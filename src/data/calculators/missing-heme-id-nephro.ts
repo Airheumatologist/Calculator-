@@ -334,7 +334,7 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Score ≥3', actions: ['Discuss prophylaxis vs bleed risk', 'Patient education on VTE symptoms', 'Review drug interactions with DOACs'] },
+      { condition: 'Score ≥2', actions: ['Discuss prophylaxis vs bleed risk', 'Patient education on VTE symptoms', 'Review drug interactions with DOACs'] },
       { condition: 'Any score', actions: ['Encourage mobility', 'Reassess if clinical status changes'] },
     ],
   },

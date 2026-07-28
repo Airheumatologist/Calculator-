@@ -787,8 +787,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
     description: 'Loading dose = target concentration × volume of distribution × weight.',
     category: 'general',
     tags: ['pharmacokinetics', 'loading dose', 'vd', 'dosing'],
-    whenToUse: 'Estimating IV loading doses when Vd and target level are known (e.g., teaching PK).',
-    whyUse: 'Core pharmacokinetic relationship for achieving steady concentration quickly.',
+    whenToUse: 'Estimating loading doses when Vd and target concentration are known (e.g., teaching PK).',
+    whyUse: 'Core pharmacokinetic relationship for rapidly achieving a target plasma concentration.',
     inputs: [
       numberInput('cp', 'Target concentration (Cp)', { unit: 'mg/L', min: 0.01, max: 500, step: 0.1, defaultValue: 20 }),
       numberInput('vd', 'Volume of distribution (Vd)', { unit: 'L/kg', min: 0.05, max: 20, step: 0.05, defaultValue: 0.7 }),

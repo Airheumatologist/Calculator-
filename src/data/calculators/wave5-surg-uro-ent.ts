@@ -598,7 +598,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
     whenToUse:
       'Preoperative cardiac risk stratification for noncardiac surgery (educational simplification of Gupta MICA).',
     whyUse:
-      'Gupta MICA predicts inpatient MI or cardiac arrest from routinely available variables and often outperforms RCRI for discrimination.',
+      'Gupta MICA predicts 30-day MI or cardiac arrest from routinely available variables and often outperforms RCRI for discrimination.',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 65 }),
       selectInput('functional', 'Functional status', [
@@ -807,7 +807,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
     category: 'hematology',
     tags: ['rogers', 'vte', 'dvt', 'pe', 'postoperative', 'prophylaxis'],
     whenToUse:
-      'Estimating postop VTE risk after major general, vascular, or thoracic surgery (educational simplified item set).',
+      'Estimating postop VTE risk after major general or vascular surgery (educational simplified item set).',
     whyUse:
       'Rogers model was developed from Patient Safety in Surgery Study / NSQIP data for 30-day VTE.',
     inputs: [
@@ -2124,7 +2124,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
     whenToUse:
       'Men with lower urinary tract symptoms to quantify severity and track treatment response.',
     whyUse:
-      'Standard AUA/ICS tool (identical to AUA Symptom Index) for BPH evaluation.',
+      'Standard AUA/ICS tool (AUA Symptom Index plus QoL item) for BPH evaluation.',
     inputs: [
       selectInput('incomplete', 'Incomplete emptying (past month)', [
         { label: 'Not at all (0)', value: 0 },
@@ -2439,7 +2439,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'High % free', actions: ['Observe / repeat PSA', 'Treat BPH'] },
+      { condition: 'High % free', actions: ['Observe / repeat PSA', 'Treat BPH if symptomatic'] },
       { condition: 'Low % free', actions: ['mpMRI', 'Biopsy counseling'] },
     ],
     pearls: [
@@ -2723,7 +2723,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
     category: 'urology',
     tags: ['stone', 'ureteral', 'renal colic', 'flank pain', 'urology'],
     whenToUse:
-      'ED patients with flank pain / suspected ureterolithiasis when estimating pre-CT stone probability.',
+      'Non-febrile ED patients with flank pain / suspected uncomplicated ureterolithiasis when estimating pre-CT stone probability.',
     whyUse:
       'May support selective imaging or ultrasound-first strategies when score is high and infection is absent.',
     inputs: [

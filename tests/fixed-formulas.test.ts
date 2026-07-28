@@ -467,3 +467,102 @@ describe('thyroid-storm-burch', () => {
     expect(labels.some((l) => /39\.3–39\.9/.test(l) && /\(25\)/.test(l))).toBe(true);
   });
 });
+
+describe('egsys', () => {
+  it('scores palpitations preceding syncope as +4 (not −1)', () => {
+    const none = score('egsys', {
+      palpitations: false,
+      heartOrEcg: false,
+      effort: false,
+      supine: false,
+      autonomic: false,
+      precipitating: false,
+    });
+    const palp = score('egsys', {
+      palpitations: true,
+      heartOrEcg: false,
+      effort: false,
+      supine: false,
+      autonomic: false,
+      precipitating: false,
+    });
+    expect(none.score).toBe(0);
+    expect(palp.score).toBe(4);
+    expect(palp.riskLevel).toBe('high'); // ≥3 cardiac pathway
+  });
+});
+
+describe('sic-score', () => {
+  it('requires coag subscore >2 (not ≥2) with total ≥4', () => {
+    // INR 2 + platelets 0 + SOFA 2 = total 4, coag 2 → not SIC (must exceed 2)
+    const borderline = score('sic-score', { inr: 2, platelets: 0, sofa: 2 });
+    expect(borderline.score).toBe(4);
+    expect(String(borderline.label).toLowerCase()).not.toMatch(/sic positive/);
+
+    // INR 2 + platelets 1 + SOFA 1 = total 4, coag 3 → SIC positive
+    const positive = score('sic-score', { inr: 2, platelets: 1, sofa: 1 });
+    expect(positive.score).toBe(4);
+    expect(String(positive.label).toLowerCase()).toMatch(/sic positive/);
+  });
+});
+
+describe('glasgow-blatchford', () => {
+  it('treats GBS 0 and 1 as very low risk (ACG outpatient band)', () => {
+    const zero = score('glasgow-blatchford', {
+      bun: 0,
+      hbMale: 0,
+      sbp: 0,
+      hr100: false,
+      melena: false,
+      syncope: false,
+      liver: false,
+      heart: false,
+    });
+    const one = score('glasgow-blatchford', {
+      bun: 0,
+      hbMale: 0,
+      sbp: 0,
+      hr100: true,
+      melena: false,
+      syncope: false,
+      liver: false,
+      heart: false,
+    });
+    expect(zero.score).toBe(0);
+    expect(one.score).toBe(1);
+    expect(zero.riskLevel).toBe('low');
+    expect(one.riskLevel).toBe('low');
+    expect(String(one.interpretation)).toMatch(/very low risk|outpatient/i);
+  });
+});
+
+describe('qt-prolongation-risk (Tisdale)', () => {
+  it('scores ≥2 QT-prolonging drugs as +6 total (3+3), not +3', () => {
+    const one = score('qt-prolongation-risk', {
+      age68: false,
+      female: false,
+      loop: false,
+      kLow: false,
+      qtc450: false,
+      ami: false,
+      oneQtDrug: true,
+      twoQtDrugs: false,
+      sepsis: false,
+      hf: false,
+    });
+    const two = score('qt-prolongation-risk', {
+      age68: false,
+      female: false,
+      loop: false,
+      kLow: false,
+      qtc450: false,
+      ami: false,
+      oneQtDrug: false,
+      twoQtDrugs: true,
+      sepsis: false,
+      hf: false,
+    });
+    expect(one.score).toBe(3);
+    expect(two.score).toBe(6);
+  });
+});

@@ -277,7 +277,7 @@ export const wave5CardioCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Stage A–B', actions: ['Prevention focus', 'Screen for structural disease when indicated'] },
+      { condition: 'Stage A–B', actions: ['Risk-factor control and prevention', 'Stage B: preventive GDMT and surveillance for symptoms'] },
       { condition: 'Stage C–D', actions: ['GDMT titration', 'Congestion management', 'Advanced options if refractory'] },
     ],
     pearls: [
@@ -1770,7 +1770,7 @@ export const wave5CardioCalcs: Calculator[] = [
     description: 'Glasgow Aneurysm Score for risk stratification in AAA repair (ruptured or elective educational use).',
     category: 'cardiology',
     tags: ['aaa', 'glasgow aneurysm', 'vascular', 'perioperative'],
-    whenToUse: 'AAA repair risk communication using age and comorbidity points.',
+    whenToUse: 'AAA repair risk communication using age, shock, and comorbidity points.',
     whyUse: 'Simple score correlating with perioperative mortality after aneurysm repair.',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 75 }),
@@ -2123,7 +2123,7 @@ export const wave5CardioCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Elevated NP', actions: ['Optimize HF', 'Consider further cardiac evaluation if it changes plan', 'Informed consent regarding risk'] },
+      { condition: 'Elevated NP', actions: ['HF/volume assessment and optimization', 'Further testing only if it changes the plan', 'Postop troponin surveillance if surgery proceeds'] },
     ],
     pearls: [
       'AF, CKD, age, and PE also raise NP — interpret in context.',
@@ -2345,7 +2345,7 @@ export const wave5CardioCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'High probability', actions: ['Urgent EP referral if symptomatic', 'Medication review', 'Family screening'] },
+      { condition: 'High probability', actions: ['EP / inherited-arrhythmia referral', 'Avoid QT-prolonging drugs; discuss β-blocker', 'Family screening'] },
     ],
     pearls: [
       'Original score treats TdP and syncope as mutually exclusive (higher weight TdP).',

@@ -125,7 +125,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
     description: 'In-hospital mortality risk strata for acute decompensated HF using BUN, SBP, and creatinine (ADHERE classification tree).',
     category: 'cardiology',
     tags: ['heart failure', 'adhere', 'mortality', 'bun'],
-    whenToUse: 'Adults hospitalized with acute decompensated heart failure for early mortality risk stratification.',
+    whenToUse: 'Adults hospitalized with acute decompensated heart failure for in-hospital mortality risk stratification.',
     whyUse: 'Simple bedside tree from a large US registry; identifies low- vs high-risk groups using three variables.',
     inputs: [
       numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, step: 1, defaultValue: 30 }),
@@ -528,7 +528,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'CPC 1–2', actions: ['Secondary prevention', 'Rehab as needed', 'Cardiology follow-up'] },
-      { condition: 'CPC 3–4', actions: ['Goals-of-care discussion', 'Neuroprognostication timeline', 'Supportive ICU care'] },
+      { condition: 'CPC 3–4', actions: ['Goals-of-care discussion', 'Supportive care and disposition planning', 'Rehab as appropriate'] },
     ],
     pearls: ['Assign CPC based on best neurologic status at a defined time point (e.g., discharge).', 'mRS and GOSE provide finer disability granularity when available.'],
   },
@@ -623,7 +623,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'EF <40%', actions: ['HF workup if symptomatic', 'GDMT', 'Consider ICD eligibility chronically'] },
+      { condition: 'EF ≤40%', actions: ['HF workup', 'GDMT for HFrEF when indicated', 'ICD evaluation if EF remains ≤35% after GDMT'] },
       { condition: 'Low SV with shock', actions: ['Integrate with CI, lactate, filling pressures', 'Resuscitate phenotype-guided'] },
     ],
     pearls: ['Normal SV often ~60–100 mL but varies with body size.', 'Teichholz EF from linear dimensions is less accurate than volumetric methods.'],
@@ -1049,15 +1049,16 @@ export const wave2CardiologyCalcs: Calculator[] = [
       yesNo('kLow', 'Serum K⁺ ≤ 3.5 mEq/L', 2),
       yesNo('qtc450', 'Admission QTc ≥ 450 ms', 2),
       yesNo('ami', 'Acute MI', 2),
-      yesNo('oneQtDrug', '1 QTc-prolonging medication', 3),
-      yesNo('twoQtDrugs', '≥2 QTc-prolonging medications', 3),
+      yesNo('oneQtDrug', '1 QTc-prolonging medication (+3)', 3),
+      yesNo('twoQtDrugs', '≥2 QTc-prolonging medications (+6 total)', 6),
       yesNo('sepsis', 'Sepsis', 3),
       yesNo('hf', 'Heart failure', 3),
     ],
     calculate(values) {
-      // If ≥2 QT drugs selected, count that (3) and do not also add single-drug points
+      // Tisdale: 1 QT drug = +3; ≥2 QT drugs = +3 (for 1) + +3 (for ≥2) = +6 total
       const two = bool(values.twoQtDrugs);
-      const one = bool(values.oneQtDrug) && !two;
+      const one = bool(values.oneQtDrug);
+      const qtDrugPts = two ? 6 : one ? 3 : 0;
       const score =
         (bool(values.age68) ? 1 : 0) +
         (bool(values.female) ? 1 : 0) +
@@ -1065,8 +1066,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
         (bool(values.kLow) ? 2 : 0) +
         (bool(values.qtc450) ? 2 : 0) +
         (bool(values.ami) ? 2 : 0) +
-        (one ? 3 : 0) +
-        (two ? 3 : 0) +
+        qtDrugPts +
         (bool(values.sepsis) ? 3 : 0) +
         (bool(values.hf) ? 3 : 0);
 
@@ -1095,7 +1095,8 @@ export const wave2CardiologyCalcs: Calculator[] = [
         score,
         ...r,
         details: [
-          { label: 'Max conceptual score', value: '~21 (with mutual exclusion of 1 vs ≥2 QT drugs)' },
+          { label: 'QT-drug points', value: two ? '6 (≥2 drugs)' : one ? '3 (1 drug)' : '0' },
+          { label: 'Max conceptual score', value: '~21 (1 vs ≥2 QT drugs mutually exclusive)' },
           { label: 'High-risk threshold', value: '≥ 11' },
         ],
         recommendations:
@@ -1108,8 +1109,8 @@ export const wave2CardiologyCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Tisdale et al. developed a risk score for QTc prolongation in cardiac care units: age≥68 (1), female (1), loop diuretic (1), K≤3.5 (2), admission QTc≥450 (2), acute MI (2), 1 QT drug (3), ≥2 QT drugs (3), sepsis (3), HF (3).',
-      formula: 'Sum of weighted risk factors (0–~21); low ≤6, moderate 7–10, high ≥11',
+        'Tisdale et al.: age≥68 (1), female (1), loop diuretic (1), K≤3.5 (2), admission QTc≥450 (2), acute MI (2), 1 QT drug (3), ≥2 QT drugs (3 additional → 6 total), sepsis (3), HF (3).',
+      formula: 'Sum of weighted risk factors (0–~21); ≥2 QT drugs score 6; low ≤6, moderate 7–10, high ≥11',
       validation: 'Derived and validated in hospitalized cardiology populations.',
       references: [
         {
@@ -1729,7 +1730,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
     description: 'Predicts risk of contrast-induced nephropathy after PCI using Mehran score.',
     category: 'cardiology',
     tags: ['contrast', 'aki', 'pci', 'mehran', 'nephropathy'],
-    whenToUse: 'Patients undergoing PCI / contrast exposure when estimating CIN and dialysis risk.',
+    whenToUse: 'Patients undergoing PCI when estimating contrast-induced nephropathy and dialysis risk.',
     whyUse: 'Widely used validated score for contrast-induced nephropathy risk stratification.',
     inputs: [
       yesNo('hypotension', 'Hypotension (SBP <80 for ≥1h requiring support)', 5),

@@ -915,8 +915,8 @@ export const wave5PedsIdCalcs: Calculator[] = [
       'Educational hour-specific TSB risk-zone helper approximating Bhutani nomogram bands for term/near-term newborns ≥35 weeks.',
     category: 'pediatrics',
     tags: ['jaundice', 'bilirubin', 'bhutani', 'neonate', 'hyperbilirubinemia'],
-    whenToUse: 'Term and late-preterm newborns with measured TSB when estimating approximate Bhutani risk zone (not a full nomogram plot).',
-    whyUse: 'Hour of age matters as much as absolute TSB; zones guide follow-up intensity before phototherapy decisions.',
+    whenToUse: '≥35-week newborns with measured TSB when estimating approximate Bhutani risk zone (not a full nomogram plot).',
+    whyUse: 'Hour of age matters as much as absolute TSB; risk zones stratify later significant hyperbilirubinemia and guide follow-up intensity (phototherapy uses separate AAP thresholds).',
     inputs: [
       numberInput('ageHours', 'Age', { unit: 'hours', min: 12, max: 144, defaultValue: 48 }),
       numberInput('tsb', 'Total serum bilirubin', { unit: 'mg/dL', min: 1, max: 30, step: 0.1, defaultValue: 10 }),
@@ -2230,7 +2230,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: '≥1 severe feature', actions: ['Parenteral artesunate', 'Supportive ICU-capable care', 'Step down to oral when able'] },
+      { condition: '≥1 severe feature', actions: ['Parenteral artesunate', 'Supportive ICU-capable care', 'Full oral ACT after ≥24 h parenteral when able'] },
       { condition: 'Uncomplicated', actions: ['ACT oral regimen', 'Adherence and return precautions'] },
     ],
     pearls: [

@@ -596,7 +596,8 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     category: 'gastroenterology',
     tags: ['pancreatitis', 'marshall', 'organ failure', 'atlanta'],
     whenToUse: 'Grading organ failure in acute pancreatitis per revised Atlanta classification.',
-    whyUse: 'Organ failure (score ≥2 in any system) defines moderately severe/severe pancreatitis and drives ICU decisions.',
+    whyUse:
+      'Organ failure (score ≥2 in any system) marks non-mild disease; persistent ≥48 h defines severe pancreatitis (revised Atlanta) and drives ICU decisions.',
     inputs: [
       selectInput('resp', 'Respiratory (PaO₂/FiO₂)', [
         { label: '>400 (0)', value: 0 },
@@ -1199,8 +1200,15 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: '0–1', actions: ['Single-agent prophylaxis often sufficient', 'Rescue antiemetic available'] },
-      { condition: '≥2', actions: ['≥2 prophylactic classes', 'Opioid-sparing strategy', 'Consider propofol TIVA'] },
+      { condition: '0', actions: ['Optional single agent', 'Rescue antiemetic available'] },
+      {
+        condition: '≥1',
+        actions: [
+          '≥2 prophylactic classes (multimodal)',
+          'Opioid-sparing strategy',
+          'Consider propofol TIVA if high risk',
+        ],
+      },
     ],
     pearls: ['Nonsmoking increases PONV risk (smokers have lower rates).', 'Pediatric risk scores differ (Eberhart, etc.).'],
   },
@@ -1608,7 +1616,14 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'High-risk positive', actions: ['Urgent head CT', 'Neurosurgery if ICH/fracture needing care'] },
-      { condition: 'Medium-risk only', actions: ['CT vs shared decision observation', 'Strict return precautions if observed'] },
+      {
+        condition: 'Medium-risk only',
+        actions: [
+          'CT head recommended (original CATCH)',
+          'Observation only if local protocol / reliable shared decision',
+          'Strict return precautions if observed',
+        ],
+      },
       { condition: 'Negative', actions: ['Observation period', 'Caregiver education', 'Return if vomiting/mental status change'] },
     ],
     pearls: [

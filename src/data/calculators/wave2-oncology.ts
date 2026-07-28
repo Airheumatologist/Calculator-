@@ -226,7 +226,7 @@ export const wave2OncologyCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Grade ≥2', actions: ['Cell-therapy / neurology consult', 'Hold driving precautions', 'Consider MRI brain + EEG'] },
+      { condition: 'Grade ≥2', actions: ['Cell-therapy / neurology consult', 'Driving restrictions', 'Consider MRI brain + EEG', 'Consider corticosteroids per protocol'] },
       { condition: 'Grade ≥3', actions: ['ICU', 'Corticosteroids per protocol', 'Seizure precautions / AEDs as indicated'] },
     ],
     pearls: [
@@ -312,7 +312,7 @@ export const wave2OncologyCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'Grade ≥3', actions: ['Fever precautions education', 'Consider G-CSF per regimen', 'Hold/delay chemo per protocol'] },
-      { condition: 'Fever + ANC <0.5–1.0', actions: ['Treat as febrile neutropenia', 'Urgent broad-spectrum antibiotics'] },
+      { condition: 'Fever + ANC <1.0', actions: ['Treat as febrile neutropenia', 'Urgent broad-spectrum antibiotics'] },
     ],
     pearls: ['Febrile neutropenia is a clinical emergency regardless of exact grade.', 'Duration of neutropenia matters as much as nadir depth.'],
   },

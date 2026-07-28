@@ -31,7 +31,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     description: 'Estimates LDL-C with the Sampson-NIH equation; more accurate at higher TG than Friedewald.',
     category: 'endocrinology',
     tags: ['cholesterol', 'ldl', 'lipid', 'sampson'],
-    whenToUse: 'Calculated LDL when TG are moderately elevated (up to ~800 mg/dL) or LDL is low.',
+    whenToUse: 'Calculated LDL when TG are elevated (validated to ~800 mg/dL) or LDL is low.',
     whyUse: 'Outperforms Friedewald at low LDL and higher TG; usable when Friedewald is invalid.',
     inputs: [
       numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 50, max: 600, defaultValue: 200 }),
@@ -731,7 +731,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     category: 'nephrology',
     tags: ['calcium', 'phosphate', 'ckd', 'mbd'],
     whenToUse: 'CKD mineral-bone disorder monitoring.',
-    whyUse: 'Historically used threshold for ectopic calcification risk; still a quick composite marker.',
+    whyUse: 'Historical calcification-risk composite (classic Ca×P <55); KDIGO prefers individual Ca and phosphate targets over the product alone.',
     inputs: [
       numberInput('ca', 'Serum calcium', { unit: 'mg/dL', min: 4, max: 16, step: 0.1, defaultValue: 9.0 }),
       numberInput('phos', 'Serum phosphate', { unit: 'mg/dL', min: 0.5, max: 20, step: 0.1, defaultValue: 4.5 }),
@@ -1247,7 +1247,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     category: 'nephrology',
     tags: ['crcl', 'gfr', 'clearance', '24h urine'],
     whenToUse: 'When measured clearance is needed (extremes of muscle mass, amputations, pregnancy, drug dosing uncertainty).',
-    whyUse: 'Gold-standard bedside clearance formula before (or when) nuclear GFR unavailable.',
+    whyUse: 'Classic measured clearance from timed urine when eGFR is unreliable; overestimates true GFR vs exogenous-marker methods.',
     inputs: [
       numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', min: 1, max: 500, defaultValue: 100 }),
       numberInput('volume', 'Urine volume', { unit: 'mL', min: 50, max: 10000, defaultValue: 2000, helpText: 'Total volume over collection period' }),

@@ -453,7 +453,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'Lower band', actions: ['Usual ACS therapy', 'Standard bleed precautions'] },
-      { condition: 'High/very high band', actions: ['Bleeding-avoidance strategies', 'Reassess triple therapy need', 'Close Hb monitoring'] },
+      { condition: 'High/very high band', actions: ['Bleeding-avoidance strategies', 'Prefer radial access / dose-adjust anticoagulants', 'Close Hb monitoring'] },
     ],
     pearls: [
       'Absolute rates vary with modern radial access and antithrombotic regimens.',
@@ -762,7 +762,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'Low marker count', actions: ['Calculate official 5-year risk', 'Reassess with new syncope/NSVT/imaging'] },
-      { condition: 'Multiple markers / syncope / MWT≥30', actions: ['Specialty HCM clinic', 'ICD shared decision', 'Avoid competitive sports per guidelines'] },
+      { condition: 'Multiple markers / syncope / MWT≥30', actions: ['Specialty HCM clinic', 'ICD shared decision', 'Exercise counseling with HCM expert (shared decision)'] },
     ],
     pearls: [
       'Do not use this factor count as a substitute for the published HCM Risk-SCD percentage.',
@@ -2006,7 +2006,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
     category: 'hematology',
     tags: ['cancer', 'vte', 'ottawa', 'recurrence', 'thrombosis'],
     whenToUse: 'Patients with cancer-associated VTE when estimating recurrence risk on anticoagulation.',
-    whyUse: 'Identifies lower vs higher recurrence risk strata that may inform secondary prevention intensity/duration discussions.',
+    whyUse: 'Identifies lower vs higher recurrence risk while anticoagulated; informs counseling and intensity discussions (not a stop rule).',
     inputs: [
       yesNo('female', 'Female sex', 1),
       yesNo('lung', 'Lung cancer', 1),
@@ -2088,7 +2088,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
     category: 'hematology',
     tags: ['vte', 'herdoo2', 'anticoagulation', 'recurrence', 'women'],
     whenToUse:
-      'Women with unprovoked VTE after completing 5–12 months of anticoagulation when considering discontinuation.',
+      'Women with a first unprovoked VTE after completing 5–12 months of anticoagulation when considering discontinuation.',
     whyUse: '0–1 HERDOO2 points ≈ low recurrence risk suitable for stopping in management studies; ≥2 continue.',
     inputs: [
       yesNo('hyperpig', 'Hyperpigmentation, edema, or redness in either lower extremity', 1),

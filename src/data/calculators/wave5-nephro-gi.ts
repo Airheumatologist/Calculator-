@@ -197,8 +197,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: '5-year risk ≥5–10% (local policy)', actions: ['Nephrology referral', 'CKD education', 'CVD risk reduction', 'Medication review'] },
-      { condition: '5-year risk ≥20% or eGFR <30', actions: ['RRT modality education', 'Anemia/CKD-MBD/acidosis management', 'Access planning if appropriate'] },
+      { condition: '5-year risk ≥3–5% (local policy)', actions: ['Nephrology referral', 'CKD education', 'CVD risk reduction', 'Medication review'] },
+      { condition: '2-year risk >40% or eGFR-based KRT prep criteria', actions: ['RRT modality education', 'Anemia/CKD-MBD/acidosis management', 'Access planning if appropriate'] },
     ],
     pearls: [
       'ACR must be in mg/g (or convert carefully from mg/mmol).',
@@ -1359,7 +1359,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'Any wide QRS / sine / instability', actions: ['IV calcium', 'Cardiac monitor', 'Shift K (insulin/glucose, albuterol)', 'Emergent dialysis if needed'] },
-      { condition: 'Elevated K without ECG changes', actions: ['Still treat if K very high or rising', 'Stop KA-sparing drugs', 'Kayexalate/patiromer/SZC per setting', 'Address cause'] },
+      { condition: 'Elevated K without ECG changes', actions: ['Still treat if K very high or rising', 'Stop KA-sparing drugs', 'Patiromer or SZC preferred (SPS if used locally)', 'Address cause'] },
     ],
     pearls: [
       'Calcium antagonizes cardiac effects but does not lower serum K.',
@@ -1474,7 +1474,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
     category: 'nephrology',
     tags: ['bicarbonate', 'ckd', 'metabolic acidosis', 'alkali', 'kdigo'],
     whenToUse: 'CKD patients with low or borderline total CO₂/HCO₃ to decide on alkali therapy consideration.',
-    whyUse: 'Treating chronic metabolic acidosis in CKD may slow progression and improve bone/muscle outcomes in selected patients.',
+    whyUse: 'Frames alkali consideration in CKD; hard-outcome benefit is uncertain—contemporary guidance prioritizes more severe acidosis and avoiding over-correction.',
     inputs: [
       numberInput('hco3', 'Serum HCO₃⁻ or total CO₂', { unit: 'mEq/L', min: 5, max: 40, step: 0.1, defaultValue: 20 }),
       selectInput('stage', 'CKD stage (context)', [
@@ -1541,7 +1541,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'HCO₃ <22 in CKD ND', actions: ['Confirm on venous total CO₂', 'Oral NaHCO₃ if appropriate', 'Dietary acid reduction (fruits/vegetables) if suitable', 'Monitor BP and edema'] },
+      { condition: 'HCO₃ <18 (or persistently low) in CKD ND', actions: ['Confirm on venous total CO₂', 'Consider oral alkali ± dietary acid reduction if appropriate', 'Monitor BP, edema, and avoid over-correction'] },
     ],
     pearls: [
       'Sodium bicarbonate adds sodium load — caution in uncontrolled HTN or edema.',

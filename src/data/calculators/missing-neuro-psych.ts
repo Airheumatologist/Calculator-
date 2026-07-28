@@ -9,7 +9,7 @@ export const missingNeuroPsychCalcs: Calculator[] = [
     description: 'Clinical severity grade for aneurysmal subarachnoid hemorrhage (I–V).',
     category: 'neurology',
     tags: ['sah', 'aneurysm', 'neuro', 'grade'],
-    whenToUse: 'Patients with suspected or confirmed subarachnoid hemorrhage for clinical severity grading.',
+    whenToUse: 'Patients with confirmed subarachnoid hemorrhage for clinical severity grading.',
     whyUse: 'Classic bedside grade linked to surgical risk and outcomes; complements Fisher/modified Fisher imaging grades.',
     inputs: [
       selectInput('grade', 'Hunt and Hess clinical grade', [
@@ -100,9 +100,9 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         condition: 'Any SAH grade',
         actions: [
           'ABCs / neuro ICU monitoring',
-          'Urgent noncontrast CT ± LP if CT negative and suspicion high',
-          'CTA/DSA for aneurysm detection',
-          'BP control, reverse anticoagulation, nimodipine, seizure precautions per protocol',
+          'CTA/DSA for aneurysm detection and securement planning',
+          'BP control, reverse anticoagulation, nimodipine per guidelines',
+          'Treat clinical seizures; avoid routine ASM prophylaxis except selected high-risk features',
         ],
       },
       {
@@ -207,11 +207,16 @@ export const missingNeuroPsychCalcs: Calculator[] = [
     },
     nextSteps: [
       {
-        condition: 'Grade ≥3',
+        condition: 'All aSAH',
+        actions: [
+          'Nimodipine (all aSAH unless contraindicated)',
+          'Euvolemia; avoid prophylactic hypervolemia',
+        ],
+      },
+      {
+        condition: 'Grade ≥3 (thick SAH)',
         actions: [
           'Neuro ICU monitoring for DCI (days 3–14 typical peak)',
-          'Nimodipine',
-          'Euvolemia; avoid prophylactic hypervolemia',
           'Low threshold for TCD / perfusion imaging if exam changes',
         ],
       },

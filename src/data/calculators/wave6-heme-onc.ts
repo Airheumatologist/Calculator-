@@ -249,7 +249,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
     category: 'hematology',
     tags: ['sic', 'sepsis', 'dic', 'coagulopathy', 'isth'],
     whenToUse: 'Patients with sepsis/infection plus organ dysfunction when screening for sepsis-induced coagulopathy.',
-    whyUse: 'Simpler early detector than ISTH overt DIC; SIC ≥4 supports diagnosis (with platelet+INR subscore ≥2).',
+    whyUse: 'Simpler early detector than ISTH overt DIC; SIC ≥4 supports diagnosis when platelet+INR points exceed 2 (i.e. ≥3).',
     inputs: [
       selectInput('inr', 'INR (or PT-INR)', [
         { label: '≤1.2 (0 pts)', value: 0, points: 0 },
@@ -273,7 +273,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
       const sofa = num(values.sofa);
       const coagSub = inr + plt;
       const score = coagSub + sofa;
-      const positive = score >= 4 && coagSub >= 2;
+      // Iba 2017: total ≥4 AND PT+platelet points exceeding 2 (i.e. ≥3)
+      const positive = score >= 4 && coagSub > 2;
 
       if (positive) {
         return {
@@ -288,11 +289,11 @@ export const wave6HemeOncCalcs: Calculator[] = [
           ],
         };
       }
-      if (score >= 4 && coagSub < 2) {
+      if (score >= 4 && coagSub <= 2) {
         return {
           score,
-          label: 'Not SIC (SOFA-driven total without coag subscore)',
-          interpretation: `Total ${score} but platelet+INR subscore is ${coagSub} (<2). SIC diagnosis requires total ≥4 and coag subscore ≥2. Reassess coags and sepsis course.`,
+          label: 'Not SIC (total ≥4 but coag subscore ≤2)',
+          interpretation: `Total ${score} but platelet+INR subscore is ${coagSub} (must exceed 2). SIC diagnosis requires total ≥4 and coag subscore ≥3. Reassess coags and sepsis course.`,
           riskLevel: 'moderate',
           details: [
             { label: 'SIC total', value: `${score} / 6` },
@@ -313,9 +314,9 @@ export const wave6HemeOncCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'SIC: INR ≤1.2/1.2–1.4/>1.4 → 0/1/2; platelets ≥150/100–149/<100 → 0/1/2; 4-item SOFA 0/1/≥2 → 0/1/2. Positive if total ≥4 and (INR+platelet points) ≥2.',
-      formula: 'Score = INR pts + platelet pts + SOFA₄ pts (max 6)',
-      validation: 'Iba et al. / ISTH SSC for DIC; designed to capture earlier septic coagulopathy than overt DIC.',
+        'SIC: INR ≤1.2/>1.2/>1.4 → 0/1/2; platelets ≥150/<150/<100 → 0/1/2; 4-item SOFA 0/1/≥2 → 0/1/2. Positive if total ≥4 and (INR+platelet points) exceed 2 (≥3).',
+      formula: 'Score = INR pts + platelet pts + SOFA₄ pts (max 6); SIC if ≥4 and coag subscore >2',
+      validation: 'Iba et al. BMJ Open 2017 / ISTH SSC; designed to capture earlier septic coagulopathy than overt DIC.',
       references: [
         {
           title: 'Diagnosis and management of sepsis-induced coagulopathy and disseminated intravascular coagulation',
@@ -805,7 +806,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Persistent monocytosis ≥1.0', actions: ['Repeat CBC', 'Peripheral smear', 'Consider heme referral / NGS if chronic'] },
+      { condition: 'Persistent monocytosis ≥1.0 (or ≥0.5 if CMML concern)', actions: ['Repeat CBC', 'Peripheral smear', 'Consider heme referral / NGS if chronic'] },
       { condition: 'Monocytopenia', actions: ['Review meds and marrow failure signs', 'Correlate with other cytopenias'] },
     ],
     pearls: [
@@ -1301,7 +1302,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
     category: 'oncology',
     tags: ['febrile neutropenia', 'mascc', 'cisne', 'neutropenia', 'fever'],
     whenToUse: 'Adult cancer patient with fever and neutropenia when triaging home oral therapy vs admission.',
-    whyUse: 'Structures high-risk features that usually mandate inpatient IV antibiotics even if a formal MASCC is high.',
+    whyUse: 'Structures red-flag features that usually mandate inpatient IV antibiotics even if MASCC falls in the low-risk band (≥21).',
     inputs: [
       yesNo('fever', 'Fever ≥38.3 °C once or ≥38.0 °C sustained ≥1 h', 1),
       numberInput('anc', 'ANC', { unit: '/µL', min: 0, max: 2000, defaultValue: 400 }),

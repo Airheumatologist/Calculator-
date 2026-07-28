@@ -1170,7 +1170,7 @@ export const wave4FormulasCalcs: Calculator[] = [
     description: 'Converts between odds and probability (risk).',
     category: 'general',
     tags: ['ebm', 'odds', 'probability', 'bayes'],
-    whenToUse: 'Moving between odds ratios / pre-test odds and natural frequencies.',
+    whenToUse: 'Converting between odds and probability (e.g., pre-test odds for Bayesian reasoning).',
     whyUse: 'Probability = odds/(1+odds); odds = p/(1−p).',
     inputs: [
       selectInput('direction', 'Convert', [

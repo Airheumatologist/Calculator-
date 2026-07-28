@@ -10,7 +10,7 @@ export const cardiologyCalcs: Calculator[] = [
     category: 'cardiology',
     tags: ['afib', 'stroke', 'anticoagulation', 'af'],
     whenToUse: 'Patients with non-valvular atrial fibrillation to assess annual stroke risk and need for anticoagulation.',
-    whyUse: 'Widely validated; guideline-recommended (AHA/ACC/HRS, ESC) for stroke risk stratification in AF.',
+    whyUse: 'Widely validated; AHA/ACC guideline-recommended for stroke risk stratification in nonvalvular AF (ESC 2024 prefers CHA₂DS₂-VA).',
     inputs: [
       yesNo('chf', 'Congestive heart failure / LV dysfunction', 1),
       yesNo('htn', 'Hypertension', 1),
@@ -93,8 +93,12 @@ export const cardiologyCalcs: Calculator[] = [
         actions: ['Start or continue DOAC unless contraindicated', 'Check CBC, renal/hepatic function before DOAC', 'Educate on adherence and bleeding signs'],
       },
       {
-        condition: 'Score 0–1',
-        actions: ['Generally no anticoagulation for men with 0', 'Individualize for score 1', 'Control HTN, DM, lifestyle factors'],
+        condition: 'Score 1 (men) or 2 (women)',
+        actions: ['Consider anticoagulation with shared decision-making', 'Weigh bleeding risk and preferences'],
+      },
+      {
+        condition: 'Score 0 (men) or 1 (women)',
+        actions: ['Generally no anticoagulation', 'Control HTN, DM, lifestyle factors'],
       },
     ],
     pearls: ['Female sex alone (score 1) is not usually an indication for anticoagulation.', 'Do not use for valvular AF (moderate–severe mitral stenosis or mechanical valves).'],
@@ -732,7 +736,7 @@ export const cardiologyCalcs: Calculator[] = [
     description: 'Simplified PE severity index for 30-day mortality.',
     category: 'cardiology',
     tags: ['pe', 'spesi'],
-    whenToUse: 'Rapid risk stratification of acute PE.',
+    whenToUse: 'Rapid risk stratification of confirmed acute PE.',
     whyUse: 'Easier than full PESI with similar discrimination for low-risk PE.',
     inputs: [
       yesNo('age80', 'Age > 80 years', 1),
@@ -843,7 +847,7 @@ export const cardiologyCalcs: Calculator[] = [
           doi: '10.1097/CCM.0000000000005337', }],
     },
     nextSteps: [
-      { condition: 'MAP < 65 with shock', actions: ['Fluid resuscitation if hypovolemic', 'Vasopressors (norepinephrine first-line in septic shock)', 'Source control'] },
+      { condition: 'MAP < 65 with shock', actions: ['Fluid resuscitation if hypovolemic', 'Vasopressors (norepinephrine first-line in septic shock)', 'Treat underlying cause'] },
     ],
   },
   {
@@ -916,7 +920,7 @@ export const cardiologyCalcs: Calculator[] = [
     category: 'cardiology',
     tags: ['prevention', 'statin', 'cholesterol'],
     whenToUse: 'Adults 40–79 without prior ASCVD for primary prevention.',
-    whyUse: 'ACC/AHA guideline tool for statin and aspirin discussions.',
+    whyUse: 'ACC/AHA guideline tool for statin and lifestyle primary-prevention discussions.',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 40, max: 79, defaultValue: 55 }),
       selectInput('sex', 'Sex', [

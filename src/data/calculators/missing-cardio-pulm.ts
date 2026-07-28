@@ -73,7 +73,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'RCRI 0–1', actions: ['Low predicted risk', 'Focus on guideline-directed medical therapy and surgical recovery'] },
+      { condition: 'RCRI 0–1', actions: ['Low predicted risk', 'Proceed without additional cardiac testing if functional capacity adequate and no active cardiac symptoms'] },
       { condition: 'RCRI ≥2', actions: ['Review urgency of surgery', 'Optimize volume status, anemia, BP', 'Consider additional testing only if it will change management'] },
     ],
     pearls: [
@@ -143,7 +143,8 @@ export const missingCardioPulmCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'Score 0', actions: ['Consider outpatient oral antibiotics', 'Safety-net advice and follow-up'] },
-      { condition: 'Score 1–2', actions: ['Hospital assessment', 'Consider short-stay or inpatient care'] },
+      { condition: 'Score 1', actions: ['Clinical judgment for home with safety-netting vs same-day assessment', 'Account for comorbidities and social support'] },
+      { condition: 'Score 2', actions: ['Hospital assessment', 'Consider short-stay or inpatient care'] },
       { condition: 'Score 3–4', actions: ['Urgent admission', 'IV antibiotics', 'Evaluate for ICU (shock, ventilatory failure)'] },
     ],
     pearls: ['Add urea (CURB-65) when labs are available for refined risk.'],
@@ -299,7 +300,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
     nextSteps: [
       { condition: 'Score ≤2', actions: ['Usual ward or outpatient pathway as otherwise indicated'] },
       { condition: 'Score 3–4', actions: ['Frequent vitals', 'Early senior review', 'Have escalation plan'] },
-      { condition: 'Score ≥5', actions: ['ICU consult', 'Prepare for ventilatory/hemodynamic support', 'Source control and timely antibiotics'] },
+      { condition: 'Score ≥5', actions: ['ICU consult', 'Prepare for ventilatory/hemodynamic support', 'Timely antibiotics; broaden if MRSA/Pseudomonas risk factors'] },
     ],
     pearls: ['Age-adjusted RR and oxygen thresholds matter—do not use a single cutoff for all ages.'],
   },

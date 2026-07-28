@@ -222,7 +222,7 @@ export const extraCalcs: Calculator[] = [
     description: 'Heart failure functional class by symptom limitation.',
     category: 'cardiology',
     tags: ['heart failure', 'nyha', 'functional'],
-    whenToUse: 'Staging functional limitation in known HF.',
+    whenToUse: 'Classifying functional limitation in known HF.',
     whyUse: 'Guides therapy intensity and trial eligibility language.',
     inputs: [
       selectInput('class', 'Symptom class', [

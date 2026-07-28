@@ -422,7 +422,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     category: 'nephrology',
     tags: ['osmolality', 'toxicology'],
     whenToUse: 'Hyponatremia workup, toxic alcohol suspicion.',
-    whyUse: 'Osmolal gap screens for methanol/ethylene glycol and other osmoles.',
+    whyUse: 'Calculated osm for hyponatremia tonicity; gap screens toxic alcohols/other osmoles.',
     inputs: [
       numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, defaultValue: 140 }),
       numberInput('glu', 'Glucose', { unit: 'mg/dL', min: 40, max: 2000, defaultValue: 100 }),
@@ -701,7 +701,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     description: 'BSA using Mosteller formula for chemo and physiologic indexing.',
     category: 'general',
     tags: ['bsa', 'chemotherapy', 'dosing'],
-    whenToUse: 'Chemotherapy dosing, cardiac index, burn estimates adjunct.',
+    whenToUse: 'Chemotherapy dosing and cardiac index normalization.',
     whyUse: 'Mosteller is simple and widely accepted.',
     inputs: [
       numberInput('height', 'Height', { unit: 'cm', min: 50, max: 250, defaultValue: 170 }),

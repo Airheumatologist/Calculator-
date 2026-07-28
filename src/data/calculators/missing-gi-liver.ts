@@ -220,7 +220,7 @@ export const missingGiLiverCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Score ≥2', actions: ['Admit', 'Resuscitate (restrictive transfusion thresholds if stable)', 'Urgent endoscopy timing by severity', 'PPI infusion per protocol'] },
+      { condition: 'Score ≥2', actions: ['Admit', 'Resuscitate (restrictive transfusion thresholds if stable)', 'Urgent endoscopy timing by severity', 'IV PPI per protocol'] },
       { condition: 'Score 0–1', actions: ['Still apply GBS for discharge safety', 'Do not use AIMS65 alone for outpatient triage'] },
     ],
     pearls: ['AIMS65 is for mortality, not need for endoscopic therapy — pair with Glasgow-Blatchford.'],

@@ -82,7 +82,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     category: 'endocrinology',
     tags: ['rohrer', 'ponderal index', 'adiposity', 'anthropometry'],
     whenToUse: 'Anthropometric assessment when a height³-normalized mass index is preferred to BMI.',
-    whyUse: 'Classic alternative to BMI; used historically in pediatrics and body-composition research.',
+    whyUse: 'Classic alternative to BMI; used in pediatrics (esp. neonatal proportionality/IUGR) and body-composition research.',
     inputs: [
       numberInput('weight', 'Weight', { unit: 'kg', min: 1, max: 400, step: 0.1, defaultValue: 70 }),
       numberInput('height', 'Height', { unit: 'cm', min: 40, max: 230, defaultValue: 170 }),

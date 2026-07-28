@@ -156,7 +156,7 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
     category: 'general',
     tags: ['lbw', 'lean body weight', 'james', 'dosing', 'pharmacokinetics'],
     whenToUse: 'Drug dosing or PK estimates that scale to lean mass (e.g., some anesthetics, research equations).',
-    whyUse: 'Classic sex-specific LBW formulas widely cited in clinical pharmacology.',
+    whyUse: 'Classic sex-specific LBW formulas; can fail at high BMI (prefer Janmahasatian).',
     inputs: [
       numberInput('weight', 'Total body weight', { unit: 'kg', min: 30, max: 300, step: 0.1, defaultValue: 80 }),
       numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, defaultValue: 170 }),
@@ -1573,7 +1573,7 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
     category: 'rheumatology',
     tags: ['mases', 'enthesitis', 'axial spa', 'rheumatology'],
     whenToUse: 'Quantifying enthesitis burden in axSpA / AS clinical care or trials.',
-    whyUse: 'Simple 0–13 site count endorsed in SpA research; tracks peripheral entheseal tenderness.',
+    whyUse: 'Simple 0–13 site count endorsed in SpA research; mainly axial plus selected peripheral sites (e.g., Achilles).',
     inputs: [
       numberInput('total', 'MASES total (tender sites)', {
         min: 0,

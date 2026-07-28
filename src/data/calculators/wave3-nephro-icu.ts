@@ -421,7 +421,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     description: 'Acute Kidney Injury Network stages 1–3 using creatinine and urine output.',
     category: 'nephrology',
     tags: ['aki', 'akin', 'creatinine'],
-    whenToUse: 'Staging AKI with AKIN criteria (48-hour window for creatinine rise).',
+    whenToUse: 'Staging AKI with AKIN criteria (Cr rise within 48 h and/or urine output).',
     whyUse: 'Refined RIFLE; bridge to current KDIGO staging.',
     inputs: [
       selectInput('crStage', 'Creatinine criterion', [
@@ -1262,7 +1262,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     category: 'critical-care',
     tags: ['vexus', 'ultrasound', 'congestion', 'fluid', 'right heart'],
     whenToUse: 'Bedside assessment of systemic venous congestion (heart failure, AKI, fluid intolerance).',
-    whyUse: 'Integrates hepatic vein, portal vein, and intrarenal venous Doppler into a congestion grade.',
+    whyUse: 'Integrates IVC size with hepatic, portal, and intrarenal venous Doppler into a congestion grade.',
     inputs: [
       selectInput('ivc', 'IVC (qualifying)', [
         { label: 'IVC <2 cm diameter (VExUS 0 pathway)', value: 0 },
@@ -1608,7 +1608,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     category: 'critical-care',
     tags: ['cpp', 'icp', 'neurocritical', 'map'],
     whenToUse: 'Neurocritical care when ICP (or surrogate) and MAP are available.',
-    whyUse: 'Maintains estimate of net pressure driving cerebral blood flow; common goals ≥60 mmHg.',
+    whyUse: 'Estimates net pressure driving cerebral blood flow; common targets 60–70 mmHg.',
     inputs: [
       numberInput('map', 'MAP', { unit: 'mmHg', min: 30, max: 200, defaultValue: 80 }),
       numberInput('icp', 'ICP', { unit: 'mmHg', min: 0, max: 80, defaultValue: 15 }),

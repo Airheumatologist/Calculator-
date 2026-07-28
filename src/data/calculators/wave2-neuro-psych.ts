@@ -205,7 +205,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         actions: [
           'Start or escalate preventive therapy',
           'Acute treatment optimization (early, adequate dose)',
-          'Limit simple/combo analgesics to avoid MOH',
+          'Limit acute med days (analgesics/triptans/opioids) to avoid MOH',
           'Consider CGRP pathway agents / specialty clinic',
         ],
       },
@@ -2007,7 +2007,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
     },
     nextSteps: [
       {
-        condition: 'Score ≥1–2',
+        condition: 'Score ≥1',
         actions: ['Detailed alcohol and drug history', 'AUDIT and/or DAST-10', 'Brief intervention', 'Referral to treatment when indicated'],
       },
     ],

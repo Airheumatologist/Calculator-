@@ -303,8 +303,8 @@ export const wave2PulmIdCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Score ≤6', actions: ['Supportive care', 'Antivirals when indicated', 'Outpatient/ward per overall status'] },
-      { condition: 'Score ≥10', actions: ['Consider step-up monitoring or ICU', 'Cover bacterial coinfection if suspected', 'Serial labs and gas exchange'] },
+      { condition: 'Score 0–11', actions: ['Supportive care', 'Antivirals when indicated', 'Ward care per overall status'] },
+      { condition: 'Score ≥12', actions: ['Consider step-up monitoring or ICU', 'Cover bacterial coinfection if suspected', 'Serial labs and gas exchange'] },
     ],
   },
   {
@@ -314,7 +314,7 @@ export const wave2PulmIdCalcs: Calculator[] = [
     description: 'ISARIC 4C score estimating in-hospital mortality risk in COVID-19.',
     category: 'infectious-disease',
     tags: ['covid-19', 'isaric', '4c', 'mortality', 'risk'],
-    whenToUse: 'Adults hospitalized with COVID-19 (or similar ILI pathways using 4C components).',
+    whenToUse: 'Adults hospitalized with confirmed or suspected COVID-19 for in-hospital mortality risk stratification.',
     whyUse: 'Validated multivariable mortality model using age, sex, comorbidities, vitals, and labs.',
     inputs: [
       selectInput('age', 'Age', [
@@ -836,8 +836,8 @@ export const wave2PulmIdCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Score ≥4', actions: ['LMWH/UFH prophylaxis unless bleeding risk high', 'Mechanical prophylaxis if anticoag contraindicated'] },
-      { condition: 'Score 0–1', actions: ['Emphasize mobilization', 'Avoid unnecessary prophylaxis if low risk and high bleed risk'] },
+      { condition: 'Score ≥2', actions: ['LMWH/UFH prophylaxis unless bleeding risk high', 'Mechanical prophylaxis if anticoag contraindicated'] },
+      { condition: 'Score 0–1', actions: ['Emphasize mobilization', 'Avoid unnecessary prophylaxis if low risk'] },
     ],
   },
   {
@@ -1506,7 +1506,7 @@ export const wave2PulmIdCalcs: Calculator[] = [
     nextSteps: [
       { condition: 'Fulminant', actions: ['ICU', 'PO vanco + IV metro', 'Surgery consult'] },
       { condition: 'Severe', actions: ['PO vancomycin or fidaxomicin', 'Close monitoring for progression'] },
-      { condition: 'Non-severe', actions: ['Standard CDI therapy', 'Stewardship of concurrent antibiotics'] },
+      { condition: 'Non-severe', actions: ['Fidaxomicin or PO vancomycin', 'Stewardship of concurrent antibiotics'] },
     ],
   },
   {
@@ -1616,7 +1616,7 @@ export const wave2PulmIdCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'Septic shock criteria met', actions: ['ICU care', 'Norepinephrine', 'Antibiotics and source control', 'Serial lactate'] },
-      { condition: 'Sepsis without shock', actions: ['SOFA/qSOFA assessment', 'Cultures and antibiotics', 'Fluid resuscitation as indicated'] },
+      { condition: 'Sepsis without shock', actions: ['SOFA-based organ dysfunction assessment', 'Cultures and antibiotics', 'Fluid resuscitation as indicated'] },
     ],
     pearls: ['Lactate is not perfectly specific for sepsis.', 'Document timing of fluids, antibiotics, and pressors.'],
   },

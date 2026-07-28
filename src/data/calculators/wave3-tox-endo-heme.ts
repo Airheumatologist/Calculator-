@@ -546,7 +546,15 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Significant toxicity', actions: ['ABG, electrolytes, glucose', 'IV bicarb if indicated', 'Avoid intubation delays/hypoventilation', 'Nephrology early'] },
+      {
+        condition: 'Significant toxicity',
+        actions: [
+          'ABG, electrolytes, glucose',
+          'IV bicarb if indicated',
+          'Avoid intubation if possible; if intubating, prevent hypoventilation',
+          'Nephrology early',
+        ],
+      },
       { condition: 'Rising levels', actions: ['Repeat q2–3h until peak passed', 'GI decontamination if appropriate timing'] },
     ],
     pearls: [
@@ -879,7 +887,17 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'High concern NMS', actions: ['Stop neuroleptics', 'ICU for severe cases', 'IV fluids, cooling', 'CK, renal function', 'Psychiatry / neurology / toxicology'] },
+      {
+        condition: 'High concern NMS',
+        actions: [
+          'Stop dopamine antagonists (neuroleptics/antiemetics)',
+          'Restart dopamine agonists if recently withdrawn',
+          'ICU for severe cases',
+          'IV fluids, cooling',
+          'CK, renal function',
+          'Psychiatry / neurology / toxicology',
+        ],
+      },
     ],
     pearls: [
       'Onset usually days (not minutes–hours like SS or MH under anesthesia).',

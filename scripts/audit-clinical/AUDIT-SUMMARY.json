@@ -1,0 +1,1110 @@
+{
+  "completedAt": "2026-07-28T14:24:07.159Z",
+  "scope": "whenToUse, whyUse, nextSteps",
+  "policy": "Fix inaccuracies only; keep slim; no extra points unless needed",
+  "totals": {
+    "batches": 40,
+    "findingsFiles": 80,
+    "audited": 910,
+    "fixed": 98,
+    "ok": 812,
+    "uncertain": 0,
+    "note": "All 910 extracted calculators appear in findings items; some batch audited counts were off-by-one vs item arrays"
+  },
+  "fixes": [
+    {
+      "batch": 1,
+      "id": "cha2ds2-vasc",
+      "issues": [
+        "whyUse listed ESC as still recommending CHA₂DS₂-VASc; ESC 2024 endorses sex-neutral CHA₂DS₂-VA instead",
+        "nextSteps 'Score 0–1' omitted sex-specific intermediate band (consider OAC for men=1 / women=2) and incorrectly bundled women score 1 with individualized OAC"
+      ],
+      "changes": [
+        "whyUse: 'guideline-recommended (AHA/ACC/HRS, ESC)...' → 'AHA/ACC guideline-recommended... (ESC 2024 prefers CHA₂DS₂-VA)'",
+        "nextSteps: replaced single 'Score 0–1' band with 'Score 1 (men) or 2 (women)' (consider OAC) and 'Score 0 (men) or 1 (women)' (generally no OAC); kept ≥2 men / ≥3 women start DOAC"
+      ]
+    },
+    {
+      "batch": 1,
+      "id": "spesi",
+      "issues": [
+        "whenToUse said 'acute PE' without specifying confirmed PE; sPESI is for severity/disposition after PE diagnosis, not diagnostic workup"
+      ],
+      "changes": [
+        "whenToUse: 'Rapid risk stratification of acute PE.' → 'Rapid risk stratification of confirmed acute PE.'"
+      ]
+    },
+    {
+      "batch": 1,
+      "id": "map",
+      "issues": [
+        "nextSteps listed unqualified 'Source control' for all MAP <65 shock; source control applies to septic/infectious shock, not all shock phenotypes"
+      ],
+      "changes": [
+        "nextSteps action 'Source control' → 'Treat underlying cause'"
+      ]
+    },
+    {
+      "batch": 1,
+      "id": "ascvd-risk",
+      "issues": [
+        "whyUse framed tool for 'statin and aspirin discussions'; 2019 ACC/AHA primary prevention guidelines de-emphasize routine aspirin; PCE mainly guides statin/lifestyle intensity"
+      ],
+      "changes": [
+        "whyUse: 'statin and aspirin discussions' → 'statin and lifestyle primary-prevention discussions'"
+      ]
+    },
+    {
+      "batch": 2,
+      "id": "qsofa",
+      "issues": [
+        "whyUse framed qSOFA as a simple sepsis screen; SSC 2021 strongly recommends against qSOFA as a single screening tool vs SIRS/NEWS/MEWS (low sensitivity)."
+      ],
+      "changes": [
+        {
+          "field": "whyUse",
+          "from": "Simple screen for organ dysfunction risk; not a diagnostic criteria for sepsis alone.",
+          "to": "Bedside mortality/organ-dysfunction risk prompt; not a sole sepsis screen (SSC 2021) or diagnostic criterion alone."
+        }
+      ]
+    },
+    {
+      "batch": 2,
+      "id": "news2",
+      "issues": [
+        "nextSteps incorrectly grouped aggregate score ≥7 with single parameter = 3 as equivalent escalation; RCP/NICE assign different responses."
+      ],
+      "changes": [
+        {
+          "field": "nextSteps",
+          "from": "[{ condition: 'Score ≥7 or single param 3', actions: ['Urgent senior review', 'Consider critical care outreach'] }, { condition: 'Score 5–6', actions: ['Increase observations', 'Prompt medical review'] }]",
+          "to": "[{ condition: 'Score ≥7', actions: ['Emergency critical care assessment', 'Continuous monitoring / higher-level care'] }, { condition: 'Score 5–6', actions: ['Urgent ward-based review', 'Increase observation frequency'] }, { condition: 'Single param = 3', actions: ['Urgent ward doctor review', 'Adjust monitoring / consider escalation'] }]"
+        }
+      ]
+    },
+    {
+      "batch": 2,
+      "id": "rts",
+      "issues": [
+        "whenToUse said field triage, but calculator implements weighted RTS (TRISS/prognosis); field triage typically uses unweighted T-RTS (sum 0–12)."
+      ],
+      "changes": [
+        {
+          "field": "whenToUse",
+          "from": "Field or ED trauma triage and prognosis.",
+          "to": "Trauma severity/prognosis (weighted RTS in TRISS); field triage often uses unweighted T-RTS."
+        }
+      ]
+    },
+    {
+      "batch": 3,
+      "id": "ottawa-ankle",
+      "issues": [
+        "whenToUse age phrasing '≥2–18+ years (validated adults)' was confusing and misstated the validated population"
+      ],
+      "changes": [
+        "whenToUse → 'Acute ankle or midfoot injury (<10 days) in patients ≥2 years (adults and children).'"
+      ]
+    },
+    {
+      "batch": 3,
+      "id": "westley-croup",
+      "issues": [
+        "Moderate–severe nextSteps omitted dexamethasone; steroids indicated for all croup severities"
+      ],
+      "changes": [
+        "nextSteps Moderate–severe actions: added 'Dexamethasone' before nebulized epinephrine"
+      ]
+    },
+    {
+      "batch": 3,
+      "id": "pecarn-head",
+      "issues": [
+        "nextSteps collapsed intermediate and high risk into 'Higher risk → CT', omitting observation option for intermediate risk"
+      ],
+      "changes": [
+        "nextSteps: added Intermediate condition with 'Observation vs CT (shared decision-making)'; retained Higher risk → CT"
+      ]
+    },
+    {
+      "batch": 4,
+      "id": "nyha",
+      "issues": [
+        "whenToUse said 'Staging' functional limitation; NYHA is functional classification, not ACC/AHA stages A–D"
+      ],
+      "changes": [
+        "whenToUse: 'Staging functional limitation in known HF.' → 'Classifying functional limitation in known HF.'"
+      ]
+    },
+    {
+      "batch": 4,
+      "id": "glasgow-blatchford",
+      "issues": [
+        "whyUse limited outpatient band to score 0 only; ACG 2021 and many pathways use GBS 0–1",
+        "nextSteps 'GBS ≥1 Admit' incorrectly forces admission for GBS 1 (very-low-risk band)"
+      ],
+      "changes": [
+        "whyUse: 'Score 0 identifies…' → 'Score 0–1 identifies very low-risk patients often safe for outpatient management.'",
+        "nextSteps condition 'GBS 0' → 'GBS ≤1'; 'GBS ≥1' → 'GBS ≥2'"
+      ]
+    },
+    {
+      "batch": 5,
+      "id": "rcri",
+      "issues": [
+        "nextSteps for RCRI 0–1 emphasized 'surgical recovery' (post-op language); for a preoperative risk tool the low-risk action is proceed without further cardiac testing when capacity/symptoms allow (AHA 2024 / Lee pathway)"
+      ],
+      "changes": [
+        "nextSteps RCRI 0–1 actions: 'Focus on guideline-directed medical therapy and surgical recovery' → 'Proceed without additional cardiac testing if functional capacity adequate and no active cardiac symptoms'"
+      ]
+    },
+    {
+      "batch": 5,
+      "id": "crb65",
+      "issues": [
+        "nextSteps lumped Score 1–2 as 'Hospital assessment'; NICE NG250 (2025) and primary-care use of CRB-65 treat score 1 with clinical judgment (home safety-netting vs same-day assessment), with hospital referral more clearly indicated at score ≥2"
+      ],
+      "changes": [
+        "nextSteps: split 'Score 1–2' into 'Score 1' (home with safety-netting vs same-day assessment) and 'Score 2' (hospital assessment / short-stay)"
+      ]
+    },
+    {
+      "batch": 5,
+      "id": "smart-cop",
+      "issues": [
+        "nextSteps Score ≥5 listed 'Source control and timely antibiotics'; source control is not a routine CAP action (unless empyema/abscess); high SMART-COP pathways emphasize timely abx and consideration of MRSA/Pseudomonas coverage when risk factors present"
+      ],
+      "changes": [
+        "nextSteps Score ≥5: 'Source control and timely antibiotics' → 'Timely antibiotics; broaden if MRSA/Pseudomonas risk factors'"
+      ]
+    },
+    {
+      "batch": 6,
+      "id": "new-orleans-ct-head",
+      "issues": [
+        "whenToUse said 'LOC or amnesia'; original Haydel/MDCalc inclusion is GCS 15 with LOC (amnesia is a criterion, not the inclusion alternative)."
+      ],
+      "changes": [
+        "whenToUse → 'Adults with minor head injury, GCS 15, and loss of consciousness (normal neuro exam).'"
+      ]
+    },
+    {
+      "batch": 6,
+      "id": "sf-syncope",
+      "issues": [
+        "whyUse claimed 'high-sensitivity'; external validations often failed to reproduce original sensitivity."
+      ],
+      "changes": [
+        "whyUse → 'Simple CHESS screen; any positive criterion = higher short-term risk (external sensitivity varies).'"
+      ]
+    },
+    {
+      "batch": 6,
+      "id": "lrinec",
+      "issues": [
+        "nextSteps used ≥8 as OR threshold; classic LRINEC rule-in/moderate–high starts at ≥6 (6–7 intermediate, ≥8 high)."
+      ],
+      "changes": [
+        "nextSteps high-risk condition → '≥6 or high clinical suspicion' with urgent surgical consult / OR exploration"
+      ]
+    },
+    {
+      "batch": 6,
+      "id": "aims65",
+      "issues": [
+        "nextSteps said 'PPI infusion'; continuous infusion is not mandated by AIMS65 and intermittent IV PPI is widely accepted."
+      ],
+      "changes": [
+        "nextSteps Score ≥2 action → 'IV PPI per protocol' (was 'PPI infusion per protocol')"
+      ]
+    },
+    {
+      "batch": 7,
+      "id": "khorana",
+      "issues": [
+        "nextSteps used Score ≥3 for prophylaxis discussion; ASCO (2019/2023) recommends offering/discussing ambulatory thromboprophylaxis at Khorana ≥2 (AVERT/CASSINI-aligned), while original high-risk band remains ≥3"
+      ],
+      "changes": [
+        "nextSteps condition 'Score ≥3' → 'Score ≥2' for discuss prophylaxis vs bleed risk"
+      ]
+    },
+    {
+      "batch": 8,
+      "id": "hunt-hess",
+      "issues": [
+        "whenToUse included 'suspected' SAH; Hunt-Hess is a post-diagnosis clinical severity grade for confirmed SAH",
+        "nextSteps under 'Any SAH grade' listed CT±LP diagnostic workup appropriate to undiagnosed headache/SAH suspicion, not graded SAH",
+        "seizure precautions language risked implying routine ASM prophylaxis, which AHA/ASA 2023 recommends against except selected high-risk features"
+      ],
+      "changes": [
+        "whenToUse: 'suspected or confirmed' → 'confirmed'",
+        "nextSteps (Any SAH): removed CT±LP; kept aneurysm imaging/securement, BP/coagulopathy/nimodipine; clarified seizures vs routine ASM prophylaxis"
+      ]
+    },
+    {
+      "batch": 8,
+      "id": "fisher-grade",
+      "issues": [
+        "Nimodipine and euvolemia listed only under Grade ≥3; nimodipine is indicated for all aSAH (unless contraindicated), not only high mFisher grades"
+      ],
+      "changes": [
+        "Split nextSteps into 'All aSAH' (nimodipine; euvolemia / avoid prophylactic hypervolemia) and 'Grade ≥3 (thick SAH)' (DCI monitoring, TCD/perfusion threshold)"
+      ]
+    },
+    {
+      "batch": 9,
+      "id": "loading-dose",
+      "issues": [
+        "whenToUse limited tool to 'IV loading doses' despite bioavailability (F) options for oral routes; whyUse 'steady concentration' overstated (loading dose targets a concentration, not steady state by itself)"
+      ],
+      "changes": [
+        "whenToUse: 'Estimating IV loading doses when Vd and target level are known' → 'Estimating loading doses when Vd and target concentration are known'",
+        "whyUse: 'achieving steady concentration quickly' → 'rapidly achieving a target plasma concentration'"
+      ]
+    },
+    {
+      "batch": 10,
+      "id": "serum-osmolality",
+      "issues": [
+        "whyUse mentioned only osmolal gap/toxic alcohols, omitting primary use of calculated osm for hyponatremia tonicity classification"
+      ],
+      "changes": [
+        "whyUse: 'Osmolal gap screens for methanol/ethylene glycol and other osmoles.' → 'Calculated osm for hyponatremia tonicity; gap screens toxic alcohols/other osmoles.'"
+      ]
+    },
+    {
+      "batch": 10,
+      "id": "bsa",
+      "issues": [
+        "whenToUse listed 'burn estimates adjunct'; Mosteller absolute BSA (m²) is not used for burn %TBSA or Parkland fluid dosing (those use Rule of Nines/Lund-Browder %TBSA × weight)"
+      ],
+      "changes": [
+        "whenToUse: 'Chemotherapy dosing, cardiac index, burn estimates adjunct.' → 'Chemotherapy dosing and cardiac index normalization.'"
+      ]
+    },
+    {
+      "batch": 11,
+      "id": "adhere-hf",
+      "issues": [
+        "whenToUse said 'early mortality'; ADHERE tree predicts in-hospital mortality (Fonarow JAMA 2005), not a generic early-mortality endpoint."
+      ],
+      "changes": [
+        "whenToUse: 'early mortality risk stratification' → 'in-hospital mortality risk stratification'"
+      ]
+    },
+    {
+      "batch": 11,
+      "id": "cpc-score",
+      "issues": [
+        "nextSteps for CPC 3–4 implied ICU/neuroprognostication pathway as default; CPC is primarily an outcome category (often at discharge) and CPC 3 is conscious severe disability, not ICU care by definition."
+      ],
+      "changes": [
+        "nextSteps CPC 3–4: replaced 'Neuroprognostication timeline' and 'Supportive ICU care' with 'Supportive care and disposition planning' and 'Rehab as appropriate'"
+      ]
+    },
+    {
+      "batch": 11,
+      "id": "stroke-volume",
+      "issues": [
+        "nextSteps 'Consider ICD eligibility chronically' at EF <40% is inaccurate: primary-prevention ICD is generally LVEF ≤35% (with GDMT/time criteria), while HFrEF is EF ≤40%."
+      ],
+      "changes": [
+        "nextSteps condition EF <40% → EF ≤40%; actions now HF workup, GDMT for HFrEF when indicated, ICD evaluation if EF remains ≤35% after GDMT"
+      ]
+    },
+    {
+      "batch": 11,
+      "id": "mehran-contrast",
+      "issues": [
+        "whenToUse broadened population to 'PCI / contrast exposure'; original Mehran score was derived/validated for CIN after PCI, not general contrast procedures."
+      ],
+      "changes": [
+        "whenToUse: 'Patients undergoing PCI / contrast exposure when estimating CIN and dialysis risk.' → 'Patients undergoing PCI when estimating contrast-induced nephropathy and dialysis risk.'"
+      ]
+    },
+    {
+      "batch": 12,
+      "id": "ldl-sampson",
+      "issues": [
+        "whenToUse called TG up to ~800 mg/dL 'moderately elevated'; NCEP/AHA classify TG ≥500 as very high and 200–499 as high — 800 is beyond moderate."
+      ],
+      "changes": [
+        "whenToUse: 'moderately elevated (up to ~800 mg/dL)' → 'elevated (validated to ~800 mg/dL)'"
+      ]
+    },
+    {
+      "batch": 12,
+      "id": "calcium-phosphate-product",
+      "issues": [
+        "whyUse implied ongoing clinical validity of Ca×P product ('still a quick composite marker') without noting KDIGO 2017 de-emphasis of the product as a treatment guide."
+      ],
+      "changes": [
+        "whyUse: clarified historical Ca×P <55 construct and that KDIGO prefers individual Ca and phosphate targets over the product alone"
+      ]
+    },
+    {
+      "batch": 12,
+      "id": "creatinine-clearance-timed",
+      "issues": [
+        "whyUse called timed CrCl the 'gold-standard' bedside formula; true gold-standard GFR uses exogenous filtration markers (inulin/iothalamate/nuclear); timed CrCl overestimates GFR due to tubular secretion."
+      ],
+      "changes": [
+        "whyUse: 'Gold-standard bedside clearance formula before (or when) nuclear GFR unavailable' → 'Classic measured clearance from timed urine when eGFR is unreliable; overestimates true GFR vs exogenous-marker methods'"
+      ]
+    },
+    {
+      "batch": 13,
+      "id": "midas",
+      "issues": [
+        "nextSteps MOH action mentioned only simple/combo analgesics; MOH also driven by triptans, opioids, and combination acute therapies (ICHD / AHS)"
+      ],
+      "changes": [
+        {
+          "field": "nextSteps",
+          "from": "Limit simple/combo analgesics to avoid MOH",
+          "to": "Limit acute med days (analgesics/triptans/opioids) to avoid MOH"
+        }
+      ]
+    },
+    {
+      "batch": 13,
+      "id": "cage-aid",
+      "issues": [
+        "nextSteps condition 'Score ≥1–2' was ambiguous (could be read as only scores 1–2, excluding 3–4) despite both ≥1 (sensitive) and ≥2 (specific) being valid positive cutoffs"
+      ],
+      "changes": [
+        {
+          "field": "nextSteps.condition",
+          "from": "Score ≥1–2",
+          "to": "Score ≥1"
+        }
+      ]
+    },
+    {
+      "batch": 14,
+      "id": "icans-grade",
+      "issues": [
+        "nextSteps grade ≥2 said 'Hold driving precautions' (ambiguous/incorrect phrasing)",
+        "nextSteps omitted corticosteroids at grade ≥2 despite standard CAR-T pathways and this calculator's own grade-2 interpretation commonly starting steroids"
+      ],
+      "changes": [
+        "nextSteps grade ≥2: 'Hold driving precautions' → 'Driving restrictions'; added 'Consider corticosteroids per protocol'"
+      ]
+    },
+    {
+      "batch": 14,
+      "id": "ctcae-neutropenia",
+      "issues": [
+        "nextSteps condition 'Fever + ANC <0.5–1.0' is ambiguous (reads as a closed range and could exclude profound neutropenia <0.5)"
+      ],
+      "changes": [
+        "nextSteps condition: 'Fever + ANC <0.5–1.0' → 'Fever + ANC <1.0' (CTCAE febrile neutropenia ANC <1000/µL; covers grade 3–4 and clinical FN pathways)"
+      ]
+    },
+    {
+      "batch": 15,
+      "id": "ottawa-hip",
+      "issues": [
+        "whyUse claimed 'high sensitivity for hip fracture' as if a validated Ottawa-style rule; PubMed has no Stiell hip radiography decision rule (cited PMID 9403421 is Ottawa Knee implementation), and next-step clinical cues remain reasonable without that claim."
+      ],
+      "changes": [
+        {
+          "field": "whyUse",
+          "from": "Supports selective imaging while retaining high sensitivity for hip fracture.",
+          "to": "Structures common high-yield cues for hip radiographs after trauma; occult fracture still possible if nonambulatory."
+        }
+      ]
+    },
+    {
+      "batch": 15,
+      "id": "goese",
+      "issues": [
+        "nextSteps condition 'GOS-E ≤4' included death (GOS-E 1) in a rehab/caregiver action pathway; parallel GOS text correctly starts at grade 2."
+      ],
+      "changes": [
+        {
+          "field": "nextSteps",
+          "from": "condition 'GOS-E ≤4'",
+          "to": "condition 'GOS-E 2–4' (vegetative through upper severe disability; excludes death)"
+        }
+      ]
+    },
+    {
+      "batch": 16,
+      "id": "mulbsta",
+      "issues": [
+        "nextSteps used Score ≤6 and ≥10; derivation/validation risk bands are 0–11 low and ≥12 high (Youden cut-off 12)."
+      ],
+      "changes": [
+        "nextSteps: Score ≤6 → Score 0–11; Score ≥10 → Score ≥12 (aligned with Guo et al. MuLBSTA cut-offs)."
+      ]
+    },
+    {
+      "batch": 16,
+      "id": "isaric-4c",
+      "issues": [
+        "whenToUse over-extended score to 'similar ILI pathways'; 4C Mortality is validated for hospitalized COVID-19."
+      ],
+      "changes": [
+        "whenToUse: limited to adults hospitalized with confirmed or suspected COVID-19 for in-hospital mortality stratification."
+      ]
+    },
+    {
+      "batch": 16,
+      "id": "improve-vte",
+      "issues": [
+        "nextSteps listed prophylaxis only at Score ≥4; for inpatient pharmacologic prophylaxis need, common validated threshold is ≥2 (0–1 low; 2–3 moderate; ≥4 high)."
+      ],
+      "changes": [
+        "nextSteps: Score ≥4 → Score ≥2 for LMWH/UFH prophylaxis unless bleed risk high; slimmed 0–1 actions."
+      ]
+    },
+    {
+      "batch": 16,
+      "id": "cdi-severity",
+      "issues": [
+        "Non-severe nextSteps said 'Standard CDI therapy' (ambiguous; metro no longer preferred first-line)."
+      ],
+      "changes": [
+        "Non-severe actions: 'Standard CDI therapy' → 'Fidaxomicin or PO vancomycin'."
+      ]
+    },
+    {
+      "batch": 16,
+      "id": "sepsis-3-shock",
+      "issues": [
+        "Sepsis without shock nextSteps listed 'SOFA/qSOFA'; Sepsis-3 defines sepsis by SOFA rise; qSOFA is screening only."
+      ],
+      "changes": [
+        "Sepsis without shock: 'SOFA/qSOFA assessment' → 'SOFA-based organ dysfunction assessment'."
+      ]
+    },
+    {
+      "batch": 17,
+      "id": "crusade",
+      "issues": [
+        "High/very high nextSteps listed 'Reassess triple therapy need'; CRUSADE is an NSTE-ACS in-hospital major-bleeding model, not a triple-therapy decision tool — primary actions are bleeding-avoidance (radial access, antithrombotic dosing)."
+      ],
+      "changes": [
+        {
+          "field": "nextSteps",
+          "from": "High/very high band: Bleeding-avoidance strategies; Reassess triple therapy need; Close Hb monitoring",
+          "to": "High/very high band: Bleeding-avoidance strategies; Prefer radial access / dose-adjust anticoagulants; Close Hb monitoring"
+        }
+      ]
+    },
+    {
+      "batch": 17,
+      "id": "hcm-risk-scd",
+      "issues": [
+        "nextSteps for high marker count said 'Avoid competitive sports per guidelines'; current AHA/ACC HCM and sports participation guidance emphasize shared decision-making rather than blanket competitive-sports prohibition."
+      ],
+      "changes": [
+        {
+          "field": "nextSteps",
+          "from": "Multiple markers / syncope / MWT≥30: Specialty HCM clinic; ICD shared decision; Avoid competitive sports per guidelines",
+          "to": "Multiple markers / syncope / MWT≥30: Specialty HCM clinic; ICD shared decision; Exercise counseling with HCM expert (shared decision)"
+        }
+      ]
+    },
+    {
+      "batch": 17,
+      "id": "ottawa-score-vte-cancer",
+      "issues": [
+        "whyUse implied the score guides secondary-prevention duration; Ottawa stratifies recurrent VTE risk while on anticoagulation in cancer-associated VTE, not post-treatment duration decisions."
+      ],
+      "changes": [
+        {
+          "field": "whyUse",
+          "from": "Identifies lower vs higher recurrence risk strata that may inform secondary prevention intensity/duration discussions.",
+          "to": "Identifies lower vs higher recurrence risk while anticoagulated; informs counseling and intensity discussions (not a stop rule)."
+        }
+      ]
+    },
+    {
+      "batch": 17,
+      "id": "herdoo2",
+      "issues": [
+        "whenToUse said women with unprovoked VTE; derivation/validation apply to women with a first unprovoked VTE after 5–12 months of anticoagulation."
+      ],
+      "changes": [
+        {
+          "field": "whenToUse",
+          "from": "Women with unprovoked VTE after completing 5–12 months of anticoagulation when considering discontinuation.",
+          "to": "Women with a first unprovoked VTE after completing 5–12 months of anticoagulation when considering discontinuation."
+        }
+      ]
+    },
+    {
+      "batch": 18,
+      "id": "marshall-organ",
+      "issues": [
+        "whyUse said organ failure 'defines moderately severe/severe pancreatitis'; revised Atlanta also classifies moderately severe disease via local complications or comorbidity exacerbation without organ failure; persistent OF ≥48 h defines severe"
+      ],
+      "changes": [
+        {
+          "field": "whyUse",
+          "from": "Organ failure (score ≥2 in any system) defines moderately severe/severe pancreatitis and drives ICU decisions.",
+          "to": "Organ failure (score ≥2 in any system) marks non-mild disease; persistent ≥48 h defines severe pancreatitis (revised Atlanta) and drives ICU decisions."
+        }
+      ]
+    },
+    {
+      "batch": 18,
+      "id": "apfel-ponv",
+      "issues": [
+        "nextSteps said single-agent prophylaxis is often sufficient for Apfel 0–1; Fourth Consensus Guidelines (Gan 2020) recommend multimodal (≥2 classes) for adults with ≥1 risk factor, with optional single agent mainly for score 0"
+      ],
+      "changes": [
+        {
+          "field": "nextSteps",
+          "from": "[{ condition: '0–1', actions: ['Single-agent prophylaxis often sufficient', 'Rescue antiemetic available'] }, { condition: '≥2', actions: ['≥2 prophylactic classes', 'Opioid-sparing strategy', 'Consider propofol TIVA'] }]",
+          "to": "[{ condition: '0', actions: ['Optional single agent', 'Rescue antiemetic available'] }, { condition: '≥1', actions: ['≥2 prophylactic classes (multimodal)', 'Opioid-sparing strategy', 'Consider propofol TIVA if high risk'] }]"
+        }
+      ]
+    },
+    {
+      "batch": 18,
+      "id": "catch-rule",
+      "issues": [
+        "nextSteps for medium-risk framed CT as optional shared-decision vs observation; original CATCH recommends CT when any high- or medium-risk feature is present (medium-risk predicts CT brain injury)"
+      ],
+      "changes": [
+        {
+          "field": "nextSteps",
+          "from": "[{ condition: 'Medium-risk only', actions: ['CT vs shared decision observation', 'Strict return precautions if observed'] }]",
+          "to": "[{ condition: 'Medium-risk only', actions: ['CT head recommended (original CATCH)', 'Observation only if local protocol / reliable shared decision', 'Strict return precautions if observed'] }]"
+        }
+      ]
+    },
+    {
+      "batch": 20,
+      "id": "akin-aki",
+      "issues": [
+        "whenToUse mentioned only the 48-hour creatinine window and omitted urine-output staging, though AKIN (and this calculator) stages by Cr and/or UO"
+      ],
+      "changes": [
+        "whenToUse: 'Staging AKI with AKIN criteria (48-hour window for creatinine rise).' → 'Staging AKI with AKIN criteria (Cr rise within 48 h and/or urine output).'"
+      ]
+    },
+    {
+      "batch": 20,
+      "id": "vexus",
+      "issues": [
+        "whyUse listed only hepatic/portal/intrarenal Doppler and omitted IVC size, which is required to grade VExUS (IVC <2 cm → grade 0)"
+      ],
+      "changes": [
+        "whyUse: 'Integrates hepatic vein, portal vein, and intrarenal venous Doppler…' → 'Integrates IVC size with hepatic, portal, and intrarenal venous Doppler into a congestion grade.'"
+      ]
+    },
+    {
+      "batch": 20,
+      "id": "cerebral-perfusion",
+      "issues": [
+        "whyUse said 'Maintains estimate' (wrong verb) and 'common goals ≥60 mmHg'; BTF targets CPP 60–70 mmHg and cautions against aggressive CPP >70"
+      ],
+      "changes": [
+        "whyUse: 'Maintains estimate of net pressure driving cerebral blood flow; common goals ≥60 mmHg.' → 'Estimates net pressure driving cerebral blood flow; common targets 60–70 mmHg.'"
+      ]
+    },
+    {
+      "batch": 21,
+      "id": "nips",
+      "issues": [
+        "nextSteps condition 'Score ≥3–4' was ambiguous (reads as a closed range) and conflicted with common practice that pain intervention starts at scores >3 / ≥3."
+      ],
+      "changes": [
+        "nextSteps condition: 'Score ≥3–4' → 'Score ≥3' (aligns with evidence note that scores >3 often treated as pain and with calc mild–moderate band starting at 3)."
+      ]
+    },
+    {
+      "batch": 21,
+      "id": "philadelphia-criteria",
+      "issues": [
+        "whenToUse said classically 29–60 days; original Baker Philadelphia cohort was 29–56 days of age."
+      ],
+      "changes": [
+        "whenToUse: '29–60 days' → '29–56 days' (Baker et al. NEJM 1993 enrollment age)."
+      ]
+    },
+    {
+      "batch": 21,
+      "id": "pecarn-fever",
+      "issues": [
+        "whenToUse/whyUse framed primary outcome as 'invasive bacterial infection' only; Kuppermann PECARN 2019 primary outcome is serious bacterial infection (SBI: UTI, bacteremia, bacterial meningitis). Age affects disposition more than lab cutoffs."
+      ],
+      "changes": [
+        "whenToUse: 'invasive bacterial infection risk' → 'serious bacterial infection (SBI) risk'.",
+        "whyUse: 'with age stratification' → 'age band guides disposition' (labs UA/ANC/PCT; disposition differs by ≤28 vs 29–60 d)."
+      ]
+    },
+    {
+      "batch": 22,
+      "id": "salicylate-level",
+      "issues": [
+        "nextSteps action 'Avoid intubation delays/hypoventilation' is ambiguous and can be read as urging early intubation; salicylate teaching is to avoid intubation when possible and, if required, prevent peri-intubation hypoventilation."
+      ],
+      "changes": [
+        "nextSteps Significant toxicity: rewrote intubation action to 'Avoid intubation if possible; if intubating, prevent hypoventilation'"
+      ]
+    },
+    {
+      "batch": 22,
+      "id": "nms-criteria",
+      "issues": [
+        "whenToUse includes abrupt dopamine agonist withdrawal, but nextSteps only said 'Stop neuroleptics', which is incomplete/wrong for withdrawal-precipitated NMS (restart agonists)."
+      ],
+      "changes": [
+        "nextSteps High concern NMS: replaced single 'Stop neuroleptics' with 'Stop dopamine antagonists (neuroleptics/antiemetics)' and 'Restart dopamine agonists if recently withdrawn'"
+      ]
+    },
+    {
+      "batch": 23,
+      "id": "vte-bleed",
+      "issues": [
+        "whenToUse said on (or starting) anticoagulation; VTE-BLEED was derived/validated for major bleeding during the stable anticoagulation phase after VTE, not the acute initiation period."
+      ],
+      "changes": [
+        {
+          "field": "whenToUse",
+          "from": "Patients with VTE on (or starting) anticoagulation when assessing major bleed risk.",
+          "to": "Patients with VTE on stable anticoagulation when assessing major bleed risk (e.g., extended-therapy decisions)."
+        }
+      ]
+    },
+    {
+      "batch": 23,
+      "id": "riete-vte",
+      "issues": [
+        "whyUse claimed 'Seven binary RIETE items'; published RIETE PE prognosis tools differ, and the implemented items are sPESI-like (age, cancer, chronic HF, chronic lung disease, HR, SBP, O₂ sat) with cardiopulmonary disease split."
+      ],
+      "changes": [
+        {
+          "field": "whyUse",
+          "from": "Seven binary RIETE items map low vs higher mortality risk strata from the RIETE registry.",
+          "to": "sPESI-like binary items (age, cancer, chronic HF, chronic lung disease, tachycardia, hypotension, hypoxia) band short-term PE mortality risk (RIETE-era literature)."
+        }
+      ]
+    },
+    {
+      "batch": 23,
+      "id": "feverpain-score",
+      "issues": [
+        "nextSteps for 2–3 and 4–5 did not match NICE NG84 (no Abx or delayed for 2–3; immediate or delayed for 4–5) and over-emphasized testing."
+      ],
+      "changes": [
+        {
+          "field": "nextSteps",
+          "from": "[{ condition: '0–1', actions: ['Supportive care', 'Safety netting'] }, { condition: '2–3', actions: ['Delayed Abx or testing'] }, { condition: '4–5', actions: ['Immediate Abx or confirm with test'] }]",
+          "to": "[{ condition: '0–1', actions: ['Supportive care', 'No routine Abx', 'Safety netting'] }, { condition: '2–3', actions: ['No Abx or delayed (backup) Abx'] }, { condition: '4–5', actions: ['Immediate or delayed (backup) Abx'] }]"
+        }
+      ]
+    },
+    {
+      "batch": 24,
+      "id": "odds-to-risk",
+      "issues": [
+        "whenToUse incorrectly said 'odds ratios' — this tool converts odds ↔ probability, not odds ratios"
+      ],
+      "changes": [
+        {
+          "field": "whenToUse",
+          "from": "Moving between odds ratios / pre-test odds and natural frequencies.",
+          "to": "Converting between odds and probability (e.g., pre-test odds for Bayesian reasoning)."
+        }
+      ]
+    },
+    {
+      "batch": 25,
+      "id": "r-ipi",
+      "issues": [
+        "whenToUse over-extended population to 'aggressive B-NHL'; R-IPI was derived/validated in rituximab-era DLBCL (Sehn et al.), not all aggressive B-NHL."
+      ],
+      "changes": [
+        "whenToUse: 'Newly diagnosed DLBCL / aggressive B-NHL treated in the rituximab era...' → 'Newly diagnosed DLBCL treated in the rituximab era for OS risk groups.'"
+      ]
+    },
+    {
+      "batch": 25,
+      "id": "cisne",
+      "issues": [
+        "whenToUse said 'solid-tumor (and selected)' — CISNE validation is solid-tumor, clinically stable FN; not for unstable patients or most hematologic malignancies",
+        "nextSteps condition 'Score ≥1–2' was malformed and omitted high-risk (≥3) management (admit; not outpatient pathway)"
+      ],
+      "changes": [
+        "whenToUse: limited to adult solid-tumor clinically stable FN; note exclusion of unstable patients / most hematologic malignancies",
+        "nextSteps: 'Score ≥1–2' → separate 'Score 1–2' (low threshold to admit) and 'Score ≥3' (inpatient IV antibiotics; not outpatient FN pathway)"
+      ]
+    },
+    {
+      "batch": 27,
+      "id": "wfns-sah",
+      "issues": [
+        "whenToUse included 'highly suspected' SAH; WFNS is a post-diagnosis clinical severity grade for confirmed aSAH (parallel to Hunt-Hess audit)"
+      ],
+      "changes": [
+        "whenToUse: 'Confirmed or highly suspected aneurysmal SAH...' → 'Confirmed aneurysmal SAH for standardized clinical severity grading.'"
+      ]
+    },
+    {
+      "batch": 27,
+      "id": "scat5-symptom",
+      "issues": [
+        "whyUse implied SCAT symptom totals drive 'return-to-play decisions'; SCAT symptom severity supports multimodal assessment and recovery tracking, not standalone RTP clearance"
+      ],
+      "changes": [
+        "whyUse: removed 'return-to-play decisions' → 'baseline comparison and serial recovery tracking within multimodal concussion assessment'"
+      ]
+    },
+    {
+      "batch": 27,
+      "id": "ace-iii-total",
+      "issues": [
+        "whyUse claimed total cutoffs aid 'dementia vs MCI triage'; published 82/88 cutoffs are dementia-screening thresholds (sens/spec trade-off), not validated dementia-vs-MCI discriminators"
+      ],
+      "changes": [
+        "whyUse: 'total cutoffs aid dementia vs MCI triage (education-dependent)' → 'total cutoffs (often 82/88) aid dementia screening (education-dependent)'"
+      ]
+    },
+    {
+      "batch": 27,
+      "id": "restless-irlssg",
+      "issues": [
+        "nextSteps ferritin phrasing '<50–75 µg/L' was ambiguous and mixed older ~50 thresholds with current guidance; modern RLS algorithms replete around ferritin ≤75 µg/L and incorporate TSAT"
+      ],
+      "changes": [
+        "nextSteps action: 'Serum ferritin (often treat if <50–75 µg/L per guidelines/context)' → 'Serum ferritin/iron studies (often replete if ferritin ≤75 µg/L; check TSAT)'"
+      ]
+    },
+    {
+      "batch": 28,
+      "id": "levothyroxine-dose",
+      "issues": [
+        "whyUse said 'ideal/actual weight' as if interchangeable for the 1.6 µg/kg estimate; ATA full-replacement teaching uses body weight (~1.6 µg/kg) in healthy adults, with IBW often preferred in obesity and lower starts in elderly/cardiac disease"
+      ],
+      "changes": [
+        {
+          "field": "whyUse",
+          "from": "≈1.6 µg/kg ideal/actual weight is a common full-replacement starting estimate in healthy adults.",
+          "to": "≈1.6 µg/kg body weight is a common full-replacement starting estimate in healthy adults (often IBW in obesity)."
+        }
+      ]
+    },
+    {
+      "batch": 28,
+      "id": "nida-quick",
+      "issues": [
+        "whyUse/nextSteps implied any positive Quick Screen proceeds to full NM-ASSIST; NIDA algorithm sends illegal drug or nonmedical Rx positives to NM-ASSIST, while alcohol and tobacco alone use substance-specific / SBIRT or cessation pathways"
+      ],
+      "changes": [
+        {
+          "field": "whyUse",
+          "from": "Positive screen prompts full NIDA-Modified ASSIST and brief intervention.",
+          "to": "Any positive domain needs follow-up; illegal or nonmedical Rx use prompts NIDA-Modified ASSIST; alcohol/tobacco use SBIRT or cessation pathways."
+        },
+        {
+          "field": "nextSteps",
+          "from": "[{ condition: 'Positive screen', actions: ['NM-ASSIST', 'SBIRT brief intervention', 'Assess readiness to change'] }]",
+          "to": "[{ condition: 'Illegal or nonmedical Rx positive', actions: ['NM-ASSIST', 'SBIRT brief intervention', 'Assess readiness to change'] }, { condition: 'Alcohol or tobacco positive only', actions: ['Substance-specific counseling / cessation', 'SBIRT as indicated', 'Assess readiness to change'] }]"
+        }
+      ]
+    },
+    {
+      "batch": 29,
+      "id": "acc-aha-hf-stage",
+      "issues": [
+        "nextSteps Stage A–B said 'Screen for structural disease when indicated'; Stage B already implies structural disease, abnormal function, or elevated NP (2022 pre-HF), so screening language misstates Stage B management."
+      ],
+      "changes": [
+        "nextSteps Stage A–B → 'Risk-factor control and prevention' + 'Stage B: preventive GDMT and surveillance for symptoms'."
+      ]
+    },
+    {
+      "batch": 29,
+      "id": "glasgow-aneurysm",
+      "issues": [
+        "whenToUse said risk communication uses 'age and comorbidity points' only; GAS also adds large points for shock (+17), which is not a comorbidity."
+      ],
+      "changes": [
+        "whenToUse: 'age and comorbidity points' → 'age, shock, and comorbidity points'."
+      ]
+    },
+    {
+      "batch": 29,
+      "id": "preop-bnp-threshold",
+      "issues": [
+        "nextSteps for elevated NP led with 'Optimize HF' and omitted the key CCS action for elevated preop NP (postoperative troponin surveillance if surgery proceeds); further testing is selective only if management changes."
+      ],
+      "changes": [
+        "nextSteps Elevated NP → HF/volume assessment and optimization; further testing only if it changes the plan; postop troponin surveillance if surgery proceeds."
+      ]
+    },
+    {
+      "batch": 29,
+      "id": "schwartz-lqts",
+      "issues": [
+        "nextSteps high probability said 'Urgent EP referral if symptomatic'; high clinical probability LQTS warrants specialty evaluation, QT-drug avoidance, and cascade screening even when currently asymptomatic (SCD risk)."
+      ],
+      "changes": [
+        "nextSteps High probability → EP/inherited-arrhythmia referral; avoid QT-prolonging drugs and discuss β-blocker; family screening."
+      ]
+    },
+    {
+      "batch": 30,
+      "id": "lean-body-weight-james",
+      "issues": [
+        "whyUse framed James as generally suitable classic LBW without noting non-physiologic values / underperformance at high BMI where LBW dosing is most needed"
+      ],
+      "changes": [
+        {
+          "field": "whyUse",
+          "from": "Classic sex-specific LBW formulas widely cited in clinical pharmacology.",
+          "to": "Classic sex-specific LBW formulas; can fail at high BMI (prefer Janmahasatian)."
+        }
+      ]
+    },
+    {
+      "batch": 30,
+      "id": "mases",
+      "issues": [
+        "whyUse said 'tracks peripheral entheseal tenderness'; MASES was developed for AS/axSpA and is primarily axial sites plus selected peripheral (e.g. Achilles), not a peripheral-only index"
+      ],
+      "changes": [
+        {
+          "field": "whyUse",
+          "from": "Simple 0–13 site count endorsed in SpA research; tracks peripheral entheseal tenderness.",
+          "to": "Simple 0–13 site count endorsed in SpA research; mainly axial plus selected peripheral sites (e.g., Achilles)."
+        }
+      ]
+    },
+    {
+      "batch": 31,
+      "id": "kidney-failure-risk",
+      "issues": [
+        "Referral threshold stated as 5-year ≥5–10%; KDIGO/NICE-aligned practice points use 5-year ≥3–5%.",
+        "RRT modality/access planning tied to 5-year ≥20% or eGFR <30; practice points use 2-year risk >40% (plus eGFR-based KRT prep criteria)."
+      ],
+      "changes": [
+        "nextSteps: '5-year risk ≥5–10% (local policy)' → '5-year risk ≥3–5% (local policy)'",
+        "nextSteps: '5-year risk ≥20% or eGFR <30' → '2-year risk >40% or eGFR-based KRT prep criteria'"
+      ]
+    },
+    {
+      "batch": 31,
+      "id": "hyperkalemia-ecg",
+      "issues": [
+        "Next-step binder list led with Kayexalate (SPS); modern practice prefers patiromer or SZC given SPS GI toxicity concerns."
+      ],
+      "changes": [
+        "nextSteps action: 'Kayexalate/patiromer/SZC per setting' → 'Patiromer or SZC preferred (SPS if used locally)'"
+      ]
+    },
+    {
+      "batch": 31,
+      "id": "bicarb-ckd",
+      "issues": [
+        "whyUse overstated progression benefit; RCTs mixed and KDIGO 2024 downgraded prior <22 treatment recommendation.",
+        "nextSteps used sole HCO₃ <22 threshold (2012-style); KDIGO 2024 practice point example is treat to avoid clinically important acidosis (e.g., HCO₃ <18)."
+      ],
+      "changes": [
+        "whyUse: progression/bone-muscle benefit claim → frames alkali consideration; uncertain hard outcomes; prioritize more severe acidosis and avoid over-correction",
+        "nextSteps condition: 'HCO₃ <22 in CKD ND' → 'HCO₃ <18 (or persistently low) in CKD ND'; actions updated for individualization and over-correction monitoring"
+      ]
+    },
+    {
+      "batch": 32,
+      "id": "jaundice-nomogram",
+      "issues": [
+        "whenToUse said 'term and late-preterm' (late-preterm includes 34 wks outside original Bhutani/≥35-week use); whyUse implied zones guide phototherapy decisions — Bhutani zones predict subsequent significant hyperbilirubinemia and guide follow-up; phototherapy uses separate AAP thresholds"
+      ],
+      "changes": [
+        "whenToUse: 'Term and late-preterm newborns…' → '≥35-week newborns…'",
+        "whyUse: clarified risk zones stratify later significant hyperbilirubinemia and guide follow-up intensity; phototherapy uses separate AAP thresholds"
+      ]
+    },
+    {
+      "batch": 32,
+      "id": "malaria-severity",
+      "issues": [
+        "nextSteps 'Step down to oral when able' omitted WHO minimum ≥24 h parenteral antimalarial before switching to a full oral ACT course"
+      ],
+      "changes": [
+        "nextSteps action 'Step down to oral when able' → 'Full oral ACT after ≥24 h parenteral when able'"
+      ]
+    },
+    {
+      "batch": 33,
+      "id": "gupta-mica",
+      "issues": [
+        "whyUse incorrectly stated endpoint as inpatient MI/cardiac arrest; Gupta/NSQIP endpoint is intraoperative/postoperative MI or cardiac arrest through 30 days"
+      ],
+      "changes": [
+        "whyUse: 'inpatient MI or cardiac arrest' → '30-day MI or cardiac arrest'"
+      ]
+    },
+    {
+      "batch": 33,
+      "id": "rogers-score",
+      "issues": [
+        "whenToUse included thoracic surgery; Rogers derivation/validation was general and vascular surgery (Patient Safety in Surgery Study)"
+      ],
+      "changes": [
+        "whenToUse: 'major general, vascular, or thoracic surgery' → 'major general or vascular surgery'"
+      ]
+    },
+    {
+      "batch": 33,
+      "id": "ipss-prostate",
+      "issues": [
+        "whyUse claimed IPSS is identical to AUA Symptom Index; the seven symptom items match AUA-SI, but IPSS also includes a separate QoL item"
+      ],
+      "changes": [
+        "whyUse: 'identical to AUA Symptom Index' → 'AUA Symptom Index plus QoL item'"
+      ]
+    },
+    {
+      "batch": 33,
+      "id": "free-psa-ratio",
+      "issues": [
+        "nextSteps for high % free said 'Treat BPH' without symptomatic caveat (medical therapy only indicated if LUTS bother)"
+      ],
+      "changes": [
+        "nextSteps High % free: 'Treat BPH' → 'Treat BPH if symptomatic'"
+      ]
+    },
+    {
+      "batch": 33,
+      "id": "stone-score",
+      "issues": [
+        "whenToUse omitted derivation population constraints (non-febrile / uncomplicated ureterolithiasis; not for infection or toxic presentation)"
+      ],
+      "changes": [
+        "whenToUse: 'ED patients with flank pain / suspected ureterolithiasis...' → 'Non-febrile ED patients with flank pain / suspected uncomplicated ureterolithiasis...'"
+      ]
+    },
+    {
+      "batch": 34,
+      "id": "ibuprofen-toxicity",
+      "issues": [
+        "whenToUse said 'ibuprofen (or similar NSAID)' but mg/kg bands are ibuprofen-specific; other NSAIDs (e.g. mefenamic acid) have different toxicity profiles/thresholds"
+      ],
+      "changes": [
+        "whenToUse: removed 'or similar NSAID'; clarified bands are ibuprofen-specific"
+      ]
+    },
+    {
+      "batch": 34,
+      "id": "methotrexate-toxicity",
+      "issues": [
+        "nextSteps said only 'do not give leucovorin immediately after glucarpidase'; consensus guidance holds leucovorin ~2 h before and after glucarpidase (substrate interaction)"
+      ],
+      "changes": [
+        "nextSteps (glucarpidase path): 'Do not give leucovorin immediately after…' → 'Hold leucovorin ~2 h before and after glucarpidase'"
+      ]
+    },
+    {
+      "batch": 34,
+      "id": "sds-zung",
+      "issues": [
+        "nextSteps used 'Raw ≥50' while the calculator (and classic Zung severity bands) interpret by SDS index; mild starts at index ≥50 (raw ≥40). Raw ≥50 is a later clinical-significance proposal (Dunstan) but mismatched the tool's own bands"
+      ],
+      "changes": [
+        "nextSteps condition: 'Raw ≥50' → 'Index ≥50 (raw ≥40 classic)'"
+      ]
+    },
+    {
+      "batch": 35,
+      "id": "dka-resolution",
+      "issues": [
+        "whenToUse framed resolution primarily as 'anion gap closure'; 2024 ADA/ESPE/ISPAD hyperglycemic crises consensus defines DKA resolution by ketones <0.6 mmol/L plus pH ≥7.3 or HCO₃ ≥18 and discourages AG as a resolution criterion (hyperchloremia after saline)"
+      ],
+      "changes": [
+        {
+          "field": "whenToUse",
+          "from": "During DKA treatment to decide when anion gap closure / resolution criteria are met for transition to SQ insulin.",
+          "to": "During DKA treatment to decide when ketoacidosis resolution criteria are met for transition to SQ insulin."
+        }
+      ]
+    },
+    {
+      "batch": 36,
+      "id": "biophysical-profile",
+      "issues": [
+        "nextSteps treated BPP 8–10 as uniformly continue-surveillance; standard interpretation is 8/10 or 10/10 reassuring only with normal amniotic fluid — 8/10 with oligohydramnios is not fully reassuring and needs further evaluation/management."
+      ],
+      "changes": [
+        "nextSteps condition 'BPP 8–10' → 'BPP 8–10 with normal fluid'"
+      ]
+    },
+    {
+      "batch": 36,
+      "id": "arrest-labor",
+      "issues": [
+        "nextSteps 'Counsel CS vs OVD' for any arrest incorrectly implies operative vaginal delivery is an option in first-stage arrest; OVD requires complete dilation and is second-stage only."
+      ],
+      "changes": [
+        "nextSteps 'Arrest met' action 'Counsel CS vs OVD' → 'Counsel CS (1st stage) or OVD/CS if 2nd stage prerequisites met'"
+      ]
+    },
+    {
+      "batch": 37,
+      "id": "rohrer-index",
+      "issues": [
+        "whyUse said 'used historically in pediatrics', which understates ongoing clinical use of ponderal/Rohrer index for neonatal body proportionality and IUGR symmetry assessment"
+      ],
+      "changes": [
+        "whyUse: 'used historically in pediatrics and body-composition research' → 'used in pediatrics (esp. neonatal proportionality/IUGR) and body-composition research'"
+      ]
+    },
+    {
+      "batch": 38,
+      "id": "sic-score",
+      "issues": [
+        "whyUse stated platelet+INR subscore ≥2; original Iba 2017 SIC definition requires total ≥4 and that platelet+PT-INR points exceed 2 (i.e. ≥3)."
+      ],
+      "changes": [
+        "whyUse: 'platelet+INR subscore ≥2' → 'platelet+INR points exceed 2 (i.e. ≥3)'"
+      ]
+    },
+    {
+      "batch": 38,
+      "id": "amc-count",
+      "issues": [
+        "nextSteps used monocytosis ≥1.0 only; WHO/ICC 2022 CMML monocytosis threshold is ≥0.5 ×10⁹/L (with other criteria), while ≥1.0 remains classic absolute monocytosis."
+      ],
+      "changes": [
+        "nextSteps condition: 'Persistent monocytosis ≥1.0' → 'Persistent monocytosis ≥1.0 (or ≥0.5 if CMML concern)'"
+      ]
+    },
+    {
+      "batch": 38,
+      "id": "fn-pathway",
+      "issues": [
+        "whyUse said 'even if a formal MASCC is high' without clarifying that MASCC ≥21 is the low-risk band (high score = low risk), which is easy to misread as high-risk MASCC."
+      ],
+      "changes": [
+        "whyUse: rewrote to 'even if MASCC falls in the low-risk band (≥21)'"
+      ]
+    },
+    {
+      "batch": 39,
+      "id": "mchat-r",
+      "issues": [
+        "nextSteps low-risk rescreen said '24–30 months if not done'; official M-CHAT-R algorithm is rescreen after second birthday when child is younger than 24 months."
+      ],
+      "changes": [
+        "nextSteps (score 0–2): 'Rescreen at 24–30 months if not done' → 'If younger than 24 months, rescreen after second birthday'."
+      ]
+    },
+    {
+      "batch": 39,
+      "id": "benzo-dose-equiv",
+      "issues": [
+        "nextSteps taper pace '5–10% every 1–4 weeks' allows weekly steps faster than current joint ASAM/clinical guidance initial pace of 5–10% every 2–4 weeks."
+      ],
+      "changes": [
+        "nextSteps (taper planning): 'every 1–4 weeks' → 'every 2–4 weeks' (aligned with ASAM 2025 BZD tapering CPG)."
+      ]
+    }
+  ]
+}

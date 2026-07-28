@@ -398,7 +398,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     nextSteps: [
       {
         condition: 'Score 0–2',
-        actions: ['Routine surveillance', 'Rescreen at 24–30 months if not done', 'Refer if ongoing clinical concern'],
+        actions: ['Routine surveillance', 'If younger than 24 months, rescreen after second birthday', 'Refer if ongoing clinical concern'],
       },
       {
         condition: 'Score 3–7',
@@ -735,7 +735,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       },
       {
         condition: 'Taper planning',
-        actions: ['Reduce ~5–10% every 1–4 weeks as tolerated', 'Slower near end of taper', 'Support for insomnia/anxiety without automatic dose re-escalation'],
+        actions: ['Reduce ~5–10% every 2–4 weeks as tolerated', 'Slower near end of taper', 'Support for insomnia/anxiety without automatic dose re-escalation'],
       },
     ],
     pearls: [

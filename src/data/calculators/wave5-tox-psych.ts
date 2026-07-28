@@ -116,7 +116,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     description: 'Educational acute ibuprofen mg/kg dose bands for GI/CNS/metabolic toxicity risk.',
     category: 'toxicology',
     tags: ['ibuprofen', 'nsaid', 'overdose', 'toxic dose'],
-    whenToUse: 'Acute ibuprofen (or similar NSAID) overdose with estimated dose and weight.',
+    whenToUse: 'Acute ibuprofen overdose with estimated dose and weight (bands are ibuprofen-specific, not all NSAIDs).',
     whyUse: 'Most single acute ibuprofen ODs are mild; bands help disposition and need for labs/observation.',
     inputs: [
       numberInput('dose_mg', 'Ingested ibuprofen dose', { unit: 'mg', min: 0, max: 100000, defaultValue: 6000 }),
@@ -839,7 +839,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       },
       {
         condition: 'Toxic level + delayed clearance / AKI',
-        actions: ['Review glucarpidase criteria', 'Critical care support', 'Do not give leucovorin immediately after glucarpidase (timing rules)'],
+        actions: ['Review glucarpidase criteria', 'Critical care support', 'Hold leucovorin ~2 h before and after glucarpidase'],
       },
     ],
     pearls: [
@@ -2393,7 +2393,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     },
     nextSteps: [
       {
-        condition: 'Raw ≥50',
+        condition: 'Index ≥50 (raw ≥40 classic)',
         actions: ['Diagnostic interview', 'Safety assessment', 'Therapy ± antidepressants', 'Follow serial scores'],
       },
     ],

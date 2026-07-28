@@ -1129,7 +1129,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
     category: 'endocrinology',
     tags: ['levothyroxine', 'thyroid', 'hypothyroid', 'dosing'],
     whenToUse: 'Estimating full replacement dose in adults; use lower starts in elderly or cardiac disease.',
-    whyUse: '≈1.6 µg/kg ideal/actual weight is a common full-replacement starting estimate in healthy adults.',
+    whyUse: '≈1.6 µg/kg body weight is a common full-replacement starting estimate in healthy adults (often IBW in obesity).',
     inputs: [
       numberInput('weight', 'Body weight', { unit: 'kg', min: 30, max: 200, defaultValue: 70 }),
       selectInput('approach', 'Dosing approach', [
@@ -1976,7 +1976,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
     category: 'psychiatry',
     tags: ['nida', 'substance use', 'screening', 'alcohol', 'drugs', 'tobacco'],
     whenToUse: 'Primary care or general medical visits for brief substance use screening.',
-    whyUse: 'Positive screen prompts full NIDA-Modified ASSIST and brief intervention.',
+    whyUse: 'Any positive domain needs follow-up; illegal or nonmedical Rx use prompts NIDA-Modified ASSIST; alcohol/tobacco use SBIRT or cessation pathways.',
     inputs: [
       selectInput('alcohol', 'Alcohol — how many times in past year had ≥5 (men) / ≥4 (women) drinks/day', [
         { label: 'Never (0)', value: 0 },
@@ -2064,7 +2064,14 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Positive screen', actions: ['NM-ASSIST', 'SBIRT brief intervention', 'Assess readiness to change'] },
+      {
+        condition: 'Illegal or nonmedical Rx positive',
+        actions: ['NM-ASSIST', 'SBIRT brief intervention', 'Assess readiness to change'],
+      },
+      {
+        condition: 'Alcohol or tobacco positive only',
+        actions: ['Substance-specific counseling / cessation', 'SBIRT as indicated', 'Assess readiness to change'],
+      },
     ],
     pearls: ['Binge thresholds: ≥5 drinks men, ≥4 women in a day.', 'Normalize questions to improve honesty.'],
   },

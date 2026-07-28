@@ -150,7 +150,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
     category: 'gastroenterology',
     tags: ['ugib', 'bleed', 'gi'],
     whenToUse: 'Adults with suspected upper GI bleeding.',
-    whyUse: 'Score 0 identifies very low-risk patients safe for outpatient management.',
+    whyUse: 'Score 0–1 identifies very low-risk patients often safe for outpatient management.',
     inputs: [
       selectInput('bun', 'BUN (mg/dL)', [
         { label: '<18.2 (0)', value: 0 },
@@ -187,30 +187,31 @@ export const giNeuroPsychCalcs: Calculator[] = [
         (bool(values.syncope) ? 2 : 0) +
         (bool(values.liver) ? 2 : 0) +
         (bool(values.heart) ? 2 : 0);
-      if (score === 0) {
+      // ACG 2021: GBS 0–1 very low risk for outpatient discharge
+      if (score <= 1) {
         return {
-          score: 0,
+          score,
           label: 'Very low risk',
-          interpretation: 'GBS 0: very low risk of needing intervention; outpatient management often safe.',
+          interpretation: `GBS ${score}: very low risk of needing hospital-based intervention; outpatient management often safe (ACG suggests discharge with outpatient follow-up for GBS 0–1).`,
           riskLevel: 'low',
         };
       }
       return {
         score,
         label: score <= 3 ? 'Low–moderate risk' : 'Higher risk',
-        interpretation: 'GBS ≥1: higher likelihood of needing transfusion/endoscopy/surgery — typically admit.',
+        interpretation: `GBS ${score}: higher likelihood of needing transfusion/endoscopy/surgery — typically admit.`,
         riskLevel: score >= 6 ? 'high' : 'moderate',
       };
     },
     evidence: {
-      summary: 'GBS predicts need for hospital-based intervention in UGIB better than Rockall for this purpose.',
-      validation: 'Multiple ED validations; score 0 for early discharge pathways.',
+      summary: 'GBS predicts need for hospital-based intervention in UGIB better than Rockall for this purpose. GBS 0–1 is the modern very-low-risk band for outpatient pathways.',
+      validation: 'Multiple ED validations; ACG 2021 supports GBS 0–1 for early discharge consideration.',
       references: [{ title: 'A risk score to predict need for treatment for upper GI haemorrhage', citation: 'Blatchford O et al. Lancet. 2000', year: 2000, pmid: '11073021',
           doi: '10.1016/S0140-6736(00)02816-6', }],
     },
     nextSteps: [
-      { condition: 'GBS 0', actions: ['Consider discharge with early GI follow-up', 'PPI as indicated', 'Return precautions'] },
-      { condition: 'GBS ≥1', actions: ['Admit', 'Resuscitation', 'Urgent endoscopy timing per severity'] },
+      { condition: 'GBS ≤1', actions: ['Consider discharge with early GI follow-up', 'PPI as indicated', 'Return precautions'] },
+      { condition: 'GBS ≥2', actions: ['Admit', 'Resuscitation', 'Urgent endoscopy timing per severity'] },
     ],
   },
   {

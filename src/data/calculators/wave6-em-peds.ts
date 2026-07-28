@@ -1466,7 +1466,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
     nextSteps: [
       { condition: 'BPP ≤4', actions: ['Urgent OB evaluation', 'Continuous monitoring', 'Delivery if appropriate'] },
       { condition: 'BPP 6', actions: ['Repeat testing', 'Consider delivery if mature / oligohydramnios'] },
-      { condition: 'BPP 8–10', actions: ['Continue indicated surveillance schedule'] },
+      { condition: 'BPP 8–10 with normal fluid', actions: ['Continue indicated surveillance schedule'] },
     ],
     pearls: [
       'False positives occur with fetal sleep — extend study to 30+ minutes when needed.',
@@ -1728,7 +1728,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Arrest met', actions: ['Counsel CS vs OVD', 'Document adequacy of labor', 'Prepare OR if needed'] },
+      { condition: 'Arrest met', actions: ['Counsel CS (1st stage) or OVD/CS if 2nd stage prerequisites met', 'Document adequacy of labor', 'Prepare OR if needed'] },
       { condition: 'Criteria not met', actions: ['Optimize UCs', 'Support, hydration, position', 'Avoid premature FTP label'] },
     ],
     pearls: [

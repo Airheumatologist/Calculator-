@@ -1053,7 +1053,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Score ≥3–4', actions: ['Swaddling, sucrose, non-nutritive sucking', 'Analgesia for painful procedures', 'Reassess'] },
+      { condition: 'Score ≥3', actions: ['Swaddling, sucrose, non-nutritive sucking', 'Analgesia for painful procedures', 'Reassess'] },
     ],
     pearls: ['Intubated infants cannot cry — weight other cues more heavily.', 'Baseline temperament and illness alter scores.'],
   },
@@ -1948,7 +1948,7 @@ export const wave3PedsObCalcs: Calculator[] = [
     description: 'Low-risk lab and clinical criteria for febrile infants (classic Philadelphia pathway).',
     category: 'pediatrics',
     tags: ['fever', 'infant', 'philadelphia', 'sbi', 'low risk'],
-    whenToUse: 'Febrile infants (classically 29–60 days) when applying Philadelphia low-risk criteria.',
+    whenToUse: 'Febrile infants (classically 29–56 days) when applying Philadelphia low-risk criteria.',
     whyUse: 'Historical well-validated set of low-risk criteria including LP in the original pathway.',
     inputs: [
       yesNo('wellAppearing', 'Well-appearing'),
@@ -2076,8 +2076,8 @@ export const wave3PedsObCalcs: Calculator[] = [
     description: 'Simplified PECARN rule helper for febrile infants using age band, urinalysis, ANC, and procalcitonin.',
     category: 'pediatrics',
     tags: ['fever', 'pecarn', 'infant', 'procalcitonin', 'ibi'],
-    whenToUse: 'Febrile infants ≤60 days when applying PECARN prediction rules for invasive bacterial infection risk.',
-    whyUse: 'Multicenter PECARN rules identify low-risk infants using UA, ANC, and PCT with age stratification.',
+    whenToUse: 'Febrile infants ≤60 days when applying PECARN prediction rules for serious bacterial infection (SBI) risk.',
+    whyUse: 'Multicenter PECARN rules identify low-risk infants using UA, ANC, and PCT; age band guides disposition.',
     inputs: [
       selectInput('ageBand', 'Age band', [
         { label: '≤28 days', value: '0-28' },

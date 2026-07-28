@@ -1527,7 +1527,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     description: 'Checklist of standard biochemical criteria for resolution of diabetic ketoacidosis before stopping IV insulin.',
     category: 'endocrinology',
     tags: ['dka', 'diabetes', 'ketoacidosis', 'insulin', 'resolution'],
-    whenToUse: 'During DKA treatment to decide when anion gap closure / resolution criteria are met for transition to SQ insulin.',
+    whenToUse: 'During DKA treatment to decide when ketoacidosis resolution criteria are met for transition to SQ insulin.',
     whyUse: 'Prevents premature stop of insulin infusion before ketoacidosis clears; glucose normalizes before ketosis often.',
     inputs: [
       numberInput('glu', 'Glucose', { unit: 'mg/dL', min: 40, max: 1000, defaultValue: 180 }),

@@ -109,7 +109,7 @@ export const missingEmergencyCalcs: Calculator[] = [
     description: 'CT decision criteria after minor head trauma for patients with GCS 15.',
     category: 'emergency',
     tags: ['head trauma', 'ct', 'imaging', 'gcs'],
-    whenToUse: 'Patients with minor head injury and GCS 15 who had LOC or amnesia.',
+    whenToUse: 'Adults with minor head injury, GCS 15, and loss of consciousness (normal neuro exam).',
     whyUse: 'Very sensitive for intracranial injury; more liberal (less specific) than Canadian CT Head Rule.',
     inputs: [
       yesNo('headache', 'Headache'),
@@ -256,7 +256,7 @@ export const missingEmergencyCalcs: Calculator[] = [
     category: 'emergency',
     tags: ['syncope', 'risk', 'chess', 'disposition'],
     whenToUse: 'Adult ED patients with syncope or near-syncope for short-term serious outcome risk.',
-    whyUse: 'Simple high-sensitivity screen; any positive criterion = higher risk.',
+    whyUse: 'Simple CHESS screen; any positive criterion = higher short-term risk (external sensitivity varies).',
     inputs: [
       yesNo('chf', 'History of congestive heart failure'),
       yesNo('hct', 'Hematocrit <30%'),
@@ -1031,7 +1031,7 @@ export const missingEmergencyCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: '≥8 or high clinical suspicion', actions: ['OR exploration', 'Antibiotics', 'Supportive care'] },
+      { condition: '≥6 or high clinical suspicion', actions: ['Urgent surgical consult / OR exploration', 'Antibiotics', 'Supportive care'] },
       { condition: '≤5 with low suspicion', actions: ['Treat cellulitis pathway', 'Close follow-up / observation'] },
     ],
     pearls: [

@@ -73,7 +73,7 @@ export const criticalCareCalcs: Calculator[] = [
     category: 'critical-care',
     tags: ['sepsis', 'infection', 'sofa'],
     whenToUse: 'Outside ICU, patients with suspected infection.',
-    whyUse: 'Simple screen for organ dysfunction risk; not a diagnostic criteria for sepsis alone.',
+    whyUse: 'Bedside mortality/organ-dysfunction risk prompt; not a sole sepsis screen (SSC 2021) or diagnostic criterion alone.',
     inputs: [
       yesNo('rr', 'Respiratory rate ≥ 22/min', 1),
       yesNo('ams', 'Altered mentation', 1),
@@ -295,8 +295,9 @@ export const criticalCareCalcs: Calculator[] = [
       references: [{ title: 'National Early Warning Score (NEWS) 2', citation: 'Royal College of Physicians. NEWS2 standardising the assessment of acute-illness severity in the NHS. 2017', year: 2017, url: 'https://www.rcp.ac.uk/improving-care/resources/national-early-warning-score-news-2/' }],
     },
     nextSteps: [
-      { condition: 'Score ≥7 or single param 3', actions: ['Urgent senior review', 'Consider critical care outreach'] },
-      { condition: 'Score 5–6', actions: ['Increase observations', 'Prompt medical review'] },
+      { condition: 'Score ≥7', actions: ['Emergency critical care assessment', 'Continuous monitoring / higher-level care'] },
+      { condition: 'Score 5–6', actions: ['Urgent ward-based review', 'Increase observation frequency'] },
+      { condition: 'Single param = 3', actions: ['Urgent ward doctor review', 'Adjust monitoring / consider escalation'] },
     ],
   },
   {
@@ -606,7 +607,7 @@ export const criticalCareCalcs: Calculator[] = [
     description: 'Physiologic trauma severity using GCS, SBP, and RR.',
     category: 'emergency',
     tags: ['trauma', 'triage'],
-    whenToUse: 'Field or ED trauma triage and prognosis.',
+    whenToUse: 'Trauma severity/prognosis (weighted RTS in TRISS); field triage often uses unweighted T-RTS.',
     whyUse: 'Component of TRISS; correlates with survival.',
     inputs: [
       selectInput('gcs', 'GCS coded', [

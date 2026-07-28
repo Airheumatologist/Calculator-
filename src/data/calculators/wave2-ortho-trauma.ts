@@ -72,7 +72,7 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     category: 'orthopedics',
     tags: ['hip', 'xray', 'trauma', 'ottawa', 'fracture'],
     whenToUse: 'Adults with acute hip or groin pain after fall or blunt trauma.',
-    whyUse: 'Supports selective imaging while retaining high sensitivity for hip fracture.',
+    whyUse: 'Structures common high-yield cues for hip radiographs after trauma; occult fracture still possible if nonambulatory.',
     inputs: [
       yesNo('traumaPain', 'Acute hip/groin pain after fall or blunt trauma'),
       yesNo('age65', 'Age ≥65 years'),
@@ -1506,7 +1506,7 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'GOS-E ≤4', actions: ['Comprehensive rehab', 'Social work / caregiver resources', 'Long-term care planning'] },
+      { condition: 'GOS-E 2–4', actions: ['Comprehensive rehab', 'Social work / caregiver resources', 'Long-term care planning'] },
       { condition: 'GOS-E 5–8', actions: ['Targeted cognitive/vocational rehab', 'Community reintegration'] },
     ],
   },

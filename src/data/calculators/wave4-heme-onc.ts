@@ -10,7 +10,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
     description: 'Rituximab-era regrouping of standard IPI factors for diffuse large B-cell lymphoma outcomes.',
     category: 'hematology',
     tags: ['r-ipi', 'ipi', 'dlbcl', 'lymphoma', 'prognosis', 'nhl'],
-    whenToUse: 'Newly diagnosed DLBCL / aggressive B-NHL treated in the rituximab era for OS risk groups.',
+    whenToUse: 'Newly diagnosed DLBCL treated in the rituximab era for OS risk groups.',
     whyUse: 'Reclassifies classic IPI into three clinically useful strata (very good / good / poor) better aligned with R-CHOP outcomes.',
     inputs: [
       yesNo('age', 'Age > 60 years', 1),
@@ -1365,7 +1365,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
     description: 'Clinical Index of Stable Febrile Neutropenia for risk of serious complications in seemingly stable patients.',
     category: 'oncology',
     tags: ['cisne', 'febrile neutropenia', 'mascc', 'outpatient', 'oncology'],
-    whenToUse: 'Adult solid-tumor (and selected) patients with febrile neutropenia who appear clinically stable at presentation.',
+    whenToUse: 'Adult solid-tumor patients with febrile neutropenia who appear clinically stable at presentation (not for unstable patients or most hematologic malignancies).',
     whyUse: 'Helps identify who remains high-risk for complications despite apparent stability; complements MASCC.',
     inputs: [
       yesNo('ecog', 'ECOG performance status ≥ 2', 2),
@@ -1430,7 +1430,8 @@ export const wave4HemeOncCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'Score 0 + MASCC low-risk', actions: ['Consider oral outpatient pathway if protocol allows', '24-h contact plan'] },
-      { condition: 'Score ≥1–2', actions: ['Low threshold to admit', 'IV antipseudomonal coverage until stability clear'] },
+      { condition: 'Score 1–2', actions: ['Low threshold to admit', 'IV antipseudomonal coverage until stability clear'] },
+      { condition: 'Score ≥3', actions: ['Inpatient IV antibiotics', 'Not for outpatient FN pathway'] },
     ],
     pearls: [
       'Do not use CISNE if patient is already unstable (hypotension, organ failure).',

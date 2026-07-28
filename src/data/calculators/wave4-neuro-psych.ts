@@ -544,7 +544,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     description: 'World Federation of Neurosurgical Societies grade for aneurysmal SAH using GCS and motor deficit (I–V).',
     category: 'neurology',
     tags: ['sah', 'wfns', 'aneurysm', 'grade', 'gcs'],
-    whenToUse: 'Confirmed or highly suspected aneurysmal SAH for standardized clinical severity grading.',
+    whenToUse: 'Confirmed aneurysmal SAH for standardized clinical severity grading.',
     whyUse: 'Widely used international grade linking GCS and focal motor deficit to outcome; complements Hunt-Hess and Fisher grades.',
     inputs: [
       numberInput('gcs', 'Glasgow Coma Scale total', { min: 3, max: 15, defaultValue: 15 }),
@@ -854,7 +854,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     category: 'neurology',
     tags: ['concussion', 'scat5', 'scat6', 'sports', 'symptom'],
     whenToUse: 'Sideline or clinic concussion assessment after administering the SCAT symptom checklist.',
-    whyUse: 'Quantifies symptom burden for baseline comparison, recovery tracking, and return-to-play decisions.',
+    whyUse: 'Quantifies symptom burden for baseline comparison and serial recovery tracking within multimodal concussion assessment.',
     inputs: [
       numberInput('numSymptoms', 'Number of symptoms endorsed (0–22)', {
         min: 0,
@@ -1229,7 +1229,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     category: 'neurology',
     tags: ['ace-iii', 'dementia', 'cognition', 'mci', 'screening'],
     whenToUse: 'When ACE-III has been administered and domain/total scores are available for interpretation.',
-    whyUse: 'Broader than MMSE/MoCA alone; total cutoffs aid dementia vs MCI triage (education-dependent).',
+    whyUse: 'Broader than MMSE/MoCA alone; total cutoffs (often 82/88) aid dementia screening (education-dependent).',
     inputs: [
       numberInput('total', 'ACE-III total (0–100)', {
         min: 0,
@@ -1909,7 +1909,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       {
         condition: 'Any clinically significant RLS',
         actions: [
-          'Serum ferritin (often treat if <50–75 µg/L per guidelines/context)',
+          'Serum ferritin/iron studies (often replete if ferritin ≤75 µg/L; check TSAT)',
           'Reduce triggers (alcohol, antihistamines)',
           'Alpha-2-delta ligands or other agents per severity and comorbidities',
         ],

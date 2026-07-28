@@ -9,7 +9,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     description: 'Determines need for ankle/foot radiographs after acute injury.',
     category: 'orthopedics',
     tags: ['ankle', 'xray', 'trauma'],
-    whenToUse: 'Acute ankle or midfoot injury (<10 days) in patients ≥2–18+ years (validated adults).',
+    whenToUse: 'Acute ankle or midfoot injury (<10 days) in patients ≥2 years (adults and children).',
     whyUse: 'Safely reduces unnecessary radiographs.',
     inputs: [
       selectInput('zone', 'Injury zone', [
@@ -516,7 +516,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'Mild', actions: ['Dexamethasone 0.15–0.6 mg/kg', 'Supportive care'] },
-      { condition: 'Moderate–severe', actions: ['Nebulized epinephrine', 'Observe for rebound', 'Airway preparedness'] },
+      { condition: 'Moderate–severe', actions: ['Dexamethasone', 'Nebulized epinephrine', 'Observe for rebound', 'Airway preparedness'] },
     ],
   },
   {
@@ -571,6 +571,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'Very low risk', actions: ['No routine CT', 'Return precautions'] },
+      { condition: 'Intermediate', actions: ['Observation vs CT (shared decision-making)'] },
       { condition: 'Higher risk', actions: ['CT head', 'Neurosurgery if positive'] },
     ],
   },

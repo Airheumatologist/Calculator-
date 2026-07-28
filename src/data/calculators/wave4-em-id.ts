@@ -205,7 +205,8 @@ export const wave4EmIdCalcs: Calculator[] = [
       'Estimates risk of major bleeding on anticoagulation after VTE to support duration and intensity discussions.',
     category: 'hematology',
     tags: ['vte', 'bleeding', 'vte-bleed', 'anticoagulation', 'safety'],
-    whenToUse: 'Patients with VTE on (or starting) anticoagulation when assessing major bleed risk.',
+    whenToUse:
+      'Patients with VTE on stable anticoagulation when assessing major bleed risk (e.g., extended-therapy decisions).',
     whyUse: 'Simple 6-factor score validated for major bleeding during stable anticoagulation after VTE.',
     inputs: [
       yesNo('cancer', 'Active cancer', 2),
@@ -296,7 +297,8 @@ export const wave4EmIdCalcs: Calculator[] = [
     category: 'hematology',
     tags: ['pe', 'riete', 'vte', 'prognosis', 'mortality'],
     whenToUse: 'Confirmed acute PE for rapid prognostic stratification (adjunct to sPESI/PESI).',
-    whyUse: 'Seven binary RIETE items map low vs higher mortality risk strata from the RIETE registry.',
+    whyUse:
+      'sPESI-like binary items (age, cancer, chronic HF, chronic lung disease, tachycardia, hypotension, hypoxia) band short-term PE mortality risk (RIETE-era literature).',
     inputs: [
       yesNo('age80', 'Age >80 years', 1),
       yesNo('cancer', 'Active cancer', 1),
@@ -566,9 +568,9 @@ export const wave4EmIdCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: '0–1', actions: ['Supportive care', 'Safety netting'] },
-      { condition: '2–3', actions: ['Delayed Abx or testing'] },
-      { condition: '4–5', actions: ['Immediate Abx or confirm with test'] },
+      { condition: '0–1', actions: ['Supportive care', 'No routine Abx', 'Safety netting'] },
+      { condition: '2–3', actions: ['No Abx or delayed (backup) Abx'] },
+      { condition: '4–5', actions: ['Immediate or delayed (backup) Abx'] },
     ],
     pearls: [
       'Distinct from Centor/McIsaac — different items and cutoffs.',
@@ -1602,7 +1604,7 @@ export const wave4EmIdCalcs: Calculator[] = [
     whenToUse: 'Adults with syncope when estimating likelihood of cardiac etiology.',
     whyUse: 'Point score from history distinguishing cardiac vs non-cardiac syncope (EGSYS).',
     inputs: [
-      yesNo('palpitations', 'Palpitations preceding syncope (−1)', -1),
+      yesNo('palpitations', 'Palpitations preceding syncope (+4)', 4),
       yesNo('heartOrEcg', 'Heart disease and/or abnormal ECG (+3)', 3),
       yesNo('effort', 'Syncope during effort (+3)', 3),
       yesNo('supine', 'Syncope while supine (+2)', 2),
@@ -1612,7 +1614,7 @@ export const wave4EmIdCalcs: Calculator[] = [
     ],
     calculate(values) {
       let score = 0;
-      if (bool(values.palpitations)) score -= 1;
+      if (bool(values.palpitations)) score += 4;
       if (bool(values.heartOrEcg)) score += 3;
       if (bool(values.effort)) score += 3;
       if (bool(values.supine)) score += 2;
@@ -1648,8 +1650,8 @@ export const wave4EmIdCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'EGSYS: palpitations −1; heart disease/abnormal ECG +3; effort syncope +3; supine syncope +2; autonomic prodromes −1; precipitating factors −1. Score ≥3 predicts cardiac syncope.',
-      formula: 'Algebraic sum of weighted items',
+        'EGSYS: palpitations preceding syncope +4; heart disease/abnormal ECG +3; effort syncope +3; supine syncope +2; autonomic prodromes −1; precipitating factors −1. Score ≥3 predicts cardiac syncope.',
+      formula: 'Algebraic sum of weighted items (range typically −2 to +12)',
       validation: 'Del Rosso et al. EGSYS; useful adjunct, not sole disposition tool.',
       references: [
         {
