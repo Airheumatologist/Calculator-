@@ -43,7 +43,7 @@ export const missingGiLiverCalcs: Calculator[] = [
       formula: 'DF = 4.6 × (PT − control PT) + bilirubin (mg/dL)',
       validation: 'Widely used severity threshold; steroids studied mainly in DF ≥32 populations. Complementary to MELD and GAHS.',
       references: [
-        { title: 'Corticosteroid therapy of alcoholic hepatitis', citation: 'Maddrey WC et al. Gastroenterology. 1978', year: 1978, pmid: '658710',
+        { title: 'Corticosteroid therapy of alcoholic hepatitis', citation: 'Maddrey WC et al. Gastroenterology. 1978', year: 1978, pmid: '352788',
           doi: '10.1093/geront/18.3.230', },
       ],
     },
@@ -298,8 +298,8 @@ export const missingGiLiverCalcs: Calculator[] = [
       formula: 'Logistic model from age, day-0 albumin, bilirubin change, renal insufficiency, day-0 bilirubin, PT',
       validation: 'Validated predictor of 6-month survival after steroid initiation; guides early stop in non-responders.',
       references: [
-        { title: 'The Lille model: a new tool for therapeutic strategy in patients with severe alcoholic hepatitis treated with steroids', citation: 'Louvet A et al. Hepatology. 2007', year: 2007, pmid: '17401563',
-          doi: '10.1007/s00253-007-0920-1', },
+        { title: 'The Lille model: a new tool for therapeutic strategy in patients with severe alcoholic hepatitis treated with steroids', citation: 'Louvet A et al. Hepatology. 2007', year: 2007, pmid: '17518367',
+          doi: '10.1002/hep.21607', },
       ],
     },
     nextSteps: [
@@ -528,8 +528,8 @@ export const missingGiLiverCalcs: Calculator[] = [
       formula: 'R = (ALT/ULN) / (ALP/ULN)',
       validation: 'Standard DILI phenotype definition used in RUCAM and regulatory guidance.',
       references: [
-        { title: 'Criteria of drug-induced liver disorders: report of an international consensus meeting', citation: 'Danan G, Benichou C. J Hepatol. 1993 / CIOMS', year: 1993, pmid: '8371190',
-          doi: '10.1111/j.1752-7325.1993.tb02691.x', },
+        { title: 'Criteria of drug-induced liver disorders: report of an international consensus meeting', citation: 'Danan G, Benichou C. J Hepatol. 1993 / CIOMS', year: 1993, pmid: '8229110',
+          doi: '10.1016/0895-4356(93)90101-6', },
       ],
     },
     nextSteps: [
@@ -620,8 +620,8 @@ export const missingGiLiverCalcs: Calculator[] = [
       summary: 'Forrest I active bleed, IIa vessel, IIb clot = higher risk needing therapy; IIc/III low risk.',
       validation: 'Endoscopic classification standard for decades; rebleed estimates predate modern PPI/endotherapy but rank-order remains valid.',
       references: [
-        { title: 'Endoscopy in gastrointestinal bleeding', citation: 'Forrest JA et al. Lancet. 1974', year: 1974, pmid: '4135416',
-          doi: '10.1002/ijc.2910130402', },
+        { title: 'Endoscopy in gastrointestinal bleeding', citation: 'Forrest JA et al. Lancet. 1974', year: 1974, pmid: '4136718',
+          doi: '10.1016/s0140-6736(74)91770-x', },
       ],
     },
     nextSteps: [
@@ -763,8 +763,8 @@ export const missingGiLiverCalcs: Calculator[] = [
       summary: 'AIR score (0–12): vomiting, RIF pain, graded rebound/guarding, fever ≥38.5, PMN%, WBC, CRP.',
       validation: 'Andersson et al.; multiple external validations; useful for ruling in/out.',
       references: [
-        { title: 'The Appendicitis Inflammatory Response Score: a tool for the diagnosis of acute appendicitis that outperforms the Alvarado score', citation: 'Andersson M, Andersson RE. World J Surg. 2008', year: 2008, pmid: '18469549',
-          doi: '10.1097/MBC.0b013e3282ff76c3', },
+        { title: 'The Appendicitis Inflammatory Response Score: a tool for the diagnosis of acute appendicitis that outperforms the Alvarado score', citation: 'Andersson M, Andersson RE. World J Surg. 2008', year: 2008, pmid: '18553045',
+          doi: '10.1007/s00268-008-9649-y', },
       ],
     },
     nextSteps: [
@@ -929,8 +929,8 @@ export const missingGiLiverCalcs: Calculator[] = [
       formula: 'NFS = −1.675 + 0.037·age + 0.094·BMI + 1.13·IFG + 0.99·AST/ALT − 0.013·Plt − 0.66·albumin',
       validation: 'Angulo et al. derivation/validation in NAFLD; widely used in guidelines with FIB-4.',
       references: [
-        { title: 'The NAFLD fibrosis score: a noninvasive system that identifies liver fibrosis in patients with NAFLD', citation: 'Angulo P et al. Hepatology. 2007', year: 2007, pmid: '17012989',
-          doi: '10.1097/01.lgt.0000225890.21539.79', },
+        { title: 'The NAFLD fibrosis score: a noninvasive system that identifies liver fibrosis in patients with NAFLD', citation: 'Angulo P et al. Hepatology. 2007', year: 2007, pmid: '17393509',
+          doi: '10.1002/hep.21496', },
       ],
     },
     nextSteps: [

@@ -2111,8 +2111,8 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         {
           title: 'World Health Organization clinical / growth standards resources',
           citation: 'World Health Organization',
-          year: 2006, pmid: '15841682',
-          doi: '10.1017/s0033291704002892', url: 'https://www.who.int/' },
+          year: 2006, pmid: '16416313',
+          doi: '10.1007/s00109-005-0002-8', url: 'https://www.who.int/' },
       ],
     },
     nextSteps: [

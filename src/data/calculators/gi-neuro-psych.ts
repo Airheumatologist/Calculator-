@@ -57,7 +57,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
     evidence: {
       summary: 'Child-Turcotte-Pugh uses bili, albumin, INR, ascites, encephalopathy.',
       validation: 'Longstanding surgical risk and cirrhosis severity tool.',
-      references: [{ title: 'Surgery and portal hypertension', citation: 'Child CG, Turcotte JG. 1964; Pugh modification 1973', year: 1973, pmid: '4541913',
+      references: [{ title: 'Surgery and portal hypertension', citation: 'Child CG, Turcotte JG. 1964; Pugh modification 1973', year: 1973, pmid: '4950264',
           doi: '10.1002/bjs.1800600817', }],
     },
     nextSteps: [

@@ -55,8 +55,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
       formula: 'SI = HR ÷ SBP; compare to age-specific threshold',
       validation: 'Validated in pediatric trauma registries; improves identification of severely injured children vs adult SI >0.9 alone.',
       references: [
-        { title: 'Shock index pediatric adjusted (SIPA) in blunt trauma', citation: 'Acker SN et al. J Pediatr Surg. 2015', year: 2015, pmid: '25783300',
-          doi: '10.1016/j.jpedsurg.2014.11.031', },
+        { title: 'Shock index pediatric adjusted (SIPA) in blunt trauma', citation: 'Acker SN et al. J Pediatr Surg. 2015', year: 2015, pmid: '25638631',
+          doi: '10.1016/j.jpedsurg.2014.08.009', },
       ],
     },
     nextSteps: [
@@ -497,8 +497,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
       summary: 'Tennessee criteria often use LDH ≥600, AST ≥70 (or ≥2× ULN), platelets ≤100k. Mississippi classifies by platelet nadir.',
       validation: 'Clinical diagnosis; smear, haptoglobin, and trends aid hemolysis confirmation.',
       references: [
-        { title: 'HELLP syndrome', citation: 'Sibai BM. Obstet Gynecol. / Tennessee & Mississippi classifications', year: 2004, pmid: '16449123',
-          doi: '10.1097/01.AOG.0000195356.90589.c5', },
+        { title: 'HELLP syndrome', citation: 'Sibai BM. Obstet Gynecol. / Tennessee & Mississippi classifications', year: 2004, pmid: '15519429',
+          doi: '10.1016/j.clp.2004.06.008', },
       ],
     },
     nextSteps: [
@@ -1332,8 +1332,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
       formula: 'IBW = 2.396 × e^(0.01863 × ht_cm)',
       validation: 'Used in pediatric dosing literature; validate against local pharmacy standards.',
       references: [
-        { title: 'Traub-Johnson pediatric IBW', citation: 'Traub SL, Johnson CE. Am J Hosp Pharm. 1980', year: 1980, pmid: '7369179',
-          doi: '10.1093/ajcp/73.4.552', },
+        { title: 'Traub-Johnson pediatric IBW', citation: 'Traub SL, Johnson CE. Am J Hosp Pharm. 1980', year: 1980, pmid: '6823980',
+          doi: '10.1177/014860718000400316', },
       ],
     },
     nextSteps: [
@@ -1524,8 +1524,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
       formula: 'UAG = UNa + UK − UCl',
       validation: 'Classic teaching; unreliable with toluene, ketoanions, or large urinary unmeasured anions; direct NH₄ preferred when available.',
       references: [
-        { title: 'The urine anion gap', citation: 'Batlle DC et al. N Engl J Med. 1988', year: 1988, pmid: '2835676',
-          doi: '10.1016/0165-1218(88)90032-8', },
+        { title: 'The urine anion gap', citation: 'Batlle DC et al. N Engl J Med. 1988', year: 1988, pmid: '3344005',
+          doi: '10.1056/NEJM198803103181002', },
       ],
     },
     nextSteps: [

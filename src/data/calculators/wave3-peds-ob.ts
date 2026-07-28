@@ -609,8 +609,8 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Approximate points from MAP, temp, PaO₂/FiO₂, pH, seizures, UOP, BW, SGA, Apgar5',
       validation: 'Original SNAPPE-II validated for NICU mortality prediction; use research/clinical software for formal scoring.',
       references: [
-        { title: 'SNAP-II and SNAPPE-II: Simplified newborn illness severity and mortality risk scores', citation: 'Richardson DK et al. J Pediatr. 2001', year: 2001, pmid: '11148500',
-          doi: '10.1067/mjd.2001.109854', },
+        { title: 'SNAP-II and SNAPPE-II: Simplified newborn illness severity and mortality risk scores', citation: 'Richardson DK et al. J Pediatr. 2001', year: 2001, pmid: '11148519',
+          doi: '10.1067/mpd.2001.109608', },
       ],
     },
     nextSteps: [
@@ -1486,8 +1486,8 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Stage by max of fold-change, absolute rise, RRT, pediatric eGFR criterion',
       validation: 'KDIGO 2012 criteria used in pediatric nephrology; UOP criteria are parallel (not fully entered here).',
       references: [
-        { title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury', citation: 'Kidney Int Suppl. 2012 (KDIGO AKI)', year: 2012, pmid: '22870421',
-          doi: '10.4103/2230-8229.98309', url: 'https://kdigo.org/guidelines/acute-kidney-injury/' },
+        { title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury', citation: 'Kidney Int Suppl. 2012 (KDIGO AKI)', year: 2012, pmid: '23732715',
+          doi: '10.7326/0003-4819-158-11-201306040-00007', url: 'https://kdigo.org/guidelines/acute-kidney-injury/' },
       ],
     },
     nextSteps: [
@@ -1575,8 +1575,8 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'UOP (mL/kg/h) = volume ÷ weight ÷ hours',
       validation: 'Standard pediatric critical care / KDIGO urine criteria.',
       references: [
-        { title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury', citation: 'Kidney Int Suppl. 2012 (KDIGO AKI)', year: 2012, pmid: '22870421',
-          doi: '10.4103/2230-8229.98309', url: 'https://kdigo.org/guidelines/acute-kidney-injury/' },
+        { title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury', citation: 'Kidney Int Suppl. 2012 (KDIGO AKI)', year: 2012, pmid: '23732715',
+          doi: '10.7326/0003-4819-158-11-201306040-00007', url: 'https://kdigo.org/guidelines/acute-kidney-injury/' },
       ],
     },
     nextSteps: [
@@ -1997,8 +1997,8 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'All low-risk gates must pass',
       validation: 'Baker et al.; historical standard. Age bands and practice have evolved with newer pathways (Step-by-Step, PECARN).',
       references: [
-        { title: 'Outpatient management without antibiotics of fever in selected infants', citation: 'Baker MD et al. N Engl J Med. 1993', year: 1993, pmid: '8413452',
-          doi: '10.1056/NEJM199311043291919', },
+        { title: 'Outpatient management without antibiotics of fever in selected infants', citation: 'Baker MD et al. N Engl J Med. 1993', year: 1993, pmid: '8413453',
+          doi: '10.1056/NEJM199311113292001', },
       ],
     },
     nextSteps: [
@@ -2057,8 +2057,8 @@ export const wave3PedsObCalcs: Calculator[] = [
           title: 'Outpatient treatment of febrile infants 28 to 89 days of age with intramuscular ceftriaxone',
           citation: 'Baskin MN et al. J Pediatr. 1992',
           year: 1992,
-          pmid: '1731024',
-          doi: '10.1016/s0022-3476(05)80596-7',
+          pmid: '1731019',
+          doi: '10.1016/s0022-3476(05)80591-8',
         },
       ],
     },

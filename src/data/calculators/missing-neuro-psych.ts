@@ -91,8 +91,8 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         {
           title: 'Surgical risk as related to time of intervention in the repair of intracranial aneurysms',
           citation: 'Hunt WE, Hess RM. J Neurosurg. 1968',
-          year: 1968, pmid: '5646457',
-          doi: '10.1001/archotol.1968.00760060524016', },
+          year: 1968, pmid: '5635959',
+          doi: '10.3171/jns.1968.28.1.0014', },
       ],
     },
     nextSteps: [
@@ -673,8 +673,8 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         {
           title: 'AUDIT-C as a brief screen for alcohol misuse in primary care',
           citation: 'Bush K et al. Arch Intern Med. 1998; Bradley KA et al. various',
-          year: 1998, pmid: '9554672',
-          doi: '10.1378/chest.113.4.1148', },
+          year: 1998, pmid: '9738608',
+          doi: '10.1001/archinte.158.16.1789', },
       ],
     },
     nextSteps: [
@@ -916,8 +916,8 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         {
           title: 'The SAD PERSONS scale for suicide risk',
           citation: 'Patterson WM et al. Psychosomatics. 1983',
-          year: 1983, pmid: '6622622',
-          doi: '10.1097/00006842-198308000-00007', },
+          year: 1983, pmid: '6867245',
+          doi: '10.1016/S0033-3182(83)73213-5', },
       ],
     },
     nextSteps: [
@@ -1200,8 +1200,8 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         {
           title: 'The Richmond Agitation-Sedation Scale: validity and reliability in adult ICU patients',
           citation: 'Sessler CN et al. Am J Respir Crit Care Med. 2002',
-          year: 2002, pmid: '12394987',
-          doi: '10.1097/00003246-200210000-00047', },
+          year: 2002, pmid: '12421743',
+          doi: '10.1164/rccm.2107138', },
       ],
     },
     nextSteps: [

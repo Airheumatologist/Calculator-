@@ -325,8 +325,8 @@ export const extraCalcs: Calculator[] = [
     evidence: {
       summary: 'QTcF = QT / ∛RR. Preferred over Bazett when HR extreme.',
       validation: 'Increasingly recommended in drug studies and clinical practice.',
-      references: [{ title: 'Duration of systole in electrocardiogram', citation: 'Fridericia LS. Acta Med Scand. 1920', year: 1920, pmid: '35249834',
-          doi: '10.1053/j.jvca.2022.01.043', }],
+      references: [{ title: 'Duration of systole in electrocardiogram', citation: 'Fridericia LS. Acta Med Scand. 1920', year: 1920, pmid: '14516292',
+          doi: '10.1046/j.1542-474x.2003.08413.x', }],
     },
     nextSteps: [{ condition: 'QTc ≥500', actions: ['Telemetry', 'Stop QT drugs', 'Replete K/Mg'] }],
   },
@@ -394,7 +394,7 @@ export const extraCalcs: Calculator[] = [
     evidence: {
       summary: 'Hamwi: Men 106 lb + 6 lb/inch >5 ft; Women 100 + 5 lb/inch >5 ft.',
       validation: 'Nutrition practice formula.',
-      references: [{ title: 'Hamwi ideal body weight formula (historical pharmacy teaching)', citation: 'Hamwi GJ. 1964 (classic pharmacy teaching; modern IBW comparisons in nutrition literature)', year: 1964, pmid: '16825033',
+      references: [{ title: 'Hamwi ideal body weight formula (historical pharmacy teaching)', citation: 'Hamwi GJ. 1964 (classic pharmacy teaching; modern IBW comparisons in nutrition literature)', year: 1964, pmid: '6869387',
           doi: '10.1053/j.jrn.2006.01.008', }],
     },
     nextSteps: [{ condition: 'Any', actions: ['Use with clinical nutrition assessment'] }],

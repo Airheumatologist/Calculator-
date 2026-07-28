@@ -87,8 +87,8 @@ export const missingEmergencyCalcs: Calculator[] = [
           title: 'The Canadian CT Head Rule for patients with minor head injury',
           citation: 'Stiell IG et al. Lancet. 2001;357:1391-1396',
           year: 2001,
-          pmid: '11248153',
-          doi: '10.1056/NEJM200103153441101',
+          pmid: '11356436',
+          doi: '10.1016/s0140-6736(00)04561-x',
         },
       ],
     },
@@ -152,8 +152,8 @@ export const missingEmergencyCalcs: Calculator[] = [
           title: 'Indications for computed tomography in patients with minor head injury',
           citation: 'Haydel MJ et al. N Engl J Med. 2000;343:100-105',
           year: 2000,
-          pmid: '10891516',
-          doi: '10.1056/NEJM200007133430203',
+          pmid: '10891517',
+          doi: '10.1056/NEJM200007133430204',
         },
       ],
     },
@@ -632,8 +632,8 @@ export const missingEmergencyCalcs: Calculator[] = [
         {
           title: 'Difficult tracheal intubation: a retrospective study (modified Mallampati)',
           citation: 'Samsoon GL, Young JR. Anaesthesia. 1987;42:487-490',
-          year: 1987, pmid: '3592177',
-          doi: '10.1111/j.1365-2044.1987.tb04042.x', },
+          year: 1987, pmid: '3592174',
+          doi: '10.1111/j.1365-2044.1987.tb04039.x', },
       ],
     },
     nextSteps: [
@@ -913,8 +913,8 @@ export const missingEmergencyCalcs: Calculator[] = [
         {
           title: 'NEXUS chest imaging decision instrument',
           citation: 'Rodriguez RM et al. PLoS Med / JAMA Surg validations (NEXUS Chest)',
-          year: 2013, pmid: '24285359',
-          doi: '10.1038/ismej.2013.211', },
+          year: 2013, pmid: '23925583',
+          doi: '10.1001/jamasurg.2013.2757', },
       ],
     },
     nextSteps: [
@@ -1108,8 +1108,8 @@ export const missingEmergencyCalcs: Calculator[] = [
         {
           title: 'Revised Baux Score',
           citation: 'Osler T et al. J Trauma. 2010;68:690-694; Baux S. historical thesis',
-          year: 2010, pmid: '20220420',
-          doi: '10.1097/TA.0b013e3181bb8ea0', },
+          year: 2010, pmid: '20038856',
+          doi: '10.1097/TA.0b013e3181c453b3', },
       ],
     },
     nextSteps: [
@@ -1296,8 +1296,8 @@ export const missingEmergencyCalcs: Calculator[] = [
         {
           title: 'LEMON airway assessment (ATLS / emergency airway literature)',
           citation: 'Reed MJ et al. Emerg Med J. 2005;22:99-102; ATLS difficult airway teaching',
-          year: 2005, pmid: '15662056',
-          doi: '10.1136/emj.2002.002626', },
+          year: 2005, pmid: '15662057',
+          doi: '10.1136/emj.2003.008771', },
       ],
     },
     nextSteps: [

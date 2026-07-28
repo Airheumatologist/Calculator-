@@ -72,8 +72,8 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       formula: 'Stage = max(creatinine stage, UOP stage); Stage 3 also if RRT initiated',
       validation: 'International consensus; widely used in research and clinical pathways.',
       references: [
-        { title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury', citation: 'Kidney Int Suppl. 2012 (KDIGO AKI)', year: 2012, pmid: '22870421',
-          doi: '10.4103/2230-8229.98309', url: 'https://kdigo.org/guidelines/acute-kidney-injury/' },
+        { title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury', citation: 'Kidney Int Suppl. 2012 (KDIGO AKI)', year: 2012, pmid: '22890468',
+          doi: '10.1159/000339789', url: 'https://kdigo.org/guidelines/acute-kidney-injury/' },
       ],
     },
     nextSteps: [
@@ -329,8 +329,8 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       formula: 'Site (0–2) + Plt≥350 + Hb<10/ESA + WBC>11 + BMI≥35',
       validation: 'Derived and validated in chemotherapy outpatients; absolute rates vary by era and regimens.',
       references: [
-        { title: 'Development and validation of a predictive model for chemotherapy-associated thrombosis', citation: 'Khorana AA et al. Blood. 2008', year: 2008, pmid: '18252800',
-          doi: '10.1242/jcs.021303', },
+        { title: 'Development and validation of a predictive model for chemotherapy-associated thrombosis', citation: 'Khorana AA et al. Blood. 2008', year: 2008, pmid: '18216292',
+          doi: '10.1182/blood-2007-10-116327', },
       ],
     },
     nextSteps: [
@@ -592,8 +592,8 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       summary: 'Rochester criteria define a low-risk febrile infant using clinical well appearance and limited laboratory thresholds.',
       validation: 'Classic derivation with high NPV for SBI in historical cohorts; superseded/refined by newer algorithms.',
       references: [
-        { title: 'Identification of infants unlikely to have serious bacterial infection', citation: 'Dagan R et al. J Pediatr. 1985 / Rochester criteria literature', year: 1985, pmid: '3884780',
-          doi: '10.1016/0022-3913(85)90102-7', },
+        { title: 'Identification of infants unlikely to have serious bacterial infection', citation: 'Dagan R et al. J Pediatr. 1985 / Rochester criteria literature', year: 1985, pmid: '4067741',
+          doi: '10.1016/s0022-3476(85)80175-x', },
       ],
     },
     nextSteps: [
@@ -893,9 +893,9 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       formula: 'TTKG = (U_K ÷ (U_osm/P_osm)) ÷ P_K',
       validation: 'Classic physiologic construct; modern nephrology often discourages clinical reliance.',
       references: [
-        { title: 'The transtubular potassium concentration in patients with hypokalemia and hyperkalemia', citation: 'West ML et al. Am J Kidney Dis. 1986', year: 1986, pmid: '3521261',
+        { title: 'The transtubular potassium concentration in patients with hypokalemia and hyperkalemia', citation: 'West ML et al. Am J Kidney Dis. 1986', year: 1986, pmid: '3762510',
           doi: '10.1093/oxfordjournals.aje.a114366', },
-        { title: 'TTKG limitations (urea effect)', citation: 'Kamel KS, Halperin ML. various reviews', year: 2011, pmid: '3521261',
+        { title: 'TTKG limitations (urea effect)', citation: 'Kamel KS, Halperin ML. various reviews', year: 2011, pmid: '3762510',
           doi: '10.1093/oxfordjournals.aje.a114366', },
       ],
     },
@@ -1114,8 +1114,8 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       formula: 'Behavior (0–3) + CV (0–3) + Resp (0–3) + O₂ (0 or 2)',
       validation: 'Multiple PEWS variants associate higher scores with ICU transfer; not a substitute for clinical concern.',
       references: [
-        { title: 'Pediatric early warning systems literature', citation: 'Monaghan A. Paediatr Nurs. 2005 / subsequent PEWS validations', year: 2005, pmid: '15793982',
-          doi: '10.7748/paed.17.2.14.s19', },
+        { title: 'Pediatric early warning systems literature', citation: 'Monaghan A. Paediatr Nurs. 2005 / subsequent PEWS validations', year: 2005, pmid: '28699997',
+          doi: '10.1590/1518-8345.1733.2912', },
       ],
     },
     nextSteps: [
@@ -1256,8 +1256,8 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       formula: 'Age≥75 (1) + anemia (2) + prior bleed (2) + eGFR<60 (1) + antiplatelet (1)',
       validation: 'Derived and validated in ORBIT-AF; compared favorably with HAS-BLED in some analyses.',
       references: [
-        { title: 'The ORBIT bleeding score: a simple bedside score to assess bleeding risk in AF', citation: 'O’Brien EC et al. Eur Heart J. 2015', year: 2015, pmid: '25796055',
-          doi: '10.1016/j.actpsy.2015.03.001', },
+        { title: 'The ORBIT bleeding score: a simple bedside score to assess bleeding risk in AF', citation: 'O’Brien EC et al. Eur Heart J. 2015', year: 2015, pmid: '26424865',
+          doi: '10.1093/eurheartj/ehv476', },
       ],
     },
     nextSteps: [

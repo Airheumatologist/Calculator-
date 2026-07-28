@@ -905,8 +905,8 @@ export const cardiologyCalcs: Calculator[] = [
       formula: 'QTc (Bazett) = QT / √(RR) with RR in seconds',
       validation: 'Standard ECG teaching; thresholds vary by sex and method.',
       references: [{ title: 'An analysis of the time-relations of electrocardiograms (Bazett QT correction)', citation: 'Bazett HC. Heart. 1920 (classic; modern discussions in ECG literature)', year: 1920,
-          pmid: '35249835',
-          doi: '10.1016/j.jpurol.2022.02.006', url: 'https://en.wikipedia.org/wiki/QT_interval#Correction_for_heart_rate' }],
+          pmid: '16993419',
+          doi: '10.1113/jphysiol.1920.sp001881', url: 'https://en.wikipedia.org/wiki/QT_interval#Correction_for_heart_rate' }],
     },
     nextSteps: [
       { condition: 'QTc ≥ 500', actions: ['Telemetry', 'MgSO4 if TdP or very high risk', 'Discontinue offending agents', 'Replete K+ to >4 and Mg >2'] },

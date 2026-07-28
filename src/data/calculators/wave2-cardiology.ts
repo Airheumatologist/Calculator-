@@ -1024,8 +1024,8 @@ export const wave2CardiologyCalcs: Calculator[] = [
       validation: 'One of several linear/nonlinear corrections superior to Bazett at extreme HR in comparative studies.',
       references: [
         { title: 'QT interval corrections (Hodges linear formula)', citation: 'Hodges M et al. J Electrocardiol. 1983 (linear QT correction; classic ECG methods)', year: 1983,
-          pmid: '6684125',
-          doi: '10.1083/jcb.97.2.522', url: 'https://en.wikipedia.org/wiki/QT_interval#Hodges_correction' },
+          pmid: '34253795',
+          doi: '10.1038/s41598-021-93774-9', url: 'https://en.wikipedia.org/wiki/QT_interval#Hodges_correction' },
       ],
     },
     nextSteps: [
@@ -1504,7 +1504,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
         {
           title: 'The ABC (age, biomarkers, clinical history) bleeding risk score',
           citation: 'Hijazi Z et al. Eur Heart J. 2016',
-          year: 2016, pmid: '27056738', doi: '10.1016/S0140-6736(16)30840-1' },
+          year: 2016, pmid: '27056738', doi: '10.1016/S0140-6736(16)00741-8' },
       ],
     },
     nextSteps: [

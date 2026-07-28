@@ -68,8 +68,8 @@ export const missingCardioPulmCalcs: Calculator[] = [
       formula: 'High-risk surgery + IHD + HF + CVD + insulin DM + Cr>2.0 (1 each) = 0–6',
       validation: 'Derived in 4315 patients; widely validated though absolute event rates vary by era and definition of MI.',
       references: [
-        { title: 'Derivation and prospective validation of a simple index for prediction of cardiac risk of major noncardiac surgery', citation: 'Lee TH et al. Circulation. 1999', year: 1999, pmid: '10525402',
-          doi: '10.1006/jmbi.1999.3111', },
+        { title: 'Derivation and prospective validation of a simple index for prediction of cardiac risk of major noncardiac surgery', citation: 'Lee TH et al. Circulation. 1999', year: 1999, pmid: '10477528',
+          doi: '10.1161/01.cir.100.10.1043', },
       ],
     },
     nextSteps: [
@@ -736,7 +736,8 @@ export const missingCardioPulmCalcs: Calculator[] = [
       formula: 'Concordant STE≥1mm (5) + concordant STD V1–V3 ≥1mm (3) + discordant STE≥5mm (2); modified replaces 5mm with ST/S ≤ −0.25',
       validation: 'Derived from GUSTO-1; Smith-modified rule validated with improved sensitivity.',
       references: [
-        { title: 'Electrocardiographic diagnosis of evolving MI in LBBB (Sgarbossa)', citation: 'Sgarbossa EB et al. N Engl J Med. 1996', year: 1996, pmid: '8598860' },
+        { title: 'Electrocardiographic diagnosis of evolving MI in LBBB (Sgarbossa)', citation: 'Sgarbossa EB et al. N Engl J Med. 1996', year: 1996, pmid: '8559200',
+          doi: '10.1056/NEJM199602223340801' },
         { title: 'Diagnosis of MI with LBBB using ST-segment/S-wave ratio', citation: 'Smith SW et al. Ann Emerg Med. 2012', year: 2012, pmid: '22939607',
           doi: '10.1016/j.annemergmed.2012.07.119', },
       ],
@@ -826,8 +827,8 @@ export const missingCardioPulmCalcs: Calculator[] = [
       formula: 'DTS = exercise time − (5 × ST deviation) − (4 × angina index)',
       validation: 'Derived at Duke University; widely validated for prognosis after exercise ECG.',
       references: [
-        { title: 'Prognostic value of a treadmill exercise score in outpatients with suspected CAD', citation: 'Mark DB et al. N Engl J Med. 1991', year: 1991, pmid: '1864370',
-          doi: '10.1016/0014-5793(91)80975-9', },
+        { title: 'Prognostic value of a treadmill exercise score in outpatients with suspected CAD', citation: 'Mark DB et al. N Engl J Med. 1991', year: 1991, pmid: '9822093',
+          doi: '10.1016/s0735-1097(98)00451-3', },
       ],
     },
     nextSteps: [
@@ -979,8 +980,8 @@ export const missingCardioPulmCalcs: Calculator[] = [
       formula: 'Exudate if protein >2.9 OR cholesterol >45 OR LDH >0.45× ULN',
       validation: 'Meta-analysis-derived simplified criteria; slightly less sensitive than full Light’s in some comparisons.',
       references: [
-        { title: 'Pleural fluid chemical analysis in parapneumonic effusions: a meta-analysis', citation: 'Heffner JE et al. Am J Respir Crit Care Med. 1995 / related cut-point work', year: 1995, pmid: '7882838',
-          doi: '10.2337/diacare.17.12.1551', },
+        { title: 'Pleural fluid chemical analysis in parapneumonic effusions: a meta-analysis', citation: 'Heffner JE et al. Am J Respir Crit Care Med. 1995 / related cut-point work', year: 1995, pmid: '7767510',
+          doi: '10.1164/ajrccm.151.6.7767510', },
       ],
     },
     nextSteps: [
@@ -1130,8 +1131,8 @@ export const missingCardioPulmCalcs: Calculator[] = [
       formula: 'SI = HR/SBP; ASI = SI × age; RPP = HR × SBP',
       validation: 'Multiple trauma and ED studies support SI/ASI for occult shock detection; exact cutoffs vary by population.',
       references: [
-        { title: 'Age-adjusted shock index in trauma risk stratification', citation: 'Zarzaur BL et al. related trauma literature; various ED validations', year: 2008, pmid: '17955559',
-          doi: '10.1002/chem.200701160', },
+        { title: 'Age-adjusted shock index in trauma risk stratification', citation: 'Zarzaur BL et al. related trauma literature; various ED validations', year: 2008, pmid: '18498875',
+          doi: '10.1016/j.jss.2008.03.025', },
       ],
     },
     nextSteps: [
@@ -1312,8 +1313,8 @@ export const missingCardioPulmCalcs: Calculator[] = [
       formula: 'Points from age/sex/lipids/BP/smoking/DM → mapped approximate 10-year hard CHD %',
       validation: 'NOT validated as a clinical calculator. For care decisions use official AHA PREVENT (2023) or PCE/Framingham tools.',
       references: [
-        { title: 'Prediction of coronary heart disease using risk factor categories (Framingham)', citation: 'Wilson PW et al. Circulation. 1998', year: 1998, pmid: '9864381',
-          doi: '10.3892/ijmm.3.1.21', },
+        { title: 'Prediction of coronary heart disease using risk factor categories (Framingham)', citation: 'Wilson PW et al. Circulation. 1998', year: 1998, pmid: '9603539',
+          doi: '10.1161/01.cir.97.18.1837', },
         { title: 'AHA PREVENT equations for CV risk', citation: 'Khan SS et al. Circulation. 2023', year: 2023, pmid: '37947094',
           doi: '10.1161/CIR.0000000000001191', },
       ],
