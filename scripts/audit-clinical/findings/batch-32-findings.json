@@ -1,0 +1,271 @@
+{
+  "batch": 32,
+  "file": "wave5-peds-id.ts",
+  "audited": 25,
+  "fixed": 2,
+  "items": [
+    {
+      "id": "peews-full",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/3901/pediatric-early-warning-score-pews",
+        "Monaghan/classic PEWS teaching — multi-domain educational tool; ≥5 and any domain 3 commonly trigger urgent review; institutional charts vary"
+      ]
+    },
+    {
+      "id": "pals-hr",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://cpr.heart.org/en/cpr-courses-and-kits/healthcare-professional/pediatric",
+        "AHA PALS — age-based normal HR; bradycardia with poor perfusion is pre-arrest (support ABCs/ventilation, epi/CPR per algorithm)"
+      ]
+    },
+    {
+      "id": "pals-rr",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://cpr.heart.org/en/cpr-courses-and-kits/healthcare-professional/pediatric",
+        "AHA PALS — age-based RR norms; tachypnea early sign; bradypnea/irregular breathing needs airway support and differential (glucose/CNS)"
+      ]
+    },
+    {
+      "id": "pals-sbp",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://chemm.hhs.gov/pals.htm",
+        "PALS hypotension: neonate <60, infant <70, 1–10 y <70+2×age, >10 y <90 mmHg SBP; treat poor perfusion before hypotension"
+      ]
+    },
+    {
+      "id": "ett-depth",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pedemmorsels.com/ett/",
+        "Classic oral depth ≈ age(y)/2 + 12 cm (lips) for children; confirm with ETCO₂, bilateral BS, CXR — not primary neonatal method"
+      ]
+    },
+    {
+      "id": "defib-dose-peds",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://cpr.heart.org/-/media/CPR-Files/CPR-Guidelines-Files/Algorithms/AlgorithmPALS_CA_200707",
+        "AHA PALS algorithm — first shock 2 J/kg, second 4 J/kg, subsequent ≥4 J/kg (max 10 J/kg or adult dose); CPR cycles + reversible causes"
+      ]
+    },
+    {
+      "id": "epi-dose-peds",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://cpr.heart.org/-/media/CPR-Files/CPR-Guidelines-Files/Algorithms/AlgorithmPALS_CA_200707",
+        "PALS arrest epi IV/IO 0.01 mg/kg (0.1 mL/kg of 0.1 mg/mL / 1:10,000) q3–5 min; max 1 mg/dose"
+      ]
+    },
+    {
+      "id": "fluid-bolus-peds",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ahajournals.org/doi/10.1161/CIR.0000000000000901",
+        "PALS/SSC pediatric shock — isotonic crystalloid 10–20 mL/kg boluses with reassessment; smaller/titratable volumes when myocardial dysfunction suspected"
+      ]
+    },
+    {
+      "id": "kcal-needs-peds",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK545442/",
+        "Educational age-based kcal/kg rules of thumb; dietitian/DRI/indirect calorimetry supersede — avoid early overfeeding in ICU"
+      ]
+    },
+    {
+      "id": "failure-to-thrive",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.who.int/tools/child-growth-standards",
+        "WHO WAZ <−2 underweight, <−3 severe; percentile crossing/velocity/red flags structure evaluation — not a formal validated score"
+      ]
+    },
+    {
+      "id": "jaundice-nomogram",
+      "status": "fixed",
+      "issues": [
+        "whenToUse said 'term and late-preterm' (late-preterm includes 34 wks outside original Bhutani/≥35-week use); whyUse implied zones guide phototherapy decisions — Bhutani zones predict subsequent significant hyperbilirubinemia and guide follow-up; phototherapy uses separate AAP thresholds"
+      ],
+      "changes": [
+        "whenToUse: 'Term and late-preterm newborns…' → '≥35-week newborns…'",
+        "whyUse: clarified risk zones stratify later significant hyperbilirubinemia and guide follow-up intensity; phototherapy uses separate AAP thresholds"
+      ],
+      "sources": [
+        "https://med.stanford.edu/newborns/professional-education/jaundice-and-phototherapy/bhutani-nomogram.html",
+        "https://divisionofresearch.kaiserpermanente.org/publications/predicting-the-need-for-phototherapy-after-discharge/",
+        "Bhutani et al. Pediatrics 1999 — hour-specific risk zones for subsequent TSB >95th percentile; separate AAP treatment nomograms for phototherapy"
+      ]
+    },
+    {
+      "id": "phototherapy-threshold",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://publications.aap.org/pediatrics/article/150/3/e2022058859/188726/Clinical-Practice-Guideline-Revision-Management-of",
+        "AAP 2022 — hour-specific phototherapy thresholds rise with age and fall with neurotoxicity risk factors; confirm with official tool"
+      ]
+    },
+    {
+      "id": "exchange-transfusion-threshold",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://publications.aap.org/pediatrics/article/150/3/e2022058859/188726/Clinical-Practice-Guideline-Revision-Management-of",
+        "AAP 2022 — exchange thresholds above phototherapy; intensive photo + neonatology/prepare exchange near threshold or with ABE"
+      ]
+    },
+    {
+      "id": "croup-dex-dose",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/8649915/",
+        "https://pubmed.ncbi.nlm.nih.gov/30133690/",
+        "Dexamethasone 0.15–0.6 mg/kg single dose (max often 10 mg; some allow higher); mild: dex + supportive; moderate–severe: add nebulized epinephrine"
+      ]
+    },
+    {
+      "id": "pulmonary-score",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/11825832/",
+        "Smith et al. Acad Emerg Med 2002 — pulmonary score RR+wheeze+accessory (0–9); mild 0–3, moderate 4–6, severe 7–9 pathway bands"
+      ]
+    },
+    {
+      "id": "scarlet-fever",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/23091044/",
+        "IDSA GAS pharyngitis — clinical scarlet fever features + RADT/culture; penicillin/amoxicillin; return-to-school after antibiotics started"
+      ]
+    },
+    {
+      "id": "pims-ts",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.cdc.gov/mis/index.html",
+        "CDC/WHO MIS-C (PIMS-TS) — fever, multi-system inflammation, labs, COVID link, exclude alternatives; hospitalize, echo/ECG, specialists, protocol therapy"
+      ]
+    },
+    {
+      "id": "orbital-cellulitis",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/20516236/",
+        "Classic orbital red flags (pain with EOM, ophthalmoplegia, proptosis, vision change) → urgent imaging, IV abx, ophtho/ENT, admit"
+      ]
+    },
+    {
+      "id": "glasgow-meningococcal",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/2886770/",
+        "GMSPS historical prognostic score (hypotension, ΔT, coma, deterioration, absent meningism, rash, base deficit); treat suspected meningococcal disease immediately — score does not gate antibiotics"
+      ]
+    },
+    {
+      "id": "petechiae-risk",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.nice.org.uk/guidance/ng143",
+        "NICE NG143 fever traffic light — non-blanching rash/purpura/ill appearance red; immediate abx/cultures/senior for red; amber needs urgent evaluation"
+      ]
+    },
+    {
+      "id": "uti-peds",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/21873693/",
+        "AAP 2011 / NICE NG111 — age, sex/circumcision, fever without source, urinary symptoms drive testing; young/ill infants urgent specimen ± sepsis eval"
+      ]
+    },
+    {
+      "id": "pneumonia-peds",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/21880587/",
+        "https://pubmed.ncbi.nlm.nih.gov/21903691/",
+        "IDSA/PIDS and BTS pediatric CAP — hypoxia, work of breathing, feeding, age, complications drive outpatient vs admit vs higher acuity"
+      ]
+    },
+    {
+      "id": "who-pneumonia",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.who.int/publications/i/item/9789241507813",
+        "WHO 2014 IMCI — 2–59 mo: fast breathing (≥50 if 2–11 mo; ≥40 if 12–59 mo) ± indrawing = pneumonia (oral amox, f/u 3 d); danger signs = severe (O₂, referral, pre-referral abx)"
+      ]
+    },
+    {
+      "id": "malaria-severity",
+      "status": "fixed",
+      "issues": [
+        "nextSteps 'Step down to oral when able' omitted WHO minimum ≥24 h parenteral antimalarial before switching to a full oral ACT course"
+      ],
+      "changes": [
+        "nextSteps action 'Step down to oral when able' → 'Full oral ACT after ≥24 h parenteral when able'"
+      ],
+      "sources": [
+        "https://www.severemalaria.org/severe-malaria/severe-malaria-treatment",
+        "https://www.who.int/publications/i/item/guidelines-for-malaria",
+        "WHO severe malaria — any defining feature → parenteral artesunate; ≥24 h parenteral then full oral ACT when able"
+      ]
+    },
+    {
+      "id": "dengue-warning",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.who.int/publications/i/item/9789241547871",
+        "WHO dengue classification — warning signs (abd pain, vomiting, fluid accumulation, mucosal bleed, lethargy, hepatomegaly, rising HCT/falling platelets) → observe/fluids; severe dengue → emergency resuscitation/ICU"
+      ]
+    }
+  ]
+}

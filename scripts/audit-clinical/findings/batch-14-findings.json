@@ -1,0 +1,201 @@
+{
+  "batch": 14,
+  "file": "wave2-oncology.ts",
+  "audited": 19,
+  "fixed": 2,
+  "items": [
+    {
+      "id": "car-t-crs",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Lee DW et al. Biol Blood Marrow Transplant. 2019 (ASTCT CRS grading; PMID 30592986)",
+        "Product/label pathways: tocilizumab commonly from grade ≥2; steroids for higher-grade/refractory CRS; ICU for grade ≥3"
+      ]
+    },
+    {
+      "id": "icans-grade",
+      "status": "fixed",
+      "issues": [
+        "nextSteps grade ≥2 said 'Hold driving precautions' (ambiguous/incorrect phrasing)",
+        "nextSteps omitted corticosteroids at grade ≥2 despite standard CAR-T pathways and this calculator's own grade-2 interpretation commonly starting steroids"
+      ],
+      "changes": [
+        "nextSteps grade ≥2: 'Hold driving precautions' → 'Driving restrictions'; added 'Consider corticosteroids per protocol'"
+      ],
+      "sources": [
+        "Lee DW et al. Biol Blood Marrow Transplant. 2019 (ASTCT ICANS grading; PMID 30592986)",
+        "NCCN/SITC-style ICANS pathways: steroids often considered at grade ≥2; ICU + steroids for grade ≥3"
+      ]
+    },
+    {
+      "id": "ctcae-neutropenia",
+      "status": "fixed",
+      "issues": [
+        "nextSteps condition 'Fever + ANC <0.5–1.0' is ambiguous (reads as a closed range and could exclude profound neutropenia <0.5)"
+      ],
+      "changes": [
+        "nextSteps condition: 'Fever + ANC <0.5–1.0' → 'Fever + ANC <1.0' (CTCAE febrile neutropenia ANC <1000/µL; covers grade 3–4 and clinical FN pathways)"
+      ],
+      "sources": [
+        "NCI CTCAE v5.0: febrile neutropenia = ANC <1000/mm³ with fever criteria",
+        "IDSA/ASCO fever and neutropenia: severe neutropenia often ANC <500 or <1000 expected to fall below 500"
+      ]
+    },
+    {
+      "id": "ctcae-thrombocytopenia",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "NCI CTCAE v5.0 platelet grades (G3 25–<50, G4 <25 ×10⁹/L); protocol hold/transfuse thresholds"
+      ]
+    },
+    {
+      "id": "r-chop-bsa",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Mosteller RD. N Engl J Med. 1987 (BSA); standard mg/m² × BSA dosing practice"
+      ]
+    },
+    {
+      "id": "calvert-carboplatin",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Calvert AH et al. J Clin Oncol. 1989 (PMID 2681557)",
+        "NCI/FDA practice: GFR often capped at 125 mL/min for Calvert"
+      ]
+    },
+    {
+      "id": "okuda",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Okuda K et al. Cancer. 1985 (PMID 2990661); historical four-factor HCC stage; BCLC preferred for treatment allocation"
+      ]
+    },
+    {
+      "id": "bclc-hcc",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Reig M et al. J Hepatol. 2022 BCLC update (PMID 34801630): stages 0/A curative options; B loco-regional; C systemic; D BSC"
+      ]
+    },
+    {
+      "id": "clip-score",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "CLIP investigators. Hepatology. 1998 (PMID 9731568): Child-Pugh, morphology, AFP, portal thrombosis → 0–6"
+      ]
+    },
+    {
+      "id": "milan-criteria",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Mazzaferro V et al. N Engl J Med. 1996 (PMID 8654604): single ≤5 cm or ≤3 nodules ≤3 cm for transplant candidacy"
+      ]
+    },
+    {
+      "id": "recist",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Eisenhauer EA et al. Eur J Cancer. 2009 (PMID 19097774): RECIST 1.1 CR/PR/SD/PD; new lesions = PD; immunotherapy mixed response caveat appropriate"
+      ]
+    },
+    {
+      "id": "iperformance",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Oken MM et al. Am J Clin Oncol. 1982 (PMID 7165009): ECOG PS; PS ≥3 appropriately triggers goals-of-care / limited intensive therapy"
+      ]
+    },
+    {
+      "id": "karnofsky",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "KPS <80 is Motzer and IMDC adverse factor; finer scale than ECOG"
+      ]
+    },
+    {
+      "id": "gail-model-simplified",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Gail MH et al. J Natl Cancer Inst. 1989 (PMID 2593165); text correctly frames as educational / prompts formal Gail or Tyrer-Cuzick"
+      ]
+    },
+    {
+      "id": "nccn-distress",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "NCCN Distress Management: DT ≥4 triggers further evaluation/referral; severe distress (often ≥7) or SI warrants urgent mental health assessment"
+      ]
+    },
+    {
+      "id": "imdc-risk",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Heng DY et al. J Clin Oncol. 2009 (PMID 19826129): IMDC (Heng) favorable/intermediate/poor for metastatic RCC systemic therapy discussions"
+      ]
+    },
+    {
+      "id": "mskcc-motzer",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Motzer RJ et al. J Clin Oncol. 2002 (PMID 11773181): five-factor MSKCC model; IMDC adds neutrophils/platelets and drops LDH"
+      ]
+    },
+    {
+      "id": "hasenclever-ips",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Hasenclever D, Diehl V. N Engl J Med. 1998 (PMID 9819449): seven-factor IPS for advanced classical Hodgkin; freedom from progression"
+      ]
+    },
+    {
+      "id": "flipi",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Solal-Céligny P et al. Blood. 2004 (PMID 15126323): FLIPI five factors; nextSteps correctly pair with grade and GELF for treatment vs observation"
+      ]
+    },
+    {
+      "id": "ipi-lymphoma",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "The International Non-Hodgkin's Lymphoma Prognostic Factors Project. N Engl J Med. 1993 (PMID 8413381); foundation for R-IPI/CNS-IPI; high IPI prompts COO/FISH and CNS risk review"
+      ]
+    }
+  ]
+}

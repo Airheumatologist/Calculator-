@@ -1,0 +1,261 @@
+{
+  "batch": 27,
+  "file": "wave4-neuro-psych.ts",
+  "audited": 24,
+  "fixed": 4,
+  "items": [
+    {
+      "id": "race-scale",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ahajournals.org/doi/10.1161/strokeaha.113.003071",
+        "https://www.mdcalc.com/calc/3941/rapid-arterial-occlusion-evaluation-race-scale-stroke",
+        "Pérez de la Ossa N et al. Stroke. 2014 — RACE 0–9; cutoff ≥5 for LVO suspicion (sens ~85%, spec ~65–68%)"
+      ]
+    },
+    {
+      "id": "laps-score",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/3959/los-angeles-motor-scale-lams",
+        "https://www.ahajournals.org/doi/10.1161/STROKEAHA.117.019228",
+        "Nazliel/Noorian LAMS literature — face+arm+grip 0–5; ≥4 commonly used LVO/CSC routing threshold"
+      ]
+    },
+    {
+      "id": "c-stat",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/4009/cincinnati-prehospital-stroke-severity-scale-cp-sss",
+        "Katz BS et al. Stroke. 2015 — gaze 2 + arm 1 + LOC 1 (0–4); ≥2 LVO/severe-stroke screen"
+      ]
+    },
+    {
+      "id": "fast-ed",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/10633/field-assessment-stroke-triage-emergency-destination-fast-ed",
+        "Lima FO et al. Stroke. 2016 — FAST-ED 0–9; ≥4 high LVOS probability (~60%+); some systems use ≥3 or ≥5"
+      ]
+    },
+    {
+      "id": "func-score",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ahajournals.org/doi/10.1161/strokeaha.107.512202",
+        "Rost NS et al. Stroke. 2008 — FUNC 0–11 predicts 90-day functional independence after primary ICH; complements ICH Score mortality"
+      ]
+    },
+    {
+      "id": "spot-sign",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Demchuk AM et al. Lancet Neurol. 2012 (PREDICT) — CTA spot sign predicts hematoma expansion",
+        "Standard ICH care: BP control, reverse coagulopathy, ICU monitoring, neurosurgical input"
+      ]
+    },
+    {
+      "id": "wfns-sah",
+      "status": "fixed",
+      "issues": [
+        "whenToUse included 'highly suspected' SAH; WFNS is a post-diagnosis clinical severity grade for confirmed aSAH (parallel to Hunt-Hess audit)"
+      ],
+      "changes": [
+        "whenToUse: 'Confirmed or highly suspected aneurysmal SAH...' → 'Confirmed aneurysmal SAH for standardized clinical severity grading.'"
+      ],
+      "sources": [
+        "Teasdale GM et al. WFNS SAH grading — GCS + motor deficit → grades I–V",
+        "https://www.ahajournals.org/doi/10.1161/STR.0000000000000436",
+        "AHA/ASA aSAH pathway: nimodipine all grades; secure aneurysm; DCI watch ~days 3–14; airway/EVD for poor grade"
+      ]
+    },
+    {
+      "id": "vasospasm-risk",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Frontera JA et al. Neurosurgery. 2006 — modified Fisher thick SAH ± IVH raises DCI risk",
+        "Classic DCI window ~days 3–14 with peak ~7–10 after aSAH"
+      ]
+    },
+    {
+      "id": "tbi-severity",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "ATLS/neurotrauma standard — mild GCS 13–15, moderate 9–12, severe ≤8",
+        "Teasdale G, Jennett B. Lancet. 1974 — GCS; severe TBI airway/CT/avoid hypoxia-hypotension pathway"
+      ]
+    },
+    {
+      "id": "scat5-symptom",
+      "status": "fixed",
+      "issues": [
+        "whyUse implied SCAT symptom totals drive 'return-to-play decisions'; SCAT symptom severity supports multimodal assessment and recovery tracking, not standalone RTP clearance"
+      ],
+      "changes": [
+        "whyUse: removed 'return-to-play decisions' → 'baseline comparison and serial recovery tracking within multimodal concussion assessment'"
+      ],
+      "sources": [
+        "Echemendia RJ et al. Br J Sports Med. 2017 (SCAT5); SCAT6 2023 — 22 symptoms × 0–6 (severity 0–132)",
+        "Concussion in Sport Group — same-day remove-from-play if concussion suspected; graduated RTL then RTP"
+      ]
+    },
+    {
+      "id": "concussion-return",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "McCrory/Patricios CISG consensus — 6-stage graduated RTP; advance if asymptomatic (typically ≥24 h/stage); medical clearance before contact",
+        "Return-to-learn prioritization before advancing sport intensity"
+      ]
+    },
+    {
+      "id": "4at",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.the4at.com",
+        "Bellelli G et al. Age Ageing. 2014 — 4AT 0–12; ≥4 possible delirium; 1–3 possible CI; 0 unlikely"
+      ]
+    },
+    {
+      "id": "brief-confusion",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Han JH et al. Ann Emerg Med. 2013 — bCAM positive = F1 (acute/fluctuating) + F2 (inattention) + (F3 altered LOC or F4 disorganized thinking)"
+      ]
+    },
+    {
+      "id": "ace-iii-total",
+      "status": "fixed",
+      "issues": [
+        "whyUse claimed total cutoffs aid 'dementia vs MCI triage'; published 82/88 cutoffs are dementia-screening thresholds (sens/spec trade-off), not validated dementia-vs-MCI discriminators"
+      ],
+      "changes": [
+        "whyUse: 'total cutoffs aid dementia vs MCI triage (education-dependent)' → 'total cutoffs (often 82/88) aid dementia screening (education-dependent)'"
+      ],
+      "sources": [
+        "Hsieh S et al. Dement Geriatr Cogn Disord. 2013 — ACE-III 0–100; cutoffs 88 (higher sensitivity) and 82 (higher specificity)",
+        "University of Sydney ACE-III FAQ — same 88/82 dementia suspicion cut-offs as ACE-R"
+      ]
+    },
+    {
+      "id": "iqcode",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://nceph.anu.edu.au/research/tools-resources/informant-questionnaire-cognitive-decline-elderly",
+        "Jorm AF — IQCODE average 1–5 over ~10 years; short-form balanced cutoffs ~3.31–3.38; community cutoffs often ≥3.3–3.6"
+      ]
+    },
+    {
+      "id": "ad8",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Galvin JE et al. Neurology. 2005 — AD8 ≥2 yes responses positive for cognitive impairment; informant preferred"
+      ]
+    },
+    {
+      "id": "gds-15",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://hign.org/consultgeri/try-this-series/geriatric-depression-scale-gds",
+        "Yesavage/HIGN GDS-15 — 0–4 normal, 5–8 mild, 9–11 moderate, 12–15 severe; ≥5 warrants further evaluation"
+      ]
+    },
+    {
+      "id": "cornell-dementia",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Alexopoulos GS et al. Biol Psychiatry. 1988 — CSDD 0–38; common action thresholds ≥6–8; >10 often probable major depression band"
+      ]
+    },
+    {
+      "id": "zarit-burden",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Zarit SH et al. Gerontologist. 1980 — ZBI-22 bands often 0–20 / 21–40 / 41–60 / 61–88; ZBI-12 high burden commonly ≥17"
+      ]
+    },
+    {
+      "id": "psqi",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Buysse DJ et al. Psychiatry Res. 1989 — PSQI global 0–21; classic poor-sleeper cutoff >5"
+      ]
+    },
+    {
+      "id": "restless-irlssg",
+      "status": "fixed",
+      "issues": [
+        "nextSteps ferritin phrasing '<50–75 µg/L' was ambiguous and mixed older ~50 thresholds with current guidance; modern RLS algorithms replete around ferritin ≤75 µg/L and incorporate TSAT"
+      ],
+      "changes": [
+        "nextSteps action: 'Serum ferritin (often treat if <50–75 µg/L per guidelines/context)' → 'Serum ferritin/iron studies (often replete if ferritin ≤75 µg/L; check TSAT)'"
+      ],
+      "sources": [
+        "Walters AS et al. Sleep Med. 2003 — IRLS 0–40 (mild 1–10, moderate 11–20, severe 21–30, very severe 31–40)",
+        "https://aasm.org/new-guideline-provides-treatment-recommendations-for-restless-legs-syndrome/",
+        "AASM/IRLSSG iron guidance — repletion commonly considered at ferritin ≤75 µg/L (with TSAT); gabapentinoids preferred over routine dopamine agonists"
+      ]
+    },
+    {
+      "id": "pc-ptsd",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Prins A et al. J Gen Intern Med. 2016; NCPTSD PC-PTSD-5 — trauma gate then 5 items; ≥3 optimally sensitive screen; ≥4 more efficient in some VA samples"
+      ]
+    },
+    {
+      "id": "ciwa-b",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Busto UE et al. J Clin Psychopharmacol. 1989 — CIWA-B multi-item benzo withdrawal scale (totals often 0–80)",
+        "Institutional bands commonly mild 1–20 / moderate 21–40 / severe 41–60 / very severe 61–80; slow taper, avoid abrupt stop"
+      ]
+    },
+    {
+      "id": "ort",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Webster LR, Webster RM. Pain Med. 2005 — ORT sex-specific weighted score; low 0–3, moderate 4–7, high ≥8 before chronic opioid therapy for non-cancer pain"
+      ]
+    }
+  ]
+}

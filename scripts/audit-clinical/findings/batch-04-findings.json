@@ -1,0 +1,262 @@
+{
+  "batch": 4,
+  "files": ["extra.ts", "gi-neuro-psych.ts"],
+  "audited": 25,
+  "fixed": 2,
+  "items": [
+    {
+      "id": "duke-criteria",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Li JS et al. Clin Infect Dis. 2000 (modified Duke)",
+        "Fowler VG et al. Clin Infect Dis. 2023 (Duke-ISCVID update; framework still definite/possible/rejected)"
+      ]
+    },
+    {
+      "id": "jones-criteria",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Gewitz MH et al. Circulation. 2015 (AHA Jones revision)",
+        "Secondary prophylaxis and GAS eradication standard ARF care"
+      ]
+    },
+    {
+      "id": "centor-feverpain",
+      "status": "ok",
+      "issues": [
+        "nextSteps omit intermediate (2–3) delayed-prescription band; not inaccurate for Low/High as written"
+      ],
+      "changes": [],
+      "sources": [
+        "Little P et al. BMJ. 2013 (PRISM/FeverPAIN)",
+        "NICE NG84: 0–1 no Abx; 2–3 delayed; 4–5 immediate"
+      ]
+    },
+    {
+      "id": "framingham-hf",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "McKee PA et al. N Engl J Med. 1971",
+        "Modern HF workup (BNP/echo/GDMT) appropriately listed as next steps"
+      ]
+    },
+    {
+      "id": "nyha",
+      "status": "fixed",
+      "issues": [
+        "whenToUse said 'Staging' functional limitation; NYHA is functional classification, not ACC/AHA stages A–D"
+      ],
+      "changes": [
+        "whenToUse: 'Staging functional limitation in known HF.' → 'Classifying functional limitation in known HF.'"
+      ],
+      "sources": [
+        "AHA classes of heart failure (NYHA Functional Classification vs ACC/AHA stages)",
+        "2022 AHA/ACC/HFSA HF guideline: NYHA characterizes symptoms/functional capacity in stage C/D HF"
+      ]
+    },
+    {
+      "id": "pao2-fio2-age-expected",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Teaching rule expected PaO₂ ≈ 100 − 0.3×age on room air/sea level",
+        "A–a gradient workup for hypoxemia standard"
+      ]
+    },
+    {
+      "id": "qc-fridericia",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Fridericia preferred over Bazett at HR extremes (FDA/EMA drug studies; clinical reviews)",
+        "QTc ≥500 ms high TdP risk — telemetry, stop QT drugs, replete K/Mg"
+      ]
+    },
+    {
+      "id": "serum-anion-gap-k",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "AG methods with vs without K; albumin correction for HAGMA workup"
+      ]
+    },
+    {
+      "id": "ibw-hamwi",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Hamwi GJ 1964 classic dietetics/pharmacy IBW formula"
+      ]
+    },
+    {
+      "id": "calcium-correction-si",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Payne RB et al. Br Med J. 1973 SI albumin correction; ionized Ca preferred"
+      ]
+    },
+    {
+      "id": "child-pugh",
+      "status": "ok",
+      "issues": [
+        "HCC/varices screening listed under Class B–C only; Class A also needs surveillance — not contradicted, left slim"
+      ],
+      "changes": [],
+      "sources": [
+        "Child-Turcotte-Pugh class A 5–6, B 7–9, C 10–15",
+        "AASLD/EASL cirrhosis surveillance and transplant evaluation practice"
+      ]
+    },
+    {
+      "id": "meld",
+      "status": "ok",
+      "issues": [
+        "whyUse notes MELD-Na; US allocation now MELD 3.0 — still acceptable as common variant language"
+      ],
+      "changes": [],
+      "sources": [
+        "Kamath PS et al. Hepatology. 2001",
+        "Merion RM et al.: transplant survival benefit historically around MELD ≥15; Mayo Clinic still cites ≥15"
+      ]
+    },
+    {
+      "id": "meld-na",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Kim WR et al. N Engl J Med. 2008",
+        "OPTN MELD-Na Na bounds 125–137"
+      ]
+    },
+    {
+      "id": "glasgow-blatchford",
+      "status": "fixed",
+      "issues": [
+        "whyUse limited outpatient band to score 0 only; ACG 2021 and many pathways use GBS 0–1",
+        "nextSteps 'GBS ≥1 Admit' incorrectly forces admission for GBS 1 (very-low-risk band)"
+      ],
+      "changes": [
+        "whyUse: 'Score 0 identifies…' → 'Score 0–1 identifies very low-risk patients often safe for outpatient management.'",
+        "nextSteps condition 'GBS 0' → 'GBS ≤1'; 'GBS ≥1' → 'GBS ≥2'"
+      ],
+      "sources": [
+        "Laine L et al. Am J Gastroenterol. 2021 ACG UGIB guideline (GBS 0–1 discharge)",
+        "Blatchford O et al. Lancet. 2000 (original score 0 pathway)",
+        "ESGE/NICE/UK pathways commonly GBS ≤1 for outpatient consideration"
+      ]
+    },
+    {
+      "id": "rockall",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Rockall TA et al. Gut. 1996 pre- and complete (post-endoscopy) scores"
+      ]
+    },
+    {
+      "id": "alvarado",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Alvarado A. Ann Emerg Med. 1986; imaging still common adjunct"
+      ]
+    },
+    {
+      "id": "bisap",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Wu BU et al. Gut. 2008; BISAP ≥3 higher mortality/organ failure risk"
+      ]
+    },
+    {
+      "id": "abcd2",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Johnston SC et al. Lancet. 2007",
+        "ACEP/AHA practice: do not rely on ABCD² alone to delay urgent TIA workup"
+      ]
+    },
+    {
+      "id": "nihss",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Brott T et al. Stroke. 1989; standard for thrombolysis/thrombectomy pathways"
+      ]
+    },
+    {
+      "id": "phq9",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Kroenke K et al. J Gen Intern Med. 2001: ≥10 sensitivity/specificity ~88% for MDD; item 9 safety"
+      ]
+    },
+    {
+      "id": "gad7",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Spitzer RL et al. Arch Intern Med. 2006: score ≥10 reasonable GAD cut point; CBT/SSRI-SNRI"
+      ]
+    },
+    {
+      "id": "cage",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Ewing JA. JAMA. 1984; positive typically ≥2; SBIRT next steps appropriate"
+      ]
+    },
+    {
+      "id": "ciwa",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Sullivan JT et al. Br J Addict. 1989; symptom-triggered benzos commonly CIWA ≥8–10; thiamine"
+      ]
+    },
+    {
+      "id": "mmse",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Folstein MF et al. 1975; traditional ≤24 impairment band education-dependent"
+      ]
+    },
+    {
+      "id": "moca",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Nasreddine et al. 2005 original <26 MCI screen; more sensitive than MMSE for MCI"
+      ]
+    }
+  ]
+}

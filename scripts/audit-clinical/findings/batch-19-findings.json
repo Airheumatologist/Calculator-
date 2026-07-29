@@ -1,0 +1,253 @@
+{
+  "batch": 19,
+  "file": "wave3-gi-hep.ts",
+  "audited": 25,
+  "fixed": 0,
+  "items": [
+    {
+      "id": "meld-xi",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/17154400/",
+        "https://www.amjtransplant.org/article/S1600-6135(22)14409-6/fulltext"
+      ]
+    },
+    {
+      "id": "peld-score",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.aasld.org/liver-fellow-network/core-series/clinical-pearls/pediatric-liver-transplant-prioritization",
+        "https://www.mdcalc.com/calc/87/peld-score-pediatric-end-stage-liver-disease-younger-12"
+      ]
+    },
+    {
+      "id": "ukeld",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.nhsbt.nhs.uk/organ-transplantation/liver/is-a-liver-transplant-right-for-you/liver-transplant-tests/how-do-doctors-decide-if-you-need-a-liver-transplant/",
+        "https://transplantbenefit.org/"
+      ]
+    },
+    {
+      "id": "clif-c-aclf",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://efclif.com/research-infrastructure/score-calculators/clif-c-of-aclf-ad/",
+        "https://www.mdcalc.com/calc/10240/clif-c-aclf-acute-chronic-liver-failure"
+      ]
+    },
+    {
+      "id": "clif-sofa",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://efclif.com/research-infrastructure/score-calculators/clif-c-of-aclf-ad/",
+        "https://www.journal-of-hepatology.eu/article/S0168-8278(23)00244-1/fulltext"
+      ]
+    },
+    {
+      "id": "abic-score",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/18721242/",
+        "http://alchepscores.com/"
+      ]
+    },
+    {
+      "id": "arr",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/AST/ALT_ratio",
+        "https://pubmed.ncbi.nlm.nih.gov/15208167/"
+      ]
+    },
+    {
+      "id": "aasld-ascites",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/3096/serum-ascites-albumin-gradient-saag",
+        "https://emedicine.medscape.com/article/2172621-overview"
+      ]
+    },
+    {
+      "id": "runyon-criteria",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://emcrit.org/pulmcrit/secondary-bacterial-peritonitis/",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC5348596/"
+      ]
+    },
+    {
+      "id": "harmless-ap",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/19245846/",
+        "https://www.mdcalc.com/calc/3286/harmless-acute-pancreatitis-score-haps"
+      ]
+    },
+    {
+      "id": "pned",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/20051943/",
+        "https://www.mdpi.com/2077-0383/12/11/3678"
+      ]
+    },
+    {
+      "id": "pas",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/3926/pediatric-appendicitis-score-pas"
+      ]
+    },
+    {
+      "id": "tokyo-cholangitis",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/10142/tokyo-guidelines-acute-cholangitis-2018",
+        "https://pubmed.ncbi.nlm.nih.gov/28941329/"
+      ]
+    },
+    {
+      "id": "tokyo-cholecystitis",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/10130/tokyo-guidelines-acute-cholecystitis-2018",
+        "https://pubmed.ncbi.nlm.nih.gov/29045062/"
+      ]
+    },
+    {
+      "id": "determinant-based",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/22777340/"
+      ]
+    },
+    {
+      "id": "mayo-pbc",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.sciencedirect.com/science/article/abs/pii/S0025619612653506",
+        "https://www.mayoclinic.org/medical-professionals/transplant-medicine/calculators/the-updated-natural-history-model-for-primary-biliary-cholangitis/itt-20434724"
+      ]
+    },
+    {
+      "id": "barrett-prague",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/16697750/"
+      ]
+    },
+    {
+      "id": "los-angeles-esophagitis",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/10348825/"
+      ]
+    },
+    {
+      "id": "varices-baveno",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/27388923/",
+        "https://www.cghjournal.org/article/S1542-3565(19)30494-X/fulltext"
+      ]
+    },
+    {
+      "id": "hvpg",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.aasld.org/liver-fellow-network/core-series/why-series/why-do-we-use-non-selective-beta-blockers-cirrhosis",
+        "https://practicalgastro.com/2025/08/26/use-of-beta-blockers-in-patients-with-cirrhosis/"
+      ]
+    },
+    {
+      "id": "ascites-pmm",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.aasld.org/liver-fellow-network/core-series/why-series/why-timing-matters-paracentesis-admission-cirrhosis",
+        "https://www.hepatitisc.uw.edu/pdf/management-cirrhosis-related-complications/spontaneous-bacterial-peritonitis-recognition-management/core-concept/all.html"
+      ]
+    },
+    {
+      "id": "delta-meld",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/15476479/",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC10254044/"
+      ]
+    },
+    {
+      "id": "fibroscan-f-stage",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.journal-of-hepatology.eu/article/S0168-8278(21)00398-6/fulltext"
+      ]
+    },
+    {
+      "id": "df-units",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/56/maddreys-discriminant-function-alcoholic-hepatitis",
+        "https://www.aasld.org/liver-fellow-network/core-series/why-series/why-do-we-use-steroids-maddreys-discriminant-function"
+      ]
+    },
+    {
+      "id": "gerd-q",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/19737151/",
+        "https://www.aafp.org/afp/2010/0515/p1278"
+      ]
+    }
+  ]
+}

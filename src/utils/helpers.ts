@@ -91,3 +91,92 @@ export function numberInput(
     required: true,
   };
 }
+
+export type RangeViolation = {
+  id: string;
+  label: string;
+  value: number;
+  min?: number;
+  max?: number;
+  direction: 'low' | 'high';
+};
+
+/** Values typed outside an input's min/max (HTML min/max do not block free typing). */
+export function getRangeViolations(
+  inputs: { id: string; label: string; type: string; min?: number; max?: number }[],
+  values: Record<string, number | string | boolean | null | undefined>
+): RangeViolation[] {
+  const violations: RangeViolation[] = [];
+  for (const input of inputs) {
+    if (input.type !== 'number') continue;
+    if (input.min === undefined && input.max === undefined) continue;
+    const raw = values[input.id];
+    if (raw === null || raw === undefined || raw === '') continue;
+    const n = typeof raw === 'number' ? raw : parseFloat(String(raw));
+    if (!Number.isFinite(n)) continue;
+    if (input.min !== undefined && n < input.min) {
+      violations.push({
+        id: input.id,
+        label: input.label,
+        value: n,
+        min: input.min,
+        max: input.max,
+        direction: 'low',
+      });
+    } else if (input.max !== undefined && n > input.max) {
+      violations.push({
+        id: input.id,
+        label: input.label,
+        value: n,
+        min: input.min,
+        max: input.max,
+        direction: 'high',
+      });
+    }
+  }
+  return violations;
+}
+
+export function rangeViolationMessage(direction: 'low' | 'high'): string {
+  return direction === 'high'
+    ? 'Too high; please change to proceed'
+    : 'Too low; please change to proceed';
+}
+
+/** Live result shown when any numeric input is outside its declared min/max. */
+export function rangeBlockedResult(violations: RangeViolation[]): {
+  score: string;
+  label: string;
+  interpretation: string;
+  riskLevel: RiskLevel;
+  details: { label: string; value: string }[];
+} {
+  const hasHigh = violations.some((v) => v.direction === 'high');
+  const hasLow = violations.some((v) => v.direction === 'low');
+  const label =
+    hasHigh && hasLow
+      ? 'Out of range; please change to proceed'
+      : hasHigh
+        ? rangeViolationMessage('high')
+        : rangeViolationMessage('low');
+
+  return {
+    score: '—',
+    label,
+    interpretation: violations
+      .map((v) =>
+        v.direction === 'high'
+          ? `${v.label}: too high (maximum ${v.max}).`
+          : `${v.label}: too low (minimum ${v.min}).`
+      )
+      .join(' '),
+    riskLevel: 'info',
+    details: violations.map((v) => ({
+      label: v.label,
+      value:
+        v.direction === 'high'
+          ? `${v.value} (max ${v.max})`
+          : `${v.value} (min ${v.min})`,
+    })),
+  };
+}

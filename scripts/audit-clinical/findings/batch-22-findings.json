@@ -1,0 +1,236 @@
+{
+  "batch": 22,
+  "file": "wave3-tox-endo-heme.ts",
+  "audited": 21,
+  "fixed": 2,
+  "items": [
+    {
+      "id": "osmolar-gap-tox",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://emcrit.org/ibcc/alcohols/",
+        "https://poisoncontrol.utah.edu/news/2023/09/fomepizole-antidote",
+        "https://www.acep.org/toxicology/newsroom/Oct2020/toxic-alcohols"
+      ]
+    },
+    {
+      "id": "methanol-osmol",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://emcrit.org/ibcc/alcohols/",
+        "https://www.acep.org/toxicology/newsroom/Oct2020/toxic-alcohols"
+      ]
+    },
+    {
+      "id": "ethylene-glycol-osmol",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ebmconsult.com/articles/ethylene-glycol-toxicology",
+        "https://emcrit.org/ibcc/alcohols/"
+      ]
+    },
+    {
+      "id": "nac-dosing",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK537183/",
+        "https://www.acmt.net/news/acmt-practice-statement-duration-of-intravenous-acetylcysteine-therapy-following-acetaminophen-overdose-2026-update/"
+      ]
+    },
+    {
+      "id": "digoxin-fab",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://litfl.com/calcium-digoxin-toxicity-and-stone-heart-theory/",
+        "https://www.mdcalc.com/calc/4036/digifab-dosing-digoxin-poisoning",
+        "https://www.sciencedirect.com/science/article/pii/S0002934324005436"
+      ]
+    },
+    {
+      "id": "salicylate-level",
+      "status": "fixed",
+      "issues": [
+        "nextSteps action 'Avoid intubation delays/hypoventilation' is ambiguous and can be read as urging early intubation; salicylate teaching is to avoid intubation when possible and, if required, prevent peri-intubation hypoventilation."
+      ],
+      "changes": [
+        "nextSteps Significant toxicity: rewrote intubation action to 'Avoid intubation if possible; if intubating, prevent hypoventilation'"
+      ],
+      "sources": [
+        "https://emcrit.org/ibcc/salicylates/",
+        "https://coreem.net/core/salicylate-toxicity-salicylism/",
+        "https://www.amboss.com/us/knowledge/salicylate-poisoning",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4371029/"
+      ]
+    },
+    {
+      "id": "fomepizole-dose",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://poisoncontrol.utah.edu/news/2023/09/fomepizole-antidote",
+        "https://emcrit.org/ibcc/alcohols/"
+      ]
+    },
+    {
+      "id": "naloxone-infusion",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Common toxicology rule of thumb: infusion ≈ 2/3 effective bolus per hour"
+      ]
+    },
+    {
+      "id": "serotonin-syndrome",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.aafp.org/afp/2010/0501/p1139",
+        "https://academic.oup.com/qjmed/article-abstract/96/9/635/1522590",
+        "https://emedicine.medscape.com/article/821737-clinical"
+      ]
+    },
+    {
+      "id": "nms-criteria",
+      "status": "fixed",
+      "issues": [
+        "whenToUse includes abrupt dopamine agonist withdrawal, but nextSteps only said 'Stop neuroleptics', which is incomplete/wrong for withdrawal-precipitated NMS (restart agonists)."
+      ],
+      "changes": [
+        "nextSteps High concern NMS: replaced single 'Stop neuroleptics' with 'Stop dopamine antagonists (neuroleptics/antiemetics)' and 'Restart dopamine agonists if recently withdrawn'"
+      ],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK482282/",
+        "https://emcrit.org/ibcc/nms/",
+        "https://emergencycarebc.ca/clinical_resource/clinical-summary/neuroleptic-malignant-syndrome-diagnosis-treatment/"
+      ]
+    },
+    {
+      "id": "anticholinergic-tox",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC6597673/",
+        "https://poisoncontrol.utah.edu/news/2024/02/physostigmine-or-rivastigmine-anticholinergic-toxicity"
+      ]
+    },
+    {
+      "id": "cholinergic-tox",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/17706760/"
+      ]
+    },
+    {
+      "id": "opioid-toxidrome",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Standard toxicology opioid triad teaching"
+      ]
+    },
+    {
+      "id": "pack-year",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/lung-cancer-screening"
+      ]
+    },
+    {
+      "id": "nicotine-dependence",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.sciencedirect.com/topics/medicine-and-dentistry/fagerstrom-test-for-nicotine-dependence",
+        "Heatherton TF et al. Br J Addict. 1991 (FTND)"
+      ]
+    },
+    {
+      "id": "alcohol-unit",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.niaaa.nih.gov/alcohols-effects-health/overview-alcohol-consumption/what-standard-drink"
+      ]
+    },
+    {
+      "id": "body-fat-navy",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "US Navy Hodgdon circumference equations (military field method)"
+      ]
+    },
+    {
+      "id": "waist-hip-ratio",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.who.int/publications/i/item/9241208945"
+      ]
+    },
+    {
+      "id": "tirads",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://radiopaedia.org/articles/acr-thyroid-imaging-reporting-and-data-system-acr-ti-rads?lang=us",
+        "Tessler FN et al. J Am Coll Radiol. 2017 (ACR TI-RADS)"
+      ]
+    },
+    {
+      "id": "bethesda-thyroid",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/37427847/",
+        "https://www.pathologyoutlines.com/topic/thyroiddiagnostic.html"
+      ]
+    },
+    {
+      "id": "thyroid-storm-burch",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/3816/burch-wartofsky-point-scale-bwps-thyrotoxicosis",
+        "Burch HB, Wartofsky L. Endocrinol Metab Clin North Am. 1993"
+      ]
+    },
+    {
+      "id": "myxedema",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/10603/myxedema-coma-diagnostic-score",
+        "https://emedicine.medscape.com/article/123577-treatment",
+        "Popoveniuc G et al. Endocrine. 2014"
+      ]
+    }
+  ]
+}

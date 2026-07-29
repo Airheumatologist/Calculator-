@@ -1,0 +1,257 @@
+{
+  "batch": 17,
+  "file": "wave3-cardio-vasc.ts",
+  "audited": 22,
+  "fixed": 4,
+  "items": [
+    {
+      "id": "scai-shock",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.scai.org/publications/clinical-documents/scai-shock-stages-classification-expert-consensus-update-review-and",
+        "Baran DA et al. Catheter Cardiovasc Interv. 2019 — stages A at-risk through E extremis; stages C–E hypoperfusion/escalating support"
+      ]
+    },
+    {
+      "id": "intermacs",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ahajournals.org/doi/10.1161/circheartfailure.116.003032",
+        "Stevenson LW et al. J Heart Lung Transplant. 2009 — profiles 1–2 crash/bridge acuity; 3–4 advanced therapy planning; 5–7 ambulatory advanced HF"
+      ]
+    },
+    {
+      "id": "cardshock",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/25820680/",
+        "Harjola VP et al. Eur J Heart Fail. 2015 — 7-variable short-term/in-hospital mortality score; bands 0–3 / 4–5 / 6–9"
+      ]
+    },
+    {
+      "id": "crusade",
+      "status": "fixed",
+      "issues": [
+        "High/very high nextSteps listed 'Reassess triple therapy need'; CRUSADE is an NSTE-ACS in-hospital major-bleeding model, not a triple-therapy decision tool — primary actions are bleeding-avoidance (radial access, antithrombotic dosing)."
+      ],
+      "changes": [
+        {
+          "field": "nextSteps",
+          "from": "High/very high band: Bleeding-avoidance strategies; Reassess triple therapy need; Close Hb monitoring",
+          "to": "High/very high band: Bleeding-avoidance strategies; Prefer radial access / dose-adjust anticoagulants; Close Hb monitoring"
+        }
+      ],
+      "sources": [
+        "https://www.ahajournals.org/doi/10.1161/circulationaha.108.828541",
+        "https://www.mdcalc.com/calc/1784/crusade-score-post-mi-bleeding-risk",
+        "Subherwal S et al. Circulation. 2009 — NSTE-ACS admission variables for in-hospital major bleeding; ESC may consider CRUSADE in NSTE-ACS angiography patients"
+      ]
+    },
+    {
+      "id": "dapt-score",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://tools.acc.org/DAPTriskapp/",
+        "Yeh RW et al. JAMA. 2016 — apply after ~12 event-free months post-PCI, not on chronic OAC; ≥2 favors prolonged DAPT, <2 standard duration"
+      ]
+    },
+    {
+      "id": "precise-dapt",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/10641/precise-dapt-score",
+        "Costa F et al. Lancet. 2017 — out-of-hospital bleeding on DAPT; ≥25 high bleeding risk → short DAPT strategies; educational tool correctly defers to full nomogram"
+      ]
+    },
+    {
+      "id": "hcm-risk-scd",
+      "status": "fixed",
+      "issues": [
+        "nextSteps for high marker count said 'Avoid competitive sports per guidelines'; current AHA/ACC HCM and sports participation guidance emphasize shared decision-making rather than blanket competitive-sports prohibition."
+      ],
+      "changes": [
+        {
+          "field": "nextSteps",
+          "from": "Multiple markers / syncope / MWT≥30: Specialty HCM clinic; ICD shared decision; Avoid competitive sports per guidelines",
+          "to": "Multiple markers / syncope / MWT≥30: Specialty HCM clinic; ICD shared decision; Exercise counseling with HCM expert (shared decision)"
+        }
+      ],
+      "sources": [
+        "https://www.mdcalc.com/calc/10481/hcm-risk-scd",
+        "O’Mahony C et al. Eur Heart J. 2014 — ESC HCM Risk-SCD continuous 5-year model (age, MWT, LA, LVOT, FH SCD, NSVT, syncope)",
+        "https://www.ahajournals.org/doi/10.1161/CIR.0000000000001297",
+        "2020 AHA/ACC HCM and 2025 sports-participation statements: SDM for exercise/competitive sports after expert assessment"
+      ]
+    },
+    {
+      "id": "brugada-criteria",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://litfl.com/brugada-syndrome-ecg-library/",
+        "Antzelevitch C et al. Heart Rhythm. 2016 — type 1 coved STE diagnostic pattern; type 2 saddleback needs high-lead ECG / expert / provocation context; fever and drug avoidance"
+      ]
+    },
+    {
+      "id": "wellens-helper",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://litfl.com/wellens-syndrome-ecg-library/",
+        "de Zwaan C et al. Am Heart J. 1982 — biphasic or deep inverted precordial T waves after pain resolves; urgent angiography, avoid provocative stress testing"
+      ]
+    },
+    {
+      "id": "smith-modified-sgarbossa",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://litfl.com/sgarbossa-criteria-ecg-library/",
+        "Smith SW et al. Ann Emerg Med. 2012 — ST/S ≤ −0.25 replaces absolute ≥5 mm discordant STE; LBBB and paced-rhythm application; treat positive as STEMI equivalent"
+      ]
+    },
+    {
+      "id": "right-heart-strain",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Konstantinides SV et al. ESC PE guidelines 2019/2020 — RV dysfunction + biomarkers distinguish intermediate-high vs intermediate-low among normotensive PE; PERT/higher monitoring when significant strain"
+      ]
+    },
+    {
+      "id": "bova",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/4004/bova-score-pulmonary-embolism-complications",
+        "Bova C et al. Eur Respir J. 2014 — normotensive PE; SBP 90–100 (2), HR≥110 (1), RV (2), troponin (2); stages I 0–2, II 3–4, III >4"
+      ]
+    },
+    {
+      "id": "lv-mass",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Lang RM et al. JASE 2015 ASE/EACVI chamber quantification — cube formula LVM = 0.8×{1.04×[(IVSd+LVIDd+PWTd)³−LVIDd³]}+0.6; index to BSA; sex-specific LVMI cutoffs"
+      ]
+    },
+    {
+      "id": "metabolic-syndrome",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "NCEP ATP III / AHA-NHLBI update — ≥3 of 5 criteria (waist, TG, HDL, BP, fasting glucose) defines metabolic syndrome; lifestyle + CV risk assessment"
+      ]
+    },
+    {
+      "id": "score2-europe",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "SCORE2 working group. Eur Heart J. 2021 — ages 40–69 without prior ASCVD; regional charts for 10-year fatal+nonfatal CVD; educational tool correctly requires official SCORE2"
+      ]
+    },
+    {
+      "id": "reynolds-risk",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Ridker PM et al. JAMA. 2007 — Reynolds adds hsCRP and parental MI to traditional factors; sex-specific models; educational bands OK with official confirmation"
+      ]
+    },
+    {
+      "id": "mesa-cac",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.acc.org/latest-in-cardiology/ten-points-to-remember/2018/11/14/11/00/2018-cholesterol-guideline",
+        "2018/2019 ACC/AHA cholesterol: CAC 0 may defer statin (selected intermediate risk); CAC ≥100 (or ≥75th %ile) favors statin; selective aspirin often discussed at ≥100"
+      ]
+    },
+    {
+      "id": "coronary-calcium-asts",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://radiopaedia.org/articles/agatston-score?lang=us",
+        "Agatston categories 0 / 1–10 / 11–100 / 101–400 / >400 standard absolute cut-points; higher scores drive preventive pharmacotherapy"
+      ]
+    },
+    {
+      "id": "ankle-brachial-index",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Aboyans V et al. Circulation. 2012 AHA ABI scientific statement — ABI ≤0.90 PAD; >1.40 noncompressible → TBI/imaging; supervised exercise and GDMT for PAD"
+      ]
+    },
+    {
+      "id": "constans-dvt",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/18217155/",
+        "Constans J et al. Thromb Haemost. 2008 — 4-item UEDVT score (−1 to 3); ≤0 low probability; ≥1 intermediate/high → duplex US"
+      ]
+    },
+    {
+      "id": "ottawa-score-vte-cancer",
+      "status": "fixed",
+      "issues": [
+        "whyUse implied the score guides secondary-prevention duration; Ottawa stratifies recurrent VTE risk while on anticoagulation in cancer-associated VTE, not post-treatment duration decisions."
+      ],
+      "changes": [
+        {
+          "field": "whyUse",
+          "from": "Identifies lower vs higher recurrence risk strata that may inform secondary prevention intensity/duration discussions.",
+          "to": "Identifies lower vs higher recurrence risk while anticoagulated; informs counseling and intensity discussions (not a stop rule)."
+        }
+      ],
+      "sources": [
+        "https://www.ahajournals.org/doi/10.1161/circulationaha.111.051920",
+        "Louzada ML et al. Circulation. 2012 — Ottawa score: ≤0 low / ≥1 high recurrence risk on anticoagulation in CAT; not a rule to stop therapy"
+      ]
+    },
+    {
+      "id": "herdoo2",
+      "status": "fixed",
+      "issues": [
+        "whenToUse said women with unprovoked VTE; derivation/validation apply to women with a first unprovoked VTE after 5–12 months of anticoagulation."
+      ],
+      "changes": [
+        {
+          "field": "whenToUse",
+          "from": "Women with unprovoked VTE after completing 5–12 months of anticoagulation when considering discontinuation.",
+          "to": "Women with a first unprovoked VTE after completing 5–12 months of anticoagulation when considering discontinuation."
+        }
+      ],
+      "sources": [
+        "https://www.mdcalc.com/calc/4005/herdoo2-rule-discontinuing-anticoagulation-unprovoked-vte",
+        "Rodger MA et al. BMJ. 2017 — women with first unprovoked VTE; HERDOO2 0–1 may discontinue after 5–12 months; ≥2 continue; not validated in men"
+      ]
+    }
+  ]
+}

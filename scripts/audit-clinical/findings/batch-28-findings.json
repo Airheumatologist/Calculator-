@@ -1,0 +1,262 @@
+{
+  "batch": 28,
+  "file": "wave4-primary-endo.ts",
+  "audited": 24,
+  "fixed": 2,
+  "items": [
+    {
+      "id": "ada-diabetes-risk",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://diabetes.org/diabetes/risk-test",
+        "https://www.mdcalc.com/calc/4020/american-diabetes-association-ada-risk-calculator",
+        "ADA Risk Test: score ≥5 = increased risk → diagnostic testing (A1c/FPG/OGTT) and lifestyle counseling"
+      ]
+    },
+    {
+      "id": "findrisc",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/4000/findrisc-finnish-diabetes-risk-score",
+        "https://reference.medscape.com/calculator/236/findrisc-diabetes-risk-calculator",
+        "Lindström & Tuomilehto Diabetes Care 2003 — moderate 12–14, high 15–20, very high ≥21; testing/lifestyle intensify from moderate–high"
+      ]
+    },
+    {
+      "id": "a1c-diagnosis",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://diabetesjournals.org/care/article/49/Supplement_1/S27/163926/2-Diagnosis-and-Classification-of-Diabetes",
+        "ADA: diabetes A1c ≥6.5%, FPG ≥126, 2-h OGTT ≥200, or random ≥200 + classic symptoms; prediabetes A1c 5.7–6.4 / FPG 100–125 / 2-h 140–199; confirm asymptomatic diagnosis; DPP-style 5–7% weight loss for prevention"
+      ]
+    },
+    {
+      "id": "hypoglycemia-level",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://diabetesjournals.org/care/article/48/Supplement_1/S128/157561/6-Glycemic-Goals-and-Hypoglycemia-Standards-of",
+        "ADA: Level 1 glucose <70 and ≥54 mg/dL; Level 2 <54; Level 3 severe event requiring assistance (any glucose); Level 2–3 → regimen review, glucagon access, safety counseling"
+      ]
+    },
+    {
+      "id": "insulin-sensitivity-factor",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Standard diabetes education: ISF ≈ 1800/TDD (rapid analog) or 1500/TDD (regular); educational rule of thumb, titrate with SMBG/CGM"
+      ]
+    },
+    {
+      "id": "carb-ratio",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Standard ICR teaching: ICR ≈ 500/TDD (g carb per unit); lower ICR number = more insulin per carb for postprandial highs; raise for lows"
+      ]
+    },
+    {
+      "id": "correction-dose-insulin",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Standard formula: correction = (BG − target)/ISF − IOB; frequent large corrections → review basal/ICR and precipitants"
+      ]
+    },
+    {
+      "id": "total-daily-insulin",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Common teaching ranges ~0.3–1.0 U/kg/day depending on type, residual function, and resistance; supervised start and titration"
+      ]
+    },
+    {
+      "id": "basal-bolus-split",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Classic MDI start ~40–50% basal / remainder prandial; adjust for fasting vs postprandial patterns and dawn phenomenon"
+      ]
+    },
+    {
+      "id": "steroid-hyperglycemia",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Glucocorticoids preferentially raise postprandial glucose; anticipatory monitoring and prandial/basal adjustment for known diabetes; screen high-dose steroid starts without diabetes"
+      ]
+    },
+    {
+      "id": "thyroid-function-pattern",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.thyroid.org/professionals/ata-professional-guidelines/",
+        "ATA framework: primary hypo → TPO Abs ± levothyroxine; thyrotoxic → T3/TRAb and referral; central pattern → pituitary workup and do not miss concurrent adrenal insufficiency"
+      ]
+    },
+    {
+      "id": "levothyroxine-dose",
+      "status": "fixed",
+      "issues": [
+        "whyUse said 'ideal/actual weight' as if interchangeable for the 1.6 µg/kg estimate; ATA full-replacement teaching uses body weight (~1.6 µg/kg) in healthy adults, with IBW often preferred in obesity and lower starts in elderly/cardiac disease"
+      ],
+      "changes": [
+        {
+          "field": "whyUse",
+          "from": "≈1.6 µg/kg ideal/actual weight is a common full-replacement starting estimate in healthy adults.",
+          "to": "≈1.6 µg/kg body weight is a common full-replacement starting estimate in healthy adults (often IBW in obesity)."
+        }
+      ],
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC10527945/",
+        "Garber JR et al. Thyroid 2012 (ATA) — ~1.6 µg/kg body weight full replacement in healthy adults; start low in elderly/CAD; recheck TSH ~6 weeks"
+      ]
+    },
+    {
+      "id": "pth-interpretation",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://jamanetwork.com/journals/jamasurgery/fullarticle/2542667",
+        "Primary HPT: high/non-suppressed PTH + high Ca → 24h urine Ca (vs FHH), DEXA, surgical criteria; PTH-independent hyperCa → PTHrP/SPEP/1,25-OH D/malignancy; hypoPTH pattern → Mg, Ca/calcitriol, ECG if severe"
+      ]
+    },
+    {
+      "id": "vitamin-d-status",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://academic.oup.com/jcem/article/96/7/1911/2833671",
+        "Common bands (ng/mL): <12 severe deficiency, 12–19 deficiency, 20–29 insufficiency, ~30–50 sufficient; IOM/NAM vs Endocrine Society cutoffs differ; repletion then maintenance for deficiency"
+      ]
+    },
+    {
+      "id": "frax-simp",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://frax.shef.ac.uk/FRAX/",
+        "Educational risk-factor tally only — not official FRAX probabilities; multiple clinical risks or age-eligible → formal FRAX + DXA"
+      ]
+    },
+    {
+      "id": "osteoporosis-t",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "WHO densitometry: normal T ≥ −1.0; osteopenia −1.0 to −2.5; osteoporosis T ≤ −2.5 (postmenopausal women / men ≥50); hip/spine fragility fracture = clinical osteoporosis; FRAX for osteopenia treatment decisions"
+      ]
+    },
+    {
+      "id": "who-bmi-class",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.cdc.gov/bmi/adult-calculator/bmi-categories.html",
+        "WHO adult BMI: <18.5 underweight; 18.5–24.9 normal; 25–29.9 overweight; 30–34.9 / 35–39.9 / ≥40 class I–III obesity"
+      ]
+    },
+    {
+      "id": "child-bmi-percentile",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.cdc.gov/bmi/child-teen-calculator/bmi-categories.html",
+        "CDC ages 2–19: <5th underweight; 5th–<85th healthy; 85th–<95th overweight; ≥95th obesity; lifestyle + comorbidity screening as indicated"
+      ]
+    },
+    {
+      "id": "fatty-liver-index",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Bedogni et al. BMC Gastroenterol 2006 — FLI <30 rules out, ≥60 rules in steatosis; intermediate indeterminate; pair with fibrosis scores (FIB-4) and metabolic workup"
+      ]
+    },
+    {
+      "id": "hepatic-steatosis-index",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC7864273/",
+        "Lee et al. Dig Liver Dis 2010 — HSI <30 rules out, >36 rules in NAFLD steatosis (Korean derivation); lifestyle + FIB-4 / elastography if fibrosis risk"
+      ]
+    },
+    {
+      "id": "nida-quick",
+      "status": "fixed",
+      "issues": [
+        "whyUse/nextSteps implied any positive Quick Screen proceeds to full NM-ASSIST; NIDA algorithm sends illegal drug or nonmedical Rx positives to NM-ASSIST, while alcohol and tobacco alone use substance-specific / SBIRT or cessation pathways"
+      ],
+      "changes": [
+        {
+          "field": "whyUse",
+          "from": "Positive screen prompts full NIDA-Modified ASSIST and brief intervention.",
+          "to": "Any positive domain needs follow-up; illegal or nonmedical Rx use prompts NIDA-Modified ASSIST; alcohol/tobacco use SBIRT or cessation pathways."
+        },
+        {
+          "field": "nextSteps",
+          "from": "[{ condition: 'Positive screen', actions: ['NM-ASSIST', 'SBIRT brief intervention', 'Assess readiness to change'] }]",
+          "to": "[{ condition: 'Illegal or nonmedical Rx positive', actions: ['NM-ASSIST', 'SBIRT brief intervention', 'Assess readiness to change'] }, { condition: 'Alcohol or tobacco positive only', actions: ['Substance-specific counseling / cessation', 'SBIRT as indicated', 'Assess readiness to change'] }]"
+        }
+      ],
+      "sources": [
+        "https://nida.nih.gov/sites/default/files/pdf/nmassist.pdf",
+        "NIDA Quick Screen V1.0: Yes to illegal drugs or nonmedical Rx → NM-ASSIST Q1; alcohol/tobacco positives managed with substance-specific follow-up and brief intervention/cessation"
+      ]
+    },
+    {
+      "id": "readiness-quit",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Fiore MC et al. US PHS Treating Tobacco Use and Dependence 2008 — stages of change; preparation/action → quit date, pharmacotherapy, early follow-up; precontemplation → 5R motivational approach"
+      ]
+    },
+    {
+      "id": "bp-classification",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ahajournals.org/doi/10.1161/hyp.0000000000000065",
+        "ACC/AHA 2017: normal <120/<80; elevated 120–129/<80; stage 1 130–139 or 80–89; stage 2 ≥140 or ≥90; crisis ≥180/120 with organ-damage assessment for emergency vs urgency"
+      ]
+    },
+    {
+      "id": "pulse-pressure",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK482408/",
+        "PP = SBP − DBP; wide PP linked to arterial stiffness/CV risk (often discussed >~60 mmHg); narrow PP may reflect low stroke volume — urgent assessment if shock context"
+      ]
+    }
+  ]
+}

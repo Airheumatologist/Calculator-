@@ -1,0 +1,455 @@
+[
+  {
+    "file": "emergency-misc.ts",
+    "id": "ottawa-ankle",
+    "name": "Ottawa Ankle Rules",
+    "shortName": "Ottawa Ankle",
+    "whenToUse": "Acute ankle or midfoot injury (<10 days) in patients ≥2–18+ years (validated adults).",
+    "whyUse": "Safely reduces unnecessary radiographs.",
+    "nextSteps": [
+      {
+        "condition": "Positive",
+        "actions": [
+          "Ankle series and/or foot series as indicated"
+        ]
+      },
+      {
+        "condition": "Negative",
+        "actions": [
+          "RICE",
+          "Early weight bearing as tolerated",
+          "Follow-up if not improving"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "ottawa-knee",
+    "name": "Ottawa Knee Rules",
+    "shortName": "Ottawa Knee",
+    "whenToUse": "Acute knee injury.",
+    "whyUse": "Reduces unnecessary knee films with high sensitivity.",
+    "nextSteps": [
+      {
+        "condition": "Positive",
+        "actions": [
+          "Knee X-ray series"
+        ]
+      },
+      {
+        "condition": "Negative",
+        "actions": [
+          "Conservative care",
+          "Reassess if not improving"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "nexus",
+    "name": "NEXUS C-Spine Criteria",
+    "shortName": "NEXUS",
+    "whenToUse": "Blunt trauma patients for C-spine clearance.",
+    "whyUse": "Avoids unnecessary C-spine imaging.",
+    "nextSteps": [
+      {
+        "condition": "Positive",
+        "actions": [
+          "CT C-spine preferred in adults",
+          "Maintain collar until cleared"
+        ]
+      },
+      {
+        "condition": "Negative",
+        "actions": [
+          "Remove collar",
+          "Document clearance"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "canadian-cspine",
+    "name": "Canadian C-Spine Rule",
+    "shortName": "Canadian C-Spine",
+    "whenToUse": "Alert (GCS 15) stable adults with blunt trauma.",
+    "whyUse": "Slightly more sensitive/specific than NEXUS in some comparisons.",
+    "nextSteps": [
+      {
+        "condition": "Positive",
+        "actions": [
+          "CT C-spine",
+          "Maintain immobilization"
+        ]
+      },
+      {
+        "condition": "Negative",
+        "actions": [
+          "Clear C-spine clinically"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "parkland",
+    "name": "Parkland Burn Formula",
+    "shortName": "Parkland",
+    "whenToUse": "Adults/children with major burns needing formal resuscitation.",
+    "whyUse": "Classic crystalloid estimate; give half in first 8 hours from injury time.",
+    "nextSteps": [
+      {
+        "condition": "Major burn",
+        "actions": [
+          "ABCs, airway if inhalation",
+          "Transfer to burn center per ABA criteria",
+          "Tetanus, analgesia",
+          "Titrate fluids to UOP"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "rule-of-nines",
+    "name": "Rule of Nines (Adult TBSA)",
+    "shortName": "Rule of Nines",
+    "whenToUse": "Adult burn TBSA estimation for Parkland and transfer criteria.",
+    "whyUse": "Rapid field estimate; Lund-Browder better for children.",
+    "nextSteps": [
+      {
+        "condition": "TBSA estimated",
+        "actions": [
+          "Apply Parkland if indicated",
+          "Burn center criteria"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "apgar",
+    "name": "APGAR Score",
+    "shortName": "APGAR",
+    "whenToUse": "Immediately after birth at 1 and 5 minutes (and q5 min if <7).",
+    "whyUse": "Standard communication of newborn transition; not used alone to guide resuscitation start.",
+    "nextSteps": [
+      {
+        "condition": "Score <7 at 5 min",
+        "actions": [
+          "Continue NRP",
+          "Repeat q5 min",
+          "Investigate etiology"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "bishop",
+    "name": "Bishop Score",
+    "shortName": "Bishop",
+    "whenToUse": "Before labor induction to predict success.",
+    "whyUse": "Low score may benefit from cervical ripening.",
+    "nextSteps": [
+      {
+        "condition": "Unfavorable",
+        "actions": [
+          "Mechanical or prostaglandin ripening per protocol"
+        ]
+      },
+      {
+        "condition": "Favorable",
+        "actions": [
+          "Oxytocin induction as indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "gestational-age",
+    "name": "Gestational Age & Naegele Due Date",
+    "shortName": "Due Date",
+    "whenToUse": "Dating pregnancy when LMP known (ultrasound preferred early).",
+    "whyUse": "Naegele’s rule standard estimate.",
+    "nextSteps": [
+      {
+        "condition": "Dating",
+        "actions": [
+          "Offer dating ultrasound if uncertain LMP",
+          "Prenatal care schedule"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "pgcs",
+    "name": "Pediatric GCS",
+    "shortName": "Pediatric GCS",
+    "whenToUse": "Altered consciousness in infants/young children.",
+    "whyUse": "Verbal component modified for developmental stage.",
+    "nextSteps": [
+      {
+        "condition": "Low GCS",
+        "actions": [
+          "NRP/PALS as indicated",
+          "CT if trauma/concern for ICH"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "westley-croup",
+    "name": "Westley Croup Score",
+    "shortName": "Westley Croup",
+    "whenToUse": "Children with croup to guide treatment intensity.",
+    "whyUse": "Standard severity tool in croup studies (dexamethasone/epinephrine).",
+    "nextSteps": [
+      {
+        "condition": "Mild",
+        "actions": [
+          "Dexamethasone 0.15–0.6 mg/kg",
+          "Supportive care"
+        ]
+      },
+      {
+        "condition": "Moderate–severe",
+        "actions": [
+          "Nebulized epinephrine",
+          "Observe for rebound",
+          "Airway preparedness"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "pecarn-head",
+    "name": "PECARN Head Injury (Simplified)",
+    "shortName": "PECARN",
+    "whenToUse": "Children with minor blunt head trauma (GCS 14–15).",
+    "whyUse": "Identifies very low risk for ciTBI who may avoid CT.",
+    "nextSteps": [
+      {
+        "condition": "Very low risk",
+        "actions": [
+          "No routine CT",
+          "Return precautions"
+        ]
+      },
+      {
+        "condition": "Higher risk",
+        "actions": [
+          "CT head",
+          "Neurosurgery if positive"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "wells-hit",
+    "name": "4Ts Score for HIT",
+    "shortName": "4Ts HIT",
+    "whenToUse": "Thrombocytopenia in patients receiving heparin.",
+    "whyUse": "Guides whether to order HIT antibody testing and stop heparin.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥4",
+        "actions": [
+          "Discontinue heparin/LMWH",
+          "Start argatroban/bivalirudin/fondaparinux per setting",
+          "HIT Ab ELISA ± functional assay"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "padua",
+    "name": "Padua Prediction Score (VTE Risk)",
+    "shortName": "Padua",
+    "whenToUse": "Hospitalized medical patients for VTE prophylaxis decisions.",
+    "whyUse": "Identifies high-risk medical inpatients (≥4).",
+    "nextSteps": [
+      {
+        "condition": "≥4",
+        "actions": [
+          "LMWH/heparin prophylaxis if bleed risk acceptable",
+          "Mechanical prophylaxis if bleeding"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "caprini",
+    "name": "Caprini Score (VTE Risk)",
+    "shortName": "Caprini",
+    "whenToUse": "Perioperative VTE risk assessment.",
+    "whyUse": "Widely used in surgical pathways for prophylaxis intensity.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥5",
+        "actions": [
+          "LMWH/heparin + SCDs often",
+          "Extended prophylaxis after some orthopedic cases"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "stop-bang",
+    "name": "STOP-BANG Sleep Apnea Screen",
+    "shortName": "STOP-BANG",
+    "whenToUse": "Preoperative or primary care OSA screening.",
+    "whyUse": "Simple high-sensitivity screen.",
+    "nextSteps": [
+      {
+        "condition": "High risk",
+        "actions": [
+          "Polysomnography or HSAT",
+          "CPAP if diagnosed",
+          "Periop airway caution"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "epworth",
+    "name": "Epworth Sleepiness Scale",
+    "shortName": "Epworth",
+    "whenToUse": "Evaluation of excessive daytime sleepiness.",
+    "whyUse": "Common patient-reported sleepiness measure.",
+    "nextSteps": [
+      {
+        "condition": "ESS >10",
+        "actions": [
+          "Sleep history",
+          "Consider sleep study",
+          "Counsel on drowsy driving"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "bode",
+    "name": "BODE Index (COPD)",
+    "shortName": "BODE",
+    "whenToUse": "COPD prognostication and transplant referral discussions.",
+    "whyUse": "Predicts mortality better than FEV1 alone.",
+    "nextSteps": [
+      {
+        "condition": "High BODE",
+        "actions": [
+          "Optimize inhalers/pulm rehab",
+          "Consider transplant/LVRS evaluation",
+          "Advance care planning"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "steroid-conversion",
+    "name": "Corticosteroid Conversion",
+    "shortName": "Steroid Conversion",
+    "whenToUse": "Switching between systemic corticosteroids.",
+    "whyUse": "Approximate anti-inflammatory equivalences.",
+    "nextSteps": [
+      {
+        "condition": "Conversion",
+        "actions": [
+          "Account for half-life differences",
+          "Stress-dose if adrenal suppression risk"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "opioid-mme",
+    "name": "Morphine Milligram Equivalents (MME)",
+    "shortName": "MME",
+    "whenToUse": "Assessing opioid dose intensity and overdose risk.",
+    "whyUse": "CDC thresholds (e.g., ≥50 MME/day) flag higher risk.",
+    "nextSteps": [
+      {
+        "condition": "≥50 MME",
+        "actions": [
+          "Offer naloxone",
+          "Avoid benzodiazepines",
+          "Reassess pain plan",
+          "Consider taper if harm outweighs benefit"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "corrected-phenytoin",
+    "name": "Corrected Phenytoin (Albumin)",
+    "shortName": "Corr. Phenytoin",
+    "whenToUse": "Total phenytoin levels with low albumin (or CrCl <20 with adjusted formula).",
+    "whyUse": "Free phenytoin preferred; correction approximates when free level unavailable.",
+    "nextSteps": [
+      {
+        "condition": "Toxic range",
+        "actions": [
+          "Hold/reduce dose",
+          "Supportive care",
+          "Check free phenytoin if available"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "transferrin-sat",
+    "name": "Transferrin Saturation",
+    "shortName": "TSAT",
+    "whenToUse": "Iron deficiency vs overload assessment.",
+    "whyUse": "Quick iron availability metric.",
+    "nextSteps": [
+      {
+        "condition": "Low",
+        "actions": [
+          "Ferritin, CBC",
+          "Find bleeding source if IDA"
+        ]
+      },
+      {
+        "condition": "High",
+        "actions": [
+          "Ferritin, HFE genetic testing as indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "emergency-misc.ts",
+    "id": "free-water-sodium-change",
+    "name": "Predicted Sodium Change (Adrogue)",
+    "shortName": "Na Change (Infusate)",
+    "whenToUse": "Planning correction of hypo/hypernatremia with IV fluids.",
+    "whyUse": "Estimates ΔNa per liter to avoid overcorrection.",
+    "nextSteps": [
+      {
+        "condition": "Severe symptomatic hyponatremia",
+        "actions": [
+          "100 mL 3% saline boluses per guidelines",
+          "Frequent Na monitoring"
+        ]
+      }
+    ]
+  }
+]

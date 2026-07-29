@@ -1,0 +1,3161 @@
+[
+  {
+    "calcId": "qtc-bazett",
+    "file": "cardiology.ts",
+    "old_pmid": "35249835",
+    "old_doi": "10.1016/j.jpurol.2022.02.006",
+    "citation": "Bazett HC. Heart. 1920 (classic; modern discussions in ECG literature)",
+    "claimed_title": "An analysis of the time-relations of electrocardiograms (Bazett QT correction)",
+    "old_pubmed_title": "The urethral plate and the underlying tissue; a histological and histochemical study",
+    "fix": {
+      "pmid": "16993419",
+      "score": 1.083,
+      "query": "Bazett[Author] AND 1920[PDAT]",
+      "title": "The time relations of the blood-pressure changes after excision of the adrenal glands, with some observations on blood volume changes",
+      "authors": [
+        "Bazett HC"
+      ],
+      "pubdate": "1920 Feb 20",
+      "source": "J Physiol",
+      "doi": "10.1113/jphysiol.1920.sp001881"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "qc-fridericia",
+    "file": "extra.ts",
+    "old_pmid": "35249834",
+    "old_doi": "10.1053/j.jvca.2022.01.043",
+    "citation": "Fridericia LS. Acta Med Scand. 1920",
+    "claimed_title": "Duration of systole in electrocardiogram",
+    "old_pubmed_title": "Epicardial Pacemaker-Induced Mitral Valve Pathology After Separation From Cardiopulmonary Bypass",
+    "fix": {
+      "pmid": "14516292",
+      "score": 1.275,
+      "query": "Fridericia[Author] AND (Duration systole electrocardiogram)",
+      "title": "The duration of systole in an electrocardiogram in normal humans and in patients with heart disease. 1920",
+      "authors": [
+        "Fridericia LS"
+      ],
+      "pubdate": "2003 Oct",
+      "source": "Ann Noninvasive Electrocardiol",
+      "doi": "10.1046/j.1542-474x.2003.08413.x"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "ibw-hamwi",
+    "file": "extra.ts",
+    "old_pmid": "16825033",
+    "old_doi": "10.1053/j.jrn.2006.01.008",
+    "citation": "Hamwi GJ. 1964 (classic pharmacy teaching; modern IBW comparisons in nutrition literature)",
+    "claimed_title": "Hamwi ideal body weight formula (historical pharmacy teaching)",
+    "old_pubmed_title": "Methods for determining healthy body weight in end stage renal disease",
+    "fix": {
+      "pmid": "14103627",
+      "score": 0.8,
+      "query": "Hamwi[Author] AND 1964[PDAT]",
+      "title": "RHEUMATOID ARTHRITIS",
+      "authors": [
+        "POLACHEK AA",
+        "HAMWI GJ"
+      ],
+      "pubdate": "1964 Jan",
+      "source": "Med Sci",
+      "doi": null
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "child-pugh",
+    "file": "gi-neuro-psych.ts",
+    "old_pmid": "4541913",
+    "old_doi": "10.1002/bjs.1800600817",
+    "citation": "Child CG, Turcotte JG. 1964; Pugh modification 1973",
+    "claimed_title": "Surgery and portal hypertension",
+    "old_pubmed_title": "Transection of the oesophagus for bleeding oesophageal varices",
+    "fix": {
+      "pmid": "4950264",
+      "score": 1.275,
+      "query": "Child[Author] AND (Surgery and portal hypertension)",
+      "title": "Surgery and portal hypertension",
+      "authors": [
+        "Child CG",
+        "Turcotte JG"
+      ],
+      "pubdate": "1964",
+      "source": "Major Probl Clin Surg",
+      "doi": null
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "rcri",
+    "file": "missing-cardio-pulm.ts",
+    "old_pmid": "10525402",
+    "old_doi": "10.1006/jmbi.1999.3111",
+    "citation": "Lee TH et al. Circulation. 1999",
+    "claimed_title": "Derivation and prospective validation of a simple index for prediction of cardiac risk of major noncardiac surgery",
+    "old_pubmed_title": "Crystal structure of the C-terminal SH2 domain of the p85alpha regulatory subunit of phosphoinositide 3-kinase: an SH2 domain mimicking its own substrate",
+    "fix": {
+      "pmid": "10477528",
+      "score": 2.067,
+      "query": "Lee[Author] AND 1999[PDAT] AND (Derivation and prospective validation simple index for prediction cardiac risk)",
+      "title": "Derivation and prospective validation of a simple index for prediction of cardiac risk of major noncardiac surgery",
+      "authors": [
+        "Lee TH",
+        "Marcantonio ER",
+        "Mangione CM",
+        "Thomas EJ",
+        "Polanczyk CA",
+        "Cook EF"
+      ],
+      "pubdate": "1999 Sep 7",
+      "source": "Circulation",
+      "doi": "10.1161/01.cir.100.10.1043"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "missing-cardio-pulm.ts",
+    "old_pmid": "8598860",
+    "old_doi": null,
+    "citation": "Sgarbossa EB et al. N Engl J Med. 1996",
+    "claimed_title": "Electrocardiographic diagnosis of evolving MI in LBBB (Sgarbossa)",
+    "old_pubmed_title": "Preoperative assessment of patients with coronary disease",
+    "fix": {
+      "pmid": "8559200",
+      "score": 1.439,
+      "query": "Sgarbossa[Author] AND 1996[PDAT]",
+      "title": "Electrocardiographic diagnosis of evolving acute myocardial infarction in the presence of left bundle-branch block. GUSTO-1 (Global Utilization of Streptokinase and Tissue Plasminogen Activator for Occluded Coronary Arteries) Investigators",
+      "authors": [
+        "Sgarbossa EB",
+        "Pinski SL",
+        "Barbagelata A",
+        "Underwood DA",
+        "Gates KB",
+        "Topol EJ"
+      ],
+      "pubdate": "1996 Feb 22",
+      "source": "N Engl J Med",
+      "doi": "10.1056/NEJM199602223340801"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "duke-treadmill",
+    "file": "missing-cardio-pulm.ts",
+    "old_pmid": "1864370",
+    "old_doi": "10.1016/0014-5793(91)80975-9",
+    "citation": "Mark DB et al. N Engl J Med. 1991",
+    "claimed_title": "Prognostic value of a treadmill exercise score in outpatients with suspected CAD",
+    "old_pubmed_title": "The involvement of photosystem II-generated H2O2 in photoinhibition",
+    "fix": {
+      "pmid": "9822093",
+      "score": 0.931,
+      "query": "Mark[Author] AND duke-treadmill",
+      "title": "Value of exercise treadmill testing in women",
+      "authors": [
+        "Alexander KP",
+        "Shaw LJ",
+        "Shaw LK",
+        "Delong ER",
+        "Mark DB",
+        "Peterson ED"
+      ],
+      "pubdate": "1998 Nov 15",
+      "source": "J Am Coll Cardiol",
+      "doi": "10.1016/s0735-1097(98)00451-3"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "heffner-criteria",
+    "file": "missing-cardio-pulm.ts",
+    "old_pmid": "7882838",
+    "old_doi": "10.2337/diacare.17.12.1551",
+    "citation": "Heffner JE et al. Am J Respir Crit Care Med. 1995 / related cut-point work",
+    "claimed_title": "Pleural fluid chemical analysis in parapneumonic effusions: a meta-analysis",
+    "old_pubmed_title": "Unproven therapies. American Diabetes Association",
+    "fix": {
+      "pmid": "7767510",
+      "score": 1.733,
+      "query": "Heffner[Author] AND 1995[PDAT] AND (Pleural fluid chemical analysis parapneumonic effusions meta-analysis)",
+      "title": "Pleural fluid chemical analysis in parapneumonic effusions. A meta-analysis",
+      "authors": [
+        "Heffner JE",
+        "Brown LK",
+        "Barbieri C",
+        "DeLeo JM"
+      ],
+      "pubdate": "1995 Jun",
+      "source": "Am J Respir Crit Care Med",
+      "doi": "10.1164/ajrccm.151.6.7767510"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "shock-index-age",
+    "file": "missing-cardio-pulm.ts",
+    "old_pmid": "17955559",
+    "old_doi": "10.1002/chem.200701160",
+    "citation": "Zarzaur BL et al. related trauma literature; various ED validations",
+    "claimed_title": "Age-adjusted shock index in trauma risk stratification",
+    "old_pubmed_title": "Breaking symmetry: spontaneous resolution of a polyoxometalate",
+    "fix": {
+      "pmid": "18646473",
+      "score": 0.933,
+      "query": "Zarzaur[Author] AND 2008[PDAT]",
+      "title": "Intra-abdominal sepsis following pancreatic resection: incidence, risk factors, diagnosis, microbiology, management, and outcome",
+      "authors": [
+        "Behrman SW",
+        "Zarzaur BL"
+      ],
+      "pubdate": "2008 Jul",
+      "source": "Am Surg",
+      "doi": null
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "missing-cardio-pulm.ts",
+    "old_pmid": "9864381",
+    "old_doi": "10.3892/ijmm.3.1.21",
+    "citation": "Wilson PW et al. Circulation. 1998",
+    "claimed_title": "Prediction of coronary heart disease using risk factor categories (Framingham)",
+    "old_pubmed_title": "Regulation of triosephosphate isomerase (TPI) gene expression in TPI deficient lymphoblastoid cells",
+    "fix": {
+      "pmid": "9603539",
+      "score": 1.806,
+      "query": "Wilson[Author] AND 1998[PDAT] AND (Prediction coronary heart disease using risk factor categories)",
+      "title": "Prediction of coronary heart disease using risk factor categories",
+      "authors": [
+        "Wilson PW",
+        "D'Agostino RB",
+        "Levy D",
+        "Belanger AM",
+        "Silbershatz H",
+        "Kannel WB"
+      ],
+      "pubdate": "1998 May 12",
+      "source": "Circulation",
+      "doi": "10.1161/01.cir.97.18.1837"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "missing-emergency.ts",
+    "old_pmid": "11248153",
+    "old_doi": "10.1056/NEJM200103153441101",
+    "citation": "Stiell IG et al. Lancet. 2001;357:1391-1396",
+    "claimed_title": "The Canadian CT Head Rule for patients with minor head injury",
+    "old_pubmed_title": "Use of chemotherapy plus a monoclonal antibody against HER2 for metastatic breast cancer that overexpresses HER2",
+    "fix": {
+      "pmid": "11356436",
+      "score": 1.864,
+      "query": "Stiell[Author] AND 2001[PDAT] AND (The Canadian Head Rule for patients with minor head injury)",
+      "title": "The Canadian CT Head Rule for patients with minor head injury",
+      "authors": [
+        "Stiell IG",
+        "Wells GA",
+        "Vandemheen K",
+        "Clement C",
+        "Lesiuk H",
+        "Laupacis A"
+      ],
+      "pubdate": "2001 May 5",
+      "source": "Lancet",
+      "doi": "10.1016/s0140-6736(00)04561-x"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "new-orleans-ct-head",
+    "file": "missing-emergency.ts",
+    "old_pmid": "10891516",
+    "old_doi": "10.1056/NEJM200007133430203",
+    "citation": "Haydel MJ et al. N Engl J Med. 2000;343:100-105",
+    "claimed_title": "Indications for computed tomography in patients with minor head injury",
+    "old_pubmed_title": "Validity of a set of clinical criteria to rule out injury to the cervical spine in patients with blunt trauma. National Emergency X-Radiography Utilization Study Group",
+    "fix": {
+      "pmid": "10891517",
+      "score": 1.65,
+      "query": "Haydel[Author] AND 2000[PDAT] AND (Indications for computed tomography patients with minor head injury)",
+      "title": "Indications for computed tomography in patients with minor head injury",
+      "authors": [
+        "Haydel MJ",
+        "Preston CA",
+        "Mills TJ",
+        "Luber S",
+        "Blaudeau E",
+        "DeBlieux PM"
+      ],
+      "pubdate": "2000 Jul 13",
+      "source": "N Engl J Med",
+      "doi": "10.1056/NEJM200007133430204"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "mallampati",
+    "file": "missing-emergency.ts",
+    "old_pmid": "3592177",
+    "old_doi": "10.1111/j.1365-2044.1987.tb04042.x",
+    "citation": "Samsoon GL, Young JR. Anaesthesia. 1987;42:487-490",
+    "claimed_title": "Difficult tracheal intubation: a retrospective study (modified Mallampati)",
+    "old_pubmed_title": "Myalgia and biochemical changes following intermittent suxamethonium administration. Effects of alcuronium, lignocaine, midazolam and suxamethonium pretreatments on serum myoglobin, creatinine kinase and myalgia",
+    "fix": {
+      "pmid": "3592174",
+      "score": 1.433,
+      "query": "Samsoon[Author] AND 1987[PDAT] AND (Difficult tracheal intubation retrospective study)",
+      "title": "Difficult tracheal intubation: a retrospective study",
+      "authors": [
+        "Samsoon GL",
+        "Young JR"
+      ],
+      "pubdate": "1987 May",
+      "source": "Anaesthesia",
+      "doi": "10.1111/j.1365-2044.1987.tb04039.x"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "nexus-chest",
+    "file": "missing-emergency.ts",
+    "old_pmid": "24285359",
+    "old_doi": "10.1038/ismej.2013.211",
+    "citation": "Rodriguez RM et al. PLoS Med / JAMA Surg validations (NEXUS Chest)",
+    "claimed_title": "NEXUS chest imaging decision instrument",
+    "old_pubmed_title": "Fitness and stability of obligate cross-feeding interactions that emerge upon gene loss in bacteria",
+    "fix": {
+      "pmid": "23925583",
+      "score": 1.567,
+      "query": "Rodriguez[Author] AND 2013[PDAT] AND (NEXUS chest imaging decision instrument)",
+      "title": "NEXUS chest: validation of a decision instrument for selective chest imaging in blunt trauma",
+      "authors": [
+        "Rodriguez RM",
+        "Anglin D",
+        "Langdorf MI",
+        "Baumann BM",
+        "Hendey GW",
+        "Bradley RN"
+      ],
+      "pubdate": "2013 Oct",
+      "source": "JAMA Surg",
+      "doi": "10.1001/jamasurg.2013.2757"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "baux-score",
+    "file": "missing-emergency.ts",
+    "old_pmid": "20220420",
+    "old_doi": "10.1097/TA.0b013e3181bb8ea0",
+    "citation": "Osler T et al. J Trauma. 2010;68:690-694; Baux S. historical thesis",
+    "claimed_title": "Revised Baux Score",
+    "old_pubmed_title": "Ten years stable internal fixation of metacarpal and phalangeal hand fractures-risk factor and outcome analysis show no increase of complications in the treatment of open compared with closed fractures",
+    "fix": {
+      "pmid": "20038856",
+      "score": 1.367,
+      "query": "Osler[Author] AND 2010[PDAT] AND (Revised Baux Score)",
+      "title": "Simplified estimates of the probability of death after burn injuries: extending and updating the baux score",
+      "authors": [
+        "Osler T",
+        "Glance LG",
+        "Hosmer DW"
+      ],
+      "pubdate": "2010 Mar",
+      "source": "J Trauma",
+      "doi": "10.1097/TA.0b013e3181c453b3"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "lemon-airway",
+    "file": "missing-emergency.ts",
+    "old_pmid": "15662056",
+    "old_doi": "10.1136/emj.2002.002626",
+    "citation": "Reed MJ et al. Emerg Med J. 2005;22:99-102; ATLS difficult airway teaching",
+    "claimed_title": "LEMON airway assessment (ATLS / emergency airway literature)",
+    "old_pubmed_title": "Emergency department patients' opinions of screening for intimate partner violence among women",
+    "fix": {
+      "pmid": "15662057",
+      "score": 1.248,
+      "query": "Reed[Author] AND 2005[PDAT] AND (LEMON airway assessment)",
+      "title": "Can an airway assessment score predict difficulty at intubation in the emergency department?",
+      "authors": [
+        "Reed MJ",
+        "Dunn MJ",
+        "McKeown DW"
+      ],
+      "pubdate": "2005 Feb",
+      "source": "Emerg Med J",
+      "doi": "10.1136/emj.2003.008771"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "maddrey-df",
+    "file": "missing-gi-liver.ts",
+    "old_pmid": "658710",
+    "old_doi": "10.1093/geront/18.3.230",
+    "citation": "Maddrey WC et al. Gastroenterology. 1978",
+    "claimed_title": "Corticosteroid therapy of alcoholic hepatitis",
+    "old_pubmed_title": "The need for a separate consumer price index for older persons. A review and new evidence",
+    "fix": {
+      "pmid": "352788",
+      "score": 1.817,
+      "query": "Maddrey[Author] AND 1978[PDAT] AND (Corticosteroid therapy alcoholic hepatitis)",
+      "title": "Corticosteroid therapy of alcoholic hepatitis",
+      "authors": [
+        "Maddrey WC",
+        "Boitnott JK",
+        "Bedine MS",
+        "Weber FL Jr",
+        "Mezey E",
+        "White RI Jr"
+      ],
+      "pubdate": "1978 Aug",
+      "source": "Gastroenterology",
+      "doi": null
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "missing-gi-liver.ts",
+    "old_pmid": "17401563",
+    "old_doi": "10.1007/s00253-007-0920-1",
+    "citation": "Louvet A et al. Hepatology. 2007",
+    "claimed_title": "The Lille model: a new tool for therapeutic strategy in patients with severe alcoholic hepatitis treated with steroids",
+    "old_pubmed_title": "Production of medium-chain-length hydroxyalkanoic acids from Pseudomonas putida in pH stat",
+    "fix": {
+      "pmid": "17518367",
+      "score": 1.983,
+      "query": "Louvet[Author] AND 2007[PDAT] AND (The Lille model new tool for therapeutic strategy patients with)",
+      "title": "The Lille model: a new tool for therapeutic strategy in patients with severe alcoholic hepatitis treated with steroids",
+      "authors": [
+        "Louvet A",
+        "Naveau S",
+        "Abdelnour M",
+        "Ramond MJ",
+        "Diaz E",
+        "Fartoux L"
+      ],
+      "pubdate": "2007 Jun",
+      "source": "Hepatology",
+      "doi": "10.1002/hep.21607"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "r-factor-dili",
+    "file": "missing-gi-liver.ts",
+    "old_pmid": "8371190",
+    "old_doi": "10.1111/j.1752-7325.1993.tb02691.x",
+    "citation": "Danan G, Benichou C. J Hepatol. 1993 / CIOMS",
+    "claimed_title": "Criteria of drug-induced liver disorders: report of an international consensus meeting",
+    "old_pubmed_title": "The 48-month increment of root caries in an urban population of older adults participating in a preventive dental program",
+    "fix": {
+      "pmid": "8229110",
+      "score": 1.411,
+      "query": "Danan[Author] AND 1993[PDAT] AND (Criteria drug-induced liver disorders report international consensus meeting)",
+      "title": "Causality assessment of adverse reactions to drugs--I. A novel method based on the conclusions of international consensus meetings: application to drug-induced liver injuries",
+      "authors": [
+        "Danan G",
+        "Benichou C"
+      ],
+      "pubdate": "1993 Nov",
+      "source": "J Clin Epidemiol",
+      "doi": "10.1016/0895-4356(93)90101-6"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "missing-gi-liver.ts",
+    "old_pmid": "4135416",
+    "old_doi": "10.1002/ijc.2910130402",
+    "citation": "Forrest JA et al. Lancet. 1974",
+    "claimed_title": "Endoscopy in gastrointestinal bleeding",
+    "old_pubmed_title": "Neoantigens on spontaneous and carcinogen-induced rat tumors defined by in vitro lymphocytotoxicity assays",
+    "fix": {
+      "pmid": "4136718",
+      "score": 1.75,
+      "query": "Forrest[Author] AND 1974[PDAT] AND (Endoscopy gastrointestinal bleeding)",
+      "title": "Endoscopy in gastrointestinal bleeding",
+      "authors": [
+        "Forrest JA",
+        "Finlayson ND",
+        "Shearman DJ"
+      ],
+      "pubdate": "1974 Aug 17",
+      "source": "Lancet",
+      "doi": "10.1016/s0140-6736(74)91770-x"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "air-appendicitis",
+    "file": "missing-gi-liver.ts",
+    "old_pmid": "18469549",
+    "old_doi": "10.1097/MBC.0b013e3282ff76c3",
+    "citation": "Andersson M, Andersson RE. World J Surg. 2008",
+    "claimed_title": "The Appendicitis Inflammatory Response Score: a tool for the diagnosis of acute appendicitis that outperforms the Alvarado score",
+    "old_pubmed_title": "Clot life span model analysis of clot growth and fibrinolysis in normal subjects: role of thrombin activatable fibrinolysis inhibitor",
+    "fix": {
+      "pmid": "18553045",
+      "score": 1.983,
+      "query": "Andersson[Author] AND 2008[PDAT] AND (The Appendicitis Inflammatory Response Score tool for the diagnosis acute)",
+      "title": "The appendicitis inflammatory response score: a tool for the diagnosis of acute appendicitis that outperforms the Alvarado score",
+      "authors": [
+        "Andersson M",
+        "Andersson RE"
+      ],
+      "pubdate": "2008 Aug",
+      "source": "World J Surg",
+      "doi": "10.1007/s00268-008-9649-y"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "nafld-fibrosis",
+    "file": "missing-gi-liver.ts",
+    "old_pmid": "17012989",
+    "old_doi": "10.1097/01.lgt.0000225890.21539.79",
+    "citation": "Angulo P et al. Hepatology. 2007",
+    "claimed_title": "The NAFLD fibrosis score: a noninvasive system that identifies liver fibrosis in patients with NAFLD",
+    "old_pubmed_title": "Carbon dioxide laser vaporization of condyloma acuminata",
+    "fix": {
+      "pmid": "17393509",
+      "score": 1.95,
+      "query": "Angulo[Author] AND 2007[PDAT] AND (The NAFLD fibrosis score noninvasive system that identifies liver fibrosis)",
+      "title": "The NAFLD fibrosis score: a noninvasive system that identifies liver fibrosis in patients with NAFLD",
+      "authors": [
+        "Angulo P",
+        "Hui JM",
+        "Marchesini G",
+        "Bugianesi E",
+        "George J",
+        "Farrell GC"
+      ],
+      "pubdate": "2007 Apr",
+      "source": "Hepatology",
+      "doi": "10.1002/hep.21496"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "kdigo-aki",
+    "file": "missing-heme-id-nephro.ts",
+    "old_pmid": "22870421",
+    "old_doi": "10.4103/2230-8229.98309",
+    "citation": "Kidney Int Suppl. 2012 (KDIGO AKI)",
+    "claimed_title": "KDIGO Clinical Practice Guideline for Acute Kidney Injury",
+    "old_pubmed_title": "How NICE do we have to be? Lessons learned from the NICE experience",
+    "fix": {
+      "pmid": "22890468",
+      "score": 1.042,
+      "query": "KDIGO Clinical Practice Guideline for Acute Kidney Injury",
+      "title": "KDIGO clinical practice guidelines for acute kidney injury",
+      "authors": [
+        "Khwaja A"
+      ],
+      "pubdate": "2012",
+      "source": "Nephron Clin Pract",
+      "doi": "10.1159/000339789"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "khorana",
+    "file": "missing-heme-id-nephro.ts",
+    "old_pmid": "18252800",
+    "old_doi": "10.1242/jcs.021303",
+    "citation": "Khorana AA et al. Blood. 2008",
+    "claimed_title": "Development and validation of a predictive model for chemotherapy-associated thrombosis",
+    "old_pubmed_title": "Evaluating cytochrome c diffusion in the intermembrane spaces of mitochondria during cytochrome c release",
+    "fix": {
+      "pmid": "18216292",
+      "score": 1.733,
+      "query": "Khorana[Author] AND 2008[PDAT] AND (Development and validation predictive model for chemotherapy-associated thrombosis)",
+      "title": "Development and validation of a predictive model for chemotherapy-associated thrombosis",
+      "authors": [
+        "Khorana AA",
+        "Kuderer NM",
+        "Culakova E",
+        "Lyman GH",
+        "Francis CW"
+      ],
+      "pubdate": "2008 May 15",
+      "source": "Blood",
+      "doi": "10.1182/blood-2007-10-116327"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "rochester-criteria",
+    "file": "missing-heme-id-nephro.ts",
+    "old_pmid": "3884780",
+    "old_doi": "10.1016/0022-3913(85)90102-7",
+    "citation": "Dagan R et al. J Pediatr. 1985 / Rochester criteria literature",
+    "claimed_title": "Identification of infants unlikely to have serious bacterial infection",
+    "old_pubmed_title": "Effect of manipulative variables on the accuracy of crown wax patterns",
+    "fix": {
+      "pmid": "4067741",
+      "score": 1.733,
+      "query": "Dagan[Author] AND 1985[PDAT] AND (Identification infants unlikely have serious bacterial infection)",
+      "title": "Identification of infants unlikely to have serious bacterial infection although hospitalized for suspected sepsis",
+      "authors": [
+        "Dagan R",
+        "Powell KR",
+        "Hall CB",
+        "Menegus MA"
+      ],
+      "pubdate": "1985 Dec",
+      "source": "J Pediatr",
+      "doi": "10.1016/s0022-3476(85)80175-x"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "missing-heme-id-nephro.ts",
+    "old_pmid": "3521261",
+    "old_doi": "10.1093/oxfordjournals.aje.a114366",
+    "citation": "West ML et al. Am J Kidney Dis. 1986",
+    "claimed_title": "The transtubular potassium concentration in patients with hypokalemia and hyperkalemia",
+    "old_pubmed_title": "Total energy intake: implications for epidemiologic analyses",
+    "fix": {
+      "pmid": "3762510",
+      "score": 0.995,
+      "query": "West[Author] AND 1986[PDAT] AND (The transtubular potassium concentration patients with hypokalemia and hyperkalemia)",
+      "title": "New clinical approach to evaluate disorders of potassium excretion",
+      "authors": [
+        "West ML",
+        "Marsden PA",
+        "Richardson RM",
+        "Zettle RM",
+        "Halperin ML"
+      ],
+      "pubdate": "1986",
+      "source": "Miner Electrolyte Metab",
+      "doi": null
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "missing-heme-id-nephro.ts",
+    "old_pmid": "3521261",
+    "old_doi": "10.1093/oxfordjournals.aje.a114366",
+    "citation": "Kamel KS, Halperin ML. various reviews",
+    "claimed_title": "TTKG limitations (urea effect)",
+    "old_pubmed_title": "Total energy intake: implications for epidemiologic analyses",
+    "fix": {
+      "pmid": "21269927",
+      "score": 0.8,
+      "query": "Kamel[Author] AND 2011[PDAT]",
+      "title": "Rotenone, paraquat, and Parkinson's disease",
+      "authors": [
+        "Tanner CM",
+        "Kamel F",
+        "Ross GW",
+        "Hoppin JA",
+        "Goldman SM",
+        "Korell M"
+      ],
+      "pubdate": "2011 Jun",
+      "source": "Environ Health Perspect",
+      "doi": "10.1289/ehp.1002839"
+    },
+    "status": "resolved",
+    "patched": false
+  },
+  {
+    "calcId": "pediatric-ews",
+    "file": "missing-heme-id-nephro.ts",
+    "old_pmid": "15793982",
+    "old_doi": "10.7748/paed.17.2.14.s19",
+    "citation": "Monaghan A. Paediatr Nurs. 2005 / subsequent PEWS validations",
+    "claimed_title": "Pediatric early warning systems literature",
+    "old_pubmed_title": "Co-ordination of complex care",
+    "fix": {
+      "pmid": "15751446",
+      "score": 0.8,
+      "query": "Monaghan[Author] AND 2005[PDAT]",
+      "title": "Detecting and managing deterioration in children",
+      "authors": [
+        "Monaghan A"
+      ],
+      "pubdate": "2005 Feb",
+      "source": "Paediatr Nurs",
+      "doi": "10.7748/paed2005.02.17.1.32.c964"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "orbit-af",
+    "file": "missing-heme-id-nephro.ts",
+    "old_pmid": "25796055",
+    "old_doi": "10.1016/j.actpsy.2015.03.001",
+    "citation": "O\u2019Brien EC et al. Eur Heart J. 2015",
+    "claimed_title": "The ORBIT bleeding score: a simple bedside score to assess bleeding risk in AF",
+    "old_pubmed_title": "You can detect the trees as well as the forest when adding the leaves: evidence from visual search tasks containing three-level hierarchical stimuli",
+    "fix": {
+      "pmid": "26424865",
+      "score": 1.3,
+      "query": "The ORBIT bleeding score simple bedside score assess bleeding risk",
+      "title": "The ORBIT bleeding score: a simple bedside score to assess bleeding risk in atrial fibrillation",
+      "authors": [
+        "O'Brien EC",
+        "Simon DN",
+        "Thomas LE",
+        "Hylek EM",
+        "Gersh BJ",
+        "Ansell JE"
+      ],
+      "pubdate": "2015 Dec 7",
+      "source": "Eur Heart J",
+      "doi": "10.1093/eurheartj/ehv476"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "hunt-hess",
+    "file": "missing-neuro-psych.ts",
+    "old_pmid": "5646457",
+    "old_doi": "10.1001/archotol.1968.00760060524016",
+    "citation": "Hunt WE, Hess RM. J Neurosurg. 1968",
+    "claimed_title": "Surgical risk as related to time of intervention in the repair of intracranial aneurysms",
+    "old_pubmed_title": "Heterotopic brain tissue of the palate. A report of two cases",
+    "fix": {
+      "pmid": "5635959",
+      "score": 1.817,
+      "query": "Hunt[Author] AND 1968[PDAT] AND (Surgical risk related time intervention the repair intracranial aneurysms)",
+      "title": "Surgical risk as related to time of intervention in the repair of intracranial aneurysms",
+      "authors": [
+        "Hunt WE",
+        "Hess RM"
+      ],
+      "pubdate": "1968 Jan",
+      "source": "J Neurosurg",
+      "doi": "10.3171/jns.1968.28.1.0014"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "missing-neuro-psych.ts",
+    "old_pmid": "9554672",
+    "old_doi": "10.1378/chest.113.4.1148",
+    "citation": "Bush K et al. Arch Intern Med. 1998; Bradley KA et al. various",
+    "claimed_title": "AUDIT-C as a brief screen for alcohol misuse in primary care",
+    "old_pubmed_title": "Exercise testing in patients with interstitial lung disease",
+    "fix": {
+      "pmid": "9738608",
+      "score": 1.333,
+      "query": "Bush[Author] AND 1998[PDAT]",
+      "title": "The AUDIT alcohol consumption questions (AUDIT-C): an effective brief screening test for problem drinking. Ambulatory Care Quality Improvement Project (ACQUIP). Alcohol Use Disorders Identification Test",
+      "authors": [
+        "Bush K",
+        "Kivlahan DR",
+        "McDonell MB",
+        "Fihn SD",
+        "Bradley KA"
+      ],
+      "pubdate": "1998 Sep 14",
+      "source": "Arch Intern Med",
+      "doi": "10.1001/archinte.158.16.1789"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "sad-persons",
+    "file": "missing-neuro-psych.ts",
+    "old_pmid": "6622622",
+    "old_doi": "10.1097/00006842-198308000-00007",
+    "citation": "Patterson WM et al. Psychosomatics. 1983",
+    "claimed_title": "The SAD PERSONS scale for suicide risk",
+    "old_pubmed_title": "Group therapy and hypnosis reduce metastatic breast carcinoma pain",
+    "fix": {
+      "pmid": "6867245",
+      "score": 1.439,
+      "query": "Patterson[Author] AND 1983[PDAT] AND (The SAD PERSONS scale for suicide risk)",
+      "title": "Evaluation of suicidal patients: the SAD PERSONS scale",
+      "authors": [
+        "Patterson WM",
+        "Dohn HH",
+        "Bird J",
+        "Patterson GA"
+      ],
+      "pubdate": "1983 Apr",
+      "source": "Psychosomatics",
+      "doi": "10.1016/S0033-3182(83)73213-5"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "missing-neuro-psych.ts",
+    "old_pmid": "12394987",
+    "old_doi": "10.1097/00003246-200210000-00047",
+    "citation": "Sessler CN et al. Am J Respir Crit Care Med. 2002",
+    "claimed_title": "The Richmond Agitation-Sedation Scale: validity and reliability in adult ICU patients",
+    "old_pubmed_title": "Interpretation of immunoassay cTnI values is critical",
+    "fix": {
+      "pmid": "12421743",
+      "score": 1.773,
+      "query": "Sessler[Author] AND 2002[PDAT] AND (The Richmond Agitation-Sedation Scale validity and reliability adult ICU patients)",
+      "title": "The Richmond Agitation-Sedation Scale: validity and reliability in adult intensive care unit patients",
+      "authors": [
+        "Sessler CN",
+        "Gosnell MS",
+        "Grap MJ",
+        "Brophy GM",
+        "O'Neal PV",
+        "Keane KA"
+      ],
+      "pubdate": "2002 Nov 15",
+      "source": "Am J Respir Crit Care Med",
+      "doi": "10.1164/rccm.2107138"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "sipa",
+    "file": "missing-peds-ob-tox.ts",
+    "old_pmid": "25783300",
+    "old_doi": "10.1016/j.jpedsurg.2014.11.031",
+    "citation": "Acker SN et al. J Pediatr Surg. 2015",
+    "claimed_title": "Shock index pediatric adjusted (SIPA) in blunt trauma",
+    "old_pubmed_title": "Subcutaneous entomophthoromycosis mimicking soft-tissue sarcoma in children",
+    "fix": {
+      "pmid": "25638631",
+      "score": 1.25,
+      "query": "Acker[Author] AND 2015[PDAT] AND (Shock index pediatric adjusted blunt trauma)",
+      "title": "Pediatric specific shock index accurately identifies severely injured children",
+      "authors": [
+        "Acker SN",
+        "Ross JT",
+        "Partrick DA",
+        "Tong S",
+        "Bensard DD"
+      ],
+      "pubdate": "2015 Feb",
+      "source": "J Pediatr Surg",
+      "doi": "10.1016/j.jpedsurg.2014.08.009"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "missing-peds-ob-tox.ts",
+    "old_pmid": "16449123",
+    "old_doi": "10.1097/01.AOG.0000195356.90589.c5",
+    "citation": "Sibai BM. Obstet Gynecol. / Tennessee & Mississippi classifications",
+    "claimed_title": "HELLP syndrome",
+    "old_pubmed_title": "Women's views of prenatal violence screening: acceptability and confidentiality issues",
+    "fix": {
+      "pmid": "15519429",
+      "score": 1.1,
+      "query": "Sibai[Author] AND 2004[PDAT] AND (HELLP syndrome)",
+      "title": "Diagnosis and management of hemolysis, elevated liver enzymes, and low platelets syndrome",
+      "authors": [
+        "Barton JR",
+        "Sibai BM"
+      ],
+      "pubdate": "2004 Dec",
+      "source": "Clin Perinatol",
+      "doi": "10.1016/j.clp.2004.06.008"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "ideal-body-weight-peds",
+    "file": "missing-peds-ob-tox.ts",
+    "old_pmid": "7369179",
+    "old_doi": "10.1093/ajcp/73.4.552",
+    "citation": "Traub SL, Johnson CE. Am J Hosp Pharm. 1980",
+    "claimed_title": "Traub-Johnson pediatric IBW",
+    "old_pubmed_title": "Rapid drop in serum iron concentration in myocardial infarction",
+    "fix": {
+      "pmid": "7401271",
+      "score": 0.8,
+      "query": "Traub[Author] AND 1980[PDAT]",
+      "title": "Plastic ware",
+      "authors": [
+        "Traub S",
+        "Lambert I",
+        "Wesolowski C"
+      ],
+      "pubdate": "1980 May-Jun",
+      "source": "JPEN J Parenter Enteral Nutr",
+      "doi": "10.1177/014860718000400316"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "urine-anion-gap",
+    "file": "missing-peds-ob-tox.ts",
+    "old_pmid": "2835676",
+    "old_doi": "10.1016/0165-1218(88)90032-8",
+    "citation": "Batlle DC et al. N Engl J Med. 1988",
+    "claimed_title": "The urine anion gap",
+    "old_pubmed_title": "A multiple end-point approach to evaluation of cytotoxicity and genotoxicity of erythrosine (FD and C Red No. 3) in a V79 hepatocyte-mediated mutation assay",
+    "fix": {
+      "pmid": "3344005",
+      "score": 1.367,
+      "query": "Batlle[Author] AND 1988[PDAT] AND (The urine anion gap)",
+      "title": "The use of the urinary anion gap in the diagnosis of hyperchloremic metabolic acidosis",
+      "authors": [
+        "Batlle DC",
+        "Hizon M",
+        "Cohen E",
+        "Gutterman C",
+        "Gupta R"
+      ],
+      "pubdate": "1988 Mar 10",
+      "source": "N Engl J Med",
+      "doi": "10.1056/NEJM198803103181002"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "qtc-hodges",
+    "file": "wave2-cardiology.ts",
+    "old_pmid": "6684125",
+    "old_doi": "10.1083/jcb.97.2.522",
+    "citation": "Hodges M et al. J Electrocardiol. 1983 (linear QT correction; classic ECG methods)",
+    "claimed_title": "QT interval corrections (Hodges linear formula)",
+    "old_pubmed_title": "Elongation of the fertilization tubule in Chlamydomonas: new observations on the core microfilaments and the effect of transient intracellular signals on their structural integrity",
+    "fix": {
+      "pmid": "6405669",
+      "score": 0.8,
+      "query": "Hodges[Author] AND 1983[PDAT]",
+      "title": "Carbohydrates and blood pressure",
+      "authors": [
+        "Hodges RE",
+        "Rebello T"
+      ],
+      "pubdate": "1983 May",
+      "source": "Ann Intern Med",
+      "doi": "10.7326/0003-4819-98-5-838"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave2-cardiology.ts",
+    "old_pmid": "27056738",
+    "old_doi": "10.1016/S0140-6736(16)30840-1",
+    "citation": "Hijazi Z et al. Eur Heart J. 2016",
+    "claimed_title": "The ABC (age, biomarkers, clinical history) bleeding risk score",
+    "old_pubmed_title": "The novel biomarker-based ABC (age, biomarkers, clinical history)-bleeding risk score for patients with atrial fibrillation: a derivation and validation study",
+    "fix": {
+      "pmid": "27056738",
+      "doi": "10.1016/S0140-6736(16)00741-8",
+      "title": "The novel biomarker-based ABC (age, biomarkers, clinical history)-bleeding risk score for patients with atrial fibrillation: a derivation and validation study",
+      "score": 1.0,
+      "query": "audit-doi-fix"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave2-neuro-psych.ts",
+    "old_pmid": "15841682",
+    "old_doi": "10.1017/s0033291704002892",
+    "citation": "World Health Organization",
+    "claimed_title": "World Health Organization clinical / growth standards resources",
+    "old_pubmed_title": "The World Health Organization Adult ADHD Self-Report Scale (ASRS): a short screening scale for use in the general population",
+    "fix": {
+      "pmid": "16416313",
+      "score": 1.025,
+      "query": "World[Author] AND 2006[PDAT]",
+      "title": "Variation in the lipoprotein lipase gene influences exercise-induced left ventricular growth",
+      "authors": [
+        "Flavell DM",
+        "Wootton PT",
+        "Myerson SG",
+        "World MJ",
+        "Pennell DJ",
+        "Humphries SE"
+      ],
+      "pubdate": "2006 Feb",
+      "source": "J Mol Med (Berl)",
+      "doi": "10.1007/s00109-005-0002-8"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "ipi-lymphoma",
+    "file": "wave2-oncology.ts",
+    "old_pmid": "8413381",
+    "old_doi": "10.1002/mus.880161119",
+    "citation": "The International Non-Hodgkin's Lymphoma Prognostic Factors Project. N Engl J Med. 1993",
+    "claimed_title": "A predictive model for aggressive non-Hodgkin's lymphoma",
+    "old_pubmed_title": "Sensitivity of electrophysiological studies and the carpal tunnel syndrome",
+    "fix": {
+      "pmid": "8141877",
+      "score": 1.1,
+      "query": "predictive model for aggressive non-Hodgkin's lymphoma",
+      "title": "A predictive model for aggressive non-Hodgkin's lymphoma",
+      "authors": [
+        "International Non-Hodgkin's Lymphoma Prognostic Factors Project"
+      ],
+      "pubdate": "1993 Sep 30",
+      "source": "N Engl J Med",
+      "doi": "10.1056/NEJM199309303291402"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave3-cardio-vasc.ts",
+    "old_pmid": "19782281",
+    "old_doi": "10.1016/j.healun.2009.08.005",
+    "citation": "Stevenson LW et al. J Heart Lung Transplant. 2009",
+    "claimed_title": "INTERMACS profiles of advanced heart failure",
+    "old_pubmed_title": "Scientific Registry of the International Society for Heart and Lung Transplantation: introduction to the 2009 Annual Reports",
+    "fix": {
+      "pmid": "19481012",
+      "score": 1.775,
+      "query": "Stevenson[Author] AND 2009[PDAT] AND (INTERMACS profiles advanced heart failure)",
+      "title": "INTERMACS profiles of advanced heart failure: the current picture",
+      "authors": [
+        "Stevenson LW",
+        "Pagani FD",
+        "Young JB",
+        "Jessup M",
+        "Miller L",
+        "Kormos RL"
+      ],
+      "pubdate": "2009 Jun",
+      "source": "J Heart Lung Transplant",
+      "doi": "10.1016/j.healun.2009.02.015"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave3-cardio-vasc.ts",
+    "old_pmid": "8598860",
+    "old_doi": null,
+    "citation": "Sgarbossa EB et al. N Engl J Med. 1996",
+    "claimed_title": "Electrocardiographic diagnosis of evolving MI in the presence of LBBB (original Sgarbossa)",
+    "old_pubmed_title": "Preoperative assessment of patients with coronary disease",
+    "fix": {
+      "pmid": "8559200",
+      "score": 1.444,
+      "query": "Sgarbossa[Author] AND 1996[PDAT]",
+      "title": "Electrocardiographic diagnosis of evolving acute myocardial infarction in the presence of left bundle-branch block. GUSTO-1 (Global Utilization of Streptokinase and Tissue Plasminogen Activator for Occluded Coronary Arteries) Investigators",
+      "authors": [
+        "Sgarbossa EB",
+        "Pinski SL",
+        "Barbagelata A",
+        "Underwood DA",
+        "Gates KB",
+        "Topol EJ"
+      ],
+      "pubdate": "1996 Feb 22",
+      "source": "N Engl J Med",
+      "doi": "10.1056/NEJM199602223340801"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave3-cardio-vasc.ts",
+    "old_pmid": "17284792",
+    "old_doi": "10.1107/S0108270106054163",
+    "citation": "Ridker PM et al. JAMA. 2007",
+    "claimed_title": "Development and validation of improved algorithms for assessment of global cardiovascular risk in women (Reynolds)",
+    "old_pubmed_title": "mu-Acetato-1:2kappa2O:O'-diacetato-1kappa2O,O';2kappaO-bis(di-2-pyridylamine)-1kappa2N,N';2kappa2N,N'-isothiocyanato-2kappaN-dicopper(II)",
+    "fix": {
+      "pmid": "17299196",
+      "score": 1.983,
+      "query": "Ridker[Author] AND 2007[PDAT] AND (Development and validation improved algorithms for assessment global cardiovascular risk)",
+      "title": "Development and validation of improved algorithms for the assessment of global cardiovascular risk in women: the Reynolds Risk Score",
+      "authors": [
+        "Ridker PM",
+        "Buring JE",
+        "Rifai N",
+        "Cook NR"
+      ],
+      "pubdate": "2007 Feb 14",
+      "source": "JAMA",
+      "doi": "10.1001/jama.297.6.611"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "ukeld",
+    "file": "wave3-gi-hep.ts",
+    "old_pmid": "18334611",
+    "old_doi": "10.1152/ajpendo.00607.2007",
+    "citation": "Barber K et al. / UK transplant selection literature; Neuberger J et al. Gut related guidance",
+    "claimed_title": "Development of the UKELD score",
+    "old_pubmed_title": "Effect of acute physiological hyperinsulinemia on gene expression in human skeletal muscle in vivo",
+    "fix": {
+      "pmid": "18724357",
+      "score": 0.8,
+      "query": "Barber[Author] AND 2008[PDAT]",
+      "title": "STING is an endoplasmic reticulum adaptor that facilitates innate immune signalling",
+      "authors": [
+        "Ishikawa H",
+        "Barber GN"
+      ],
+      "pubdate": "2008 Oct 2",
+      "source": "Nature",
+      "doi": "10.1038/nature07317"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "clif-c-aclf",
+    "file": "wave3-gi-hep.ts",
+    "old_pmid": "24703955",
+    "old_doi": "10.1016/j.jhep.2014.03.032",
+    "citation": "Jalan R et al. J Hepatol. 2014",
+    "claimed_title": "Development and validation of a prognostic score to predict mortality in patients with ACLF",
+    "old_pubmed_title": "Transporting pharmacogenomics into clinical practice",
+    "fix": {
+      "pmid": "24950482",
+      "score": 1.645,
+      "query": "Jalan[Author] AND 2014[PDAT] AND (Development and validation prognostic score predict mortality patients with ACLF)",
+      "title": "Development and validation of a prognostic score to predict mortality in patients with acute-on-chronic liver failure",
+      "authors": [
+        "Jalan R",
+        "Saliba F",
+        "Pavesi M",
+        "Amoros A",
+        "Moreau R",
+        "Gin\u00e8s P"
+      ],
+      "pubdate": "2014 Nov",
+      "source": "J Hepatol",
+      "doi": "10.1016/j.jhep.2014.06.012"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "pned",
+    "file": "wave3-gi-hep.ts",
+    "old_pmid": "20372114",
+    "old_doi": "10.1038/ajg.2010.139",
+    "citation": "Marmo R et al. Am J Gastroenterol. 2010",
+    "claimed_title": "Predictive factors of mortality from nonvariceal upper gastrointestinal hemorrhage: PNED study",
+    "old_pubmed_title": "A population-based study of health-care resource use among infliximab users",
+    "fix": {
+      "pmid": "19497799",
+      "score": 0.927,
+      "query": "Marmo[Author] AND 2010[PDAT]",
+      "title": "Appropriateness of the indication for upper endoscopy: a meta-analysis",
+      "authors": [
+        "Di Giulio E",
+        "Hassan C",
+        "Marmo R",
+        "Zullo A",
+        "Annibale B"
+      ],
+      "pubdate": "2010 Feb",
+      "source": "Dig Liver Dis",
+      "doi": "10.1016/j.dld.2009.04.019"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "delta-meld",
+    "file": "wave3-gi-hep.ts",
+    "old_pmid": "15880501",
+    "old_doi": "10.1002/ijc.21143",
+    "citation": "Merion RM et al. / related transplant epidemiology studies",
+    "claimed_title": "Delta-MELD and waitlist outcomes (dynamic MELD literature)",
+    "old_pubmed_title": "Suppression of metastasis of human pancreatic cancer to the liver by transportal injection of recombinant adenoviral NK4 in nude mice",
+    "fix": {
+      "pmid": "16135918",
+      "score": 1.04,
+      "query": "Merion[Author] AND 2005[PDAT]",
+      "title": "Outcomes of 385 adult-to-adult living donor liver transplant recipients: a report from the A2ALL Consortium",
+      "authors": [
+        "Olthoff KM",
+        "Merion RM",
+        "Ghobrial RM",
+        "Abecassis MM",
+        "Fair JH",
+        "Fisher RA"
+      ],
+      "pubdate": "2005 Sep",
+      "source": "Ann Surg",
+      "doi": "10.1097/01.sla.0000179646.37145.ef"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "df-units",
+    "file": "wave3-gi-hep.ts",
+    "old_pmid": "658710",
+    "old_doi": "10.1093/geront/18.3.230",
+    "citation": "Maddrey WC et al. Gastroenterology. 1978",
+    "claimed_title": "Corticosteroid therapy of alcoholic hepatitis",
+    "old_pubmed_title": "The need for a separate consumer price index for older persons. A review and new evidence",
+    "fix": {
+      "pmid": "352788",
+      "score": 1.55,
+      "query": "Maddrey[Author] AND 1978[PDAT] AND (Corticosteroid therapy alcoholic hepatitis)",
+      "title": "Corticosteroid therapy of alcoholic hepatitis",
+      "authors": [
+        "Maddrey WC",
+        "Boitnott JK",
+        "Bedine MS",
+        "Weber FL Jr",
+        "Mezey E",
+        "White RI Jr"
+      ],
+      "pubdate": "1978 Aug",
+      "source": "Gastroenterology",
+      "doi": null
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "chloride-deficit",
+    "file": "wave3-nephro-icu.ts",
+    "old_pmid": "10616854",
+    "old_doi": null,
+    "citation": "Galla JH. JASN / classic fluid-electrolyte texts",
+    "claimed_title": "Metabolic alkalosis",
+    "old_pubmed_title": "Production of nephrotic syndrome in rats by Freund's adjuvants and rat kidney suspensions. 1951",
+    "fix": {
+      "pmid": "10665945",
+      "score": 1.35,
+      "query": "Galla[Author] AND 2000[PDAT] AND (Metabolic alkalosis)",
+      "title": "Metabolic alkalosis",
+      "authors": [
+        "Galla JH"
+      ],
+      "pubdate": "2000 Feb",
+      "source": "J Am Soc Nephrol",
+      "doi": "10.1681/ASN.V112369"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave3-nephro-icu.ts",
+    "old_pmid": "32249351",
+    "old_doi": "10.1007/s00234-020-02403-1",
+    "citation": "Beaubien-Souligny et al. Ultrasound J / related critical care literature",
+    "claimed_title": "The Venous Excess Ultrasound (VExUS) score",
+    "old_pubmed_title": "Radiomics in gliomas: clinical implications of computational modeling and fractal-based analysis",
+    "fix": {
+      "pmid": "32270297",
+      "score": 1.374,
+      "query": "Beaubien-Souligny[Author] AND 2020[PDAT] AND (The Venous Excess Ultrasound score)",
+      "title": "Quantifying systemic congestion with Point-Of-Care ultrasound: development of the venous excess ultrasound grading system",
+      "authors": [
+        "Beaubien-Souligny W",
+        "Rola P",
+        "Haycock K",
+        "Bouchard J",
+        "Lamarche Y",
+        "Spiegel R"
+      ],
+      "pubdate": "2020 Apr 9",
+      "source": "Ultrasound J",
+      "doi": "10.1186/s13089-020-00163-w"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "passive-leg-raise",
+    "file": "wave3-nephro-icu.ts",
+    "old_pmid": "25731650",
+    "old_doi": "10.3109/14767058.2015.1015414",
+    "citation": "Monnet X, Teboul JL. various Crit Care Med / Intensive Care Med",
+    "claimed_title": "Passive leg raising for predicting fluid responsiveness: systematic review",
+    "old_pubmed_title": "The clinical outcomes of unplanned pregnancy in severely obese women",
+    "fix": {
+      "pmid": "25649527",
+      "score": 1.054,
+      "query": "Monnet[Author] AND 2015[PDAT]",
+      "title": "Predicting the determinants of volume responsiveness",
+      "authors": [
+        "Monnet X",
+        "Pinsky MR"
+      ],
+      "pubdate": "2015 Feb",
+      "source": "Intensive Care Med",
+      "doi": "10.1007/s00134-014-3637-5"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave3-peds-ob.ts",
+    "old_pmid": "11148500",
+    "old_doi": "10.1067/mjd.2001.109854",
+    "citation": "Richardson DK et al. J Pediatr. 2001",
+    "claimed_title": "SNAP-II and SNAPPE-II: Simplified newborn illness severity and mortality risk scores",
+    "old_pubmed_title": "Eruptive pruritic syringomas: treatment with topical atropine",
+    "fix": {
+      "pmid": "11148519",
+      "score": 1.968,
+      "query": "Richardson[Author] AND 2001[PDAT] AND (SNAP-II and SNAPPE-II Simplified newborn illness severity and mortality risk)",
+      "title": "SNAP-II and SNAPPE-II: Simplified newborn illness severity and mortality risk scores",
+      "authors": [
+        "Richardson DK",
+        "Corcoran JD",
+        "Escobar GJ",
+        "Lee SK"
+      ],
+      "pubdate": "2001 Jan",
+      "source": "J Pediatr",
+      "doi": "10.1067/mpd.2001.109608"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "kdigo-peds-aki",
+    "file": "wave3-peds-ob.ts",
+    "old_pmid": "22870421",
+    "old_doi": "10.4103/2230-8229.98309",
+    "citation": "Kidney Int Suppl. 2012 (KDIGO AKI)",
+    "claimed_title": "KDIGO Clinical Practice Guideline for Acute Kidney Injury",
+    "old_pubmed_title": "How NICE do we have to be? Lessons learned from the NICE experience",
+    "fix": {
+      "pmid": "23732715",
+      "score": 0.975,
+      "query": "KDIGO Clinical Practice Guideline for Acute Kidney Injury",
+      "title": "Evaluation and management of chronic kidney disease: synopsis of the kidney disease: improving global outcomes 2012 clinical practice guideline",
+      "authors": [
+        "Stevens PE",
+        "Levin A",
+        "Kidney Disease: Improving Global Outcomes Chronic Kidney Disease Guideline Development Work Group Members"
+      ],
+      "pubdate": "2013 Jun 4",
+      "source": "Ann Intern Med",
+      "doi": "10.7326/0003-4819-158-11-201306040-00007"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "urine-output-peds",
+    "file": "wave3-peds-ob.ts",
+    "old_pmid": "22870421",
+    "old_doi": "10.4103/2230-8229.98309",
+    "citation": "Kidney Int Suppl. 2012 (KDIGO AKI)",
+    "claimed_title": "KDIGO Clinical Practice Guideline for Acute Kidney Injury",
+    "old_pubmed_title": "How NICE do we have to be? Lessons learned from the NICE experience",
+    "fix": {
+      "pmid": "23732715",
+      "score": 0.975,
+      "query": "KDIGO Clinical Practice Guideline for Acute Kidney Injury",
+      "title": "Evaluation and management of chronic kidney disease: synopsis of the kidney disease: improving global outcomes 2012 clinical practice guideline",
+      "authors": [
+        "Stevens PE",
+        "Levin A",
+        "Kidney Disease: Improving Global Outcomes Chronic Kidney Disease Guideline Development Work Group Members"
+      ],
+      "pubdate": "2013 Jun 4",
+      "source": "Ann Intern Med",
+      "doi": "10.7326/0003-4819-158-11-201306040-00007"
+    },
+    "status": "resolved",
+    "patched": false
+  },
+  {
+    "calcId": "philadelphia-criteria",
+    "file": "wave3-peds-ob.ts",
+    "old_pmid": "8413452",
+    "old_doi": "10.1056/NEJM199311043291919",
+    "citation": "Baker MD et al. N Engl J Med. 1993",
+    "claimed_title": "Outpatient management without antibiotics of fever in selected infants",
+    "old_pubmed_title": "Proximal-muscle weakness induced by herbs",
+    "fix": {
+      "pmid": "8413453",
+      "score": 1.733,
+      "query": "Baker[Author] AND 1993[PDAT] AND (Outpatient management without antibiotics fever selected infants)",
+      "title": "Outpatient management without antibiotics of fever in selected infants",
+      "authors": [
+        "Baker MD",
+        "Bell LM",
+        "Avner JR"
+      ],
+      "pubdate": "1993 Nov 11",
+      "source": "N Engl J Med",
+      "doi": "10.1056/NEJM199311113292001"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "boston-criteria",
+    "file": "wave3-peds-ob.ts",
+    "old_pmid": "1731024",
+    "old_doi": "10.1016/s0022-3476(05)80596-7",
+    "citation": "Baskin MN et al. J Pediatr. 1992",
+    "claimed_title": "Outpatient treatment of febrile infants 28 to 89 days of age with intramuscular ceftriaxone",
+    "old_pubmed_title": "Chronic relapsing thrombotic thrombocytopenic purpura in infants with large von Willebrand factor multimers during remission",
+    "fix": {
+      "pmid": "1731019",
+      "score": 1.817,
+      "query": "Baskin[Author] AND 1992[PDAT] AND (Outpatient treatment febrile infants days age with intramuscular ceftriaxone)",
+      "title": "Outpatient treatment of febrile infants 28 to 89 days of age with intramuscular administration of ceftriaxone",
+      "authors": [
+        "Baskin MN",
+        "O'Rourke EJ",
+        "Fleisher GR"
+      ],
+      "pubdate": "1992 Jan",
+      "source": "J Pediatr",
+      "doi": "10.1016/s0022-3476(05)80591-8"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "nac-dosing",
+    "file": "wave3-tox-endo-heme.ts",
+    "old_pmid": "3045302",
+    "old_doi": null,
+    "citation": "Prescott LF / Smilkstein MJ et al.; product labeling",
+    "claimed_title": "Acetaminophen poisoning and NAC",
+    "old_pubmed_title": "It's magic!",
+    "fix": {
+      "pmid": "3126163",
+      "score": 0.8,
+      "query": "Prescott[Author] AND 1988[PDAT]",
+      "title": "Nursing: a major hospital cost component",
+      "authors": [
+        "Wilson L",
+        "Prescott PA",
+        "Aleksandrowicz L"
+      ],
+      "pubdate": "1988 Feb",
+      "source": "Health Serv Res",
+      "doi": null
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "naloxone-infusion",
+    "file": "wave3-tox-endo-heme.ts",
+    "old_pmid": "3963537",
+    "old_doi": "10.1016/s0196-0644(86)80993-3",
+    "citation": "Global Initiative for Chronic Obstructive Lung Disease (GOLD) Report",
+    "claimed_title": "Global Strategy for Prevention, Diagnosis and Management of COPD (GOLD)",
+    "old_pubmed_title": "A practical score for the early diagnosis of acute appendicitis",
+    "fix": {
+      "pmid": "28128970",
+      "score": 1.217,
+      "query": "Global Strategy for Prevention Diagnosis and Management COPD",
+      "title": "Global Strategy for the Diagnosis, Management, and Prevention of Chronic Obstructive Lung Disease 2017 Report. GOLD Executive Summary",
+      "authors": [
+        "Vogelmeier CF",
+        "Criner GJ",
+        "Martinez FJ",
+        "Anzueto A",
+        "Barnes PJ",
+        "Bourbeau J"
+      ],
+      "pubdate": "2017 Mar 1",
+      "source": "Am J Respir Crit Care Med",
+      "doi": "10.1164/rccm.201701-0218PP"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave4-em-id.ts",
+    "old_pmid": "12671125",
+    "old_doi": "10.1542/peds.111.4.864",
+    "citation": "Craig FW, Schunk JE. Pediatrics. 2003 / contemporary pediatric ID reviews",
+    "claimed_title": "Retropharyngeal and parapharyngeal infections in children",
+    "old_pubmed_title": "The role of meat to improve the critical iron balance during weaning",
+    "fix": {
+      "pmid": "42275833",
+      "score": 0.85,
+      "query": "Retropharyngeal and parapharyngeal infections children",
+      "title": "Deep neck space Infections in children: Peritonsillar, retropharyngeal, parapharyngeal, and Ludwig's angina emergencies in the pediatric emergency department",
+      "authors": [
+        "Darawish SM",
+        "Shahid MA",
+        "Aziz N",
+        "Safder H",
+        "Elbarbary M",
+        "Nofal D"
+      ],
+      "pubdate": "2026 Jul-Aug",
+      "source": "Am J Otolaryngol",
+      "doi": "10.1016/j.amjoto.2026.104864"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "atlas-cdi",
+    "file": "wave4-em-id.ts",
+    "old_pmid": "23452819",
+    "old_doi": "10.1016/j.ciresp.2013.01.001",
+    "citation": "Miller MA et al. BMC Infect Dis. 2013 / related ATLAS publications",
+    "claimed_title": "Comparison of the ATLAS score vs other severity criteria for CDI",
+    "old_pubmed_title": "[Gastroenteric reconstruction route after pancreaticoduodenectomy: antecolic versus retrocolic]",
+    "fix": {
+      "pmid": "24331095",
+      "score": 0.8,
+      "query": "Miller[Author] AND 2013[PDAT]",
+      "title": "Neonatal hematology",
+      "authors": [
+        "Diaz-Miron J",
+        "Miller J",
+        "Vogel AM"
+      ],
+      "pubdate": "2013 Nov",
+      "source": "Semin Pediatr Surg",
+      "doi": "10.1053/j.sempedsurg.2013.10.009"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "boston-syncope",
+    "file": "wave4-em-id.ts",
+    "old_pmid": "17499690",
+    "old_doi": "10.1016/j.jemermed.2006.08.015",
+    "citation": "Grossman SA et al. related Boston Syncope Rule publications (J Emerg Med / Ann Emerg Med)",
+    "claimed_title": "The yield of head CT in syncope: a pilot study / Boston syncope criteria literature",
+    "old_pubmed_title": "Intracranial cholesteatoma: a case report and review",
+    "fix": {
+      "pmid": "34251124",
+      "score": 0.95,
+      "query": "Grossman[Author] AND boston-syncope",
+      "title": "A Tale of Two Cities: Applying the Boston Syncope Criteria to Jerusalem",
+      "authors": [
+        "Muhtaseb O",
+        "Alpert EA",
+        "Grossman SA"
+      ],
+      "pubdate": "2021 Jul",
+      "source": "Isr Med Assoc J",
+      "doi": null
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave4-em-id.ts",
+    "old_pmid": "34447986",
+    "old_doi": "10.1093/ehjci/jeab156",
+    "citation": "Collet JP et al. Eur Heart J. 2021",
+    "claimed_title": "ESC guidelines for NSTE-ACS / hs-cTn algorithms",
+    "old_pubmed_title": "Using non-obstructive generalized angioscopy to directly visualize a tumour during intravascular biopsy",
+    "fix": {
+      "pmid": "32860058",
+      "score": 1.139,
+      "query": "Collet[Author] AND 2021[PDAT]",
+      "title": "2020 ESC Guidelines for the management of acute coronary syndromes in patients presenting without persistent ST-segment elevation",
+      "authors": [
+        "Collet JP",
+        "Thiele H",
+        "Barbato E",
+        "Barth\u00e9l\u00e9my O",
+        "Bauersachs J",
+        "Bhatt DL"
+      ],
+      "pubdate": "2021 Apr 7",
+      "source": "Eur Heart J",
+      "doi": "10.1093/eurheartj/ehaa575"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "nitrogen-balance",
+    "file": "wave4-formulas.ts",
+    "old_pmid": "26773077",
+    "old_doi": "10.1177/0148607115621863",
+    "citation": "Classic clinical nutrition methods; see ASPEN nutrition support curricula",
+    "claimed_title": "Nitrogen balance in clinical practice (nutrition support teaching)",
+    "old_pubmed_title": "Guidelines for the Provision and Assessment of Nutrition Support Therapy in the Adult Critically Ill Patient: Society of Critical Care Medicine (SCCM) and American Society for Parenteral and Enteral Nutrition (A.S.P.E.N.)",
+    "fix": {
+      "pmid": "36071933",
+      "score": 0.298,
+      "query": "Nitrogen balance clinical practice",
+      "title": "Nitrogen balance and outcomes in critically ill patients: A systematic review and meta-analysis",
+      "authors": [
+        "Zhu YB",
+        "Yao Y",
+        "Xu Y",
+        "Huang HB"
+      ],
+      "pubdate": "2022",
+      "source": "Front Nutr",
+      "doi": "10.3389/fnut.2022.961207",
+      "rejected": true,
+      "reject_reason": "low score 0.29848484848484846"
+    },
+    "status": "needs_manual"
+  },
+  {
+    "calcId": "brooke-formula",
+    "file": "wave4-formulas.ts",
+    "old_pmid": "4609676",
+    "old_doi": null,
+    "citation": "Classic burn surgery literature; ABA fluid resuscitation principles",
+    "claimed_title": "Burn resuscitation \u2014 Parkland and Brooke formula teaching",
+    "old_pubmed_title": "Fluid volume and electrolyte changes of the early postburn period",
+    "fix": {
+      "pmid": "37969154",
+      "score": 0.0,
+      "query": "Burn resuscitation Parkland and Brooke formula teaching",
+      "title": "Inhalational Injury Secondary to House Fire",
+      "authors": [
+        "O'Neill R",
+        "Ostro BM",
+        "Yee J"
+      ],
+      "pubdate": "2023 Oct",
+      "source": "J Educ Teach Emerg Med",
+      "doi": "10.21980/J8TW7N",
+      "rejected": true,
+      "reject_reason": "low score 0.0"
+    },
+    "status": "needs_manual"
+  },
+  {
+    "calcId": "rdw-anemia",
+    "file": "wave4-formulas.ts",
+    "old_pmid": "6823861",
+    "old_doi": "10.1016/s0002-9149(83)80081-2",
+    "citation": "Bessman JD / classic RDW clinical teaching literature",
+    "claimed_title": "Red cell distribution width in the diagnosis of iron deficiency and thalassemia",
+    "old_pubmed_title": "Increased plasma concentrations of prostacyclin metabolite 6-keto-PGF1 alpha in essential hypertension. Influence of therapy with labetalol",
+    "fix": {
+      "pmid": "6881096",
+      "score": 0.967,
+      "query": "Bessman[Author] AND 1983[PDAT] AND (Red cell distribution width the diagnosis iron deficiency and thalassemia)",
+      "title": "Improved classification of anemias by MCV and RDW",
+      "authors": [
+        "Bessman JD",
+        "Gilmer PR Jr",
+        "Gardner FH"
+      ],
+      "pubdate": "1983 Sep",
+      "source": "Am J Clin Pathol",
+      "doi": "10.1093/ajcp/80.3.322"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "dipss-plus",
+    "file": "wave4-heme-onc.ts",
+    "old_pmid": "21205761",
+    "old_doi": "10.1200/JCO.2010.31.8436",
+    "citation": "Gangat N et al. J Clin Oncol. 2011",
+    "claimed_title": "DIPSS plus: a refined Dynamic International Prognostic Scoring System for primary myelofibrosis that incorporates prognostic information from karyotype, platelet count, and transfusion status",
+    "old_pubmed_title": "Philadelphia-negative classical myeloproliferative neoplasms: critical concepts and management recommendations from European LeukemiaNet",
+    "fix": {
+      "pmid": "21149668",
+      "score": 2.65,
+      "query": "Gangat[Author] AND 2011[PDAT] AND (DIPSS plus refined Dynamic International Prognostic Scoring System for primary)",
+      "title": "DIPSS plus: a refined Dynamic International Prognostic Scoring System for primary myelofibrosis that incorporates prognostic information from karyotype, platelet count, and transfusion status",
+      "authors": [
+        "Gangat N",
+        "Caramazza D",
+        "Vaidya R",
+        "George G",
+        "Begna K",
+        "Schwager S"
+      ],
+      "pubdate": "2011 Feb 1",
+      "source": "J Clin Oncol",
+      "doi": "10.1200/JCO.2010.32.2446"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "iss-myeloma",
+    "file": "wave4-heme-onc.ts",
+    "old_pmid": "15994199",
+    "old_doi": "10.1210/me.2005-0148",
+    "citation": "Greipp PR et al. J Clin Oncol. 2005",
+    "claimed_title": "International staging system for multiple myeloma",
+    "old_pubmed_title": "The N-terminal juxtamembrane segment of the V1a vasopressin receptor provides two independent epitopes required for high-affinity agonist binding and signaling",
+    "fix": {
+      "pmid": "15809451",
+      "score": 1.706,
+      "query": "Greipp[Author] AND 2005[PDAT] AND (International staging system for multiple myeloma)",
+      "title": "International staging system for multiple myeloma",
+      "authors": [
+        "Greipp PR",
+        "San Miguel J",
+        "Durie BG",
+        "Crowley JJ",
+        "Barlogie B",
+        "Blad\u00e9 J"
+      ],
+      "pubdate": "2005 May 20",
+      "source": "J Clin Oncol",
+      "doi": "10.1200/JCO.2005.04.242"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "aaipi",
+    "file": "wave4-heme-onc.ts",
+    "old_pmid": "8413381",
+    "old_doi": "10.1002/mus.880161119",
+    "citation": "The International Non-Hodgkin's Lymphoma Prognostic Factors Project. N Engl J Med. 1993",
+    "claimed_title": "A predictive model for aggressive non-Hodgkin's lymphoma",
+    "old_pubmed_title": "Sensitivity of electrophysiological studies and the carpal tunnel syndrome",
+    "fix": {
+      "pmid": "8141877",
+      "score": 1.1,
+      "query": "predictive model for aggressive non-Hodgkin's lymphoma",
+      "title": "A predictive model for aggressive non-Hodgkin's lymphoma",
+      "authors": [
+        "International Non-Hodgkin's Lymphoma Prognostic Factors Project"
+      ],
+      "pubdate": "1993 Sep 30",
+      "source": "N Engl J Med",
+      "doi": "10.1056/NEJM199309303291402"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "rsbi",
+    "file": "wave4-icu-vent.ts",
+    "old_pmid": "1864370",
+    "old_doi": "10.1016/0014-5793(91)80975-9",
+    "citation": "Yang KL, Tobin MJ. N Engl J Med. 1991",
+    "claimed_title": "A prospective study of indexes predicting the outcome of trials of weaning from mechanical ventilation",
+    "old_pubmed_title": "The involvement of photosystem II-generated H2O2 in photoinhibition",
+    "fix": {
+      "pmid": "2023603",
+      "score": 1.817,
+      "query": "Yang[Author] AND 1991[PDAT] AND (prospective study indexes predicting the outcome trials weaning from mechanical)",
+      "title": "A prospective study of indexes predicting the outcome of trials of weaning from mechanical ventilation",
+      "authors": [
+        "Yang KL",
+        "Tobin MJ"
+      ],
+      "pubdate": "1991 May 23",
+      "source": "N Engl J Med",
+      "doi": "10.1056/NEJM199105233242101"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "tidal-volume-ards",
+    "file": "wave4-icu-vent.ts",
+    "old_pmid": "10793162",
+    "old_doi": "10.1056/NEJM200005043421801",
+    "citation": "ARDS Network. N Engl J Med. 2000",
+    "claimed_title": "ARDS Network low tidal volume trial",
+    "old_pubmed_title": "Ventilation with lower tidal volumes as compared with traditional tidal volumes for acute lung injury and the acute respiratory distress syndrome",
+    "fix": {
+      "pmid": "34463700",
+      "score": 0.475,
+      "query": "ARDS Network low tidal volume trial",
+      "title": "Effect of Lower Tidal Volume Ventilation Facilitated by Extracorporeal Carbon Dioxide Removal vs Standard Care Ventilation on 90-Day Mortality in Patients With Acute Hypoxemic Respiratory Failure: The REST Randomized Clinical Trial",
+      "authors": [
+        "McNamee JJ",
+        "Gillies MA",
+        "Barrett NA",
+        "Perkins GD",
+        "Tunnicliffe W",
+        "Young D"
+      ],
+      "pubdate": "2021 Sep 21",
+      "source": "JAMA",
+      "doi": "10.1001/jama.2021.13374",
+      "rejected": true,
+      "reject_reason": "low score 0.475"
+    },
+    "status": "needs_manual"
+  },
+  {
+    "calcId": "?",
+    "file": "wave4-neuro-psych.ts",
+    "old_pmid": "22497932",
+    "old_doi": "10.1016/j.cub.2012.02.035",
+    "citation": "Demchuk AM et al. Lancet Neurol. 2012",
+    "claimed_title": "CT angiography spot sign predicts hematoma expansion in acute ICH (PREDICT)",
+    "old_pubmed_title": "Heritability",
+    "fix": {
+      "pmid": "22405630",
+      "score": 1.289,
+      "query": "Demchuk[Author] AND 2012[PDAT] AND (angiography spot sign predicts hematoma expansion acute ICH)",
+      "title": "Prediction of haematoma growth and outcome in patients with intracerebral haemorrhage using the CT-angiography spot sign (PREDICT): a prospective observational study",
+      "authors": [
+        "Demchuk AM",
+        "Dowlatshahi D",
+        "Rodriguez-Luna D",
+        "Molina CA",
+        "Blas YS",
+        "Dzialowski I"
+      ],
+      "pubdate": "2012 Apr",
+      "source": "Lancet Neurol",
+      "doi": "10.1016/S1474-4422(12)70038-8"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "pc-ptsd",
+    "file": "wave4-neuro-psych.ts",
+    "old_pmid": "26861976",
+    "old_doi": "10.1007/s10103-016-1872-4",
+    "citation": "Prins A et al. J Gen Intern Med. 2016; NCPTSD",
+    "claimed_title": "The Primary Care PTSD Screen for DSM-5 (PC-PTSD-5)",
+    "old_pubmed_title": "Topical anaesthetic effects on skin vasculature with potential implications for laser treatment",
+    "fix": {
+      "pmid": "27170304",
+      "score": 1.65,
+      "query": "Prins[Author] AND 2016[PDAT] AND (The Primary Care PTSD Screen for DSM-5)",
+      "title": "The Primary Care PTSD Screen for DSM-5 (PC-PTSD-5): Development and Evaluation Within a Veteran Primary Care Sample",
+      "authors": [
+        "Prins A",
+        "Bovin MJ",
+        "Smolenski DJ",
+        "Marx BP",
+        "Kimerling R",
+        "Jenkins-Guarnieri MA"
+      ],
+      "pubdate": "2016 Oct",
+      "source": "J Gen Intern Med",
+      "doi": "10.1007/s11606-016-3703-5"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave4-primary-endo.ts",
+    "old_pmid": "19581665",
+    "old_doi": null,
+    "citation": "Bang H et al. Ann Intern Med. 2009 (related risk score literature)",
+    "claimed_title": "Screening for type 2 diabetes mellitus",
+    "old_pubmed_title": "Hypomagnesaemia due to use of proton pump inhibitors--a review",
+    "fix": {
+      "pmid": "25168549",
+      "score": 1.062,
+      "query": "Bang[Author] AND (Screening for type diabetes mellitus)",
+      "title": "Is type-2 diabetes mellitus associated with overactive bladder symptoms in men with lower urinary tract symptoms?",
+      "authors": [
+        "Bang WJ",
+        "Lee JY",
+        "Koo KC",
+        "Hah YS",
+        "Lee DH",
+        "Cho KS"
+      ],
+      "pubdate": "2014 Sep",
+      "source": "Urology",
+      "doi": "10.1016/j.urology.2014.05.017"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave4-primary-endo.ts",
+    "old_pmid": "12610021",
+    "old_doi": "10.2337/diacare.26.3.677",
+    "citation": "Lindstr\u00f6m J, Tuomilehto J. Diabetes Care. 2003",
+    "claimed_title": "The diabetes risk score: a practical tool to predict type 2 diabetes risk",
+    "old_pubmed_title": "The impact of smoking on inhaled insulin",
+    "fix": {
+      "pmid": "12610029",
+      "score": 1.7,
+      "query": "The diabetes risk score practical tool predict type diabetes risk",
+      "title": "The diabetes risk score: a practical tool to predict type 2 diabetes risk",
+      "authors": [
+        "Lindstr\u00f6m J",
+        "Tuomilehto J"
+      ],
+      "pubdate": "2003 Mar",
+      "source": "Diabetes Care",
+      "doi": "10.2337/diacare.26.3.725"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave4-primary-endo.ts",
+    "old_pmid": "28223341",
+    "old_doi": "10.2337/dbi16-0066",
+    "citation": "International Hypoglycaemia Study Group. Diabetes Care. 2017",
+    "claimed_title": "Glucose Concentrations of Less Than 3.0 mmol/L (54 mg/dL)",
+    "old_pubmed_title": "Targeting the Gut Microbiota-FXR Signaling Axis for Glycemic Control: Does a Dietary Supplement Work Magic?",
+    "fix": {
+      "pmid": "28713827",
+      "score": 0.8,
+      "query": "International[Author] AND 2017[PDAT]",
+      "title": "Retracted: Estimation of Response Functions Based on Variational Bayes Algorithm in Dynamic Images Sequences",
+      "authors": [
+        "International BR"
+      ],
+      "pubdate": "2017",
+      "source": "Biomed Res Int",
+      "doi": "10.1155/2017/6898324"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "insulin-sensitivity-factor",
+    "file": "wave4-primary-endo.ts",
+    "old_pmid": "18477818",
+    "old_doi": "10.1088/1748-6041/3/2/025012",
+    "citation": "Davidson PC et al. / Walsh J pump therapy teaching; standard diabetes education texts",
+    "claimed_title": "Using insulin",
+    "old_pubmed_title": "Preparation and evaluation of a high-strength biocompatible glass-ionomer cement for improved dental restoratives",
+    "fix": {
+      "pmid": "19158048",
+      "score": 1.317,
+      "query": "Davidson[Author] AND 2008[PDAT] AND (Using insulin)",
+      "title": "Analysis of guidelines for basal-bolus insulin dosing: basal insulin, correction factor, and carbohydrate-to-insulin ratio",
+      "authors": [
+        "Davidson PC",
+        "Hebblewhite HR",
+        "Steed RD",
+        "Bode BW"
+      ],
+      "pubdate": "2008 Dec",
+      "source": "Endocr Pract",
+      "doi": "10.4158/EP.14.9.1095"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "carb-ratio",
+    "file": "wave4-primary-endo.ts",
+    "old_pmid": "18477818",
+    "old_doi": "10.1088/1748-6041/3/2/025012",
+    "citation": "Walsh J, Roberts R. Pumping Insulin / standard ICR teaching",
+    "claimed_title": "Insulin dosing formulas in diabetes education",
+    "old_pubmed_title": "Preparation and evaluation of a high-strength biocompatible glass-ionomer cement for improved dental restoratives",
+    "fix": {
+      "pmid": "23109051",
+      "score": 0.8,
+      "query": "Walsh[Author] AND 2012[PDAT]",
+      "title": "Pain in rheumatoid arthritis",
+      "authors": [
+        "Walsh DA",
+        "McWilliams DF"
+      ],
+      "pubdate": "2012 Dec",
+      "source": "Curr Pain Headache Rep",
+      "doi": "10.1007/s11916-012-0303-x"
+    },
+    "status": "resolved",
+    "patched": false
+  },
+  {
+    "calcId": "correction-dose-insulin",
+    "file": "wave4-primary-endo.ts",
+    "old_pmid": "34964868",
+    "old_doi": "10.2337/dc22-S006",
+    "citation": "ADA / diabetes self-management education standards; pump therapy manuals",
+    "claimed_title": "Insulin correction bolus teaching",
+    "old_pubmed_title": "6. Glycemic Targets: Standards of Medical Care in Diabetes-2022",
+    "fix": {
+      "pmid": "42438920",
+      "score": 0.912,
+      "query": "Insulin correction bolus teaching",
+      "title": "Effect of Active Insulin Time and Glycemic Targets on Automatic Correction Bolus Delivery",
+      "authors": [
+        "Papa G",
+        "Cannarella R",
+        "Gusmano C",
+        "Finocchiaro C",
+        "Anzaldi M",
+        "Gruttadauria G"
+      ],
+      "pubdate": "2026 Jul 13",
+      "source": "J Diabetes Sci Technol",
+      "doi": "10.1177/19322968261465689"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "total-daily-insulin",
+    "file": "wave4-primary-endo.ts",
+    "old_pmid": "38078595",
+    "old_doi": "10.3791/65850",
+    "citation": "ADA. Diabetes Care",
+    "claimed_title": "Pharmacologic Approaches to Glycemic Treatment: Standards of Care",
+    "old_pubmed_title": "Multiplex Immunohistochemistry Staining for Paraffin-embedded Lung Cancer Tissue",
+    "fix": {
+      "pmid": "38078590",
+      "score": 1.183,
+      "query": "Pharmacologic Approaches Glycemic Treatment Standards Care",
+      "title": "9. Pharmacologic Approaches to Glycemic Treatment: Standards of Care in Diabetes-2024",
+      "authors": [
+        "American Diabetes Association Professional Practice Committee"
+      ],
+      "pubdate": "2024 Jan 1",
+      "source": "Diabetes Care",
+      "doi": "10.2337/dc24-S009"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "basal-bolus-split",
+    "file": "wave4-primary-endo.ts",
+    "old_pmid": "38078595",
+    "old_doi": "10.3791/65850",
+    "citation": "ADA Standards / clinical insulin manuals",
+    "claimed_title": "Insulin therapy in type 1 diabetes",
+    "old_pubmed_title": "Multiplex Immunohistochemistry Staining for Paraffin-embedded Lung Cancer Tissue",
+    "fix": {
+      "pmid": "38559691",
+      "score": 0.964,
+      "query": "Insulin therapy type diabetes",
+      "title": "Current barriers to initiating insulin therapy in individuals with type 2 diabetes",
+      "authors": [
+        "Gald\u00f3n Sanz-Pastor A",
+        "Justel Enr\u00edquez A",
+        "S\u00e1nchez Bao A",
+        "Ampudia-Blasco FJ"
+      ],
+      "pubdate": "2024",
+      "source": "Front Endocrinol (Lausanne)",
+      "doi": "10.3389/fendo.2024.1366368"
+    },
+    "status": "resolved",
+    "patched": false
+  },
+  {
+    "calcId": "qtc-rautaharju",
+    "file": "wave5-cardio.ts",
+    "old_pmid": "15063498",
+    "old_doi": "10.1016/j.femsle.2004.02.020",
+    "citation": "Rautaharju PM et al. various ECG methodology papers; common form QT\u00d7(120+HR)/180",
+    "claimed_title": "A simple method for QT correction (Rautaharju et al. formulations in ECG literature)",
+    "old_pubmed_title": "Production of phenyllactic acid by lactic acid bacteria: an approach to the selection of strains contributing to food quality and preservation",
+    "fix": {
+      "pmid": "15081446",
+      "score": 0.8,
+      "query": "Rautaharju[Author] AND 2004[PDAT]",
+      "title": "Assessment of prolonged QT and JT intervals in ventricular conduction defects",
+      "authors": [
+        "Rautaharju PM",
+        "Zhang ZM",
+        "Prineas R",
+        "Heiss G"
+      ],
+      "pubdate": "2004 Apr 15",
+      "source": "Am J Cardiol",
+      "doi": "10.1016/j.amjcard.2003.12.055"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave5-cardio.ts",
+    "old_pmid": "1378630",
+    "old_doi": "10.1073/pnas.89.14.6540",
+    "citation": "Zhou SH / Rautaharju et al. related ECG methodology; clinical reviews on JTc in wide QRS",
+    "claimed_title": "The JT interval as a depolarization-independent measure of repolarization",
+    "old_pubmed_title": "Selective loss of a DNase I hypersensitive site upstream of the tyrosine aminotransferase gene in mice homozygous for lethal albino deletions",
+    "fix": {
+      "pmid": "1303841",
+      "score": 0.8,
+      "query": "Zhou[Author] AND 1992[PDAT]",
+      "title": "[Masticatory efficiency]",
+      "authors": [
+        "Zhou YH",
+        "Fu MK",
+        "Lin JX"
+      ],
+      "pubdate": "1992 Jul",
+      "source": "Zhonghua Kou Qiang Yi Xue Za Zhi",
+      "doi": null
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave5-cardio.ts",
+    "old_pmid": "26867832",
+    "old_doi": "10.1016/j.chest.2015.11.026",
+    "citation": "Product label; Kearon C et al. Chest antithrombotic guidelines (various updates)",
+    "claimed_title": "Enoxaparin prescribing information / CHEST antithrombotic guidance (dosing principles)",
+    "old_pubmed_title": "Antithrombotic Therapy for VTE Disease: CHEST Guideline and Expert Panel Report",
+    "fix": null,
+    "status": "needs_manual"
+  },
+  {
+    "calcId": "?",
+    "file": "wave5-cardio.ts",
+    "old_pmid": "21220739",
+    "old_doi": "10.1161/CIRCULATIONAHA.110.004713",
+    "citation": "Schwartz PJ, Crotti L. Circulation. 2011 related reviews",
+    "claimed_title": "The long QT syndrome spectrum (score refinements in literature)",
+    "old_pubmed_title": "Transcatheter aortic valve implantation in the era after commercialization: quo vadis in the real world?",
+    "fix": {
+      "pmid": "22440783",
+      "score": 0.8,
+      "query": "Schwartz[Author] AND 2011[PDAT]",
+      "title": "Ethics of vaccination programs",
+      "authors": [
+        "Schwartz JL",
+        "Caplan AL"
+      ],
+      "pubdate": "2011 Oct",
+      "source": "Curr Opin Virol",
+      "doi": "10.1016/j.coviro.2011.05.009"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "rate-pressure-product",
+    "file": "wave5-general-misc.ts",
+    "old_pmid": "618645",
+    "old_doi": null,
+    "citation": "Sarnoff SJ et al. / classic RPP\u2013MVO\u2082 literature; Gobel FL et al. Circulation. 1978",
+    "claimed_title": "Hemodynamic determinants of oxygen consumption of the heart with special reference to the tension-time index",
+    "old_pubmed_title": "The peak monitor of the Technicon SMAC system",
+    "fix": {
+      "pmid": "13498167",
+      "score": 1.733,
+      "query": "Sarnoff[Author] AND (Hemodynamic determinants oxygen consumption the heart with special reference the)",
+      "title": "Hemodynamic determinants of oxygen consumption of the heart with special reference to the tension-time index",
+      "authors": [
+        "Sarnoff SJ",
+        "Braunwald E",
+        "Welch GH Jr",
+        "Case RB",
+        "Stainsby WN",
+        "Macruz R"
+      ],
+      "pubdate": "1958 Jan",
+      "source": "Am J Physiol",
+      "doi": "10.1152/ajplegacy.1957.192.1.148"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "shock-index-diastolic",
+    "file": "wave5-general-misc.ts",
+    "old_pmid": "32249351",
+    "old_doi": "10.1007/s00234-020-02403-1",
+    "citation": "Ospina-Tasc\u00f3n GA et al. Ann Intensive Care. 2020",
+    "claimed_title": "Diastolic shock index and clinical outcomes in patients with septic shock",
+    "old_pubmed_title": "Radiomics in gliomas: clinical implications of computational modeling and fractal-based analysis",
+    "fix": {
+      "pmid": "32296976",
+      "score": 1.5,
+      "query": "Diastolic shock index and clinical outcomes patients with septic shock",
+      "title": "Diastolic shock index and clinical outcomes in patients with septic shock",
+      "authors": [
+        "Ospina-Tasc\u00f3n GA",
+        "Teboul JL",
+        "Hernandez G",
+        "Alvarez I",
+        "S\u00e1nchez-Ortiz AI",
+        "Calder\u00f3n-Tapia LE"
+      ],
+      "pubdate": "2020 Apr 16",
+      "source": "Ann Intensive Care",
+      "doi": "10.1186/s13613-020-00658-8"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "bmi-prime",
+    "file": "wave5-general-misc.ts",
+    "old_pmid": "16625941",
+    "old_doi": null,
+    "citation": "Gadzik J. / BMI Prime educational literature",
+    "claimed_title": "BMI Prime \u2014 a useful measure of percent ideal body mass",
+    "old_pubmed_title": "Possibilities for fertility restoration: a new surgical technique",
+    "fix": {
+      "pmid": "16768059",
+      "score": 1.069,
+      "query": "Gadzik[Author] AND 2006[PDAT]",
+      "title": "\"How much should I weigh?\"--Quetelet's equation, upper weight limits, and BMI prime",
+      "authors": [
+        "Gadzik J"
+      ],
+      "pubdate": "2006 Feb",
+      "source": "Conn Med",
+      "doi": null
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "asdas-crp",
+    "file": "wave5-general-misc.ts",
+    "old_pmid": "21216817",
+    "old_doi": "10.1136/ard.2010.139105",
+    "citation": "Machado P et al. Ann Rheum Dis. 2011",
+    "claimed_title": "ASDAS cut-offs",
+    "old_pubmed_title": "European League Against Rheumatism recommendations for calcium pyrophosphate deposition. Part I: terminology and diagnosis",
+    "fix": {
+      "pmid": "21068095",
+      "score": 1.233,
+      "query": "Machado[Author] AND 2011[PDAT] AND (ASDAS cut-offs)",
+      "title": "Ankylosing Spondylitis Disease Activity Score (ASDAS): defining cut-off values for disease activity states and improvement scores",
+      "authors": [
+        "Machado P",
+        "Landew\u00e9 R",
+        "Lie E",
+        "Kvien TK",
+        "Braun J",
+        "Baker D"
+      ],
+      "pubdate": "2011 Jan",
+      "source": "Ann Rheum Dis",
+      "doi": "10.1136/ard.2010.138594"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "tonicity",
+    "file": "wave5-nephro-gi.ts",
+    "old_pmid": "10824078",
+    "old_doi": "10.1056/NEJM200005253422107",
+    "citation": "Classic tonicity teaching; Adrogu\u00e9 & Madias hyponatremia reviews",
+    "claimed_title": "The pathophysiology and treatment of hyponatraemic encephalopathy",
+    "old_pubmed_title": "Hyponatremia",
+    "fix": {
+      "pmid": "10770155",
+      "score": 0.8,
+      "query": "Classic[Author] AND 2000[PDAT]",
+      "title": "Radiation safety role in institutional disaster planning",
+      "authors": [
+        "Classic KL",
+        "Knutson AH",
+        "Smith GD"
+      ],
+      "pubdate": "2000 May",
+      "source": "Health Phys",
+      "doi": "10.1097/00004032-200005001-00001"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "salicylate",
+    "file": "wave5-nephro-gi.ts",
+    "old_pmid": "18955669",
+    "old_doi": "10.1161/CIRCULATIONAHA.108.765032",
+    "citation": "Classic nephrology/EM teaching; Mehta AN et al. related reviews on AG acidosis",
+    "claimed_title": "Mind the gap (acid-base teaching mnemonics)",
+    "old_pubmed_title": "c-Jun N-terminal kinase 2 deficiency protects against hypercholesterolemia-induced endothelial dysfunction and oxidative stress",
+    "fix": {
+      "pmid": "18472153",
+      "score": 0.8,
+      "query": "Classic[Author] AND 2008[PDAT]",
+      "title": "Retention of in vitro and in vivo BMP-2 bioactivities in sustained delivery vehicles for bone tissue engineering",
+      "authors": [
+        "Kempen DH",
+        "Lu L",
+        "Hefferan TE",
+        "Creemers LB",
+        "Maran A",
+        "Classic KL"
+      ],
+      "pubdate": "2008 Aug",
+      "source": "Biomaterials",
+      "doi": "10.1016/j.biomaterials.2008.04.031"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "pancreatic",
+    "file": "wave5-nephro-gi.ts",
+    "old_pmid": "20389009",
+    "old_doi": "10.2166/wst.2010.973",
+    "citation": "Standard nephrology texts / acid-base monographs",
+    "claimed_title": "Hyperchloremic metabolic acidosis teaching reviews",
+    "old_pubmed_title": "Development and optimization of a sequencing batch reactor for nitrogen and phosphorus removal from abattoir wastewater to meet irrigation standards",
+    "fix": {
+      "pmid": "20285294",
+      "score": 0.55,
+      "query": "Standard[Author] AND pancreatic",
+      "title": "Cystic fibrosis of pancreas",
+      "authors": [
+        "COLLINS JO",
+        "STANDARD J"
+      ],
+      "pubdate": "1947 Mar",
+      "source": "Conn State Med J",
+      "doi": null
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave5-nephro-gi.ts",
+    "old_pmid": "10919522",
+    "old_doi": "10.1053/ajem.2000.7313",
+    "citation": "Classic EM/nephrology reviews; Mattu A et al. Am J Emerg Med. 2000",
+    "claimed_title": "Electrocardiographic manifestations of hyperkalemia",
+    "old_pubmed_title": "Patient preferences regarding pain medication in the ED",
+    "fix": {
+      "pmid": "11043630",
+      "score": 0.933,
+      "query": "Electrocardiographic manifestations hyperkalemia",
+      "title": "Electrocardiographic manifestations of hyperkalemia",
+      "authors": [
+        "Mattu A",
+        "Brady WJ",
+        "Robinson DA"
+      ],
+      "pubdate": "2000 Oct",
+      "source": "Am J Emerg Med",
+      "doi": "10.1053/ajem.2000.7344"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "partial-mayo",
+    "file": "wave5-nephro-gi.ts",
+    "old_pmid": "3303953",
+    "old_doi": null,
+    "citation": "Schroeder KW et al. N Engl J Med. 1987",
+    "claimed_title": "Coated oral 5-aminosalicylic acid therapy for UC (Mayo score derivation context)",
+    "old_pubmed_title": "The non-obese diabetic (NOD) mouse",
+    "fix": {
+      "pmid": "3317057",
+      "score": 1.578,
+      "query": "Schroeder[Author] AND 1987[PDAT] AND (Coated oral 5-aminosalicylic acid therapy for)",
+      "title": "Coated oral 5-aminosalicylic acid therapy for mildly to moderately active ulcerative colitis. A randomized study",
+      "authors": [
+        "Schroeder KW",
+        "Tremaine WJ",
+        "Ilstrup DM"
+      ],
+      "pubdate": "1987 Dec 24",
+      "source": "N Engl J Med",
+      "doi": "10.1056/NEJM198712243172603"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave5-peds-id.ts",
+    "old_pmid": "15793982",
+    "old_doi": "10.7748/paed.17.2.14.s19",
+    "citation": "Monaghan A. Paediatr Nurs. 2005 / subsequent PEWS validations",
+    "claimed_title": "Evaluating the Pediatric Early Warning Score (PEWS) system for emergency department triage",
+    "old_pubmed_title": "Co-ordination of complex care",
+    "fix": {
+      "pmid": "25377402",
+      "score": 1.065,
+      "query": "Evaluating the Pediatric Early Warning Score system for emergency department",
+      "title": "Evaluating the Pediatric Early Warning Score (PEWS) system for admitted patients in the pediatric emergency department",
+      "authors": [
+        "Gold DL",
+        "Mihalov LK",
+        "Cohen DM"
+      ],
+      "pubdate": "2014 Nov",
+      "source": "Acad Emerg Med",
+      "doi": "10.1111/acem.12514"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "glasgow-meningococcal",
+    "file": "wave5-peds-id.ts",
+    "old_pmid": "2886770",
+    "old_doi": null,
+    "citation": "Sinclair JF et al. Lancet. 1987; subsequent validations",
+    "claimed_title": "The Glasgow Meningococcal Septicemia Prognostic Score",
+    "old_pubmed_title": "Antibiotics by design",
+    "fix": {
+      "pmid": "1898875",
+      "score": 0.85,
+      "query": "The Glasgow Meningococcal Septicemia Prognostic Score",
+      "title": "Validation of the Glasgow Meningococcal Septicemia Prognostic Score: a 10-year retrospective survey",
+      "authors": [
+        "Thomson AP",
+        "Sills JA",
+        "Hart CA"
+      ],
+      "pubdate": "1991 Jan",
+      "source": "Crit Care Med",
+      "doi": "10.1097/00003246-199101000-00010"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "nnis-ssi",
+    "file": "wave5-surg-uro-ent.ts",
+    "old_pmid": "1928194",
+    "old_doi": "10.1016/0002-9343(91)90345-x",
+    "citation": "CDC NNIS. Am J Infect Control (various years); Culver DH et al. Am J Med. 1991",
+    "claimed_title": "National Nosocomial Infections Surveillance (NNIS) System Report",
+    "old_pubmed_title": "Catheter-associated urinary tract infections: epidemiology, pathogenesis, and prevention",
+    "fix": {
+      "pmid": "1850582",
+      "score": 1.05,
+      "query": "National Nosocomial Infections Surveillance System Report",
+      "title": "National nosocomial infections surveillance system (NNIS): description of surveillance methods",
+      "authors": [
+        "Emori TG",
+        "Culver DH",
+        "Horan TC",
+        "Jarvis WR",
+        "White JW",
+        "Olson DR"
+      ],
+      "pubdate": "1991 Feb",
+      "source": "Am J Infect Control",
+      "doi": "10.1016/0196-6553(91)90157-8"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave5-surg-uro-ent.ts",
+    "old_pmid": "26015853",
+    "old_doi": "10.4240/wjgs.v7.i5.78",
+    "citation": "Sartelli M et al. World J Emerg Surg. 2015;10:22",
+    "claimed_title": "Physiological parameters for Prognosis in Abdominal Sepsis (WISS) study / WSES sepsis severity score",
+    "old_pubmed_title": "Pancreatectomy and splenectomy for a splenic aneurysm associated with segmental arterial mediolysis",
+    "fix": {
+      "pmid": "26269709",
+      "score": 1.167,
+      "query": "Sartelli[Author] AND 2015[PDAT]",
+      "title": "The role of the open abdomen procedure in managing severe abdominal sepsis: WSES position paper",
+      "authors": [
+        "Sartelli M",
+        "Abu-Zidan FM",
+        "Ansaloni L",
+        "Bala M",
+        "Beltr\u00e1n MA",
+        "Biffl WL"
+      ],
+      "pubdate": "2015",
+      "source": "World J Emerg Surg",
+      "doi": "10.1186/s13017-015-0032-7"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "psa-density",
+    "file": "wave5-surg-uro-ent.ts",
+    "old_pmid": "1373725",
+    "old_doi": null,
+    "citation": "Benson MC et al. J Urol. 1992 / subsequent PSAD literature",
+    "claimed_title": "PSA density of the transition zone in BPH and prostate cancer",
+    "old_pubmed_title": "Adhesion to vascular cell adhesion molecule 1 and fibronectin. Comparison of alpha 4 beta 1 (VLA-4) and alpha 4 beta 7 on the human B cell line JY",
+    "fix": {
+      "pmid": "7508785",
+      "score": 0.95,
+      "query": "Benson[Author] AND psa-density",
+      "title": "An algorithm for prostate cancer detection in a patient population using prostate-specific antigen and prostate-specific antigen density",
+      "authors": [
+        "Benson MC",
+        "McMahon DJ",
+        "Cooner WH",
+        "Olsson CA"
+      ],
+      "pubdate": "1993",
+      "source": "World J Urol",
+      "doi": "10.1007/BF00185070"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave5-tox-psych.ts",
+    "old_pmid": "11444507",
+    "old_doi": "10.1097/00005344-200107000-00011",
+    "citation": "Spiller HA. Toxicol Rev. / standard toxicology references",
+    "claimed_title": "Carbamazepine poisoning",
+    "old_pubmed_title": "The kidney in congestive heart failure: renal adverse event rate of treatment",
+    "fix": {
+      "pmid": "11753195",
+      "score": 1.1,
+      "query": "Spiller[Author] AND 2001[PDAT] AND (Carbamazepine poisoning)",
+      "title": "Management of carbamazepine overdose",
+      "authors": [
+        "Spiller HA"
+      ],
+      "pubdate": "2001 Dec",
+      "source": "Pediatr Emerg Care",
+      "doi": "10.1097/00006565-200112000-00015"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave5-tox-psych.ts",
+    "old_pmid": "10336520",
+    "old_doi": null,
+    "citation": "Shannon M. / EXTRIP theophylline recommendations",
+    "claimed_title": "Theophylline toxicity",
+    "old_pubmed_title": "Transport of ochratoxin A by renal multispecific organic anion transporter 1",
+    "fix": {
+      "pmid": "10326941",
+      "score": 1.175,
+      "query": "Shannon[Author] AND 1999[PDAT] AND (Theophylline toxicity)",
+      "title": "Life-threatening events after theophylline overdose: a 10-year prospective analysis",
+      "authors": [
+        "Shannon M"
+      ],
+      "pubdate": "1999 May 10",
+      "source": "Arch Intern Med",
+      "doi": "10.1001/archinte.159.9.989"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "phq-a",
+    "file": "wave5-tox-psych.ts",
+    "old_pmid": "11556941",
+    "old_doi": "10.1046/j.1525-1497.2001.016009606.x",
+    "citation": "Johnson JG et al. J Adolesc Health. 2002",
+    "claimed_title": "The Patient Health Questionnaire for Adolescents: validation of an instrument for the assessment of mental disorders among adolescent primary care patients",
+    "old_pubmed_title": "The PHQ-9: validity of a brief depression severity measure",
+    "fix": {
+      "pmid": "11869927",
+      "score": 2.067,
+      "query": "Johnson[Author] AND 2002[PDAT] AND (The Patient Health Questionnaire for Adolescents validation instrument for the)",
+      "title": "The patient health questionnaire for adolescents: validation of an instrument for the assessment of mental disorders among adolescent primary care patients",
+      "authors": [
+        "Johnson JG",
+        "Harris ES",
+        "Spitzer RL",
+        "Williams JB"
+      ],
+      "pubdate": "2002 Mar",
+      "source": "J Adolesc Health",
+      "doi": "10.1016/s1054-139x(01)00333-0"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave6-clinical-residual.ts",
+    "old_pmid": "28646522",
+    "old_doi": "10.1111/jcpt.12586",
+    "citation": "Augustin S et al. Hepatology. 2017 / subsequent validations",
+    "claimed_title": "Expanded Baveno VI criteria",
+    "old_pubmed_title": "Pericarditis during infliximab therapy in paediatric ulcerative colitis",
+    "fix": {
+      "pmid": "28696510",
+      "score": 1.319,
+      "query": "Augustin[Author] AND 2017[PDAT] AND (Expanded Baveno criteria)",
+      "title": "Expanding the Baveno VI criteria for the screening of varices in patients with compensated advanced chronic liver disease",
+      "authors": [
+        "Augustin S",
+        "Pons M",
+        "Maurice JB",
+        "Bureau C",
+        "Stefanescu H",
+        "Ney M"
+      ],
+      "pubdate": "2017 Dec",
+      "source": "Hepatology",
+      "doi": "10.1002/hep.29363"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave6-clinical-residual.ts",
+    "old_pmid": "19487637",
+    "old_doi": "10.2337/dc09-0684",
+    "citation": "Kitabchi AE et al. Diabetes Care. 2009",
+    "claimed_title": "Hyperglycemic crises in adult patients with diabetes",
+    "old_pubmed_title": "Circulating fibroblast growth factor-21 is elevated in impaired glucose tolerance and type 2 diabetes and correlates with muscle and hepatic insulin resistance",
+    "fix": {
+      "pmid": "19564476",
+      "score": 1.817,
+      "query": "Kitabchi[Author] AND 2009[PDAT] AND (Hyperglycemic crises adult patients with diabetes)",
+      "title": "Hyperglycemic crises in adult patients with diabetes",
+      "authors": [
+        "Kitabchi AE",
+        "Umpierrez GE",
+        "Miles JM",
+        "Fisher JN"
+      ],
+      "pubdate": "2009 Jul",
+      "source": "Diabetes Care",
+      "doi": "10.2337/dc09-9032"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave6-clinical-residual.ts",
+    "old_pmid": "25317875",
+    "old_doi": "10.1056/NEJMcibr1409796",
+    "citation": "Berend K et al. N Engl J Med. 2014",
+    "claimed_title": "Acid-base disorders",
+    "old_pubmed_title": "The target of metformin in type 2 diabetes",
+    "fix": {
+      "pmid": "25295502",
+      "score": 1.367,
+      "query": "Berend[Author] AND 2014[PDAT]",
+      "title": "Physiological approach to assessment of acid-base disturbances",
+      "authors": [
+        "Berend K",
+        "de Vries AP",
+        "Gans RO"
+      ],
+      "pubdate": "2014 Oct 9",
+      "source": "N Engl J Med",
+      "doi": "10.1056/NEJMra1003327"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave6-clinical-residual.ts",
+    "old_pmid": "25317875",
+    "old_doi": "10.1056/NEJMcibr1409796",
+    "citation": "Berend K et al. N Engl J Med. 2014",
+    "claimed_title": "Simple and mixed acid-base disorders",
+    "old_pubmed_title": "The target of metformin in type 2 diabetes",
+    "fix": {
+      "pmid": "25295502",
+      "score": 1.19,
+      "query": "Berend[Author] AND 2014[PDAT]",
+      "title": "Physiological approach to assessment of acid-base disturbances",
+      "authors": [
+        "Berend K",
+        "de Vries AP",
+        "Gans RO"
+      ],
+      "pubdate": "2014 Oct 9",
+      "source": "N Engl J Med",
+      "doi": "10.1056/NEJMra1003327"
+    },
+    "status": "resolved",
+    "patched": false
+  },
+  {
+    "calcId": "smoke-inhalation",
+    "file": "wave6-clinical-residual.ts",
+    "old_pmid": "28099378",
+    "old_doi": "10.1097/TA.0000000000001385",
+    "citation": "ABA / burn critical care reviews",
+    "claimed_title": "Inhalation injury and burn care",
+    "old_pubmed_title": "American College of Surgeons Level I trauma centers outcomes do not correlate with patients' perception of hospital experience",
+    "fix": {
+      "pmid": "27853985",
+      "score": 0.8,
+      "query": "ABA[Author] AND 2017[PDAT]",
+      "title": "A definition for aggressive disease in patients with HER-2 negative metastatic breast cancer: an expert consensus of the Spanish Society of Medical Oncology (SEOM)",
+      "authors": [
+        "Gonz\u00e1lez A",
+        "Lluch A",
+        "Aba E",
+        "Albanell J",
+        "Ant\u00f3n A",
+        "\u00c1lvarez I"
+      ],
+      "pubdate": "2017 May",
+      "source": "Clin Transl Oncol",
+      "doi": "10.1007/s12094-016-1571-4"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave6-em-peds.ts",
+    "old_pmid": "3086933",
+    "old_doi": null,
+    "citation": "Walsh MC, Kliegman RM. Pediatr Clin North Am. 1986",
+    "claimed_title": "Modified Bell staging (Walsh & Kliegman and subsequent refinements)",
+    "old_pubmed_title": "Applications of scanning electron microscopy to the study of liver disease",
+    "fix": {
+      "pmid": "3731667",
+      "score": 0.8,
+      "query": "Walsh[Author] AND 1986[PDAT]",
+      "title": "Neonatal mastitis",
+      "authors": [
+        "Walsh M",
+        "McIntosh K"
+      ],
+      "pubdate": "1986 Aug",
+      "source": "Clin Pediatr (Phila)",
+      "doi": "10.1177/000992288602500802"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "shock-index-ob",
+    "file": "wave6-em-peds.ts",
+    "old_pmid": "17955559",
+    "old_doi": "10.1002/chem.200701160",
+    "citation": "Nathan HL et al. / related obstetric SI literature; Le Bas et al. observations",
+    "claimed_title": "Shock index and early recognition of maternal hemorrhage",
+    "old_pubmed_title": "Breaking symmetry: spontaneous resolution of a polyoxometalate",
+    "fix": {
+      "pmid": "26173288",
+      "score": 0.8,
+      "query": "Nathan[Author] AND 2013[PDAT]",
+      "title": "Improving Students' Learning With Effective Learning Techniques: Promising Directions From Cognitive and Educational Psychology",
+      "authors": [
+        "Dunlosky J",
+        "Rawson KA",
+        "Marsh EJ",
+        "Nathan MJ",
+        "Willingham DT"
+      ],
+      "pubdate": "2013 Jan",
+      "source": "Psychol Sci Public Interest",
+      "doi": "10.1177/1529100612453266"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave6-em-peds.ts",
+    "old_pmid": "12090977",
+    "old_doi": "10.1016/s0140-6736(02)09088-8",
+    "citation": "Magpie Trial Collaborative Group. Lancet. 2002",
+    "claimed_title": "Do women with pre-eclampsia, and their babies, benefit from magnesium sulphate? (Magpie)",
+    "old_pubmed_title": "Anastrozole alone or in combination with tamoxifen versus tamoxifen alone for adjuvant treatment of postmenopausal women with early breast cancer: first results of the ATAC randomised trial",
+    "fix": {
+      "pmid": "12057549",
+      "score": 1.433,
+      "query": "women with pre-eclampsia and their babies benefit from magnesium sulphate",
+      "title": "Do women with pre-eclampsia, and their babies, benefit from magnesium sulphate? The Magpie Trial: a randomised placebo-controlled trial",
+      "authors": [
+        "Altman D",
+        "Carroli G",
+        "Duley L",
+        "Farrell B",
+        "Moodley J",
+        "Neilson J"
+      ],
+      "pubdate": "2002 Jun 1",
+      "source": "Lancet",
+      "doi": "10.1016/s0140-6736(02)08778-0"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave6-em-peds.ts",
+    "old_pmid": "30020667",
+    "old_doi": null,
+    "citation": "Jha K et al. StatPearls / classic Avery literature context",
+    "claimed_title": "Transient tachypnea of the newborn",
+    "old_pubmed_title": "Bacterial Gastroenteritis(Archived)",
+    "fix": {
+      "pmid": "30726039",
+      "score": 1.233,
+      "query": "Jha[Author] AND (Transient tachypnea the newborn)",
+      "title": "Transient Tachypnea of the Newborn",
+      "authors": [
+        "Daley SF",
+        "Nassar GN",
+        "Jha K",
+        "Makker K"
+      ],
+      "pubdate": "2026 Jan",
+      "source": "",
+      "doi": null
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "conicity-index",
+    "file": "wave6-formulas-misc.ts",
+    "old_pmid": "1794925",
+    "old_doi": null,
+    "citation": "Valdez R. Int J Obes. 1991 / related conicity literature",
+    "claimed_title": "A new index of abdominal adiposity as an indicator of risk for cardiovascular disease",
+    "old_pubmed_title": "Relationships between the amount of weight loss and post-heparin lipoprotein lipase activity in patients with type II diabetes",
+    "fix": {
+      "pmid": "1890438",
+      "score": 1.2,
+      "query": "Valdez[Author] AND 1991[PDAT]",
+      "title": "A simple model-based index of abdominal adiposity",
+      "authors": [
+        "Valdez R"
+      ],
+      "pubdate": "1991",
+      "source": "J Clin Epidemiol",
+      "doi": "10.1016/0895-4356(91)90059-i"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "fluid-deficit-percent",
+    "file": "wave6-formulas-misc.ts",
+    "old_pmid": "15231928",
+    "old_doi": "10.1542/peds.114.1.196",
+    "citation": "WHO / AAP oral rehydration and IV deficit teaching literature",
+    "claimed_title": "Management of dehydration in children",
+    "old_pubmed_title": "Do children receiving Supplemental Security Income who are enrolled in Medicaid fare better under a fee-for-service or comprehensive capitation model?",
+    "fix": {
+      "pmid": "29622321",
+      "score": 0.6,
+      "query": "Management dehydration children",
+      "title": "Evaluation and Management of Dehydration in Children",
+      "authors": [
+        "Santillanes G",
+        "Rose E"
+      ],
+      "pubdate": "2018 May",
+      "source": "Emerg Med Clin North Am",
+      "doi": "10.1016/j.emc.2017.12.004"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "glucose-rate-mgkgmin",
+    "file": "wave6-formulas-misc.ts",
+    "old_pmid": "21669896",
+    "old_doi": "10.1542/peds.2010-1881",
+    "citation": "AAP / neonatology textbooks on GIR targeting",
+    "claimed_title": "Neonatal hypoglycemia and glucose infusion rate teaching",
+    "old_pubmed_title": "Early autism detection: are we ready for routine screening?",
+    "fix": {
+      "pmid": "38577196",
+      "score": 0.142,
+      "query": "Neonatal hypoglycemia and glucose infusion rate teaching",
+      "title": "Continuous glucose monitoring metrics in pregnancy with type 1 diabetes mellitus",
+      "authors": [
+        "Jeeyavudeen MS",
+        "Crosby M",
+        "Pappachan JM"
+      ],
+      "pubdate": "2024 Mar 20",
+      "source": "World J Methodol",
+      "doi": "10.5662/wjm.v14.i1.90316",
+      "rejected": true,
+      "reject_reason": "low score 0.14166666666666666"
+    },
+    "status": "needs_manual"
+  },
+  {
+    "calcId": "insulin-drip-rate",
+    "file": "wave6-formulas-misc.ts",
+    "old_pmid": "19487389",
+    "old_doi": "10.1093/jxb/erp175",
+    "citation": "ADA / AACE hyperglycemic crisis guidance",
+    "claimed_title": "Hyperglycemic crises in adults (DKA/HHS) insulin infusion principles",
+    "old_pubmed_title": "ABA inhibits germination but not dormancy release in mature imbibed seeds of Lolium rigidum Gaud",
+    "fix": {
+      "pmid": "19821330",
+      "score": 0.8,
+      "query": "ADA[Author] AND 2009[PDAT]",
+      "title": "Surgery for thumb (trapeziometacarpal joint) osteoarthritis",
+      "authors": [
+        "Wajon A",
+        "Carr E",
+        "Edmunds I",
+        "Ada L"
+      ],
+      "pubdate": "2009 Oct 7",
+      "source": "Cochrane Database Syst Rev",
+      "doi": "10.1002/14651858.CD004631.pub3"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "inr-calc",
+    "file": "wave6-heme-onc.ts",
+    "old_pmid": "10977405",
+    "old_doi": null,
+    "citation": "WHO Expert Committee on Biological Standardization / INR methodology",
+    "claimed_title": "WHO guidelines for thromboplastins and plasma used to control oral anticoagulant therapy",
+    "old_pubmed_title": "Why don't we have federal confidentiality legislation?",
+    "fix": {
+      "pmid": "10853384",
+      "score": 0.706,
+      "query": "WHO guidelines for thromboplastins and plasma used control oral anticoagulant",
+      "title": "WHO Expert Committee on Biological Standardization",
+      "authors": [],
+      "pubdate": "1999",
+      "source": "World Health Organ Tech Rep Ser",
+      "doi": null
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "tumor-lysis-clinical",
+    "file": "wave6-heme-onc.ts",
+    "old_pmid": "15461619",
+    "old_doi": "10.1111/j.1365-2141.2004.05144.x",
+    "citation": "Cairo MS, Bishop M. Br J Haematol. 2004",
+    "claimed_title": "Tumour lysis syndrome: new therapeutic strategies and classification",
+    "old_pubmed_title": "Bone marrow histopathology in peripheral T-cell lymphomas",
+    "fix": {
+      "pmid": "15384972",
+      "score": 1.75,
+      "query": "Cairo[Author] AND 2004[PDAT] AND (Tumour lysis syndrome new therapeutic strategies and classification)",
+      "title": "Tumour lysis syndrome: new therapeutic strategies and classification",
+      "authors": [
+        "Cairo MS",
+        "Bishop M"
+      ],
+      "pubdate": "2004 Oct",
+      "source": "Br J Haematol",
+      "doi": "10.1111/j.1365-2141.2004.05094.x"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "hypercalcemia-of-malignancy",
+    "file": "wave6-heme-onc.ts",
+    "old_pmid": "29344500",
+    "old_doi": "10.1159/000475994",
+    "citation": "Zagzag J et al. / classic HCM management reviews; ASCO educational materials",
+    "claimed_title": "Hypercalcemia of malignancy: an update on pathogenesis and management",
+    "old_pubmed_title": "Pilot Study of a \"Large-Eye,\" Surgically Induced Dry Eye Rabbit Model by Selective Removal of the Harderian, Lacrimal, and Meibomian Glands",
+    "fix": {
+      "pmid": "30240520",
+      "score": 0.953,
+      "query": "Zagzag[Author] AND 2018[PDAT]",
+      "title": "Hypercalcemia and cancer: Differential diagnosis and treatment",
+      "authors": [
+        "Zagzag J",
+        "Hu MI",
+        "Fisher SB",
+        "Perrier ND"
+      ],
+      "pubdate": "2018 Sep",
+      "source": "CA Cancer J Clin",
+      "doi": "10.3322/caac.21489"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "?",
+    "file": "wave6-heme-onc.ts",
+    "old_pmid": "16161180",
+    "old_doi": "10.1002/bmc.570",
+    "citation": "NICE NG / Loblaw DA et al. clinical MSCC reviews",
+    "claimed_title": "Metastatic spinal cord compression in adults (NICE guidance concepts)",
+    "old_pubmed_title": "High-performance liquid chromatography method development and validation for simultaneous determination of five model compounds, antipyrine, metoprolol, ketoprofen, furosemide and phenol red, as a tool for the standardization of rat in situ intestinal permeability studies using timed wavelength detection",
+    "fix": {
+      "pmid": "15986204",
+      "score": 0.935,
+      "query": "NICE[Author] AND 2005[PDAT]",
+      "title": "The accuracy of ultrasound in the diagnosis of clinically occult groin hernias in adults",
+      "authors": [
+        "Alam A",
+        "Nice C",
+        "Uberoi R"
+      ],
+      "pubdate": "2005 Dec",
+      "source": "Eur Radiol",
+      "doi": "10.1007/s00330-005-2825-7"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "twist-score",
+    "file": "wave6-psych-sleep.ts",
+    "old_pmid": "23174225",
+    "old_doi": "10.1016/j.juro.2012.08.178",
+    "citation": "Barbosa JA et al. J Urol. 2013;189:1859-1864",
+    "claimed_title": "Testicular Workup for Ischemia and Suspected Torsion (TWIST) score",
+    "old_pubmed_title": "The Penile Perception Score: an instrument enabling evaluation by surgeons and patient self-assessment after hypospadias repair",
+    "fix": {
+      "pmid": "32844355",
+      "score": 1.194,
+      "query": "Barbosa[Author] AND (Testicular Workup for Ischemia and Suspected Torsion score)",
+      "title": "Validation of the TWIST score for testicular torsion in adults",
+      "authors": [
+        "Barbosa JABA",
+        "de Freitas PFS",
+        "Carvalho SAD",
+        "Coelho AQ",
+        "Yorioka MAW",
+        "Pereira MWA"
+      ],
+      "pubdate": "2021 Jan",
+      "source": "Int Urol Nephrol",
+      "doi": "10.1007/s11255-020-02618-4"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "easi-eczema",
+    "file": "wave6-scores-residual.ts",
+    "old_pmid": "11260234",
+    "old_doi": "10.1034/j.1600-0536.2001.044004201.x",
+    "citation": "Hanifin JM et al. Exp Dermatol. 2001 / severity banding literature",
+    "claimed_title": "What is the EASI?",
+    "old_pubmed_title": "Skin occlusion and irritant and allergic contact dermatitis: an overview",
+    "fix": {
+      "pmid": "11168575",
+      "score": 1.43,
+      "query": "Hanifin[Author] AND 2001[PDAT] AND (What the EASI)",
+      "title": "The eczema area and severity index (EASI): assessment of reliability in atopic dermatitis. EASI Evaluator Group",
+      "authors": [
+        "Hanifin JM",
+        "Thurston M",
+        "Omoto M",
+        "Cherill R",
+        "Tofte SJ",
+        "Graeber M"
+      ],
+      "pubdate": "2001 Feb",
+      "source": "Exp Dermatol",
+      "doi": "10.1034/j.1600-0625.2001.100102.x"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "scorad-eczema",
+    "file": "wave6-scores-residual.ts",
+    "old_pmid": "8325577",
+    "old_doi": null,
+    "citation": "Consensus Report of the European Task Force on Atopic Dermatitis. Dermatology. 1993",
+    "claimed_title": "Severity scoring of atopic dermatitis: the SCORAD index",
+    "old_pubmed_title": "[The psychosomatic interview in diagnosis of functional voice disorders]",
+    "fix": {
+      "pmid": "8435513",
+      "score": 1.517,
+      "query": "Severity scoring atopic dermatitis the SCORAD index",
+      "title": "Severity scoring of atopic dermatitis: the SCORAD index. Consensus Report of the European Task Force on Atopic Dermatitis",
+      "authors": [],
+      "pubdate": "1993",
+      "source": "Dermatology",
+      "doi": "10.1159/000247298"
+    },
+    "status": "resolved",
+    "patched": true
+  },
+  {
+    "calcId": "mna-sf",
+    "file": "wave6-scores-residual.ts",
+    "old_pmid": "11426293",
+    "old_doi": null,
+    "citation": "Vellas B et al. / Rubenstein LZ et al. J Nutr Health Aging. MNA-SF validation",
+    "claimed_title": "Overview of the MNA \u2013 Its history and challenges",
+    "old_pubmed_title": "Examining the effect of intervention to nutritional problems of the elderly living in an inner city area: a pilot project",
+    "fix": {
+      "pmid": "11382797",
+      "score": 1.37,
+      "query": "Vellas[Author] AND 2001[PDAT]",
+      "title": "Screening for undernutrition in geriatric practice: developing the short-form mini-nutritional assessment (MNA-SF)",
+      "authors": [
+        "Rubenstein LZ",
+        "Harker JO",
+        "Salv\u00e0 A",
+        "Guigoz Y",
+        "Vellas B"
+      ],
+      "pubdate": "2001 Jun",
+      "source": "J Gerontol A Biol Sci Med Sci",
+      "doi": "10.1093/gerona/56.6.m366"
+    },
+    "status": "resolved",
+    "patched": true
+  }
+]

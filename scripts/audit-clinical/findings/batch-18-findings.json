@@ -1,0 +1,247 @@
+{
+  "batch": 18,
+  "file": "wave3-em-surgery.ts",
+  "audited": 22,
+  "fixed": 3,
+  "items": [
+    {
+      "id": "rome-iv-ibs",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://theromefoundation.org/rome-iv/rome-iv-criteria/",
+        "https://www.mdcalc.com/calc/4007/rome-iv-diagnostic-criteria-irritable-bowel-syndrome-ibs",
+        "Lacy BE et al. Gastroenterology. 2016 — pain ≥1 day/week ×3 mo + ≥2 of 3 stool-related criteria; onset ≥6 mo"
+      ]
+    },
+    {
+      "id": "bristol-stool",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Lewis SJ, Heaton KW. Scand J Gastroenterol. 1997 — types 1–2 slow transit; 3–4 normal; 6–7 diarrhea",
+        "Standard IBS subtyping by predominant Bristol form"
+      ]
+    },
+    {
+      "id": "upper-gi-bleed-abc",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.msdmanuals.com/professional/multimedia/clinical-calculator/abc-score-for-prediction-of-30-day-mortality-in-acute-gi-bleeding",
+        "Laursen SB et al. ABC mortality score — bands ~0–3 low, 4–7 intermediate, ≥8 high; use with GBS for intervention need"
+      ]
+    },
+    {
+      "id": "lower-gi-bleed-oakland",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/10042/oakland-score-safe-discharge-lower-gi-bleed",
+        "https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2767946",
+        "Oakland ≤8 validated low-risk safe-discharge threshold; >8 admit"
+      ]
+    },
+    {
+      "id": "strangulation-sbo",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Classic SBO ischemia teaching — peritonitis/CT ischemia → emergent OR; water-soluble contrast challenge for selected adhesive SBO without ischemia signs"
+      ]
+    },
+    {
+      "id": "ctsi-balthazar",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://radiopaedia.org/articles/ct-severity-index-in-acute-pancreatitis-3?lang=us",
+        "Balthazar CTSI mild 0–3, moderate 4–6, severe 7–10; supportive care mild; monitor OF/step-up for higher scores"
+      ]
+    },
+    {
+      "id": "marshall-organ",
+      "status": "fixed",
+      "issues": [
+        "whyUse said organ failure 'defines moderately severe/severe pancreatitis'; revised Atlanta also classifies moderately severe disease via local complications or comorbidity exacerbation without organ failure; persistent OF ≥48 h defines severe"
+      ],
+      "changes": [
+        {
+          "field": "whyUse",
+          "from": "Organ failure (score ≥2 in any system) defines moderately severe/severe pancreatitis and drives ICU decisions.",
+          "to": "Organ failure (score ≥2 in any system) marks non-mild disease; persistent ≥48 h defines severe pancreatitis (revised Atlanta) and drives ICU decisions."
+        }
+      ],
+      "sources": [
+        "https://www.merckmanuals.com/professional/multimedia/table/modified-marshall-organ-failure-score",
+        "Banks PA et al. Gut. 2013 — revised Atlanta; Marshall ≥2 = organ failure; persistent >48 h = severe AP"
+      ]
+    },
+    {
+      "id": "manheim-peritonitis",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/16300704/",
+        "MPI classic bands <21 lower, 21–29 intermediate, ≥30 high mortality; source control + Abx for all"
+      ]
+    },
+    {
+      "id": "boey-score",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Boey J et al. Ann Surg. 1987 — major illness, shock, delay >24 h; mortality rises sharply at Boey ≥2"
+      ]
+    },
+    {
+      "id": "posum-simp",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Copeland GP et al. Br J Surg. 1991 — full POSSUM logistic model; this educational helper correctly disclaims precise mortality %"
+      ]
+    },
+    {
+      "id": "acs-nsqip-simp",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Bilimoria KY et al. J Am Coll Surg. 2013 — official ACS-NSQIP calculator; educational helper correctly defers to official tool"
+      ]
+    },
+    {
+      "id": "asa-physical",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.asahq.org/standards-and-practice-parameters/statement-on-asa-physical-status-classification-system",
+        "ASA PS I–VI comorbidity language; not a standalone mortality calculator"
+      ]
+    },
+    {
+      "id": "apfel-ponv",
+      "status": "fixed",
+      "issues": [
+        "nextSteps said single-agent prophylaxis is often sufficient for Apfel 0–1; Fourth Consensus Guidelines (Gan 2020) recommend multimodal (≥2 classes) for adults with ≥1 risk factor, with optional single agent mainly for score 0"
+      ],
+      "changes": [
+        {
+          "field": "nextSteps",
+          "from": "[{ condition: '0–1', actions: ['Single-agent prophylaxis often sufficient', 'Rescue antiemetic available'] }, { condition: '≥2', actions: ['≥2 prophylactic classes', 'Opioid-sparing strategy', 'Consider propofol TIVA'] }]",
+          "to": "[{ condition: '0', actions: ['Optional single agent', 'Rescue antiemetic available'] }, { condition: '≥1', actions: ['≥2 prophylactic classes (multimodal)', 'Opioid-sparing strategy', 'Consider propofol TIVA if high risk'] }]"
+        }
+      ],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/32467512/",
+        "https://www.nysora.com/anesthesia/postoperative-nausea-and-vomiting-ponv/",
+        "Apfel CC et al. Anesthesiology. 1999 — ~10/20/40/60/80% for scores 0–4; Gan TJ et al. 4th consensus 2020 multimodal ≥1 risk factor"
+      ]
+    },
+    {
+      "id": "aldrete-score",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Aldrete JA, Kroulik D. Anesth Analg. 1970 — modified Aldrete 0–10; common PACU discharge ≥9"
+      ]
+    },
+    {
+      "id": "heaven-airway",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/10675/heaven-criteria",
+        "HEAVEN mnemonic (hypoxemia, extremes, anatomic, vomit/blood, exsanguination, neck) — more positives raise difficulty; educational prep tiers"
+      ]
+    },
+    {
+      "id": "cormack-lehane",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Cormack RS, Lehane J. Anaesthesia. 1984; Yentis/Lee 2a/2b modification — 1–2a usually easy; 2b–3 bougie/optimize; 4 rescue pathway"
+      ]
+    },
+    {
+      "id": "macocha",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://healthmanagement.org/c/icu/issuearticle/difficult-intubation-in-the-icu-why-and-how-to-prevent-and-manage-difficult-intubation",
+        "De Jong A et al. AJRCCM 2013 — MACOCHA ≥3 predicts difficult ICU intubation; expert operator + preparation"
+      ]
+    },
+    {
+      "id": "catch-rule",
+      "status": "fixed",
+      "issues": [
+        "nextSteps for medium-risk framed CT as optional shared-decision vs observation; original CATCH recommends CT when any high- or medium-risk feature is present (medium-risk predicts CT brain injury)"
+      ],
+      "changes": [
+        {
+          "field": "nextSteps",
+          "from": "[{ condition: 'Medium-risk only', actions: ['CT vs shared decision observation', 'Strict return precautions if observed'] }]",
+          "to": "[{ condition: 'Medium-risk only', actions: ['CT head recommended (original CATCH)', 'Observation only if local protocol / reliable shared decision', 'Strict return precautions if observed'] }]"
+        }
+      ],
+      "sources": [
+        "https://www.mdcalc.com/calc/3954/catch-canadian-assessment-tomography-childhood-head-injury-rule",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC2831681/",
+        "Osmond MH et al. CMAJ 2010 — any high- or medium-risk CATCH factor → CT; high-risk = neuro intervention risk"
+      ]
+    },
+    {
+      "id": "chalice-rule",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Dunning J et al. Arch Dis Child. 2006 — any CHALICE criterion historically → CT; follow current NICE pathway"
+      ]
+    },
+    {
+      "id": "dangerous-mechanism",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "CDC/ACS COT field triage and decision-rule dangerous-mechanism lists — high-energy vs low-energy + elderly/anticoagulated vulnerability"
+      ]
+    },
+    {
+      "id": "atls-class",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "ACS COT ATLS hemorrhagic shock classes I–IV — Class III–IV early blood products/TXA/MTP; educational vital-sign patterns"
+      ]
+    },
+    {
+      "id": "massive-transfusion-abc",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/19204506/",
+        "Nunez TC et al. 2009 — ABC (penetrating, SBP≤90, HR≥120, +FAST) ≥2 predicts massive transfusion / MTP activation"
+      ]
+    }
+  ]
+}

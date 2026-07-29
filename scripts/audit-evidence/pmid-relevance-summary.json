@@ -1,0 +1,17 @@
+{
+  "total_refs": 981,
+  "with_pmid": 839,
+  "with_doi": 750,
+  "by_status": {
+    "ok": 682,
+    "url_only": 141,
+    "mismatch": 119,
+    "suspect": 37,
+    "doi_mismatch": 1,
+    "doi_only_unchecked": 1
+  },
+  "mismatches": 119,
+  "suspects": 37,
+  "doi_mismatches": 1,
+  "unresolved": 0
+}

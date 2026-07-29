@@ -1,0 +1,223 @@
+{
+  "batch": 10,
+  "file": "nephrology-endo.ts",
+  "audited": 20,
+  "fixed": 2,
+  "items": [
+    {
+      "id": "cockcroft-gault",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.kidney.org/sites/default/files/441-8491_2202_faqs_aboutgfr_v5.pdf",
+        "https://www.niddk.nih.gov/research-funding/research-programs/kidney-clinical-research-epidemiology/laboratory/ckd-drug-dosing-providers"
+      ]
+    },
+    {
+      "id": "ckd-epi",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://kdigo.org/wp-content/uploads/2024/03/KDIGO-2024-CKD-Guideline.pdf",
+        "https://www.kidney.org/how-to-classify-ckd",
+        "https://pubmed.ncbi.nlm.nih.gov/34554658/"
+      ]
+    },
+    {
+      "id": "mdrd",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/10075613/",
+        "https://www.kidney.org/sites/default/files/441-8491_2202_faqs_aboutgfr_v5.pdf"
+      ]
+    },
+    {
+      "id": "fena",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC10371381/",
+        "https://www.mdcalc.com/calc/60/fractional-excretion-sodium-fena"
+      ]
+    },
+    {
+      "id": "feurea",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/12427149/",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC10371381/"
+      ]
+    },
+    {
+      "id": "anion-gap",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/401925/"
+      ]
+    },
+    {
+      "id": "corrected-calcium",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC8340960/",
+        "https://thischangedmypractice.com/myth-of-calcium-correction/"
+      ]
+    },
+    {
+      "id": "corrected-sodium",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://diabetesjournals.org/care/article/47/8/1257/156808/Hyperglycemic-Crises-in-Adults-With-Diabetes-A",
+        "https://www.aafp.org/afp/2017/1201/p729"
+      ]
+    },
+    {
+      "id": "serum-osmolality",
+      "status": "fixed",
+      "issues": [
+        "whyUse mentioned only osmolal gap/toxic alcohols, omitting primary use of calculated osm for hyponatremia tonicity classification"
+      ],
+      "changes": [
+        "whyUse: 'Osmolal gap screens for methanol/ethylene glycol and other osmoles.' → 'Calculated osm for hyponatremia tonicity; gap screens toxic alcohols/other osmoles.'"
+      ],
+      "sources": [
+        "https://emcrit.org/ibcc/alcohols/",
+        "https://pubmed.ncbi.nlm.nih.gov/18442409/"
+      ]
+    },
+    {
+      "id": "osmolal-gap",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/12216995/",
+        "https://emcrit.org/ibcc/alcohols/"
+      ]
+    },
+    {
+      "id": "free-water-deficit",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/10816188/",
+        "https://www.mdcalc.com/calc/113/free-water-deficit-hypernatremia",
+        "https://emcrit.org/ibcc/hypernatremia/"
+      ]
+    },
+    {
+      "id": "bicarb-deficit",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/25494270/"
+      ]
+    },
+    {
+      "id": "bmi",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index"
+      ]
+    },
+    {
+      "id": "ibw",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/?term=Devine+BJ+gentamicin+1974"
+      ]
+    },
+    {
+      "id": "abw",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/20067334/"
+      ]
+    },
+    {
+      "id": "bsa",
+      "status": "fixed",
+      "issues": [
+        "whenToUse listed 'burn estimates adjunct'; Mosteller absolute BSA (m²) is not used for burn %TBSA or Parkland fluid dosing (those use Rule of Nines/Lund-Browder %TBSA × weight)"
+      ],
+      "changes": [
+        "whenToUse: 'Chemotherapy dosing, cardiac index, burn estimates adjunct.' → 'Chemotherapy dosing and cardiac index normalization.'"
+      ],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK559005/",
+        "https://www.spectral-ai.com/blog/tbsa-burn-care-assessment/",
+        "https://pubmed.ncbi.nlm.nih.gov/3657876/"
+      ]
+    },
+    {
+      "id": "maintenance-fluids",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/13431307/",
+        "https://publications.aap.org/pediatrics/article/142/6/e20183083/37483"
+      ]
+    },
+    {
+      "id": "homa-ir",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/3899825/",
+        "https://diabetesjournals.org/care/article/27/6/1487/22836/Use-and-Abuse-of-HOMA-Modeling"
+      ]
+    },
+    {
+      "id": "eag",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/18540046/"
+      ]
+    },
+    {
+      "id": "ldl-friedewald",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/4337382/",
+        "https://jcp.bmj.com/content/76/3/145"
+      ]
+    },
+    {
+      "id": "anc",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://academic.oup.com/cid/article/52/4/e56/382256",
+        "https://www.ncbi.nlm.nih.gov/books/NBK541102/"
+      ]
+    }
+  ]
+}

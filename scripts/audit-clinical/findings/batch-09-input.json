@@ -1,0 +1,422 @@
+[
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "sipa",
+    "name": "Shock Index, Pediatric Adjusted (SIPA)",
+    "shortName": "SIPA",
+    "whenToUse": "Injured children to identify need for transfusion, operative intervention, or ICU care.",
+    "whyUse": "Age-adjusted SI outperforms adult SI cutoffs and vital signs alone in pediatric trauma.",
+    "nextSteps": [
+      {
+        "condition": "Elevated SIPA",
+        "actions": [
+          "Trauma team activation per protocol",
+          "Prepare for hemorrhage control / transfusion",
+          "Serial vitals and lactate"
+        ]
+      },
+      {
+        "condition": "Normal SIPA",
+        "actions": [
+          "Continue standard trauma evaluation — normal SIPA does not exclude injury"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "yale-observation",
+    "name": "Yale Observation Scale (Febrile Child)",
+    "shortName": "Yale OS",
+    "whenToUse": "Febrile children (classically 3–36 months) when assessing overall toxic appearance.",
+    "whyUse": "Structures the “ill vs well” gestalt into reproducible observational domains.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥16 or toxic appearance",
+        "actions": [
+          "Full septic workup as age-indicated",
+          "Early antibiotics if unstable",
+          "Admit / critical care as needed"
+        ]
+      },
+      {
+        "condition": "Score ≤10 and well-appearing",
+        "actions": [
+          "Follow age-based fever guidelines",
+          "Reliable follow-up"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "step-by-step-fever",
+    "name": "Step-by-Step (Febrile Young Infant)",
+    "shortName": "Step-by-Step",
+    "whenToUse": "Well-appearing febrile infants 0–90 days when applying Step-by-Step risk stratification.",
+    "whyUse": "Identifies infants at low risk of invasive bacterial infection who may avoid LP/admission in validated pathways.",
+    "nextSteps": [
+      {
+        "condition": "Not low risk",
+        "actions": [
+          "Hospital evaluation",
+          "Cultures ± LP per age",
+          "Antibiotics when indicated"
+        ]
+      },
+      {
+        "condition": "Low risk",
+        "actions": [
+          "Pathway-directed observation or discharge with follow-up"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "vbac-success",
+    "name": "VBAC Success (Grobman Educational Model)",
+    "shortName": "VBAC Success",
+    "whenToUse": "Counseling candidates for trial of labor after cesarean (TOLAC).",
+    "whyUse": "Major predictors of VBAC success help shared decision-making; not a guarantee of outcome.",
+    "nextSteps": [
+      {
+        "condition": "Considering TOLAC",
+        "actions": [
+          "Facility capable of emergency cesarean",
+          "Discuss uterine rupture (~0.5–1% after low transverse scar)",
+          "Document informed consent"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "preeclampsia-criteria",
+    "name": "Preeclampsia Diagnostic Criteria Helper",
+    "shortName": "Preeclampsia",
+    "whenToUse": "Suspected preeclampsia after 20 weeks gestation (or postpartum).",
+    "whyUse": "Structures diagnostic criteria including atypical presentations without proteinuria.",
+    "nextSteps": [
+      {
+        "condition": "Preeclampsia with severe features",
+        "actions": [
+          "Admit",
+          "MgSO₄ for seizure prophylaxis",
+          "BP control (IV agents if severe-range)",
+          "Delivery planning"
+        ]
+      },
+      {
+        "condition": "Without severe features",
+        "actions": [
+          "Labs, fetal monitoring",
+          "Outpatient vs inpatient per GA/protocol"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "hellp",
+    "name": "HELLP Syndrome Lab Pattern Helper",
+    "shortName": "HELLP",
+    "whenToUse": "Suspected HELLP in pregnant/postpartum patients with preeclampsia features or RUQ pain.",
+    "whyUse": "Organizes classic lab triad; incomplete HELLP still warrants aggressive management.",
+    "nextSteps": [
+      {
+        "condition": "Complete or partial HELLP",
+        "actions": [
+          "Stabilize BP",
+          "MgSO₄",
+          "CBC/LDH/LFTs/coags serial",
+          "OB/MFM, delivery planning",
+          "Watch for DIC, rupture, eclampsia"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "mag-toxicity",
+    "name": "Magnesium Toxicity Levels Helper",
+    "shortName": "Mg Toxicity",
+    "whenToUse": "Patients on MgSO₄ for preeclampsia/eclampsia or to interpret a Mg level.",
+    "whyUse": "Links level ranges to loss of reflexes, respiratory depression, and cardiac risk.",
+    "nextSteps": [
+      {
+        "condition": "Loss of DTRs or respiratory depression",
+        "actions": [
+          "Stop MgSO₄",
+          "Airway support",
+          "Calcium gluconate 1 g IV",
+          "Check level, Cr, urine output"
+        ]
+      },
+      {
+        "condition": "Therapeutic",
+        "actions": [
+          "q1h nursing checks: RR, SpO2, DTRs, UOP"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "ethanol-level-estimate",
+    "name": "Ethanol Level Estimate",
+    "shortName": "EtOH Estimate",
+    "whenToUse": "Rough educational estimate of ethanol level when formal level delayed, or to relate osm gap to EtOH.",
+    "whyUse": "Widmark and osm-gap conversions are common bedside approximations — not forensic measurements.",
+    "nextSteps": [
+      {
+        "condition": "High estimated level",
+        "actions": [
+          "Airway monitoring",
+          "Serum EtOH, glucose",
+          "Consider other alcohols if gap unexplained"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "rumack-matthew-time",
+    "name": "Rumack-Matthew Time/Level Helper",
+    "shortName": "Rumack-Matthew",
+    "whenToUse": "Single acute acetaminophen ingestion ≥4 hours post-ingestion with a timed level.",
+    "whyUse": "Approximates whether level is above the 150 treatment line for NAC decisions (educational).",
+    "nextSteps": [
+      {
+        "condition": "On/above treatment line",
+        "actions": [
+          "N-acetylcysteine immediately",
+          "Serial LFTs/INR",
+          "Poison center"
+        ]
+      },
+      {
+        "condition": "Below line, time certain",
+        "actions": [
+          "May observe without NAC",
+          "Return precautions"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "loading-dose",
+    "name": "Loading Dose Calculator",
+    "shortName": "Loading Dose",
+    "whenToUse": "Estimating IV loading doses when Vd and target level are known (e.g., teaching PK).",
+    "whyUse": "Core pharmacokinetic relationship for achieving steady concentration quickly.",
+    "nextSteps": [
+      {
+        "condition": "After loading",
+        "actions": [
+          "Start maintenance regimen",
+          "Therapeutic drug monitoring when indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "infusion-rate",
+    "name": "Infusion Rate (mcg/kg/min → mL/hr)",
+    "shortName": "Infusion Rate",
+    "whenToUse": "Titrating vasoactive or other continuous infusions with known concentration.",
+    "whyUse": "Prevents unit errors when programming pumps.",
+    "nextSteps": [
+      {
+        "condition": "Any drip",
+        "actions": [
+          "Independent double-check",
+          "Smart-pump drug library",
+          "Titrate to clinical endpoint"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "corrected-retic",
+    "name": "Corrected Reticulocyte Count & RPI",
+    "shortName": "Retic / RPI",
+    "whenToUse": "Anemia workup to distinguish hypo- vs hyperproliferative response.",
+    "whyUse": "Raw retic % overestimates production when Hct is low; RPI accounts for shift/maturation.",
+    "nextSteps": [
+      {
+        "condition": "Low RPI",
+        "actions": [
+          "Iron/B12/folate studies",
+          "EPO/renal function",
+          "Review meds",
+          "Consider marrow evaluation"
+        ]
+      },
+      {
+        "condition": "High RPI",
+        "actions": [
+          "Hemolysis labs",
+          "Bleed search",
+          "Smear"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "absolute-lymphocyte",
+    "name": "Absolute Lymphocyte Count (ALC)",
+    "shortName": "ALC",
+    "whenToUse": "Infection risk, viral illness, immunodeficiency screens, chemo recovery.",
+    "whyUse": "Absolute counts are more informative than percentages alone.",
+    "nextSteps": [
+      {
+        "condition": "Severe lymphopenia",
+        "actions": [
+          "HIV test if appropriate",
+          "Medication review",
+          "Immunology referral if persistent"
+        ]
+      },
+      {
+        "condition": "Marked lymphocytosis",
+        "actions": [
+          "Peripheral smear",
+          "Flow cytometry if persistent in adults"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "sodium-deficit",
+    "name": "Sodium Deficit",
+    "shortName": "Na Deficit",
+    "whenToUse": "Planning sodium replacement in symptomatic or severe hyponatremia (adjunct).",
+    "whyUse": "Provides a rough total deficit estimate; correction rate limits are critical.",
+    "nextSteps": [
+      {
+        "condition": "Severe symptoms",
+        "actions": [
+          "100 mL 3% saline boluses per guidelines",
+          "ICU monitoring",
+          "Recheck Na frequently"
+        ]
+      },
+      {
+        "condition": "Chronic hyponatremia",
+        "actions": [
+          "Slow correction",
+          "Identify cause (SIADH, hypovolemia, etc.)"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "expected-pco2-metabolic-alk",
+    "name": "Expected PCO₂ (Metabolic Alkalosis)",
+    "shortName": "PCO₂ (Met Alk)",
+    "whenToUse": "Metabolic alkalosis to detect concurrent respiratory disorders.",
+    "whyUse": "Compensation is hypoventilation; if PCO₂ differs from expected, mixed disorder likely.",
+    "nextSteps": [
+      {
+        "condition": "Metabolic alkalosis",
+        "actions": [
+          "Volume/Cl status",
+          "Diuretic/vomiting history",
+          "K repletion",
+          "ABG correlation"
+        ]
+      },
+      {
+        "condition": "Mixed disorder",
+        "actions": [
+          "Evaluate ventilation and second process"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "hypertonic-hyponatremia",
+    "name": "Hypertonic Hyponatremia (Glucose Correction)",
+    "shortName": "Na / Hyperglycemia",
+    "whenToUse": "Hyponatremia with marked hyperglycemia (DKA/HHS) to estimate effective water balance.",
+    "whyUse": "Translocational hyponatremia from glucose; corrected Na guides free-water status.",
+    "nextSteps": [
+      {
+        "condition": "DKA/HHS",
+        "actions": [
+          "Use corrected Na for fluid planning",
+          "Monitor Na as glucose corrects",
+          "Follow ADA protocols"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "ideal-body-weight-peds",
+    "name": "Pediatric Ideal Body Weight",
+    "shortName": "Peds IBW",
+    "whenToUse": "Weight-based dosing or nutrition estimates in children when IBW is preferred over total body weight.",
+    "whyUse": "Traub-Johnson provides a simple height-based IBW used in pediatric pharmacy contexts.",
+    "nextSteps": [
+      {
+        "condition": "Dosing",
+        "actions": [
+          "Check drug-specific weight basis",
+          "Consider adjusted body weight if obese per protocol"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "finnegan",
+    "name": "Finnegan NAS Score (Simplified)",
+    "shortName": "Finnegan",
+    "whenToUse": "Infants at risk for neonatal opioid withdrawal when Finnegan-style serial scoring is used.",
+    "whyUse": "Structures CNS, metabolic/vasomotor, and GI withdrawal signs; thresholds guide treatment.",
+    "nextSteps": [
+      {
+        "condition": "Elevated scores",
+        "actions": [
+          "Non-pharm first: swaddle, low stimulation, feeding support",
+          "Morphine/methadone protocol if thresholds met",
+          "Social work / discharge planning"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-peds-ob-tox.ts",
+    "id": "urine-anion-gap",
+    "name": "Urine Anion Gap",
+    "shortName": "UAG",
+    "whenToUse": "Normal anion gap metabolic acidosis to help distinguish GI bicarb loss vs RTA.",
+    "whyUse": "Negative UAG suggests appropriate NH₄⁺ excretion (e.g., diarrhea); positive suggests impaired renal acidification (RTA).",
+    "nextSteps": [
+      {
+        "condition": "Positive UAG + NAGMA",
+        "actions": [
+          "Check urine pH",
+          "Evaluate for RTA types",
+          "K, Ca, growth (peds), autoimmune workup as indicated"
+        ]
+      },
+      {
+        "condition": "Negative UAG + NAGMA",
+        "actions": [
+          "GI loss evaluation",
+          "Volume and K repletion"
+        ]
+      }
+    ]
+  }
+]

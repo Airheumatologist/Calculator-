@@ -1,0 +1,423 @@
+[
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "ckd-epi-2021",
+    "name": "CKD-EPI 2021 Creatinine eGFR (Race-Free)",
+    "shortName": "CKD-EPI 2021",
+    "whenToUse": "Adult CKD detection, staging, and monitoring using serum creatinine.",
+    "whyUse": "NKF-ASN preferred race-free creatinine equation (Inker 2021).",
+    "nextSteps": [
+      {
+        "condition": "eGFR <60",
+        "actions": [
+          "Confirm chronicity (≥3 months)",
+          "Urine ACR",
+          "Medication review",
+          "BP / glucose optimization"
+        ]
+      },
+      {
+        "condition": "eGFR <30",
+        "actions": [
+          "Nephrology referral",
+          "RRT education if progressive",
+          "Avoid nephrotoxins"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "ckd-epi-cys",
+    "name": "CKD-EPI Cystatin C eGFR",
+    "shortName": "CKD-EPI CysC",
+    "whenToUse": "When creatinine is unreliable (low muscle mass, amputation, extremes of diet) or to confirm eGFR.",
+    "whyUse": "Cystatin C less dependent on muscle mass; useful confirmatory or alternative equation.",
+    "nextSteps": [
+      {
+        "condition": "Discordant Cr vs CysC eGFR",
+        "actions": [
+          "Review muscle mass, diet, steroids, thyroid disease",
+          "Consider measured GFR if decisions hinge on value"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "egfr-stage",
+    "name": "KDIGO eGFR G Stage",
+    "shortName": "eGFR Stage",
+    "whenToUse": "Convert any eGFR/GFR value into KDIGO G category for documentation and risk framing.",
+    "whyUse": "Standard CKD GFR categories used with albuminuria for prognosis.",
+    "nextSteps": [
+      {
+        "condition": "G3–G5",
+        "actions": [
+          "Urine ACR (A category)",
+          "Medication dose review",
+          "BP and metabolic bone/anemia screening as indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "kdigo-ckd-heat",
+    "name": "KDIGO CKD Heat Map (G × A Risk)",
+    "shortName": "KDIGO Heat Map",
+    "whenToUse": "CKD risk stratification for monitoring frequency and referral urgency.",
+    "whyUse": "Combined G and A categories predict progression and CV outcomes better than GFR alone.",
+    "nextSteps": [
+      {
+        "condition": "High / very high",
+        "actions": [
+          "Nephrology co-management",
+          "Aggressive risk-factor control",
+          "Sick-day medication plan"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "rifle-aki",
+    "name": "RIFLE AKI Criteria",
+    "shortName": "RIFLE",
+    "whenToUse": "Staging AKI by creatinine/GFR change and/or urine output criteria.",
+    "whyUse": "Foundational consensus AKI criteria preceding AKIN and KDIGO.",
+    "nextSteps": [
+      {
+        "condition": "R / I / F",
+        "actions": [
+          "Hemodynamic optimization",
+          "Review nephrotoxins",
+          "Serial Cr and UO",
+          "Renal ultrasound if obstruction possible"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "akin-aki",
+    "name": "AKIN AKI Staging",
+    "shortName": "AKIN",
+    "whenToUse": "Staging AKI with AKIN criteria (48-hour window for creatinine rise).",
+    "whyUse": "Refined RIFLE; bridge to current KDIGO staging.",
+    "nextSteps": [
+      {
+        "condition": "Stage ≥2",
+        "actions": [
+          "Nephrology consult",
+          "Strict I/O and daily weights",
+          "Avoid further nephrotoxins"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "renal-angina",
+    "name": "Renal Angina Index (Simplified)",
+    "shortName": "RAI",
+    "whenToUse": "Early risk stratification for AKI in at-risk hospitalized/ICU patients (educational adult adaptation).",
+    "whyUse": "Concept of “renal angina” combines predisposition risk with early signs of injury (Cr change, fluid overload).",
+    "nextSteps": [
+      {
+        "condition": "RAI ≥8",
+        "actions": [
+          "Optimize hemodynamics",
+          "Minimize nephrotoxins",
+          "Serial Cr and FO tracking",
+          "Consider nephrology early"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "furosemide-stress",
+    "name": "Furosemide Stress Test (FST)",
+    "shortName": "FST",
+    "whenToUse": "Oliguric early AKI to assess tubular responsiveness and risk of progression (after euvolemia ensured).",
+    "whyUse": "UO response after 1–1.5 mg/kg IV furosemide predicts progression and need for RRT better than many static markers.",
+    "nextSteps": [
+      {
+        "condition": "Non-responder",
+        "actions": [
+          "Reassess for RRT indications",
+          "Avoid repeated futile loop dosing",
+          "Nephrology involvement"
+        ]
+      },
+      {
+        "condition": "Responder",
+        "actions": [
+          "Continue supportive AKI care",
+          "Match UOP with intake if needed"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "fena-diuretic",
+    "name": "FENa on Diuretics + FeUrea",
+    "shortName": "FENa/FeUrea",
+    "whenToUse": "Oliguric AKI differential when patient has received diuretics.",
+    "whyUse": "FENa rises after loops even if prerenal; FeUrea is preferred in that setting.",
+    "nextSteps": [
+      {
+        "condition": "Prerenal pattern",
+        "actions": [
+          "Volume resuscitation if hypovolemic",
+          "Hold ACEi/NSAID/SGLT2i as appropriate"
+        ]
+      },
+      {
+        "condition": "ATN pattern",
+        "actions": [
+          "Supportive care",
+          "Avoid overload",
+          "Monitor K, acid-base"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "electrolyte-free-water",
+    "name": "Electrolyte-Free Water Clearance (cEFWC)",
+    "shortName": "cEFWC",
+    "whenToUse": "Hyponatremia / free-water balance assessment using urine electrolytes and volume.",
+    "whyUse": "Estimates whether kidneys are excreting or retaining electrolyte-free water.",
+    "nextSteps": [
+      {
+        "condition": "Negative cEFWC + hyponatremia",
+        "actions": [
+          "Fluid restriction or treat SIADH cause",
+          "Ensure adequate solute intake"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "infusate-sodium-table",
+    "name": "Infusate ΔNa (Adrogué Table)",
+    "shortName": "Infusate ΔNa",
+    "whenToUse": "Planning IV fluid Na content effect for dysnatremia correction.",
+    "whyUse": "Estimates ΔNa per 1 L of D5W, 0.45% NaCl, 0.9% NaCl, or 3% NaCl.",
+    "nextSteps": [
+      {
+        "condition": "Active correction",
+        "actions": [
+          "Serial Na q2–4h if using 3%",
+          "DDAVP clamp strategy in selected high-risk hyponatremia"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "potassium-deficit",
+    "name": "Estimated Potassium Deficit",
+    "shortName": "K Deficit",
+    "whenToUse": "Rough planning for K repletion in hypokalemia (not exact total-body K).",
+    "whyUse": "Provides order-of-magnitude deficit; actual needs vary with ongoing losses and pH.",
+    "nextSteps": [
+      {
+        "condition": "K <2.5 or ECG changes",
+        "actions": [
+          "Monitored setting",
+          "IV K per institutional max rates",
+          "Recheck frequently"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "chloride-deficit",
+    "name": "Chloride Deficit (Metabolic Alkalosis)",
+    "shortName": "Cl Deficit",
+    "whenToUse": "Chloride-depletion (saline-responsive) metabolic alkalosis volume/Cl repletion planning.",
+    "whyUse": "Rough Cl deficit helps estimate NS volume needed when alkalosis is Cl-responsive.",
+    "nextSteps": [
+      {
+        "condition": "Cl-responsive alkalosis",
+        "actions": [
+          "Isotonic saline if hypovolemic",
+          "Replete K/Mg",
+          "Stop or reduce loop/thiazide if possible"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "potassium-iv-rate",
+    "name": "IV Potassium Rate Safety Check",
+    "shortName": "K IV Rate",
+    "whenToUse": "Before/while ordering IV KCl to compare planned rate with usual safety ceilings.",
+    "whyUse": "Rapid IV K risks arrhythmia; institutions set max rates and concentrations.",
+    "nextSteps": [
+      {
+        "condition": "Rate above limits",
+        "actions": [
+          "Reduce rate or use central access",
+          "Ensure telemetry",
+          "Pharmacy/protocol review"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "ionized-ca-ph",
+    "name": "Ionized Calcium pH Correction",
+    "shortName": "iCa–pH",
+    "whenToUse": "When iCa is measured at a non-physiologic pH and you want an approximate 7.40-normalized value.",
+    "whyUse": "Acidemia increases iCa; alkalemia decreases iCa — correction aids interpretation.",
+    "nextSteps": [
+      {
+        "condition": "True hypocalcemia",
+        "actions": [
+          "Check Mg, PTH, vitamin D",
+          "Replace Ca if symptomatic or severe"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "phos-replacement",
+    "name": "Phosphate Replacement Estimate",
+    "shortName": "Phos Dose",
+    "whenToUse": "Planning repletion for hypophosphatemia (weight-based mmol estimates).",
+    "whyUse": "Severity-stratified mmol/kg guidance commonly used in ICU protocols.",
+    "nextSteps": [
+      {
+        "condition": "Severe (<1.0 mg/dL)",
+        "actions": [
+          "IV repletion in monitored setting",
+          "Evaluate refeeding, vitamin D, hyperparathyroidism"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "vexus",
+    "name": "VExUS Score (Venous Congestion)",
+    "shortName": "VExUS",
+    "whenToUse": "Bedside assessment of systemic venous congestion (heart failure, AKI, fluid intolerance).",
+    "whyUse": "Integrates hepatic vein, portal vein, and intrarenal venous Doppler into a congestion grade.",
+    "nextSteps": [
+      {
+        "condition": "VExUS 2–3 + overload",
+        "actions": [
+          "Diuresis or ultrafiltration as appropriate",
+          "Reassess organ perfusion",
+          "Treat right heart / TR causes"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "ivc-collapsibility",
+    "name": "IVC Collapsibility Index",
+    "shortName": "IVC CI",
+    "whenToUse": "Bedside ultrasound volume assessment (spontaneous breathing or controlled ventilation).",
+    "whyUse": "CI% estimates RAP / fluid responsiveness when used with correct respiratory context.",
+    "nextSteps": [
+      {
+        "condition": "High CI + hypoperfusion",
+        "actions": [
+          "Fluid challenge or PLR confirmation",
+          "Reassess perfusion"
+        ]
+      },
+      {
+        "condition": "Low CI + overload",
+        "actions": [
+          "Avoid fluids",
+          "Consider decongestion"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "passive-leg-raise",
+    "name": "Passive Leg Raise (PLR) Interpretation",
+    "shortName": "PLR",
+    "whenToUse": "Predict fluid responsiveness without committing to a fluid bolus.",
+    "whyUse": "PLR reversibly mobilizes ~300 mL venous blood; SV/CO increase ≥10–15% predicts responders.",
+    "nextSteps": [
+      {
+        "condition": "Responder + hypoperfusion",
+        "actions": [
+          "Fluid bolus",
+          "Reassess lactate/perfusion",
+          "Stop fluids when PLR negative"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "pulse-pressure-variation",
+    "name": "Pulse Pressure Variation (PPV)",
+    "shortName": "PPV",
+    "whenToUse": "Fully adapted patients on controlled ventilation to predict fluid responsiveness.",
+    "whyUse": "Dynamic arterial waveform index; PPV >12–13% often predicts responders under valid conditions.",
+    "nextSteps": [
+      {
+        "condition": "High valid PPV + hypoperfusion",
+        "actions": [
+          "Fluid challenge",
+          "Reassess PPV after each bolus"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "cerebral-perfusion",
+    "name": "Cerebral Perfusion Pressure (CPP)",
+    "shortName": "CPP",
+    "whenToUse": "Neurocritical care when ICP (or surrogate) and MAP are available.",
+    "whyUse": "Maintains estimate of net pressure driving cerebral blood flow; common goals ≥60 mmHg.",
+    "nextSteps": [
+      {
+        "condition": "CPP <60",
+        "actions": [
+          "Treat raised ICP",
+          "Optimize MAP with fluids/vasopressors per protocol",
+          "Ensure transducer leveling"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-nephro-icu.ts",
+    "id": "oxygen-delivery",
+    "name": "Oxygen Delivery (DO₂)",
+    "shortName": "DO₂",
+    "whenToUse": "Shock / high-risk perioperative care when CO and ABG/oximetry available.",
+    "whyUse": "Quantifies bulk O₂ transport; low DO₂ may contribute to tissue hypoxia.",
+    "nextSteps": [
+      {
+        "condition": "Low DO₂ + shock",
+        "actions": [
+          "Restore CO (fluids/inotropes as indicated)",
+          "Correct hypoxemia",
+          "Consider transfusion only per restrictive thresholds"
+        ]
+      }
+    ]
+  }
+]

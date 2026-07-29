@@ -1,0 +1,277 @@
+{
+  "batch": 34,
+  "file": "wave5-tox-psych.ts",
+  "audited": 25,
+  "fixed": 3,
+  "items": [
+    {
+      "id": "acetaminophen-dose-toxicity",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.merckmanuals.com/professional/injuries-poisoning/poisoning/acetaminophen-poisoning",
+        "https://wikem.org/wiki/Acetaminophen_toxicity",
+        "https://emedicine.medscape.com/article/820200-overview"
+      ]
+    },
+    {
+      "id": "ibuprofen-toxicity",
+      "status": "fixed",
+      "issues": [
+        "whenToUse said 'ibuprofen (or similar NSAID)' but mg/kg bands are ibuprofen-specific; other NSAIDs (e.g. mefenamic acid) have different toxicity profiles/thresholds"
+      ],
+      "changes": [
+        "whenToUse: removed 'or similar NSAID'; clarified bands are ibuprofen-specific"
+      ],
+      "sources": [
+        "https://litfl.com/nsaids-toxicity/",
+        "https://emedicine.medscape.com/article/816117-clinical",
+        "https://wikem.org/wiki/NSAID_toxicity"
+      ]
+    },
+    {
+      "id": "iron-toxicity",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/21975503/",
+        "https://emedicine.medscape.com/article/815152-overview"
+      ]
+    },
+    {
+      "id": "lithium-level",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.extrip-workgroup.org/lithium",
+        "https://pubmed.ncbi.nlm.nih.gov/25583292/",
+        "https://emcrit.org/ibcc/lithium/"
+      ]
+    },
+    {
+      "id": "valproate-level",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK560898/",
+        "https://emcrit.org/ibcc/vpa/",
+        "https://emedicine.medscape.com/article/819315-medication"
+      ]
+    },
+    {
+      "id": "carbamazepine-level",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/11444507/",
+        "https://emedicine.medscape.com/article/813557-overview"
+      ]
+    },
+    {
+      "id": "theophylline-level",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.extrip-workgroup.org/theophylline",
+        "https://pubmed.ncbi.nlm.nih.gov/25715736/",
+        "https://emedicine.medscape.com/article/818847-treatment"
+      ]
+    },
+    {
+      "id": "methotrexate-toxicity",
+      "status": "fixed",
+      "issues": [
+        "nextSteps said only 'do not give leucovorin immediately after glucarpidase'; consensus guidance holds leucovorin ~2 h before and after glucarpidase (substrate interaction)"
+      ],
+      "changes": [
+        "nextSteps (glucarpidase path): 'Do not give leucovorin immediately after…' → 'Hold leucovorin ~2 h before and after glucarpidase'"
+      ],
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC5759822/",
+        "https://voraxaze.com/expert-guidelines",
+        "https://pubmed.ncbi.nlm.nih.gov/29079637/"
+      ]
+    },
+    {
+      "id": "co-oximetry",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/19297574/",
+        "https://emedicine.medscape.com/article/819987-treatment"
+      ]
+    },
+    {
+      "id": "methemoglobin-level",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK537317/",
+        "https://emedicine.medscape.com/article/204178-treatment"
+      ]
+    },
+    {
+      "id": "cyanide-toxicity",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/17963990/",
+        "https://emedicine.medscape.com/article/814287-treatment"
+      ]
+    },
+    {
+      "id": "organophosphate",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/17706760/",
+        "https://emedicine.medscape.com/article/167726-treatment"
+      ]
+    },
+    {
+      "id": "snakebite-severity",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/8599491/",
+        "https://emedicine.medscape.com/article/168828-treatment"
+      ]
+    },
+    {
+      "id": "tetanus-prophylaxis",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.cdc.gov/tetanus/hcp/clinical-guidance/index.html",
+        "https://www.cdc.gov/pinkbook/hcp/table-of-contents/chapter-21-tetanus.html"
+      ]
+    },
+    {
+      "id": "rabies-pep",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.cdc.gov/rabies/hcp/clinical-care/post-exposure-prophylaxis.html",
+        "https://www.cdc.gov/yellow-book/hcp/travel-associated-infections-diseases/rabies.html"
+      ]
+    },
+    {
+      "id": "needle-stick-pep",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/23917901/",
+        "https://www.cdc.gov/niosh/healthcare/infectious-diseases/bloodborne-pathogen-exposures.html"
+      ]
+    },
+    {
+      "id": "anaphylaxis-criteria",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/16461139/",
+        "https://www.aaaai.org/conditions-treatments/allergies/anaphylaxis"
+      ]
+    },
+    {
+      "id": "epinephrine-im-dose",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/16461139/",
+        "https://emedicine.medscape.com/article/135065-treatment"
+      ]
+    },
+    {
+      "id": "burn-transfer-aba",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://ameriburn.org/public-resources/burn-center-referral-criteria/",
+        "https://emedicine.medscape.com/article/1278244-treatment"
+      ]
+    },
+    {
+      "id": "phq-a",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.aacap.org/App_Themes/AACAP/docs/member_resources/toolbox_for_clinical_practice_and_outcomes/symptoms/GLAD-PC_PHQ-9.pdf",
+        "https://pubmed.ncbi.nlm.nih.gov/11556941/"
+      ]
+    },
+    {
+      "id": "asq-suicide",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.nimh.nih.gov/research/research-conducted-at-nimh/asq-toolkit-materials",
+        "https://pubmed.ncbi.nlm.nih.gov/23027429/"
+      ]
+    },
+    {
+      "id": "sheehan",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/9565717/",
+        "https://www.phenxtoolkit.org/protocols/view/630801"
+      ]
+    },
+    {
+      "id": "sds-zung",
+      "status": "fixed",
+      "issues": [
+        "nextSteps used 'Raw ≥50' while the calculator (and classic Zung severity bands) interpret by SDS index; mild starts at index ≥50 (raw ≥40). Raw ≥50 is a later clinical-significance proposal (Dunstan) but mismatched the tool's own bands"
+      ],
+      "changes": [
+        "nextSteps condition: 'Raw ≥50' → 'Index ≥50 (raw ≥40 classic)'"
+      ],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/14221692/",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC6558728/",
+        "https://fpnotebook.com/Psych/Exam/ZngSlfRtngDprsnScl.htm"
+      ]
+    },
+    {
+      "id": "sas-zung-anxiety",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/5172928/",
+        "https://link.springer.com/article/10.1186/s12888-019-2427-6"
+      ]
+    },
+    {
+      "id": "yale-brown-ocd",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/2684084/",
+        "https://iocdf.org/about-ocd/ocd-treatment/"
+      ]
+    }
+  ]
+}

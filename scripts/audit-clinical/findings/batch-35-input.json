@@ -1,0 +1,607 @@
+[
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "expanded-baveno",
+    "name": "Expanded Baveno VI Criteria",
+    "shortName": "Exp. Baveno VI",
+    "whenToUse": "Compensated advanced chronic liver disease (cACLD) when deciding whether screening EGD for clinically significant varices can be deferred.",
+    "whyUse": "Expanded Baveno VI (LSM <25 kPa and platelets >110×10⁹/L) spares endoscopy with very low risk of missing varices needing treatment.",
+    "nextSteps": [
+      {
+        "condition": "Criteria met",
+        "actions": [
+          "Defer screening EGD",
+          "Surveillance LSM + CBC",
+          "Lifestyle/etiology treatment"
+        ]
+      },
+      {
+        "condition": "Criteria not met or decompensated",
+        "actions": [
+          "Variceal screening/management EGD",
+          "Hepatology follow-up"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "ascites-grade",
+    "name": "Clinical Ascites Grade (1–3)",
+    "shortName": "Ascites Grade",
+    "whenToUse": "Document ascites severity and guide intensity of diuretic / paracentesis strategy in cirrhosis.",
+    "whyUse": "Standard grades link description to treatment pathways (observation vs diuretics vs LVP).",
+    "nextSteps": [
+      {
+        "condition": "New ascites",
+        "actions": [
+          "Diagnostic paracentesis (SAAG, cell count, culture)",
+          "Salt restriction",
+          "Review EtOH/NSAIDs"
+        ]
+      },
+      {
+        "condition": "Grade 3 or tense",
+        "actions": [
+          "LVP + albumin as indicated",
+          "Diuretic optimization",
+          "SBP prophylaxis if prior SBP/high-risk"
+        ]
+      },
+      {
+        "condition": "Refractory",
+        "actions": [
+          "Hepatology",
+          "TIPS/transplant discussion",
+          "Serial LVP plan"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "variceal-bleed-risk",
+    "name": "Variceal Bleed Risk Helper (Child–Pugh + Context)",
+    "shortName": "Variceal Risk",
+    "whenToUse": "Cirrhosis with known/suspected varices or recent variceal bleed for risk framing and care intensity.",
+    "whyUse": "Child–Pugh class strongly stratifies short-term mortality after variceal bleeding; red signs and size add primary-prevention context.",
+    "nextSteps": [
+      {
+        "condition": "Active bleed",
+        "actions": [
+          "ABC / ICU as needed",
+          "Octreotide or terlipressin",
+          "IV antibiotics",
+          "Urgent EGD",
+          "Consider early TIPS if high-risk"
+        ]
+      },
+      {
+        "condition": "Primary prevention high-risk varices",
+        "actions": [
+          "Start NSBB or schedule EBL",
+          "Counsel on EtOH cessation",
+          "Optimize liver disease"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "meld-3-edu",
+    "name": "MELD 3.0 (Educational)",
+    "shortName": "MELD 3.0",
+    "whenToUse": "Adult chronic liver disease prognosis education when labs for MELD 3.0 components are available.",
+    "whyUse": "MELD 3.0 improves mortality prediction vs MELD-Na and addresses sex disparity with a female coefficient and albumin.",
+    "nextSteps": [
+      {
+        "condition": "Elevated MELD 3.0",
+        "actions": [
+          "Hepatology/transplant referral if candidate",
+          "Manage decompensation",
+          "Avoid nephrotoxins"
+        ]
+      },
+      {
+        "condition": "Female patients",
+        "actions": [
+          "MELD 3.0 better accounts for sex than classic MELD — still use official listing tools"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "mdrd-original",
+    "name": "MDRD eGFR (Original 4-Variable, Historical)",
+    "shortName": "MDRD Original",
+    "whenToUse": "Interpreting older lab reports that used MDRD, or teaching why race-based eGFR was abandoned.",
+    "whyUse": "Shows the classic 175 equation and documents that the Black race multiplier is no longer recommended for clinical care.",
+    "nextSteps": [
+      {
+        "condition": "Any clinical use",
+        "actions": [
+          "Prefer CKD-EPI 2021 race-free eGFR",
+          "Add ACR for CGA staging",
+          "Do not reintroduce race multipliers"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "aki-cause",
+    "name": "AKI Cause Likelihood (Pre-renal vs ATN Checklist)",
+    "shortName": "AKI Cause",
+    "whenToUse": "Oliguric or rising-creatinine AKI when sorting volume-responsive pre-renal physiology from intrinsic ATN.",
+    "whyUse": "Structures history, exam, urine indices, and sediment; does not replace clinical judgment or FeUrea on diuretics.",
+    "nextSteps": [
+      {
+        "condition": "Pre-renal favored",
+        "actions": [
+          "Isotonic fluids or perfusion optimization",
+          "Hold nephrotoxins",
+          "Treat underlying cause"
+        ]
+      },
+      {
+        "condition": "ATN favored",
+        "actions": [
+          "Supportive care",
+          "Renal dosing",
+          "Dialysis if indications",
+          "Nephrology if severe"
+        ]
+      },
+      {
+        "condition": "Unclear",
+        "actions": [
+          "Bladder scan/US",
+          "Urine microscopy",
+          "FeUrea if on diuretics",
+          "Serologies if active sediment"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "fena-contrast",
+    "name": "FENa after Contrast (Timing Helper)",
+    "shortName": "FENa Contrast",
+    "whenToUse": "AKI or rising creatinine after iodinated contrast when FENa is considered.",
+    "whyUse": "Contrast-associated AKI can show low FENa early; timing and alternatives matter more than a single cut-off.",
+    "nextSteps": [
+      {
+        "condition": "Rising Cr post-contrast",
+        "actions": [
+          "Stop nephrotoxins",
+          "Volume assess",
+          "Rule out obstruction/other AKI",
+          "Supportive care"
+        ]
+      },
+      {
+        "condition": "High-risk future contrast",
+        "actions": [
+          "Minimize volume/frequency",
+          "Periprocedural volume optimization per protocol",
+          "Consider alternate imaging"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "desmopressin-challenge",
+    "name": "Desmopressin Challenge (Educational Interpretation)",
+    "shortName": "DDAVP Challenge",
+    "whenToUse": "After water deprivation when diagnosing DI subtype with post-desmopressin urine osmolality response.",
+    "whyUse": "Percent rise in Uosm after DDAVP separates central from nephrogenic DI in classic teaching algorithms.",
+    "nextSteps": [
+      {
+        "condition": "Central DI pattern",
+        "actions": [
+          "Desmopressin therapy trial",
+          "MRI sella if new",
+          "Endocrine referral"
+        ]
+      },
+      {
+        "condition": "Nephrogenic pattern",
+        "actions": [
+          "Stop lithium if possible",
+          "Correct K/Ca",
+          "Thiazide/NSAID/amiloride strategies per cause"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "water-deprivation",
+    "name": "Water Deprivation Test Interpretation (Educational)",
+    "shortName": "Water Deprive",
+    "whenToUse": "Structured polyuria workup when interpreting supervised water deprivation results.",
+    "whyUse": "Maps end-test plasma/urine osmolality patterns to primary polydipsia vs DI before desmopressin step.",
+    "nextSteps": [
+      {
+        "condition": "DI pattern",
+        "actions": [
+          "Desmopressin challenge",
+          "Endocrine referral",
+          "Electrolyte monitoring"
+        ]
+      },
+      {
+        "condition": "Primary polydipsia pattern",
+        "actions": [
+          "Behavioral water restriction plan",
+          "Psych/med review",
+          "Avoid hyponatremia from over-correction"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "siadh-criteria",
+    "name": "SIADH Diagnostic Criteria Checklist",
+    "shortName": "SIADH Criteria",
+    "whenToUse": "Euvolemic hyponatremia when evaluating for SIADH after excluding hypothyroidism and glucocorticoid deficiency.",
+    "whyUse": "Forces explicit documentation of Posm, Uosm, UNa, volume status, and normal adrenal/thyroid function.",
+    "nextSteps": [
+      {
+        "condition": "SIADH likely",
+        "actions": [
+          "Medication review (SSRIs, carbamazepine, etc.)",
+          "CXR/CNS imaging as indicated",
+          "Fluid restriction if mild–moderate",
+          "3% saline if severe symptoms"
+        ]
+      },
+      {
+        "condition": "Uncertain volume",
+        "actions": [
+          "Trial cautious fluids if hypovolemia possible",
+          "Uric acid/FENa adjuncts",
+          "Specialist input"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "di-diagnosis",
+    "name": "Diabetes Insipidus vs Primary Polydipsia Helper",
+    "shortName": "DI vs PP",
+    "whenToUse": "Polyuria–polydipsia syndrome initial differentiation before or alongside formal testing.",
+    "whyUse": "Baseline Na, plasma osmolality, and urine concentration provide quick Bayesian framing.",
+    "nextSteps": [
+      {
+        "condition": "DI favored",
+        "actions": [
+          "Endocrine referral",
+          "Copeptin or deprivation protocol",
+          "MRI if central DI confirmed"
+        ]
+      },
+      {
+        "condition": "Primary polydipsia favored",
+        "actions": [
+          "Gradual intake reduction",
+          "Psych liaison if appropriate",
+          "Watch for hyponatremia"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "graves-cas",
+    "name": "Clinical Activity Score (Graves Orbitopathy)",
+    "shortName": "CAS",
+    "whenToUse": "Graves disease with suspected active thyroid eye disease to decide anti-inflammatory therapy need.",
+    "whyUse": "CAS ≥3/7 indicates active orbitopathy in the basic 7-item score and supports immunosuppressive consideration.",
+    "nextSteps": [
+      {
+        "condition": "CAS ≥3",
+        "actions": [
+          "Ophthalmology / TED clinic",
+          "Smoking cessation",
+          "Euthyroid state",
+          "Consider IV steroids if moderate–severe active"
+        ]
+      },
+      {
+        "condition": "Vision change / color desaturation",
+        "actions": [
+          "Emergency assessment for dysthyroid optic neuropathy"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "ata-nodule",
+    "name": "ATA Thyroid Nodule Sonographic Pattern",
+    "shortName": "ATA Pattern",
+    "whenToUse": "Thyroid nodules with ultrasound description to estimate ATA pattern risk and biopsy size cutoffs.",
+    "whyUse": "Pattern-based approach (benign → high suspicion) drives FNA thresholds complementary to TIRADS systems.",
+    "nextSteps": [
+      {
+        "condition": "Meets FNA size threshold",
+        "actions": [
+          "Ultrasound-guided FNA",
+          "Include lymph node survey"
+        ]
+      },
+      {
+        "condition": "Below threshold",
+        "actions": [
+          "Sonographic follow-up interval per pattern",
+          "Reassess if growth/new features"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "somogyi-dawn",
+    "name": "Somogyi vs Dawn Phenomenon Helper",
+    "shortName": "Somogyi/Dawn",
+    "whenToUse": "Patients with high morning glucose on insulin when deciding whether overnight hypo vs dawn physiology is likely.",
+    "whyUse": "3 a.m. glucose (or CGM) distinguishes nocturnal hypoglycemia with rebound from dawn-related rise without hypo.",
+    "nextSteps": [
+      {
+        "condition": "Nocturnal hypo pattern",
+        "actions": [
+          "Reduce basal/NPH",
+          "Check timing of long-acting insulin",
+          "Consider CGM"
+        ]
+      },
+      {
+        "condition": "Dawn pattern",
+        "actions": [
+          "Basal titration or timing change",
+          "Avoid excess bedtime carbs if mismatched",
+          "Endocrine follow-up if brittle"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "dka-resolution",
+    "name": "DKA Resolution Criteria Checklist",
+    "shortName": "DKA Resolution",
+    "whenToUse": "During DKA treatment to decide when anion gap closure / resolution criteria are met for transition to SQ insulin.",
+    "whyUse": "Prevents premature stop of insulin infusion before ketoacidosis clears; glucose normalizes before ketosis often.",
+    "nextSteps": [
+      {
+        "condition": "Not resolved",
+        "actions": [
+          "Continue IV insulin + D5 when glucose falls",
+          "Replete K",
+          "Find precipitant"
+        ]
+      },
+      {
+        "condition": "Resolved",
+        "actions": [
+          "Overlap basal SQ insulin",
+          "Stop IV insulin after overlap",
+          "Diabetes education"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "hhs-diagnosis",
+    "name": "HHS Diagnostic Criteria Helper",
+    "shortName": "HHS Dx",
+    "whenToUse": "Severe hyperglycemia with mental status change when distinguishing HHS from DKA or mixed presentations.",
+    "whyUse": "HHS uses extreme glucose/osmolality with minimal ketoacidosis; fluid deficits are massive.",
+    "nextSteps": [
+      {
+        "condition": "HHS likely",
+        "actions": [
+          "Aggressive controlled fluids",
+          "Electrolytes q frequent",
+          "Insulin per protocol after initial fluids",
+          "Find infection/MI/stroke precipitant",
+          "ICU"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "abg-stepwise",
+    "name": "Stepwise ABG Interpretation Helper",
+    "shortName": "ABG Steps",
+    "whenToUse": "Structured first-pass arterial (or venous) blood gas interpretation in acute care.",
+    "whyUse": "Encodes a repeatable sequence: pH → primary process → compensation → anion gap → hidden disorders.",
+    "nextSteps": [
+      {
+        "condition": "Metabolic acidosis",
+        "actions": [
+          "Lactate, ketones, toxic alcohols as indicated",
+          "Calculate AG and delta-delta",
+          "Treat cause"
+        ]
+      },
+      {
+        "condition": "Respiratory failure pattern",
+        "actions": [
+          "Airway/ventilation assessment",
+          "Repeat gas after therapy"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "mixed-disorder",
+    "name": "Mixed Acid–Base Disorder Detector",
+    "shortName": "Mixed AB",
+    "whenToUse": "Known or suspected primary metabolic/respiratory disorder when checking whether compensation is appropriate.",
+    "whyUse": "Inappropriate compensation implies a second primary process requiring separate treatment.",
+    "nextSteps": [
+      {
+        "condition": "Mixed disorder flagged",
+        "actions": [
+          "Identify second process (lactate, sepsis hypervent, COPD, vomiting, diuretics)",
+          "Treat each primary cause"
+        ]
+      },
+      {
+        "condition": "Appropriate compensation",
+        "actions": [
+          "Treat primary disorder",
+          "Serial gases"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "shunt-estimate",
+    "name": "Estimated Physiologic Shunt Fraction (Qs/Qt)",
+    "shortName": "Shunt Est.",
+    "whenToUse": "Severe hypoxemia workup when estimating shunt fraction educationally from ABG and assumed contents.",
+    "whyUse": "Qs/Qt helps frame true shunt vs V/Q mismatch (shunt responds poorly to FiO₂ alone).",
+    "nextSteps": [
+      {
+        "condition": "High estimated shunt",
+        "actions": [
+          "Optimize PEEP/positioning",
+          "Treat collapse/edema/pneumonia",
+          "Consider echo for intracardiac shunt if unexplained"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "rule-of-150",
+    "name": "Rule of 150 (PaO₂ Estimate)",
+    "shortName": "Rule of 150",
+    "whenToUse": "Quick sanity check of room-air ABG values at sea level or rough expected PaO₂ from PaCO₂.",
+    "whyUse": "On room air, PaO₂ ≈ 150 − PaCO₂ (simplified alveolar gas). Large shortfalls suggest A–a gradient elevation.",
+    "nextSteps": [
+      {
+        "condition": "Large deficit",
+        "actions": [
+          "Compute formal A–a gradient",
+          "CXR/US",
+          "Assess for PE/pneumonia/edema/shunt"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "altitude-pao2",
+    "name": "Expected PaO₂ at Altitude (Educational)",
+    "shortName": "Altitude PaO₂",
+    "whenToUse": "Travel/medicine or interpreting hypoxemia at elevation; teaching alveolar gas equation at low PB.",
+    "whyUse": "Barometric pressure falls with altitude, lowering PIO₂ and expected PaO₂ even in healthy lungs.",
+    "nextSteps": [
+      {
+        "condition": "Cardiopulmonary disease + altitude travel",
+        "actions": [
+          "Pre-travel SpO₂/ABG",
+          "Consider HAST for air travel",
+          "Portable O₂ planning"
+        ]
+      },
+      {
+        "condition": "Altitude illness symptoms",
+        "actions": [
+          "Descent",
+          "O₂",
+          "Acetazolamide/dexamethasone per syndrome"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "smoke-inhalation",
+    "name": "Smoke Inhalation Severity Checklist",
+    "shortName": "Smoke Inhalation",
+    "whenToUse": "Fire/smoke exposure patients in ED or burn triage for inhalation injury risk.",
+    "whyUse": "Inhalation injury drives mortality in burns; early airway protection decisions are critical.",
+    "nextSteps": [
+      {
+        "condition": "Airway threat",
+        "actions": [
+          "Early controlled intubation",
+          "100% O₂",
+          "Burn center transfer",
+          "COHb ± cyanide pathway"
+        ]
+      },
+      {
+        "condition": "Moderate risk",
+        "actions": [
+          "Serial exams",
+          "COHb",
+          "Bronchoscopy per protocol",
+          "Fluid resuscitation if cutaneous burns"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "carboxy-half-life",
+    "name": "Carboxyhemoglobin Half-Life (O₂ Context)",
+    "shortName": "CO Half-Life",
+    "whenToUse": "CO poisoning management counseling on expected COHb clearance with oxygen therapy.",
+    "whyUse": "Illustrates why 100% NRB oxygen is mandatory and when HBO is considered to accelerate clearance.",
+    "nextSteps": [
+      {
+        "condition": "Any symptomatic CO poisoning",
+        "actions": [
+          "100% oxygen until COHb low and symptoms improve",
+          "ECG/troponin if indicated",
+          "Consider HBO per criteria",
+          "Source removal"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-clinical-residual.ts",
+    "id": "beta-blocker-tox",
+    "name": "Beta-Blocker Toxicity Checklist",
+    "shortName": "BB Tox",
+    "whenToUse": "Suspected or known beta-blocker overdose with cardiovascular toxicity.",
+    "whyUse": "Structures red-flag features and first-line antidotal considerations (glucagon, vasopressors, HIET).",
+    "nextSteps": [
+      {
+        "condition": "Unstable BB overdose",
+        "actions": [
+          "ABCs / pacing readiness",
+          "Glucagon",
+          "Vasopressors",
+          "Consider HIET",
+          "Poison control",
+          "Bicarb if wide QRS"
+        ]
+      },
+      {
+        "condition": "Mild",
+        "actions": [
+          "Monitor",
+          "Glucose checks",
+          "Decontamination if early and appropriate"
+        ]
+      }
+    ]
+  }
+]

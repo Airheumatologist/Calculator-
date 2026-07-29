@@ -1,0 +1,381 @@
+[
+  {
+    "file": "missing-cardio-pulm.ts",
+    "id": "rcri",
+    "name": "Revised Cardiac Risk Index (RCRI)",
+    "shortName": "RCRI",
+    "whenToUse": "Adults undergoing noncardiac surgery for preoperative cardiac risk stratification.",
+    "whyUse": "Simple, validated 6-factor index used widely in perioperative medicine and guidelines.",
+    "nextSteps": [
+      {
+        "condition": "RCRI 0–1",
+        "actions": [
+          "Low predicted risk",
+          "Focus on guideline-directed medical therapy and surgical recovery"
+        ]
+      },
+      {
+        "condition": "RCRI ≥2",
+        "actions": [
+          "Review urgency of surgery",
+          "Optimize volume status, anemia, BP",
+          "Consider additional testing only if it will change management"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-cardio-pulm.ts",
+    "id": "crb65",
+    "name": "CRB-65 Score",
+    "shortName": "CRB-65",
+    "whenToUse": "Adults with community-acquired pneumonia when BUN/urea is unavailable (e.g., clinic or prehospital).",
+    "whyUse": "Bedside alternative to CURB-65 for site-of-care decisions without blood tests.",
+    "nextSteps": [
+      {
+        "condition": "Score 0",
+        "actions": [
+          "Consider outpatient oral antibiotics",
+          "Safety-net advice and follow-up"
+        ]
+      },
+      {
+        "condition": "Score 1–2",
+        "actions": [
+          "Hospital assessment",
+          "Consider short-stay or inpatient care"
+        ]
+      },
+      {
+        "condition": "Score 3–4",
+        "actions": [
+          "Urgent admission",
+          "IV antibiotics",
+          "Evaluate for ICU (shock, ventilatory failure)"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-cardio-pulm.ts",
+    "id": "smart-cop",
+    "name": "SMART-COP Score",
+    "shortName": "SMART-COP",
+    "whenToUse": "Adults with CAP to estimate risk of needing IRVS (ICU-level support).",
+    "whyUse": "Better identifies ICU need than CURB-65 alone in some cohorts.",
+    "nextSteps": [
+      {
+        "condition": "Score ≤2",
+        "actions": [
+          "Usual ward or outpatient pathway as otherwise indicated"
+        ]
+      },
+      {
+        "condition": "Score 3–4",
+        "actions": [
+          "Frequent vitals",
+          "Early senior review",
+          "Have escalation plan"
+        ]
+      },
+      {
+        "condition": "Score ≥5",
+        "actions": [
+          "ICU consult",
+          "Prepare for ventilatory/hemodynamic support",
+          "Source control and timely antibiotics"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-cardio-pulm.ts",
+    "id": "mmrc-dyspnea",
+    "name": "mMRC Dyspnea Scale",
+    "shortName": "mMRC",
+    "whenToUse": "COPD and chronic respiratory disease to grade dyspnea-related disability.",
+    "whyUse": "Simple patient-reported grade used in GOLD ABE assessment and symptom burden.",
+    "nextSteps": [
+      {
+        "condition": "mMRC ≥2",
+        "actions": [
+          "Review inhaler technique and adherence",
+          "Consider LABA/LAMA ± ICS per phenotype",
+          "Refer to pulmonary rehabilitation"
+        ]
+      },
+      {
+        "condition": "Any grade",
+        "actions": [
+          "Combine with exacerbation history for GOLD ABE grouping",
+          "Address comorbidities (HF, deconditioning, anemia)"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-cardio-pulm.ts",
+    "id": "sf-ratio",
+    "name": "SpO₂/FiO₂ Ratio (S/F)",
+    "shortName": "S/F Ratio",
+    "whenToUse": "Hypoxemic respiratory failure when arterial blood gas is unavailable or for serial noninvasive monitoring.",
+    "whyUse": "S/F correlates with P/F; useful triage and ARDS screening without ABG.",
+    "nextSteps": [
+      {
+        "condition": "S/F ≤315 with bilateral opacities",
+        "actions": [
+          "Consider ARDS workup",
+          "Lung-protective ventilation if intubated",
+          "Treat underlying cause"
+        ]
+      },
+      {
+        "condition": "Severe range",
+        "actions": [
+          "ABG for formal P/F",
+          "Escalate respiratory support",
+          "ICU care"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-cardio-pulm.ts",
+    "id": "edacs",
+    "name": "EDACS (Emergency Department Assessment of Chest Pain Score)",
+    "shortName": "EDACS",
+    "whenToUse": "ED patients with possible cardiac chest pain in accelerated diagnostic protocols.",
+    "whyUse": "Identifies low-risk patients (with negative ECG/troponins) safe for early discharge.",
+    "nextSteps": [
+      {
+        "condition": "EDACS <16 + neg ECG + neg troponins",
+        "actions": [
+          "Consider early discharge",
+          "Outpatient follow-up",
+          "Lifestyle and risk-factor counseling"
+        ]
+      },
+      {
+        "condition": "EDACS ≥16 or positive workup",
+        "actions": [
+          "Prolonged observation / admit",
+          "Cardiology pathway as indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-cardio-pulm.ts",
+    "id": "atria-bleed",
+    "name": "ATRIA Bleeding Risk Score",
+    "shortName": "ATRIA Bleed",
+    "whenToUse": "Patients with AF on or considering warfarin to stratify major hemorrhage risk.",
+    "whyUse": "Simple score from a large ATRIA cohort; complements stroke risk assessment.",
+    "nextSteps": [
+      {
+        "condition": "Low (0–3)",
+        "actions": [
+          "Proceed with indicated anticoagulation",
+          "Periodic lab monitoring"
+        ]
+      },
+      {
+        "condition": "High (≥5)",
+        "actions": [
+          "Mitigate modifiable bleed risks",
+          "Shared decision-making with CHA₂DS₂-VASc",
+          "Consider DOAC and closer follow-up"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-cardio-pulm.ts",
+    "id": "same-tt2r2",
+    "name": "SAMe-TT₂R₂ Score",
+    "shortName": "SAMe-TT₂R₂",
+    "whenToUse": "Patients with AF being considered for warfarin vs DOAC when TTR quality is a concern.",
+    "whyUse": "Identifies who is less likely to achieve good INR control on VKA—favor DOAC if eligible.",
+    "nextSteps": [
+      {
+        "condition": "Score 0–2",
+        "actions": [
+          "VKA acceptable if chosen",
+          "Target TTR >70%"
+        ]
+      },
+      {
+        "condition": "Score >2",
+        "actions": [
+          "Choose DOAC if eligible",
+          "If VKA mandatory, frequent INR checks and adherence support"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-cardio-pulm.ts",
+    "id": "sgarbossa",
+    "name": "Sgarbossa Criteria (MI in LBBB)",
+    "shortName": "Sgarbossa",
+    "whenToUse": "Suspected ACS with LBBB (or ventricular paced rhythm in adapted use) when STEMI diagnosis is uncertain.",
+    "whyUse": "Highly specific criteria for occlusion MI when concordant changes are present.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥3 or modified positive",
+        "actions": [
+          "Activate emergent reperfusion pathway",
+          "Treat as STEMI equivalent"
+        ]
+      },
+      {
+        "condition": "Score <3",
+        "actions": [
+          "Continue ACS workup",
+          "Serial ECG/troponin",
+          "Reassess with modified criteria"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-cardio-pulm.ts",
+    "id": "duke-treadmill",
+    "name": "Duke Treadmill Score",
+    "shortName": "Duke Treadmill",
+    "whenToUse": "Patients undergoing Bruce-protocol exercise ECG for suspected CAD prognosis.",
+    "whyUse": "Stratifies annual cardiovascular mortality; guides need for angiography.",
+    "nextSteps": [
+      {
+        "condition": "Low risk (≥5)",
+        "actions": [
+          "Medical therapy and risk-factor modification",
+          "Routine follow-up"
+        ]
+      },
+      {
+        "condition": "Intermediate",
+        "actions": [
+          "Consider stress imaging or coronary CTA",
+          "Intensify GDMT"
+        ]
+      },
+      {
+        "condition": "High risk (≤−11)",
+        "actions": [
+          "Referral for coronary angiography",
+          "Optimize anti-ischemic therapy"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-cardio-pulm.ts",
+    "id": "berlin-ards",
+    "name": "Berlin ARDS Definition Helper",
+    "shortName": "Berlin ARDS",
+    "whenToUse": "Acute hypoxemic respiratory failure evaluation for ARDS diagnosis and severity.",
+    "whyUse": "Standard international definition guiding lung-protective strategies and trial eligibility.",
+    "nextSteps": [
+      {
+        "condition": "Mild–moderate ARDS",
+        "actions": [
+          "Low TV ventilation",
+          "PEEP titration",
+          "Treat sepsis/pneumonia/aspiration as applicable"
+        ]
+      },
+      {
+        "condition": "Severe ARDS",
+        "actions": [
+          "Early prone positioning",
+          "Consider NMB",
+          "Specialty center / ECMO evaluation if refractory"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-cardio-pulm.ts",
+    "id": "heffner-criteria",
+    "name": "Heffner Criteria (Pleural Effusion)",
+    "shortName": "Heffner",
+    "whenToUse": "When serum protein/LDH simultaneous values are unavailable, or as a simplified adjunct to Light’s.",
+    "whyUse": "Uses pleural fluid values alone; practical when paired serum labs are missing.",
+    "nextSteps": [
+      {
+        "condition": "Exudate",
+        "actions": [
+          "Cell count, culture, cytology as indicated",
+          "Correlate with Light’s when serum labs available"
+        ]
+      },
+      {
+        "condition": "Transudate",
+        "actions": [
+          "Treat underlying systemic cause"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-cardio-pulm.ts",
+    "id": "cardiac-power",
+    "name": "Cardiac Power Output",
+    "shortName": "CPO",
+    "whenToUse": "Cardiogenic shock or advanced HF with measured/estimated CO and MAP available.",
+    "whyUse": "Strong hemodynamic correlate of prognosis in cardiogenic shock (e.g., SHOCK trial analyses).",
+    "nextSteps": [
+      {
+        "condition": "CPO ≤0.6 W in shock",
+        "actions": [
+          "Urgent stabilization",
+          "Inotropes/vasopressors as indicated",
+          "Evaluate mechanical circulatory support"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-cardio-pulm.ts",
+    "id": "shock-index-age",
+    "name": "Age-Adjusted Shock Index",
+    "shortName": "ASI",
+    "whenToUse": "Trauma, sepsis, or hemorrhage triage when occult shock is a concern, especially in older adults.",
+    "whyUse": "Age adjustment improves prediction of mortality/transfusion need vs raw shock index in some studies.",
+    "nextSteps": [
+      {
+        "condition": "ASI ≥50 or SI ≥0.9",
+        "actions": [
+          "Urgent workup for shock/hemorrhage",
+          "IV access, labs, imaging as indicated"
+        ]
+      },
+      {
+        "condition": "Any elevation",
+        "actions": [
+          "Serial vitals",
+          "Treat underlying cause"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-cardio-pulm.ts",
+    "id": "prevent-cvd",
+    "name": "Framingham-Style 10-Year Hard CHD Risk (Educational)",
+    "shortName": "Framingham 10y (Edu)",
+    "whenToUse": "Adult primary-prevention teaching / rough risk orientation when a full official calculator is unavailable.",
+    "whyUse": "Illustrates how traditional risk factors combine; for clinical decisions use validated ACC/AHA PREVENT or PCE tools.",
+    "nextSteps": [
+      {
+        "condition": "Any elevated estimate",
+        "actions": [
+          "Confirm with official risk calculator",
+          "Address smoking, BP, lipids, weight, activity",
+          "Shared decision-making on statin/antihypertensive therapy per guidelines"
+        ]
+      }
+    ]
+  }
+]

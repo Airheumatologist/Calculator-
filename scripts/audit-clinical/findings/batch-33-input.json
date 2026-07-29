@@ -1,0 +1,654 @@
+[
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "clavien-dindo",
+    "name": "Clavien–Dindo Complication Grade",
+    "shortName": "Clavien–Dindo",
+    "whenToUse": "Documenting or auditing postoperative morbidity after any surgical procedure.",
+    "whyUse": "Standardized, therapy-based grading improves communication and research comparability.",
+    "nextSteps": [
+      {
+        "condition": "Grade I–II",
+        "actions": [
+          "Supportive/pharmacologic care",
+          "Document in discharge summary"
+        ]
+      },
+      {
+        "condition": "Grade III+",
+        "actions": [
+          "Urgent procedural planning",
+          "Escalate senior review",
+          "Consider ICU for IV"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "p-possum",
+    "name": "P-POSSUM Mortality (Simplified Educational)",
+    "shortName": "P-POSSUM",
+    "whenToUse": "Teaching / rough discussion of emergency or major elective surgical risk when full P-POSSUM software is unavailable.",
+    "whyUse": "P-POSSUM recalibrated POSSUM to reduce over-prediction of death in low-risk patients; this helper surfaces key domains only.",
+    "nextSteps": [
+      {
+        "condition": "Any major case",
+        "actions": [
+          "Institutional risk tool for consent",
+          "Optimize physiology pre-op when time allows"
+        ]
+      },
+      {
+        "condition": "High approximate risk",
+        "actions": [
+          "ICU booked",
+          "Consultant-delivered care",
+          "Consider non-operative pathway"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "sort-score",
+    "name": "SORT — Surgical Outcome Risk Tool (Simplified)",
+    "shortName": "SORT",
+    "whenToUse": "Adults undergoing non-cardiac, non-neurologic surgery when a quick UK-style mortality estimate is useful (educational simplification).",
+    "whyUse": "SORT was derived from NCEPOD data for 30-day mortality with few routinely available variables.",
+    "nextSteps": [
+      {
+        "condition": "Estimate <1%",
+        "actions": [
+          "Standard pathway",
+          "Document discussion"
+        ]
+      },
+      {
+        "condition": "Estimate ≥5%",
+        "actions": [
+          "Senior MDT review",
+          "Critical care planning",
+          "Optimize reversible risks"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "nela-risk",
+    "name": "NELA Emergency Laparotomy Risk (Simplified Educational)",
+    "shortName": "NELA simp",
+    "whenToUse": "Adults considered for emergency laparotomy when discussing magnitude of risk (use official NELA tool for reported %).",
+    "whyUse": "NELA audit drivers (physiology, ASA, peritoneal soiling, malignancy, urgency) strongly associate with death after emergency laparotomy.",
+    "nextSteps": [
+      {
+        "condition": "All candidates",
+        "actions": [
+          "Official NELA risk % for consent",
+          "Sepsis Six if infected",
+          "Consultant surgeon + anesthetist"
+        ]
+      },
+      {
+        "condition": "High burden",
+        "actions": [
+          "Level 3 care planned",
+          "Goals of care",
+          "Minimize delay to source control"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "gupta-mica",
+    "name": "Gupta MICA Perioperative Risk (Simplified)",
+    "shortName": "Gupta MICA",
+    "whenToUse": "Preoperative cardiac risk stratification for noncardiac surgery (educational simplification of Gupta MICA).",
+    "whyUse": "Gupta MICA predicts inpatient MI or cardiac arrest from routinely available variables and often outperforms RCRI for discrimination.",
+    "nextSteps": [
+      {
+        "condition": "Low risk",
+        "actions": [
+          "Proceed if otherwise indicated",
+          "Continue indicated cardioprotective meds"
+        ]
+      },
+      {
+        "condition": "Higher risk",
+        "actions": [
+          "Review active cardiac conditions",
+          "Anesthesia planning",
+          "Postop monitoring intensity"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "ariscat",
+    "name": "ARISCAT Postoperative Pulmonary Risk",
+    "shortName": "ARISCAT",
+    "whenToUse": "Adults undergoing non-obstetric surgery when estimating risk of postoperative pulmonary complications.",
+    "whyUse": "Simple point score stratifies low / intermediate / high PPC risk to guide prehabilitation and monitoring.",
+    "nextSteps": [
+      {
+        "condition": "Low",
+        "actions": [
+          "Standard ERAS pulmonary care"
+        ]
+      },
+      {
+        "condition": "Intermediate–high",
+        "actions": [
+          "Preop optimization of infection/COPD/anemia when feasible",
+          "Lung-protective ventilation",
+          "Early physio / CPAP if indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "rogers-score",
+    "name": "Rogers Postoperative VTE Risk Score",
+    "shortName": "Rogers VTE",
+    "whenToUse": "Estimating postop VTE risk after major general, vascular, or thoracic surgery (educational simplified item set).",
+    "whyUse": "Rogers model was developed from Patient Safety in Surgery Study / NSQIP data for 30-day VTE.",
+    "nextSteps": [
+      {
+        "condition": "Low",
+        "actions": [
+          "Early ambulation",
+          "Mechanical prophylaxis as indicated"
+        ]
+      },
+      {
+        "condition": "Moderate–high",
+        "actions": [
+          "LMWH/UFH unless contraindicated",
+          "Mechanical + pharmacologic",
+          "Reassess bleed risk"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "nnis-ssi",
+    "name": "NNIS Surgical Site Infection Risk Index",
+    "shortName": "NNIS SSI",
+    "whenToUse": "Risk-stratifying SSI probability for surveillance comparisons or patient counseling after surgery.",
+    "whyUse": "Classic simple index used historically by NNIS/NHSN; still useful educationally alongside procedure-specific rates.",
+    "nextSteps": [
+      {
+        "condition": "Any surgery",
+        "actions": [
+          "Antibiotic prophylaxis within 60 min of incision",
+          "Skin antisepsis",
+          "Glycemic and temperature control"
+        ]
+      },
+      {
+        "condition": "Index 2–3",
+        "actions": [
+          "Heightened wound surveillance",
+          "Patient education on SSI signs"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "wound-class",
+    "name": "CDC Surgical Wound Classification",
+    "shortName": "Wound class",
+    "whenToUse": "Intraoperative documentation of wound contamination class for SSI risk and antibiotic decisions.",
+    "whyUse": "Standard CDC/NHSN categories underpin SSI surveillance and prophylaxis duration norms.",
+    "nextSteps": [
+      {
+        "condition": "Class I–II",
+        "actions": [
+          "Timely prophylactic antibiotics",
+          "Stop prophylaxis within 24 h for most procedures"
+        ]
+      },
+      {
+        "condition": "Class III–IV",
+        "actions": [
+          "Therapeutic antibiotics as indicated",
+          "Source control",
+          "Wound management plan"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "aap-score",
+    "name": "Adult Appendicitis Score (AAS)",
+    "shortName": "AAS",
+    "whenToUse": "Adults with suspected appendicitis to stratify low vs intermediate vs high probability.",
+    "whyUse": "AAS incorporates graded pain, guarding, and lab cut-points; useful for selective imaging pathways.",
+    "nextSteps": [
+      {
+        "condition": "Low",
+        "actions": [
+          "Serial exam",
+          "Safety-net return precautions",
+          "Gyn workup if applicable"
+        ]
+      },
+      {
+        "condition": "Intermediate–high",
+        "actions": [
+          "Imaging per local pathway",
+          "NPO / IV fluids",
+          "Surgery consult"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "lintula-score",
+    "name": "Lintula Appendicitis Score",
+    "shortName": "Lintula",
+    "whenToUse": "Suspected appendicitis when a rapid clinical (lab-free) score is desired, especially in children.",
+    "whyUse": "No laboratory values required; useful for prehospital or early triage stratification.",
+    "nextSteps": [
+      {
+        "condition": "Low",
+        "actions": [
+          "Oral challenge",
+          "Reassessment",
+          "Safety net"
+        ]
+      },
+      {
+        "condition": "High",
+        "actions": [
+          "Surgery consult",
+          "Imaging if diagnosis uncertain",
+          "NPO"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "tzanakis",
+    "name": "Tzanakis Appendicitis Score",
+    "shortName": "Tzanakis",
+    "whenToUse": "Suspected acute appendicitis when ultrasound is available to include in the score.",
+    "whyUse": "Simple and ultrasound-inclusive; score ≥8 often used as high probability threshold.",
+    "nextSteps": [
+      {
+        "condition": "<8",
+        "actions": [
+          "Serial exams",
+          "CT if ongoing concern",
+          "Gyn/GU differential"
+        ]
+      },
+      {
+        "condition": "≥8",
+        "actions": [
+          "Surgical consult",
+          "Perioperative preparation"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "wses",
+    "name": "WSES Sepsis Severity Score (Surgical)",
+    "shortName": "WSES",
+    "whenToUse": "Complicated intra-abdominal infection / peritonitis when estimating severity and mortality risk.",
+    "whyUse": "Integrates clinical condition, setting of acquisition, organ failures, and delays to source control.",
+    "nextSteps": [
+      {
+        "condition": "Any complicated IAI",
+        "actions": [
+          "Broad-spectrum abx",
+          "Source control timing",
+          "Cultures"
+        ]
+      },
+      {
+        "condition": "High score",
+        "actions": [
+          "ICU",
+          "Damage-control laparotomy if unstable",
+          "MDR coverage if risk factors"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "hinchey",
+    "name": "Hinchey Classification (Diverticulitis)",
+    "shortName": "Hinchey",
+    "whenToUse": "Staging acute diverticulitis with perforation/abscess for operative planning and communication.",
+    "whyUse": "Universally understood stages linking extent of peritoneal contamination to management.",
+    "nextSteps": [
+      {
+        "condition": "I–II",
+        "actions": [
+          "IV abx",
+          "IR drain if indicated",
+          "Elective resection discussion later"
+        ]
+      },
+      {
+        "condition": "III–IV",
+        "actions": [
+          "Emergency surgery",
+          "ICU",
+          "Source control + diversion as needed"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "modified-hinchey",
+    "name": "Modified Hinchey Classification",
+    "shortName": "Mod Hinchey",
+    "whenToUse": "CT staging of acute diverticulitis to guide outpatient vs inpatient vs interventional care.",
+    "whyUse": "Adds stage 0 and splits pericolic disease (Ia phlegmon vs Ib abscess) for modern nonoperative pathways.",
+    "nextSteps": [
+      {
+        "condition": "0–Ia",
+        "actions": [
+          "Medical therapy",
+          "Outpatient if stable and reliable"
+        ]
+      },
+      {
+        "condition": "Ib–II",
+        "actions": [
+          "Admit",
+          "IR drainage evaluation",
+          "Surgery if fails"
+        ]
+      },
+      {
+        "condition": "III–IV",
+        "actions": [
+          "Emergency surgical source control",
+          "ICU"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "parkland-grading",
+    "name": "Parkland Grading Scale (Cholecystitis)",
+    "shortName": "Parkland grade",
+    "whenToUse": "During laparoscopic cholecystectomy to grade inflammatory severity and anticipate difficulty.",
+    "whyUse": "Predicts conversion, complications, and operative time better than purely clinical labels.",
+    "nextSteps": [
+      {
+        "condition": "Grade 1–2",
+        "actions": [
+          "Standard laparoscopic cholecystectomy"
+        ]
+      },
+      {
+        "condition": "Grade 3–5",
+        "actions": [
+          "Critical view of safety meticulously",
+          "Consider IOC / near-infrared cholangiography",
+          "Bailout subtotal cholecystectomy if anatomy unclear"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "renal-trauma-aast",
+    "name": "AAST Kidney Injury Scale",
+    "shortName": "AAST kidney",
+    "whenToUse": "Staging blunt or penetrating kidney injury on CT or at laparotomy.",
+    "whyUse": "Standard trauma language guiding nonoperative vs interventional vs operative management.",
+    "nextSteps": [
+      {
+        "condition": "Grade I–III stable",
+        "actions": [
+          "Observation",
+          "Serial CBC",
+          "Activity restriction"
+        ]
+      },
+      {
+        "condition": "Grade IV–V or unstable",
+        "actions": [
+          "Trauma/urology consult",
+          "Angio vs OR",
+          "Stent if urinoma"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "splenic-trauma-aast",
+    "name": "AAST Spleen Injury Scale",
+    "shortName": "AAST spleen",
+    "whenToUse": "Staging blunt or penetrating splenic injury on CT or operatively.",
+    "whyUse": "Guides nonoperative management, angioembolization, and splenectomy decisions.",
+    "nextSteps": [
+      {
+        "condition": "Stable low grade",
+        "actions": [
+          "Serial exams/Hb",
+          "Bed rest protocol",
+          "Vaccinate if later splenectomy"
+        ]
+      },
+      {
+        "condition": "Blush or high grade stable",
+        "actions": [
+          "IR embolization evaluation",
+          "ICU observation"
+        ]
+      },
+      {
+        "condition": "Unstable",
+        "actions": [
+          "OR for splenectomy",
+          "Massive transfusion as needed"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "liver-trauma-aast",
+    "name": "AAST Liver Injury Scale",
+    "shortName": "AAST liver",
+    "whenToUse": "Staging blunt or penetrating liver injury on CT or at laparotomy.",
+    "whyUse": "Standard grading for NOM candidacy, angioembolization, and damage-control surgery.",
+    "nextSteps": [
+      {
+        "condition": "Stable low–mid grade",
+        "actions": [
+          "ICU or step-down observation",
+          "Serial Hb",
+          "Activity limits"
+        ]
+      },
+      {
+        "condition": "Blush stable",
+        "actions": [
+          "IR embolization"
+        ]
+      },
+      {
+        "condition": "Unstable",
+        "actions": [
+          "Damage-control laparotomy",
+          "Massive transfusion protocol"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "ipss-prostate",
+    "name": "IPSS — International Prostate Symptom Score",
+    "shortName": "IPSS",
+    "whenToUse": "Men with lower urinary tract symptoms to quantify severity and track treatment response.",
+    "whyUse": "Standard AUA/ICS tool (identical to AUA Symptom Index) for BPH evaluation.",
+    "nextSteps": [
+      {
+        "condition": "Mild",
+        "actions": [
+          "Lifestyle",
+          "Reassess annually or if worsening"
+        ]
+      },
+      {
+        "condition": "Moderate–severe",
+        "actions": [
+          "UA ± PSA per shared decision",
+          "Medical therapy",
+          "Urology if refractory or red flags"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "psa-density",
+    "name": "PSA Density",
+    "shortName": "PSAD",
+    "whenToUse": "Interpreting elevated PSA when prostate volume is known (TRUS, MRI, or pathology).",
+    "whyUse": "Higher PSAD increases likelihood of clinically significant prostate cancer vs BPH-related PSA rise.",
+    "nextSteps": [
+      {
+        "condition": "Low PSAD",
+        "actions": [
+          "Observe PSA trend",
+          "Treat BPH if symptomatic"
+        ]
+      },
+      {
+        "condition": "High PSAD",
+        "actions": [
+          "mpMRI if not done",
+          "Urology for biopsy shared decision"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "free-psa-ratio",
+    "name": "Free/Total PSA Ratio",
+    "shortName": "Free PSA %",
+    "whenToUse": "Men with total PSA roughly 4–10 ng/mL (or age-adjusted gray zone) and normal DRE when deciding on further testing.",
+    "whyUse": "Lower % free PSA associates with higher prostate cancer probability; higher % favors BPH.",
+    "nextSteps": [
+      {
+        "condition": "High % free",
+        "actions": [
+          "Observe / repeat PSA",
+          "Treat BPH"
+        ]
+      },
+      {
+        "condition": "Low % free",
+        "actions": [
+          "mpMRI",
+          "Biopsy counseling"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "gleason-grade-group",
+    "name": "Gleason Grade Group",
+    "shortName": "Grade Group",
+    "whenToUse": "Interpreting prostate biopsy or prostatectomy Gleason scores in modern Grade Group terms.",
+    "whyUse": "Grade Groups improve communication (e.g., 3+4=7 vs 4+3=7 are different groups).",
+    "nextSteps": [
+      {
+        "condition": "Group 1",
+        "actions": [
+          "Active surveillance criteria review",
+          "Confirm with MRI/path second opinion if discordant"
+        ]
+      },
+      {
+        "condition": "Group 2–3",
+        "actions": [
+          "Risk-group staging",
+          "Shared decision RP vs RT"
+        ]
+      },
+      {
+        "condition": "Group 4–5",
+        "actions": [
+          "Bone/CT or PSMA PET per guideline",
+          "Multidisciplinary clinic"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "bladder-cancer-eortc",
+    "name": "EORTC NMIBC Risk Points (Simplified)",
+    "shortName": "EORTC NMIBC",
+    "whenToUse": "After TURBT for Ta/T1/CIS NMIBC when counseling on recurrence/progression risk and adjuvant therapy intensity.",
+    "whyUse": "EORTC risk tables remain foundational for NMIBC stratification (alongside EAU risk groups and CUETO).",
+    "nextSteps": [
+      {
+        "condition": "Low risk",
+        "actions": [
+          "Surveillance cystoscopy schedule",
+          "Single instillation if eligible"
+        ]
+      },
+      {
+        "condition": "Intermediate–high",
+        "actions": [
+          "Intravesical BCG or chemo",
+          "Restaging TURBT if indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-surg-uro-ent.ts",
+    "id": "stone-score",
+    "name": "STONE Score (Ureteral Stone)",
+    "shortName": "STONE",
+    "whenToUse": "ED patients with flank pain / suspected ureterolithiasis when estimating pre-CT stone probability.",
+    "whyUse": "May support selective imaging or ultrasound-first strategies when score is high and infection is absent.",
+    "nextSteps": [
+      {
+        "condition": "Any suspected stone",
+        "actions": [
+          "UA / culture if infection",
+          "Analgesia",
+          "Pregnancy test in women"
+        ]
+      },
+      {
+        "condition": "Fever / solitary kidney / anuria",
+        "actions": [
+          "Urgent urology",
+          "Decompression if obstructed infected stone"
+        ]
+      }
+    ]
+  }
+]

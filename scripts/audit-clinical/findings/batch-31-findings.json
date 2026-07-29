@@ -1,0 +1,237 @@
+{
+  "batch": 31,
+  "file": "wave5-nephro-gi.ts",
+  "audited": 25,
+  "fixed": 3,
+  "items": [
+    {
+      "id": "egfr-cys-cr-combined",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.nejm.org/doi/full/10.1056/NEJMoa2102953",
+        "https://www.niddk.nih.gov/research-funding/research-programs/kidney-clinical-research-epidemiology/laboratory/glomerular-filtration-rate-equations/adults"
+      ]
+    },
+    {
+      "id": "kidney-failure-risk",
+      "status": "fixed",
+      "issues": [
+        "Referral threshold stated as 5-year ≥5–10%; KDIGO/NICE-aligned practice points use 5-year ≥3–5%.",
+        "RRT modality/access planning tied to 5-year ≥20% or eGFR <30; practice points use 2-year risk >40% (plus eGFR-based KRT prep criteria)."
+      ],
+      "changes": [
+        "nextSteps: '5-year risk ≥5–10% (local policy)' → '5-year risk ≥3–5% (local policy)'",
+        "nextSteps: '5-year risk ≥20% or eGFR <30' → '2-year risk >40% or eGFR-based KRT prep criteria'"
+      ],
+      "sources": [
+        "https://kidneyfailurerisk.com/interpretation",
+        "https://www.ukkidney.org/sites/default/files/education/KFRE%20quick%20reference.pdf",
+        "https://www.ontariorenalnetwork.ca/en/kidney-care-resources/clinical-tools/primary-care/kfre"
+      ]
+    },
+    {
+      "id": "jelliffe",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": []
+    },
+    {
+      "id": "wright-crcl",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": []
+    },
+    {
+      "id": "protein-24h",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://emedicine.medscape.com/article/238158-workup"
+      ]
+    },
+    {
+      "id": "pcr-protein-creatinine",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://emedicine.medscape.com/article/238158-workup"
+      ]
+    },
+    {
+      "id": "acr-albumin",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.kidney.org/how-to-classify-ckd",
+        "https://kdigo.org/wp-content/uploads/2024/03/KDIGO-2024-CKD-Guideline.pdf"
+      ]
+    },
+    {
+      "id": "sodium-excretion",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": []
+    },
+    {
+      "id": "tonicity",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": []
+    },
+    {
+      "id": "boston-approach",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": []
+    },
+    {
+      "id": "expected-pco2-chronic-resp",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": []
+    },
+    {
+      "id": "expected-pco2-acute-resp",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": []
+    },
+    {
+      "id": "high-ag-causes",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": []
+    },
+    {
+      "id": "nagma-causes",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": []
+    },
+    {
+      "id": "ammonium",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": []
+    },
+    {
+      "id": "hyperkalemia-ecg",
+      "status": "fixed",
+      "issues": [
+        "Next-step binder list led with Kayexalate (SPS); modern practice prefers patiromer or SZC given SPS GI toxicity concerns."
+      ],
+      "changes": [
+        "nextSteps action: 'Kayexalate/patiromer/SZC per setting' → 'Patiromer or SZC preferred (SPS if used locally)'"
+      ],
+      "sources": [
+        "https://emedicine.medscape.com/article/240903-treatment",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC5367739/"
+      ]
+    },
+    {
+      "id": "ipth-ckd",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://kdigo.org/wp-content/uploads/2017/02/2017-KDIGO-CKD-MBD-GL-Update.pdf",
+        "https://kdigo.org/wp-content/uploads/2022/07/KDIGO-CKD-MBD-Quick-Reference-Guide-June-2022.pdf"
+      ]
+    },
+    {
+      "id": "bicarb-ckd",
+      "status": "fixed",
+      "issues": [
+        "whyUse overstated progression benefit; RCTs mixed and KDIGO 2024 downgraded prior <22 treatment recommendation.",
+        "nextSteps used sole HCO₃ <22 threshold (2012-style); KDIGO 2024 practice point example is treat to avoid clinically important acidosis (e.g., HCO₃ <18)."
+      ],
+      "changes": [
+        "whyUse: progression/bone-muscle benefit claim → frames alkali consideration; uncertain hard outcomes; prioritize more severe acidosis and avoid over-correction",
+        "nextSteps condition: 'HCO₃ <22 in CKD ND' → 'HCO₃ <18 (or persistently low) in CKD ND'; actions updated for individualization and over-correction monitoring"
+      ],
+      "sources": [
+        "http://www.nephjc.com/news/kdigo-ckd-part2",
+        "https://www.renalandurologynews.com/features/beyond-sodium-bicarbonate-for-treating-metabolic-acidosis-in-ckd/",
+        "https://kdigo.org/wp-content/uploads/2024/03/KDIGO-2024-CKD-Guideline.pdf"
+      ]
+    },
+    {
+      "id": "mayo-score-uc",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.cghjournal.org/article/S1542-3565(24)00718-3/fulltext"
+      ]
+    },
+    {
+      "id": "partial-mayo",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.igibdscores.it/en/info-mayo-partial.php",
+        "https://ibdclinic.ca/wp-content/uploads/2024/09/partialmayo.pdf"
+      ]
+    },
+    {
+      "id": "sccai",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC1774553/",
+        "https://geteccu.org/contenidos/up/2016/03/Cronica-UC-AJG-2.pdf"
+      ]
+    },
+    {
+      "id": "harvey-bradshaw",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": []
+    },
+    {
+      "id": "ses-cd",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.igibdscores.it/en/info-sescd.php"
+      ]
+    },
+    {
+      "id": "ibs-sss",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/9146781/"
+      ]
+    },
+    {
+      "id": "west-haven-he",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4128786/"
+      ]
+    }
+  ]
+}

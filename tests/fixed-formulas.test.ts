@@ -566,3 +566,55 @@ describe('qt-prolongation-risk (Tisdale)', () => {
     expect(two.score).toBe(6);
   });
 });
+
+describe('input range validation (UI gate)', () => {
+  // calculate() itself is still pure math; CalculatorPage gates via helpers.
+  // Pin the helper contract so out-of-range typing cannot silently score.
+  it('flags ASCVD age above max as too high', async () => {
+    const { getRangeViolations, rangeBlockedResult, rangeViolationMessage } = await import(
+      '../src/utils/helpers'
+    );
+    const c = calc('ascvd-risk');
+    const violations = getRangeViolations(c.inputs, {
+      age: 90,
+      sex: 'M',
+      race: 'W',
+      tc: 200,
+      hdl: 50,
+      sbp: 130,
+      txHtn: false,
+      dm: false,
+      smoker: false,
+    });
+    expect(violations).toHaveLength(1);
+    expect(violations[0].id).toBe('age');
+    expect(violations[0].direction).toBe('high');
+    expect(rangeViolationMessage('high')).toBe('Too high; please change to proceed');
+    const blocked = rangeBlockedResult(violations);
+    expect(blocked.score).toBe('—');
+    expect(blocked.label).toBe('Too high; please change to proceed');
+    expect(blocked.riskLevel).toBe('info');
+  });
+
+  it('flags values below min as too low', async () => {
+    const { getRangeViolations, rangeBlockedResult } = await import('../src/utils/helpers');
+    const c = calc('ascvd-risk');
+    const violations = getRangeViolations(c.inputs, { age: 30 });
+    expect(violations.some((v) => v.id === 'age' && v.direction === 'low')).toBe(true);
+    expect(rangeBlockedResult(violations).label).toBe('Too low; please change to proceed');
+  });
+
+  it('allows values at declared min/max bounds', async () => {
+    const { getRangeViolations } = await import('../src/utils/helpers');
+    const c = calc('ascvd-risk');
+    const ageInput = c.inputs.find((i) => i.id === 'age')!;
+    expect(getRangeViolations([ageInput], { age: ageInput.min })).toHaveLength(0);
+    expect(getRangeViolations([ageInput], { age: ageInput.max })).toHaveLength(0);
+  });
+
+  it('does not treat empty/null as out of range', async () => {
+    const { getRangeViolations } = await import('../src/utils/helpers');
+    const c = calc('ascvd-risk');
+    expect(getRangeViolations(c.inputs, { age: null })).toHaveLength(0);
+  });
+});

@@ -491,6 +491,23 @@ p {
   box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
+.number-row input.input-invalid {
+  border-color: var(--danger);
+  background: #fef2f2;
+}
+
+.number-row input.input-invalid:focus {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
+.input-error {
+  margin: 0.4rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--danger);
+}
+
 .unit {
   color: var(--text-muted);
   font-size: 0.85rem;

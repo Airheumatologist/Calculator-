@@ -6,6 +6,7 @@ import { CalculatorForm } from '../components/CalculatorForm';
 import { LiveResult } from '../components/LiveResult';
 import { EvidencePanel } from '../components/EvidencePanel';
 import { NextStepsPanel } from '../components/NextStepsPanel';
+import { getRangeViolations, rangeBlockedResult } from '../utils/helpers';
 
 function initialValues(calc: ReturnType<typeof getCalculator>) {
   const values: Record<string, number | string | boolean | null> = {};
@@ -35,8 +36,16 @@ export function CalculatorPage() {
     setTab('next');
   }, [id]);
 
+  const rangeViolations = useMemo(
+    () => (calc ? getRangeViolations(calc.inputs, values) : []),
+    [calc, values]
+  );
+
   const result = useMemo(() => {
     if (!calc) return null;
+    if (rangeViolations.length > 0) {
+      return rangeBlockedResult(rangeViolations);
+    }
     try {
       return calc.calculate(values);
     } catch {
@@ -47,7 +56,7 @@ export function CalculatorPage() {
         riskLevel: 'info' as const,
       };
     }
-  }, [calc, values]);
+  }, [calc, values, rangeViolations]);
 
   if (!calc || !result) {
     return (

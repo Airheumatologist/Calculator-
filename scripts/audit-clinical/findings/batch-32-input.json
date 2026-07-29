@@ -1,0 +1,611 @@
+[
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "peews-full",
+    "name": "Full Pediatric Early Warning Score (Multi-domain)",
+    "shortName": "Full PEWS",
+    "whenToUse": "Hospitalized children when a fuller multi-domain PEWS-style assessment is preferred over a 3-item simplification.",
+    "whyUse": "Captures more physiologic domains than simplified PEWS variants; still subordinate to local PEWS charts and clinical concern.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥5 or any domain 3",
+        "actions": [
+          "Urgent review",
+          "Increase monitoring",
+          "Prepare escalation"
+        ]
+      },
+      {
+        "condition": "Score 0–2 stable",
+        "actions": [
+          "Routine PEWS observations"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "pals-hr",
+    "name": "PALS Normal Heart Rate by Age",
+    "shortName": "PALS HR",
+    "whenToUse": "Quick reference for whether measured HR is within expected age band during resuscitation teaching or triage.",
+    "whyUse": "Normal pediatric HR ranges change dramatically with age; adult norms misclassify infants and toddlers.",
+    "nextSteps": [
+      {
+        "condition": "Bradycardia + poor perfusion",
+        "actions": [
+          "ABCs",
+          "Oxygen",
+          "Support ventilation",
+          "Prepare epinephrine/CPR per PALS"
+        ]
+      },
+      {
+        "condition": "Isolated mild tachycardia",
+        "actions": [
+          "Assess fever, pain, volume status"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "pals-rr",
+    "name": "PALS Normal Respiratory Rate by Age",
+    "shortName": "PALS RR",
+    "whenToUse": "Interpreting measured respiratory rate against age-expected norms in ill or injured children.",
+    "whyUse": "RR is one of the most age-dependent vitals; tachypnea is an early sign of illness or compensation.",
+    "nextSteps": [
+      {
+        "condition": "Tachypnea + distress",
+        "actions": [
+          "Oxygen as needed",
+          "Position of comfort",
+          "Evaluate cause"
+        ]
+      },
+      {
+        "condition": "Bradypnea / irregular",
+        "actions": [
+          "Support airway/ventilation",
+          "Check glucose and CNS causes"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "pals-sbp",
+    "name": "PALS Minimum Systolic BP by Age",
+    "shortName": "PALS SBP",
+    "whenToUse": "Rapid lookup of age-based minimum SBP when assessing shock or interpreting pediatric BP.",
+    "whyUse": "Hypotension is a late finding in pediatric shock; knowing the age cutoff avoids false reassurance.",
+    "nextSteps": [
+      {
+        "condition": "SBP below minimum + shock signs",
+        "actions": [
+          "Fluid bolus per PALS",
+          "Reassess",
+          "Vasopressors if fluid-refractory",
+          "Treat cause"
+        ]
+      },
+      {
+        "condition": "SBP above min but poor perfusion",
+        "actions": [
+          "Still treat as shock",
+          "Do not wait for hypotension"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "ett-depth",
+    "name": "Pediatric ETT Insertion Depth",
+    "shortName": "ETT Depth",
+    "whenToUse": "After selecting ETT size, estimate initial oral insertion depth in children (not neonates).",
+    "whyUse": "Provides a starting lip-mark depth; must be confirmed with auscultation, ETCO₂, and imaging when available.",
+    "nextSteps": [
+      {
+        "condition": "After intubation",
+        "actions": [
+          "ETCO₂",
+          "Bilateral BS",
+          "Secure tube",
+          "CXR when feasible"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "defib-dose-peds",
+    "name": "Pediatric Defibrillation Energy Dose",
+    "shortName": "Peds Defib",
+    "whenToUse": "Cardiac arrest with shockable rhythm (VF/pVT) in children when preparing defibrillator energy.",
+    "whyUse": "Weight-based joules differ from adult fixed doses; under-/overdosing is common without quick math.",
+    "nextSteps": [
+      {
+        "condition": "Shockable arrest",
+        "actions": [
+          "CPR 2 min cycles",
+          "Epinephrine timing per PALS",
+          "Treat reversible causes"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "epi-dose-peds",
+    "name": "Pediatric Epinephrine Dose (Cardiac Arrest)",
+    "shortName": "Peds Epi",
+    "whenToUse": "Pediatric cardiac arrest when preparing IV/IO epinephrine.",
+    "whyUse": "Converts weight to mg and mL of 1:10,000 concentration to reduce dosing errors.",
+    "nextSteps": [
+      {
+        "condition": "During arrest",
+        "actions": [
+          "High-quality CPR",
+          "Epinephrine q3–5 min",
+          "Identify H’s and T’s"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "fluid-bolus-peds",
+    "name": "Pediatric Fluid Bolus Volume",
+    "shortName": "Peds Bolus",
+    "whenToUse": "Hypovolemic or distributive shock in children when ordering an isotonic crystalloid bolus.",
+    "whyUse": "Rapid mL/kg math for 10 vs 20 mL/kg strategies (cardiac/renal caution often uses 10 mL/kg).",
+    "nextSteps": [
+      {
+        "condition": "Improved perfusion",
+        "actions": [
+          "Maintenance fluids",
+          "Treat underlying cause"
+        ]
+      },
+      {
+        "condition": "Fluid-refractory shock",
+        "actions": [
+          "Vasoactive agents",
+          "ICU care",
+          "Source control"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "kcal-needs-peds",
+    "name": "Pediatric Estimated Caloric Needs",
+    "shortName": "Peds kcal",
+    "whenToUse": "Estimate baseline caloric targets for healthy or recovering children when a simple age-based rule of thumb is acceptable.",
+    "whyUse": "Age-based kcal/kg estimates provide a starting point before dietitian-guided or measured energy expenditure.",
+    "nextSteps": [
+      {
+        "condition": "FTT or obesity",
+        "actions": [
+          "Full growth assessment",
+          "Specialist nutrition input"
+        ]
+      },
+      {
+        "condition": "ICU",
+        "actions": [
+          "Avoid overfeeding early",
+          "Reassess frequently"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "failure-to-thrive",
+    "name": "Failure to Thrive Helper (Weight-for-Age Z)",
+    "shortName": "FTT Helper",
+    "whenToUse": "Children with poor weight gain when z-scores or percentile concerns are already known from growth charts.",
+    "whyUse": "Structures common WHO/CDC-style z-score thresholds and clinical red flags into a simple risk band.",
+    "nextSteps": [
+      {
+        "condition": "Moderate concern",
+        "actions": [
+          "Diet diary",
+          "Close weight checks",
+          "Primary care / nutrition"
+        ]
+      },
+      {
+        "condition": "Severe / red flags",
+        "actions": [
+          "Urgent evaluation",
+          "Consider admit",
+          "Multidisciplinary care"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "jaundice-nomogram",
+    "name": "Bhutani-Style Jaundice Risk Zone (Educational)",
+    "shortName": "Bhutani Zone",
+    "whenToUse": "Term and late-preterm newborns with measured TSB when estimating approximate Bhutani risk zone (not a full nomogram plot).",
+    "whyUse": "Hour of age matters as much as absolute TSB; zones guide follow-up intensity before phototherapy decisions.",
+    "nextSteps": [
+      {
+        "condition": "High or high-intermediate zone",
+        "actions": [
+          "Earlier follow-up TSB",
+          "Evaluate phototherapy need",
+          "Lactation support"
+        ]
+      },
+      {
+        "condition": "Low zone, well infant",
+        "actions": [
+          "Routine newborn follow-up timing"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "phototherapy-threshold",
+    "name": "AAP-Style Phototherapy Threshold (Approximate)",
+    "shortName": "Photo Threshold",
+    "whenToUse": "Estimating whether TSB is near phototherapy range in term/late-preterm infants (confirm with official AAP tool).",
+    "whyUse": "Phototherapy thresholds rise with age in hours and fall with neurotoxicity risk factors.",
+    "nextSteps": [
+      {
+        "condition": "At/above threshold",
+        "actions": [
+          "Start phototherapy",
+          "Monitor TSB trajectory",
+          "Escalate if rising fast"
+        ]
+      },
+      {
+        "condition": "Near threshold",
+        "actions": [
+          "Repeat TSB sooner",
+          "Address feeding"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "exchange-transfusion-threshold",
+    "name": "Exchange Transfusion Threshold (Approximate)",
+    "shortName": "Exchange TSB",
+    "whenToUse": "Severe hyperbilirubinemia when estimating proximity to exchange thresholds alongside neurotoxicity signs.",
+    "whyUse": "Exchange thresholds are higher than phototherapy thresholds and lower when acute bilirubin encephalopathy signs exist.",
+    "nextSteps": [
+      {
+        "condition": "Near/above threshold or ABE",
+        "actions": [
+          "Intensive phototherapy",
+          "NICU/neonatology",
+          "Prepare exchange resources"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "croup-dex-dose",
+    "name": "Croup Dexamethasone Dose",
+    "shortName": "Croup Dex",
+    "whenToUse": "Children with croup (laryngotracheitis) when ordering dexamethasone.",
+    "whyUse": "Common practice uses 0.15–0.6 mg/kg once (max often 10–16 mg); calculates absolute mg and mL if concentration known.",
+    "nextSteps": [
+      {
+        "condition": "Mild croup",
+        "actions": [
+          "Dex",
+          "Supportive care",
+          "Home if well after observation"
+        ]
+      },
+      {
+        "condition": "Moderate–severe",
+        "actions": [
+          "Dex + nebulized epinephrine",
+          "Longer observation / admit if needed"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "pulmonary-score",
+    "name": "Pediatric Asthma Pulmonary Score",
+    "shortName": "Pulmonary Score",
+    "whenToUse": "Children with asthma exacerbation to grade severity and response to therapy at the bedside.",
+    "whyUse": "Simple three-domain score used in many pediatric ED pathways to standardize mild/moderate/severe labeling.",
+    "nextSteps": [
+      {
+        "condition": "Mild",
+        "actions": [
+          "SABA",
+          "Consider steroids if indicated",
+          "Discharge planning"
+        ]
+      },
+      {
+        "condition": "Moderate–severe",
+        "actions": [
+          "SABA/ipratropium",
+          "Systemic steroids",
+          "Reassess for admit/ICU"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "scarlet-fever",
+    "name": "Scarlet Fever Diagnostic Helper",
+    "shortName": "Scarlet Fever",
+    "whenToUse": "Pharyngitis with sandpaper rash or suspected scarlet fever.",
+    "whyUse": "Organizes classic clinical criteria to support testing and treatment decisions (not a formal validated score).",
+    "nextSteps": [
+      {
+        "condition": "High suspicion or GAS+",
+        "actions": [
+          "Antibiotics",
+          "School return guidance",
+          "Household counseling"
+        ]
+      },
+      {
+        "condition": "Low suspicion",
+        "actions": [
+          "Broader rash differential",
+          "Supportive care"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "pims-ts",
+    "name": "PIMS-TS / MIS-C Criteria Helper",
+    "shortName": "PIMS-TS",
+    "whenToUse": "Children with prolonged fever and multi-system inflammation when MIS-C / PIMS-TS is in the differential.",
+    "whyUse": "Structures key case-definition domains; does not replace formal CDC/WHO definitions or specialist diagnosis.",
+    "nextSteps": [
+      {
+        "condition": "High suspicion",
+        "actions": [
+          "Hospitalize",
+          "Echo/ECG",
+          "Specialist consults",
+          "Supportive + immunomodulatory therapy per protocol"
+        ]
+      },
+      {
+        "condition": "Partial features",
+        "actions": [
+          "Close follow-up labs",
+          "Reassess differential"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "orbital-cellulitis",
+    "name": "Orbital Cellulitis Red Flags Checklist",
+    "shortName": "Orbital Cellulitis",
+    "whenToUse": "Periorbital erythema/swelling in a child when differentiating preseptal vs orbital infection risk.",
+    "whyUse": "Pain with EOM, proptosis, ophthalmoplegia, and vision change mandate urgent imaging and specialty care.",
+    "nextSteps": [
+      {
+        "condition": "Any hard red flag",
+        "actions": [
+          "Urgent imaging",
+          "IV abx",
+          "Ophtho + ENT",
+          "Admit"
+        ]
+      },
+      {
+        "condition": "Likely preseptal, well child",
+        "actions": [
+          "Close follow-up",
+          "Outpatient therapy if appropriate"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "glasgow-meningococcal",
+    "name": "Glasgow Meningococcal Septicemia Prognostic Score (GMSPS)",
+    "shortName": "GMSPS",
+    "whenToUse": "Children/adolescents with suspected meningococcal septicemia for severity stratification (historical prognostic tool).",
+    "whyUse": "GMSPS correlates with mortality risk in classic meningococcal cohorts and highlights ominous exam findings.",
+    "nextSteps": [
+      {
+        "condition": "Any suspected meningococcal sepsis",
+        "actions": [
+          "Antibiotics now",
+          "Fluid resuscitation",
+          "ICU",
+          "Source investigations"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "petechiae-risk",
+    "name": "Fever with Petechiae Risk (NICE-style Traffic Light)",
+    "shortName": "Petechiae Fever",
+    "whenToUse": "Febrile children with petechiae or purpura when triaging urgency for invasive bacterial disease.",
+    "whyUse": "Highlights red features that mandate immediate management versus amber features needing careful evaluation.",
+    "nextSteps": [
+      {
+        "condition": "Red features",
+        "actions": [
+          "Resuscitation bay",
+          "Antibiotics",
+          "Cultures",
+          "ICU/senior"
+        ]
+      },
+      {
+        "condition": "Amber",
+        "actions": [
+          "Urgent labs/observation",
+          "Shared decision on empiric therapy"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "uti-peds",
+    "name": "Pediatric UTI Likelihood Checklist",
+    "shortName": "Peds UTI",
+    "whenToUse": "Febrile infants/young children or verbal children with urinary symptoms when deciding on urine testing.",
+    "whyUse": "Combines age, sex/circumcision, fever pattern, and urinary signs used in pediatric UTI guidelines.",
+    "nextSteps": [
+      {
+        "condition": "Young infant / ill",
+        "actions": [
+          "Urgent urine + sepsis evaluation as indicated"
+        ]
+      },
+      {
+        "condition": "UA suggestive",
+        "actions": [
+          "Culture",
+          "Empiric abx per local resistance"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "pneumonia-peds",
+    "name": "Pediatric Pneumonia Severity (Modified)",
+    "shortName": "Peds PNA Severity",
+    "whenToUse": "Children with clinical/radiographic pneumonia when deciding outpatient vs inpatient vs higher acuity care.",
+    "whyUse": "Bundles commonly used severity markers from pediatric CAP guidance (BTS/IDSA-style concepts).",
+    "nextSteps": [
+      {
+        "condition": "Mild",
+        "actions": [
+          "Oral abx if indicated",
+          "Safety-net advice"
+        ]
+      },
+      {
+        "condition": "Moderate–severe",
+        "actions": [
+          "Admit",
+          "O₂",
+          "IV therapy as needed",
+          "Image if complicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "who-pneumonia",
+    "name": "WHO Pediatric Pneumonia Classification",
+    "shortName": "WHO Pneumonia",
+    "whenToUse": "Children 2–59 months with cough or difficult breathing in resource-variable settings using WHO IMCI logic.",
+    "whyUse": "Standard global classification driving antibiotic and referral decisions in IMCI programs.",
+    "nextSteps": [
+      {
+        "condition": "Severe",
+        "actions": [
+          "Oxygen if available",
+          "Referral",
+          "Pre-referral abx"
+        ]
+      },
+      {
+        "condition": "Pneumonia",
+        "actions": [
+          "Oral amoxicillin",
+          "Follow-up 3 days"
+        ]
+      },
+      {
+        "condition": "No pneumonia",
+        "actions": [
+          "Supportive care",
+          "Safety net"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "malaria-severity",
+    "name": "Severe Malaria Criteria Count (WHO)",
+    "shortName": "Severe Malaria",
+    "whenToUse": "Confirmed or highly suspected malaria when assessing for severe disease requiring parenteral therapy and intensive support.",
+    "whyUse": "Any single WHO severe feature generally defines severe malaria and changes management intensity.",
+    "nextSteps": [
+      {
+        "condition": "≥1 severe feature",
+        "actions": [
+          "Parenteral artesunate",
+          "Supportive ICU-capable care",
+          "Step down to oral when able"
+        ]
+      },
+      {
+        "condition": "Uncomplicated",
+        "actions": [
+          "ACT oral regimen",
+          "Adherence and return precautions"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-peds-id.ts",
+    "id": "dengue-warning",
+    "name": "Dengue Warning Signs Checklist",
+    "shortName": "Dengue Warning",
+    "whenToUse": "Suspected or confirmed dengue during the critical phase when screening for warning signs of progression.",
+    "whyUse": "Warning signs identify patients needing medical observation and careful fluid management before shock develops.",
+    "nextSteps": [
+      {
+        "condition": "Warning signs",
+        "actions": [
+          "Admit/observe",
+          "Monitored fluids",
+          "Labs q interval"
+        ]
+      },
+      {
+        "condition": "Severe dengue",
+        "actions": [
+          "Emergency resuscitation per WHO",
+          "ICU",
+          "Blood products if indicated"
+        ]
+      },
+      {
+        "condition": "No warning signs, well",
+        "actions": [
+          "Home care advice",
+          "Daily follow-up in critical window"
+        ]
+      }
+    ]
+  }
+]

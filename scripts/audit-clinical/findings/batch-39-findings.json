@@ -1,0 +1,263 @@
+{
+  "batch": 39,
+  "file": "wave6-psych-sleep.ts",
+  "audited": 25,
+  "fixed": 2,
+  "items": [
+    {
+      "id": "panic-pdss",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC3600865/",
+        "Furukawa TA et al. J Clin Psychopharmacol. 2009 (PMID 19006198); PDSS ≥10 often at least moderately ill / intervention range",
+        "Shear MK et al. Am J Psychiatry. 1997 (PMID 9356566)"
+      ]
+    },
+    {
+      "id": "lsas-social",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Mennin DS et al. J Anxiety Disord. 2002 (PMID 12405524); LSAS total ≥30 SAD screen, ≥60 generalized subtype",
+        "Common severity bands: <30 none/mild; 30–49 mild; 50–64 moderate; 65–79 marked; 80–94 severe; ≥95 very severe"
+      ]
+    },
+    {
+      "id": "eat-26",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.eat-26.com/scoring/",
+        "EAT-26 official: total ≥20 prompts professional interview/referral; behavioral flags also warrant referral independent of total"
+      ]
+    },
+    {
+      "id": "mchat-r",
+      "status": "fixed",
+      "issues": [
+        "nextSteps low-risk rescreen said '24–30 months if not done'; official M-CHAT-R algorithm is rescreen after second birthday when child is younger than 24 months."
+      ],
+      "changes": [
+        "nextSteps (score 0–2): 'Rescreen at 24–30 months if not done' → 'If younger than 24 months, rescreen after second birthday'."
+      ],
+      "sources": [
+        "https://www.mchatscreen.com/mchat-rf/scoring/",
+        "Robins DL et al. Pediatrics. 2014 (PMID 24366990); bands 0–2 low, 3–7 medium/Follow-Up, 8–20 high/refer; age 16–30 months"
+      ]
+    },
+    {
+      "id": "vanderbilt-adhd",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "NICHQ Vanderbilt Assessment Scales scoring: ≥6/9 often/very often in domain + performance problem (typically ≥1 item scored 4–5)",
+        "https://nichq.org/wp-content/uploads/2024/09/NICHQ-Vanderbilt-Assessment-Scales.pdf"
+      ]
+    },
+    {
+      "id": "cudit-r",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.phenxtoolkit.org/protocols/view/510310",
+        "Adamson SJ et al. Drug Alcohol Depend. 2010 (PMID 20347232); ≥8 hazardous use, ≥12 possible CUD"
+      ]
+    },
+    {
+      "id": "benzo-dose-equiv",
+      "status": "fixed",
+      "issues": [
+        "nextSteps taper pace '5–10% every 1–4 weeks' allows weekly steps faster than current joint ASAM/clinical guidance initial pace of 5–10% every 2–4 weeks."
+      ],
+      "changes": [
+        "nextSteps (taper planning): 'every 1–4 weeks' → 'every 2–4 weeks' (aligned with ASAM 2025 BZD tapering CPG)."
+      ],
+      "sources": [
+        "https://link.springer.com/article/10.1007/s11606-025-09499-2",
+        "Brunner E et al. Joint Clinical Practice Guideline on Benzodiazepine Tapering (ASAM 2025): 5–10% every 2–4 weeks; do not exceed ~25% every 2 weeks"
+      ]
+    },
+    {
+      "id": "morphine-iv-po",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Classic equianalgesic teaching IV:PO morphine ≈ 1:3 (some protocols 1:2); incomplete oral bioavailability",
+        "Ripamonti CI et al. / standard palliative equianalgesic tables"
+      ]
+    },
+    {
+      "id": "buprenorphine-cows",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/1985/cows-score-opiate-withdrawal",
+        "Traditional transmucosal induction commonly COWS ≥8 (many prefer ≥10–12); delay/low-dose pathways for fentanyl/methadone"
+      ]
+    },
+    {
+      "id": "pain-detect",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Freynhagen R et al. Curr Med Res Opin. 2006 (PMID 17022849)",
+        "≤12 unlikely neuropathic; 13–18 unclear; ≥19 likely neuropathic"
+      ]
+    },
+    {
+      "id": "peg-pain",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Krebs EE et al. J Gen Intern Med. 2009 (PMID 19418100)",
+        "https://www.mdcalc.com/calc/10405/pain-enjoyment-life-general-activity-peg-scale",
+        "Reed DE et al. 2024: ~1–2 point PEG improvement clinically meaningful; ≥4 pragmatic action threshold for multimodal review"
+      ]
+    },
+    {
+      "id": "bpi-interference",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Cleeland CS, Ryan KM. Ann Acad Med Singap. 1994 (PMID 8080219)",
+        "BPI interference mean of 7 items; ≥4 pragmatic moderate-interference action band"
+      ]
+    },
+    {
+      "id": "id-migraine",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Lipton RB et al. Neurology. 2003 (PMID 12913201); 3-item screen (disability, nausea, photophobia), ≥2/3 positive; Se ~0.81 Sp ~0.75",
+        "AHS/AAN: consider prevention if ≥4 migraine days/month and/or disability despite acute care"
+      ]
+    },
+    {
+      "id": "barthel-index",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Granger CV et al.; BI ~60 pivotal dependency / assisted-independence threshold",
+        "Shah S et al. bands: 0–20 total, 21–60 severe, 61–90 moderate dependence"
+      ]
+    },
+    {
+      "id": "tpa-exclude",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "AHA/ASA AIS guidelines (Powers WJ et al. Stroke. 2019 PMID 31662037); absolute exclusions preclude standard IV thrombolysis; LVO → endovascular pathway"
+      ]
+    },
+    {
+      "id": "oasis-score",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Johnson AE et al. Crit Care Med. 2013 (PMID 23660729); OASIS first-day ICU severity with limited variables vs APACHE; educational tool correctly caveated"
+      ]
+    },
+    {
+      "id": "saps-iii-simp",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Moreno RP et al. Intensive Care Med. 2005 (PMID 16132893); SAPS III domains; simplified educational framing appropriately disclaims futility use"
+      ]
+    },
+    {
+      "id": "nrs-2002",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Kondrup J et al. Clin Nutr. 2003 (PMID 12765673); ESPEN NRS-2002 ≥3 nutritionally at risk → care plan; <3 weekly rescreen"
+      ]
+    },
+    {
+      "id": "charcot-triad",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Classic Charcot triad low sensitivity; Tokyo Guidelines preferred for diagnosis/severity",
+        "Thuluvath AJ et al. related cholangitis criteria comparisons (PMID 33997636 / 29090868)"
+      ]
+    },
+    {
+      "id": "reynolds-pentad",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Reynolds BM, Dargan EL. Ann Surg. 1959 (PMID 13670595); shock + AMS with cholangitis → emergent source control",
+        "TG18: grade III / severe → urgent drainage + broad abx (Enterococcus coverage recommended in severe community-acquired)"
+      ]
+    },
+    {
+      "id": "twist-score",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Barbosa JA et al. J Urol. 2013 (PMID 23174225)",
+        "Bands 0–2 low, 3–4 intermediate, 5–7 high; high risk → explore without delaying for US if clinical torsion clear"
+      ]
+    },
+    {
+      "id": "chokai-score",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Fukuhara H et al. Am J Emerg Med. 2017 (PMID 28633903); CHOKAI total 0–13, common cutoff ≥6 for higher ureterolithiasis probability"
+      ]
+    },
+    {
+      "id": "house-brackmann",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "House JW, Brackmann DE. Otolaryngol Head Neck Surg. 1985; grades I–VI",
+        "AAN Bell’s palsy: early corticosteroids; eye care for incomplete closure (higher grades); antivirals optional/selected"
+      ]
+    },
+    {
+      "id": "snot-22",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Hopkins C et al.; SNOT-22 standard CRS PRO; MCID commonly ~8.9 points (~8–9)",
+        "Intranasal steroids + saline first-line CRS medical therapy; ESS if refractory with appropriate CT/endoscopy"
+      ]
+    },
+    {
+      "id": "nose-scale",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Stewart MG et al. Otolaryngol Head Neck Surg. 2004; NOSE 5 items ×0–4, ×5 → 0–100",
+        "Severity bands often mild 5–25, moderate 30–50, severe 55–75, extreme 80–100; ≥30–50 with structural disease is reasonable intervention-discussion range"
+      ]
+    }
+  ]
+}

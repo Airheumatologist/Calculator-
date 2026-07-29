@@ -1,0 +1,463 @@
+[
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "osmolar-gap-tox",
+    "name": "Toxic Alcohol Osmolar Gap Helper",
+    "shortName": "Osm Gap Tox",
+    "whenToUse": "Suspected toxic alcohol ingestion with measured and calculated osmolality ± known ethanol level.",
+    "whyUse": "Elevated osmolar gap suggests unmeasured osmotically active solutes (alcohols, acetone, severe hyperlipidemia/proteins, mannitol).",
+    "nextSteps": [
+      {
+        "condition": "Elevated gap ± acidosis / visual symptoms / oxalate crystals",
+        "actions": [
+          "Fomepizole",
+          "Toxic alcohol levels",
+          "Nephrology for HD criteria",
+          "ABG, electrolytes, lactate, ethanol"
+        ]
+      },
+      {
+        "condition": "Gap explained by ethanol only",
+        "actions": [
+          "Supportive care for intoxication",
+          "Reassess if anion gap rises later"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "methanol-osmol",
+    "name": "Estimated Methanol from Osmolar Gap",
+    "shortName": "MeOH Osmol",
+    "whenToUse": "When methanol level is pending and residual osm gap is attributed to methanol.",
+    "whyUse": "Rapid ballpark for severity while awaiting quantitative methanol.",
+    "nextSteps": [
+      {
+        "condition": "Any suspected methanol",
+        "actions": [
+          "Fomepizole",
+          "Confirm level",
+          "Ophthalmology if visual symptoms",
+          "HD if indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "ethylene-glycol-osmol",
+    "name": "Estimated Ethylene Glycol from Osmolar Gap",
+    "shortName": "EG Osmol",
+    "whenToUse": "Suspected EG ingestion with residual osm gap while quantitative level pending.",
+    "whyUse": "Provides bedside estimate of parent alcohol burden to support antidote/HD decisions with full clinical picture.",
+    "nextSteps": [
+      {
+        "condition": "Suspected EG",
+        "actions": [
+          "Fomepizole",
+          "EG level",
+          "Calcium, renal function, ABG",
+          "HD if severe acidosis/AKI/high level"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "nac-dosing",
+    "name": "N-Acetylcysteine IV Dosing (21-hour)",
+    "shortName": "NAC Dosing",
+    "whenToUse": "Acetaminophen overdose when IV NAC is indicated (nomogram, unknown time, fulminant pathway, etc.).",
+    "whyUse": "Standard three-bag protocol doses are weight-based; errors in bag preparation are common.",
+    "nextSteps": [
+      {
+        "condition": "NAC indicated",
+        "actions": [
+          "Start without delay if criteria met",
+          "Serial APAP, AST/ALT, INR, creatinine",
+          "Poison center consultation"
+        ]
+      },
+      {
+        "condition": "Massive overdose / late presentation",
+        "actions": [
+          "Consider extended NAC, HD discussion if very high levels/acidosis"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "digoxin-fab",
+    "name": "Digoxin Immune Fab Vial Estimate",
+    "shortName": "DigiFab",
+    "whenToUse": "Life-threatening digoxin toxicity or planning Fab dosing with known level or ingested amount.",
+    "whyUse": "Vial estimates guide pharmacy preparation; underdosing leaves free digoxin activity.",
+    "nextSteps": [
+      {
+        "condition": "Unstable dig toxicity",
+        "actions": [
+          "Fab urgently",
+          "Correct electrolytes carefully",
+          "Avoid calcium as “stone heart” dogma is debated — follow local tox guidance",
+          "Poison center"
+        ]
+      },
+      {
+        "condition": "After Fab",
+        "actions": [
+          "Telemetry",
+          "Expect total digoxin assay elevation",
+          "Renal clearance of Fab-digoxin complex delayed in CKD"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "salicylate-level",
+    "name": "Salicylate Toxicity Severity Helper",
+    "shortName": "Salicylate",
+    "whenToUse": "Known or suspected salicylate poisoning with a quantitative level.",
+    "whyUse": "Levels guide urgency, but chronic toxicity is severe at lower concentrations than acute.",
+    "nextSteps": [
+      {
+        "condition": "Significant toxicity",
+        "actions": [
+          "ABG, electrolytes, glucose",
+          "IV bicarb if indicated",
+          "Avoid intubation delays/hypoventilation",
+          "Nephrology early"
+        ]
+      },
+      {
+        "condition": "Rising levels",
+        "actions": [
+          "Repeat q2–3h until peak passed",
+          "GI decontamination if appropriate timing"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "fomepizole-dose",
+    "name": "Fomepizole Dosing",
+    "shortName": "Fomepizole",
+    "whenToUse": "Confirmed or highly suspected methanol or ethylene glycol poisoning.",
+    "whyUse": "ADH inhibition is time-critical; weight-based dosing and redosing with HD differ from standard q12h.",
+    "nextSteps": [
+      {
+        "condition": "Starting fomepizole",
+        "actions": [
+          "Confirm IV access",
+          "Send levels, ABG, chemistries",
+          "Poison center",
+          "Plan HD if indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "naloxone-infusion",
+    "name": "Naloxone Infusion Rate (Rule of Thumb)",
+    "shortName": "Naloxone Drip",
+    "whenToUse": "Recurrent opioid respiratory depression after bolus naloxone, especially long-acting opioids.",
+    "whyUse": "Provides a practical starting infusion when boluses must be repeated frequently.",
+    "nextSteps": [
+      {
+        "condition": "Recurrent hypoventilation",
+        "actions": [
+          "Airway support first",
+          "Re-bolus then start drip",
+          "Observe longer for long-acting agents"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "serotonin-syndrome",
+    "name": "Hunter Serotonin Toxicity Criteria",
+    "shortName": "Hunter SS",
+    "whenToUse": "Possible serotonin toxicity after serotonergic drugs (SSRI/SNRI, MAOI, tramadol, linezolid, MDMA, etc.).",
+    "whyUse": "Hunter criteria are more sensitive/specific than older Sternbach criteria in validation cohorts.",
+    "nextSteps": [
+      {
+        "condition": "Positive / severe",
+        "actions": [
+          "Stop offenders",
+          "Benzodiazepines",
+          "Active cooling if hyperthermic",
+          "ICU for rigidity/hyperthermia",
+          "Avoid pure dopamine antagonists if SS likely"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "nms-criteria",
+    "name": "NMS Diagnostic Criteria Helper",
+    "shortName": "NMS",
+    "whenToUse": "Fever and rigidity in a patient on antipsychotics or after abrupt dopamine agonist withdrawal.",
+    "whyUse": "Structures cardinal features (exposure, rigidity, hyperthermia, autonomic instability, CK/mental status).",
+    "nextSteps": [
+      {
+        "condition": "High concern NMS",
+        "actions": [
+          "Stop neuroleptics",
+          "ICU for severe cases",
+          "IV fluids, cooling",
+          "CK, renal function",
+          "Psychiatry / neurology / toxicology"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "anticholinergic-tox",
+    "name": "Anticholinergic Toxidrome Checklist",
+    "shortName": "Anticholinergic",
+    "whenToUse": "Altered patient with possible anticholinergic overdose (antihistamines, TCAs, atropine, plants).",
+    "whyUse": "Rapid toxidrome pattern recognition guides physostigmine consideration and differential.",
+    "nextSteps": [
+      {
+        "condition": "Likely anticholinergic OD",
+        "actions": [
+          "ECG (QRS/QTc)",
+          "Benzodiazepines for agitation",
+          "Cooling if hot",
+          "Urinary catheter if retention",
+          "Poison center before physostigmine"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "cholinergic-tox",
+    "name": "Cholinergic Toxidrome (SLUDGE / DUMBBELS)",
+    "shortName": "Cholinergic",
+    "whenToUse": "Suspected organophosphate, carbamate, nerve agent, or nicotine excess with secretory toxidrome.",
+    "whyUse": "Early recognition drives atropine, pralidoxime (for OP), decontamination, and airway support.",
+    "nextSteps": [
+      {
+        "condition": "Likely OP/carbamate",
+        "actions": [
+          "PPE / decontamination",
+          "Atropine",
+          "Pralidoxime for OP",
+          "Benzodiazepines",
+          "Airway management"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "opioid-toxidrome",
+    "name": "Opioid Toxidrome Checklist",
+    "shortName": "Opioid Toxidrome",
+    "whenToUse": "Suspected opioid intoxication with CNS and respiratory depression.",
+    "whyUse": "The classic triad plus supporting features supports naloxone trial and monitoring plan.",
+    "nextSteps": [
+      {
+        "condition": "Hypoventilation",
+        "actions": [
+          "Support ventilation",
+          "Naloxone",
+          "Monitor for recurrence",
+          "Avoid large boluses in dependent patients when possible"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "pack-year",
+    "name": "Pack-Years Smoking",
+    "shortName": "Pack-Years",
+    "whenToUse": "Quantifying cumulative tobacco exposure for screening and risk discussion.",
+    "whyUse": "Pack-years inform lung cancer screening eligibility and COPD risk framing.",
+    "nextSteps": [
+      {
+        "condition": "Any ongoing smoking",
+        "actions": [
+          "Cessation counseling",
+          "Pharmacotherapy (NRT, varenicline, bupropion)",
+          "Screening eligibility check"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "nicotine-dependence",
+    "name": "Fagerström Test for Nicotine Dependence",
+    "shortName": "FTND",
+    "whenToUse": "Assessing physical nicotine dependence to guide cessation intensity.",
+    "whyUse": "Higher scores predict withdrawal severity and benefit from more intensive pharmacotherapy.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥5–6",
+        "actions": [
+          "Offer combination pharmacotherapy",
+          "Set quit date",
+          "Behavioral counseling",
+          "Follow-up"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "alcohol-unit",
+    "name": "Alcohol Content & Standard Drinks",
+    "shortName": "Alcohol Units",
+    "whenToUse": "Counseling on intake, documenting exposure, or estimating ethanol load.",
+    "whyUse": "Volume × ABV is more accurate than “number of drinks” when pour sizes vary.",
+    "nextSteps": [
+      {
+        "condition": "Unhealthy use",
+        "actions": [
+          "AUDIT-C screening",
+          "Brief intervention",
+          "Withdrawal risk assessment if dependent"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "body-fat-navy",
+    "name": "US Navy Body Fat Estimate",
+    "shortName": "Navy BF%",
+    "whenToUse": "Quick anthropometric body-fat estimate when DEXA/BIA unavailable.",
+    "whyUse": "Simple field method used by US military standards; better than BMI alone for composition.",
+    "nextSteps": [
+      {
+        "condition": "Elevated BF or metabolic risk",
+        "actions": [
+          "Lifestyle intervention",
+          "Waist circumference / WHR",
+          "Cardiometabolic labs as indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "waist-hip-ratio",
+    "name": "Waist–Hip Ratio (WHR)",
+    "shortName": "WHR",
+    "whenToUse": "Assessing central adiposity and cardiometabolic risk beyond BMI.",
+    "whyUse": "WHR captures fat distribution associated with CVD and metabolic disease risk.",
+    "nextSteps": [
+      {
+        "condition": "Elevated WHR",
+        "actions": [
+          "Lifestyle intervention",
+          "BP, lipids, A1c as indicated",
+          "Consider waist-alone thresholds too"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "tirads",
+    "name": "ACR TI-RADS (Simplified Points)",
+    "shortName": "TI-RADS",
+    "whenToUse": "Risk-stratifying thyroid nodules on ultrasound for FNA decisions.",
+    "whyUse": "Standardizes lexicon and biopsy thresholds by TR level and size.",
+    "nextSteps": [
+      {
+        "condition": "FNA threshold met",
+        "actions": [
+          "Ultrasound-guided FNA",
+          "Bethesda cytology interpretation",
+          "TSH if not done"
+        ]
+      },
+      {
+        "condition": "Follow-up size",
+        "actions": [
+          "Serial US per ACR intervals",
+          "Earlier if growth/suspicious change"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "bethesda-thyroid",
+    "name": "Bethesda Thyroid Cytology Interpreter",
+    "shortName": "Bethesda",
+    "whenToUse": "After thyroid FNA when a Bethesda category is reported.",
+    "whyUse": "Standardizes implied malignancy risk and next-step framework (with 2017/2023 updates).",
+    "nextSteps": [
+      {
+        "condition": "III–IV",
+        "actions": [
+          "Molecular testing discussion",
+          "Endocrine / surgery referral",
+          "Review sonographic risk"
+        ]
+      },
+      {
+        "condition": "V–VI",
+        "actions": [
+          "Surgical consultation",
+          "Pre-op TSH, vocal cord assessment as indicated",
+          "Staging workup if aggressive features"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "thyroid-storm-burch",
+    "name": "Burch–Wartofsky Point Scale (Thyroid Storm)",
+    "shortName": "BWPS",
+    "whenToUse": "Severe thyrotoxicosis when distinguishing uncomplicated thyrotoxicosis from thyroid storm.",
+    "whyUse": "Points-based likelihood guides ICU-level multimodality therapy urgency.",
+    "nextSteps": [
+      {
+        "condition": "BWPS ≥45 or clinical storm",
+        "actions": [
+          "ICU",
+          "PTU or methimazole",
+          "Iodine ≥1 h after thionamide",
+          "Hydrocortisone",
+          "Propranolol (or alternative)",
+          "Identify precipitant"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-tox-endo-heme.ts",
+    "id": "myxedema",
+    "name": "Myxedema Coma Diagnostic Score (Simplified)",
+    "shortName": "Myxedema",
+    "whenToUse": "Suspected decompensated hypothyroidism / myxedema coma in a critically ill patient.",
+    "whyUse": "Structures thermoregulatory, CNS, cardiovascular, GI, and metabolic features while labs pending.",
+    "nextSteps": [
+      {
+        "condition": "High suspicion",
+        "actions": [
+          "ICU monitoring",
+          "IV levothyroxine ± liothyronine per expert protocol",
+          "Stress-dose steroids until AI excluded",
+          "Cultures / treat infection",
+          "Gentle rewarming",
+          "Avoid sedatives"
+        ]
+      }
+    ]
+  }
+]

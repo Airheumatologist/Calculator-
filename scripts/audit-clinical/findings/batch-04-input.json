@@ -1,0 +1,471 @@
+[
+  {
+    "file": "extra.ts",
+    "id": "duke-criteria",
+    "name": "Modified Duke Criteria (IE Helper)",
+    "shortName": "Duke IE",
+    "whenToUse": "Suspected infective endocarditis classification.",
+    "whyUse": "Standard diagnostic framework (definite / possible / rejected).",
+    "nextSteps": [
+      {
+        "condition": "Possible/Definite",
+        "actions": [
+          "Multiple blood cultures before antibiotics if stable",
+          "Echo (TTE ± TEE)",
+          "ID + cardiology involvement"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "extra.ts",
+    "id": "jones-criteria",
+    "name": "Jones Criteria (Acute Rheumatic Fever)",
+    "shortName": "Jones ARF",
+    "whenToUse": "Suspected acute rheumatic fever.",
+    "whyUse": "WHO/AHA diagnostic framework.",
+    "nextSteps": [
+      {
+        "condition": "Meets criteria",
+        "actions": [
+          "Anti-inflammatory therapy",
+          "Antibiotic treatment/eradication",
+          "Secondary prophylaxis",
+          "Echo"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "extra.ts",
+    "id": "centor-feverpain",
+    "name": "FeverPAIN Score",
+    "shortName": "FeverPAIN",
+    "whenToUse": "Acute sore throat antibiotic decision support.",
+    "whyUse": "Predicts bacterial (strep) probability; guides delayed Rx strategies.",
+    "nextSteps": [
+      {
+        "condition": "Low",
+        "actions": [
+          "Symptomatic care"
+        ]
+      },
+      {
+        "condition": "High",
+        "actions": [
+          "Immediate Abx or RADT per local policy"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "extra.ts",
+    "id": "framingham-hf",
+    "name": "Framingham Heart Failure Criteria",
+    "shortName": "Framingham HF",
+    "whenToUse": "Clinical diagnosis of heart failure (historical/epidemiologic criteria).",
+    "whyUse": "Classic major/minor framework still taught clinically.",
+    "nextSteps": [
+      {
+        "condition": "HF suspected/met",
+        "actions": [
+          "BNP/NT-proBNP",
+          "Echo",
+          "GDMT if HFrEF",
+          "Volume management"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "extra.ts",
+    "id": "nyha",
+    "name": "NYHA Functional Classification",
+    "shortName": "NYHA",
+    "whenToUse": "Staging functional limitation in known HF.",
+    "whyUse": "Guides therapy intensity and trial eligibility language.",
+    "nextSteps": [
+      {
+        "condition": "Class III–IV",
+        "actions": [
+          "Ensure GDMT",
+          "Evaluate for CRT/ICD if indicated",
+          "Advanced HF referral"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "extra.ts",
+    "id": "pao2-fio2-age-expected",
+    "name": "Expected PaO₂ (Age)",
+    "shortName": "Expected PaO₂",
+    "whenToUse": "ABG interpretation on room air.",
+    "whyUse": "PaO₂ normally declines with age.",
+    "nextSteps": [
+      {
+        "condition": "Low PaO₂",
+        "actions": [
+          "Calculate A–a gradient",
+          "Supplemental O₂",
+          "Diagnose cause"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "extra.ts",
+    "id": "qc-fridericia",
+    "name": "Corrected QT (Fridericia)",
+    "shortName": "QTc Fridericia",
+    "whenToUse": "QT correction when HR is very high or low.",
+    "whyUse": "More accurate than Bazett at heart rate extremes.",
+    "nextSteps": [
+      {
+        "condition": "QTc ≥500",
+        "actions": [
+          "Telemetry",
+          "Stop QT drugs",
+          "Replete K/Mg"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "extra.ts",
+    "id": "serum-anion-gap-k",
+    "name": "Anion Gap Including Potassium",
+    "shortName": "AG + K",
+    "whenToUse": "When comparing to lab AG methods that include K.",
+    "whyUse": "Avoid misinterpretation of method differences.",
+    "nextSteps": [
+      {
+        "condition": "Elevated",
+        "actions": [
+          "Evaluate HAGMA causes",
+          "Check albumin correction"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "extra.ts",
+    "id": "ibw-hamwi",
+    "name": "Ideal Body Weight (Hamwi)",
+    "shortName": "IBW Hamwi",
+    "whenToUse": "Alternative IBW estimate for nutrition.",
+    "whyUse": "Common dietetics formula.",
+    "nextSteps": [
+      {
+        "condition": "Any",
+        "actions": [
+          "Use with clinical nutrition assessment"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "extra.ts",
+    "id": "calcium-correction-si",
+    "name": "Corrected Calcium (SI units)",
+    "shortName": "Corr. Ca (SI)",
+    "whenToUse": "Labs reporting SI units.",
+    "whyUse": "Avoid unit confusion with US conventional formula.",
+    "nextSteps": [
+      {
+        "condition": "Abnormal",
+        "actions": [
+          "Confirm ionized calcium"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "gi-neuro-psych.ts",
+    "id": "child-pugh",
+    "name": "Child-Pugh Score",
+    "shortName": "Child-Pugh",
+    "whenToUse": "Cirrhosis severity, surgical risk, prognosis discussions.",
+    "whyUse": "Classic liver disease staging; complements MELD for transplant.",
+    "nextSteps": [
+      {
+        "condition": "Class B–C",
+        "actions": [
+          "Manage decompensation",
+          "Screen HCC/varices",
+          "Consider transplant referral"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "gi-neuro-psych.ts",
+    "id": "meld",
+    "name": "MELD Score",
+    "shortName": "MELD",
+    "whenToUse": "Liver transplant prioritization and cirrhosis prognosis.",
+    "whyUse": "Objective lab-based score used by transplant systems (often MELD-Na).",
+    "nextSteps": [
+      {
+        "condition": "MELD ≥15",
+        "actions": [
+          "Transplant center referral if candidate",
+          "Manage complications of cirrhosis"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "gi-neuro-psych.ts",
+    "id": "meld-na",
+    "name": "MELD-Na Score",
+    "shortName": "MELD-Na",
+    "whenToUse": "Liver allocation / prognosis with hyponatremia.",
+    "whyUse": "Hyponatremia adds prognostic information beyond MELD.",
+    "nextSteps": [
+      {
+        "condition": "Elevated",
+        "actions": [
+          "Transplant evaluation",
+          "Careful sodium correction"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "gi-neuro-psych.ts",
+    "id": "glasgow-blatchford",
+    "name": "Glasgow-Blatchford Score (GBS)",
+    "shortName": "Glasgow-Blatchford",
+    "whenToUse": "Adults with suspected upper GI bleeding.",
+    "whyUse": "Score 0 identifies very low-risk patients safe for outpatient management.",
+    "nextSteps": [
+      {
+        "condition": "GBS 0",
+        "actions": [
+          "Consider discharge with early GI follow-up",
+          "PPI as indicated",
+          "Return precautions"
+        ]
+      },
+      {
+        "condition": "GBS ≥1",
+        "actions": [
+          "Admit",
+          "Resuscitation",
+          "Urgent endoscopy timing per severity"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "gi-neuro-psych.ts",
+    "id": "rockall",
+    "name": "Rockall Score (Pre-endoscopy)",
+    "shortName": "Rockall",
+    "whenToUse": "Upper GI bleed mortality risk stratification.",
+    "whyUse": "Complements GBS; full Rockall includes endoscopic findings.",
+    "nextSteps": [
+      {
+        "condition": "High score",
+        "actions": [
+          "Resuscitate",
+          "Urgent endoscopy",
+          "ICU if unstable"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "gi-neuro-psych.ts",
+    "id": "alvarado",
+    "name": "Alvarado Score (Appendicitis)",
+    "shortName": "Alvarado",
+    "whenToUse": "Suspected appendicitis to guide imaging/surgery decisions.",
+    "whyUse": "Structured clinical probability; imaging still common.",
+    "nextSteps": [
+      {
+        "condition": "Low",
+        "actions": [
+          "Reassess",
+          "Consider gyn/GU alternatives"
+        ]
+      },
+      {
+        "condition": "Intermediate–high",
+        "actions": [
+          "CT/US/MRI per age/pregnancy",
+          "Surgical consult"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "gi-neuro-psych.ts",
+    "id": "bisap",
+    "name": "BISAP Score",
+    "shortName": "BISAP",
+    "whenToUse": "Early severity assessment in acute pancreatitis (first 24h).",
+    "whyUse": "Simple, uses data available early; predicts mortality.",
+    "nextSteps": [
+      {
+        "condition": "BISAP ≥3",
+        "actions": [
+          "Monitor organ failure",
+          "ICU consideration",
+          "Supportive care optimization"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "gi-neuro-psych.ts",
+    "id": "abcd2",
+    "name": "ABCD² Score",
+    "shortName": "ABCD²",
+    "whenToUse": "Patients with recent TIA symptoms.",
+    "whyUse": "Guides urgency of workup (though urgent workup increasingly universal).",
+    "nextSteps": [
+      {
+        "condition": "All TIA",
+        "actions": [
+          "Urgent vascular imaging",
+          "ECG/AF screen",
+          "Antiplatelet therapy",
+          "Statin and risk-factor control"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "gi-neuro-psych.ts",
+    "id": "nihss",
+    "name": "NIH Stroke Scale (Simplified Total)",
+    "shortName": "NIHSS",
+    "whenToUse": "Acute ischemic stroke severity and communication.",
+    "whyUse": "Standard for tPA/thrombectomy trials and serial exams.",
+    "nextSteps": [
+      {
+        "condition": "Acute ischemic stroke",
+        "actions": [
+          "Door-to-CT/needle pathways",
+          "Consider thrombolysis/thrombectomy eligibility",
+          "Stroke unit care"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "gi-neuro-psych.ts",
+    "id": "phq9",
+    "name": "PHQ-9 Depression Screen",
+    "shortName": "PHQ-9",
+    "whenToUse": "Screening and monitoring major depression in primary care and specialty settings.",
+    "whyUse": "Validated, brief, and widely integrated into workflows.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥10",
+        "actions": [
+          "Clinical interview for MDD",
+          "Offer psychotherapy and/or antidepressant",
+          "Follow-up"
+        ]
+      },
+      {
+        "condition": "Item 9 >0",
+        "actions": [
+          "Immediate suicide risk assessment"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "gi-neuro-psych.ts",
+    "id": "gad7",
+    "name": "GAD-7 Anxiety Screen",
+    "shortName": "GAD-7",
+    "whenToUse": "Screening and severity monitoring for generalized anxiety.",
+    "whyUse": "Brief, validated anxiety measure.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥10",
+        "actions": [
+          "Diagnostic assessment",
+          "CBT / SSRI-SNRI as appropriate"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "gi-neuro-psych.ts",
+    "id": "cage",
+    "name": "CAGE Questionnaire",
+    "shortName": "CAGE",
+    "whenToUse": "Primary care / ED screening for problem drinking.",
+    "whyUse": "Very brief four-question screen.",
+    "nextSteps": [
+      {
+        "condition": "Positive",
+        "actions": [
+          "Full substance history",
+          "Labs if indicated",
+          "Brief intervention / referral to treatment"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "gi-neuro-psych.ts",
+    "id": "ciwa",
+    "name": "CIWA-Ar (Alcohol Withdrawal)",
+    "shortName": "CIWA-Ar",
+    "whenToUse": "Symptom-triggered benzodiazepine protocols for alcohol withdrawal.",
+    "whyUse": "Standard severity score guiding benzo dosing.",
+    "nextSteps": [
+      {
+        "condition": "CIWA ≥8–10",
+        "actions": [
+          "Diazepam/lorazepam per protocol",
+          "Thiamine, folate, multivitamin",
+          "Monitor for seizures/DTs"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "gi-neuro-psych.ts",
+    "id": "mmse",
+    "name": "MMSE (Score Entry)",
+    "shortName": "MMSE",
+    "whenToUse": "Cognitive screening interpretation when MMSE already administered.",
+    "whyUse": "Widely known cognitive screen (copyrighted instrument — enter total only).",
+    "nextSteps": [
+      {
+        "condition": "Score ≤24",
+        "actions": [
+          "Full cognitive workup",
+          "Labs (B12, TSH)",
+          "Imaging as indicated",
+          "Consider MoCA"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "gi-neuro-psych.ts",
+    "id": "moca",
+    "name": "MoCA (Score Entry)",
+    "shortName": "MoCA",
+    "whenToUse": "Interpretation of administered MoCA total.",
+    "whyUse": "More sensitive than MMSE for mild cognitive impairment.",
+    "nextSteps": [
+      {
+        "condition": "Score <26",
+        "actions": [
+          "Neuropsychological testing as needed",
+          "Reversible cause workup"
+        ]
+      }
+    ]
+  }
+]

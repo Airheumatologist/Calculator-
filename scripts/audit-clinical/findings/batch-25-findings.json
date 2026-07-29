@@ -1,0 +1,245 @@
+{
+  "batch": 25,
+  "file": "wave4-heme-onc.ts",
+  "audited": 24,
+  "fixed": 2,
+  "items": [
+    {
+      "id": "r-ipi",
+      "status": "fixed",
+      "issues": [
+        "whenToUse over-extended population to 'aggressive B-NHL'; R-IPI was derived/validated in rituximab-era DLBCL (Sehn et al.), not all aggressive B-NHL."
+      ],
+      "changes": [
+        "whenToUse: 'Newly diagnosed DLBCL / aggressive B-NHL treated in the rituximab era...' → 'Newly diagnosed DLBCL treated in the rituximab era for OS risk groups.'"
+      ],
+      "sources": [
+        "https://www.mdcalc.com/calc/3936/international-prognostic-index-diffuse-large-b-cell-lymphoma-ipi-r-ipi",
+        "Sehn LH et al. Blood. 2007 (PMID 17105812) — R-IPI very good 0 / good 1–2 / poor 3–5 in R-CHOP DLBCL"
+      ]
+    },
+    {
+      "id": "cns-ipi",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/10488/central-nervous-system-international-prognostic-index-cns-ipi",
+        "Schmitz N et al. J Clin Oncol. 2016 (PMID 27382100) — low 0–1 (~0.6%), int 2–3 (~3.4%), high 4–6 (~10.2%) 2-y CNS relapse; kidney/adrenal + IPI factors"
+      ]
+    },
+    {
+      "id": "dipss",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/10066/dipss-dynamic-international-prognostic-scoring-system-myelofibrosis",
+        "Passamonti F et al. Blood. 2010 (PMID 20008785) — PMF; Hb <10 double-weighted; low 0 / int-1 1–2 / int-2 3–4 / high 5–6; dynamic after diagnosis"
+      ]
+    },
+    {
+      "id": "dipss-plus",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/10066/dipss-dynamic-international-prognostic-scoring-system-myelofibrosis",
+        "Gangat N et al. J Clin Oncol. 2011 (PMID 21205761) — DIPSS category + unfavorable karyotype + Plt <100 + transfusion need"
+      ]
+    },
+    {
+      "id": "sokal-score",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/2143/sokal-index-chronic-myelogenous-leukemia-cml",
+        "Sokal JE et al. Blood. 1984; ELN prefers ELTS over Sokal/Euro/EUTOS for TKI-era long-term survival (ELN 2020/2025)"
+      ]
+    },
+    {
+      "id": "hasford-score",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Hasford J et al. J Natl Cancer Inst. 1998 (PMID 9625174) — Euro score (IFN era); low ≤0.78 (≤780), int 0.781–1.48, high >1.48",
+        "ELN: ELTS preferred for TKI-era OS vs Sokal/Hasford/EUTOS"
+      ]
+    },
+    {
+      "id": "eutos",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Hasford J et al. Blood. 2011 (PMID 21536864) — EUTOS = 4×spleen_cm + 7×basophil_%; low ≤87 / high >87 for CCyR on imatinib (not ELTS OS model)"
+      ]
+    },
+    {
+      "id": "iss-myeloma",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Greipp PR et al. J Clin Oncol. 2005 (PMID 15994199) — ISS I: β2M <3.5 + albumin ≥3.5; III: β2M ≥5.5; II: remainder; pair with R-ISS when FISH/LDH known"
+      ]
+    },
+    {
+      "id": "r-iss-myeloma",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Palumbo A et al. J Clin Oncol. 2015 (PMID 26240224) — R-ISS I = ISS I + normal LDH + no high-risk CA; III = ISS III + (high LDH or high-risk CA); high-risk CA: del(17p), t(4;14), t(14;16)"
+      ]
+    },
+    {
+      "id": "durie-salmon",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Durie BG, Salmon SE. Cancer. 1975 (PMID 1182674) — historical tumor-burden stage + creatinine A/B; ISS/R-ISS preferred for modern prognosis"
+      ]
+    },
+    {
+      "id": "cll-rai",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Rai KR et al. Blood. 1975 (PMID 1139039) — 0 lymphocytosis; I nodes; II spleen/liver; III anemia Hb <11; IV Plt <100; treatment still per IWCLL indications"
+      ]
+    },
+    {
+      "id": "cll-binet",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Binet JL et al. Cancer. 1981 (PMID 7237385) — A <3 areas; B ≥3 areas; C Hb <10 and/or Plt <100; five lymphoid areas"
+      ]
+    },
+    {
+      "id": "cll-ipi",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/4054/international-prognostic-index-chronic-lymphocytic-leukemia-cll-ipi",
+        "International CLL-IPI working group. Lancet Oncol. 2016 (PMID 27185642) — low 0–1 / int 2–3 / high 4–6 / very high 7–10; TP53 worth 4 pts; start therapy only with IWCLL indication"
+      ]
+    },
+    {
+      "id": "pit-tcell",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Gallamini A et al. Blood. 2004 (PMID 14645001) — PIT for PTCL-U/NOS: age >60, ECOG ≥2, LDH >ULN, marrow involvement; groups 0 / 1 / 2 / 3–4"
+      ]
+    },
+    {
+      "id": "aaipi",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "International Non-Hodgkin's Lymphoma Prognostic Factors Project. N Engl J Med. 1993 (PMID 8413381) — aaIPI for age ≤60: LDH, ECOG ≥2, stage III–IV; low 0 / LI 1 / HI 2 / high 3"
+      ]
+    },
+    {
+      "id": "mipi-mantle",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Hoster E et al. Blood. 2008 (PMID 18077791) — simplified MIPI: low 0–3 / int 4–5 / high ≥6; MIPI-c adds Ki-67"
+      ]
+    },
+    {
+      "id": "bsa-mosteller",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Mosteller RD. N Engl J Med. 1987 (PMID 3657876) — BSA = √(ht_cm × wt_kg / 3600); carboplatin typically Calvert AUC not mg/m²"
+      ]
+    },
+    {
+      "id": "cisne",
+      "status": "fixed",
+      "issues": [
+        "whenToUse said 'solid-tumor (and selected)' — CISNE validation is solid-tumor, clinically stable FN; not for unstable patients or most hematologic malignancies",
+        "nextSteps condition 'Score ≥1–2' was malformed and omitted high-risk (≥3) management (admit; not outpatient pathway)"
+      ],
+      "changes": [
+        "whenToUse: limited to adult solid-tumor clinically stable FN; note exclusion of unstable patients / most hematologic malignancies",
+        "nextSteps: 'Score ≥1–2' → separate 'Score 1–2' (low threshold to admit) and 'Score ≥3' (inpatient IV antibiotics; not outpatient FN pathway)"
+      ],
+      "sources": [
+        "https://www.mdcalc.com/calc/3997/clinical-index-stable-febrile-neutropenia-cisne",
+        "Carmona-Bayonas A et al. J Clin Oncol. 2015 (PMID 25559804) — low 0 / int 1–2 / high ≥3; solid-tumor stable FN validation",
+        "NCCN/supportive-care pathways — CISNE complements MASCC; high CISNE favors inpatient care"
+      ]
+    },
+    {
+      "id": "das28",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Prevoo ML et al. / EULAR DAS documentation — remission <2.6; LDA ≤3.2; MDA ≤5.1; HDA >5.1; nextSteps escalate if >3.2"
+      ]
+    },
+    {
+      "id": "cdai-ra",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/2177/clinical-disease-activity-index-cdai-rheumatoid-arthritis",
+        "Aletaha/Smolen — CDAI remission ≤2.8; LDA ≤10; MDA ≤22; HDA >22; escalate if >10"
+      ]
+    },
+    {
+      "id": "sdai-ra",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Smolen JS et al. Rheumatology (Oxford). 2003 (PMID 12595618) — SDAI remission ≤3.3 (ACR/EULAR); LDA ≤11; MDA ≤26; HDA >26; CRP in mg/dL"
+      ]
+    },
+    {
+      "id": "basdai",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Garrett S et al. J Rheumatol. 1994 (PMID 7699630) — BASDAI ≥4 common active-disease / biologic-pathway threshold; pair with ASDAS/CRP"
+      ]
+    },
+    {
+      "id": "sle-dai",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Gladman DD et al. J Rheumatol. 2002 (PMID 11838846) — SLEDAI-2K; educational bands 0 / 1–5 mild / 6–10 moderate / 11–19 high / ≥20 very high widely used",
+        "https://www.mdcalc.com/calc/10099/systemic-lupus-erythematosus-disease-activity-index-2000-sledai-2k"
+      ]
+    },
+    {
+      "id": "pasi",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Fredriksson T, Pettersson U. Dermatologica. 1978 (PMID 357213) — PASI 0–72; common pathway cut PASI >10 (with DLQI/BSA) for systemic/biologic eligibility"
+      ]
+    }
+  ]
+}

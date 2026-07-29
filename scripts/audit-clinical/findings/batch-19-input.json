@@ -1,0 +1,643 @@
+[
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "meld-xi",
+    "name": "MELD-XI Score",
+    "shortName": "MELD-XI",
+    "whenToUse": "End-stage liver disease prognosis when INR is unreliable (warfarin, DOAC, DIC) or unavailable.",
+    "whyUse": "Retains bilirubin and creatinine prognostic information without coagulation; educational alternative to full MELD/MELD-Na.",
+    "nextSteps": [
+      {
+        "condition": "Elevated MELD-XI",
+        "actions": [
+          "Manage decompensation",
+          "Transplant evaluation if candidate",
+          "Do not use alone for listing priority"
+        ]
+      },
+      {
+        "condition": "On anticoagulants",
+        "actions": [
+          "Prefer MELD-XI or clinical judgment over INR-driven MELD",
+          "Address reversible renal injury"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "peld-score",
+    "name": "PELD Score",
+    "shortName": "PELD",
+    "whenToUse": "Children <12 years with chronic liver disease for prognosis / transplant prioritization context.",
+    "whyUse": "Age-appropriate counterpart to MELD using bilirubin, INR, albumin, age <1 year, and growth failure.",
+    "nextSteps": [
+      {
+        "condition": "Elevated PELD or decompensation",
+        "actions": [
+          "Pediatric transplant center referral",
+          "Nutrition and growth support",
+          "Manage portal HTN complications"
+        ]
+      },
+      {
+        "condition": "Growth failure",
+        "actions": [
+          "Dietitian involvement",
+          "Document serial anthropometrics for listing"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "ukeld",
+    "name": "UKELD Score",
+    "shortName": "UKELD",
+    "whenToUse": "Adult chronic liver disease when estimating transplant benefit using UK-style labs (includes sodium).",
+    "whyUse": "UK listing threshold historically UKELD ≥49; incorporates INR, creatinine, bilirubin, and sodium.",
+    "nextSteps": [
+      {
+        "condition": "UKELD ≥49",
+        "actions": [
+          "Transplant assessment if candidate",
+          "Manage ascites, encephalopathy, varices",
+          "Address hyponatremia carefully"
+        ]
+      },
+      {
+        "condition": "UKELD <49",
+        "actions": [
+          "Optimize disease-specific therapy",
+          "Serial UKELD if progressive disease"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "clif-c-aclf",
+    "name": "CLIF-C ACLF Score (Simplified)",
+    "shortName": "CLIF-C ACLF",
+    "whenToUse": "Hospitalized cirrhosis with acute-on-chronic liver failure for mortality risk estimate.",
+    "whyUse": "Prognostic score for ACLF severity; complements CLIF-OF/CLIF-SOFA organ grading.",
+    "nextSteps": [
+      {
+        "condition": "ACLF suspected",
+        "actions": [
+          "Grade organ failures (CLIF-OF)",
+          "Treat precipitant (infection, bleed, alcohol, DILI)",
+          "ICU as needed",
+          "Early transplant discussion if candidate"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "clif-sofa",
+    "name": "CLIF-SOFA / CLIF-OF (Simplified Sum)",
+    "shortName": "CLIF-SOFA",
+    "whenToUse": "Bedside educational grading of organ dysfunction in decompensated cirrhosis / ACLF workup.",
+    "whyUse": "Organ-failure count and severity define ACLF grades and feed CLIF-C ACLF.",
+    "nextSteps": [
+      {
+        "condition": "≥2 organ failures",
+        "actions": [
+          "ICU-level care",
+          "Precipitant workup",
+          "CLIF-C ACLF mortality estimate",
+          "Transplant vs futility discussion"
+        ]
+      },
+      {
+        "condition": "0–1 failure",
+        "actions": [
+          "Close monitoring",
+          "Re-grade serially",
+          "Manage decompensation"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "abic-score",
+    "name": "ABIC Score (Alcoholic Hepatitis)",
+    "shortName": "ABIC",
+    "whenToUse": "Confirmed or probable alcoholic hepatitis for risk stratification (complements Maddrey, GAHS, MELD).",
+    "whyUse": "Continuous score with low/intermediate/high 90-day mortality strata.",
+    "nextSteps": [
+      {
+        "condition": "Intermediate–high ABIC",
+        "actions": [
+          "Rule out infection",
+          "Nutrition support",
+          "Calculate Maddrey/MELD",
+          "Steroid candidacy if severe"
+        ]
+      },
+      {
+        "condition": "Low ABIC",
+        "actions": [
+          "Supportive care",
+          "Alcohol cessation",
+          "Monitor trajectory"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "arr",
+    "name": "AST/ALT Ratio (De Ritis)",
+    "shortName": "AST/ALT",
+    "whenToUse": "Interpreting aminotransferase pattern in suspected alcoholic liver disease, cirrhosis, or mixed injury.",
+    "whyUse": "Ratio >1 (especially >2) supports alcohol-related injury or advanced fibrosis; <1 common in viral/NAFLD hepatitis without cirrhosis.",
+    "nextSteps": [
+      {
+        "condition": "Ratio ≥2 + heavy alcohol",
+        "actions": [
+          "Evaluate for alcoholic hepatitis",
+          "DF/MELD/ABIC as indicated",
+          "Nutrition and cessation support"
+        ]
+      },
+      {
+        "condition": "Any abnormal pattern",
+        "actions": [
+          "Exclude ischemia, rhabdo, meds",
+          "Fibrosis assessment if chronic disease"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "aasld-ascites",
+    "name": "SAAG (Serum-Ascites Albumin Gradient)",
+    "shortName": "SAAG",
+    "whenToUse": "After diagnostic paracentesis when serum and ascites albumin are available.",
+    "whyUse": "SAAG ≥1.1 g/dL indicates portal hypertension with high accuracy; guides differential and therapy.",
+    "nextSteps": [
+      {
+        "condition": "High SAAG",
+        "actions": [
+          "SBP rule-out with cell count",
+          "Portal HTN management",
+          "Echo if protein high (cardiac)"
+        ]
+      },
+      {
+        "condition": "Low SAAG",
+        "actions": [
+          "Expand differential",
+          "Targeted fluid studies"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "runyon-criteria",
+    "name": "Runyon Criteria (Secondary Peritonitis)",
+    "shortName": "Runyon",
+    "whenToUse": "Ascitic infection when distinguishing SBP from secondary peritonitis needing source control.",
+    "whyUse": "≥2 chemical criteria raise concern for secondary peritonitis and prompt imaging/surgery.",
+    "nextSteps": [
+      {
+        "condition": "≥2 criteria",
+        "actions": [
+          "Emergent imaging",
+          "Surgery/IR source control",
+          "Broad antibiotics"
+        ]
+      },
+      {
+        "condition": "<2 criteria + SBP",
+        "actions": [
+          "Third-generation cephalosporin (typical)",
+          "Albumin if indicated",
+          "Repeat paracentesis if no improvement"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "harmless-ap",
+    "name": "HAPS (Harmless Acute Pancreatitis Score)",
+    "shortName": "HAPS",
+    "whenToUse": "Early evaluation of acute pancreatitis to identify patients suitable for ward care.",
+    "whyUse": "Absence of peritonitis signs, hemoconcentration, and renal failure predicts mild course with high NPV.",
+    "nextSteps": [
+      {
+        "condition": "Harmless",
+        "actions": [
+          "Ward care",
+          "Supportive therapy",
+          "Early oral nutrition"
+        ]
+      },
+      {
+        "condition": "Not harmless",
+        "actions": [
+          "Reassess severity (BISAP, organ failure)",
+          "Monitor for necrosis/infection"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "pned",
+    "name": "PNED Score (UGIB Mortality, Simplified)",
+    "shortName": "PNED",
+    "whenToUse": "Adults with nonvariceal upper GI bleeding for in-hospital mortality risk stratification.",
+    "whyUse": "Includes clinical and post-endoscopy factors (rebleed, failed endoscopic therapy) beyond pure admission scores.",
+    "nextSteps": [
+      {
+        "condition": "High score / rebleed / failed endo",
+        "actions": [
+          "Repeat endoscopy",
+          "Interventional radiology",
+          "Surgical consult",
+          "ICU"
+        ]
+      },
+      {
+        "condition": "Lower score",
+        "actions": [
+          "Standard PPI and monitoring",
+          "Early diet as appropriate"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "pas",
+    "name": "Pediatric Appendicitis Score (PAS)",
+    "shortName": "PAS",
+    "whenToUse": "Children with suspected appendicitis to structure probability and imaging decisions.",
+    "whyUse": "Pediatric-specific alternative/complement to Alvarado; includes hop tenderness and neutrophilia.",
+    "nextSteps": [
+      {
+        "condition": "Low PAS",
+        "actions": [
+          "Serial exams",
+          "Consider gyn/GU/mesenteric adenitis"
+        ]
+      },
+      {
+        "condition": "Intermediate–high",
+        "actions": [
+          "US first-line in many centers",
+          "Surgical consult",
+          "Avoid unnecessary radiation when possible"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "tokyo-cholangitis",
+    "name": "Tokyo Guidelines Cholangitis Severity",
+    "shortName": "TG18 Cholangitis",
+    "whenToUse": "Confirmed or suspected acute cholangitis after diagnosis criteria met (systemic inflammation + cholestasis + imaging).",
+    "whyUse": "Grade guides urgency of biliary drainage and intensity of care.",
+    "nextSteps": [
+      {
+        "condition": "Grade III",
+        "actions": [
+          "Urgent decompression",
+          "Critical care",
+          "Source control"
+        ]
+      },
+      {
+        "condition": "Grade II",
+        "actions": [
+          "Early ERCP within appropriate window",
+          "IV abx"
+        ]
+      },
+      {
+        "condition": "Grade I",
+        "actions": [
+          "Medical therapy",
+          "Elective/early drainage timing per response"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "tokyo-cholecystitis",
+    "name": "Tokyo Guidelines Cholecystitis Severity",
+    "shortName": "TG18 Cholecystitis",
+    "whenToUse": "Acute cholecystitis once diagnostic criteria are met, to grade severity and plan intervention.",
+    "whyUse": "Grade III organ dysfunction and Grade II local/inflammatory markers change operative risk and need for drainage.",
+    "nextSteps": [
+      {
+        "condition": "Grade III",
+        "actions": [
+          "ICU as needed",
+          "GB drainage",
+          "Delay elective chole until recovered"
+        ]
+      },
+      {
+        "condition": "Grade I–II",
+        "actions": [
+          "Surgical pathway per fitness and local inflammation"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "determinant-based",
+    "name": "Determinant-Based Pancreatitis Severity",
+    "shortName": "DB Classification",
+    "whenToUse": "Acute pancreatitis when (peri)pancreatic necrosis and organ-failure duration are known or suspected.",
+    "whyUse": "Separates sterile vs infected necrosis and transient vs persistent organ failure for prognosis and management intensity.",
+    "nextSteps": [
+      {
+        "condition": "Critical / severe",
+        "actions": [
+          "ICU",
+          "Organ support",
+          "Specialist pancreatology/surgery",
+          "Delay necrosectomy when possible (step-up)"
+        ]
+      },
+      {
+        "condition": "Moderate",
+        "actions": [
+          "Monitor for infection of necrosis",
+          "Nutrition",
+          "Avoid early unnecessary intervention"
+        ]
+      },
+      {
+        "condition": "Mild",
+        "actions": [
+          "Ward care",
+          "Early oral intake",
+          "Etiology treatment"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "mayo-pbc",
+    "name": "Mayo Natural History Model (PBC)",
+    "shortName": "Mayo PBC",
+    "whenToUse": "PBC prognosis discussions and transplant timing context (educational R score).",
+    "whyUse": "Classic model using age, bilirubin, albumin, PT, and edema; higher R → worse survival.",
+    "nextSteps": [
+      {
+        "condition": "Rising bilirubin / high R",
+        "actions": [
+          "Hepatology/transplant referral",
+          "Confirm PBC therapy adherence",
+          "Screen varices/HCC if advanced"
+        ]
+      },
+      {
+        "condition": "Lower R",
+        "actions": [
+          "Continue UDCA",
+          "Assess biochemical response at 1 year"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "barrett-prague",
+    "name": "Prague C & M (Barrett Esophagus)",
+    "shortName": "Prague C&M",
+    "whenToUse": "Documenting Barrett esophagus extent at endoscopy for surveillance planning.",
+    "whyUse": "Standardized C&M reporting improves communication and correlates with neoplastic risk burden.",
+    "nextSteps": [
+      {
+        "condition": "Dysplasia / neoplasia",
+        "actions": [
+          "Expert pathology confirm",
+          "Endoscopic eradication therapy referral"
+        ]
+      },
+      {
+        "condition": "NDBE",
+        "actions": [
+          "PPI optimization",
+          "Surveillance per length and guidelines"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "los-angeles-esophagitis",
+    "name": "Los Angeles Classification (Esophagitis)",
+    "shortName": "LA Grade",
+    "whenToUse": "Endoscopic grading of erosive esophagitis severity.",
+    "whyUse": "Standardized grades guide GERD severity documentation, PPI intensity, and healing expectations.",
+    "nextSteps": [
+      {
+        "condition": "Grade C–D",
+        "actions": [
+          "Optimize PPI",
+          "Assess healing",
+          "Screen for Barrett once healed if indicated"
+        ]
+      },
+      {
+        "condition": "Grade A–B",
+        "actions": [
+          "PPI course",
+          "Step-down if asymptomatic after healing"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "varices-baveno",
+    "name": "Baveno VI Criteria (Varices Screening)",
+    "shortName": "Baveno VI",
+    "whenToUse": "Compensated advanced chronic liver disease (cACLD) when deciding need for screening EGD for varices needing treatment.",
+    "whyUse": "LSM <20 kPa and platelets >150×10⁹/L identify patients at very low risk of varices needing treatment who can defer endoscopy.",
+    "nextSteps": [
+      {
+        "condition": "Meets Baveno VI",
+        "actions": [
+          "Skip EGD for now",
+          "Annual non-invasive recheck"
+        ]
+      },
+      {
+        "condition": "Fails criteria",
+        "actions": [
+          "EGD",
+          "Risk-stratify varices",
+          "Consider NSBB / banding"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "hvpg",
+    "name": "HVPG Interpretation",
+    "shortName": "HVPG",
+    "whenToUse": "Interpreting measured HVPG from hepatic vein catheterization.",
+    "whyUse": "HVPG thresholds define CSPH, variceal bleeding risk, and treatment response targets.",
+    "nextSteps": [
+      {
+        "condition": "HVPG ≥10",
+        "actions": [
+          "Variceal screening strategy",
+          "Consider NSBB in cACLD",
+          "Eliminate etiology of liver disease"
+        ]
+      },
+      {
+        "condition": "Refractory bleed/ascites",
+        "actions": [
+          "TIPS evaluation in selected patients"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "ascites-pmm",
+    "name": "Ascites PMN (SBP Diagnosis)",
+    "shortName": "PMN / SBP",
+    "whenToUse": "Diagnostic paracentesis in ascites — especially cirrhosis with symptoms, admission, or GI bleed.",
+    "whyUse": "PMN ≥250/µL diagnoses SBP and warrants prompt antibiotics without waiting for culture.",
+    "nextSteps": [
+      {
+        "condition": "PMN ≥250",
+        "actions": [
+          "Empiric abx now",
+          "Albumin if indicated",
+          "Do not wait for culture"
+        ]
+      },
+      {
+        "condition": "PMN <250",
+        "actions": [
+          "Hold abx unless high suspicion",
+          "Culture-positive bacterascites follow-up"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "delta-meld",
+    "name": "Delta-MELD (ΔMELD)",
+    "shortName": "ΔMELD",
+    "whenToUse": "Serial MELD scores in decompensated cirrhosis or waitlist monitoring.",
+    "whyUse": "Rising MELD (positive ΔMELD) associates with higher mortality beyond static MELD alone.",
+    "nextSteps": [
+      {
+        "condition": "Rising ΔMELD",
+        "actions": [
+          "Infection workup",
+          "US Doppler for portal vein thrombus",
+          "Transplant center update",
+          "Avoid nephrotoxins"
+        ]
+      },
+      {
+        "condition": "Falling MELD",
+        "actions": [
+          "Continue therapy",
+          "Reassess listing priority per policy"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "fibroscan-f-stage",
+    "name": "FibroScan LSM → Fibrosis Stage (Approx)",
+    "shortName": "LSM F-stage",
+    "whenToUse": "Interpreting vibration-controlled transient elastography (FibroScan) LSM in chronic liver disease.",
+    "whyUse": "Etiology-aware kPa cut-offs triage advanced fibrosis/cirrhosis risk for clinical pathways.",
+    "nextSteps": [
+      {
+        "condition": "High LSM",
+        "actions": [
+          "Assume advanced disease until proven otherwise",
+          "Complication screening",
+          "Hepatology referral"
+        ]
+      },
+      {
+        "condition": "Low LSM",
+        "actions": [
+          "Lower likelihood advanced fibrosis",
+          "Manage etiology",
+          "Repeat if clinical change"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "df-units",
+    "name": "Maddrey DF Unit Helper (PT vs INR)",
+    "shortName": "DF Units",
+    "whenToUse": "When calculating Maddrey DF and labs report INR more readily than PT/control.",
+    "whyUse": "Original DF uses PT in seconds vs control; INR-based shortcuts are imperfect and lab-dependent.",
+    "nextSteps": [
+      {
+        "condition": "DF ≥32",
+        "actions": [
+          "Infection screen",
+          "Steroid candidacy",
+          "Plan Lille at day 7"
+        ]
+      },
+      {
+        "condition": "Unit confusion",
+        "actions": [
+          "Confirm bili in mg/dL",
+          "Call lab for control PT"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-gi-hep.ts",
+    "id": "gerd-q",
+    "name": "GerdQ Questionnaire",
+    "shortName": "GerdQ",
+    "whenToUse": "Primary care or GI clinic assessment of suspected GERD and monitoring symptom control.",
+    "whyUse": "Structured 6-item score; ≥8 suggests GERD and may support empiric PPI trial in typical patients.",
+    "nextSteps": [
+      {
+        "condition": "GerdQ ≥8 without alarms",
+        "actions": [
+          "Empiric PPI",
+          "Lifestyle counseling",
+          "Follow GerdQ on therapy"
+        ]
+      },
+      {
+        "condition": "Alarms or refractory",
+        "actions": [
+          "Endoscopy",
+          "Consider pH-impedance / manometry pathways"
+        ]
+      }
+    ]
+  }
+]

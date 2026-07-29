@@ -1,0 +1,508 @@
+[
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "oswestry",
+    "name": "Oswestry Disability Index",
+    "shortName": "ODI",
+    "whenToUse": "When ODI questionnaire (10 sections × 0–5) has been scored and percent disability is available.",
+    "whyUse": "Most widely used condition-specific disability measure for low back pain outcomes and research.",
+    "nextSteps": [
+      {
+        "condition": "ODI >40%",
+        "actions": [
+          "Multimodal spine program",
+          "Screen yellow flags",
+          "Imaging only if red flags / persistent"
+        ]
+      },
+      {
+        "condition": "Serial use",
+        "actions": [
+          "Track change ≥ MCID",
+          "Pair with pain VAS and work status"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "ndi-neck",
+    "name": "Neck Disability Index",
+    "shortName": "NDI",
+    "whenToUse": "When NDI (10 sections) has been administered for neck pain, whiplash, or cervical radiculopathy follow-up.",
+    "whyUse": "Standard neck-specific disability PRO; mirrors Oswestry structure.",
+    "nextSteps": [
+      {
+        "condition": "NDI ≥30%",
+        "actions": [
+          "Cervical PT",
+          "Ergonomics / work review",
+          "Neuro exam if radicular"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "dash-upper-limb",
+    "name": "DASH Score (Upper Extremity)",
+    "shortName": "DASH",
+    "whenToUse": "When the 30-item DASH disability/symptom score has been computed for arm/shoulder/hand conditions.",
+    "whyUse": "Gold-standard region-specific PRO for upper-limb function across diagnoses.",
+    "nextSteps": [
+      {
+        "condition": "Elevated DASH",
+        "actions": [
+          "Hand/OT or PT",
+          "Activity modification",
+          "Ortho review if structural lesion"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "quickdash",
+    "name": "QuickDASH",
+    "shortName": "QuickDASH",
+    "whenToUse": "Brief upper-extremity PRO when full DASH is too long; same 0–100 metric family.",
+    "whyUse": "11-item short form correlates highly with full DASH and is practical in clinic.",
+    "nextSteps": [
+      {
+        "condition": "QuickDASH >40",
+        "actions": [
+          "UE-focused rehab",
+          "Ergonomic assessment",
+          "Specialist referral if progressive neuro deficit"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "womac",
+    "name": "WOMAC Osteoarthritis Index (Total)",
+    "shortName": "WOMAC",
+    "whenToUse": "When WOMAC pain + stiffness + function subscales have been summed for hip/knee OA.",
+    "whyUse": "Core PRO for hip and knee osteoarthritis trials and clinic outcomes.",
+    "nextSteps": [
+      {
+        "condition": "Moderate–severe WOMAC",
+        "actions": [
+          "Land-based exercise / PT",
+          "Weight loss if BMI high",
+          "Ortho review for TKA/THA if refractory"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "ikdc",
+    "name": "IKDC Subjective Knee Form (Total)",
+    "shortName": "IKDC",
+    "whenToUse": "When IKDC subjective form has been scored after knee injury, ACL reconstruction, or cartilage treatment.",
+    "whyUse": "Standard sports-knee PRO spanning symptoms, sports activity, and function.",
+    "nextSteps": [
+      {
+        "condition": "IKDC <80 post-ACL",
+        "actions": [
+          "Progress sport-specific rehab",
+          "Quadriceps strength testing",
+          "Return-to-sport battery"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "easi-eczema",
+    "name": "EASI (Eczema Area and Severity Index)",
+    "shortName": "EASI",
+    "whenToUse": "When regional EASI components have been scored for AD trials or treat-to-target clinic care.",
+    "whyUse": "Core clinician-reported AD severity endpoint in modern dermatology trials and guidelines.",
+    "nextSteps": [
+      {
+        "condition": "EASI >7 with impact",
+        "actions": [
+          "Dermatology referral",
+          "Infection screen if crusting/fever",
+          "Shared decision on advanced therapies"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "scorad-eczema",
+    "name": "SCORAD (Atopic Dermatitis)",
+    "shortName": "SCORAD",
+    "whenToUse": "When SCORAD (extent A, intensity B, subjective C) has been calculated.",
+    "whyUse": "Classic European composite AD severity score including itch and sleep.",
+    "nextSteps": [
+      {
+        "condition": "SCORAD >50",
+        "actions": [
+          "Dermatology",
+          "Rule out superinfection",
+          "Consider phototherapy/systemics"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "iop-glaucoma",
+    "name": "IOP Interpretation Bands",
+    "shortName": "IOP",
+    "whenToUse": "Quick interpretation of measured IOP in mmHg alongside optic nerve and field assessment.",
+    "whyUse": "IOP is a major modifiable glaucoma risk factor; absolute cutoffs never replace full exam.",
+    "nextSteps": [
+      {
+        "condition": "IOP >21 new",
+        "actions": [
+          "Ophthalmology referral",
+          "Document disc/cup",
+          "Avoid relying on IOP alone"
+        ]
+      },
+      {
+        "condition": "IOP >40 or acute symptoms",
+        "actions": [
+          "Emergency eye care",
+          "Check for angle closure",
+          "Do not dilate if angle closure suspected"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "snellen-logmar",
+    "name": "Snellen to LogMAR",
+    "shortName": "LogMAR",
+    "whenToUse": "When reporting or comparing visual acuity on a logarithmic scale (trials, low vision, research).",
+    "whyUse": "LogMAR is linear for change analysis; Snellen steps are unequal.",
+    "nextSteps": [
+      {
+        "condition": "LogMAR ≥0.5 in better eye",
+        "actions": [
+          "Low-vision / ophtho assessment",
+          "Driving standards review by jurisdiction"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "vhi-10",
+    "name": "Voice Handicap Index-10",
+    "shortName": "VHI-10",
+    "whenToUse": "When VHI-10 questionnaire has been completed for dysphonia or post-laryngeal treatment follow-up.",
+    "whyUse": "Brief, validated voice-related quality-of-life / handicap measure used in ENT clinics.",
+    "nextSteps": [
+      {
+        "condition": "VHI-10 ≥11",
+        "actions": [
+          "Laryngoscopy if persistent dysphonia >2–4 wk",
+          "Voice therapy referral",
+          "Review reflux/irritants/voice use"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "pure-tone-average",
+    "name": "Pure-Tone Average (PTA)",
+    "shortName": "PTA",
+    "whenToUse": "From air-conduction thresholds to summarize hearing level (commonly 0.5, 1, 2 kHz ± 4 kHz).",
+    "whyUse": "Standard single-number summary for hearing loss degree and disability discussions.",
+    "nextSteps": [
+      {
+        "condition": "PTA >25 dB",
+        "actions": [
+          "Full audiology workup if not done",
+          "Hearing aid trial counseling",
+          "MRI if asymmetric SNHL per guidelines"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "berlin-sleep",
+    "name": "Berlin Questionnaire (Sleep Apnea Screen)",
+    "shortName": "Berlin",
+    "whenToUse": "Primary care or preoperative OSA risk screening when STOP-BANG is not used.",
+    "whyUse": "Validated three-category questionnaire classifying high vs low OSA risk.",
+    "nextSteps": [
+      {
+        "condition": "High risk",
+        "actions": [
+          "Home sleep apnea test or PSG",
+          "Counsel drowsy driving",
+          "Periop OSA precautions if surgery planned"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "cat-copd",
+    "name": "COPD Assessment Test (CAT)",
+    "shortName": "CAT",
+    "whenToUse": "Routine COPD visits to quantify symptoms and guide GOLD ABE grouping / treatment intensity.",
+    "whyUse": "8-item validated symptom score preferred in GOLD for impact assessment (with mMRC).",
+    "nextSteps": [
+      {
+        "condition": "CAT ≥10",
+        "actions": [
+          "Review inhaler regimen (LABA/LAMA ± ICS)",
+          "Pulmonary rehab referral",
+          "Exacerbation action plan"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "ado-index",
+    "name": "ADO Index (COPD Prognosis)",
+    "shortName": "ADO",
+    "whenToUse": "COPD prognostication when 6-minute walk (for BODE) is unavailable.",
+    "whyUse": "Simpler than BODE; age + mMRC + FEV1% predicts mortality without exercise test.",
+    "nextSteps": [
+      {
+        "condition": "ADO ≥7",
+        "actions": [
+          "Pulmonary specialty follow-up",
+          "Pulm rehab",
+          "Goals-of-care / exacerbation plan"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "gold-stage",
+    "name": "GOLD Airflow Obstruction Stage",
+    "shortName": "GOLD Stage",
+    "whenToUse": "After COPD is diagnosed (FEV1/FVC <0.7 post-BD) to grade obstruction severity.",
+    "whyUse": "Universal spirometric severity language in GOLD reports (separate from ABE symptom/exacerbation groups).",
+    "nextSteps": [
+      {
+        "condition": "GOLD 3–4",
+        "actions": [
+          "Specialty COPD care",
+          "Check O2 criteria",
+          "Pulm rehab",
+          "Exacerbation prevention"
+        ]
+      },
+      {
+        "condition": "Any grade",
+        "actions": [
+          "Assign ABE group with CAT/mMRC + exacerbations",
+          "Smoking cessation",
+          "Vaccinations"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "act-asthma",
+    "name": "Asthma Control Test (ACT)",
+    "shortName": "ACT",
+    "whenToUse": "Clinic visits to assess asthma control and step therapy decisions.",
+    "whyUse": "5-item validated patient questionnaire; cutoff ≤19 identifies uncontrolled asthma.",
+    "nextSteps": [
+      {
+        "condition": "ACT ≤19",
+        "actions": [
+          "Inhaler technique / adherence",
+          "Step-up controller therapy",
+          "Check rhinitis, GERD, smoking, occupation"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "acq-asthma",
+    "name": "Asthma Control Questionnaire (ACQ)",
+    "shortName": "ACQ",
+    "whenToUse": "When ACQ-5, ACQ-6, or ACQ-7 mean has been calculated for research or specialty clinic.",
+    "whyUse": "Juniper ACQ is a standard continuous control metric in asthma trials.",
+    "nextSteps": [
+      {
+        "condition": "ACQ ≥1.5",
+        "actions": [
+          "Step-up per GINA",
+          "Specialist if high-dose ICS/LABA failing",
+          "Biologic pathway if severe eosinophilic/allergic"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "gina-control",
+    "name": "GINA Symptom Control (Checklist)",
+    "shortName": "GINA Control",
+    "whenToUse": "Quick guideline-style control classification at asthma visits (with exacerbation risk assessment).",
+    "whyUse": "GINA’s standard well / partly / uncontrolled framework used worldwide.",
+    "nextSteps": [
+      {
+        "condition": "Partly or uncontrolled",
+        "actions": [
+          "Confirm diagnosis / phenotype",
+          "ICS-containing controller optimization",
+          "Written action plan"
+        ]
+      },
+      {
+        "condition": "Any visit",
+        "actions": [
+          "Assess exacerbation risk",
+          "Inhaler technique",
+          "Smoking / allergen exposures"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "elixhauser-simp",
+    "name": "Elixhauser Comorbidity Count (Simplified)",
+    "shortName": "Elixhauser",
+    "whenToUse": "Quick comorbidity burden tally when full weighted Elixhauser/van Walraven scores are not computed.",
+    "whyUse": "Elixhauser categories improve mortality risk adjustment vs demographics alone; count is a simple proxy.",
+    "nextSteps": [
+      {
+        "condition": "Count ≥5",
+        "actions": [
+          "Medication reconciliation",
+          "Multimorbidity care plan",
+          "Consider formal weighted risk score if research/QI"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "frailty-clinical",
+    "name": "Clinical Frailty Scale (CFS)",
+    "shortName": "CFS",
+    "whenToUse": "Older adults in acute care, ICU triage context, or outpatient geriatrics for baseline fitness.",
+    "whyUse": "Simple pictorial/ordinal scale predicting outcomes better than age alone.",
+    "nextSteps": [
+      {
+        "condition": "CFS ≥5",
+        "actions": [
+          "Comprehensive geriatric assessment",
+          "Fall/med review",
+          "Goals-of-care discussion"
+        ]
+      },
+      {
+        "condition": "CFS ≥7",
+        "actions": [
+          "Palliative needs screen",
+          "Caregiver support",
+          "Avoid non-beneficial intensive interventions when discordant with goals"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "fried-frailty",
+    "name": "Fried Frailty Phenotype",
+    "shortName": "Fried",
+    "whenToUse": "Research or clinic frailty phenotyping when grip strength/gait speed data are available.",
+    "whyUse": "Classic biologic frailty phenotype predictive of falls, disability, hospitalization, and death.",
+    "nextSteps": [
+      {
+        "condition": "Pre-frail or frail",
+        "actions": [
+          "Resistance + balance exercise",
+          "Nutrition / protein review",
+          "Fall risk assessment",
+          "Deprescribing pass"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "morse-fall",
+    "name": "Morse Fall Scale",
+    "shortName": "Morse",
+    "whenToUse": "Hospital nursing admission and reassessment for fall precautions.",
+    "whyUse": "Widely implemented inpatient fall risk tool with actionable cut bands.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥25",
+        "actions": [
+          "Fall precautions bundle",
+          "Toileting q2h when appropriate",
+          "Review psychoactive meds"
+        ]
+      },
+      {
+        "condition": "Score ≥45",
+        "actions": [
+          "High-risk protocol",
+          "Consider sitter/video monitor",
+          "PT mobility assessment"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "hendrich-fall",
+    "name": "Hendrich II Fall Risk Model",
+    "shortName": "Hendrich II",
+    "whenToUse": "Inpatient fall risk screening using Hendrich II (alternative to Morse).",
+    "whyUse": "Brief model including confusion, depression, elimination, dizziness, sex, antiepileptics, benzos, and get-up-and-go.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥5",
+        "actions": [
+          "Fall precautions",
+          "Benzodiazepine deprescribing review",
+          "PT / toileting plan"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-scores-residual.ts",
+    "id": "mna-sf",
+    "name": "Mini Nutritional Assessment – Short Form",
+    "shortName": "MNA-SF",
+    "whenToUse": "Geriatric nutrition screening in clinic, hospital, or long-term care.",
+    "whyUse": "Validated 6-item short form; identifies malnutrition risk quickly for full MNA or dietitian referral.",
+    "nextSteps": [
+      {
+        "condition": "Score ≤11",
+        "actions": [
+          "Dietitian referral",
+          "Food intake record",
+          "Check dentition, swallow, depression, meds"
+        ]
+      },
+      {
+        "condition": "Score ≤7",
+        "actions": [
+          "High-calorie/protein plan",
+          "Rule out disease-related malnutrition",
+          "Consider supplements"
+        ]
+      }
+    ]
+  }
+]

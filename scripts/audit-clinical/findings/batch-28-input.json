@@ -1,0 +1,569 @@
+[
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "ada-diabetes-risk",
+    "name": "ADA Type 2 Diabetes Risk Test",
+    "shortName": "ADA Risk",
+    "whenToUse": "Adults in primary care or community settings to identify who may need glucose testing.",
+    "whyUse": "Simple validated point score; higher scores warrant diagnostic testing (A1c, FPG, or OGTT).",
+    "nextSteps": [
+      {
+        "condition": "Score ≥5",
+        "actions": [
+          "Diagnostic glucose testing",
+          "Lifestyle intervention",
+          "Assess for metabolic syndrome"
+        ]
+      },
+      {
+        "condition": "Score <5",
+        "actions": [
+          "Preventive counseling",
+          "Age-appropriate rescreening"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "findrisc",
+    "name": "FINDRISC Diabetes Risk Score",
+    "shortName": "FINDRISC",
+    "whenToUse": "Adults for opportunistic type 2 diabetes risk stratification and prevention counseling.",
+    "whyUse": "Widely validated non-invasive score; high scores prompt OGTT/A1c and lifestyle programs.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥12",
+        "actions": [
+          "A1c/FPG/OGTT",
+          "Weight and activity program",
+          "Address BP/lipids"
+        ]
+      },
+      {
+        "condition": "Score ≥15",
+        "actions": [
+          "Intensive lifestyle",
+          "Consider diabetes prevention program referral"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "a1c-diagnosis",
+    "name": "Diabetes Diagnostic Category (A1c/FPG/OGTT)",
+    "shortName": "A1c Dx",
+    "whenToUse": "When classifying glycemic status from one or more diagnostic tests.",
+    "whyUse": "Aligns results with ADA diagnostic cutoffs; flags discordant tests needing confirmation.",
+    "nextSteps": [
+      {
+        "condition": "Diabetes range",
+        "actions": [
+          "Confirm if needed",
+          "Education",
+          "A1c target planning",
+          "ASCVD risk"
+        ]
+      },
+      {
+        "condition": "Prediabetes",
+        "actions": [
+          "DPP-style lifestyle",
+          "Weight loss 5–7%",
+          "Repeat labs"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "hypoglycemia-level",
+    "name": "ADA Hypoglycemia Level",
+    "shortName": "Hypo Level",
+    "whenToUse": "Documenting or triaging hypoglycemic events in people with diabetes.",
+    "whyUse": "Standardized levels guide treatment intensity, education, and regimen review.",
+    "nextSteps": [
+      {
+        "condition": "Level 2–3",
+        "actions": [
+          "Regimen de-intensification",
+          "Glucagon access",
+          "Driving safety counseling"
+        ]
+      },
+      {
+        "condition": "Recurrent Level 1",
+        "actions": [
+          "Pattern analysis",
+          "Meal timing",
+          "Consider CGM"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "insulin-sensitivity-factor",
+    "name": "Insulin Sensitivity Factor (Rule of 1800/1500)",
+    "shortName": "ISF",
+    "whenToUse": "Initial estimate of correction factor when designing or revising a basal–bolus plan.",
+    "whyUse": "Rule-of-thumb from total daily dose; must be individualized with SMBG/CGM.",
+    "nextSteps": [
+      {
+        "condition": "New ISF estimate",
+        "actions": [
+          "Pair with ICR",
+          "Educate on hypo risk",
+          "Follow-up CGM/SMBG review"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "carb-ratio",
+    "name": "Insulin-to-Carb Ratio (Rule of 500)",
+    "shortName": "ICR",
+    "whenToUse": "Estimating grams of carbohydrate covered by 1 unit of mealtime insulin.",
+    "whyUse": "Starting point for carbohydrate counting regimens; refine with postprandial data.",
+    "nextSteps": [
+      {
+        "condition": "Postprandial highs",
+        "actions": [
+          "Lower ICR number carefully",
+          "Review carb counting accuracy",
+          "Check basal adequacy"
+        ]
+      },
+      {
+        "condition": "Postprandial lows",
+        "actions": [
+          "Raise ICR (fewer units per carb)",
+          "Review prebolus timing"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "correction-dose-insulin",
+    "name": "Insulin Correction Dose",
+    "shortName": "Correction",
+    "whenToUse": "Estimating units of rapid-acting insulin to correct hyperglycemia above target.",
+    "whyUse": "Standard formula for correction boluses; combine carefully with meal bolus and IOB.",
+    "nextSteps": [
+      {
+        "condition": "Large correction frequently needed",
+        "actions": [
+          "Review basal and ICR",
+          "Check for illness, steroids, pump failure"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "total-daily-insulin",
+    "name": "Weight-Based Total Daily Insulin Estimate",
+    "shortName": "TDD Est",
+    "whenToUse": "Rough starting TDD estimate for insulin-naive or regimen redesign (supervised).",
+    "whyUse": "Weight-based ranges provide a safe starting framework before titration.",
+    "nextSteps": [
+      {
+        "condition": "New insulin start",
+        "actions": [
+          "Choose regimen",
+          "SMBG/CGM plan",
+          "Follow-up titration in days"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "basal-bolus-split",
+    "name": "Basal–Bolus Split from TDD",
+    "shortName": "Basal/Bolus",
+    "whenToUse": "Designing MDI or reviewing pump basal total from known TDD.",
+    "whyUse": "Classic 50/50 starting split; adjustable for dawn phenomenon or high carb intake.",
+    "nextSteps": [
+      {
+        "condition": "Fasting highs",
+        "actions": [
+          "Review basal",
+          "Dawn phenomenon evaluation"
+        ]
+      },
+      {
+        "condition": "Postprandial highs",
+        "actions": [
+          "Increase prandial share or strengthen ICR"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "steroid-hyperglycemia",
+    "name": "Steroid Hyperglycemia Risk / Expected Rise Helper",
+    "shortName": "Steroid BG",
+    "whenToUse": "Patients starting or escalating systemic glucocorticoids, with or without known diabetes.",
+    "whyUse": "Steroids raise postprandial glucose disproportionately; anticipatory monitoring and treatment planning reduce complications.",
+    "nextSteps": [
+      {
+        "condition": "Known diabetes on steroids",
+        "actions": [
+          "Increase monitoring",
+          "Adjust prandial/basal per protocol",
+          "Endocrine if severe"
+        ]
+      },
+      {
+        "condition": "No diabetes, high dose",
+        "actions": [
+          "Periodic glucose checks",
+          "Educate on symptoms"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "thyroid-function-pattern",
+    "name": "Thyroid Function Pattern Interpreter",
+    "shortName": "TFT Pattern",
+    "whenToUse": "When TSH and free T4 are available and a pattern-based differential is needed.",
+    "whyUse": "Rapid pattern recognition guides next labs (T3, antibodies, imaging, pituitary workup).",
+    "nextSteps": [
+      {
+        "condition": "Primary hypo",
+        "actions": [
+          "TPO Abs",
+          "Levothyroxine if indicated",
+          "Dose by weight/age"
+        ]
+      },
+      {
+        "condition": "Thyrotoxic pattern",
+        "actions": [
+          "T3, TRAb/TSI",
+          "Beta-blocker if symptomatic",
+          "Endocrine referral"
+        ]
+      },
+      {
+        "condition": "Central pattern",
+        "actions": [
+          "Pituitary panel",
+          "MRI if indicated",
+          "Do not miss adrenal insufficiency"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "levothyroxine-dose",
+    "name": "Levothyroxine Dose Estimate (Adult)",
+    "shortName": "T4 Dose",
+    "whenToUse": "Estimating full replacement dose in adults; use lower starts in elderly or cardiac disease.",
+    "whyUse": "≈1.6 µg/kg ideal/actual weight is a common full-replacement starting estimate in healthy adults.",
+    "nextSteps": [
+      {
+        "condition": "New start",
+        "actions": [
+          "Baseline TSH/FT4",
+          "ECG if cardiac risk",
+          "Follow-up labs 6 weeks"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "pth-interpretation",
+    "name": "PTH with Calcium Pattern Interpreter",
+    "shortName": "PTH Pattern",
+    "whenToUse": "Abnormal calcium evaluation when PTH is available.",
+    "whyUse": "PTH–calcium pairing is the core branch point for parathyroid vs non-parathyroid disorders.",
+    "nextSteps": [
+      {
+        "condition": "Primary HPT pattern",
+        "actions": [
+          "24h urine Ca",
+          "DEXA",
+          "Surgical criteria review",
+          "Endocrine/surgery referral"
+        ]
+      },
+      {
+        "condition": "PTH-independent hyperCa",
+        "actions": [
+          "PTHrP",
+          "SPEP/UPEP",
+          "1,25-OH D",
+          "Malignancy workup"
+        ]
+      },
+      {
+        "condition": "Hypoparathyroidism pattern",
+        "actions": [
+          "Mg",
+          "Ca/calcitriol therapy planning",
+          "ECG if severe"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "vitamin-d-status",
+    "name": "Vitamin D Status (25-OH D)",
+    "shortName": "Vit D",
+    "whenToUse": "Interpreting serum 25-OH vitamin D results.",
+    "whyUse": "Common cutoffs guide repletion vs maintenance; lab units and targets vary slightly by society.",
+    "nextSteps": [
+      {
+        "condition": "Deficiency",
+        "actions": [
+          "Repletion (e.g., weekly high-dose then daily maintenance)",
+          "Ca intake",
+          "Fall/bone risk"
+        ]
+      },
+      {
+        "condition": "Very high",
+        "actions": [
+          "Stop excess D",
+          "Serum calcium",
+          "Review sources"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "frax-simp",
+    "name": "FRAX-Style Major Risk Factor Checklist (Educational)",
+    "shortName": "FRAX-simp",
+    "whenToUse": "Quick bedside tally of clinical risk factors before formal FRAX or densitometry decisions.",
+    "whyUse": "Highlights who needs DXA, fall prevention, and treatment discussion. Does not replace official FRAX tool.",
+    "nextSteps": [
+      {
+        "condition": "≥2–3 factors or age-eligible",
+        "actions": [
+          "Official FRAX",
+          "DXA",
+          "Treat if high risk / osteoporosis"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "osteoporosis-t",
+    "name": "DXA T-Score Interpretation (WHO)",
+    "shortName": "T-score",
+    "whenToUse": "Interpreting central DXA T-scores in postmenopausal women and men ≥50 years.",
+    "whyUse": "WHO categories drive labeling; treatment also considers fracture history and FRAX.",
+    "nextSteps": [
+      {
+        "condition": "Osteoporosis or hip/spine fracture",
+        "actions": [
+          "Treat",
+          "Secondary workup",
+          "Dental/GI clearance if needed for agents"
+        ]
+      },
+      {
+        "condition": "Osteopenia",
+        "actions": [
+          "FRAX",
+          "Lifestyle",
+          "Reassess interval DXA"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "who-bmi-class",
+    "name": "WHO BMI Classification",
+    "shortName": "BMI Class",
+    "whenToUse": "When BMI is already calculated and category labeling is needed.",
+    "whyUse": "Standard adult WHO cutoffs for underweight through class III obesity.",
+    "nextSteps": [
+      {
+        "condition": "BMI ≥30 or overweight + comorbidity",
+        "actions": [
+          "Lifestyle",
+          "Comorbidity screen",
+          "Anti-obesity therapy discussion"
+        ]
+      },
+      {
+        "condition": "Underweight",
+        "actions": [
+          "Nutritional assessment",
+          "Secondary cause workup"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "child-bmi-percentile",
+    "name": "Pediatric BMI Percentile Interpretation",
+    "shortName": "Child BMI %",
+    "whenToUse": "When BMI percentile from growth charts/EMR is available for ages 2–19.",
+    "whyUse": "Pediatric weight status uses percentiles, not adult BMI cutoffs.",
+    "nextSteps": [
+      {
+        "condition": "Overweight/obesity",
+        "actions": [
+          "Lifestyle counseling",
+          "Screen BP, lipids, glucose as indicated",
+          "Sleep/mental health"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "fatty-liver-index",
+    "name": "Fatty Liver Index (FLI)",
+    "shortName": "FLI",
+    "whenToUse": "Noninvasive estimate of fatty liver probability in adults when imaging not yet done.",
+    "whyUse": "FLI <30 rules out and ≥60 rules in steatosis with reasonable accuracy in validation cohorts.",
+    "nextSteps": [
+      {
+        "condition": "FLI ≥60",
+        "actions": [
+          "Liver enzymes",
+          "FIB-4/NFS",
+          "Ultrasound if needed",
+          "Weight loss, alcohol review"
+        ]
+      },
+      {
+        "condition": "Indeterminate",
+        "actions": [
+          "Metabolic risk assessment",
+          "Consider imaging"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "hepatic-steatosis-index",
+    "name": "Hepatic Steatosis Index (HSI)",
+    "shortName": "HSI",
+    "whenToUse": "Simple lab-based screen for NAFLD/MASLD steatosis risk.",
+    "whyUse": "HSI <30 rules out and >36 rules in steatosis in original Korean derivation.",
+    "nextSteps": [
+      {
+        "condition": "HSI >36",
+        "actions": [
+          "Lifestyle",
+          "FIB-4",
+          "Consider elastography if fibrosis risk"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "nida-quick",
+    "name": "NIDA Quick Screen",
+    "shortName": "NIDA QS",
+    "whenToUse": "Primary care or general medical visits for brief substance use screening.",
+    "whyUse": "Positive screen prompts full NIDA-Modified ASSIST and brief intervention.",
+    "nextSteps": [
+      {
+        "condition": "Positive screen",
+        "actions": [
+          "NM-ASSIST",
+          "SBIRT brief intervention",
+          "Assess readiness to change"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "readiness-quit",
+    "name": "Tobacco Quit Readiness (Stages of Change)",
+    "shortName": "Quit Stage",
+    "whenToUse": "When counseling patients who use tobacco to match intervention to readiness.",
+    "whyUse": "Tailors 5A/5R messages; avoids one-size-fit-all advice.",
+    "nextSteps": [
+      {
+        "condition": "Preparation/Action",
+        "actions": [
+          "Quit date",
+          "Pharmacotherapy",
+          "Follow-up within 1–2 weeks"
+        ]
+      },
+      {
+        "condition": "Precontemplation",
+        "actions": [
+          "Personalized 5R discussion",
+          "Leave door open"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "bp-classification",
+    "name": "ACC/AHA Blood Pressure Classification",
+    "shortName": "BP Stage",
+    "whenToUse": "Adults with standardized BP readings for category labeling (not a diagnosis alone).",
+    "whyUse": "2017 ACC/AHA thresholds guide lifestyle intensity and treatment discussions.",
+    "nextSteps": [
+      {
+        "condition": "Stage 1–2",
+        "actions": [
+          "Confirm BP",
+          "ASCVD risk",
+          "Lifestyle",
+          "Meds per risk"
+        ]
+      },
+      {
+        "condition": "Crisis range",
+        "actions": [
+          "Assess end-organ damage",
+          "ED/urgent pathway if indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-primary-endo.ts",
+    "id": "pulse-pressure",
+    "name": "Pulse Pressure",
+    "shortName": "PP",
+    "whenToUse": "From paired systolic and diastolic BP when assessing pulse pressure width.",
+    "whyUse": "Wide PP associated with arterial stiffness and CV risk; narrow PP may reflect low stroke volume.",
+    "nextSteps": [
+      {
+        "condition": "Wide PP + HTN",
+        "actions": [
+          "Confirm BP",
+          "Assess ASCVD risk",
+          "Treat isolated systolic HTN per guidelines"
+        ]
+      },
+      {
+        "condition": "Narrow PP + shock",
+        "actions": [
+          "Urgent hemodynamic assessment"
+        ]
+      }
+    ]
+  }
+]

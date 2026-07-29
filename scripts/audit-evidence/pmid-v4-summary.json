@@ -1,0 +1,10 @@
+{
+  "verdicts": {
+    "ok": 802,
+    "mismatch": 35,
+    "no_pmid": 142,
+    "suspect": 2
+  },
+  "problems": 37,
+  "mismatches": 35
+}

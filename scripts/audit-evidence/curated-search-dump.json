@@ -1,0 +1,309 @@
+{
+  "qtc-hodges": [],
+  "nac": [
+    {
+      "pmid": "1928874",
+      "title": "Acetaminophen overdose: a 48-hour intravenous N-acetylcysteine treatment protocol",
+      "doi": "10.1016/s0196-0644(05)81352-6"
+    },
+    {
+      "pmid": "3059186",
+      "title": "Efficacy of oral N-acetylcysteine in the treatment of acetaminophen overdose. Analysis of the national multicenter study (1976 to 1985)",
+      "doi": "10.1056/NEJM198812153192401"
+    }
+  ],
+  "tonicity": [
+    {
+      "pmid": "10824078",
+      "title": "Hyponatremia",
+      "doi": "10.1056/NEJM200005253422107"
+    }
+  ],
+  "insulin": [
+    {
+      "pmid": "19940220",
+      "title": "Hyperglycemic crises in adult patients with diabetes: response to Kitabchi et al",
+      "doi": "10.2337/dc09-1431"
+    },
+    {
+      "pmid": "19564476",
+      "title": "Hyperglycemic crises in adult patients with diabetes",
+      "doi": "10.2337/dc09-9032"
+    }
+  ],
+  "gir": [
+    {
+      "pmid": "37532760",
+      "title": "A quality improvement initiative for neonatal hypoglycemia screening and management in a level III neonatal intensive care unit",
+      "doi": "10.1038/s41372-023-01740-2"
+    },
+    {
+      "pmid": "22145468",
+      "title": "Two cases of Fanconi-Bickel syndrome: first report from China with novel mutations of SLC2A2 gene",
+      "doi": null
+    },
+    {
+      "pmid": "21823540",
+      "title": "HNF1A mutation presenting with fetal macrosomia and hypoglycemia in childhood prior to onset of overt diabetes",
+      "doi": null
+    },
+    {
+      "pmid": "21525882",
+      "title": "Blueberry muffin rash, hyperbilirubinemia, and hypoglycemia: a case of hemolytic disease of the fetus and newborn due to anti-Kp(a)",
+      "doi": "10.1038/jp.2010.161"
+    },
+    {
+      "pmid": "21448630",
+      "title": "Neonatal hepatoblastoma in a newborn with severe phenotype of Beckwith-Wiedemann syndrome",
+      "doi": "10.1007/s00431-011-1455-0"
+    },
+    {
+      "pmid": "21239873",
+      "title": "Clinical, biochemical and genetic analyses in two Korean patients with medium-chain acyl-CoA dehydrogenase deficiency",
+      "doi": "10.3343/kjlm.2011.31.1.54"
+    }
+  ],
+  "riete": [
+    {
+      "pmid": "40850342",
+      "title": "External validation of the VTE-PREDICT score for predicting recurrence and bleeding in venous thromboembolism: results from the Registro Informatizado Enfermedad TromboEmb\u1f40lica Registry",
+      "doi": "10.1016/j.jtha.2025.08.007"
+    },
+    {
+      "pmid": "36942630",
+      "title": "Machine learning to predict major bleeding during anticoagulation for venous thromboembolism: possibilities and limitations",
+      "doi": "10.1111/bjh.18737"
+    },
+    {
+      "pmid": "32945982",
+      "title": "Predicting the risk for major bleeding in elderly patients with venous thromboembolism using the Charlson index. Findings from the RIETE",
+      "doi": "10.1007/s11239-020-02274-6"
+    },
+    {
+      "pmid": "25980766",
+      "title": "A prognostic score to identify low-risk outpatients with acute deep vein thrombosis in the upper extremity",
+      "doi": "10.1111/jth.13008"
+    },
+    {
+      "pmid": "25242230",
+      "title": "A prognostic score to identify low-risk outpatients with acute deep vein thrombosis in the lower limbs",
+      "doi": "10.1016/j.amjmed.2014.08.023"
+    },
+    {
+      "pmid": "18612534",
+      "title": "Predictive variables for major bleeding events in patients presenting with documented acute venous thromboembolism. Findings from the RIETE Registry",
+      "doi": "10.1160/TH08-03-0193"
+    }
+  ],
+  "ibw-peds": [
+    {
+      "pmid": "31011391",
+      "title": "An algorithm to improve the accuracy of emergency weight estimation in obese children",
+      "doi": "10.11604/pamj.2018.31.90.13821"
+    }
+  ],
+  "ukeld": [
+    {
+      "pmid": "42461318",
+      "title": "Correction: Sine Spin flat detector CT can improve cerebral soft tissue imaging: a retrospective in vivo study",
+      "doi": "10.1186/s41747-026-00773-4"
+    },
+    {
+      "pmid": "42429311",
+      "title": "Velopharyngeal Anatomy and Speech Production in Cleft Palate Surrounding Primary Palatoplasty: Protocol for a Prospective Observational Pilot Study",
+      "doi": "10.2196/97206"
+    },
+    {
+      "pmid": "42409805",
+      "title": "Design, synthesis and structural mechanism of action of TRPV1 agonist MSP20 with long-lasting analgesic effect",
+      "doi": "10.1038/s41467-026-74972-3"
+    },
+    {
+      "pmid": "42397160",
+      "title": "Female endurance athletes show a reduced plasma cell-free DNA response to all-out and 3-h cycling compared to male counterparts",
+      "doi": "10.14814/phy2.70999"
+    },
+    {
+      "pmid": "42395616",
+      "title": "Case Report: Subcutaneous sensor-augmented insulin pump therapy in a 510-g preterm infant with hyperglycemia",
+      "doi": "10.3389/fped.2026.1858894"
+    },
+    {
+      "pmid": "42372579",
+      "title": "Tucatinib in patients with HER2-positive advanced/metastatic breast cancer: A systematic literature review of real-world evidence",
+      "doi": "10.1016/j.breast.2026.104837"
+    }
+  ],
+  "dmeld": [],
+  "lqts": [
+    {
+      "pmid": "39527076",
+      "title": "aTrial arrhythmias in inhEriTed aRrhythmIa Syndromes: results from the TETRIS study",
+      "doi": "10.1093/europace/euae288"
+    },
+    {
+      "pmid": "39366437",
+      "title": "Frequency of and outcomes associated with nonadherence to guideline-based recommendations for an implantable cardioverter-defibrillator in patients with congenital long QT syndrome",
+      "doi": "10.1016/j.hrthm.2024.09.063"
+    },
+    {
+      "pmid": "32893267",
+      "title": "Enhancing rare variant interpretation in inherited arrhythmias through quantitative analysis of consortium disease cohorts and population controls",
+      "doi": "10.1038/s41436-020-00946-5"
+    },
+    {
+      "pmid": "32429735",
+      "title": "Transethnic Genome-Wide Association Study Provides Insights in the Genetic Architecture and Heritability of Long QT Syndrome",
+      "doi": "10.1161/CIRCULATIONAHA.120.045956"
+    },
+    {
+      "pmid": "25239430",
+      "title": "Rationale and objectives for ECG screening in infancy",
+      "doi": "10.1016/j.hrthm.2014.09.047"
+    },
+    {
+      "pmid": "22083145",
+      "title": "QTc behavior during exercise and genetic testing for the long-QT syndrome",
+      "doi": "10.1161/CIRCULATIONAHA.111.062182"
+    }
+  ],
+  "bell": [
+    {
+      "pmid": "30868956",
+      "title": "New Nutritional and Therapeutical Strategies of NEC",
+      "doi": "10.2174/1573396315666190313164753"
+    },
+    {
+      "pmid": "11712300",
+      "title": "[NEC--neonatal necrotising enterocolitis--methods of treatment and outcome: a comparative analysis of Scottish (Glasgow) and Polish (Western Pomerania) cases]",
+      "doi": null
+    },
+    {
+      "pmid": "9537561",
+      "title": "Multisystem organ failure and capillary leak syndrome in severe necrotizing enterocolitis of very low birth weight infants",
+      "doi": "10.1016/s0022-3468(98)90092-6"
+    },
+    {
+      "pmid": "8086685",
+      "title": "Surgical treatment of necrotizing enterocolitis: when? how?",
+      "doi": "10.1111/j.1651-2227.1994.tb13245.x"
+    },
+    {
+      "pmid": "2797976",
+      "title": "Severity of necrotizing enterocolitis: influence on outcome at 2 years of age",
+      "doi": null
+    },
+    {
+      "pmid": "3141910",
+      "title": "Necrotizing enterocolitis: a practitioner's perspective",
+      "doi": "10.1542/pir.9-7-219"
+    }
+  ],
+  "mscc": [
+    {
+      "pmid": "22420969",
+      "title": "A 2011 updated systematic review and clinical practice guideline for the management of malignant extradural spinal cord compression",
+      "doi": "10.1016/j.ijrobp.2012.01.014"
+    },
+    {
+      "pmid": "9552073",
+      "title": "Emergency treatment of malignant extradural spinal cord compression: an evidence-based guideline",
+      "doi": "10.1200/JCO.1998.16.4.1613"
+    }
+  ],
+  "hamwi": [
+    {
+      "pmid": "6869387",
+      "title": "Determination of ideal body weight for drug dosage calculations",
+      "doi": null
+    }
+  ],
+  "jt": [
+    {
+      "pmid": "39862598",
+      "title": "How to correct QT interval after cardiac resynchronisation therapy",
+      "doi": "10.1016/j.jelectrocard.2025.153881"
+    },
+    {
+      "pmid": "35917620",
+      "title": "Estimation of the QTc interval in the presence of right bundle branch block: A comparative study using validated formulae for left bundle branch block",
+      "doi": "10.1016/j.jelectrocard.2022.07.006"
+    },
+    {
+      "pmid": "31292084",
+      "title": "Determination of the QT Interval in Left Bundle Branch Block: Development of a Novel Formula",
+      "doi": "10.1016/j.cjca.2019.02.014"
+    },
+    {
+      "pmid": "28082087",
+      "title": "Among patients with left bundle branch block, T-wave peak to T-wave end time is prolonged in the presence of acute coronary occlusion",
+      "doi": "10.1016/j.ijcard.2017.01.064"
+    },
+    {
+      "pmid": "23118006",
+      "title": "Facilitating assessment of QT interval duration during ventricular pacing",
+      "doi": "10.1093/europace/eus357"
+    },
+    {
+      "pmid": "17223412",
+      "title": "Repolarization duration in patients with conduction disturbances after myocardial infarction",
+      "doi": "10.1016/j.amjcard.2006.08.014"
+    }
+  ],
+  "salicylate": [],
+  "smoke": [
+    {
+      "pmid": "41950738",
+      "title": "Quantitative assessment of lung microstructure and functional changes of smoke-inhalation-induced acute lung injury with hyperpolarized (129)Xe magnetic resonance",
+      "doi": "10.1016/j.burns.2026.107944"
+    },
+    {
+      "pmid": "41886975",
+      "title": "Development and validation of a simple prediction model for length of hospital stay in a nationwide Japanese burn registry",
+      "doi": "10.1016/j.burns.2026.107952"
+    },
+    {
+      "pmid": "41297238",
+      "title": "Deep learning framework for bronchoscopic diagnosis of burn inhalation injury",
+      "doi": "10.1016/j.burns.2025.107770"
+    },
+    {
+      "pmid": "41101183",
+      "title": "Evaluating the association between bronchoscopic severity of burns-related smoke inhalation injury and clinical outcomes: A systematic review and meta-analysis",
+      "doi": "10.1016/j.burns.2025.107721"
+    },
+    {
+      "pmid": "40599137",
+      "title": "Comprehensive review of clinical presentation, treatment, and prognostic factors of airway burns",
+      "doi": "10.25122/jml-2025-0081"
+    },
+    {
+      "pmid": "40327969",
+      "title": "Evaluating inter-and intra-rater reliability in the bronchoscopic grading of burn inhalation injury: The iBRONCH-BII study",
+      "doi": "10.1016/j.burns.2025.107502"
+    }
+  ],
+  "hypo": [],
+  "sia": [
+    {
+      "pmid": "22914082",
+      "title": "Impact of location on outcome after penetrating colon injuries",
+      "doi": "10.1097/TA.0b013e31825bff06"
+    },
+    {
+      "pmid": "20453769",
+      "title": "Identifying life-threatening shock in the older injured patient: an analysis of the National Trauma Data Bank",
+      "doi": "10.1097/TA.0b013e3181d87488"
+    },
+    {
+      "pmid": "20421031",
+      "title": "Long-term follow-up of abdominal wall reconstruction after planned ventral hernia: a 15-year experience",
+      "doi": "10.1016/j.jamcollsurg.2009.12.034"
+    },
+    {
+      "pmid": "18498875",
+      "title": "New vitals after injury: shock index for the young and age x shock index for the old",
+      "doi": "10.1016/j.jss.2008.03.025"
+    }
+  ]
+}

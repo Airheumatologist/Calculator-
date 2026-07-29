@@ -1,0 +1,251 @@
+{
+  "batch": 3,
+  "file": "emergency-misc.ts",
+  "audited": 23,
+  "fixed": 3,
+  "items": [
+    {
+      "id": "ottawa-ankle",
+      "status": "fixed",
+      "issues": [
+        "whenToUse age phrasing '≥2–18+ years (validated adults)' was confusing and misstated the validated population"
+      ],
+      "changes": [
+        "whenToUse → 'Acute ankle or midfoot injury (<10 days) in patients ≥2 years (adults and children).'"
+      ],
+      "sources": [
+        "Stiell IG et al. JAMA. 1993;269:1127 (PMID 8433468) — derivation; injury <10 days; adults",
+        "Plint AC et al. BMJ. 1999 — pediatric validation down to age 2",
+        "EB Medicine / standard teaching: apply ≥2 years with ankle/midfoot trauma"
+      ]
+    },
+    {
+      "id": "ottawa-knee",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Stiell IG et al. JAMA. 1997;278:2075 (PMID 9403421)",
+        "Criteria: age ≥55, isolated patellar tenderness, fibular head tenderness, flex <90°, inability to walk 4 steps immediately and in ED"
+      ]
+    },
+    {
+      "id": "nexus",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Hoffman JR et al. N Engl J Med. 2000;343:94 (PMID 10891516)",
+        "Blunt trauma C-spine clearance; all 5 low-risk criteria met → no imaging; modern practice favors CT when imaging indicated"
+      ]
+    },
+    {
+      "id": "canadian-cspine",
+      "status": "ok",
+      "issues": [
+        "whyUse notes superiority vs NEXUS 'in some comparisons' — contested (Stiell 2003 vs NEXUS authors) but hedged acceptably; left unchanged"
+      ],
+      "changes": [],
+      "sources": [
+        "Stiell IG et al. JAMA. 2001;286:1841 (PMID 11597285) — alert GCS 15, stable, age ≥16",
+        "Stiell IG et al. N Engl J Med. 2003;349:2510 — head-to-head CCR vs NEXUS"
+      ]
+    },
+    {
+      "id": "parkland",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Baxter/Parkland literature — 4 mL × kg × %TBSA LR; half in first 8 h from injury time",
+        "StatPearls NBK537190 — titrate to UOP; transfer per ABA criteria"
+      ]
+    },
+    {
+      "id": "rule-of-nines",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Wallace AB. Lancet. 1951 — adult rule of nines",
+        "Lund-Browder preferred for children (stated in whyUse)"
+      ]
+    },
+    {
+      "id": "apgar",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Apgar V. Curr Res Anesth Analg. 1953 (PMID 13083014)",
+        "NRP: score at 1 and 5 min; continue q5 min if <7; Apgar does not drive initial resuscitation start"
+      ]
+    },
+    {
+      "id": "bishop",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Bishop EH. Obstet Gynecol. 1964 (PMID 14199536)",
+        "Unfavorable (typically ≤6) → cervical ripening; favorable (≥8) → induction with oxytocin as indicated"
+      ]
+    },
+    {
+      "id": "gestational-age",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Naegele's rule (LMP + 1 year − 3 months + 7 days); early ultrasound preferred when LMP uncertain"
+      ]
+    },
+    {
+      "id": "pgcs",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Reilly PL et al. Childs Nerv Syst. 1988 (PMID 3135935) — pediatric verbal modification",
+        "Low GCS → airway/PALS support; CT when trauma/ICH concern"
+      ]
+    },
+    {
+      "id": "westley-croup",
+      "status": "fixed",
+      "issues": [
+        "Moderate–severe nextSteps omitted dexamethasone; steroids indicated for all croup severities"
+      ],
+      "changes": [
+        "nextSteps Moderate–severe actions: added 'Dexamethasone' before nebulized epinephrine"
+      ],
+      "sources": [
+        "Westley CR et al. Am J Dis Child. 1978 (PMID 347921)",
+        "StatPearls/CPS: dexamethasone for mild and moderate–severe; nebulized epinephrine for moderate–severe",
+        "Dex 0.15–0.6 mg/kg used; 0.6 mg/kg most common trial dose"
+      ]
+    },
+    {
+      "id": "pecarn-head",
+      "status": "fixed",
+      "issues": [
+        "nextSteps collapsed intermediate and high risk into 'Higher risk → CT', omitting observation option for intermediate risk"
+      ],
+      "changes": [
+        "nextSteps: added Intermediate condition with 'Observation vs CT (shared decision-making)'; retained Higher risk → CT"
+      ],
+      "sources": [
+        "Kuppermann N et al. Lancet. 2009;374:1160 (PMID 19758692)",
+        "GCS 14–15 minor blunt head trauma; very low risk → no routine CT; intermediate → observation vs CT; high-risk predictors → CT"
+      ]
+    },
+    {
+      "id": "wells-hit",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Lo GK et al. J Thromb Haemost. 2006 (PMID 16634744) — 4Ts score",
+        "Intermediate (4–5) and high (6–8): stop heparin, non-heparin anticoagulant, immunoassay ± functional assay"
+      ]
+    },
+    {
+      "id": "padua",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Barbar S et al. J Thromb Haemost. 2010 (PMID 20738765)",
+        "Padua ≥4 = high VTE risk medical inpatients → pharmacologic prophylaxis unless high bleed risk"
+      ]
+    },
+    {
+      "id": "caprini",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Caprini JA. Dis Mon. 2005 (PMID 15900257)",
+        "Very high risk often ≥5 (general surgery): pharmacologic + mechanical; extended prophylaxis in selected ortho"
+      ]
+    },
+    {
+      "id": "stop-bang",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Chung F et al. Anesthesiology. 2008 (PMID 18431116)",
+        "High-sensitivity OSA screen; high risk → sleep study consideration and periop airway caution"
+      ]
+    },
+    {
+      "id": "epworth",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Johns MW. Sleep. 1991 (PMID 1798888)",
+        "ESS >10 commonly used threshold for excessive daytime sleepiness"
+      ]
+    },
+    {
+      "id": "bode",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Celli BR et al. N Engl J Med. 2004 (PMID 14999112)",
+        "Predicts mortality better than FEV1 alone; higher scores inform transplant/LVRS discussion"
+      ]
+    },
+    {
+      "id": "steroid-conversion",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Standard glucocorticoid equivalence tables; account for potency and duration; stress-dose if adrenal suppression risk"
+      ]
+    },
+    {
+      "id": "opioid-mme",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Dowell D et al. MMWR. 2022 (PMID 36327391) — CDC opioid guideline",
+        "≥50 MME/day associated with higher overdose risk; offer naloxone; avoid benzos; reassess plan"
+      ]
+    },
+    {
+      "id": "corrected-phenytoin",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Sheiner-Tozer equation; free phenytoin preferred",
+        "Adjusted binding factor often used when CrCl <20/ESRD"
+      ]
+    },
+    {
+      "id": "transferrin-sat",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "TSAT = iron/TIBC × 100; low supports iron deficiency with ferritin; high prompts overload/HFE workup as indicated"
+      ]
+    },
+    {
+      "id": "free-water-sodium-change",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Adrogué-Madias formula for predicted ΔNa per liter of infusate",
+        "Severe symptomatic hyponatremia: 100 mL (or 100–150 mL) 3% saline boluses with frequent Na monitoring"
+      ]
+    }
+  ]
+}

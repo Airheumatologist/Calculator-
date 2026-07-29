@@ -1,0 +1,471 @@
+[
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "ldl-sampson",
+    "name": "LDL-C (Sampson / NIH Equation)",
+    "shortName": "LDL Sampson",
+    "whenToUse": "Calculated LDL when TG are moderately elevated (up to ~800 mg/dL) or LDL is low.",
+    "whyUse": "Outperforms Friedewald at low LDL and higher TG; usable when Friedewald is invalid.",
+    "nextSteps": [
+      {
+        "condition": "Elevated LDL or high ASCVD risk",
+        "actions": [
+          "ASCVD risk assessment",
+          "Statin intensity per AHA/ACC or ESC",
+          "Address TG if ≥150–500"
+        ]
+      },
+      {
+        "condition": "TG very high",
+        "actions": [
+          "Direct LDL if TG >800",
+          "Evaluate for secondary causes of hyperTG"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "ldl-martin",
+    "name": "LDL-C (Martin/Hopkins)",
+    "shortName": "LDL Martin",
+    "whenToUse": "Calculated LDL with better accuracy than Friedewald at low LDL or higher TG (typically TG <400 mg/dL).",
+    "whyUse": "AHA-supported alternative; factor varies with TG and non-HDL rather than fixed /5.",
+    "nextSteps": [
+      {
+        "condition": "Elevated LDL",
+        "actions": [
+          "Full ASCVD risk assessment",
+          "Statin therapy per guidelines"
+        ]
+      },
+      {
+        "condition": "TG ≥400",
+        "actions": [
+          "Direct LDL or Sampson equation",
+          "Manage hypertriglyceridemia"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "non-hdl",
+    "name": "Non-HDL Cholesterol",
+    "shortName": "Non-HDL",
+    "whenToUse": "Lipid risk assessment, especially when TG elevated or as a secondary treatment target.",
+    "whyUse": "Includes LDL, VLDL, IDL, and remnant cholesterol; less dependent on fasting than calculated LDL.",
+    "nextSteps": [
+      {
+        "condition": "Above goal",
+        "actions": [
+          "Intensify lifestyle and statin therapy",
+          "Add ezetimibe/PCSK9i if very high risk and not at goal"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "cholesterol-goals",
+    "name": "LDL / Non-HDL Goal Helper (ASCVD Risk Tier)",
+    "shortName": "Lipid Goals",
+    "whenToUse": "Setting lipid targets after risk stratification.",
+    "whyUse": "Quick bedside reminder of intensity of LDL lowering by risk tier (AHA/ACC and ESC-style).",
+    "nextSteps": [
+      {
+        "condition": "Not at goal on max statin",
+        "actions": [
+          "Add ezetimibe",
+          "Consider PCSK9 inhibitor / bempedoic acid per indication"
+        ]
+      },
+      {
+        "condition": "Primary prevention uncertainty",
+        "actions": [
+          "Coronary artery calcium scoring",
+          "Risk-enhancer review"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "triglyceride-index",
+    "name": "Triglyceride-Glucose Index (TyG)",
+    "shortName": "TyG Index",
+    "whenToUse": "Bedside estimate of insulin resistance from fasting TG and glucose.",
+    "whyUse": "Simple, no insulin assay required; associated with metabolic syndrome and CV risk in studies.",
+    "nextSteps": [
+      {
+        "condition": "Elevated TyG",
+        "actions": [
+          "Screen metabolic syndrome components",
+          "Lifestyle intervention",
+          "Consider formal diabetes screening"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "homa-b",
+    "name": "HOMA-B (β-Cell Function)",
+    "shortName": "HOMA-B",
+    "whenToUse": "Research or clinical estimate of β-cell function with fasting labs.",
+    "whyUse": "Complements HOMA-IR; lower HOMA-B suggests reduced insulin secretion capacity.",
+    "nextSteps": [
+      {
+        "condition": "Low HOMA-B + hyperglycemia",
+        "actions": [
+          "Assess for progressive insulin deficiency",
+          "Diabetes education",
+          "Consider insulin if indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "quicki",
+    "name": "QUICKI (Insulin Sensitivity)",
+    "shortName": "QUICKI",
+    "whenToUse": "Estimate insulin sensitivity without clamp study.",
+    "whyUse": "Simple log-based index; correlates with clamp-derived insulin sensitivity.",
+    "nextSteps": [
+      {
+        "condition": "Low QUICKI",
+        "actions": [
+          "Lifestyle weight loss / exercise",
+          "Screen for metabolic syndrome and T2DM"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "hba1c-ifcc",
+    "name": "HbA1c % ↔ IFCC (mmol/mol)",
+    "shortName": "A1c Units",
+    "whenToUse": "Lab reports using different A1c unit systems.",
+    "whyUse": "NGSP % (common in US) vs IFCC mmol/mol (common internationally).",
+    "nextSteps": [
+      {
+        "condition": "Elevated A1c",
+        "actions": [
+          "Confirm diagnosis if needed",
+          "Counsel using eAG",
+          "Therapy per ADA/EASD"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "glucose-mg-mmol",
+    "name": "Glucose Unit Conversion (mg/dL ↔ mmol/L)",
+    "shortName": "Glucose Units",
+    "whenToUse": "Interpreting labs reported in different unit systems.",
+    "whyUse": "US labs typically use mg/dL; many countries use mmol/L.",
+    "nextSteps": [
+      {
+        "condition": "Abnormal glucose",
+        "actions": [
+          "Interpret in clinical context (fasting vs random)",
+          "Confirm with A1c / OGTT as appropriate"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "creatinine-mg-umol",
+    "name": "Creatinine Unit Conversion (mg/dL ↔ µmol/L)",
+    "shortName": "Cr Units",
+    "whenToUse": "Labs reported in different creatinine units.",
+    "whyUse": "US often mg/dL; SI units µmol/L elsewhere.",
+    "nextSteps": [
+      {
+        "condition": "Elevated creatinine",
+        "actions": [
+          "Calculate eGFR (CKD-EPI)",
+          "Review nephrotoxins",
+          "Assess acuity vs chronic"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "bilirubin-unit",
+    "name": "Bilirubin Unit Conversion (mg/dL ↔ µmol/L)",
+    "shortName": "Bili Units",
+    "whenToUse": "Interpreting bilirubin across unit systems.",
+    "whyUse": "Common conversion in hepatology and neonatology contexts.",
+    "nextSteps": [
+      {
+        "condition": "Elevated bilirubin",
+        "actions": [
+          "Fractionate direct/indirect",
+          "Evaluate hemolysis vs hepatobiliary obstruction"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "calcium-unit",
+    "name": "Calcium Unit Conversion (mg/dL ↔ mmol/L)",
+    "shortName": "Ca Units",
+    "whenToUse": "Labs reported in different calcium units.",
+    "whyUse": "US typically mg/dL; SI mmol/L.",
+    "nextSteps": [
+      {
+        "condition": "Abnormal calcium",
+        "actions": [
+          "Prefer ionized Ca if critically ill",
+          "Correct for albumin if total Ca only",
+          "Check PTH, Mg, vitamin D as indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "calcium-phosphate-product",
+    "name": "Calcium-Phosphate Product",
+    "shortName": "Ca × Phos",
+    "whenToUse": "CKD mineral-bone disorder monitoring.",
+    "whyUse": "Historically used threshold for ectopic calcification risk; still a quick composite marker.",
+    "nextSteps": [
+      {
+        "condition": "Elevated product",
+        "actions": [
+          "Dietary phosphate counseling",
+          "Binders with meals",
+          "Review calcium-based binders / vitamin D",
+          "Dialysis prescription if ESRD"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "fek",
+    "name": "Fractional Excretion of Potassium (FEK)",
+    "shortName": "FEK",
+    "whenToUse": "Hypokalemia workup (renal vs extrarenal losses) and selected hyperkalemia contexts.",
+    "whyUse": "Low FEK suggests appropriate renal K conservation; high FEK suggests renal K wasting (context-dependent).",
+    "nextSteps": [
+      {
+        "condition": "Renal K wasting",
+        "actions": [
+          "Check Mg, bicarb, BP",
+          "Review diuretics",
+          "Consider renovascular / mineralocorticoid workup if HTN"
+        ]
+      },
+      {
+        "condition": "Extrarenal pattern",
+        "actions": [
+          "Assess GI losses and intake",
+          "Replete K and Mg"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "urine-osmolal-gap",
+    "name": "Urine Osmolal Gap (UOG)",
+    "shortName": "UOG",
+    "whenToUse": "Normal anion gap metabolic acidosis: diarrhea vs RTA differential.",
+    "whyUse": "High UOG suggests robust NH₄⁺ excretion (extrarenal HCO₃ loss); low UOG suggests impaired renal acidification (RTA).",
+    "nextSteps": [
+      {
+        "condition": "Low UOG + NAGMA",
+        "actions": [
+          "Evaluate RTA type",
+          "Check K, urine pH, aldosterone axis"
+        ]
+      },
+      {
+        "condition": "High UOG + NAGMA",
+        "actions": [
+          "Seek GI bicarb loss",
+          "Review acetazolamide / other causes"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "henderson-hasselbalch",
+    "name": "Henderson-Hasselbalch (pH from HCO₃ & PCO₂)",
+    "shortName": "H-H pH",
+    "whenToUse": "Cross-check ABG/VBG consistency or estimate pH from electrolytes + PCO₂.",
+    "whyUse": "Core acid-base relationship between pH, PCO₂, and HCO₃⁻.",
+    "nextSteps": [
+      {
+        "condition": "Calculated ≠ measured pH",
+        "actions": [
+          "Recheck sample integrity",
+          "Suspect lab error or extreme temperature/abnormal proteins"
+        ]
+      },
+      {
+        "condition": "Abnormal pH",
+        "actions": [
+          "Full acid-base analysis (AG, compensation rules)",
+          "Treat underlying process"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "albumin-corrected-ag",
+    "name": "Albumin-Corrected Anion Gap",
+    "shortName": "Corr. AG",
+    "whenToUse": "Metabolic acidosis workup with low albumin (ICU, cirrhosis, nephrosis).",
+    "whyUse": "Hypoalbuminemia lowers observed AG and can mask a high-AG process.",
+    "nextSteps": [
+      {
+        "condition": "High corrected AG",
+        "actions": [
+          "Lactate, ketones",
+          "Osmolal gap if toxin risk",
+          "ABG/VBG"
+        ]
+      },
+      {
+        "condition": "Normal AG + low HCO₃",
+        "actions": [
+          "Urine AG/UOG",
+          "GI loss vs RTA workup"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "delta-ratio",
+    "name": "Delta Ratio (ΔAG / ΔHCO₃)",
+    "shortName": "Delta Ratio",
+    "whenToUse": "High anion gap metabolic acidosis to detect concurrent NAGMA or metabolic alkalosis.",
+    "whyUse": "Pure HAGMA should drop HCO₃ roughly with the rise in AG; deviations suggest a second process.",
+    "nextSteps": [
+      {
+        "condition": "Mixed NAGMA",
+        "actions": [
+          "Urine AG/UOG",
+          "Review saline resuscitation, diarrhea, RTA"
+        ]
+      },
+      {
+        "condition": "High delta ratio",
+        "actions": [
+          "Seek hidden metabolic alkalosis (vomiting, diuretics, volume contraction)"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "strong-ion-diff",
+    "name": "Simplified Strong Ion Difference (SID)",
+    "shortName": "SID approx",
+    "whenToUse": "Stewart-style acid-base teaching or complex ICU acid-base interpretation adjunct.",
+    "whyUse": "Reduced SID (e.g., hyperchloremia) associates with metabolic acidosis; elevated SID with alkalosis.",
+    "nextSteps": [
+      {
+        "condition": "Low SID acidosis",
+        "actions": [
+          "Limit hyperchloremic fluids if appropriate",
+          "Treat lactate source",
+          "Full AG/osmolal assessment"
+        ]
+      },
+      {
+        "condition": "High SID alkalosis",
+        "actions": [
+          "Volume/Cl repletion if contraction alkalosis",
+          "Review diuretics/NG losses"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "free-water-clearance",
+    "name": "Free Water Clearance (Cₕ₂ₒ)",
+    "shortName": "CH₂O",
+    "whenToUse": "Hyponatremia / concentrating-diluting ability assessment with timed urine collection.",
+    "whyUse": "Positive CH₂O = net free water excretion (dilute urine); negative = free water reabsorption (concentrated urine).",
+    "nextSteps": [
+      {
+        "condition": "Hyponatremia + negative CH₂O",
+        "actions": [
+          "Assess volume status",
+          "Uosm/UNa for SIADH vs hypovolemia",
+          "Fluid restriction or saline per diagnosis"
+        ]
+      },
+      {
+        "condition": "Hypernatremia + positive CH₂O",
+        "actions": [
+          "Replace free water",
+          "Seek DI if polyuria with low Uosm"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "osmolar-clearance",
+    "name": "Osmolar Clearance (Cₒₛₘ)",
+    "shortName": "Cosm",
+    "whenToUse": "With free water clearance calculations and polyuria workups.",
+    "whyUse": "Separates osmotic diuresis (high Cosm) from water diuresis (high V with low Uosm).",
+    "nextSteps": [
+      {
+        "condition": "Polyuria + high Cosm",
+        "actions": [
+          "Urine glucose, urea nitrogen",
+          "Review mannitol / contrast / salt load"
+        ]
+      },
+      {
+        "condition": "Polyuria + low Uosm / low Cosm share",
+        "actions": [
+          "Water deprivation / desmopressin testing pathway for DI"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave2-general-lab.ts",
+    "id": "creatinine-clearance-timed",
+    "name": "Creatinine Clearance (Timed Collection)",
+    "shortName": "CrCl timed",
+    "whenToUse": "When measured clearance is needed (extremes of muscle mass, amputations, pregnancy, drug dosing uncertainty).",
+    "whyUse": "Gold-standard bedside clearance formula before (or when) nuclear GFR unavailable.",
+    "nextSteps": [
+      {
+        "condition": "Reduced CrCl",
+        "actions": [
+          "Renal dose adjustments",
+          "Avoid nephrotoxins",
+          "CKD workup if chronic"
+        ]
+      },
+      {
+        "condition": "Discordant with eGFR",
+        "actions": [
+          "Verify complete collection (creatinine excretion rate)",
+          "Consider measured GFR if critical"
+        ]
+      }
+    ]
+  }
+]

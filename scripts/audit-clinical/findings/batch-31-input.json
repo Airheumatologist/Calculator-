@@ -1,0 +1,578 @@
+[
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "egfr-cys-cr-combined",
+    "name": "CKD-EPI 2021 Creatinine–Cystatin eGFR",
+    "shortName": "eGFR Cr+Cys",
+    "whenToUse": "Confirm eGFR when creatinine alone is unreliable, or when a more accurate estimate would change management.",
+    "whyUse": "Combined Cr+CysC equation is more accurate than either marker alone across body composition extremes.",
+    "nextSteps": [
+      {
+        "condition": "eGFR <60 or discordant with Cr-only",
+        "actions": [
+          "Confirm chronicity",
+          "Urine ACR",
+          "Review drugs dosed by GFR",
+          "Nephrology if progressive or eGFR <30"
+        ]
+      },
+      {
+        "condition": "Borderline for drug dosing",
+        "actions": [
+          "Consider measured GFR if high-stakes decision",
+          "Recheck both markers"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "kidney-failure-risk",
+    "name": "Kidney Failure Risk Equation (KFRE 4-Variable)",
+    "shortName": "KFRE",
+    "whenToUse": "Adults with CKD (typically eGFR <60) to estimate 2- and 5-year risk of treated kidney failure.",
+    "whyUse": "Guides referral urgency, patient counseling, and planning; validated internationally with regional calibrations.",
+    "nextSteps": [
+      {
+        "condition": "5-year risk ≥5–10% (local policy)",
+        "actions": [
+          "Nephrology referral",
+          "CKD education",
+          "CVD risk reduction",
+          "Medication review"
+        ]
+      },
+      {
+        "condition": "5-year risk ≥20% or eGFR <30",
+        "actions": [
+          "RRT modality education",
+          "Anemia/CKD-MBD/acidosis management",
+          "Access planning if appropriate"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "jelliffe",
+    "name": "Jelliffe Creatinine Clearance",
+    "shortName": "Jelliffe",
+    "whenToUse": "Historical or alternative CrCl estimate when Cockcroft–Gault is not preferred; educational comparison.",
+    "whyUse": "Simple age/sex/Scr formula historically used for drug dosing; does not require weight.",
+    "nextSteps": [
+      {
+        "condition": "Low CrCl",
+        "actions": [
+          "Cross-check with CKD-EPI eGFR",
+          "Review renally cleared drugs",
+          "Avoid relying solely on historical equations for staging"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "wright-crcl",
+    "name": "Wright Creatinine Clearance / GFR Estimate",
+    "shortName": "Wright",
+    "whenToUse": "Alternative GFR estimate when BSA-based formulas are desired (e.g., historical oncology contexts).",
+    "whyUse": "Incorporates BSA; sometimes compared with Cockcroft–Gault and measured GFR in chemo dosing literature.",
+    "nextSteps": [
+      {
+        "condition": "Chemo dosing decisions",
+        "actions": [
+          "Follow protocol-preferred GFR method",
+          "Consider measured GFR if borderline AUC-critical drugs",
+          "Do not mix formulas across cycles carelessly"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "protein-24h",
+    "name": "24-Hour Urine Protein Excretion",
+    "shortName": "24h Protein",
+    "whenToUse": "Quantify proteinuria when a timed collection is available, or convert concentration × volume to g/day.",
+    "whyUse": "Reference standard for daily protein excretion; frames nephrotic-range vs sub-nephrotic disease.",
+    "nextSteps": [
+      {
+        "condition": "Nephrotic-range",
+        "actions": [
+          "Serum albumin, lipids",
+          "UPCR/ACR confirmation",
+          "Serologies / biopsy planning per context",
+          "Edema and thrombosis risk management"
+        ]
+      },
+      {
+        "condition": "Incomplete collection suspected",
+        "actions": [
+          "Check 24h creatinine excretion vs expected",
+          "Use spot UPCR"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "pcr-protein-creatinine",
+    "name": "Urine Protein–Creatinine Ratio (UPCR)",
+    "shortName": "UPCR",
+    "whenToUse": "Spot quantification of proteinuria when 24h collection is impractical.",
+    "whyUse": "UPCR approximates daily protein excretion (g/day ≈ ratio in g/g) for monitoring and nephrotic-range classification.",
+    "nextSteps": [
+      {
+        "condition": "UPCR ≥3.5 g/g",
+        "actions": [
+          "Assess albumin, edema, lipids",
+          "Nephrology referral",
+          "Consider 24h collection if discordance"
+        ]
+      },
+      {
+        "condition": "Elevated but sub-nephrotic",
+        "actions": [
+          "Check urine ACR",
+          "BP/RASi optimization",
+          "Search for CKD cause"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "acr-albumin",
+    "name": "Urine Albumin–Creatinine Ratio (UACR) Categories",
+    "shortName": "UACR",
+    "whenToUse": "CKD staging (CGA), diabetes screening for albuminuria, and cardiovascular/CKD risk stratification.",
+    "whyUse": "Albuminuria category strongly predicts CKD progression and CV events independent of eGFR.",
+    "nextSteps": [
+      {
+        "condition": "A2–A3",
+        "actions": [
+          "Repeat to confirm persistence",
+          "BP target per guideline",
+          "RASi if indicated",
+          "SGLT2i / ns-MRA per indication",
+          "eGFR staging"
+        ]
+      },
+      {
+        "condition": "A1 with diabetes",
+        "actions": [
+          "Annual rescreen",
+          "Glycemic and BP control"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "sodium-excretion",
+    "name": "Estimated 24-Hour Urine Sodium (Spot / Kawasaki-Style)",
+    "shortName": "24h Na Est.",
+    "whenToUse": "Estimate daily sodium excretion / dietary salt when full 24h collection is unavailable.",
+    "whyUse": "Spot estimates support HTN and edema counseling; 24h collection remains more accurate when feasible.",
+    "nextSteps": [
+      {
+        "condition": "High estimated Na + HTN/CKD/HF",
+        "actions": [
+          "Dietary sodium reduction counseling",
+          "Dietitian referral",
+          "Review hidden sodium sources"
+        ]
+      },
+      {
+        "condition": "Need accurate balance",
+        "actions": [
+          "Obtain complete 24h urine Na",
+          "Assess volume status clinically"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "tonicity",
+    "name": "Effective Osmolality (Tonicity)",
+    "shortName": "Tonicity",
+    "whenToUse": "Hyponatremia workup and hypertonic states — assess tonicity that drives water shifts across cell membranes.",
+    "whyUse": "Urea is an ineffective osmole; tonicity (not total osm) determines cellular hydration.",
+    "nextSteps": [
+      {
+        "condition": "Hypotonic hyponatremia",
+        "actions": [
+          "Assess volume status",
+          "Uosm, UNa",
+          "TSH, cortisol as indicated",
+          "Avoid overly rapid correction"
+        ]
+      },
+      {
+        "condition": "Hypertonic with high glucose",
+        "actions": [
+          "Correct Na for hyperglycemia",
+          "Treat hyperosmolar state"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "boston-approach",
+    "name": "Boston Acid–Base Compensation Rules",
+    "shortName": "Boston Rules",
+    "whenToUse": "Bedside check whether compensation is appropriate or a second primary disorder is present.",
+    "whyUse": "Simple Δ rules complement Winters formula and full physiologic approaches.",
+    "nextSteps": [
+      {
+        "condition": "Mismatch with expected compensation",
+        "actions": [
+          "Seek second primary disorder",
+          "Review AG, albumin, lactate, ketones, toxins",
+          "Repeat ABG/VBG and electrolytes"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "expected-pco2-chronic-resp",
+    "name": "Expected HCO₃ — Chronic Respiratory Acidosis",
+    "shortName": "Chronic Resp Acid",
+    "whenToUse": "COPD/chronic hypercapnia — is the HCO₃ rise appropriate for chronic CO₂ retention?",
+    "whyUse": "Distinguishes pure chronic compensation from concurrent metabolic acid–base disorders.",
+    "nextSteps": [
+      {
+        "condition": "Inappropriate HCO₃",
+        "actions": [
+          "Evaluate mixed disorder",
+          "Review diuretics, NG losses, lactate/ketones",
+          "Correlate with prior ABGs"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "expected-pco2-acute-resp",
+    "name": "Expected pH / HCO₃ — Acute Respiratory Acidosis",
+    "shortName": "Acute Resp Acid",
+    "whenToUse": "Acute hypoventilation (opiates, airway, NM weakness) — is the ABG consistent with pure acute CO₂ retention?",
+    "whyUse": "Acute buffering only slightly raises HCO₃; larger rises imply chronicity or metabolic alkalosis.",
+    "nextSteps": [
+      {
+        "condition": "Acute hypercapnia",
+        "actions": [
+          "Airway / ventilation support",
+          "Reverse opioids/sedation",
+          "NIV or intubation per status"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "high-ag-causes",
+    "name": "High Anion Gap Acidosis Causes (MUDPILES)",
+    "shortName": "MUDPILES",
+    "whenToUse": "Structured differential for HAGMA after confirming elevated anion gap.",
+    "whyUse": "Mnemonic-based systematic review reduces missed toxic and metabolic causes.",
+    "nextSteps": [
+      {
+        "condition": "HAGMA undifferentiated",
+        "actions": [
+          "Lactate, beta-hydroxybutyrate",
+          "BMP, albumin-corrected AG",
+          "Osmolal gap if toxin possible",
+          "Salicylate level when plausible"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "nagma-causes",
+    "name": "Normal Anion Gap Acidosis Causes (HARDUP)",
+    "shortName": "HARDUP",
+    "whenToUse": "Differential diagnosis after confirming NAGMA (normal AG metabolic acidosis).",
+    "whyUse": "Structures workup between GI bicarb loss, RTA, dilutions, and drugs.",
+    "nextSteps": [
+      {
+        "condition": "NAGMA + low UOG/positive UAG",
+        "actions": [
+          "Evaluate RTA type",
+          "Check K, urine pH, renin-aldosterone"
+        ]
+      },
+      {
+        "condition": "NAGMA + GI losses",
+        "actions": [
+          "Volume and K repletion",
+          "Treat underlying diarrhea/fistula"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "ammonium",
+    "name": "Urine Ammonium Estimate from Osmolal Gap",
+    "shortName": "U-NH₄ Est.",
+    "whenToUse": "NAGMA: estimate renal NH₄⁺ excretion when direct NH₄ assay is unavailable.",
+    "whyUse": "High estimated NH₄⁺ favors extrarenal HCO₃ loss; low NH₄⁺ favors RTA or impaired ammoniagenesis.",
+    "nextSteps": [
+      {
+        "condition": "Low NH₄ estimate + NAGMA",
+        "actions": [
+          "RTA workup",
+          "Med review (CAI, amphotericin, lithium, ifosfamide)",
+          "Check serum K"
+        ]
+      },
+      {
+        "condition": "High NH₄ estimate + NAGMA",
+        "actions": [
+          "Seek GI HCO₃ loss",
+          "Volume repletion"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "hyperkalemia-ecg",
+    "name": "Hyperkalemia ECG Changes (Severity Checklist)",
+    "shortName": "HyperK ECG",
+    "whenToUse": "Known or suspected hyperkalemia — triage membrane-stabilization urgency from ECG features.",
+    "whyUse": "ECG changes mark increased risk of arrhythmia; guide calcium, shift, and removal therapies.",
+    "nextSteps": [
+      {
+        "condition": "Any wide QRS / sine / instability",
+        "actions": [
+          "IV calcium",
+          "Cardiac monitor",
+          "Shift K (insulin/glucose, albuterol)",
+          "Emergent dialysis if needed"
+        ]
+      },
+      {
+        "condition": "Elevated K without ECG changes",
+        "actions": [
+          "Still treat if K very high or rising",
+          "Stop KA-sparing drugs",
+          "Kayexalate/patiromer/SZC per setting",
+          "Address cause"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "ipth-ckd",
+    "name": "iPTH Targets in CKD (KDIGO-Oriented)",
+    "shortName": "iPTH CKD",
+    "whenToUse": "CKD-MBD monitoring — frame iPTH versus stage-based goals and assay upper limit of normal.",
+    "whyUse": "Avoids over-treating modest elevations in non-dialysis CKD and anchors dialysis targets to 2–9× ULN.",
+    "nextSteps": [
+      {
+        "condition": "Elevated iPTH",
+        "actions": [
+          "Check Ca, Phos, 25-OH vitamin D, ALP",
+          "Dietary phosphate counseling",
+          "Nephrology/CKD-MBD clinic as needed"
+        ]
+      },
+      {
+        "condition": "Low iPTH on dialysis",
+        "actions": [
+          "Review vitamin D analogs/calcimimetics",
+          "Avoid over-suppression"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "bicarb-ckd",
+    "name": "Metabolic Acidosis Treatment Threshold in CKD",
+    "shortName": "HCO₃ CKD",
+    "whenToUse": "CKD patients with low or borderline total CO₂/HCO₃ to decide on alkali therapy consideration.",
+    "whyUse": "Treating chronic metabolic acidosis in CKD may slow progression and improve bone/muscle outcomes in selected patients.",
+    "nextSteps": [
+      {
+        "condition": "HCO₃ <22 in CKD ND",
+        "actions": [
+          "Confirm on venous total CO₂",
+          "Oral NaHCO₃ if appropriate",
+          "Dietary acid reduction (fruits/vegetables) if suitable",
+          "Monitor BP and edema"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "mayo-score-uc",
+    "name": "Mayo Endoscopic Score (Ulcerative Colitis)",
+    "shortName": "Mayo Endo",
+    "whenToUse": "Colonoscopy/sigmoidoscopy grading of UC inflammatory activity.",
+    "whyUse": "Standard endoscopic endpoint in trials and treat-to-target strategies (0–1 often “endoscopic improvement”).",
+    "nextSteps": [
+      {
+        "condition": "Score ≥2",
+        "actions": [
+          "Optimize UC therapy",
+          "Stool infection studies if flare",
+          "Discuss treat-to-target with patient"
+        ]
+      },
+      {
+        "condition": "Score 0–1",
+        "actions": [
+          "Maintain therapy",
+          "Surveillance intervals per guidelines"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "partial-mayo",
+    "name": "Partial Mayo Score (Ulcerative Colitis)",
+    "shortName": "Partial Mayo",
+    "whenToUse": "Clinic follow-up of UC activity without endoscopy.",
+    "whyUse": "Correlates with full Mayo and guides response assessment between scopes.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥5",
+        "actions": [
+          "Escalate or bridge therapy per IBD specialist",
+          "CRP/fecal calprotectin",
+          "Exclude C. difficile"
+        ]
+      },
+      {
+        "condition": "Remission",
+        "actions": [
+          "Maintain therapy",
+          "Surveillance planning"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "sccai",
+    "name": "Simple Clinical Colitis Activity Index (SCCAI)",
+    "shortName": "SCCAI",
+    "whenToUse": "Quantify UC clinical activity in clinic without endoscopy.",
+    "whyUse": "Simple, validated symptom score; remission often SCCAI <3.",
+    "nextSteps": [
+      {
+        "condition": "SCCAI ≥5",
+        "actions": [
+          "Calprotectin/CRP",
+          "Therapy review",
+          "Infection screen if flare"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "harvey-bradshaw",
+    "name": "Harvey–Bradshaw Index (Crohn Disease)",
+    "shortName": "HBI",
+    "whenToUse": "Clinic assessment of Crohn disease symptom activity.",
+    "whyUse": "Faster alternative to full CDAI; remission often HBI ≤4.",
+    "nextSteps": [
+      {
+        "condition": "HBI ≥8",
+        "actions": [
+          "CRP/calprotectin",
+          "Cross-sectional imaging if complication suspected",
+          "Therapy escalation with IBD specialist"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "ses-cd",
+    "name": "SES-CD (Simple Endoscopic Score for Crohn Disease)",
+    "shortName": "SES-CD",
+    "whenToUse": "After ileocolonoscopy when SES-CD has been scored by segment.",
+    "whyUse": "Standard endoscopic activity metric for Crohn; guides mucosal healing targets.",
+    "nextSteps": [
+      {
+        "condition": "SES-CD ≥7",
+        "actions": [
+          "Therapy escalation discussion",
+          "Rule out stricture complications",
+          "Nutrition assessment"
+        ]
+      },
+      {
+        "condition": "SES-CD ≤2",
+        "actions": [
+          "Maintain regimen",
+          "Surveillance per risk"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "ibs-sss",
+    "name": "IBS Symptom Severity Score (IBS-SSS)",
+    "shortName": "IBS-SSS",
+    "whenToUse": "Quantify IBS symptom burden for baseline and treatment response.",
+    "whyUse": "Standardized 0–500 scale used in trials and clinics; 50-point change often clinically meaningful.",
+    "nextSteps": [
+      {
+        "condition": "New/severe symptoms",
+        "actions": [
+          "Exclude alarm features",
+          "Basic labs/celiac screen as indicated",
+          "Rome-compatible diagnosis"
+        ]
+      },
+      {
+        "condition": "Moderate–severe",
+        "actions": [
+          "Dietitian",
+          "Pharmacologic symptom control",
+          "Brain-gut behavioral therapy referral"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-nephro-gi.ts",
+    "id": "west-haven-he",
+    "name": "West Haven Hepatic Encephalopathy Grade",
+    "shortName": "West Haven",
+    "whenToUse": "Grade mental status changes in patients with known or suspected cirrhosis/portosystemic shunting.",
+    "whyUse": "Universal clinical grading for HE severity, triage, and response to therapy.",
+    "nextSteps": [
+      {
+        "condition": "Grade ≥2",
+        "actions": [
+          "Hospital observation or admission",
+          "Lactulose (and rifaximin as indicated)",
+          "Workup infection, GIB, electrolytes, constipation, sedatives"
+        ]
+      },
+      {
+        "condition": "Grade 3–4",
+        "actions": [
+          "Airway assessment",
+          "ICU consideration",
+          "CT head if focal signs/trauma/uncertain diagnosis"
+        ]
+      }
+    ]
+  }
+]

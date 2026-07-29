@@ -1,0 +1,542 @@
+[
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "r-ipi",
+    "name": "Revised IPI (R-IPI, DLBCL)",
+    "shortName": "R-IPI",
+    "whenToUse": "Newly diagnosed DLBCL / aggressive B-NHL treated in the rituximab era for OS risk groups.",
+    "whyUse": "Reclassifies classic IPI into three clinically useful strata (very good / good / poor) better aligned with R-CHOP outcomes.",
+    "nextSteps": [
+      {
+        "condition": "Any R-IPI",
+        "actions": [
+          "Complete PET-CT staging",
+          "HBV screen before anti-CD20",
+          "Calculate CNS-IPI"
+        ]
+      },
+      {
+        "condition": "Poor (3–5)",
+        "actions": [
+          "Trial consideration",
+          "FISH for MYC/BCL2/BCL6 if indicated",
+          "Discuss prognosis candidly"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "cns-ipi",
+    "name": "CNS-IPI (DLBCL CNS Relapse Risk)",
+    "shortName": "CNS-IPI",
+    "whenToUse": "Newly diagnosed DLBCL when deciding CNS staging intensity and prophylaxis strategies.",
+    "whyUse": "Stratifies 2-year CNS relapse risk into low / intermediate / high groups to support prophylaxis discussions.",
+    "nextSteps": [
+      {
+        "condition": "Intermediate or high",
+        "actions": [
+          "Review additional high-risk sites (testis, breast, epidural)",
+          "Consider LP / MRI if neurologic symptoms",
+          "Prophylaxis per institutional standard"
+        ]
+      },
+      {
+        "condition": "High (4–6)",
+        "actions": [
+          "Multidisciplinary lymphoma discussion",
+          "Document prophylaxis plan"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "dipss",
+    "name": "DIPSS (Primary Myelofibrosis)",
+    "shortName": "DIPSS",
+    "whenToUse": "Primary myelofibrosis for risk stratification at diagnosis or later (dynamic).",
+    "whyUse": "Hb-weighted model predicts survival and frames transplant / JAK inhibitor discussions.",
+    "nextSteps": [
+      {
+        "condition": "Int-2 or high",
+        "actions": [
+          "Transplant referral if candidate",
+          "Molecular risk (ASXL1, SRSF2, etc.)",
+          "JAK inhibitor eligibility"
+        ]
+      },
+      {
+        "condition": "Any risk",
+        "actions": [
+          "Driver mutation status (JAK2/CALR/MPL)",
+          "Symptom burden assessment",
+          "Consider DIPSS-plus if karyotype known"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "dipss-plus",
+    "name": "DIPSS-plus (Myelofibrosis)",
+    "shortName": "DIPSS+",
+    "whenToUse": "Primary myelofibrosis when karyotype, platelet count, and transfusion status are known.",
+    "whyUse": "Improves discrimination over DIPSS alone and better identifies highest-risk patients.",
+    "nextSteps": [
+      {
+        "condition": "Int-2 or high",
+        "actions": [
+          "Allo-HCT consult if candidate",
+          "NGS risk mutations",
+          "Spleen/symptom-directed therapy"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "sokal-score",
+    "name": "Sokal Score (CML)",
+    "shortName": "Sokal",
+    "whenToUse": "Newly diagnosed chronic-phase CML before or at TKI start (historical risk grouping).",
+    "whyUse": "Still reported in trials and labels; frames baseline risk though ELTS is preferred for TKI-era long-term survival.",
+    "nextSteps": [
+      {
+        "condition": "Any score",
+        "actions": [
+          "Confirm CP vs AP/BP criteria",
+          "Baseline BCR::ABL1 IS",
+          "Choose TKI and monitoring schedule"
+        ]
+      },
+      {
+        "condition": "High Sokal",
+        "actions": [
+          "Consider 2G-TKI if appropriate",
+          "Strict molecular milestone follow-up"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "hasford-score",
+    "name": "Hasford Score (Euro / CML)",
+    "shortName": "Hasford",
+    "whenToUse": "Newly diagnosed chronic-phase CML risk stratification (historical Euro score).",
+    "whyUse": "Complementary to Sokal; developed in interferon era and still cited alongside Sokal/EUTOS/ELTS.",
+    "nextSteps": [
+      {
+        "condition": "Any score",
+        "actions": [
+          "Compare with Sokal/EUTOS/ELTS",
+          "Initiate TKI per guidelines",
+          "Serial BCR::ABL1 IS"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "eutos",
+    "name": "EUTOS Score (CML)",
+    "shortName": "EUTOS",
+    "whenToUse": "Chronic-phase CML at diagnosis when a simple spleen + basophil score is desired.",
+    "whyUse": "Minimal inputs; originally validated for CCyR probability on imatinib (not identical to ELTS long-term survival model).",
+    "nextSteps": [
+      {
+        "condition": "High EUTOS",
+        "actions": [
+          "Discuss TKI potency options",
+          "Ensure adherence and drug interactions review"
+        ]
+      },
+      {
+        "condition": "Any",
+        "actions": [
+          "Also compute ELTS if long-term OS risk needed",
+          "Molecular monitoring plan"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "iss-myeloma",
+    "name": "ISS (Multiple Myeloma)",
+    "shortName": "ISS",
+    "whenToUse": "Newly diagnosed multiple myeloma staging (pair with R-ISS when cytogenetics/LDH available).",
+    "whyUse": "Simple, widely validated three-stage system that correlates with overall survival.",
+    "nextSteps": [
+      {
+        "condition": "Any ISS",
+        "actions": [
+          "FISH panel (incl. del17p, t(4;14), t(14;16))",
+          "LDH for R-ISS",
+          "CRAB/SLiM assessment"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "r-iss-myeloma",
+    "name": "R-ISS (Revised Myeloma Staging)",
+    "shortName": "R-ISS",
+    "whenToUse": "Newly diagnosed multiple myeloma when ISS stage, LDH, and FISH results are available.",
+    "whyUse": "Improves prognostic separation versus ISS alone in the novel-agent era.",
+    "nextSteps": [
+      {
+        "condition": "R-ISS III",
+        "actions": [
+          "Clinical trial consideration",
+          "Doublet/triplet/quad per era and fitness",
+          "Maintenance planning"
+        ]
+      },
+      {
+        "condition": "Any",
+        "actions": [
+          "Confirm CA by iFISH on plasma cells",
+          "Assess transplant eligibility"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "durie-salmon",
+    "name": "Durie-Salmon Stage (Simplified)",
+    "shortName": "Durie-Salmon",
+    "whenToUse": "Historical staging context or when comparing older literature; ISS/R-ISS preferred for modern prognosis.",
+    "whyUse": "Captures tumor burden concept (anemia, calcium, bone disease, M-protein) plus creatinine substage A/B.",
+    "nextSteps": [
+      {
+        "condition": "Substage B",
+        "actions": [
+          "Nephrology co-management",
+          "Light-chain cast nephropathy workup",
+          "Hydration / avoid nephrotoxins"
+        ]
+      },
+      {
+        "condition": "Any",
+        "actions": [
+          "Prefer ISS + R-ISS for prognosis",
+          "IMWG diagnosis of active myeloma"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "cll-rai",
+    "name": "Rai Staging (CLL)",
+    "shortName": "Rai",
+    "whenToUse": "Staging newly diagnosed or progressing CLL in systems that use Rai (common in North America).",
+    "whyUse": "Simple exam/lab stages correlate with survival and are used with CLL-IPI for treatment timing discussions.",
+    "nextSteps": [
+      {
+        "condition": "Rai III–IV",
+        "actions": [
+          "Evaluate hemolysis/ITP vs marrow failure",
+          "IGHV, FISH/TP53",
+          "Treatment vs trial discussion"
+        ]
+      },
+      {
+        "condition": "Rai 0–II asymptomatic",
+        "actions": [
+          "Active surveillance",
+          "Vaccinations",
+          "CLL-IPI if prognostic counseling needed"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "cll-binet",
+    "name": "Binet Staging (CLL)",
+    "shortName": "Binet",
+    "whenToUse": "CLL staging using lymphoid area count and hemoglobin/platelet thresholds (common in Europe).",
+    "whyUse": "Three-group system that is quick at the bedside and used in CLL-IPI stage component definitions.",
+    "nextSteps": [
+      {
+        "condition": "Binet C",
+        "actions": [
+          "Exclude AIHA/ITP",
+          "TP53/IGHV testing",
+          "Therapy planning"
+        ]
+      },
+      {
+        "condition": "Binet A/B",
+        "actions": [
+          "Watchful waiting if asymptomatic",
+          "CLL-IPI optional"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "cll-ipi",
+    "name": "CLL-IPI",
+    "shortName": "CLL-IPI",
+    "whenToUse": "CLL prognostic counseling when molecular/FISH and β2-microglobulin results are available.",
+    "whyUse": "Integrates genetics with clinical factors for four OS risk groups in the chemoimmunotherapy era (still used with BTKi/BCL2 contexts).",
+    "nextSteps": [
+      {
+        "condition": "TP53 / very high",
+        "actions": [
+          "BTK or BCL2-based therapy preferred over CIT",
+          "Clinical trial",
+          "Infection prophylaxis planning"
+        ]
+      },
+      {
+        "condition": "Any",
+        "actions": [
+          "Confirm IWCLL treatment indication before starting therapy"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "pit-tcell",
+    "name": "PIT (Peripheral T-cell Lymphoma)",
+    "shortName": "PIT",
+    "whenToUse": "Newly diagnosed PTCL (especially PTCL-NOS) risk stratification.",
+    "whyUse": "Four-factor model tailored to PTCL; simpler alternative to IPI in T-cell lymphoma literature.",
+    "nextSteps": [
+      {
+        "condition": "Any PIT",
+        "actions": [
+          "Confirm subtype (PTCL-NOS vs AITL vs ALCL, etc.)",
+          "CD30, ALK, TFH markers as relevant",
+          "Trial referral if high-risk"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "aaipi",
+    "name": "Age-Adjusted IPI (aaIPI)",
+    "shortName": "aaIPI",
+    "whenToUse": "Aggressive NHL / DLBCL in patients age ≤60 for risk grouping without the age factor.",
+    "whyUse": "Focuses on LDH, performance status, and stage — the dominant factors in younger adults.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥2",
+        "actions": [
+          "CNS-IPI",
+          "Molecular/FISH workup",
+          "Trial consideration"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "mipi-mantle",
+    "name": "MIPI (Mantle Cell Lymphoma)",
+    "shortName": "MIPI",
+    "whenToUse": "Newly diagnosed mantle cell lymphoma risk stratification.",
+    "whyUse": "MCL-specific index superior to IPI for this disease; guides intensity discussions with MIPI-c (Ki-67) when available.",
+    "nextSteps": [
+      {
+        "condition": "Any MIPI",
+        "actions": [
+          "Ki-67 / MIPI-c",
+          "TP53 assessment",
+          "Discuss BTKi-based vs chemoimmunotherapy era options"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "bsa-mosteller",
+    "name": "BSA (Mosteller Formula)",
+    "shortName": "Mosteller BSA",
+    "whenToUse": "When BSA is needed for mg/m² dosing, cardiac index, or other indexed parameters.",
+    "whyUse": "Simple square-root formula widely accepted and easy to verify at the bedside.",
+    "nextSteps": [
+      {
+        "condition": "Chemo dosing",
+        "actions": [
+          "Multiply mg/m² × BSA",
+          "Apply drug caps (e.g., vincristine)",
+          "Use Calvert for carboplatin AUC"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "cisne",
+    "name": "CISNE (Febrile Neutropenia)",
+    "shortName": "CISNE",
+    "whenToUse": "Adult solid-tumor (and selected) patients with febrile neutropenia who appear clinically stable at presentation.",
+    "whyUse": "Helps identify who remains high-risk for complications despite apparent stability; complements MASCC.",
+    "nextSteps": [
+      {
+        "condition": "Score 0 + MASCC low-risk",
+        "actions": [
+          "Consider oral outpatient pathway if protocol allows",
+          "24-h contact plan"
+        ]
+      },
+      {
+        "condition": "Score ≥1–2",
+        "actions": [
+          "Low threshold to admit",
+          "IV antipseudomonal coverage until stability clear"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "das28",
+    "name": "DAS28 (RA Disease Activity)",
+    "shortName": "DAS28",
+    "whenToUse": "Rheumatoid arthritis treat-to-target monitoring with tender/swollen joint counts and acute-phase reactant.",
+    "whyUse": "Standard composite endpoint for remission/LDA/MDA/HDA classification in RA trials and clinics.",
+    "nextSteps": [
+      {
+        "condition": "DAS28 >3.2",
+        "actions": [
+          "Review DMARD/biologic regimen",
+          "Assess steroids and bridging",
+          "Infection screen before escalation"
+        ]
+      },
+      {
+        "condition": "Remission / LDA",
+        "actions": [
+          "Maintain therapy",
+          "Taper glucocorticoids if used",
+          "Scheduled re-score"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "cdai-ra",
+    "name": "CDAI (RA)",
+    "shortName": "CDAI",
+    "whenToUse": "RA disease activity assessment when labs are unavailable or a purely clinical composite is preferred.",
+    "whyUse": "Simple sum of joint counts and global assessments; same-day scoring without ESR/CRP.",
+    "nextSteps": [
+      {
+        "condition": "CDAI >10",
+        "actions": [
+          "Therapy escalation discussion",
+          "Steroid bridging if appropriate",
+          "Reassess in 1–3 months"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "sdai-ra",
+    "name": "SDAI (RA)",
+    "shortName": "SDAI",
+    "whenToUse": "RA monitoring when tender/swollen counts, dual globals, and CRP are available.",
+    "whyUse": "ACR/EULAR-endorsed composite; remission cutoff commonly used in trials and practice.",
+    "nextSteps": [
+      {
+        "condition": "SDAI >11",
+        "actions": [
+          "Adjust DMARD/biologic",
+          "Address steroid use",
+          "Infection screen before biologic change"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "basdai",
+    "name": "BASDAI (Ankylosing Spondylitis)",
+    "shortName": "BASDAI",
+    "whenToUse": "Axial spondyloarthritis / AS disease activity monitoring and biologic eligibility discussions.",
+    "whyUse": "Standard PRO composite; BASDAI ≥4 often denotes active disease in pathways and trials.",
+    "nextSteps": [
+      {
+        "condition": "BASDAI ≥4",
+        "actions": [
+          "Check CRP / ASDAS",
+          "NSAID optimization trial documentation",
+          "Biologic eligibility review"
+        ]
+      },
+      {
+        "condition": "BASDAI <4",
+        "actions": [
+          "Physiotherapy",
+          "Continue monitoring",
+          "Reassess if symptoms flare"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "sle-dai",
+    "name": "SLEDAI-2K (Total Interpretation)",
+    "shortName": "SLEDAI-2K",
+    "whenToUse": "When SLEDAI-2K has been scored from the 24 descriptors and a total needs band interpretation.",
+    "whyUse": "Standard lupus activity index used in trials and clinics; this helper maps totals to severity strata.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥6",
+        "actions": [
+          "Review serologies and complements",
+          "Medication adherence",
+          "Organ-specific workup"
+        ]
+      },
+      {
+        "condition": "Score ≥11",
+        "actions": [
+          "Urgent specialty review",
+          "Consider hospitalization if major organs"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave4-heme-onc.ts",
+    "id": "pasi",
+    "name": "PASI (Total Interpretation)",
+    "shortName": "PASI",
+    "whenToUse": "When PASI has been calculated from region scores and a severity band is needed for documentation or systemic therapy discussions.",
+    "whyUse": "PASI is the standard psoriasis severity composite in trials (PASI-75/90 responses).",
+    "nextSteps": [
+      {
+        "condition": "PASI >10 or high DLQI",
+        "actions": [
+          "Systemic/biologic eligibility",
+          "TB/hepatitis screen before biologics",
+          "Assess psoriatic arthritis"
+        ]
+      },
+      {
+        "condition": "Mild PASI",
+        "actions": [
+          "Optimize topicals",
+          "Trigger counseling",
+          "DLQI if treatment decisions borderline"
+        ]
+      }
+    ]
+  }
+]

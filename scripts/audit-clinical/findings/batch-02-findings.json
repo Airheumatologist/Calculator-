@@ -1,0 +1,165 @@
+{
+  "batch": 2,
+  "file": "critical-care.ts",
+  "audited": 12,
+  "fixed": 3,
+  "items": [
+    {
+      "id": "gcs",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/64/glasgow-coma-scale-score-gcs",
+        "https://www.ncbi.nlm.nih.gov/books/NBK513298/",
+        "ATLS / common trauma practice: GCS ≤8 airway consideration; mild 13–15, moderate 9–12, severe ≤8"
+      ]
+    },
+    {
+      "id": "qsofa",
+      "status": "fixed",
+      "issues": [
+        "whyUse framed qSOFA as a simple sepsis screen; SSC 2021 strongly recommends against qSOFA as a single screening tool vs SIRS/NEWS/MEWS (low sensitivity)."
+      ],
+      "changes": [
+        {
+          "field": "whyUse",
+          "from": "Simple screen for organ dysfunction risk; not a diagnostic criteria for sepsis alone.",
+          "to": "Bedside mortality/organ-dysfunction risk prompt; not a sole sepsis screen (SSC 2021) or diagnostic criterion alone."
+        }
+      ],
+      "sources": [
+        "https://www.sccm.org/clinical-resources/guidelines/guidelines/surviving-sepsis-guidelines-2021",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC8486643/",
+        "https://www.mdcalc.com/calc/2654/qsofa-quick-sofa-score-sepsis",
+        "Singer M et al. Sepsis-3. JAMA. 2016"
+      ]
+    },
+    {
+      "id": "sofa",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4968574/",
+        "Singer M et al. Sepsis-3. JAMA. 2016 — acute SOFA increase ≥2 with infection = organ dysfunction/sepsis",
+        "SSC hour-1 bundle still applicable for sepsis care escalation"
+      ]
+    },
+    {
+      "id": "sirs",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Levy MM et al. Crit Care Med. 2003 (historical SIRS sepsis definitions)",
+        "Sepsis-3 replaced SIRS-based sepsis definition with infection + acute SOFA ≥2",
+        "SSC 2021 still lists SIRS among screening variables (not definition)"
+      ]
+    },
+    {
+      "id": "news2",
+      "status": "fixed",
+      "issues": [
+        "nextSteps incorrectly grouped aggregate score ≥7 with single parameter = 3 as equivalent escalation; RCP/NICE assign different responses."
+      ],
+      "changes": [
+        {
+          "field": "nextSteps",
+          "from": "[{ condition: 'Score ≥7 or single param 3', actions: ['Urgent senior review', 'Consider critical care outreach'] }, { condition: 'Score 5–6', actions: ['Increase observations', 'Prompt medical review'] }]",
+          "to": "[{ condition: 'Score ≥7', actions: ['Emergency critical care assessment', 'Continuous monitoring / higher-level care'] }, { condition: 'Score 5–6', actions: ['Urgent ward-based review', 'Increase observation frequency'] }, { condition: 'Single param = 3', actions: ['Urgent ward doctor review', 'Adjust monitoring / consider escalation'] }]"
+        }
+      ],
+      "sources": [
+        "https://www.nice.org.uk/advice/mib205/chapter/The-technology",
+        "https://www.rcp.ac.uk/media/a4ibkkbf/news2-final-report_0_0.pdf",
+        "RCP NEWS2: single red score 3 = low–medium (ward doctor urgent review); aggregate 5–6 = medium; aggregate ≥7 = high (critical care emergency assessment)"
+      ]
+    },
+    {
+      "id": "mews",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://reference.medscape.com/calculator/461/modified-early-warning-score-mews",
+        "Subbe CP et al. QJM. 2001 — MEWS ≥5 associated with higher risk / need for higher level of care",
+        "Common institutional RRT trigger ≈ MEWS ≥5"
+      ]
+    },
+    {
+      "id": "curb65",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/324/curb-65-score-pneumonia-severity",
+        "https://www.brit-thoracic.org.uk/document-library/guidelines/pneumonia-adults/quick-reference-guide-bts-guidelines-for-the-management-of-community-acquired-pneumonia-in-adults/",
+        "NICE/BTS: 0–1 low (often outpatient); 2 intermediate; ≥3 high severity inpatient, assess critical care especially if 4–5"
+      ]
+    },
+    {
+      "id": "psi-port",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/33/psi-port-score-pneumonia-severity-index-cap",
+        "Fine MJ et al. NEJM 1997 PORT/PSI",
+        "Classes I–II often outpatient; III observation vs outpatient; IV–V inpatient"
+      ]
+    },
+    {
+      "id": "apache2-simp",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/1868/apache-ii-score",
+        "Knaus WA et al. Crit Care Med. 1985 — educational/case-mix mortality estimate; not designed to direct daily management",
+        "Tool correctly labeled simplified educational (missing full APS variables)"
+      ]
+    },
+    {
+      "id": "rts",
+      "status": "fixed",
+      "issues": [
+        "whenToUse said field triage, but calculator implements weighted RTS (TRISS/prognosis); field triage typically uses unweighted T-RTS (sum 0–12)."
+      ],
+      "changes": [
+        {
+          "field": "whenToUse",
+          "from": "Field or ED trauma triage and prognosis.",
+          "to": "Trauma severity/prognosis (weighted RTS in TRISS); field triage often uses unweighted T-RTS."
+        }
+      ],
+      "sources": [
+        "https://litfl.com/trauma-scoring-systems/",
+        "Champion HR et al. J Trauma. 1989 — weighted RTS for outcome/TRISS",
+        "T-RTS (unweighted coded sum ≤11) commonly used for field trauma-center triage"
+      ]
+    },
+    {
+      "id": "aa-gradient",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK545153/",
+        "https://litfl.com/a-a-gradient/",
+        "Elevated A–a: V/Q mismatch, shunt, diffusion; normal A–a hypoxemia: hypoventilation or low FiO₂"
+      ]
+    },
+    {
+      "id": "pf-ratio",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "ARDS Definition Task Force. Berlin Definition. JAMA. 2012",
+        "Mild ARDS P/F ≤300, moderate ≤200, severe ≤100 with PEEP ≥5 cmH₂O",
+        "ARDSNet lung-protective ventilation 6 mL/kg PBW standard next step"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,474 @@
+[
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "mentzer-index",
+    "name": "Mentzer Index",
+    "shortName": "Mentzer",
+    "whenToUse": "Microcytic anemia workup when distinguishing iron deficiency from thalassemia trait is relevant.",
+    "whyUse": "Simple bedside ratio; Mentzer <13 favors thalassemia trait, >13 favors iron deficiency (imperfect).",
+    "nextSteps": [
+      {
+        "condition": "Index <13",
+        "actions": [
+          "Ferritin / iron studies",
+          "Hb electrophoresis or HPLC",
+          "Family history review"
+        ]
+      },
+      {
+        "condition": "Index >13",
+        "actions": [
+          "Iron studies",
+          "Treat deficiency if confirmed",
+          "Recheck indices after repletion"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "corrected-wbc-nrbc",
+    "name": "Corrected WBC (for nRBCs)",
+    "shortName": "Corr. WBC",
+    "whenToUse": "When nRBCs are reported per 100 WBCs and the leukocyte count needs adjustment for clinical decisions.",
+    "whyUse": "Uncorrected WBC overestimates true leukocytes when many nRBCs are counted as white cells.",
+    "nextSteps": [
+      {
+        "condition": "High nRBC count",
+        "actions": [
+          "Interpret corrected WBC for infection decisions",
+          "Evaluate cause of circulating nRBCs",
+          "Review smear"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "lean-body-weight-james",
+    "name": "Lean Body Weight (James)",
+    "shortName": "James LBW",
+    "whenToUse": "Drug dosing or PK estimates that scale to lean mass (e.g., some anesthetics, research equations).",
+    "whyUse": "Classic sex-specific LBW formulas widely cited in clinical pharmacology.",
+    "nextSteps": [
+      {
+        "condition": "Obesity / PK dosing",
+        "actions": [
+          "Compare Janmahasatian LBW",
+          "Use drug-specific scalar (IBW/ABW/LBW/TBW)"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "dosing-weight-select",
+    "name": "Dosing Weight Selector (IBW / ABW / TBW)",
+    "shortName": "Dosing Wt",
+    "whenToUse": "Quick educational guide when choosing weight scalar for common inpatient drug classes.",
+    "whyUse": "Obesity dosing is drug-specific; this summarizes common practice patterns (always verify monographs).",
+    "nextSteps": [
+      {
+        "condition": "Any dosing decision",
+        "actions": [
+          "Confirm drug-specific scalar",
+          "Check levels/AUC where available",
+          "Document weight used"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "hr-max-estimate",
+    "name": "Maximum Heart Rate Estimate",
+    "shortName": "HRmax",
+    "whenToUse": "Exercise prescription, stress testing context, or educational fitness targets.",
+    "whyUse": "Quick population estimate; individual max HR varies widely.",
+    "nextSteps": [
+      {
+        "condition": "Exercise Rx",
+        "actions": [
+          "Combine with Karvonen target zones",
+          "Screen for exercise contraindications"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "karvonen-hr",
+    "name": "Karvonen Target Heart Rate Zone",
+    "shortName": "Karvonen",
+    "whenToUse": "Aerobic training zones using heart-rate reserve (HRR).",
+    "whyUse": "Accounts for resting HR; preferred over simple %HRmax for many exercise prescriptions.",
+    "nextSteps": [
+      {
+        "condition": "Cardiac rehab / disease",
+        "actions": [
+          "Prefer medically supervised testing",
+          "Use measured peak HR when possible",
+          "Consider RPE scales"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "rate-pressure-product",
+    "name": "Rate-Pressure Product (RPP)",
+    "shortName": "RPP",
+    "whenToUse": "Exercise testing, perioperative or ICU context when estimating myocardial workload.",
+    "whyUse": "Simple correlate of myocardial oxygen consumption (MVO₂).",
+    "nextSteps": [
+      {
+        "condition": "High RPP with symptoms",
+        "actions": [
+          "Evaluate ischemia",
+          "Control BP and rate",
+          "Review meds"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "shock-index-diastolic",
+    "name": "Diastolic Shock Index",
+    "shortName": "SId",
+    "whenToUse": "Sepsis, distributive shock, or when diastolic hypotension may signal low vascular tone.",
+    "whyUse": "May flag high-risk physiology when classic SI is borderline; studied in septic shock cohorts.",
+    "nextSteps": [
+      {
+        "condition": "SId ≥2",
+        "actions": [
+          "Sepsis bundle elements as indicated",
+          "Lactate / perfusion assessment",
+          "Early ICU involvement"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "bmi-prime",
+    "name": "BMI Prime",
+    "shortName": "BMI′",
+    "whenToUse": "Expressing BMI relative to the upper normal WHO threshold (25 kg/m²).",
+    "whyUse": "Values >1.0 indicate BMI above normal range; easy comparison across populations.",
+    "nextSteps": [
+      {
+        "condition": "BMI′ >1",
+        "actions": [
+          "Lifestyle counseling",
+          "Screen metabolic syndrome components",
+          "Waist circumference"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "body-adiposity",
+    "name": "Body Adiposity Index (BAI)",
+    "shortName": "BAI",
+    "whenToUse": "When weight is unavailable or as an adjunct adiposity estimate from hip and height.",
+    "whyUse": "Does not require a scale; validated against DXA in original Mexican-American cohorts (limitations apply).",
+    "nextSteps": [
+      {
+        "condition": "Elevated BAI",
+        "actions": [
+          "Metabolic labs as indicated",
+          "Waist circumference",
+          "Lifestyle intervention"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "ponderal-index",
+    "name": "Ponderal Index (Corpulence Index)",
+    "shortName": "PI",
+    "whenToUse": "Anthropometry when a height-cubed index is preferred (neonatal/pediatric or comparative research contexts).",
+    "whyUse": "Less height-dependent than BMI in some populations; used historically and in neonatal assessment variants.",
+    "nextSteps": [
+      {
+        "condition": "Abnormal PI",
+        "actions": [
+          "Compute BMI",
+          "Use age- and sex-specific growth charts in children"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "dubois-bsa",
+    "name": "BSA (DuBois & DuBois)",
+    "shortName": "DuBois BSA",
+    "whenToUse": "When a protocol specifies DuBois BSA rather than Mosteller.",
+    "whyUse": "Historical gold-standard BSA equation still referenced in physiology and some dosing tables.",
+    "nextSteps": [
+      {
+        "condition": "Chemo dosing",
+        "actions": [
+          "Multiply mg/m² × BSA",
+          "Confirm formula mandated by protocol"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "haycock-bsa",
+    "name": "BSA (Haycock — Pediatric)",
+    "shortName": "Haycock BSA",
+    "whenToUse": "Pediatric BSA estimation for dosing or physiologic indexing when Haycock is preferred.",
+    "whyUse": "Better performance than some adult formulas at low body size / pediatrics.",
+    "nextSteps": [
+      {
+        "condition": "Pediatric dosing",
+        "actions": [
+          "Use regimen-specific mg/m² or mg/kg",
+          "Cross-check with formulary max doses"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "robinson-ibw",
+    "name": "Ideal Body Weight (Robinson)",
+    "shortName": "Robinson IBW",
+    "whenToUse": "When comparing IBW formulas or a reference cites Robinson rather than Devine.",
+    "whyUse": "Slightly different height increments than Devine; sometimes used in anesthesia/PK literature.",
+    "nextSteps": [
+      {
+        "condition": "Drug dosing",
+        "actions": [
+          "Confirm which IBW formula the protocol assumes",
+          "Compute AdjBW if obese"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "miller-ibw",
+    "name": "Ideal Body Weight (Miller)",
+    "shortName": "Miller IBW",
+    "whenToUse": "Alternative IBW estimate when literature or local practice references Miller.",
+    "whyUse": "Another commonly cited IBW equation for comparison with Devine/Robinson/Hamwi.",
+    "nextSteps": [
+      {
+        "condition": "Any",
+        "actions": [
+          "Standardize institutional IBW formula",
+          "Document formula used for high-risk drugs"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "janmahasatian",
+    "name": "Lean Body Weight (Janmahasatian)",
+    "shortName": "Janmahasatian LBW",
+    "whenToUse": "LBW estimation in normal-weight and obese adults for PK/dosing equations.",
+    "whyUse": "Performs better than James LBW across BMI range; widely used in modern PK.",
+    "nextSteps": [
+      {
+        "condition": "PK dosing",
+        "actions": [
+          "Apply drug-specific LBW equations",
+          "Do not assume all drugs use LBW"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "asdas-crp",
+    "name": "ASDAS-CRP (Axial SpA)",
+    "shortName": "ASDAS-CRP",
+    "whenToUse": "axSpA / AS disease activity monitoring with patient domains and CRP.",
+    "whyUse": "ASAS-endorsed composite; preferred over BASDAI alone when CRP is available.",
+    "nextSteps": [
+      {
+        "condition": "ASDAS ≥2.1",
+        "actions": [
+          "Review NSAID trial documentation",
+          "CRP/imaging correlation",
+          "Biologic / tsDMARD consideration"
+        ]
+      },
+      {
+        "condition": "ASDAS <1.3",
+        "actions": [
+          "Maintain therapy",
+          "Physiotherapy",
+          "Scheduled re-score"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "dapsa",
+    "name": "DAPSA (Psoriatic Arthritis)",
+    "shortName": "DAPSA",
+    "whenToUse": "PsA peripheral disease activity assessment and treat-to-target monitoring.",
+    "whyUse": "Simple continuous composite validated for PsA; skin disease scored separately (e.g., PASI).",
+    "nextSteps": [
+      {
+        "condition": "DAPSA >14",
+        "actions": [
+          "Adjust csDMARD/biologic",
+          "Assess enthesitis/dactylitis/skin",
+          "Infection screen before escalation"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "haq-di",
+    "name": "HAQ-DI (Total Interpretation)",
+    "shortName": "HAQ-DI",
+    "whenToUse": "When HAQ-DI has been scored from the 8 categories and an interpretation band is needed.",
+    "whyUse": "Standard patient-reported physical function measure in RA and other rheumatic diseases.",
+    "nextSteps": [
+      {
+        "condition": "HAQ-DI ≥1",
+        "actions": [
+          "PT/OT referral",
+          "Treat active inflammatory disease",
+          "Assess work/ADL needs"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "basfi",
+    "name": "BASFI (Total Interpretation)",
+    "shortName": "BASFI",
+    "whenToUse": "When BASFI questionnaire mean has been calculated and functional severity banding is needed.",
+    "whyUse": "Standard function PRO in axSpA alongside BASDAI/ASDAS activity measures.",
+    "nextSteps": [
+      {
+        "condition": "Elevated BASFI",
+        "actions": [
+          "Physiotherapy / supervised exercise",
+          "Reassess ASDAS/BASDAI",
+          "OT / adaptive equipment"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "mases",
+    "name": "MASES (Enthesitis Score)",
+    "shortName": "MASES",
+    "whenToUse": "Quantifying enthesitis burden in axSpA / AS clinical care or trials.",
+    "whyUse": "Simple 0–13 site count endorsed in SpA research; tracks peripheral entheseal tenderness.",
+    "nextSteps": [
+      {
+        "condition": "MASES ≥3",
+        "actions": [
+          "Correlate with ASDAS",
+          "NSAID / physio optimization",
+          "Advanced therapy review if refractory"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "gout-classification",
+    "name": "ACR/EULAR Gout Classification (Simplified)",
+    "shortName": "Gout Class.",
+    "whenToUse": "Educational classification support when crystal-proven gout is absent and clinical likelihood is being scored.",
+    "whyUse": "≥8 points classifies as gout (with entry criterion). Not a diagnostic substitute for synovial fluid microscopy when available.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥8 or MSU+",
+        "actions": [
+          "Treat flare",
+          "Urate-lowering therapy plan when appropriate",
+          "Screen comorbidities"
+        ]
+      },
+      {
+        "condition": "Score <8",
+        "actions": [
+          "Synovial fluid analysis if possible",
+          "Consider CPPD/septic arthritis/other"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "kujala-score",
+    "name": "Kujala Patellofemoral Score (Total)",
+    "shortName": "Kujala",
+    "whenToUse": "When the 13-item Kujala questionnaire has been scored and severity/function banding is needed.",
+    "whyUse": "Widely used PRO for patellofemoral pain and instability outcomes.",
+    "nextSteps": [
+      {
+        "condition": "Score <80",
+        "actions": [
+          "Quad/hip strengthening program",
+          "Activity load management",
+          "Ortho referral if instability/locking"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "lysholm-knee",
+    "name": "Lysholm Knee Score (Total)",
+    "shortName": "Lysholm",
+    "whenToUse": "When Lysholm questionnaire items have been summed after knee injury or surgery (e.g., ACL).",
+    "whyUse": "Classic knee-specific outcome measure for symptoms and function (especially ligamentous injury).",
+    "nextSteps": [
+      {
+        "condition": "Score <84",
+        "actions": [
+          "Targeted physio",
+          "Brace/activity modification",
+          "Imaging if mechanical symptoms"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave5-general-misc.ts",
+    "id": "scorten",
+    "name": "SCORTEN (SJS/TEN Severity)",
+    "shortName": "SCORTEN",
+    "whenToUse": "On admission (ideally day 1 and day 3) for patients with SJS/TEN spectrum disease.",
+    "whyUse": "Validated mortality predictor guiding intensity of care and counseling.",
+    "nextSteps": [
+      {
+        "condition": "Any SJS/TEN",
+        "actions": [
+          "Drug causality assessment (ALDEN)",
+          "Transfer criteria to burn center",
+          "Ophtho consult"
+        ]
+      },
+      {
+        "condition": "SCORTEN ≥2",
+        "actions": [
+          "ICU-capable monitoring",
+          "Multidisciplinary TEN protocol"
+        ]
+      }
+    ]
+  }
+]

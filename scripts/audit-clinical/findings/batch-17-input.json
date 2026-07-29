@@ -1,0 +1,532 @@
+[
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "scai-shock",
+    "name": "SCAI Cardiogenic Shock Stages",
+    "shortName": "SCAI Shock",
+    "whenToUse": "Patients with or at risk for cardiogenic shock (AMI, decompensated HF, post-arrest) to stage severity.",
+    "whyUse": "Standardized language for shock trajectory; guides monitoring, vasoactives, MCS, and team activation.",
+    "nextSteps": [
+      {
+        "condition": "Stage A–B",
+        "actions": [
+          "Prevent progression",
+          "Monitor lactate/vitals",
+          "Urgent etiology-directed therapy"
+        ]
+      },
+      {
+        "condition": "Stage C–E",
+        "actions": [
+          "Shock team",
+          "Consider PAC/echo-guided therapy",
+          "MCS evaluation",
+          "ICU-level care"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "intermacs",
+    "name": "INTERMACS Patient Profile",
+    "shortName": "INTERMACS",
+    "whenToUse": "Advanced HF evaluation for durable MCS, transplant listing discussions, or acuity communication.",
+    "whyUse": "Profiles correlate with outcomes after LVAD/transplant and standardize “how sick” language.",
+    "nextSteps": [
+      {
+        "condition": "Profile 1–2",
+        "actions": [
+          "Crash pathway",
+          "Temporary MCS bridge",
+          "Urgent transplant/LVAD evaluation"
+        ]
+      },
+      {
+        "condition": "Profile 3–4",
+        "actions": [
+          "Elective/urgent durable MCS planning",
+          "Optimize nutrition/RV/renal"
+        ]
+      },
+      {
+        "condition": "Profile 5–7",
+        "actions": [
+          "Close outpatient advanced HF follow-up",
+          "Avoid delayed referral"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "cardshock",
+    "name": "CardShock Risk Score",
+    "shortName": "CardShock",
+    "whenToUse": "Adults with cardiogenic shock to estimate in-hospital mortality risk strata.",
+    "whyUse": "Simple 7-variable score from a prospective European CS cohort; bedside applicable.",
+    "nextSteps": [
+      {
+        "condition": "Score 0–3",
+        "actions": [
+          "Standard CS protocols",
+          "Close reassessment"
+        ]
+      },
+      {
+        "condition": "Score ≥4",
+        "actions": [
+          "Early advanced therapies",
+          "Multidisciplinary shock care"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "crusade",
+    "name": "CRUSADE Bleeding Risk Score",
+    "shortName": "CRUSADE",
+    "whenToUse": "NSTE-ACS patients when balancing ischemic vs bleeding risk for antithrombotic intensity.",
+    "whyUse": "Widely cited bleeding risk model from the CRUSADE registry using admission variables.",
+    "nextSteps": [
+      {
+        "condition": "Lower band",
+        "actions": [
+          "Usual ACS therapy",
+          "Standard bleed precautions"
+        ]
+      },
+      {
+        "condition": "High/very high band",
+        "actions": [
+          "Bleeding-avoidance strategies",
+          "Reassess triple therapy need",
+          "Close Hb monitoring"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "dapt-score",
+    "name": "DAPT Score",
+    "shortName": "DAPT",
+    "whenToUse": "After coronary stenting when deciding whether to extend DAPT beyond 12 months (selected patients).",
+    "whyUse": "Score ≥2 identifies patients more likely to benefit from prolonged DAPT; <2 favors standard duration.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥2",
+        "actions": [
+          "Discuss extended DAPT if low bleed risk",
+          "Confirm no PRECISE-DAPT/ARC-HBR high-risk overrides"
+        ]
+      },
+      {
+        "condition": "Score <2",
+        "actions": [
+          "Standard duration",
+          "Focus on lifestyle and LDL therapy"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "precise-dapt",
+    "name": "PRECISE-DAPT (Simplified Educational)",
+    "shortName": "PRECISE-DAPT",
+    "whenToUse": "Educational estimate of out-of-hospital bleeding risk to inform DAPT duration after coronary stenting.",
+    "whyUse": "Highlights major PRECISE-DAPT predictors; full nomogram is preferred for precise cutoffs (e.g. ≥25).",
+    "nextSteps": [
+      {
+        "condition": "Lower band",
+        "actions": [
+          "Ischemic risk drives duration",
+          "Standard secondary prevention"
+        ]
+      },
+      {
+        "condition": "Higher band",
+        "actions": [
+          "Short DAPT strategies",
+          "HBR checklist (ARC-HBR)",
+          "Verify with full calculator"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "hcm-risk-scd",
+    "name": "HCM Risk-SCD (Simplified Educational)",
+    "shortName": "HCM Risk-SCD",
+    "whenToUse": "Adults with HCM when framing SCD risk factors before using the official HCM Risk-SCD model or AHA pathway.",
+    "whyUse": "Counts major ESC-model inputs and classic risk markers for structured counseling; full 5-year % needs official tool.",
+    "nextSteps": [
+      {
+        "condition": "Low marker count",
+        "actions": [
+          "Calculate official 5-year risk",
+          "Reassess with new syncope/NSVT/imaging"
+        ]
+      },
+      {
+        "condition": "Multiple markers / syncope / MWT≥30",
+        "actions": [
+          "Specialty HCM clinic",
+          "ICD shared decision",
+          "Avoid competitive sports per guidelines"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "brugada-criteria",
+    "name": "Brugada ECG Pattern Helper",
+    "shortName": "Brugada ECG",
+    "whenToUse": "When ECG suggests Brugada pattern (rSR′ and STE in right precordial leads) for pattern typing.",
+    "whyUse": "Type 1 is diagnostic; type 2 needs conversion/provocation context and clinical correlation.",
+    "nextSteps": [
+      {
+        "condition": "Type 1",
+        "actions": [
+          "EP/genetics referral",
+          "Risk stratification for ICD",
+          "Fever and drug avoidance"
+        ]
+      },
+      {
+        "condition": "Type 2",
+        "actions": [
+          "High-lead ECG",
+          "Expert opinion if symptomatic",
+          "Family history review"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "wellens-helper",
+    "name": "Wellens Syndrome Helper",
+    "shortName": "Wellens",
+    "whenToUse": "Chest pain patients with biphasic or deeply inverted precordial T waves after pain resolves.",
+    "whyUse": "Recognizing Wellens pattern prompts urgent angiography rather than stress testing.",
+    "nextSteps": [
+      {
+        "condition": "Likely Wellens",
+        "actions": [
+          "Admit/monitor",
+          "Urgent angiography",
+          "Avoid provocative testing"
+        ]
+      },
+      {
+        "condition": "Not met",
+        "actions": [
+          "Continue usual chest pain workup"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "smith-modified-sgarbossa",
+    "name": "Smith-Modified Sgarbossa Criteria",
+    "shortName": "Modified Sgarbossa",
+    "whenToUse": "Suspected occlusion MI with LBBB or ventricular paced rhythm when original Sgarbossa is negative/indeterminate.",
+    "whyUse": "Proportional discordance improves sensitivity vs the fixed ≥5 mm discordant STE rule.",
+    "nextSteps": [
+      {
+        "condition": "Positive",
+        "actions": [
+          "Emergent reperfusion pathway",
+          "Treat as STEMI equivalent"
+        ]
+      },
+      {
+        "condition": "Negative",
+        "actions": [
+          "Serial ECG",
+          "Troponin/echo",
+          "Reassess if pain persists"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "right-heart-strain",
+    "name": "Right Heart Strain Flags (PE Helper)",
+    "shortName": "RV Strain",
+    "whenToUse": "Confirmed or suspected PE when cataloguing RV strain markers for severity discussion.",
+    "whyUse": "Organizes ECG/echo strain findings that influence intermediate-high vs intermediate-low PE risk classification.",
+    "nextSteps": [
+      {
+        "condition": "Significant strain + PE",
+        "actions": [
+          "Higher-level monitoring",
+          "PERT discussion",
+          "Avoid premature discharge"
+        ]
+      },
+      {
+        "condition": "Few flags",
+        "actions": [
+          "Use validated prognostic scores",
+          "Outpatient pathways only if Hestia/sPESI allow"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "bova",
+    "name": "BOVA Score (PE Severity)",
+    "shortName": "BOVA",
+    "whenToUse": "Normotensive patients with confirmed acute PE for complication risk staging.",
+    "whyUse": "Simple 0–7 point score (SBP, HR, RV dysfunction, troponin) with stage I–III risk bands.",
+    "nextSteps": [
+      {
+        "condition": "Stage I",
+        "actions": [
+          "Often ward or selected outpatient if other rules allow"
+        ]
+      },
+      {
+        "condition": "Stage III",
+        "actions": [
+          "Higher-level care",
+          "Early deterioration plan"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "lv-mass",
+    "name": "LV Mass (ASE Cube Formula)",
+    "shortName": "LV Mass",
+    "whenToUse": "Educational estimate of LV mass from IVSd, LVIDd, and PWT linear measurements.",
+    "whyUse": "Quantifies LVH beyond voltage criteria; index to BSA for sex-specific reference ranges.",
+    "nextSteps": [
+      {
+        "condition": "LVH or concentric remodeling",
+        "actions": [
+          "BP optimization",
+          "Evaluate athlete’s heart vs pathologic LVH if relevant",
+          "Follow serial echo"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "metabolic-syndrome",
+    "name": "Metabolic Syndrome (NCEP ATP III)",
+    "shortName": "MetSynd ATP III",
+    "whenToUse": "Adults undergoing cardiometabolic risk assessment in clinic or prevention visits.",
+    "whyUse": "Simple binary diagnosis that identifies high residual ASCVD/diabetes risk clustering.",
+    "nextSteps": [
+      {
+        "condition": "≥3 criteria",
+        "actions": [
+          "Structured lifestyle program",
+          "CV risk assessment",
+          "Screen for diabetes"
+        ]
+      },
+      {
+        "condition": "<3 criteria",
+        "actions": [
+          "Target individual risks",
+          "Reassess periodically"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "score2-europe",
+    "name": "SCORE2 (Simplified Educational)",
+    "shortName": "SCORE2",
+    "whenToUse": "Adults 40–69 without prior ASCVD for educational European primary-prevention risk discussion.",
+    "whyUse": "Mirrors SCORE2 inputs; full chart/algorithm needed for precise regional percentages.",
+    "nextSteps": [
+      {
+        "condition": "Intermediate or higher",
+        "actions": [
+          "Use official SCORE2 tool",
+          "Shared decision on statins",
+          "Treat BP to target"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "reynolds-risk",
+    "name": "Reynolds Risk Score (Simplified Educational)",
+    "shortName": "Reynolds",
+    "whenToUse": "Primary prevention adults when hsCRP and parental MI history are available (educational).",
+    "whyUse": "Incorporates inflammation (hsCRP) and family history beyond traditional Framingham factors.",
+    "nextSteps": [
+      {
+        "condition": "≥10% educational band",
+        "actions": [
+          "Statin discussion",
+          "Risk factor control",
+          "Official score confirmation"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "mesa-cac",
+    "name": "MESA CAC Score Helper",
+    "shortName": "MESA CAC",
+    "whenToUse": "Primary prevention when a CAC Agatston score is available and age/sex known.",
+    "whyUse": "Absolute CAC and rough percentile bands refine statin/aspirin discussions beyond risk estimators alone.",
+    "nextSteps": [
+      {
+        "condition": "CAC 0",
+        "actions": [
+          "Consider deferring statin if otherwise intermediate risk",
+          "Lifestyle"
+        ]
+      },
+      {
+        "condition": "CAC ≥100",
+        "actions": [
+          "Statin",
+          "Aggressive prevention",
+          "Selective aspirin"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "coronary-calcium-asts",
+    "name": "Coronary Calcium Agatston Categories",
+    "shortName": "Agatston Categories",
+    "whenToUse": "When an Agatston CAC score is reported and absolute category interpretation is needed.",
+    "whyUse": "Standard absolute cut-points used in reports and prevention pathways.",
+    "nextSteps": [
+      {
+        "condition": "0",
+        "actions": [
+          "Low near-term risk counseling",
+          "Lifestyle"
+        ]
+      },
+      {
+        "condition": ">100",
+        "actions": [
+          "Preventive pharmacotherapy",
+          "Address all risk factors"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "ankle-brachial-index",
+    "name": "Ankle-Brachial Index (ABI)",
+    "shortName": "ABI",
+    "whenToUse": "Suspected PAD, atypical leg symptoms, or CV risk stratification with Doppler SBP measurements.",
+    "whyUse": "First-line noninvasive test for lower-extremity PAD diagnosis and severity.",
+    "nextSteps": [
+      {
+        "condition": "ABI ≤0.90",
+        "actions": [
+          "PAD medical therapy",
+          "Supervised exercise",
+          "Vascular referral if severe symptoms/CLI"
+        ]
+      },
+      {
+        "condition": "ABI >1.40",
+        "actions": [
+          "TBI",
+          "Imaging as indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "constans-dvt",
+    "name": "Constans Score (Upper Extremity DVT)",
+    "shortName": "Constans UEDVT",
+    "whenToUse": "Suspected upper-extremity DVT (arm swelling/pain ± catheter or pacemaker lead).",
+    "whyUse": "Simple 4-item rule to stratify UEDVT pretest probability before ultrasound.",
+    "nextSteps": [
+      {
+        "condition": "≤0",
+        "actions": [
+          "Consider alternate Dx",
+          "Ultrasound if still worried"
+        ]
+      },
+      {
+        "condition": "≥1",
+        "actions": [
+          "Duplex US",
+          "Hold catheter decisions until imaging when feasible"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "ottawa-score-vte-cancer",
+    "name": "Ottawa Score (Cancer-Associated VTE Recurrence)",
+    "shortName": "Ottawa VTE Cancer",
+    "whenToUse": "Patients with cancer-associated VTE when estimating recurrence risk on anticoagulation.",
+    "whyUse": "Identifies lower vs higher recurrence risk strata that may inform secondary prevention intensity/duration discussions.",
+    "nextSteps": [
+      {
+        "condition": "≤0",
+        "actions": [
+          "Standard CAT anticoagulation pathway",
+          "Reassess with cancer trajectory"
+        ]
+      },
+      {
+        "condition": "≥1",
+        "actions": [
+          "Optimize anticoagulation",
+          "Lower threshold for investigating breakthrough symptoms"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave3-cardio-vasc.ts",
+    "id": "herdoo2",
+    "name": "HERDOO2 Rule (Women, VTE Duration)",
+    "shortName": "HERDOO2",
+    "whenToUse": "Women with unprovoked VTE after completing 5–12 months of anticoagulation when considering discontinuation.",
+    "whyUse": "0–1 HERDOO2 points ≈ low recurrence risk suitable for stopping in management studies; ≥2 continue.",
+    "nextSteps": [
+      {
+        "condition": "0–1 points",
+        "actions": [
+          "Discuss stopping anticoagulation",
+          "Plan follow-up and return precautions"
+        ]
+      },
+      {
+        "condition": "≥2 points",
+        "actions": [
+          "Long-term anticoagulation if appropriate",
+          "Bleeding risk mitigation"
+        ]
+      }
+    ]
+  }
+]

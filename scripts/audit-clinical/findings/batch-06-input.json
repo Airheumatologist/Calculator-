@@ -1,0 +1,723 @@
+[
+  {
+    "file": "missing-emergency.ts",
+    "id": "canadian-ct-head",
+    "name": "Canadian CT Head Rule",
+    "shortName": "Canadian CT Head",
+    "whenToUse": "Adults with minor head injury: witnessed LOC, amnesia, or disorientation; GCS 13–15. Not for age <16, blood thinners, or seizure after injury.",
+    "whyUse": "High sensitivity for neurosurgical lesions and clinically important brain injury while reducing unnecessary CT.",
+    "nextSteps": [
+      {
+        "condition": "High or medium risk",
+        "actions": [
+          "CT head",
+          "Manage ABCs",
+          "Neurosurgery if mass lesion/bleed"
+        ]
+      },
+      {
+        "condition": "Rule negative",
+        "actions": [
+          "Consider observation or discharge with precautions if no other concern"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-emergency.ts",
+    "id": "new-orleans-ct-head",
+    "name": "New Orleans / Charter CT Head Criteria",
+    "shortName": "New Orleans CT",
+    "whenToUse": "Patients with minor head injury and GCS 15 who had LOC or amnesia.",
+    "whyUse": "Very sensitive for intracranial injury; more liberal (less specific) than Canadian CT Head Rule.",
+    "nextSteps": [
+      {
+        "condition": "Any criterion positive",
+        "actions": [
+          "CT head"
+        ]
+      },
+      {
+        "condition": "All negative",
+        "actions": [
+          "Clinical clearance if GCS remains 15 and reliable"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-emergency.ts",
+    "id": "years-algorithm",
+    "name": "YEARS Algorithm for PE",
+    "shortName": "YEARS",
+    "whenToUse": "Hemodynamically stable patients with suspected PE in whom D-dimer-based exclusion is appropriate.",
+    "whyUse": "Raises D-dimer threshold to 1000 ng/mL when no YEARS items present, reducing imaging without major miss rate.",
+    "nextSteps": [
+      {
+        "condition": "Below threshold",
+        "actions": [
+          "PE excluded",
+          "Seek alternate diagnosis"
+        ]
+      },
+      {
+        "condition": "At/above threshold",
+        "actions": [
+          "CTPA or V-Q",
+          "Treat if high pretest and delay to imaging in selected cases"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-emergency.ts",
+    "id": "sf-syncope",
+    "name": "San Francisco Syncope Rule (CHESS)",
+    "shortName": "SF Syncope / CHESS",
+    "whenToUse": "Adult ED patients with syncope or near-syncope for short-term serious outcome risk.",
+    "whyUse": "Simple high-sensitivity screen; any positive criterion = higher risk.",
+    "nextSteps": [
+      {
+        "condition": "CHESS positive",
+        "actions": [
+          "Consider admission",
+          "Cardiac monitoring",
+          "Targeted workup"
+        ]
+      },
+      {
+        "condition": "CHESS negative",
+        "actions": [
+          "Risk-benefit of discharge",
+          "Outpatient follow-up"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-emergency.ts",
+    "id": "canadian-syncope",
+    "name": "Canadian Syncope Risk Score",
+    "shortName": "CSRS",
+    "whenToUse": "Adult ED patients with syncope once a serious cause is not already evident on index evaluation.",
+    "whyUse": "Stratifies 30-day risk of arrhythmia, MI, structural issues, and death better than CHESS alone in validations.",
+    "nextSteps": [
+      {
+        "condition": "Very low / low (≤0)",
+        "actions": [
+          "Discharge if workup reassuring",
+          "Primary care / cardiology follow-up as needed"
+        ]
+      },
+      {
+        "condition": "Medium (1–3)",
+        "actions": [
+          "Shared decision for observation vs discharge",
+          "Close follow-up"
+        ]
+      },
+      {
+        "condition": "High / very high (≥4)",
+        "actions": [
+          "Admission and monitoring",
+          "Arrhythmia evaluation"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-emergency.ts",
+    "id": "hestia-pe",
+    "name": "Hestia Criteria (Outpatient PE)",
+    "shortName": "Hestia",
+    "whenToUse": "Confirmed acute PE when considering home treatment vs admission.",
+    "whyUse": "If all answers are “no,” outpatient management is often safe in validated cohorts (with clinical judgment).",
+    "nextSteps": [
+      {
+        "condition": "All criteria no",
+        "actions": [
+          "Discharge on anticoagulation",
+          "Early follow-up",
+          "Return precautions"
+        ]
+      },
+      {
+        "condition": "Any criterion yes",
+        "actions": [
+          "Hospitalize or observe",
+          "Risk-stratify (PESI/sPESI, RV strain)"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-emergency.ts",
+    "id": "ottawa-foot",
+    "name": "Ottawa Foot Rules",
+    "shortName": "Ottawa Foot",
+    "whenToUse": "Acute midfoot injury; reliable exam (typically within 10 days of injury).",
+    "whyUse": "High sensitivity for clinically significant midfoot fractures; reduces unnecessary films.",
+    "nextSteps": [
+      {
+        "condition": "Positive",
+        "actions": [
+          "Foot radiographs",
+          "Ortho referral if fracture"
+        ]
+      },
+      {
+        "condition": "Negative",
+        "actions": [
+          "Conservative care",
+          "Reassess if persistent pain"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-emergency.ts",
+    "id": "mallampati",
+    "name": "Modified Mallampati Classification",
+    "shortName": "Mallampati",
+    "whenToUse": "Pre-intubation or pre-sedation airway assessment (patient sitting, mouth open, tongue out, no phonation).",
+    "whyUse": "Quick component of multivariable difficult-airway assessment (e.g., LEMON); alone has limited predictive value.",
+    "nextSteps": [
+      {
+        "condition": "Class I–II",
+        "actions": [
+          "Standard airway prep",
+          "Still assess full LEMON features"
+        ]
+      },
+      {
+        "condition": "Class III–IV",
+        "actions": [
+          "Difficult airway preparation",
+          "Consider VL first-pass"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-emergency.ts",
+    "id": "shock-index",
+    "name": "Shock Index",
+    "shortName": "SI",
+    "whenToUse": "Trauma, hemorrhage risk, sepsis, or any undifferentiated illness when occult hypoperfusion is a concern.",
+    "whyUse": "May rise before frank hypotension; correlates with transfusion need, lactate, and mortality in several cohorts.",
+    "nextSteps": [
+      {
+        "condition": "SI ≥ 0.9",
+        "actions": [
+          "Evaluate for occult shock",
+          "Resuscitation and source control pathway"
+        ]
+      },
+      {
+        "condition": "SI < 0.9",
+        "actions": [
+          "Continue standard evaluation",
+          "Recheck if clinical change"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-emergency.ts",
+    "id": "start-triage",
+    "name": "START Triage Helper",
+    "shortName": "START",
+    "whenToUse": "Multi-casualty / disaster scenes using START adult triage logic.",
+    "whyUse": "Rapid categorization into Minor, Delayed, Immediate, or Expectant/Deceased to prioritize resources.",
+    "nextSteps": [
+      {
+        "condition": "Red / Immediate",
+        "actions": [
+          "Life-saving interventions",
+          "Priority transport"
+        ]
+      },
+      {
+        "condition": "Yellow / Delayed",
+        "actions": [
+          "Urgent but not first-wave care",
+          "Re-triage periodically"
+        ]
+      },
+      {
+        "condition": "Green / Minor",
+        "actions": [
+          "Secondary area",
+          "Reassess"
+        ]
+      },
+      {
+        "condition": "Black",
+        "actions": [
+          "Expectant care per protocol",
+          "Re-evaluate if resource surge"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-emergency.ts",
+    "id": "nexus-chest",
+    "name": "NEXUS Chest Decision Rule",
+    "shortName": "NEXUS Chest",
+    "whenToUse": "Blunt trauma patients ≥15 years being considered for chest X-ray or chest CT.",
+    "whyUse": "If all criteria absent, very low risk of clinically significant thoracic injury; imaging may be avoided.",
+    "nextSteps": [
+      {
+        "condition": "All criteria absent",
+        "actions": [
+          "Omit routine chest imaging if appropriate"
+        ]
+      },
+      {
+        "condition": "Any criterion present",
+        "actions": [
+          "CXR or CT based on severity",
+          "Treat injuries found"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-emergency.ts",
+    "id": "lrinec",
+    "name": "LRINEC Score",
+    "shortName": "LRINEC",
+    "whenToUse": "Suspected necrotizing soft tissue infection when labs are available; adjunct only.",
+    "whyUse": "Helps risk-stratify; low score does not rule out NSTI if clinical suspicion is high.",
+    "nextSteps": [
+      {
+        "condition": "≥8 or high clinical suspicion",
+        "actions": [
+          "OR exploration",
+          "Antibiotics",
+          "Supportive care"
+        ]
+      },
+      {
+        "condition": "≤5 with low suspicion",
+        "actions": [
+          "Treat cellulitis pathway",
+          "Close follow-up / observation"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-emergency.ts",
+    "id": "baux-score",
+    "name": "Baux Score (Burn Mortality)",
+    "shortName": "Baux",
+    "whenToUse": "Major burns for rapid prognostic estimate and burn-center communication.",
+    "whyUse": "Simple mortality correlate; revised Baux adds inhalation injury weight.",
+    "nextSteps": [
+      {
+        "condition": "Major burn / high Baux",
+        "actions": [
+          "Burn center transfer",
+          "Airway & fluid resuscitation",
+          "Tetanus, analgesia"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-emergency.ts",
+    "id": "absi-burn",
+    "name": "Abbreviated Burn Severity Index (ABSI)",
+    "shortName": "ABSI",
+    "whenToUse": "Acute burn evaluation for severity stratification and prognosis communication.",
+    "whyUse": "Incorporates depth and inhalation beyond simple Baux; maps to rough survival bands.",
+    "nextSteps": [
+      {
+        "condition": "ABSI ≥6",
+        "actions": [
+          "Burn center transfer",
+          "ICU-level monitoring as needed"
+        ]
+      },
+      {
+        "condition": "ABSI ≤5",
+        "actions": [
+          "Standard burn care",
+          "Transfer if other ABA criteria met"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-emergency.ts",
+    "id": "lemon-airway",
+    "name": "LEMON Difficult Airway Assessment",
+    "shortName": "LEMON",
+    "whenToUse": "Before RSI or elective intubation to anticipate difficult airway.",
+    "whyUse": "Structured mnemonic prompts preparation of equipment, personnel, and backup plans.",
+    "nextSteps": [
+      {
+        "condition": "0 criteria",
+        "actions": [
+          "Standard difficult-airway precautions still apply"
+        ]
+      },
+      {
+        "condition": "≥1 criterion",
+        "actions": [
+          "Plan A/B/C",
+          "VL and rescue devices",
+          "Help at bedside if high score"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-gi-liver.ts",
+    "id": "fib4",
+    "name": "FIB-4 Index",
+    "shortName": "FIB-4",
+    "whenToUse": "Outpatient risk stratification for advanced fibrosis in viral hepatitis, NAFLD/MASLD, and other chronic liver disease.",
+    "whyUse": "Simple labs; dual cutoffs triage who needs elastography/biopsy vs low-risk follow-up.",
+    "nextSteps": [
+      {
+        "condition": "Low",
+        "actions": [
+          "Lifestyle measures if NAFLD",
+          "Repeat fibrosis assessment periodically"
+        ]
+      },
+      {
+        "condition": "Indeterminate / high",
+        "actions": [
+          "VCTE/elastography or ELF",
+          "Hepatology referral",
+          "Evaluate for cirrhosis complications if high"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-gi-liver.ts",
+    "id": "apri",
+    "name": "APRI Score",
+    "shortName": "APRI",
+    "whenToUse": "Noninvasive fibrosis staging aid, especially viral hepatitis and resource-limited settings.",
+    "whyUse": "Uses only AST, AST ULN, and platelets; WHO-endorsed in some HCV pathways.",
+    "nextSteps": [
+      {
+        "condition": "APRI ≥1.5",
+        "actions": [
+          "Confirm with elastography if available",
+          "Hepatology referral",
+          "Cirrhosis complication screening if indicated"
+        ]
+      },
+      {
+        "condition": "APRI <0.5",
+        "actions": [
+          "Lower urgency for biopsy",
+          "Treat underlying disease",
+          "Repeat as clinically indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-gi-liver.ts",
+    "id": "aims65",
+    "name": "AIMS65 Score",
+    "shortName": "AIMS65",
+    "whenToUse": "Adults with acute upper GI bleeding for early mortality risk stratification.",
+    "whyUse": "Five binary admission variables; easy bedside mortality estimate complementary to GBS/Rockall.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥2",
+        "actions": [
+          "Admit",
+          "Resuscitate (restrictive transfusion thresholds if stable)",
+          "Urgent endoscopy timing by severity",
+          "PPI infusion per protocol"
+        ]
+      },
+      {
+        "condition": "Score 0–1",
+        "actions": [
+          "Still apply GBS for discharge safety",
+          "Do not use AIMS65 alone for outpatient triage"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-gi-liver.ts",
+    "id": "lille-score",
+    "name": "Lille Model (Alcoholic Hepatitis)",
+    "shortName": "Lille",
+    "whenToUse": "Day 7 of corticosteroid therapy for severe alcoholic hepatitis (usually DF ≥32 or equivalent).",
+    "whyUse": "Identifies non-responders (Lille ≥0.45) who may not benefit from continued steroids.",
+    "nextSteps": [
+      {
+        "condition": "Lille ≥0.45",
+        "actions": [
+          "Stop steroids (typical practice)",
+          "Exclude infection",
+          "Consider transplant referral if eligible",
+          "Supportive/palliative goals as appropriate"
+        ]
+      },
+      {
+        "condition": "Lille <0.45",
+        "actions": [
+          "Complete steroid course",
+          "Alcohol rehabilitation planning",
+          "Monitor glucose, infection, GI bleed"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-gi-liver.ts",
+    "id": "glasgow-ah",
+    "name": "Glasgow Alcoholic Hepatitis Score (GAHS)",
+    "shortName": "GAHS",
+    "whenToUse": "Alcoholic hepatitis severity assessment; score ≥9 associated with higher mortality.",
+    "whyUse": "Uses age, WBC, urea, PT ratio/INR, and bilirubin; may outperform DF for mortality in some cohorts.",
+    "nextSteps": [
+      {
+        "condition": "GAHS ≥9",
+        "actions": [
+          "Consider steroids if eligible",
+          "Infection screen",
+          "Nutrition",
+          "Lille at day 7 if treated"
+        ]
+      },
+      {
+        "condition": "GAHS <9",
+        "actions": [
+          "Supportive care",
+          "Monitor trajectory",
+          "Alcohol services referral"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-gi-liver.ts",
+    "id": "r-factor-dili",
+    "name": "R-Factor for DILI",
+    "shortName": "R-factor",
+    "whenToUse": "Suspected drug-induced liver injury to characterize biochemical pattern at presentation (or peak).",
+    "whyUse": "Pattern guides differential (e.g., hepatocellular vs cholestatic drugs), causality assessment, and expected course.",
+    "nextSteps": [
+      {
+        "condition": "Any pattern",
+        "actions": [
+          "Stop suspected drug(s)",
+          "Exclude viral/autoimmune/biliary causes",
+          "Serial LFTs and INR",
+          "Report severe DILI"
+        ]
+      },
+      {
+        "condition": "Hepatocellular + jaundice or coagulopathy",
+        "actions": [
+          "Urgent hepatology",
+          "Consider Hy’s law implications"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-gi-liver.ts",
+    "id": "forrest-classification",
+    "name": "Forrest Classification (Ulcer Bleed)",
+    "shortName": "Forrest",
+    "whenToUse": "During or after endoscopy for bleeding peptic ulcer to describe stigmata and guide therapy/disposition.",
+    "whyUse": "Standardizes rebleeding risk communication and need for endoscopic hemostasis / high-dose PPI.",
+    "nextSteps": [
+      {
+        "condition": "Ia, Ib, IIa (± IIb)",
+        "actions": [
+          "Endoscopic hemostasis",
+          "High-dose PPI",
+          "H. pylori testing",
+          "Hold/reverse anticoagulants per risk"
+        ]
+      },
+      {
+        "condition": "IIc / III",
+        "actions": [
+          "Oral PPI",
+          "Early feeding if stable",
+          "H. pylori test and treat",
+          "Secondary prophylaxis"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-gi-liver.ts",
+    "id": "atlanta-pancreatitis",
+    "name": "Revised Atlanta Classification Helper",
+    "shortName": "Atlanta",
+    "whenToUse": "Classify acute pancreatitis severity using organ failure duration and local/systemic complications.",
+    "whyUse": "Revised Atlanta (2012) is the consensus clinical severity framework guiding intensity of care.",
+    "nextSteps": [
+      {
+        "condition": "Mild",
+        "actions": [
+          "Supportive care",
+          "Early feeding",
+          "Etiology workup",
+          "Cholecystectomy same admission if gallstone AP when suitable"
+        ]
+      },
+      {
+        "condition": "Moderate–severe",
+        "actions": [
+          "Close monitoring / step-up care",
+          "Avoid early necrosectomy",
+          "Nutrition",
+          "Cross-sectional imaging if no improvement ~72h+"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-gi-liver.ts",
+    "id": "air-appendicitis",
+    "name": "Appendicitis Inflammatory Response (AIR) Score",
+    "shortName": "AIR",
+    "whenToUse": "Suspected appendicitis to stratify low vs high probability and guide imaging/surgery.",
+    "whyUse": "Incorporates graded peritonitis and CRP; often better calibrated than Alvarado in validations.",
+    "nextSteps": [
+      {
+        "condition": "Low",
+        "actions": [
+          "Reassess",
+          "Consider gyn/GU/mesenteric adenitis",
+          "Safety-net advice"
+        ]
+      },
+      {
+        "condition": "Intermediate–high",
+        "actions": [
+          "Imaging per age/pregnancy",
+          "Surgical consult",
+          "NPO / IV fluids if operating"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-gi-liver.ts",
+    "id": "ripasa",
+    "name": "RIPASA Appendicitis Score",
+    "shortName": "RIPASA",
+    "whenToUse": "Suspected acute appendicitis clinical probability estimation.",
+    "whyUse": "Includes demographics, symptoms, signs, labs, and urinalysis; cutoff ≥7.5 often used for high sensitivity.",
+    "nextSteps": [
+      {
+        "condition": "≥7.5",
+        "actions": [
+          "Surgical consult",
+          "Imaging per practice",
+          "NPO, fluids, analgesia"
+        ]
+      },
+      {
+        "condition": "<7.5",
+        "actions": [
+          "Serial exams",
+          "Consider imaging if persistent pain",
+          "Gynecologic evaluation when relevant"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-gi-liver.ts",
+    "id": "nafld-fibrosis",
+    "name": "NAFLD Fibrosis Score",
+    "shortName": "NFS",
+    "whenToUse": "Patients with NAFLD/MASLD to estimate likelihood of bridging fibrosis/cirrhosis.",
+    "whyUse": "Dual cutoffs identify low- and high-risk groups and reduce unnecessary biopsy.",
+    "nextSteps": [
+      {
+        "condition": "Low",
+        "actions": [
+          "Weight loss, Mediterranean-style diet, exercise",
+          "Optimize diabetes/lipids",
+          "Repeat fibrosis assessment over time"
+        ]
+      },
+      {
+        "condition": "Indeterminate/high",
+        "actions": [
+          "VCTE or other fibrosis test",
+          "Hepatology referral",
+          "Exclude other liver disease"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-gi-liver.ts",
+    "id": "mayo-psc",
+    "name": "Mayo Risk Score (PSC)",
+    "shortName": "Mayo PSC",
+    "whenToUse": "Prognostication in PSC using age, bilirubin, AST, albumin, and history of variceal bleeding.",
+    "whyUse": "Estimates relative risk of death or transplant need; complements MELD for listing decisions.",
+    "nextSteps": [
+      {
+        "condition": "Rising risk / decompensation",
+        "actions": [
+          "Transplant evaluation",
+          "Manage dominant strictures",
+          "Variceal screening",
+          "CRC surveillance if IBD"
+        ]
+      },
+      {
+        "condition": "Lower risk",
+        "actions": [
+          "Specialist follow-up",
+          "UDCA per local practice",
+          "Cholangiocarcinoma vigilance"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-gi-liver.ts",
+    "id": "glasgow-imrie",
+    "name": "Glasgow-Imrie Criteria (Pancreatitis)",
+    "shortName": "Glasgow-Imrie",
+    "whenToUse": "Acute pancreatitis severity prediction during the first 48 hours of admission.",
+    "whyUse": "Simple multi-parameter count; ≥3 criteria suggests predicted severe disease and higher-level monitoring.",
+    "nextSteps": [
+      {
+        "condition": "≥3 criteria",
+        "actions": [
+          "Higher-acuity monitoring",
+          "Goal-directed fluids",
+          "Early nutrition",
+          "Etiology-specific care",
+          "Imaging if no improvement"
+        ]
+      },
+      {
+        "condition": "<3 criteria",
+        "actions": [
+          "Ward care if stable",
+          "Re-score by 48 h",
+          "Treat cause"
+        ]
+      }
+    ]
+  }
+]

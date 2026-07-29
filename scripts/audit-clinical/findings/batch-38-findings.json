@@ -1,0 +1,260 @@
+{
+  "batch": 38,
+  "file": "wave6-heme-onc.ts",
+  "audited": 25,
+  "fixed": 3,
+  "items": [
+    {
+      "id": "hep-score",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/20854372/",
+        "https://practical-haemostasis.com/Clinical%20Prediction%20Scores/Formulae%20code%20and%20formulae/Formulae/HIT/HEP_score_v2.html",
+        "Cuker A et al. J Thromb Haemost. 2010 — cutoffs 2 (sens) and 5 (spec)"
+      ]
+    },
+    {
+      "id": "jaam-dic",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/16521260/",
+        "Gando S et al. Crit Care Med. 2006 — revised JAAM DIC ≥4 (fibrinogen removed)"
+      ]
+    },
+    {
+      "id": "sic-score",
+      "status": "fixed",
+      "issues": [
+        "whyUse stated platelet+INR subscore ≥2; original Iba 2017 SIC definition requires total ≥4 and that platelet+PT-INR points exceed 2 (i.e. ≥3)."
+      ],
+      "changes": [
+        "whyUse: 'platelet+INR subscore ≥2' → 'platelet+INR points exceed 2 (i.e. ≥3)'"
+      ],
+      "sources": [
+        "https://bmjopen.bmj.com/content/7/9/e017046",
+        "Iba T et al. BMJ Open. 2017 — total ≥4 with platelet+PT ratio points exceeding 2",
+        "https://pharmacyjoe.com/what-is-the-sepsis-induced-coagulopathy-sic-score/"
+      ]
+    },
+    {
+      "id": "isth-bat",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/25196510/",
+        "Elbatarny M et al. 2014 — abnormal: men ≥4, women ≥6, children ≥3"
+      ]
+    },
+    {
+      "id": "riete-bleed",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/1786/riete-score-risk-hemorrhage-pulmonary-embolism-treatment",
+        "https://www.practical-haemostasis.com/Clinical%20Prediction%20Scores/Formulae%20code%20and%20formulae/Formulae/VTED_bleedng/RIETE_score.html",
+        "Ruíz-Giménez N et al. Thromb Haemost. 2008 — 3-month major bleed on AC"
+      ]
+    },
+    {
+      "id": "platelet-threshold",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "AABB/ASH-style adult platelet transfusion thresholds (prophylaxis ~10, CVC ~20, LP/major surgery ~50, neuro ~100)"
+      ]
+    },
+    {
+      "id": "rbc-transfuse-threshold",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "TRICC/TRISS/FOCUS-style restrictive Hb ~7–8 g/dL in many stable hospitalized adults; ACS individualized"
+      ]
+    },
+    {
+      "id": "amc-count",
+      "status": "fixed",
+      "issues": [
+        "nextSteps used monocytosis ≥1.0 only; WHO/ICC 2022 CMML monocytosis threshold is ≥0.5 ×10⁹/L (with other criteria), while ≥1.0 remains classic absolute monocytosis."
+      ],
+      "changes": [
+        "nextSteps condition: 'Persistent monocytosis ≥1.0' → 'Persistent monocytosis ≥1.0 (or ≥0.5 if CMML concern)'"
+      ],
+      "sources": [
+        "https://ashpublications.org/blood/article/143/12/1062/515294/Navigating-the-misty-lands-of-monocytosis",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC11096042/",
+        "WHO/ICC 2022 — CMML AMC threshold lowered from ≥1.0 to ≥0.5 ×10⁹/L"
+      ]
+    },
+    {
+      "id": "aec-count",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://ashpublications.org/blood/article/126/9/1069/126459/How-I-treat-hypereosinophilic-syndromes",
+        "Hypereosinophilia AEC ≥1.5 ×10⁹/L; severe band often >5 ×10⁹/L"
+      ]
+    },
+    {
+      "id": "haptoglobin-hemolysis",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Standard hemolysis panel teaching: haptoglobin, LDH, bili, retic, smear, DAT; MAHA workup if schistocytes"
+      ]
+    },
+    {
+      "id": "inr-calc",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "INR = (PTpatient / MNPT)^ISI — WHO standardization of PT"
+      ]
+    },
+    {
+      "id": "aptt-ratio",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "UFH aPTT therapeutic range is reagent-specific; anti-Xa preferred; avoid universal 1.5–2.5 rule without local correlation"
+      ]
+    },
+    {
+      "id": "anti-xa-interpret",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Garcia DA et al. Chest. 2012 — UFH ~0.3–0.7; LMWH peaks regimen-specific; draw timing critical"
+      ]
+    },
+    {
+      "id": "fn-pathway",
+      "status": "fixed",
+      "issues": [
+        "whyUse said 'even if a formal MASCC is high' without clarifying that MASCC ≥21 is the low-risk band (high score = low risk), which is easy to misread as high-risk MASCC."
+      ],
+      "changes": [
+        "whyUse: rewrote to 'even if MASCC falls in the low-risk band (≥21)'"
+      ],
+      "sources": [
+        "Freifeld AG et al. Clin Infect Dis. 2011 (IDSA FN guideline)",
+        "MASCC ≥21 = low risk; <21 = high risk for outpatient FN triage"
+      ]
+    },
+    {
+      "id": "cat-score",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Khorana score ≥2 intermediate–high risk; ASCO-style primary prophylaxis discussions in ambulatory solid tumor chemo",
+        "Vienna CATS D-dimer extension is study-specific/educational"
+      ]
+    },
+    {
+      "id": "tls-cairo",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Cairo-Bishop laboratory TLS: ≥2 metabolic abnormalities within a 24-hour period, day −3 to +7 of cytotoxic therapy"
+      ]
+    },
+    {
+      "id": "tumor-lysis-clinical",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Cairo-Bishop clinical TLS = laboratory TLS plus renal, cardiac, or seizure complications — higher acuity care"
+      ]
+    },
+    {
+      "id": "hypercalcemia-of-malignancy",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK482423/",
+        "Mild ~10–12, moderate 12–14, severe ≥14 mg/dL; fluids + antiresorptive; calcitonin bridge for severe/neuro"
+      ]
+    },
+    {
+      "id": "spinal-cord-compression",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Cancer + back pain/neuro deficit: urgent MRI, steroids, multi-D (RT/surgery) — delays worsen paralysis risk"
+      ]
+    },
+    {
+      "id": "svco-syndrome",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "SVC syndrome: ABC, CT venogram, stent vs RT/chemo sequencing, tissue diagnosis; catheter-related AC/line plan"
+      ]
+    },
+    {
+      "id": "neutropenic-colitis",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Typhlitis: neutropenia + abdominal pain/fever — CT, broad IV abx, bowel rest; surgery for perforation/necrosis"
+      ]
+    },
+    {
+      "id": "mucositis-who",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "WHO oral mucositis grade 0–4; grade ≥3 (liquids only / alimentation) drives opioids, nutrition, infection precautions"
+      ]
+    },
+    {
+      "id": "breast-birads",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "ACR BI-RADS: 0 incomplete workup; 3 short-interval (~6 mo) follow-up; 4–5 tissue diagnosis"
+      ]
+    },
+    {
+      "id": "lung-rads",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://radiopaedia.org/articles/lung-imaging-reporting-and-data-system-lung-rads?lang=us",
+        "ACR Lung-RADS: category 3 ≈6-month LDCT; 4A often 3-month LDCT ± PET if solid ≥8 mm; 4B/4X diagnostic workup"
+      ]
+    },
+    {
+      "id": "li-rads",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "ACR LI-RADS in at-risk liver: LR-3 short-interval multiphase; LR-4/5 multidisciplinary HCC pathway; LR-M consider biopsy/non-HCC workup"
+      ]
+    }
+  ]
+}

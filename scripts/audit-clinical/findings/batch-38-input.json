@@ -1,0 +1,635 @@
+[
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "hep-score",
+    "name": "HEP Score (HIT Expert Probability)",
+    "shortName": "HEP",
+    "whenToUse": "Suspected HIT when stratifying pretest probability before immunoassay / SRA and anticoagulation decisions.",
+    "whyUse": "Broader expert-weighted model than 4Ts; cutoffs ~2 (high sensitivity) and ~5 (higher specificity) used in literature.",
+    "nextSteps": [
+      {
+        "condition": "HEP ≥2",
+        "actions": [
+          "HIT immunoassay",
+          "Consider non-heparin anticoagulant",
+          "Document heparin exposure history"
+        ]
+      },
+      {
+        "condition": "HEP ≥5 or high 4Ts",
+        "actions": [
+          "Treat as probable HIT pending labs",
+          "Hematology input",
+          "Functional assay if Ab positive/equivocal"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "jaam-dic",
+    "name": "JAAM DIC Criteria (Revised)",
+    "shortName": "JAAM DIC",
+    "whenToUse": "Critically ill patients (often sepsis) when diagnosing DIC earlier than ISTH overt-DIC thresholds.",
+    "whyUse": "More sensitive early DIC screen in Japanese critical care cohorts; score ≥4 indicates JAAM DIC.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥4",
+        "actions": [
+          "Treat cause (source control/antibiotics)",
+          "Serial coags/FDP/platelets",
+          "ISTH overt-DIC score",
+          "Bleed/thrombosis surveillance"
+        ]
+      },
+      {
+        "condition": "Score <4 with sepsis",
+        "actions": [
+          "Calculate SIC score",
+          "Repeat in 12–24 h if worsening"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "sic-score",
+    "name": "SIC Score (Sepsis-Induced Coagulopathy)",
+    "shortName": "SIC",
+    "whenToUse": "Patients with sepsis/infection plus organ dysfunction when screening for sepsis-induced coagulopathy.",
+    "whyUse": "Simpler early detector than ISTH overt DIC; SIC ≥4 supports diagnosis (with platelet+INR subscore ≥2).",
+    "nextSteps": [
+      {
+        "condition": "SIC positive",
+        "actions": [
+          "Source control + antibiotics",
+          "Serial coags/CBC",
+          "Calculate ISTH overt-DIC",
+          "Bleed/clot monitoring"
+        ]
+      },
+      {
+        "condition": "Borderline",
+        "actions": [
+          "Repeat labs 12–24 h",
+          "Review hepatopathy confounders of INR"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "isth-bat",
+    "name": "ISTH-BAT Total Interpretation",
+    "shortName": "ISTH-BAT",
+    "whenToUse": "After completing ISTH-BAT questionnaire when deciding if the bleeding history is abnormal.",
+    "whyUse": "Standardized abnormal cutoffs: adult men ≥4, adult women ≥6, children ≥3.",
+    "nextSteps": [
+      {
+        "condition": "Abnormal score",
+        "actions": [
+          "Hematology referral",
+          "Baseline hemostasis panel",
+          "Avoid empiric invasive procedures without plan"
+        ]
+      },
+      {
+        "condition": "Normal score but high concern",
+        "actions": [
+          "Still test if family history strong",
+          "Re-score after new challenges"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "riete-bleed",
+    "name": "RIETE Bleeding Score",
+    "shortName": "RIETE",
+    "whenToUse": "Acute PE/VTE when estimating 3-month major bleeding risk on anticoagulation.",
+    "whyUse": "Simple bedside score with low/intermediate/high major-bleed strata used alongside VTE-BLEED and clinical judgment.",
+    "nextSteps": [
+      {
+        "condition": "High RIETE",
+        "actions": [
+          "Review reversible bleed risks",
+          "Careful AC selection/dosing",
+          "Early follow-up labs",
+          "Patient education on bleed signs"
+        ]
+      },
+      {
+        "condition": "Any PE with high bleed risk",
+        "actions": [
+          "Avoid unnecessary thrombolysis",
+          "IVC filter only per strict indications"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "platelet-threshold",
+    "name": "Platelet Transfusion Thresholds",
+    "shortName": "Plt threshold",
+    "whenToUse": "When deciding prophylactic or pre-procedure platelet transfusion targets in adults.",
+    "whyUse": "Standardizes common indication-based cutoffs; always individualize for active bleeding and comorbidities.",
+    "nextSteps": [
+      {
+        "condition": "Below threshold + procedure",
+        "actions": [
+          "Order platelets timed to procedure",
+          "Confirm ABO/Rh issues",
+          "Recheck count after transfusion"
+        ]
+      },
+      {
+        "condition": "Refractory count rise",
+        "actions": [
+          "Evaluate alloimmunization/consumptive process",
+          "HLA-matched products if indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "rbc-transfuse-threshold",
+    "name": "Restrictive RBC Transfusion Thresholds",
+    "shortName": "RBC threshold",
+    "whenToUse": "Hospitalized adults when applying restrictive vs liberal RBC transfusion strategies.",
+    "whyUse": "Restrictive thresholds (often Hb 7–8 g/dL) are non-inferior in many stable populations and reduce exposure.",
+    "nextSteps": [
+      {
+        "condition": "Transfusing",
+        "actions": [
+          "Single-unit strategy if stable",
+          "Consent/risks",
+          "Evaluate cause of anemia"
+        ]
+      },
+      {
+        "condition": "ACS context",
+        "actions": [
+          "Cardiology input",
+          "Avoid both under- and over-transfusion"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "amc-count",
+    "name": "Absolute Monocyte Count (AMC)",
+    "shortName": "AMC",
+    "whenToUse": "Interpreting differential counts, chronic myelomonocytic leukemia screens, recovery, or infection patterns.",
+    "whyUse": "Absolute counts are more meaningful than percentages alone; monocytosis may flag CMML, recovery, or inflammation.",
+    "nextSteps": [
+      {
+        "condition": "Persistent monocytosis ≥1.0",
+        "actions": [
+          "Repeat CBC",
+          "Peripheral smear",
+          "Consider heme referral / NGS if chronic"
+        ]
+      },
+      {
+        "condition": "Monocytopenia",
+        "actions": [
+          "Review meds and marrow failure signs",
+          "Correlate with other cytopenias"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "aec-count",
+    "name": "Absolute Eosinophil Count (AEC)",
+    "shortName": "AEC",
+    "whenToUse": "Allergy, parasite, drug reaction, asthma, or hypereosinophilic syndrome workups.",
+    "whyUse": "Severity bands guide urgency of organ evaluation (heart, lung, neuro) for hypereosinophilia.",
+    "nextSteps": [
+      {
+        "condition": "AEC ≥1.5",
+        "actions": [
+          "Medication review",
+          "Parasite/travel history",
+          "Troponin/ECG if symptoms",
+          "Smear"
+        ]
+      },
+      {
+        "condition": "AEC >5 or organ injury",
+        "actions": [
+          "Urgent specialty input",
+          "Consider steroids after diagnostics planned"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "haptoglobin-hemolysis",
+    "name": "Hemolysis Lab Pattern Checklist",
+    "shortName": "Hemolysis labs",
+    "whenToUse": "Anemia with possible hemolysis to structure lab pattern interpretation.",
+    "whyUse": "No single test is perfect; concordant markers increase confidence in intravascular/extravascular hemolysis.",
+    "nextSteps": [
+      {
+        "condition": "Supports hemolysis",
+        "actions": [
+          "Peripheral smear",
+          "DAT",
+          "CBC trends",
+          "Consider MAHA labs (PT/aPTT, fibrinogen, ADAMTS13 if TTP concern)"
+        ]
+      },
+      {
+        "condition": "DAT+",
+        "actions": [
+          "Warm vs cold workup",
+          "Drug history",
+          "Treat underlying AIHA pathway"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "inr-calc",
+    "name": "INR from PT (ISI / MNPT)",
+    "shortName": "INR",
+    "whenToUse": "When raw PT, MNPT, and reagent ISI are known and INR needs verification or teaching calculation.",
+    "whyUse": "INR standardizes PT across reagents: INR = (PTpatient / MNPT)^ISI.",
+    "nextSteps": [
+      {
+        "condition": "INR above goal",
+        "actions": [
+          "Hold/reduce warfarin",
+          "Assess bleed",
+          "Vitamin K/PCC if indicated"
+        ]
+      },
+      {
+        "condition": "INR below goal",
+        "actions": [
+          "Adherence/diet/drug interaction review",
+          "Bridge only if high thrombotic risk"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "aptt-ratio",
+    "name": "aPTT Ratio",
+    "shortName": "aPTT ratio",
+    "whenToUse": "Unfractionated heparin monitoring teaching, lupus anticoagulant screens, or factor deficiency workups.",
+    "whyUse": "Normalizes raw aPTT seconds to the local control; heparin therapeutic ranges are reagent-specific (anti-Xa preferred).",
+    "nextSteps": [
+      {
+        "condition": "UFH therapy",
+        "actions": [
+          "Use institutional nomogram or anti-Xa",
+          "Do not use a universal 1.5–2.5 rule without local correlation"
+        ]
+      },
+      {
+        "condition": "Unexpected prolongation",
+        "actions": [
+          "Mixing study",
+          "Exclude contamination",
+          "Review anticoagulants"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "anti-xa-interpret",
+    "name": "Anti-Xa Level Interpretation",
+    "shortName": "Anti-Xa",
+    "whenToUse": "When an anti-Xa level is reported and needs context by drug and dosing intent.",
+    "whyUse": "Target bands differ for UFH vs prophylactic vs therapeutic LMWH; timing of draw is critical.",
+    "nextSteps": [
+      {
+        "condition": "Out of range",
+        "actions": [
+          "Confirm draw timing",
+          "Review CrCl/weight",
+          "Adjust per protocol",
+          "Assess bleeding/clotting"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "fn-pathway",
+    "name": "Febrile Neutropenia Pathway Helper",
+    "shortName": "FN pathway",
+    "whenToUse": "Adult cancer patient with fever and neutropenia when triaging home oral therapy vs admission.",
+    "whyUse": "Structures high-risk features that usually mandate inpatient IV antibiotics even if a formal MASCC is high.",
+    "nextSteps": [
+      {
+        "condition": "High-risk",
+        "actions": [
+          "Admit",
+          "IV abx within 60 min ideal",
+          "ID/oncology collaboration"
+        ]
+      },
+      {
+        "condition": "Possible low-risk",
+        "actions": [
+          "MASCC/CISNE",
+          "Social stability check",
+          "Close follow-up plan"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "cat-score",
+    "name": "CAT Score (Cancer-Associated Thrombosis, Simplified)",
+    "shortName": "CAT score",
+    "whenToUse": "Ambulatory solid-tumor patients starting systemic therapy when considering primary VTE prophylaxis discussions.",
+    "whyUse": "Extends simple cancer-VTE thinking beyond site alone; educational only—pair with full Khorana and guidelines.",
+    "nextSteps": [
+      {
+        "condition": "Khorana core ≥2",
+        "actions": [
+          "Bleed risk assessment",
+          "Discuss primary prophylaxis",
+          "Patient education on VTE signs"
+        ]
+      },
+      {
+        "condition": "Prior VTE",
+        "actions": [
+          "Secondary prevention plan",
+          "Oncology–heme collaboration"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "tls-cairo",
+    "name": "Cairo-Bishop Laboratory TLS",
+    "shortName": "Lab TLS",
+    "whenToUse": "Patients with high-burden hematologic malignancy or rapidly proliferating tumors around cytotoxic therapy.",
+    "whyUse": "Defines laboratory TLS when ≥2 metabolic abnormalities occur in the same 24-hour window (day −3 to +7 of treatment).",
+    "nextSteps": [
+      {
+        "condition": "Lab TLS",
+        "actions": [
+          "Telemetry if hyperK",
+          "IV fluids",
+          "Rasburicase if high uric acid/high risk",
+          "Check clinical TLS criteria"
+        ]
+      },
+      {
+        "condition": "High-risk malignancy without TLS",
+        "actions": [
+          "Prophylaxis tier by risk",
+          "Baseline and serial TLS labs"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "tumor-lysis-clinical",
+    "name": "Clinical Tumor Lysis Syndrome",
+    "shortName": "Clinical TLS",
+    "whenToUse": "When laboratory TLS is present or suspected and organ complications are being assessed.",
+    "whyUse": "Clinical TLS upgrades severity and urgency—drives ICU-level monitoring and renal replacement readiness.",
+    "nextSteps": [
+      {
+        "condition": "Clinical TLS",
+        "actions": [
+          "Higher acuity bed",
+          "Serial labs q2–4h initially",
+          "Nephrology/ICU",
+          "ECG monitoring"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "hypercalcemia-of-malignancy",
+    "name": "Hypercalcemia of Malignancy Helper",
+    "shortName": "HCM",
+    "whenToUse": "Cancer patients with elevated calcium or symptoms (polyuria, confusion, constipation, dehydration).",
+    "whyUse": "Severity bands guide fluids, bisphosphonates/denosumab, calcitonin, and urgency of care.",
+    "nextSteps": [
+      {
+        "condition": "Corrected ≥12 or symptomatic",
+        "actions": [
+          "IV NS",
+          "Antiresorptive therapy",
+          "Hold thiazides/calcium",
+          "PTHrP/PTH/SPEP as indicated"
+        ]
+      },
+      {
+        "condition": "≥14 or neuro symptoms",
+        "actions": [
+          "Higher acuity care",
+          "Calcitonin bridge",
+          "Urgent oncology"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "spinal-cord-compression",
+    "name": "MSCC Clinical Red Flags Checklist",
+    "shortName": "MSCC flags",
+    "whenToUse": "Cancer patients with new/worsening back pain, radiculopathy, or neurologic deficits.",
+    "whyUse": "Delays in MRI and steroids/RT/surgery worsen permanent paralysis risk—checklist prioritizes urgency.",
+    "nextSteps": [
+      {
+        "condition": "Deficit present",
+        "actions": [
+          "Stat MRI",
+          "Steroids",
+          "Urgent multi-D consult"
+        ]
+      },
+      {
+        "condition": "Pain only + cancer",
+        "actions": [
+          "Urgent outpatient/inpatient MRI",
+          "Safety-net for new weakness"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "svco-syndrome",
+    "name": "SVCO / SVC Syndrome Severity Helper",
+    "shortName": "SVCO",
+    "whenToUse": "Suspected SVC syndrome (facial swelling, collaterals, dyspnea) in malignancy or catheter-related thrombosis.",
+    "whyUse": "Stratifies need for airway management, steroids/RT/stent, and tissue diagnosis sequencing.",
+    "nextSteps": [
+      {
+        "condition": "Severe",
+        "actions": [
+          "ABC support",
+          "CT venogram/chest",
+          "IR stent consideration",
+          "Tissue diagnosis strategy"
+        ]
+      },
+      {
+        "condition": "Catheter-related",
+        "actions": [
+          "Anticoagulation if no contraindication",
+          "Line management plan"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "neutropenic-colitis",
+    "name": "Neutropenic Colitis (Typhlitis) Risk Features",
+    "shortName": "Typhlitis",
+    "whenToUse": "Profound neutropenia with abdominal pain, fever, or diarrhea after intensive chemotherapy.",
+    "whyUse": "Highlights when to obtain CT, start broad antibiotics, and involve surgery without delaying resuscitation.",
+    "nextSteps": [
+      {
+        "condition": "High concern",
+        "actions": [
+          "CT A/P with contrast if safe",
+          "Broad IV abx",
+          "NPO",
+          "Surgery if complication"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "mucositis-who",
+    "name": "WHO Oral Mucositis Grade",
+    "shortName": "WHO mucositis",
+    "whenToUse": "Patients receiving stomatotoxic chemotherapy or head-and-neck radiotherapy.",
+    "whyUse": "Simple functional grade guides analgesia, nutrition support, and infection precautions.",
+    "nextSteps": [
+      {
+        "condition": "Grade ≥3",
+        "actions": [
+          "Pain service/opioids",
+          "Nutrition consult",
+          "Rule out secondary infection",
+          "Oncology notification"
+        ]
+      },
+      {
+        "condition": "Any grade",
+        "actions": [
+          "Oral care protocol",
+          "Avoid trauma",
+          "Magic mouthwash per local formulary"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "breast-birads",
+    "name": "BI-RADS Category Interpretation",
+    "shortName": "BI-RADS",
+    "whenToUse": "Interpreting a BI-RADS assessment on mammogram, breast US, or MRI reports.",
+    "whyUse": "Standardizes next steps from routine screening to tissue diagnosis.",
+    "nextSteps": [
+      {
+        "condition": "0",
+        "actions": [
+          "Complete workup imaging",
+          "Obtain priors"
+        ]
+      },
+      {
+        "condition": "3",
+        "actions": [
+          "Schedule short-interval follow-up",
+          "Educate on return precautions"
+        ]
+      },
+      {
+        "condition": "4–5",
+        "actions": [
+          "Image-guided biopsy",
+          "Breast clinic referral"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "lung-rads",
+    "name": "Lung-RADS Category Interpretation",
+    "shortName": "Lung-RADS",
+    "whenToUse": "Interpreting LDCT lung cancer screening reports coded with Lung-RADS.",
+    "whyUse": "Links nodule category to recommended follow-up interval and management.",
+    "nextSteps": [
+      {
+        "condition": "3",
+        "actions": [
+          "Schedule ~6-month LDCT",
+          "Smoking cessation"
+        ]
+      },
+      {
+        "condition": "4A/4B/4X",
+        "actions": [
+          "Pulmonary/nodule clinic",
+          "Consider PET or biopsy per size/features"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-heme-onc.ts",
+    "id": "li-rads",
+    "name": "LI-RADS Category Interpretation",
+    "shortName": "LI-RADS",
+    "whenToUse": "Patients at risk for HCC (cirrhosis, chronic HBV, etc.) with multiphase liver CT/MRI LI-RADS categories.",
+    "whyUse": "Standardizes probability of HCC and next management steps without always needing biopsy.",
+    "nextSteps": [
+      {
+        "condition": "LR-3",
+        "actions": [
+          "Short-interval multiphase imaging",
+          "Hepatology follow-up"
+        ]
+      },
+      {
+        "condition": "LR-4/5",
+        "actions": [
+          "Liver tumor board",
+          "AFP / staging chest imaging",
+          "Transplant evaluation if candidate"
+        ]
+      },
+      {
+        "condition": "LR-M",
+        "actions": [
+          "Consider biopsy",
+          "Broader malignancy workup"
+        ]
+      }
+    ]
+  }
+]

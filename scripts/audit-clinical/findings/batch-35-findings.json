@@ -1,0 +1,258 @@
+{
+  "batch": 35,
+  "file": "wave6-clinical-residual.ts",
+  "audited": 24,
+  "fixed": 1,
+  "items": [
+    {
+      "id": "expanded-baveno",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://onlinelibrary.wiley.com/doi/full/10.1002/hep.29363",
+        "Augustin S et al. Hepatology 2017 — Expanded Baveno VI: LSM <25 kPa + platelets >110×10⁹/L spares more EGDs with low missed VNT rate; classic Baveno VI LSM <20 + Plt >150; applies to compensated ACLD only"
+      ]
+    },
+    {
+      "id": "ascites-grade",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC7805288/",
+        "https://gut.bmj.com/content/70/1/9",
+        "IAC grades 1–3; Grade 1 salt/observe, Grade 2 diuretics, Grade 3 LVP+albumin; refractory → serial LVP/TIPS/transplant; new ascites → diagnostic paracentesis"
+      ]
+    },
+    {
+      "id": "variceal-bleed-risk",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.aasld.org/liver-fellow-network/core-series/why-series/why-do-we-use-early-tips-management-variceal-bleeding",
+        "Garcia-Pagán et al. NEJM 2010 — early/preemptive TIPS in high-risk (Child C <14 or Child B with active bleed); acute AVB: vasoactive drug (octreotide/terlipressin), IV abx, urgent EGD; primary ppx high-risk varices: NSBB or EBL"
+      ]
+    },
+    {
+      "id": "meld-3-edu",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Kim WR et al. Gastroenterology 2021 (PMID 34481845)",
+        "MELD 3.0 adds female sex coefficient (+1.33) and albumin vs MELD-Na; improves mortality prediction and reduces sex disparity; educational only vs OPTN listing tools"
+      ]
+    },
+    {
+      "id": "mdrd-original",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Levey et al. Ann Intern Med 1999 / IDMS 175 re-expression",
+        "Delgado C et al. NKF-ASN Task Force Am J Kidney Dis 2021 — race-based eGFR abandoned; prefer CKD-EPI 2021 race-free ± ACR staging"
+      ]
+    },
+    {
+      "id": "aki-cause",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://kdigo.org/guidelines/acute-kidney-injury/",
+        "Classic pre-renal vs ATN teaching: FENa/FeUrea, sediment, volume response; diuretics invalidate FENa — use FeUrea; educational heuristic only"
+      ]
+    },
+    {
+      "id": "fena-contrast",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/7362385/",
+        "Fang et al. — low FENa can persist in contrast-associated AKI; not specific; timing/alternate causes matter; volume optimization and minimize unnecessary contrast"
+      ]
+    },
+    {
+      "id": "desmopressin-challenge",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK537591/",
+        "Miller et al. classic teaching: ≥50% Uosm rise after DDAVP → central DI; minimal rise → nephrogenic; modern copeptin/hypertonic saline protocols preferred in many centers"
+      ]
+    },
+    {
+      "id": "water-deprivation",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK537591/",
+        "End-deprivation Uosm >~600 favors primary polydipsia/normal; Uosm <300 with Posm ≥~295 → DI pattern → desmopressin step; supervised protocol"
+      ]
+    },
+    {
+      "id": "siadh-criteria",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.racgp.org.au/afp/2017/september/the-suspect-siadh",
+        "Bartter–Schwartz / European hyponatremia guidance: Posm <275, Uosm >100, euvolemia, UNa elevated, normal thyroid/adrenal; exclude diuretics; fluid restriction mild–mod; 3% saline severe symptoms"
+      ]
+    },
+    {
+      "id": "di-diagnosis",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Christ-Crain M et al. DI diagnosis reviews",
+        "Baseline high-normal/high Na–Posm with dilute polyuria favors DI; low/low-normal favors primary polydipsia; confirm with copeptin or deprivation/DDAVP"
+      ]
+    },
+    {
+      "id": "graves-cas",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.bopss.co.uk/bopss-uploads/EUGOGO-2021-guidelines-pdf.pdf",
+        "EUGOGO 2021 / Mourits CAS: active if CAS ≥3/7 on basic 7-item score; IV GCs for moderate–severe active GO; DON is emergency; smoking cessation + euthyroid state"
+      ]
+    },
+    {
+      "id": "ata-nodule",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://radiopaedia.org/articles/ata-guidelines-for-assessment-of-thyroid-nodules",
+        "Haugen et al. ATA 2015: high/intermediate FNA ≥1 cm; low ≥1.5 cm; very low ≥2 cm; benign no routine FNA; complementary to TIRADS"
+      ]
+    },
+    {
+      "id": "somogyi-dawn",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK279114/",
+        "3 a.m./CGM distinguishes nocturnal hypo (treat by reducing overnight insulin) from dawn phenomenon (basal timing/dose); true Somogyi rebound debated"
+      ]
+    },
+    {
+      "id": "dka-resolution",
+      "status": "fixed",
+      "issues": [
+        "whenToUse framed resolution primarily as 'anion gap closure'; 2024 ADA/ESPE/ISPAD hyperglycemic crises consensus defines DKA resolution by ketones <0.6 mmol/L plus pH ≥7.3 or HCO₃ ≥18 and discourages AG as a resolution criterion (hyperchloremia after saline)"
+      ],
+      "changes": [
+        {
+          "field": "whenToUse",
+          "from": "During DKA treatment to decide when anion gap closure / resolution criteria are met for transition to SQ insulin.",
+          "to": "During DKA treatment to decide when ketoacidosis resolution criteria are met for transition to SQ insulin."
+        }
+      ],
+      "sources": [
+        "https://diabetesjournals.org/care/article/47/8/1257/156808/Hyperglycemic-Crises-in-Adults-With-Diabetes-A",
+        "https://www.ccjm.org/content/92/3/152",
+        "Umpierrez et al. Diabetes Care 2024 — DKA resolution: β-OHB <0.6 mmol/L and pH ≥7.3 or bicarb ≥18; ideally glucose <200; do not use AG; still overlap SQ basal before stopping IV insulin"
+      ]
+    },
+    {
+      "id": "hhs-diagnosis",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK620700/",
+        "HHS: glucose often ≥600, hyperosmolality (classically effective osm ≥320; 2024 also allows effective >300 or total >320), pH >7.3, bicarb ≥15–18, minimal ketones; massive fluid deficit; insulin after initial fluids per protocol"
+      ]
+    },
+    {
+      "id": "abg-stepwise",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Berend K et al. N Engl J Med 2014",
+        "Standard teaching sequence: pH → primary process → compensation (Winter’s) → AG / mixed disorders"
+      ]
+    },
+    {
+      "id": "mixed-disorder",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Berend K et al. N Engl J Med 2014",
+        "Compensation outside expected band implies second primary process; treat each primary cause"
+      ]
+    },
+    {
+      "id": "shunt-estimate",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK482316/",
+        "Qs/Qt = (CcO₂−CaO₂)/(CcO₂−CvO₂); true shunt responds poorly to FiO₂ alone — PEEP/recruitment/treat collapse; echo if unexplained anatomic shunt"
+      ]
+    },
+    {
+      "id": "rule-of-150",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK482268/",
+        "Room-air sea-level teaching: PaO₂ ≈ 150 − PaCO₂ if normal A–a; large shortfall → formal A–a and pulmonary workup; invalid on supplemental O₂"
+      ]
+    },
+    {
+      "id": "altitude-pao2",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK539701/",
+        "PB falls with altitude → lower PIO₂/PaO₂; HAST/O₂ planning for cardiopulmonary disease; altitude illness: descent, O₂, acetazolamide/dexamethasone per syndrome"
+      ]
+    },
+    {
+      "id": "smoke-inhalation",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "ABA / burn critical care reviews",
+        "Inhalation injury raises burn mortality; early controlled airway for threat features; 100% O₂, COHb ± cyanide pathway, burn center transfer"
+      ]
+    },
+    {
+      "id": "carboxy-half-life",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Weaver LK. N Engl J Med 2009 (PMID 19297574)",
+        "COHb t½ ≈ 4–6 h room air, ~60–90 min 100% O₂, ~20–30 min HBO; 100% O₂ until low COHb/symptoms improve; HBO per criteria"
+      ]
+    },
+    {
+      "id": "beta-blocker-tox",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Graudins A et al. Br J Clin Pharmacol 2016 (PMID 26344579)",
+        "Unstable BB OD: ABCs, glucagon, vasopressors, consider HIET, poison control; NaHCO₃ if wide QRS (membrane-stabilizing agents e.g. propranolol)"
+      ]
+    }
+  ]
+}

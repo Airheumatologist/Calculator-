@@ -1,0 +1,213 @@
+{
+  "batch": 9,
+  "file": "missing-peds-ob-tox.ts",
+  "audited": 19,
+  "fixed": 1,
+  "items": [
+    {
+      "id": "sipa",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/27814956/",
+        "https://www.mdcalc.com/calc/10058/shock-index-pediatric-age-adjusted-sipa",
+        "Acker et al. — SIPA (age cutoffs ~1.22 / 1.0 / 0.9) outperforms adult SI and age-adjusted hypotension for transfusion, OR, ICU risk in pediatric trauma"
+      ]
+    },
+    {
+      "id": "yale-observation",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/7133831",
+        "https://mobile.fpnotebook.com/ID/Exam/YlSclFrFbrlChld3T36Mnths.htm",
+        "McCarthy et al. — YOS 6–30 in febrile children classically 3–36 mo; ≤10 lower risk, ≥16 higher serious-illness risk; not a standalone infant-fever rule-out"
+      ]
+    },
+    {
+      "id": "step-by-step-fever",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/1801/step-step-approach-febrile-infants",
+        "https://pubmed.ncbi.nlm.nih.gov/27382134/",
+        "Mintegi/Gomez Step-by-Step — febrile infants ≤90 d; low risk if well-appearing, >21 d, no leukocyturia, PCT <0.5, CRP ≤20, ANC ≤10k; may avoid LP/antibiotics/admission on pathway"
+      ]
+    },
+    {
+      "id": "vbac-success",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://journals.lww.com/greenjournal/fulltext/2017/11000/practice_bulletin_no__184__vaginal_birth_after.48.aspx",
+        "https://pubmed.ncbi.nlm.nih.gov/17400840",
+        "ACOG PB 184 — TOLAC in facility with emergency cesarean; uterine rupture ~0.5–0.9% after prior low-transverse scar; Grobman nomogram for predicted VBAC success counseling"
+      ]
+    },
+    {
+      "id": "preeclampsia-criteria",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.acog.org/clinical/clinical-guidance/practice-bulletin/articles/2020/06/gestational-hypertension-and-preeclampsia",
+        "ACOG PB 222 — HTN after 20 weeks (or postpartum) + proteinuria or end-organ criteria; severe features → admit, MgSO₄, BP control, delivery planning"
+      ]
+    },
+    {
+      "id": "hellp",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/16449123",
+        "Sibai / Tennessee–Mississippi HELLP criteria — hemolysis + elevated LFTs + low platelets; partial HELLP managed as obstetric emergency with MgSO₄, serial labs, delivery planning"
+      ]
+    },
+    {
+      "id": "mag-toxicity",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ahrq.gov/patient-safety/settings/labor-delivery/perinatal-care/modules/strategies/medication/tool-safe-mgso4.html",
+        "Obstetric MgSO₄ teaching — therapeutic ~4.8–8.4 mg/dL; loss of DTRs then respiratory depression; stop infusion, support airway, calcium gluconate 1 g IV; q1h RR/SpO2/DTRs/UOP checks"
+      ]
+    },
+    {
+      "id": "ethanol-level-estimate",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK537009/",
+        "Clinical toxicology teaching — Widmark dose/distribution estimate and EtOH ≈ osm gap × 4.6 are bedside approximations; measured EtOH and workup for other alcohols when gap unexplained"
+      ]
+    },
+    {
+      "id": "rumack-matthew-time",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/568/acetaminophen-overdose-nac-dosing",
+        "https://pubmed.ncbi.nlm.nih.gov/1134886",
+        "Rumack–Matthew — single acute ingestion, timed level ≥4 h; US treatment (150) line; NAC if on/above line; may withhold NAC if clearly below line with certain time"
+      ]
+    },
+    {
+      "id": "loading-dose",
+      "status": "fixed",
+      "issues": [
+        "whenToUse limited tool to 'IV loading doses' despite bioavailability (F) options for oral routes; whyUse 'steady concentration' overstated (loading dose targets a concentration, not steady state by itself)"
+      ],
+      "changes": [
+        "whenToUse: 'Estimating IV loading doses when Vd and target level are known' → 'Estimating loading doses when Vd and target concentration are known'",
+        "whyUse: 'achieving steady concentration quickly' → 'rapidly achieving a target plasma concentration'"
+      ],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK553132/",
+        "Standard PK — LD = Cp × Vd × weight / F; loading rapidly approaches a target/therapeutic concentration; steady state still depends on maintenance dosing"
+      ]
+    },
+    {
+      "id": "infusion-rate",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ismp.org/resources/guidelines-safe-preparation-compounded-sterile-preparations",
+        "Standard ICU drip math — mL/hr = mcg/kg/min × kg × 60 / (mcg/mL); independent double-check and smart-pump library"
+      ]
+    },
+    {
+      "id": "corrected-retic",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK431092/",
+        "Standard hematology — corrected retic = retic% × (Hct/45); RPI adjusts for maturation; low RPI hypoproliferative workup; high RPI hemolysis/bleed"
+      ]
+    },
+    {
+      "id": "absolute-lymphocyte",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.ncbi.nlm.nih.gov/books/NBK557422/",
+        "Standard lab hematology — ALC = WBC × lymph fraction; absolute counts preferred over %; severe lymphopenia → HIV/meds/immune eval; persistent adult lymphocytosis → smear/flow"
+      ]
+    },
+    {
+      "id": "sodium-deficit",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/10824078",
+        "https://emedicine.medscape.com/article/242166-treatment",
+        "Adrogué–Madias / US expert panel — Na deficit = TBW × (goal − actual) is adjunctive; severe symptoms: 100 mL 3% saline boluses (Europe often 150 mL); slow correction if chronic"
+      ]
+    },
+    {
+      "id": "expected-pco2-metabolic-alk",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.anaesthesiamcq.com/AcidBaseBook/ab9_3.php",
+        "https://litfl.com/metabolic-alkalosis/",
+        "Standard acid-base — expected PCO₂ ≈ 0.7×HCO₃ + 20 (±5); compensation via hypoventilation; mismatch suggests mixed disorder"
+      ]
+    },
+    {
+      "id": "hypertonic-hyponatremia",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/4763428",
+        "https://pubmed.ncbi.nlm.nih.gov/10225241",
+        "Katz (+1.6) / Hillier (+2.4) glucose correction — translocational hyponatremia; corrected Na guides free-water/fluid planning in DKA/HHS (ADA)"
+      ]
+    },
+    {
+      "id": "ideal-body-weight-peds",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://pubmed.ncbi.nlm.nih.gov/7369179",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC6782117/",
+        "Traub–Johnson — height-based pediatric IBW used in pharmacy dosing contexts; always check drug-specific TBW vs IBW vs adjusted weight"
+      ]
+    },
+    {
+      "id": "finnegan",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.mdcalc.com/calc/10048/modified-finnegan-neonatal-abstinence-score-nas",
+        "Modified Finnegan NAS — serial CNS/metabolic/GI scoring; non-pharm first; common pharmacologic thresholds ≥8 ×3 or ≥12 ×2 (morphine/methadone protocols institutional)"
+      ]
+    },
+    {
+      "id": "urine-anion-gap",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://litfl.com/urinary-anion-gap/",
+        "https://reference.medscape.com/calculator/477/urine-anion-gap-or-urine-net-charge",
+        "Classic NAGMA teaching — negative UAG suggests appropriate NH₄⁺ (e.g., diarrhea); positive suggests impaired renal acidification (RTA); use with urine pH and clinical context"
+      ]
+    }
+  ]
+}

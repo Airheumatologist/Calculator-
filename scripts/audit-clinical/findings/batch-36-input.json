@@ -1,0 +1,671 @@
+[
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "neonatal-eos-kaiser",
+    "name": "Kaiser Early-Onset Sepsis Calculator (Simplified Educational)",
+    "shortName": "Kaiser EOS",
+    "whenToUse": "Term/late-preterm newborns when structuring EOS risk discussion; teaching risk factors that feed multivariate EOS models.",
+    "whyUse": "Highlights key antecedents of early-onset GBS/E. coli sepsis. This tool does not reproduce the full Kaiser Permanente online algorithm or absolute incidence estimates.",
+    "nextSteps": [
+      {
+        "condition": "Ill-appearing",
+        "actions": [
+          "Cultures + empiric antibiotics",
+          "Supportive care",
+          "NICU evaluation"
+        ]
+      },
+      {
+        "condition": "Well + low risk",
+        "actions": [
+          "Serial exams",
+          "Parental education",
+          "Avoid unnecessary labs/antibiotics"
+        ]
+      },
+      {
+        "condition": "Intermediate",
+        "actions": [
+          "Formal EOS calc",
+          "Close observation ± limited labs per protocol"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "neonatal-los-checklist",
+    "name": "Neonatal Late-Onset Sepsis Clinical Checklist",
+    "shortName": "Neonatal LOS",
+    "whenToUse": "Infants >72 hours of life with nonspecific signs that may represent LOS (apnea, feeding intolerance, temperature instability, etc.).",
+    "whyUse": "LOS presentations are subtle; a checklist supports systematic assessment of clinical and risk domains before cultures/antibiotics.",
+    "nextSteps": [
+      {
+        "condition": "High suspicion",
+        "actions": [
+          "Cultures",
+          "Empiric antibiotics",
+          "Supportive care",
+          "Source search"
+        ]
+      },
+      {
+        "condition": "Low score but parent/nurse concern",
+        "actions": [
+          "Repeat exam",
+          "Trend vitals",
+          "Low threshold to escalate"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "nec-bell-stage",
+    "name": "Bell Staging for Necrotizing Enterocolitis",
+    "shortName": "Bell NEC",
+    "whenToUse": "Preterm or at-risk neonates with feeding intolerance, bloody stools, abdominal findings, or radiographic concern for NEC.",
+    "whyUse": "Standard communication framework for NEC severity guiding medical vs surgical pathways.",
+    "nextSteps": [
+      {
+        "condition": "Stage I",
+        "actions": [
+          "Hold feeds",
+          "Close observation",
+          "Reimage if worsens"
+        ]
+      },
+      {
+        "condition": "Stage II",
+        "actions": [
+          "Medical NEC pathway",
+          "Antibiotics",
+          "Serial exams"
+        ]
+      },
+      {
+        "condition": "Stage III",
+        "actions": [
+          "Resuscitate",
+          "Surgical consult",
+          "OR/drain as indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "pediatric-sirs",
+    "name": "Pediatric SIRS Criteria",
+    "shortName": "Peds SIRS",
+    "whenToUse": "Children with suspected infection when applying classic SIRS-based sepsis definitions (educational / legacy pathways).",
+    "whyUse": "SIRS ≥2 criteria (must include temp or leukocyte abnormality in many pediatric definitions) flagged systemic inflammation; note Phoenix/Sepsis-3 evolution in newer frameworks.",
+    "nextSteps": [
+      {
+        "condition": "SIRS + infection concern",
+        "actions": [
+          "Cultures as indicated",
+          "Source control",
+          "Risk-stratify organ dysfunction"
+        ]
+      },
+      {
+        "condition": "SIRS without clear infection",
+        "actions": [
+          "Broader differential (trauma, inflammation, post-op)"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "psofa-simp",
+    "name": "Pediatric SOFA (pSOFA) Simplified Educational",
+    "shortName": "pSOFA simp",
+    "whenToUse": "PICU-style assessment of multi-organ dysfunction severity for teaching or structured documentation.",
+    "whyUse": "pSOFA adapts SOFA to pediatric cutoffs; higher totals associate with mortality. This version uses coarse domain bins for education.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥8",
+        "actions": [
+          "PICU-level care",
+          "Reassess vasopressors/vent/RRT needs"
+        ]
+      },
+      {
+        "condition": "Rising score",
+        "actions": [
+          "Hunt for untreated source",
+          "Escalate monitoring"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "phoenix-sepsis-simp",
+    "name": "Phoenix Sepsis Criteria (Simplified Educational)",
+    "shortName": "Phoenix simp",
+    "whenToUse": "Children with suspected infection when applying modern organ-dysfunction-based sepsis definitions (teaching aid).",
+    "whyUse": "Phoenix (2024) redefined pediatric sepsis around organ dysfunction rather than SIRS; this checklist surfaces the major domains.",
+    "nextSteps": [
+      {
+        "condition": "Sepsis/shock pattern",
+        "actions": [
+          "Antibiotics",
+          "Hemodynamic support",
+          "PICU",
+          "Source control"
+        ]
+      },
+      {
+        "condition": "Borderline organ score",
+        "actions": [
+          "Serial exams",
+          "Lactate/perfusion checks",
+          "Early escalation"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "pals-cpr-depth",
+    "name": "PALS CPR Depth and Rate Reference",
+    "shortName": "PALS CPR",
+    "whenToUse": "During pediatric CPR training or real-time resuscitation as a quick quality reference.",
+    "whyUse": "Correct rate/depth/recoil and ventilation ratios improve CPR quality; age changes depth targets.",
+    "nextSteps": [
+      {
+        "condition": "Active arrest",
+        "actions": [
+          "High-quality CPR",
+          "Pad placement",
+          "Epinephrine timing per PALS",
+          "Reversible Hs/Ts"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "io-needle-size",
+    "name": "IO Needle Selection by Age (Educational)",
+    "shortName": "IO Needle",
+    "whenToUse": "Emergent vascular access when IO is chosen; training for EZ-IO / manual needle size selection.",
+    "whyUse": "Wrong length risks under-penetration or injury; age/weight-based color systems (e.g., EZ-IO) reduce error.",
+    "nextSteps": [
+      {
+        "condition": "Failed IO or extravasation",
+        "actions": [
+          "Stop infusion",
+          "New bone/site",
+          "Surgical/vascular backup"
+        ]
+      },
+      {
+        "condition": "Successful IO",
+        "actions": [
+          "Resuscitate",
+          "Plan definitive access"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "umbilical-catheter-depth",
+    "name": "Umbilical Catheter Depth (UVC / UAC)",
+    "shortName": "UVC/UAC Depth",
+    "whenToUse": "Newborns requiring UVC and/or UAC for resuscitation, infusions, or monitoring.",
+    "whyUse": "Formula-based starting depths reduce malposition; always confirm radiographically.",
+    "nextSteps": [
+      {
+        "condition": "After insertion",
+        "actions": [
+          "Confirm tip position",
+          "Begin infusions only after verification"
+        ]
+      },
+      {
+        "condition": "Malposition",
+        "actions": [
+          "Withdraw/reposition per protocol",
+          "Never advance after sterile field broken without new procedure"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "crown-rump",
+    "name": "Crown-Rump Length to Gestational Age",
+    "shortName": "CRL → GA",
+    "whenToUse": "First-trimester ultrasound dating when CRL is measured (typically ~6–14 weeks).",
+    "whyUse": "Early CRL is the most accurate ultrasound dating method; maps length to GA via standard charts.",
+    "nextSteps": [
+      {
+        "condition": "Dating scan complete",
+        "actions": [
+          "Set EDD from earliest reliable CRL",
+          "Schedule anatomy survey"
+        ]
+      },
+      {
+        "condition": "CRL outside expected range for LMP",
+        "actions": [
+          "Confirm viability",
+          "Apply redating rules"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "amniotic-afi",
+    "name": "Amniotic Fluid Index (AFI) Interpretation",
+    "shortName": "AFI",
+    "whenToUse": "Third-trimester fluid assessment or anytime AFI is reported on ultrasound.",
+    "whyUse": "AFI categories guide surveillance for fetal well-being, membrane rupture, and maternal conditions (diabetes, etc.).",
+    "nextSteps": [
+      {
+        "condition": "Oligohydramnios",
+        "actions": [
+          "Rule out ROM",
+          "Fetal assessment",
+          "Growth/Doppler",
+          "Delivery planning"
+        ]
+      },
+      {
+        "condition": "Polyhydramnios",
+        "actions": [
+          "GDM screen",
+          "Anatomy review",
+          "Surveillance"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "sd-ratio",
+    "name": "Umbilical Artery S/D Ratio Interpretation",
+    "shortName": "UA S/D",
+    "whenToUse": "Fetal growth restriction surveillance or when umbilical artery Doppler indices are reported.",
+    "whyUse": "Elevated S/D, absent, or reversed end-diastolic flow stratifies placental insufficiency severity and delivery urgency.",
+    "nextSteps": [
+      {
+        "condition": "AEDF/REDF",
+        "actions": [
+          "Urgent MFM/OB",
+          "Inpatient monitoring",
+          "Delivery timing"
+        ]
+      },
+      {
+        "condition": "Elevated indices",
+        "actions": [
+          "Serial Doppler",
+          "Growth scans",
+          "Antenatal testing"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "biophysical-profile",
+    "name": "Biophysical Profile (BPP)",
+    "shortName": "BPP",
+    "whenToUse": "Antenatal surveillance when nonstress test and/or ultrasound biophysical components are indicated.",
+    "whyUse": "Combines acute (breathing, movement, tone, NST) and chronic (AFV) markers of fetal status.",
+    "nextSteps": [
+      {
+        "condition": "BPP ≤4",
+        "actions": [
+          "Urgent OB evaluation",
+          "Continuous monitoring",
+          "Delivery if appropriate"
+        ]
+      },
+      {
+        "condition": "BPP 6",
+        "actions": [
+          "Repeat testing",
+          "Consider delivery if mature / oligohydramnios"
+        ]
+      },
+      {
+        "condition": "BPP 8–10",
+        "actions": [
+          "Continue indicated surveillance schedule"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "modified-bishop",
+    "name": "Modified Bishop Score",
+    "shortName": "Mod. Bishop",
+    "whenToUse": "Before labor induction to estimate cervical favorability and likelihood of successful vaginal delivery.",
+    "whyUse": "Higher scores predict higher induction success; may inform cervical ripening need. Modified versions use % effacement or length options.",
+    "nextSteps": [
+      {
+        "condition": "Score ≤5",
+        "actions": [
+          "Cervical ripening",
+          "Counsel on timeline/CS risk"
+        ]
+      },
+      {
+        "condition": "Score ≥8",
+        "actions": [
+          "Consider oxytocin/amniotomy per protocol"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "arrest-labor",
+    "name": "Arrest of Labor (ACOG Definitions Helper)",
+    "shortName": "Arrest Labor",
+    "whenToUse": "Laboring patients with concern for protracted or arrested progress in first or second stage.",
+    "whyUse": "Avoids premature cesarean for “failure to progress” before modern minimums for active labor and second stage are met.",
+    "nextSteps": [
+      {
+        "condition": "Arrest met",
+        "actions": [
+          "Counsel CS vs OVD",
+          "Document adequacy of labor",
+          "Prepare OR if needed"
+        ]
+      },
+      {
+        "condition": "Criteria not met",
+        "actions": [
+          "Optimize UCs",
+          "Support, hydration, position",
+          "Avoid premature FTP label"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "pph-class",
+    "name": "Postpartum Hemorrhage Blood Loss Classification",
+    "shortName": "PPH Class",
+    "whenToUse": "Postpartum bleeding above expected or when staging response to obstetric hemorrhage protocols.",
+    "whyUse": "Early recognition of stage/class drives activation of hemorrhage bundles and transfusion strategies.",
+    "nextSteps": [
+      {
+        "condition": "PPH",
+        "actions": [
+          "Call for help",
+          "Uterotonics",
+          "IV access/labs",
+          "QBL ongoing"
+        ]
+      },
+      {
+        "condition": "Severe",
+        "actions": [
+          "MTP",
+          "Surgical backup",
+          "IR/hysterectomy readiness"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "shock-index-ob",
+    "name": "Obstetric Shock Index",
+    "shortName": "OB Shock Index",
+    "whenToUse": "Suspected obstetric hemorrhage or hypovolemia when early recognition of shock is needed.",
+    "whyUse": "Pregnancy alters baseline HR/BP; shock index can rise before frank hypotension.",
+    "nextSteps": [
+      {
+        "condition": "SI ≥0.9",
+        "actions": [
+          "Evaluate bleeding",
+          "IV access",
+          "Type & cross",
+          "Uterotonics if PPH"
+        ]
+      },
+      {
+        "condition": "SI ≥1.1",
+        "actions": [
+          "Hemorrhage protocol",
+          "Blood products readiness"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "eclampsia-mag",
+    "name": "Magnesium Sulfate for Eclampsia (Educational Dosing)",
+    "shortName": "Eclampsia Mg",
+    "whenToUse": "Severe preeclampsia seizure prophylaxis or eclampsia treatment when selecting a standard MgSO₄ regimen.",
+    "whyUse": "Standardized loading/maintenance reduces dosing errors; renal function adjusts maintenance.",
+    "nextSteps": [
+      {
+        "condition": "Eclampsia",
+        "actions": [
+          "MagSO₄",
+          "ABCs",
+          "BP control",
+          "Plan delivery"
+        ]
+      },
+      {
+        "condition": "Toxicity signs",
+        "actions": [
+          "Stop Mag",
+          "Calcium gluconate",
+          "Support ventilation"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "iadsps-gdm",
+    "name": "IADPSG Gestational Diabetes Thresholds",
+    "shortName": "IADPSG GDM",
+    "whenToUse": "When 75-g 2-hour OGTT results are available and IADPSG one-step criteria are used.",
+    "whyUse": "IADPSG diagnoses GDM if any single value meets/exceeds fasting, 1-h, or 2-h cutoffs.",
+    "nextSteps": [
+      {
+        "condition": "GDM",
+        "actions": [
+          "Diabetes education",
+          "Fingersticks",
+          "Growth scans as indicated"
+        ]
+      },
+      {
+        "condition": "Overt DM suspicion",
+        "actions": [
+          "A1c/retinal exam considerations",
+          "Endocrine collab"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "nrp-oxygen",
+    "name": "NRP Target SpO₂ by Minute of Life",
+    "shortName": "NRP SpO₂",
+    "whenToUse": "Delivery room resuscitation when titrating oxygen against minute-specific SpO₂ goals.",
+    "whyUse": "Healthy newborns rise gradually to adult SpO₂; over-oxygenation and hypoxia both carry risk.",
+    "nextSteps": [
+      {
+        "condition": "SpO₂ low + poor effort/HR",
+        "actions": [
+          "MR SOPA corrective steps",
+          "PPV",
+          "↑FiO₂ carefully"
+        ]
+      },
+      {
+        "condition": "SpO₂ high",
+        "actions": [
+          "Wean FiO₂ to target"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "ttn-vs-rds",
+    "name": "TTN vs RDS Clinical Pattern Helper",
+    "shortName": "TTN vs RDS",
+    "whenToUse": "Term or preterm newborns with early respiratory distress when TTN and RDS are leading differentials.",
+    "whyUse": "Pattern recognition guides expected course, surfactant need, and workup breadth (still exclude pneumonia/PPHN).",
+    "nextSteps": [
+      {
+        "condition": "Favors RDS",
+        "actions": [
+          "CPAP",
+          "Consider surfactant",
+          "Minimize hypothermia"
+        ]
+      },
+      {
+        "condition": "Favors TTN",
+        "actions": [
+          "Supportive care",
+          "Expect improvement",
+          "Feeding plan"
+        ]
+      },
+      {
+        "condition": "Indeterminate",
+        "actions": [
+          "Sepsis workup threshold",
+          "Echo if PPHN/CHD concern"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "direct-bili",
+    "name": "Conjugated (Direct) Hyperbilirubinemia Red Flags",
+    "shortName": "Direct Bili",
+    "whenToUse": "Any neonate/infant with elevated direct/conjugated bilirubin or prolonged jaundice.",
+    "whyUse": "Conjugated hyperbilirubinemia is pathologic until proven otherwise; early biliary atresia referral improves outcomes.",
+    "nextSteps": [
+      {
+        "condition": "Conjugated elevation",
+        "actions": [
+          "Fractionate confirm",
+          "LFTs/GGT",
+          "Stool color",
+          "GI referral"
+        ]
+      },
+      {
+        "condition": "Ill infant",
+        "actions": [
+          "Sepsis workup",
+          "Coags + vitamin K",
+          "Glucose",
+          "Admit"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "g6pd",
+    "name": "G6PD Deficiency Risk Checklist",
+    "shortName": "G6PD",
+    "whenToUse": "Neonatal hyperbilirubinemia, acute hemolysis, or before prescribing oxidant drugs in at-risk populations.",
+    "whyUse": "G6PD deficiency is common worldwide and a major cause of severe neonatal jaundice and drug-induced hemolysis.",
+    "nextSteps": [
+      {
+        "condition": "High concern neonate",
+        "actions": [
+          "Serial bili",
+          "Hematocrit",
+          "G6PD assay",
+          "Hydration/phototherapy"
+        ]
+      },
+      {
+        "condition": "Acute hemolysis",
+        "actions": [
+          "Stop trigger",
+          "Support Hb",
+          "Monitor renal function"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "pfapa",
+    "name": "PFAPA Criteria Helper",
+    "shortName": "PFAPA",
+    "whenToUse": "Children with regularly recurring sterile fever episodes when PFAPA is considered.",
+    "whyUse": "Structured criteria separate PFAPA from cyclic neutropenia, monogenic autoinflammatory disease, and recurrent infection.",
+    "nextSteps": [
+      {
+        "condition": "Likely PFAPA",
+        "actions": [
+          "Symptomatic care",
+          "Consider prednisone abortive dose",
+          "Rheum referral if atypical"
+        ]
+      },
+      {
+        "condition": "Atypical (growth failure, rash, serositis)",
+        "actions": [
+          "Monogenic fever workup",
+          "Specialty referral"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "wave6-em-peds.ts",
+    "id": "hsp-criteria",
+    "name": "IgA Vasculitis (HSP) EULAR/PRINTO/PRES Criteria",
+    "shortName": "HSP / IgAV",
+    "whenToUse": "Children with purpura when classifying IgA vasculitis / HSP versus other vasculitides or purpuric illness.",
+    "whyUse": "Standard criteria require purpura (often lower limb) plus at least one additional domain (abdominal, joint, renal, histology).",
+    "nextSteps": [
+      {
+        "condition": "Criteria met",
+        "actions": [
+          "Supportive care",
+          "UA/BP schedule",
+          "Nephrology if significant renal disease"
+        ]
+      },
+      {
+        "condition": "Severe abdominal pain",
+        "actions": [
+          "Surgical eval",
+          "Imaging for intussusception",
+          "Pain control"
+        ]
+      },
+      {
+        "condition": "Not met / toxic",
+        "actions": [
+          "Broader purpura differential",
+          "Cultures/coags/platelets"
+        ]
+      }
+    ]
+  }
+]

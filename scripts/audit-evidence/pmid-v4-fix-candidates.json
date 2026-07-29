@@ -1,0 +1,656 @@
+[
+  {
+    "key": "ibw-hamwi",
+    "calcId": "ibw-hamwi",
+    "file": "extra.ts",
+    "old_pmid": "14103627",
+    "old_doi": "10.1053/j.jrn.2006.01.008",
+    "title": "Hamwi ideal body weight formula (historical pharmacy teaching)",
+    "citation": "Hamwi GJ. 1964 (classic pharmacy teaching; modern IBW comparisons in nutrition literature)",
+    "old_pubmed": "RHEUMATOID ARTHRITIS",
+    "best": {
+      "pmid": "14103627",
+      "score": 7,
+      "overlap": [],
+      "title": "RHEUMATOID ARTHRITIS",
+      "authors": [
+        "POLACHEK AA",
+        "HAMWI GJ"
+      ],
+      "pubdate": "1964 Jan",
+      "doi": null,
+      "query": "Hamwi[Author] AND 1964[PDAT]"
+    },
+    "accept": false
+  },
+  {
+    "key": "shock-index-age",
+    "calcId": "shock-index-age",
+    "file": "missing-cardio-pulm.ts",
+    "old_pmid": "18646473",
+    "old_doi": "10.1002/chem.200701160",
+    "title": "Age-adjusted shock index in trauma risk stratification",
+    "citation": "Zarzaur BL et al. related trauma literature; various ED validations",
+    "old_pubmed": "Intra-abdominal sepsis following pancreatic resection: incidence, risk factors, diagnosis, microbiology, management, and outcome",
+    "best": {
+      "pmid": "18498875",
+      "score": 9,
+      "overlap": [
+        "age",
+        "shock"
+      ],
+      "title": "New vitals after injury: shock index for the young and age x shock index for the old",
+      "authors": [
+        "Zarzaur BL",
+        "Croce MA",
+        "Fischer PE",
+        "Magnotti LJ",
+        "Fabian TC"
+      ],
+      "pubdate": "2008 Jun 15",
+      "doi": "10.1016/j.jss.2008.03.025",
+      "query": "Zarzaur age shock index trauma"
+    },
+    "accept": true
+  },
+  {
+    "key": "pediatric-ews",
+    "calcId": "pediatric-ews",
+    "file": "missing-heme-id-nephro.ts",
+    "old_pmid": "15751446",
+    "old_doi": "10.7748/paed2005.02.17.1.32.c964",
+    "title": "Pediatric early warning systems literature",
+    "citation": "Monaghan A. Paediatr Nurs. 2005 / subsequent PEWS validations",
+    "old_pubmed": "Detecting and managing deterioration in children",
+    "best": {
+      "pmid": "28699997",
+      "score": 8,
+      "overlap": [
+        "early",
+        "pediatric",
+        "warning"
+      ],
+      "title": "Accuracy of a pediatric early warning score in the recognition of clinical deterioration",
+      "authors": [
+        "Miranda JOF",
+        "Camargo CL",
+        "Nascimento CL Sobrinho",
+        "Portela DS",
+        "Monaghan A"
+      ],
+      "pubdate": "2017 Jul 10",
+      "doi": "10.1590/1518-8345.1733.2912",
+      "query": "Monaghan paediatric early warning score"
+    },
+    "accept": true
+  },
+  {
+    "key": "ideal-body-weight-peds",
+    "calcId": "ideal-body-weight-peds",
+    "file": "missing-peds-ob-tox.ts",
+    "old_pmid": "7401271",
+    "old_doi": "10.1177/014860718000400316",
+    "title": "Traub-Johnson pediatric IBW",
+    "citation": "Traub SL, Johnson CE. Am J Hosp Pharm. 1980",
+    "old_pubmed": "Plastic ware",
+    "best": {
+      "pmid": "7401271",
+      "score": 7,
+      "overlap": [],
+      "title": "Plastic ware",
+      "authors": [
+        "Traub S",
+        "Lambert I",
+        "Wesolowski C"
+      ],
+      "pubdate": "1980 May-Jun",
+      "doi": "10.1177/014860718000400316",
+      "query": "Traub[Author] AND 1980[PDAT]"
+    },
+    "accept": false
+  },
+  {
+    "key": "qtc-hodges",
+    "calcId": "qtc-hodges",
+    "file": "wave2-cardiology.ts",
+    "old_pmid": "6405669",
+    "old_doi": "10.7326/0003-4819-98-5-838",
+    "title": "QT interval corrections (Hodges linear formula)",
+    "citation": "Hodges M et al. J Electrocardiol. 1983 (linear QT correction; classic ECG methods)",
+    "old_pubmed": "Carbohydrates and blood pressure",
+    "best": {
+      "pmid": "6405669",
+      "score": 7,
+      "overlap": [],
+      "title": "Carbohydrates and blood pressure",
+      "authors": [
+        "Hodges RE",
+        "Rebello T"
+      ],
+      "pubdate": "1983 May",
+      "doi": "10.7326/0003-4819-98-5-838",
+      "query": "Hodges[Author] AND 1983[PDAT]"
+    },
+    "accept": false
+  },
+  {
+    "key": "ukeld",
+    "calcId": "ukeld",
+    "file": "wave3-gi-hep.ts",
+    "old_pmid": "18724357",
+    "old_doi": "10.1038/nature07317",
+    "title": "Development of the UKELD score",
+    "citation": "Barber K et al. / UK transplant selection literature; Neuberger J et al. Gut related guidance",
+    "old_pubmed": "STING is an endoplasmic reticulum adaptor that facilitates innate immune signalling",
+    "best": {
+      "pmid": "18724357",
+      "score": 7,
+      "overlap": [],
+      "title": "STING is an endoplasmic reticulum adaptor that facilitates innate immune signalling",
+      "authors": [
+        "Ishikawa H",
+        "Barber GN"
+      ],
+      "pubdate": "2008 Oct 2",
+      "doi": "10.1038/nature07317",
+      "query": "Barber[Author] AND 2008[PDAT]"
+    },
+    "accept": false
+  },
+  {
+    "key": "delta-meld",
+    "calcId": "delta-meld",
+    "file": "wave3-gi-hep.ts",
+    "old_pmid": "16135918",
+    "old_doi": "10.1097/01.sla.0000179646.37145.ef",
+    "title": "Delta-MELD and waitlist outcomes (dynamic MELD literature)",
+    "citation": "Merion RM et al. / related transplant epidemiology studies",
+    "old_pubmed": "Outcomes of 385 adult-to-adult living donor liver transplant recipients: a report from the A2ALL Consortium",
+    "best": {
+      "pmid": "16135918",
+      "score": 8,
+      "overlap": [
+        "transplant"
+      ],
+      "title": "Outcomes of 385 adult-to-adult living donor liver transplant recipients: a report from the A2ALL Consortium",
+      "authors": [
+        "Olthoff KM",
+        "Merion RM",
+        "Ghobrial RM",
+        "Abecassis MM",
+        "Fair JH"
+      ],
+      "pubdate": "2005 Sep",
+      "doi": "10.1097/01.sla.0000179646.37145.ef",
+      "query": "Merion[Author] AND 2005[PDAT]"
+    },
+    "accept": true
+  },
+  {
+    "key": "nac-dosing",
+    "calcId": "nac-dosing",
+    "file": "wave3-tox-endo-heme.ts",
+    "old_pmid": "3126163",
+    "old_doi": null,
+    "title": "Acetaminophen poisoning and NAC",
+    "citation": "Prescott LF / Smilkstein MJ et al.; product labeling",
+    "old_pubmed": "Nursing: a major hospital cost component",
+    "best": {
+      "pmid": "3126163",
+      "score": 7,
+      "overlap": [],
+      "title": "Nursing: a major hospital cost component",
+      "authors": [
+        "Wilson L",
+        "Prescott PA",
+        "Aleksandrowicz L"
+      ],
+      "pubdate": "1988 Feb",
+      "doi": null,
+      "query": "Prescott[Author] AND 1988[PDAT]"
+    },
+    "accept": false
+  },
+  {
+    "key": "atlas-cdi",
+    "calcId": "atlas-cdi",
+    "file": "wave4-em-id.ts",
+    "old_pmid": "24331095",
+    "old_doi": "10.1053/j.sempedsurg.2013.10.009",
+    "title": "Comparison of the ATLAS score vs other severity criteria for CDI",
+    "citation": "Miller MA et al. BMC Infect Dis. 2013 / related ATLAS publications",
+    "old_pubmed": "Neonatal hematology",
+    "best": {
+      "pmid": "23530807",
+      "score": 9,
+      "overlap": [
+        "atlas",
+        "difficile"
+      ],
+      "title": "Derivation and validation of a simple clinical bedside score (ATLAS) for Clostridium difficile infection which predicts response to therapy",
+      "authors": [
+        "Miller MA",
+        "Louie T",
+        "Mullane K",
+        "Weiss K",
+        "Lentnek A"
+      ],
+      "pubdate": "2013 Mar 25",
+      "doi": "10.1186/1471-2334-13-148",
+      "query": "ATLAS score Clostridium difficile Miller"
+    },
+    "accept": true
+  },
+  {
+    "key": "base-deficit-class",
+    "calcId": "base-deficit-class",
+    "file": "wave4-icu-vent.ts",
+    "old_pmid": "3411642",
+    "old_doi": "10.1097/00005373-198808000-00009",
+    "title": "Base deficit as a guide to volume resuscitation",
+    "citation": "Davis JW et al. J Trauma. 1988 / subsequent trauma literature",
+    "old_pubmed": "The nonoperative treatment of burst fractures of the thoracolumbar junction",
+    "best": {
+      "pmid": "3172306",
+      "score": 12,
+      "overlap": [
+        "base",
+        "deficit",
+        "guide",
+        "resuscitation",
+        "volume"
+      ],
+      "title": "Base deficit as a guide to volume resuscitation",
+      "authors": [
+        "Davis JW",
+        "Shackford SR",
+        "Mackersie RC",
+        "Hoyt DB"
+      ],
+      "pubdate": "1988 Oct",
+      "doi": "10.1097/00005373-198810000-00010",
+      "query": "Davis JW base deficit volume resuscitation trauma"
+    },
+    "accept": true
+  },
+  {
+    "key": "4at",
+    "calcId": "4at",
+    "file": "wave4-neuro-psych.ts",
+    "old_pmid": "24799320",
+    "old_doi": "10.1007/s10753-014-9903-4",
+    "title": "4AT assessment test for delirium",
+    "citation": "Bellelli G et al. Age Ageing. 2014; www.the4at.com",
+    "old_pubmed": "Platelet factor 4 inhibits IL-17/Stat3 pathway via upregulation of SOCS3 expression in melanoma",
+    "best": {
+      "pmid": "24590568",
+      "score": 9,
+      "overlap": [
+        "4at",
+        "delirium"
+      ],
+      "title": "Validation of the 4AT, a new instrument for rapid delirium screening: a study in 234 hospitalised older people",
+      "authors": [
+        "Bellelli G",
+        "Morandi A",
+        "Davis DH",
+        "Mazzola P",
+        "Turco R"
+      ],
+      "pubdate": "2014 Jul",
+      "doi": "10.1093/ageing/afu021",
+      "query": "Bellelli 4AT delirium assessment test Age Ageing"
+    },
+    "accept": true
+  },
+  {
+    "key": "hypoglycemia-level",
+    "calcId": "?",
+    "file": "wave4-primary-endo.ts",
+    "old_pmid": "28713827",
+    "old_doi": "10.1155/2017/6898324",
+    "title": "Glucose Concentrations of Less Than 3.0 mmol/L (54 mg/dL)",
+    "citation": "International Hypoglycaemia Study Group. Diabetes Care. 2017",
+    "old_pubmed": "Retracted: Estimation of Response Functions Based on Variational Bayes Algorithm in Dynamic Images Sequences",
+    "best": {
+      "pmid": "29099063",
+      "score": 8,
+      "overlap": [
+        "international"
+      ],
+      "title": "International Journal of Molecular Science 2017 Best Paper Award",
+      "authors": [
+        "International Journal of Molecular Science Editorial Office"
+      ],
+      "pubdate": "2017 Nov 2",
+      "doi": "10.3390/ijms18112310",
+      "query": "? International 2017"
+    },
+    "accept": true
+  },
+  {
+    "key": "jt-interval",
+    "calcId": "?",
+    "file": "wave5-cardio.ts",
+    "old_pmid": "1303841",
+    "old_doi": "10.1073/pnas.89.14.6540",
+    "title": "The JT interval as a depolarization-independent measure of repolarization",
+    "citation": "Zhou SH / Rautaharju et al. related ECG methodology; clinical reviews on JTc in wide QRS",
+    "old_pubmed": "[Masticatory efficiency]",
+    "best": {
+      "pmid": "1303841",
+      "score": 7,
+      "overlap": [],
+      "title": "[Masticatory efficiency]",
+      "authors": [
+        "Zhou YH",
+        "Fu MK",
+        "Lin JX"
+      ],
+      "pubdate": "1992 Jul",
+      "doi": null,
+      "query": "Zhou[Author] AND 1992[PDAT]"
+    },
+    "accept": false
+  },
+  {
+    "key": "lqts-score",
+    "calcId": "?",
+    "file": "wave5-cardio.ts",
+    "old_pmid": "22440783",
+    "old_doi": "10.1016/j.coviro.2011.05.009",
+    "title": "The long QT syndrome spectrum (score refinements in literature)",
+    "citation": "Schwartz PJ, Crotti L. Circulation. 2011 related reviews",
+    "old_pubmed": "Ethics of vaccination programs",
+    "best": {
+      "pmid": "22083145",
+      "score": 9,
+      "overlap": [
+        "long",
+        "syndrome"
+      ],
+      "title": "QTc behavior during exercise and genetic testing for the long-QT syndrome",
+      "authors": [
+        "Schwartz PJ",
+        "Crotti L"
+      ],
+      "pubdate": "2011 Nov 15",
+      "doi": "10.1161/CIRCULATIONAHA.111.062182",
+      "query": "Schwartz long QT syndrome diagnostic criteria"
+    },
+    "accept": true
+  },
+  {
+    "key": "tonicity",
+    "calcId": "tonicity",
+    "file": "wave5-nephro-gi.ts",
+    "old_pmid": "10770155",
+    "old_doi": "10.1097/00004032-200005001-00001",
+    "title": "The pathophysiology and treatment of hyponatraemic encephalopathy",
+    "citation": "Classic tonicity teaching; Adrogu\u00e9 & Madias hyponatremia reviews",
+    "old_pubmed": "Radiation safety role in institutional disaster planning",
+    "best": {
+      "pmid": "10770155",
+      "score": 7,
+      "overlap": [],
+      "title": "Radiation safety role in institutional disaster planning",
+      "authors": [
+        "Classic KL",
+        "Knutson AH",
+        "Smith GD"
+      ],
+      "pubdate": "2000 May",
+      "doi": "10.1097/00004032-200005001-00001",
+      "query": "Classic[Author] AND 2000[PDAT]"
+    },
+    "accept": false
+  },
+  {
+    "key": "salicylate",
+    "calcId": "salicylate",
+    "file": "wave5-nephro-gi.ts",
+    "old_pmid": "18472153",
+    "old_doi": "10.1016/j.biomaterials.2008.04.031",
+    "title": "Mind the gap (acid-base teaching mnemonics)",
+    "citation": "Classic nephrology/EM teaching; Mehta AN et al. related reviews on AG acidosis",
+    "old_pubmed": "Retention of in vitro and in vivo BMP-2 bioactivities in sustained delivery vehicles for bone tissue engineering",
+    "best": {
+      "pmid": "18554743",
+      "score": 7,
+      "overlap": [],
+      "title": "Non-invasive screening method for simultaneous evaluation of in vivo growth factor release profiles from multiple ectopic bone tissue engineering implants",
+      "authors": [
+        "Kempen DH",
+        "Lu L",
+        "Classic KL",
+        "Hefferan TE",
+        "Creemers LB"
+      ],
+      "pubdate": "2008 Aug 25",
+      "doi": "10.1016/j.jconrel.2008.05.004",
+      "query": "Classic[Author] AND 2008[PDAT]"
+    },
+    "accept": true
+  },
+  {
+    "key": "pancreatic",
+    "calcId": "pancreatic",
+    "file": "wave5-nephro-gi.ts",
+    "old_pmid": "20285294",
+    "old_doi": "10.2166/wst.2010.973",
+    "title": "Hyperchloremic metabolic acidosis teaching reviews",
+    "citation": "Standard nephrology texts / acid-base monographs",
+    "old_pubmed": "Cystic fibrosis of pancreas",
+    "best": {
+      "pmid": "38837536",
+      "score": 5,
+      "overlap": [
+        "acidosis",
+        "anion",
+        "gap",
+        "metabolic",
+        "normal"
+      ],
+      "title": "Demystifying normal-anion-gap metabolic acidosis: pathophysiology, aetiology, evaluation and diagnosis",
+      "authors": [
+        "Bhandari R",
+        "Ekladious A",
+        "Javaid MM"
+      ],
+      "pubdate": "2024 Jul",
+      "doi": "10.1111/imj.16418",
+      "query": "normal anion gap metabolic acidosis"
+    },
+    "accept": true
+  },
+  {
+    "key": "smoke-inhalation",
+    "calcId": "smoke-inhalation",
+    "file": "wave6-clinical-residual.ts",
+    "old_pmid": "27853985",
+    "old_doi": "10.1007/s12094-016-1571-4",
+    "title": "Inhalation injury and burn care",
+    "citation": "ABA / burn critical care reviews",
+    "old_pubmed": "A definition for aggressive disease in patients with HER-2 negative metastatic breast cancer: an expert consensus of the Spanish Society of Medical Oncology (SEOM)",
+    "best": {
+      "pmid": "27853985",
+      "score": 7,
+      "overlap": [],
+      "title": "A definition for aggressive disease in patients with HER-2 negative metastatic breast cancer: an expert consensus of the Spanish Society of Medical Oncology (SEOM)",
+      "authors": [
+        "Gonz\u00e1lez A",
+        "Lluch A",
+        "Aba E",
+        "Albanell J",
+        "Ant\u00f3n A"
+      ],
+      "pubdate": "2017 May",
+      "doi": "10.1007/s12094-016-1571-4",
+      "query": "ABA[Author] AND 2017[PDAT]"
+    },
+    "accept": false
+  },
+  {
+    "key": "bell-staging",
+    "calcId": "?",
+    "file": "wave6-em-peds.ts",
+    "old_pmid": "3731667",
+    "old_doi": "10.1177/000992288602500802",
+    "title": "Modified Bell staging (Walsh & Kliegman and subsequent refinements)",
+    "citation": "Walsh MC, Kliegman RM. Pediatr Clin North Am. 1986",
+    "old_pubmed": "Neonatal mastitis",
+    "best": {
+      "pmid": "3731667",
+      "score": 7,
+      "overlap": [],
+      "title": "Neonatal mastitis",
+      "authors": [
+        "Walsh M",
+        "McIntosh K"
+      ],
+      "pubdate": "1986 Aug",
+      "doi": "10.1177/000992288602500802",
+      "query": "Walsh[Author] AND 1986[PDAT]"
+    },
+    "accept": false
+  },
+  {
+    "key": "shock-index-ob",
+    "calcId": "shock-index-ob",
+    "file": "wave6-em-peds.ts",
+    "old_pmid": "26173288",
+    "old_doi": "10.1177/1529100612453266",
+    "title": "Shock index and early recognition of maternal hemorrhage",
+    "citation": "Nathan HL et al. / related obstetric SI literature; Le Bas et al. observations",
+    "old_pubmed": "Improving Students' Learning With Effective Learning Techniques: Promising Directions From Cognitive and Educational Psychology",
+    "best": {
+      "pmid": "31001814",
+      "score": 8,
+      "overlap": [
+        "hemorrhage",
+        "maternal",
+        "shock"
+      ],
+      "title": "Shock index thresholds to predict adverse outcomes in maternal hemorrhage and sepsis: A prospective cohort study",
+      "authors": [
+        "Nathan HL",
+        "Seed PT",
+        "Hezelgrave NL",
+        "De Greeff A",
+        "Lawley E"
+      ],
+      "pubdate": "2019 Sep",
+      "doi": "10.1111/aogs.13626",
+      "query": "Nathan shock index obstetric hemorrhage"
+    },
+    "accept": true
+  },
+  {
+    "key": "glucose-rate-mgkgmin",
+    "calcId": "glucose-rate-mgkgmin",
+    "file": "wave6-formulas-misc.ts",
+    "old_pmid": "21669896",
+    "old_doi": "10.1542/peds.2010-1881",
+    "title": "Neonatal hypoglycemia and glucose infusion rate teaching",
+    "citation": "AAP / neonatology textbooks on GIR targeting",
+    "old_pubmed": "Early autism detection: are we ready for routine screening?",
+    "best": {
+      "pmid": "33564107",
+      "score": 4,
+      "overlap": [
+        "glucose",
+        "hypoglycemia",
+        "infusion",
+        "neonatal"
+      ],
+      "title": "The use of intramuscular glucagon to prevent IV glucose infusion in early neonatal hypoglycemia",
+      "authors": [
+        "Kasirer Y",
+        "Dotan O",
+        "Mimouni FB",
+        "Wasserteil N",
+        "Hammerman C"
+      ],
+      "pubdate": "2021 May",
+      "doi": "10.1038/s41372-021-00925-x",
+      "query": "neonatal hypoglycemia glucose infusion rate AAP"
+    },
+    "accept": false
+  },
+  {
+    "key": "insulin-drip-rate",
+    "calcId": "insulin-drip-rate",
+    "file": "wave6-formulas-misc.ts",
+    "old_pmid": "19821330",
+    "old_doi": "10.1002/14651858.CD004631.pub3",
+    "title": "Hyperglycemic crises in adults (DKA/HHS) insulin infusion principles",
+    "citation": "ADA / AACE hyperglycemic crisis guidance",
+    "old_pubmed": "Surgery for thumb (trapeziometacarpal joint) osteoarthritis",
+    "best": {
+      "pmid": "19821330",
+      "score": 7,
+      "overlap": [],
+      "title": "Surgery for thumb (trapeziometacarpal joint) osteoarthritis",
+      "authors": [
+        "Wajon A",
+        "Carr E",
+        "Edmunds I",
+        "Ada L"
+      ],
+      "pubdate": "2009 Oct 7",
+      "doi": "10.1002/14651858.CD004631.pub3",
+      "query": "ADA[Author] AND 2009[PDAT]"
+    },
+    "accept": false
+  },
+  {
+    "key": "riete-bleed",
+    "calcId": "riete-bleed",
+    "file": "wave6-heme-onc.ts",
+    "old_pmid": "18521503",
+    "old_doi": "10.1160/TH08-01-0006",
+    "title": "Predicting major bleeding risk in patients with PE / RIETE bleeding score literature",
+    "citation": "Ru\u00edz-Gim\u00e9nez N et al. / RIETE investigators. Thromb Haemost. 2008",
+    "old_pubmed": "Comprehensive analysis of ADAMTS13 in patients with liver cirrhosis",
+    "best": {
+      "pmid": "18630744",
+      "score": 7,
+      "overlap": [],
+      "title": "Spliceosomal proteins in plants",
+      "authors": [
+        "Ru Y",
+        "Wang BB",
+        "Brendel V"
+      ],
+      "pubdate": "2008",
+      "doi": "10.1007/978-3-540-76776-3_1",
+      "query": "Ru[Author] AND 2008[PDAT]"
+    },
+    "accept": true
+  },
+  {
+    "key": "mscc",
+    "calcId": "?",
+    "file": "wave6-heme-onc.ts",
+    "old_pmid": "15986204",
+    "old_doi": "10.1007/s00330-005-2825-7",
+    "title": "Metastatic spinal cord compression in adults (NICE guidance concepts)",
+    "citation": "NICE NG / Loblaw DA et al. clinical MSCC reviews",
+    "old_pubmed": "The accuracy of ultrasound in the diagnosis of clinically occult groin hernias in adults",
+    "best": {
+      "pmid": "15986204",
+      "score": 7,
+      "overlap": [],
+      "title": "The accuracy of ultrasound in the diagnosis of clinically occult groin hernias in adults",
+      "authors": [
+        "Alam A",
+        "Nice C",
+        "Uberoi R"
+      ],
+      "pubdate": "2005 Dec",
+      "doi": "10.1007/s00330-005-2825-7",
+      "query": "NICE[Author] AND 2005[PDAT]"
+    },
+    "accept": false
+  }
+]

@@ -1,0 +1,380 @@
+[
+  {
+    "file": "nephrology-endo.ts",
+    "id": "cockcroft-gault",
+    "name": "Cockcroft-Gault CrCl",
+    "shortName": "CrCl (C-G)",
+    "whenToUse": "Drug dosing adjustments based on renal function.",
+    "whyUse": "Still used in many FDA drug labels despite CKD-EPI for staging.",
+    "nextSteps": [
+      {
+        "condition": "Reduced CrCl",
+        "actions": [
+          "Adjust renally cleared drugs",
+          "Avoid nephrotoxins when possible",
+          "Consider CKD-EPI for staging"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "ckd-epi",
+    "name": "CKD-EPI Creatinine eGFR (2021)",
+    "shortName": "CKD-EPI eGFR",
+    "whenToUse": "CKD detection, staging, and monitoring.",
+    "whyUse": "Preferred equation in current KDIGO/NKF guidance (2021 race-free).",
+    "nextSteps": [
+      {
+        "condition": "eGFR <60",
+        "actions": [
+          "Confirm chronicity",
+          "Urine ACR",
+          "Med review",
+          "BP/glucose control"
+        ]
+      },
+      {
+        "condition": "eGFR <30",
+        "actions": [
+          "Nephrology referral",
+          "Prepare for RRT education if progressive"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "mdrd",
+    "name": "MDRD eGFR (4-variable)",
+    "shortName": "MDRD",
+    "whenToUse": "Legacy reports; prefer CKD-EPI for new estimates.",
+    "whyUse": "Still appears on older lab reports.",
+    "nextSteps": [
+      {
+        "condition": "Any",
+        "actions": [
+          "Prefer CKD-EPI 2021 for staging"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "fena",
+    "name": "Fractional Excretion of Sodium (FENa)",
+    "shortName": "FENa",
+    "whenToUse": "Oliguric AKI when patient not on diuretics.",
+    "whyUse": "Classic tool; limited if diuretics used (prefer FeUrea).",
+    "nextSteps": [
+      {
+        "condition": "Prerenal pattern",
+        "actions": [
+          "Volume resuscitation if hypovolemic",
+          "Hold nephrotoxins/ACEi/NSAIDs as appropriate"
+        ]
+      },
+      {
+        "condition": "ATN pattern",
+        "actions": [
+          "Supportive care",
+          "Avoid volume overload",
+          "Monitor electrolytes"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "feurea",
+    "name": "Fractional Excretion of Urea (FeUrea)",
+    "shortName": "FeUrea",
+    "whenToUse": "AKI on diuretics when FENa unreliable.",
+    "whyUse": "Urea handling less affected by loop diuretics than sodium.",
+    "nextSteps": [
+      {
+        "condition": "Any",
+        "actions": [
+          "Correlate with volume status and clinical course"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "anion-gap",
+    "name": "Anion Gap (Serum)",
+    "shortName": "Anion Gap",
+    "whenToUse": "Metabolic acidosis differential (HAGMA vs NAGMA).",
+    "whyUse": "Core acid-base calculation.",
+    "nextSteps": [
+      {
+        "condition": "High AG",
+        "actions": [
+          "Lactate, ketones, toxic alcohols if indicated",
+          "ABG/VBG",
+          "Osmolal gap"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "corrected-calcium",
+    "name": "Corrected Calcium",
+    "shortName": "Corr. Calcium",
+    "whenToUse": "Hypoalbuminemia when ionized Ca not available.",
+    "whyUse": "Rough estimate; ionized calcium preferred.",
+    "nextSteps": [
+      {
+        "condition": "Abnormal",
+        "actions": [
+          "Prefer ionized calcium",
+          "ECG if severe",
+          "Treat underlying cause"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "corrected-sodium",
+    "name": "Corrected Sodium (Hyperglycemia)",
+    "shortName": "Corr. Sodium",
+    "whenToUse": "Hyperglycemia, DKA, HHS to estimate true sodium.",
+    "whyUse": "Hyperglycemia lowers measured Na; correction guides free water status.",
+    "nextSteps": [
+      {
+        "condition": "DKA/HHS",
+        "actions": [
+          "Use corrected Na for fluid planning",
+          "Follow ADA/AACE protocols"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "serum-osmolality",
+    "name": "Calculated Serum Osmolality",
+    "shortName": "Serum Osm",
+    "whenToUse": "Hyponatremia workup, toxic alcohol suspicion.",
+    "whyUse": "Osmolal gap screens for methanol/ethylene glycol and other osmoles.",
+    "nextSteps": [
+      {
+        "condition": "High gap + suspicion",
+        "actions": [
+          "Urgent toxic alcohol testing",
+          "Fomepizole if indicated",
+          "Nephrology for dialysis criteria"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "osmolal-gap",
+    "name": "Osmolal Gap",
+    "shortName": "Osm Gap",
+    "whenToUse": "Suspected toxic alcohol ingestion.",
+    "whyUse": "Rapid screen while awaiting levels.",
+    "nextSteps": [
+      {
+        "condition": "Elevated + clinical suspicion",
+        "actions": [
+          "Fomepizole",
+          "Check ABG, AG, renal function",
+          "Hemodialysis if severe"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "free-water-deficit",
+    "name": "Free Water Deficit (Hypernatremia)",
+    "shortName": "Free Water Deficit",
+    "whenToUse": "Hypernatremia fluid replacement planning.",
+    "whyUse": "Guides free water replacement rate (avoid overly rapid correction).",
+    "nextSteps": [
+      {
+        "condition": "Hypernatremia",
+        "actions": [
+          "Prefer enteral free water if possible",
+          "D5W IV if NPO",
+          "Serial Na q4–6h during correction"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "bicarb-deficit",
+    "name": "Bicarbonate Deficit",
+    "shortName": "HCO₃ Deficit",
+    "whenToUse": "Severe acidemia when bicarbonate therapy considered (selected cases).",
+    "whyUse": "Rough dosing guide; treat underlying cause primarily.",
+    "nextSteps": [
+      {
+        "condition": "Severe acidosis",
+        "actions": [
+          "Treat cause (source control, insulin, dialysis)",
+          "Avoid overcorrection"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "bmi",
+    "name": "Body Mass Index (BMI)",
+    "shortName": "BMI",
+    "whenToUse": "Weight classification and health risk counseling.",
+    "whyUse": "Standard anthropometric index.",
+    "nextSteps": [
+      {
+        "condition": "BMI ≥30",
+        "actions": [
+          "Lifestyle intervention",
+          "Screen comorbidities",
+          "Consider pharmacotherapy/bariatric referral per guidelines"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "ibw",
+    "name": "Ideal Body Weight (Devine)",
+    "shortName": "IBW",
+    "whenToUse": "Drug dosing (e.g., some antimicrobials), nutrition estimates.",
+    "whyUse": "Common pharmacy standard.",
+    "nextSteps": [
+      {
+        "condition": "Obesity",
+        "actions": [
+          "Calculate AdjBW = IBW + 0.4×(TBW−IBW) for selected drugs"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "abw",
+    "name": "Adjusted Body Weight",
+    "shortName": "AdjBW",
+    "whenToUse": "Obese patients for selected drug dosing.",
+    "whyUse": "Accounts for partial distribution into adipose tissue.",
+    "nextSteps": [
+      {
+        "condition": "Any",
+        "actions": [
+          "Confirm specific drug monograph for weight scalar"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "bsa",
+    "name": "Body Surface Area (Mosteller)",
+    "shortName": "BSA",
+    "whenToUse": "Chemotherapy dosing, cardiac index, burn estimates adjunct.",
+    "whyUse": "Mosteller is simple and widely accepted.",
+    "nextSteps": [
+      {
+        "condition": "Chemo dosing",
+        "actions": [
+          "Apply regimen mg/m² carefully",
+          "Consider caps in obesity per protocol"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "maintenance-fluids",
+    "name": "Maintenance IV Fluids (4-2-1)",
+    "shortName": "4-2-1 Fluids",
+    "whenToUse": "Maintenance fluid estimates for children and adults.",
+    "whyUse": "Classic weight-based hourly rate.",
+    "nextSteps": [
+      {
+        "condition": "Pediatric",
+        "actions": [
+          "Use isotonic fluids with appropriate dextrose/K",
+          "Monitor Na and volume status"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "homa-ir",
+    "name": "HOMA-IR",
+    "shortName": "HOMA-IR",
+    "whenToUse": "Research/clinical estimate of insulin resistance (fasting labs).",
+    "whyUse": "Simple surrogate without clamp studies.",
+    "nextSteps": [
+      {
+        "condition": "Elevated",
+        "actions": [
+          "Lifestyle intervention",
+          "Screen for metabolic syndrome / T2DM"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "eag",
+    "name": "eAG from HbA1c",
+    "shortName": "eAG",
+    "whenToUse": "Patient education linking A1c to average glucose.",
+    "whyUse": "ADA-endorsed conversion from ADAG study.",
+    "nextSteps": [
+      {
+        "condition": "Elevated A1c",
+        "actions": [
+          "Confirm diabetes diagnosis as needed",
+          "Lifestyle + pharmacotherapy per ADA"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "ldl-friedewald",
+    "name": "LDL Cholesterol (Friedewald)",
+    "shortName": "LDL Friedewald",
+    "whenToUse": "Standard lipid panel when TG <400 mg/dL.",
+    "whyUse": "Most common calculated LDL method.",
+    "nextSteps": [
+      {
+        "condition": "Elevated LDL",
+        "actions": [
+          "ASCVD risk assessment",
+          "Statin therapy per guidelines"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "nephrology-endo.ts",
+    "id": "anc",
+    "name": "Absolute Neutrophil Count (ANC)",
+    "shortName": "ANC",
+    "whenToUse": "Chemotherapy, febrile neutropenia risk, clozapine monitoring.",
+    "whyUse": "Defines neutropenia severity.",
+    "nextSteps": [
+      {
+        "condition": "ANC <500 + fever",
+        "actions": [
+          "Urgent broad-spectrum antibiotics",
+          "Cultures",
+          "Oncology pathways"
+        ]
+      }
+    ]
+  }
+]

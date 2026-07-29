@@ -1,0 +1,273 @@
+{
+  "batch": 29,
+  "file": "wave5-cardio.ts",
+  "audited": 25,
+  "fixed": 4,
+  "items": [
+    {
+      "id": "ehra-score",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.escardio.org/guidelines/clinical-practice-guidelines/all-esc-practice-guidelines/atrial-fibrillation/",
+        "Wynn GJ et al. mEHRA validation; EHRA ≥IIb commonly used as symptom threshold for rhythm-control decisions (ESC AF guidelines)"
+      ]
+    },
+    {
+      "id": "ccs-angina",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Campeau L. Circulation. 1976 (PMID 947585)",
+        "CCS III–IV prompt cardiology/revascularization discussion; rule out unstable features is appropriate"
+      ]
+    },
+    {
+      "id": "acc-aha-hf-stage",
+      "status": "fixed",
+      "issues": [
+        "nextSteps Stage A–B said 'Screen for structural disease when indicated'; Stage B already implies structural disease, abnormal function, or elevated NP (2022 pre-HF), so screening language misstates Stage B management."
+      ],
+      "changes": [
+        "nextSteps Stage A–B → 'Risk-factor control and prevention' + 'Stage B: preventive GDMT and surveillance for symptoms'."
+      ],
+      "sources": [
+        "https://www.ahajournals.org/doi/10.1161/CIR.0000000000001063",
+        "Heidenreich PA et al. 2022 AHA/ACC/HFSA HF Guideline (PMID 35363499)"
+      ]
+    },
+    {
+      "id": "gdmt-checklist",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Heidenreich PA et al. Circulation. 2022 (PMID 35363499)",
+        "Four-pillar HFrEF GDMT (ARNI/ACEI/ARB, evidence-based β-blocker, MRA, SGLT2i); LVEF ≤40%"
+      ]
+    },
+    {
+      "id": "lvh-sokolow",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Sokolow M, Lyon TP. Am Heart J. 1949 (PMID 18107386)",
+        "S V1 + R V5/V6 ≥35 mm or R aVL ≥11 mm; low sensitivity, high specificity teaching"
+      ]
+    },
+    {
+      "id": "lvh-cornell",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Casale PN et al. Circulation. 1987 (PMID 2949887)",
+        "Sex-specific Cornell voltage; product >2440 mm·ms alternate criterion"
+      ]
+    },
+    {
+      "id": "qtc-rautaharju",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.acep.org/toxicology/newsroom/feb2021/qtc-so-many-formulae-but-which-one-to-use",
+        "Rautaharju QTc = QT×(120+HR)/180; less HR-biased than Bazett; QTc ≥500 ms high TdP risk band"
+      ]
+    },
+    {
+      "id": "jtc-interval",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "JT = QT − QRS; JTc used when QRS wide (BBB/pacing); cutoffs less standardized than QTc"
+      ]
+    },
+    {
+      "id": "warfarin-inr-goal",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Otto CM et al. 2020 ACC/AHA VHD Guideline (PMID 33332150)",
+        "Mechanical valves: lifelong VKA, avoid DOAC; NVAF: prefer DOAC when eligible"
+      ]
+    },
+    {
+      "id": "doac-renal-dose",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "January CT et al. 2019 AHA/ACC/HRS AF focused update (PMID 30686041)",
+        "Renal dosing errors common; CrCl (Cockcroft–Gault) method and interactions matter"
+      ]
+    },
+    {
+      "id": "enoxaparin-dose",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Enoxaparin labeling; Kearon C et al. CHEST antithrombotic guidance",
+        "CrCl <30 renal adjust; treatment uses actual body weight; anti-Xa in extremes"
+      ]
+    },
+    {
+      "id": "heparin-bolus",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "O’Gara PT et al. 2013 STEMI guideline (PMID 23247304)",
+        "ACS UFH often 60 U/kg (max 4000) + 12 U/kg/h (max 1000); nomogram titration"
+      ]
+    },
+    {
+      "id": "lipoprotein-a-risk",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Grundy SM et al. 2018 AHA/ACC cholesterol guideline (PMID 30586774)",
+        "Elevated Lp(a) is a causal ASCVD risk enhancer; intensify LDL-C lowering"
+      ]
+    },
+    {
+      "id": "apo-b-risk",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Mach F et al. 2019 ESC/EAS dyslipidaemia guidelines (PMID 31504418)",
+        "ApoB reflects atherogenic particle number; useful when discordant with LDL-C"
+      ]
+    },
+    {
+      "id": "triglyceride-pancreatitis",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Miller M et al. AHA triglycerides statement (PMID 21502576)",
+        "Pancreatitis risk rises ≥500 mg/dL and markedly ≥1000 mg/dL; urgency bands appropriate"
+      ]
+    },
+    {
+      "id": "cardiogenic-shock-def",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Baran DA et al. SCAI cardiogenic shock classification (PMID 31104355)",
+        "Hypotension + hypoperfusion (± CI/PCWP); SCAI staging language correct"
+      ]
+    },
+    {
+      "id": "hardman-index",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Hardman DT et al. J Vasc Surg. 1996 (PMID 8558727)",
+        "Bedside rAAA mortality score; not an absolute futility rule (later validation/EVAR era)"
+      ]
+    },
+    {
+      "id": "glasgow-aneurysm",
+      "status": "fixed",
+      "issues": [
+        "whenToUse said risk communication uses 'age and comorbidity points' only; GAS also adds large points for shock (+17), which is not a comorbidity."
+      ],
+      "changes": [
+        "whenToUse: 'age and comorbidity points' → 'age, shock, and comorbidity points'."
+      ],
+      "sources": [
+        "Samy AK et al. Eur J Vasc Endovasc Surg. 1994 (PMID 8049922)",
+        "GAS = age + 17·shock + 7·myocardial + 10·cerebrovascular + 14·renal"
+      ]
+    },
+    {
+      "id": "duke-activity",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Hlatky MA et al. Am J Cardiol. 1989 (PMID 2782256)",
+        "Fleisher LA et al. 2014 ACC/AHA perioperative guideline; <4 METs poor functional capacity band"
+      ]
+    },
+    {
+      "id": "mets-estimate",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Fleisher LA et al. Circulation. 2014 (PMID 25085961)",
+        "Activity-based MET estimate for preop/rehab when formal testing unavailable"
+      ]
+    },
+    {
+      "id": "preop-bnp-threshold",
+      "status": "fixed",
+      "issues": [
+        "nextSteps for elevated NP led with 'Optimize HF' and omitted the key CCS action for elevated preop NP (postoperative troponin surveillance if surgery proceeds); further testing is selective only if management changes."
+      ],
+      "changes": [
+        "nextSteps Elevated NP → HF/volume assessment and optimization; further testing only if it changes the plan; postop troponin surveillance if surgery proceeds."
+      ],
+      "sources": [
+        "https://onlinecjc.ca/article/S0828-282X(16)30980-1/fulltext",
+        "Duceppe E et al. Can J Cardiol. 2017 (PMID 27865641); BNP ≥92 / NT-proBNP ≥300 pg/mL elevated bands"
+      ]
+    },
+    {
+      "id": "arvc-taskforce",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "Marcus FI et al. Eur Heart J. 2010 (PMID 20172912)",
+        "2010 revised Task Force Criteria multi-domain diagnosis; expert center for possible+"
+      ]
+    },
+    {
+      "id": "schwartz-lqts",
+      "status": "fixed",
+      "issues": [
+        "nextSteps high probability said 'Urgent EP referral if symptomatic'; high clinical probability LQTS warrants specialty evaluation, QT-drug avoidance, and cascade screening even when currently asymptomatic (SCD risk)."
+      ],
+      "changes": [
+        "nextSteps High probability → EP/inherited-arrhythmia referral; avoid QT-prolonging drugs and discuss β-blocker; family screening."
+      ],
+      "sources": [
+        "Schwartz PJ et al. Circulation. 1993 (PMID 8339437)",
+        "Schwartz score ≥3.5 high probability; HRS/EHRA LQTS management principles"
+      ]
+    },
+    {
+      "id": "wpw-risk",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "PACES/HRS asymptomatic WPW consensus (PMID 22579340)",
+        "SPERRI/shortest preexcited RR ≤250 ms high risk; avoid AV-nodal blockers in preexcited AF"
+      ]
+    },
+    {
+      "id": "valvular-af",
+      "status": "ok",
+      "issues": [],
+      "changes": [],
+      "sources": [
+        "https://www.jacc.org/doi/10.1016/j.jacc.2019.04.039",
+        "Valvular AF for anticoagulation = moderate–severe MS or mechanical valve; DOAC not appropriate; VKA required"
+      ]
+    }
+  ]
+}

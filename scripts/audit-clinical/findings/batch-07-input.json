@@ -1,0 +1,440 @@
+[
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "kdigo-aki",
+    "name": "KDIGO AKI Staging",
+    "shortName": "KDIGO AKI",
+    "whenToUse": "Hospitalized patients with rising creatinine and/or oliguria to stage AKI severity.",
+    "whyUse": "Standard international staging that guides monitoring intensity, nephrotoxin avoidance, and RRT planning.",
+    "nextSteps": [
+      {
+        "condition": "Any AKI",
+        "actions": [
+          "Stop nephrotoxins when possible",
+          "Optimize hemodynamics",
+          "Bladder scan / post-void residual if obstruction possible",
+          "Serial Cr, electrolytes, fluid balance"
+        ]
+      },
+      {
+        "condition": "Stage 3",
+        "actions": [
+          "Nephrology consult",
+          "Evaluate RRT indications",
+          "Nutrition and dosing adjustments"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "schwartz-gfr",
+    "name": "Bedside Schwartz Pediatric eGFR",
+    "shortName": "Schwartz eGFR",
+    "whenToUse": "Children ~1–16 years for CKD staging, drug dosing context, or renal function estimates.",
+    "whyUse": "Preferred simple bedside pediatric eGFR with IDMS-traceable creatinine.",
+    "nextSteps": [
+      {
+        "condition": "eGFR <60",
+        "actions": [
+          "Confirm chronicity",
+          "Urine protein/ACR",
+          "BP assessment",
+          "Pediatric nephrology if progressive or low eGFR"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "plasmic",
+    "name": "PLASMIC Score (TTP / ADAMTS13)",
+    "shortName": "PLASMIC",
+    "whenToUse": "Thrombotic microangiopathy when deciding urgency of plasma exchange pending ADAMTS13 activity.",
+    "whyUse": "High scores support early caplacizumab/PEX pathway while low scores argue against severe TTP.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥5 or strong clinical TTP",
+        "actions": [
+          "Urgent hematology",
+          "ADAMTS13 activity before PEX if possible without delay",
+          "Consider PEX + immunosuppression pathway"
+        ]
+      },
+      {
+        "condition": "Score ≤4",
+        "actions": [
+          "Broaden TMA differential (aHUS, DIC, malignant HTN, drugs)",
+          "Still obtain ADAMTS13 if uncertain"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "isth-dic",
+    "name": "ISTH Overt DIC Score",
+    "shortName": "ISTH DIC",
+    "whenToUse": "Patients with an underlying DIC-associated condition and abnormal coagulation tests.",
+    "whyUse": "Standardized criteria for overt DIC diagnosis and serial monitoring.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥5",
+        "actions": [
+          "Treat underlying driver (sepsis, trauma, malignancy, obstetric)",
+          "Supportive transfusion guided by bleeding/procedure",
+          "Serial ISTH scores"
+        ]
+      },
+      {
+        "condition": "Score <5 with concern",
+        "actions": [
+          "Repeat coagulation panel",
+          "Consider non-overt DIC pathway"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "khorana",
+    "name": "Khorana Score (Cancer-Associated VTE)",
+    "shortName": "Khorana",
+    "whenToUse": "Ambulatory solid tumor / lymphoma patients before or during systemic therapy for prophylaxis decisions.",
+    "whyUse": "Identifies higher-risk oncology outpatients who may benefit from thromboprophylaxis discussion.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥3",
+        "actions": [
+          "Discuss prophylaxis vs bleed risk",
+          "Patient education on VTE symptoms",
+          "Review drug interactions with DOACs"
+        ]
+      },
+      {
+        "condition": "Any score",
+        "actions": [
+          "Encourage mobility",
+          "Reassess if clinical status changes"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "mascc",
+    "name": "MASCC Risk Index (Febrile Neutropenia)",
+    "shortName": "MASCC",
+    "whenToUse": "Adults with fever and neutropenia to risk-stratify complications.",
+    "whyUse": "Score ≥21 predicts lower risk of serious medical complications and may support oral/step-down care.",
+    "nextSteps": [
+      {
+        "condition": "≥21 low risk",
+        "actions": [
+          "Consider oral regimen per protocol (e.g., cipro + amox-clav if no allergy/local resistance issues)",
+          "Ensure reliable follow-up within 24h"
+        ]
+      },
+      {
+        "condition": "<21 high risk",
+        "actions": [
+          "Admit",
+          "IV antipseudomonal β-lactam",
+          "Cultures, source evaluation"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "mcisaac",
+    "name": "McIsaac Score (Modified Centor)",
+    "shortName": "McIsaac",
+    "whenToUse": "Acute pharyngitis to guide RADT/culture and antibiotic stewardship.",
+    "whyUse": "Age adjustment improves discrimination versus classic Centor alone, especially at extremes of age.",
+    "nextSteps": [
+      {
+        "condition": "Score ≤1",
+        "actions": [
+          "Supportive care",
+          "Avoid routine antibiotics"
+        ]
+      },
+      {
+        "condition": "Score ≥2",
+        "actions": [
+          "RADT ± backup culture",
+          "Penicillin/amoxicillin if GAS confirmed (or per allergy)"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "kawasaki",
+    "name": "Classic Kawasaki Disease Criteria",
+    "shortName": "Kawasaki",
+    "whenToUse": "Febrile children with possible mucocutaneous lymph node syndrome.",
+    "whyUse": "Classic criteria support timely IVIG to reduce coronary artery complications.",
+    "nextSteps": [
+      {
+        "condition": "Classic KD",
+        "actions": [
+          "IVIG 2 g/kg",
+          "Anti-inflammatory aspirin dosing per protocol",
+          "Echo for coronary arteries",
+          "Infectious workup as needed"
+        ]
+      },
+      {
+        "condition": "Incomplete possible",
+        "actions": [
+          "CRP/ESR and supplemental labs",
+          "Early echo",
+          "Pediatric ID/cardiology"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "rochester-criteria",
+    "name": "Rochester Criteria (Febrile Infant)",
+    "shortName": "Rochester",
+    "whenToUse": "Well-appearing febrile infants (historically ≤60 days) when applying classic low-risk labs.",
+    "whyUse": "Educational/historical low-risk tool; modern practice often prefers PECARN/Step-by-Step/AAP pathways.",
+    "nextSteps": [
+      {
+        "condition": "Not low risk",
+        "actions": [
+          "Age-based full sepsis workup as indicated",
+          "Empiric antibiotics when appropriate",
+          "Admission vs close observation per protocol"
+        ]
+      },
+      {
+        "condition": "Low risk",
+        "actions": [
+          "Confirm modern pathway eligibility (AAP 2021 etc.)",
+          "Reliable follow-up essential if observation strategy used"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "improve-bleed",
+    "name": "IMPROVE Bleeding Risk Score",
+    "shortName": "IMPROVE Bleed",
+    "whenToUse": "Medical inpatients when balancing pharmacologic VTE prophylaxis against bleed risk.",
+    "whyUse": "Identifies higher bleeding risk (≥7 often used) to favor mechanical prophylaxis or closer monitoring.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥7",
+        "actions": [
+          "Reassess need for pharmacologic prophylaxis",
+          "Mechanical methods",
+          "Correct reversible bleed risks"
+        ]
+      },
+      {
+        "condition": "Score <7 with high VTE risk",
+        "actions": [
+          "Pharmacologic prophylaxis unless other contraindication"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "gap-gap",
+    "name": "Delta Gap / Excess Anion Gap",
+    "shortName": "Δ/Δ Gap",
+    "whenToUse": "High anion gap metabolic acidosis to screen for coexisting NAGMA or metabolic alkalosis.",
+    "whyUse": "Delta-delta (excess AG + HCO₃) reveals mixed disorders missed by AG alone.",
+    "nextSteps": [
+      {
+        "condition": "Low Δ/Δ",
+        "actions": [
+          "Evaluate NAGMA causes",
+          "Urine anion gap / NH4 if needed"
+        ]
+      },
+      {
+        "condition": "High Δ/Δ",
+        "actions": [
+          "Look for vomiting, diuretics, volume contraction, alkali"
+        ]
+      },
+      {
+        "condition": "Any HAGMA",
+        "actions": [
+          "Lactate, ketones, toxic alcohols, renal function as indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "sodium-correction-rate",
+    "name": "Sodium Change with Infusate (Adrogué-Madias)",
+    "shortName": "Na Δ Infusate",
+    "whenToUse": "Planning IV fluid therapy for hypo- or hypernatremia.",
+    "whyUse": "Estimates ΔNa per liter to design safer correction rates and reduce ODS risk.",
+    "nextSteps": [
+      {
+        "condition": "Severe symptomatic hyponatremia",
+        "actions": [
+          "3% saline bolus strategy per guidelines",
+          "ICU-level monitoring"
+        ]
+      },
+      {
+        "condition": "Any active correction",
+        "actions": [
+          "q2–4h Na initially as appropriate",
+          "Desmopressin rescue plans if overcorrection"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "ttkg",
+    "name": "Transtubular Potassium Gradient (TTKG)",
+    "shortName": "TTKG",
+    "whenToUse": "Educational evaluation of renal K handling in hypo/hyperkalemia when urine is concentrated.",
+    "whyUse": "Classic teaching aid for mineralocorticoid effect; limited validity with modern understanding of urea and flow.",
+    "nextSteps": [
+      {
+        "condition": "Any electrolyte disorder",
+        "actions": [
+          "Med review (diuretics, RAAS inhibitors, TMP-SMX)",
+          "Acid-base status",
+          "Urine K/Cr ratio",
+          "Consider aldosterone/renin if indicated"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "fe-magnesium",
+    "name": "Fractional Excretion of Magnesium (FEMg)",
+    "shortName": "FEMg",
+    "whenToUse": "Hypomagnesemia workup when deciding renal vs GI losses.",
+    "whyUse": "Accounts for protein-bound Mg (~30% bound → ultrafilterable fraction ~0.7).",
+    "nextSteps": [
+      {
+        "condition": "Renal wasting",
+        "actions": [
+          "Review diuretics, alcohol, amphotericin, CNIs",
+          "Check K and Ca",
+          "Replete Mg aggressively"
+        ]
+      },
+      {
+        "condition": "Extrarenal pattern",
+        "actions": [
+          "Evaluate diarrhea/malabsorption/PPI use",
+          "Replete and address intake"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "sofa-delta",
+    "name": "SOFA Delta (Sepsis-3 Organ Dysfunction)",
+    "shortName": "ΔSOFA",
+    "whenToUse": "Patients with suspected infection when applying Sepsis-3 clinical criteria.",
+    "whyUse": "Sepsis-3 defines organ dysfunction as an acute increase in SOFA ≥2 points attributable to infection.",
+    "nextSteps": [
+      {
+        "condition": "ΔSOFA ≥2 + infection",
+        "actions": [
+          "Sepsis pathway / hour-1 bundle elements",
+          "Cultures before abx if no delay",
+          "Source control",
+          "Hemodynamic resuscitation"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "pediatric-ews",
+    "name": "Pediatric Early Warning Score (PEWS, simplified)",
+    "shortName": "PEWS",
+    "whenToUse": "Hospitalized children for track-and-trigger monitoring of clinical deterioration.",
+    "whyUse": "Standardized bedside escalation tool; exact tables vary by institution — this is an educational simplification.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥5 or any domain 3",
+        "actions": [
+          "Urgent clinician review",
+          "Increase monitoring",
+          "Prepare for escalation"
+        ]
+      },
+      {
+        "condition": "Score 3–4",
+        "actions": [
+          "Medical review",
+          "Repeat observations sooner"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "hemorr2hages",
+    "name": "HEMORR₂HAGES Bleeding Risk Score",
+    "shortName": "HEMORR2HAGES",
+    "whenToUse": "Patients on or considered for anticoagulation when quantifying bleeding risk factors.",
+    "whyUse": "Includes prior bleed double-weighting and geriatric/comorbidity factors; highlights modifiable risks.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥4",
+        "actions": [
+          "Modify BP, alcohol, unnecessary antiplatelets",
+          "Fall-risk mitigation",
+          "Consider DOAC and closer follow-up"
+        ]
+      },
+      {
+        "condition": "Any score",
+        "actions": [
+          "Balance against stroke risk (e.g., CHA₂DS₂-VASc)",
+          "Patient-centered shared decision"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "missing-heme-id-nephro.ts",
+    "id": "orbit-af",
+    "name": "ORBIT Bleeding Risk Score (AF)",
+    "shortName": "ORBIT",
+    "whenToUse": "AF patients on oral anticoagulation for major bleeding risk estimation.",
+    "whyUse": "Simple five-factor score with good calibration in ORBIT-AF; emphasizes anemia and prior bleed.",
+    "nextSteps": [
+      {
+        "condition": "Score ≥4",
+        "actions": [
+          "Correct reversible anemia contributors",
+          "Minimize dual antithrombotic therapy duration",
+          "Renal dosing of DOAC",
+          "Fall and BP optimization"
+        ]
+      },
+      {
+        "condition": "Any score",
+        "actions": [
+          "Balance with CHA₂DS₂-VASc",
+          "Reassess when clinical status changes"
+        ]
+      }
+    ]
+  }
+]
