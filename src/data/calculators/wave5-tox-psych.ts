@@ -303,8 +303,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Chronic / therapeutic use toxicity', value: 'chronic' },
         { label: 'Acute-on-chronic', value: 'aoc' },
       ]),
-      yesNo('neuro', 'Significant neurotoxicity (AMS, severe tremor, myoclonus, seizure)'),
-      yesNo('renal', 'AKI / impaired lithium clearance'),
+      yesNo('neuro', 'Significant neurotoxicity (AMS, severe tremor, myoclonus, seizure)', 0),
+      yesNo('renal', 'AKI / impaired lithium clearance', 0),
     ],
     calculate(values) {
       const level = num(values.level, 1.8);
@@ -424,8 +424,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Therapeutic monitoring', value: 'tdm' },
         { label: 'Overdose / toxicity evaluation', value: 'od' },
       ]),
-      yesNo('ams', 'Altered mental status / significant CNS depression'),
-      yesNo('hyperNH3', 'Hyperammonemia present / suspected'),
+      yesNo('ams', 'Altered mental status / significant CNS depression', 0),
+      yesNo('hyperNH3', 'Hyperammonemia present / suspected', 0),
     ],
     calculate(values) {
       const level = num(values.level, 120);
@@ -531,8 +531,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whyUse: 'Levels correlate roughly with toxicity (nystagmus, ataxia, coma, seizures, Na channel effects).',
     inputs: [
       numberInput('level', 'Serum carbamazepine', { unit: 'µg/mL', min: 0, max: 100, step: 0.1, defaultValue: 14 }),
-      yesNo('ams', 'Significant CNS depression / coma'),
-      yesNo('seizure', 'Seizure / status risk features'),
+      yesNo('ams', 'Significant CNS depression / coma', 0),
+      yesNo('seizure', 'Seizure / status risk features', 0),
     ],
     calculate(values) {
       const level = num(values.level, 14);
@@ -632,8 +632,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Acute overdose', value: 'acute' },
         { label: 'Chronic / repeated supratherapeutic', value: 'chronic' },
       ]),
-      yesNo('seizure', 'Seizures'),
-      yesNo('unstable', 'Hypotension / life-threatening dysrhythmia'),
+      yesNo('seizure', 'Seizures', 0),
+      yesNo('unstable', 'Hypotension / life-threatening dysrhythmia', 0),
     ],
     calculate(values) {
       const level = num(values.level, 28);
@@ -748,8 +748,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: '72 hours', value: 72 },
         { label: 'Other / not standard time', value: 0 },
       ]),
-      yesNo('aki', 'AKI / delayed clearance risk factors'),
-      yesNo('third_space', 'Third-spacing / effusion / ascites'),
+      yesNo('aki', 'AKI / delayed clearance risk factors', 0),
+      yesNo('third_space', 'Third-spacing / effusion / ascites', 0),
     ],
     calculate(values) {
       const level = num(values.level, 10);
@@ -865,9 +865,9 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Nonsmoker', value: 'no' },
         { label: 'Smoker (higher baseline COHb)', value: 'yes' },
       ]),
-      yesNo('neuro', 'Syncope, coma, seizure, or focal neuro deficit'),
-      yesNo('cardiac', 'Chest pain, ischemia, or significant dysrhythmia'),
-      yesNo('pregnant', 'Pregnant'),
+      yesNo('neuro', 'Syncope, coma, seizure, or focal neuro deficit', 0),
+      yesNo('cardiac', 'Chest pain, ischemia, or significant dysrhythmia', 0),
+      yesNo('pregnant', 'Pregnant', 0),
     ],
     calculate(values) {
       const cohb = num(values.cohb, 15);
@@ -965,9 +965,9 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whyUse: 'Severity bands guide urgency of methylene blue and ICU care.',
     inputs: [
       numberInput('methb', 'Methemoglobin', { unit: '%', min: 0, max: 100, step: 0.1, defaultValue: 25 }),
-      yesNo('symptomatic', 'Symptoms (dyspnea, headache, tachycardia, AMS)'),
-      yesNo('severe', 'Severe features (coma, seizure, ischemia, profound hypoxia symptoms)'),
-      yesNo('g6pd', 'Known G6PD deficiency'),
+      yesNo('symptomatic', 'Symptoms (dyspnea, headache, tachycardia, AMS)', 0),
+      yesNo('severe', 'Severe features (coma, seizure, ischemia, profound hypoxia symptoms)', 0),
+      yesNo('g6pd', 'Known G6PD deficiency', 0),
     ],
     calculate(values) {
       const methb = num(values.methb, 25);
@@ -1027,6 +1027,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         interpretation,
         riskLevel,
         details: [
+          { label: 'Symptoms present', value: symptomatic ? 'Yes' : 'No' },
+          { label: 'Severe features', value: severe ? 'Yes' : 'No' },
           { label: 'Common MB trigger', value: 'Symptoms or MetHb often ≥20–30%' },
           { label: 'Typical MB dose (teaching)', value: '1–2 mg/kg IV over 5 min; may repeat' },
           { label: 'G6PD', value: g6pd ? 'Known / suspected' : 'Not flagged' },
@@ -1077,8 +1079,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Unknown / other', value: 'other' },
       ]),
       numberInput('lactate', 'Serum lactate', { unit: 'mmol/L', min: 0, max: 30, step: 0.1, defaultValue: 8 }),
-      yesNo('ams', 'Altered mental status / coma / seizure'),
-      yesNo('shock', 'Hypotension / cardiovascular collapse'),
+      yesNo('ams', 'Altered mental status / coma / seizure', 2),
+      yesNo('shock', 'Hypotension / cardiovascular collapse', 2),
       yesNo('soot', 'Soot in airway / severe smoke exposure signs'),
     ],
     calculate(values) {
@@ -1181,8 +1183,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Severe (respiratory failure, profound bronchorrhea, coma, seizures)', value: 'severe' },
       ]),
       numberInput('weight', 'Body weight', { unit: 'kg', min: 5, max: 200, step: 0.1, defaultValue: 70 }),
-      yesNo('bronchorrhea', 'Significant bronchorrhea / hypoxia from secretions'),
-      yesNo('bradycardia', 'Symptomatic bradycardia / AV block'),
+      yesNo('bronchorrhea', 'Significant bronchorrhea / hypoxia from secretions', -0.75),
+      yesNo('bradycardia', 'Symptomatic bradycardia / AV block', 0),
     ],
     calculate(values) {
       const sev = String(values.severity ?? 'moderate');
@@ -1534,7 +1536,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Not previously vaccinated', value: 'none' },
         { label: 'Previously vaccinated (pre- or post-exposure series complete)', value: 'prior' },
       ]),
-      yesNo('available_observe', 'Healthy dog/cat available for 10-day observation / testing plan'),
+      yesNo('available_observe', 'Healthy dog/cat available for 10-day observation / testing plan', 0),
     ],
     calculate(values) {
       const animal = String(values.animal ?? 'dogcat');
@@ -1548,7 +1550,11 @@ export const wave5ToxPsychCalcs: Calculator[] = [
           label: 'PEP generally not indicated',
           interpretation: 'No exposure identified. PEP not indicated. Wound care if needed; tetanus as appropriate.',
           riskLevel: 'low' as const,
-          details: [{ label: 'HRIG', value: 'No' }, { label: 'Vaccine', value: 'No' }],
+          details: [
+            { label: 'HRIG', value: 'No' },
+            { label: 'Vaccine', value: 'No' },
+            { label: 'Dog/cat available for 10-day observation', value: observe ? 'Yes' : 'No' },
+          ],
         };
       }
 
@@ -1628,6 +1634,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
           { label: 'HRIG', value: hrig },
           { label: 'Vaccine schedule', value: schedule },
           { label: 'Prior vaccination', value: prior ? 'Yes' : 'No' },
+          { label: 'Dog/cat available for 10-day observation', value: observe ? 'Yes' : 'No' },
         ],
       };
     },
@@ -1689,8 +1696,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Unvaccinated / non-immune', value: 'nonimmune' },
         { label: 'Unknown', value: 'unknown' },
       ]),
-      yesNo('source_hbsag', 'Source HBsAg positive / high risk HBV'),
-      yesNo('within_72h', 'Within 72 hours of exposure'),
+      yesNo('source_hbsag', 'Source HBsAg positive / high risk HBV', 0),
+      yesNo('within_72h', 'Within 72 hours of exposure', 0),
     ],
     calculate(values) {
       const exp = String(values.exposure_type ?? 'hollow');
@@ -1705,7 +1712,11 @@ export const wave5ToxPsychCalcs: Calculator[] = [
           label: 'No BBP PEP for intact skin',
           interpretation: 'Intact skin contact generally does not warrant HIV PEP. Wash skin; baseline testing optional per occupational health.',
           riskLevel: 'low' as const,
-          details: [{ label: 'HIV PEP', value: 'Not indicated' }],
+          details: [
+            { label: 'HIV PEP', value: 'Not indicated' },
+            { label: 'Source HBsAg / high-risk HBV', value: sourceHbv ? 'Yes' : 'No' },
+            { label: 'Within 72 h', value: within72 ? 'Yes' : 'No' },
+          ],
         };
       }
 
@@ -1756,7 +1767,9 @@ export const wave5ToxPsychCalcs: Calculator[] = [
           { label: 'Exposure', value: exp },
           { label: 'Source HIV', value: hiv },
           { label: 'HIV PEP', value: hivPep ? 'Start / indicated' : 'Not indicated or window passed' },
+          { label: 'Source HBsAg / high-risk HBV', value: sourceHbv ? 'Yes' : 'No' },
           { label: 'HBV plan', value: hbvPlan },
+          { label: 'Within 72 h', value: within72 ? 'Yes' : 'No' },
           { label: 'HCV PEP', value: 'None — surveillance only' },
           { label: 'Ideal HIV PEP start', value: '<2 hours preferred; within 72 h' },
         ],
@@ -1805,14 +1818,14 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Acute allergic reaction when deciding if anaphylaxis criteria are met.',
     whyUse: 'Anaphylaxis is clinical — early IM epinephrine when criteria met saves lives.',
     inputs: [
-      yesNo('acute_onset', 'Acute onset of illness (minutes to hours)'),
-      yesNo('skin_mucosa', 'Skin/mucosal involvement (hives, pruritus, flushing, swollen lips/tongue/uvula)'),
-      yesNo('resp', 'Respiratory compromise (dyspnea, wheeze, stridor, hypoxemia)'),
-      yesNo('hypotension_endorgan', 'Hypotension or end-organ dysfunction (collapse, syncope, incontinence)'),
-      yesNo('gi_cramp', 'Persistent GI symptoms (crampy abdominal pain, vomiting) — for criterion 2'),
-      yesNo('likely_allergen', 'Likely allergen exposure for this patient'),
-      yesNo('known_allergen', 'Known allergen exposure for this patient'),
-      yesNo('hypotension_only', 'Hypotension after known allergen (even without skin findings)'),
+      yesNo('acute_onset', 'Acute onset of illness (minutes to hours)', 0),
+      yesNo('skin_mucosa', 'Skin/mucosal involvement (hives, pruritus, flushing, swollen lips/tongue/uvula)', 0),
+      yesNo('resp', 'Respiratory compromise (dyspnea, wheeze, stridor, hypoxemia)', 0),
+      yesNo('hypotension_endorgan', 'Hypotension or end-organ dysfunction (collapse, syncope, incontinence)', 0),
+      yesNo('gi_cramp', 'Persistent GI symptoms (crampy abdominal pain, vomiting) — for criterion 2', 0),
+      yesNo('likely_allergen', 'Likely allergen exposure for this patient', 0),
+      yesNo('known_allergen', 'Known allergen exposure for this patient', 0),
+      yesNo('hypotension_only', 'Hypotension after known allergen (even without skin findings)', 0),
     ],
     calculate(values) {
       const acute = bool(values.acute_onset);
@@ -1845,9 +1858,17 @@ export const wave5ToxPsychCalcs: Calculator[] = [
           : 'Entered features do not meet classic NIAID/FAAN anaphylaxis criteria. Still treat severe symptoms appropriately; isolated mild urticaria may not need epi. When in doubt with progressive multi-system allergy, do not withhold epinephrine.',
         riskLevel: met ? 'critical' : 'low',
         details: [
-          { label: 'Criterion 1', value: c1 ? 'Met' : 'Not met' },
-          { label: 'Criterion 2', value: c2 ? 'Met' : 'Not met' },
-          { label: 'Criterion 3', value: c3 ? 'Met' : 'Not met' },
+          { label: 'Criterion 1 (acute skin + resp/CV)', value: c1 ? 'Met' : 'Not met' },
+          { label: 'Criterion 2 (≥2 systems after likely allergen)', value: c2 ? 'Met' : 'Not met' },
+          { label: 'Criterion 3 (hypotension after known allergen)', value: c3 ? 'Met' : 'Not met' },
+          { label: 'Acute onset', value: acute ? 'Yes' : 'No' },
+          { label: 'Skin/mucosa', value: skin ? 'Yes' : 'No' },
+          { label: 'Respiratory compromise', value: resp ? 'Yes' : 'No' },
+          { label: 'Hypotension / end-organ', value: hypoEnd ? 'Yes' : 'No' },
+          { label: 'Persistent GI symptoms', value: gi ? 'Yes' : 'No' },
+          { label: 'Likely allergen exposure', value: likely ? 'Yes' : 'No' },
+          { label: 'Known allergen exposure', value: known ? 'Yes' : 'No' },
+          { label: 'Hypotension after known allergen (criterion 3 path)', value: hypoOnly ? 'Yes' : 'No' },
           { label: 'System domains positive', value: String(domains) },
         ],
         recommendations: met
@@ -1917,16 +1938,23 @@ export const wave5ToxPsychCalcs: Calculator[] = [
 
       const vol1in1000 = round(dose, 2); // mL of 1 mg/mL
 
+      const conc = String(values.concentration ?? '1in1000');
+      const concLabel =
+        conc === 'auto'
+          ? 'Autoinjector only'
+          : '1 mg/mL (1:1000) IM — correct for anaphylaxis';
+
       return {
         score: dose,
         unit: 'mg IM',
         label: 'IM epinephrine dose (anterolateral thigh)',
-        interpretation: `Give ${dose} mg IM (0.01 mg/kg, max 0.5 mg) in the mid-anterolateral thigh. May repeat q5 min if refractory. Autoinjector guidance: ${auto}. Do not use IV bolus dosing meant for cardiac arrest as first-line anaphylaxis therapy.`,
+        interpretation: `Give ${dose} mg IM (0.01 mg/kg, max 0.5 mg) in the mid-anterolateral thigh. May repeat q5 min if refractory. Concentration context: ${concLabel}. Autoinjector guidance: ${auto}. Do not use IV bolus dosing meant for cardiac arrest as first-line anaphylaxis therapy.`,
         riskLevel: 'critical',
         details: [
           { label: 'Weight', value: `${wt} kg` },
+          { label: 'Concentration available', value: concLabel },
           { label: 'Calculated 0.01 mg/kg', value: `${round(raw, 2)} mg (capped at 0.5)` },
-          { label: 'Volume of 1 mg/mL', value: `${vol1in1000} mL` },
+          { label: 'Volume of 1 mg/mL', value: conc === 'auto' ? 'N/A (autoinjector)' : `${vol1in1000} mL` },
           { label: 'Autoinjector', value: auto },
           { label: 'Route', value: 'IM thigh preferred over deltoid/SC' },
         ],
@@ -2055,7 +2083,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         defaultValue: 12,
         helpText: '9 items scored 0–3; item 9 is suicide ideation — always review',
       }),
-      yesNo('item9', 'Item 9 positive (thoughts of self-harm / better off dead)'),
+      yesNo('item9', 'Item 9 positive (thoughts of self-harm / better off dead)', 0),
     ],
     calculate(values) {
       const score = num(values.score, 12);
@@ -2152,7 +2180,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       yesNo('q2', '2. In the past few weeks, have you felt that you or your family would be better off if you were dead?'),
       yesNo('q3', '3. In the past week, have you been having thoughts about killing yourself?'),
       yesNo('q4', '4. Have you ever tried to kill yourself?'),
-      yesNo('q5', '5. Are you having thoughts of killing yourself right now? (acuity — ask if any of 1–4 yes)'),
+      yesNo('q5', '5. Are you having thoughts of killing yourself right now? (acuity — ask if any of 1–4 yes)', 0),
     ],
     calculate(values) {
       const q1 = bool(values.q1);

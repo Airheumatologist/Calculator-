@@ -571,14 +571,21 @@ export const wave5NephroGiCalcs: Calculator[] = [
         riskLevel = 'normal';
         interpretation = `UACR ${acr} mg/g — KDIGO A1 (<30 mg/g). Continue screening per diabetes/CKD guidelines; sex-specific thresholds sometimes used historically for “microalbuminuria.”`;
       }
+      const sex = String(values.sex ?? 'U');
+      const sexLabel = sex === 'F' ? 'Female' : sex === 'M' ? 'Male' : 'Not specified';
       return {
         score: acr,
         unit: 'mg/g',
         label,
-        interpretation,
+        interpretation:
+          interpretation +
+          (sex === 'U'
+            ? ''
+            : ` Sex context: ${sexLabel} (historical sex-specific microalbuminuria cutoffs exist; KDIGO A1–A3 uses the same mg/g thresholds).`),
         riskLevel,
         details: [
           { label: 'KDIGO category', value: cat },
+          { label: 'Sex context', value: sexLabel },
           { label: 'A1 / A2 / A3', value: '<30 / 30–300 / >300 mg/g' },
           { label: 'Approx. mg/mmol', value: `${round(acr / 8.84, 2)} (÷8.84)` },
         ],
@@ -1280,11 +1287,11 @@ export const wave5NephroGiCalcs: Calculator[] = [
     inputs: [
       numberInput('k', 'Serum K⁺ (if known)', { unit: 'mEq/L', min: 2, max: 12, step: 0.1, defaultValue: 6.2 }),
       yesNo('peakedT', 'Peaked T waves'),
-      yesNo('prProlong', 'PR prolongation / flattened P'),
-      yesNo('lossP', 'Loss of P waves'),
-      yesNo('wideQrs', 'QRS widening'),
-      yesNo('sine', 'Sine-wave pattern'),
-      yesNo('bradyVf', 'Severe bradyarrhythmia / VT/VF / arrest'),
+      yesNo('prProlong', 'PR prolongation / flattened P', 2),
+      yesNo('lossP', 'Loss of P waves', 3),
+      yesNo('wideQrs', 'QRS widening', 4),
+      yesNo('sine', 'Sine-wave pattern', 5),
+      yesNo('bradyVf', 'Severe bradyarrhythmia / VT/VF / arrest', 6),
     ],
     calculate(values) {
       const k = num(values.k, 6.2);
@@ -1483,7 +1490,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
         { label: 'G5 ND', value: 'g5' },
         { label: 'Dialysis', value: 'dialysis' },
       ]),
-      yesNo('symptoms', 'Symptoms possibly related to acidosis (fatigue, dyspnea)'),
+      yesNo('symptoms', 'Symptoms possibly related to acidosis (fatigue, dyspnea)', 0),
     ],
     calculate(values) {
       const hco3 = num(values.hco3, 20);
@@ -2118,7 +2125,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
           value: 4,
         },
       ]),
-      yesNo('precipitant', 'Precipitant identified (infection, bleed, electrolytes, drugs, constipation)'),
+      yesNo('precipitant', 'Precipitant identified (infection, bleed, electrolytes, drugs, constipation)', 0),
     ],
     calculate(values) {
       const grade = num(values.grade, 0);

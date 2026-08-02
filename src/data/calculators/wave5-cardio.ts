@@ -302,11 +302,11 @@ export const wave5CardioCalcs: Calculator[] = [
       yesNo('bb', 'Evidence-based β-blocker (carvedilol / bisoprolol / metoprolol succinate)', 1),
       yesNo('mra', 'Mineralocorticoid receptor antagonist (spironolactone / eplerenone)', 1),
       yesNo('sglt2', 'SGLT2 inhibitor (dapagliflozin / empagliflozin, etc.)', 1),
-      yesNo('arniPreferred', 'Using ARNI (sacubitril/valsartan) rather than ACEI/ARB alone', 1, 'Preferred RAS inhibitor when eligible'),
-      yesNo('loop', 'Loop diuretic as needed for congestion', 1),
-      yesNo('ivabradine', 'Ivabradine (if eligible: sinus rhythm, HR elevated on max BB)', 1),
-      yesNo('hydralNitrates', 'Hydralazine + nitrate (selected self-identified Black patients / ACEI-intolerant)', 1),
-      yesNo('deviceEligible', 'ICD and/or CRT indicated and addressed (implanted or declined after counseling)', 1),
+      yesNo('arniPreferred', 'Using ARNI (sacubitril/valsartan) rather than ACEI/ARB alone', 0, 'Preferred RAS inhibitor when eligible'),
+      yesNo('loop', 'Loop diuretic as needed for congestion', 0),
+      yesNo('ivabradine', 'Ivabradine (if eligible: sinus rhythm, HR elevated on max BB)', 0),
+      yesNo('hydralNitrates', 'Hydralazine + nitrate (selected self-identified Black patients / ACEI-intolerant)', 0),
+      yesNo('deviceEligible', 'ICD and/or CRT indicated and addressed (implanted or declined after counseling)', 0),
     ],
     calculate(values) {
       const pillars = [
@@ -756,7 +756,7 @@ export const wave5CardioCalcs: Calculator[] = [
         { label: 'On-X aortic valve (after agreed lower-INR protocol period)', value: 'onx' },
         { label: 'Antiphospholipid syndrome (standard intensity if warfarin chosen)', value: 'aps' },
       ]),
-      yesNo('recentTe', 'Recent thromboembolism on warfarin (consider higher target / add antiplatelet per specialist)', 1),
+      yesNo('recentTe', 'Recent thromboembolism on warfarin (consider higher target / add antiplatelet per specialist)', 0),
     ],
     calculate(values) {
       const ind = String(values.indication ?? 'af');
@@ -1476,9 +1476,9 @@ export const wave5CardioCalcs: Calculator[] = [
     whyUse: 'Risk rises steeply at very high TG; thresholds guide urgency of therapy.',
     inputs: [
       numberInput('tg', 'Triglycerides', { unit: 'mg/dL', min: 30, max: 10000, step: 1, defaultValue: 400 }),
-      yesNo('priorPancreatitis', 'Prior hypertriglyceridemic pancreatitis', 1),
-      yesNo('diabetes', 'Uncontrolled diabetes / marked hyperglycemia', 1),
-      yesNo('alcohol', 'Heavy alcohol use', 1),
+      yesNo('priorPancreatitis', 'Prior hypertriglyceridemic pancreatitis', 0),
+      yesNo('diabetes', 'Uncontrolled diabetes / marked hyperglycemia', 0),
+      yesNo('alcohol', 'Heavy alcohol use', 0),
     ],
     calculate(values) {
       const tg = num(values.tg, 400);
@@ -1857,17 +1857,17 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'Preoperative evaluation or functional capacity estimation when formal exercise testing is unavailable.',
     whyUse: 'Validated questionnaire correlating with VO₂ peak; <4 METs flags higher perioperative risk discussions.',
     inputs: [
-      yesNo('q1', 'Can you take care of yourself (eat, dress, bathe, use toilet)? (+2.75)', 1),
-      yesNo('q2', 'Can you walk indoors such as around your house? (+1.75)', 1),
-      yesNo('q3', 'Can you walk a block or two on level ground? (+2.75)', 1),
-      yesNo('q4', 'Can you climb a flight of stairs or walk up a hill? (+5.50)', 1),
+      yesNo('q1', 'Can you take care of yourself (eat, dress, bathe, use toilet)? (+2.75)', 0.3999999999999999),
+      yesNo('q2', 'Can you walk indoors such as around your house? (+1.75)', 0.2999999999999998),
+      yesNo('q3', 'Can you walk a block or two on level ground? (+2.75)', 0.3999999999999999),
+      yesNo('q4', 'Can you climb a flight of stairs or walk up a hill? (+5.50)', 0.6999999999999997),
       yesNo('q5', 'Can you run a short distance? (+8.00)', 1),
-      yesNo('q6', 'Can you do light work around the house (dusting, washing dishes)? (+2.70)', 1),
-      yesNo('q7', 'Can you do moderate work around the house (vacuuming, sweeping floors, carrying groceries)? (+3.50)', 1),
+      yesNo('q6', 'Can you do light work around the house (dusting, washing dishes)? (+2.70)', 0.3999999999999999),
+      yesNo('q7', 'Can you do moderate work around the house (vacuuming, sweeping floors, carrying groceries)? (+3.50)', 0.5),
       yesNo('q8', 'Can you do heavy work around the house (scrubbing floors, moving heavy furniture)? (+8.00)', 1),
-      yesNo('q9', 'Can you do yard work (raking leaves, weeding, pushing a mower)? (+4.50)', 1),
-      yesNo('q10', 'Can you have sexual relations? (+5.25)', 1),
-      yesNo('q11', 'Can you participate in moderate recreational activities (golf, bowling, dancing, doubles tennis, throwing a baseball/football)? (+6.00)', 1),
+      yesNo('q9', 'Can you do yard work (raking leaves, weeding, pushing a mower)? (+4.50)', 0.5999999999999996),
+      yesNo('q10', 'Can you have sexual relations? (+5.25)', 0.6999999999999997),
+      yesNo('q11', 'Can you participate in moderate recreational activities (golf, bowling, dancing, doubles tennis, throwing a baseball/football)? (+6.00)', 0.7999999999999998),
       yesNo('q12', 'Can you participate in strenuous sports (swimming, singles tennis, football, basketball, skiing)? (+7.50)', 1),
     ],
     calculate(values) {
@@ -1958,7 +1958,7 @@ export const wave5CardioCalcs: Calculator[] = [
         { label: 'Jogging, singles tennis, hiking (~7–9 METs)', value: 8 },
         { label: 'Running, competitive sports, heavy labor (~≥10 METs)', value: 10 },
       ]),
-      yesNo('limitedByChest', 'Limited by chest pain, dyspnea, or syncope', 1),
+      yesNo('limitedByChest', 'Limited by chest pain, dyspnea, or syncope', 0),
     ],
     calculate(values) {
       const mets = num(values.activity, 4.5);
@@ -2261,13 +2261,13 @@ export const wave5CardioCalcs: Calculator[] = [
       yesNo('torsades', 'Torsades de pointes (+2)', 2),
       yesNo('tAlternans', 'T-wave alternans (+1)', 1),
       yesNo('notchedT', 'Notched T wave in 3 leads (+1)', 1),
-      yesNo('lowHr', 'Low heart rate for age (+0.5)', 1),
+      yesNo('lowHr', 'Low heart rate for age (+0.5)', 0.5),
       selectInput('syncope', 'Syncope', [
         { label: 'None (0)', value: 0 },
         { label: 'Syncope not stress-related (+1)', value: 1 },
         { label: 'Syncope with stress (+2)', value: 2 },
       ]),
-      yesNo('congenitalDeafness', 'Congenital deafness (+0.5)', 1),
+      yesNo('congenitalDeafness', 'Congenital deafness (+0.5)', 0.5),
       selectInput('family', 'Family history', [
         { label: 'None (0)', value: 0 },
         { label: 'Family member with definite LQTS (+1)', value: 1 },
@@ -2369,11 +2369,11 @@ export const wave5CardioCalcs: Calculator[] = [
       yesNo('preexcitedAF', 'Documented preexcited AF or polymorphic wide-complex tachycardia', 1),
       yesNo('shortSPERRI', 'Shortest preexcited RR in AF ≤250 ms (or SPERRI ≤250 ms on EPS)', 1),
       yesNo('multipleAP', 'Multiple accessory pathways suspected/proven', 1),
-      yesNo('septalAP', 'Posteroseptal / midseptal pathway location (ablation risk / specific concerns)', 1),
+      yesNo('septalAP', 'Posteroseptal / midseptal pathway location (ablation risk / specific concerns)', 0),
       yesNo('ebstein', 'Ebstein anomaly or other structural heart disease', 1),
       yesNo('familySCD', 'Family history of WPW-related SCD (rare syndromes)', 1),
-      yesNo('intermittentLoss', 'Intermittent sudden loss of preexcitation on ECG/ambulatory monitor (lower-risk marker)', 1),
-      yesNo('abruptBlockExercise', 'Abrupt complete loss of preexcitation on exercise testing (lower-risk marker)', 1),
+      yesNo('intermittentLoss', 'Intermittent sudden loss of preexcitation on ECG/ambulatory monitor (lower-risk marker)', 0),
+      yesNo('abruptBlockExercise', 'Abrupt complete loss of preexcitation on exercise testing (lower-risk marker)', 0),
     ],
     calculate(values) {
       const highFlags = [
@@ -2474,10 +2474,10 @@ export const wave5CardioCalcs: Calculator[] = [
     inputs: [
       yesNo('modSevMS', 'Moderate or severe mitral stenosis (typically rheumatic)', 1),
       yesNo('mechanicalValve', 'Mechanical prosthetic heart valve (any position)', 1),
-      yesNo('bioprosthetic', 'Bioprosthetic valve or valve repair only', 1),
-      yesNo('modSevMR', 'Moderate–severe mitral regurgitation (without MS)', 1),
-      yesNo('asOrAR', 'Significant aortic stenosis or regurgitation', 1),
-      yesNo('otherNative', 'Other native valve disease without MS/mechanical prosthesis', 1),
+      yesNo('bioprosthetic', 'Bioprosthetic valve or valve repair only', 0),
+      yesNo('modSevMR', 'Moderate–severe mitral regurgitation (without MS)', 0),
+      yesNo('asOrAR', 'Significant aortic stenosis or regurgitation', 0),
+      yesNo('otherNative', 'Other native valve disease without MS/mechanical prosthesis', 0),
     ],
     calculate(values) {
       const valvular = bool(values.modSevMS) || bool(values.mechanicalValve);

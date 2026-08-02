@@ -848,12 +848,12 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'Acute hypoxemic respiratory failure evaluation for ARDS diagnosis and severity.',
     whyUse: 'Standard international definition guiding lung-protective strategies and trial eligibility.',
     inputs: [
-      yesNo('timing', 'Timing: within 1 week of known clinical insult or new/worsening respiratory symptoms', 1),
-      yesNo('imaging', 'Imaging: bilateral opacities not fully explained by effusions, lobar/lung collapse, or nodules', 1),
-      yesNo('origin', 'Origin: respiratory failure not fully explained by cardiac failure or fluid overload', 1, 'Need objective assessment (e.g., echo) if no risk factor present'),
+      yesNo('timing', 'Timing: within 1 week of known clinical insult or new/worsening respiratory symptoms', 0),
+      yesNo('imaging', 'Imaging: bilateral opacities not fully explained by effusions, lobar/lung collapse, or nodules', 0),
+      yesNo('origin', 'Origin: respiratory failure not fully explained by cardiac failure or fluid overload', 0, 'Need objective assessment (e.g., echo) if no risk factor present'),
       numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, defaultValue: 80 }),
       numberInput('fio2', 'FiO₂', { unit: 'fraction', min: 0.21, max: 1, step: 0.01, defaultValue: 0.5 }),
-      yesNo('peep', 'PEEP or CPAP ≥ 5 cmH₂O', 1),
+      yesNo('peep', 'PEEP or CPAP ≥ 5 cmH₂O', 0),
     ],
     calculate(values) {
       const timing = bool(values.timing);
@@ -1160,9 +1160,9 @@ export const missingCardioPulmCalcs: Calculator[] = [
       numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 100, max: 400, step: 1, defaultValue: 200 }),
       numberInput('hdl', 'HDL cholesterol', { unit: 'mg/dL', min: 20, max: 120, step: 1, defaultValue: 50 }),
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 80, max: 220, defaultValue: 130 }),
-      yesNo('treatedHtn', 'On antihypertensive treatment', 1),
-      yesNo('smoker', 'Current smoker', 1),
-      yesNo('diabetes', 'Diabetes mellitus', 1),
+      yesNo('treatedHtn', 'On antihypertensive treatment', 0),
+      yesNo('smoker', 'Current smoker', 0),
+      yesNo('diabetes', 'Diabetes mellitus', 0),
     ],
     calculate(values) {
       // Educational simplification inspired by Wilson Framingham hard CHD point logic (not identical official tables).

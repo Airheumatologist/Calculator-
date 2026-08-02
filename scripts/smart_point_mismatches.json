@@ -1,0 +1,835 @@
+[
+  {
+    "calcId": "ascvd-risk",
+    "inputId": "txHtn",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 0.30000000000000004
+  },
+  {
+    "calcId": "ascvd-risk",
+    "inputId": "dm",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 0.5
+  },
+  {
+    "calcId": "ascvd-risk",
+    "inputId": "smoker",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 0.5
+  },
+  {
+    "calcId": "apache2-simp",
+    "inputId": "chronic",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 5
+  },
+  {
+    "calcId": "meld",
+    "inputId": "dialysis",
+    "optionLabel": "Yes",
+    "declared": 14,
+    "measured": 13
+  },
+  {
+    "calcId": "ottawa-ankle",
+    "inputId": "malleolarPain",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "ottawa-ankle",
+    "inputId": "midfootPain",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "ottawa-ankle",
+    "inputId": "postLat",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "ottawa-ankle",
+    "inputId": "postMed",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "ottawa-ankle",
+    "inputId": "walk",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "canadian-cspine",
+    "inputId": "highRisk",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "canadian-cspine",
+    "inputId": "rotate",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "corrected-phenytoin",
+    "inputId": "esrd",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 11.900000000000002
+  },
+  {
+    "calcId": "jones-criteria",
+    "inputId": "strep",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 5
+  },
+  {
+    "calcId": "jones-criteria",
+    "inputId": "carditis",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "jones-criteria",
+    "inputId": "arthritis",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "jones-criteria",
+    "inputId": "chorea",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "jones-criteria",
+    "inputId": "erythema",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "jones-criteria",
+    "inputId": "nodules",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "ottawa-foot",
+    "inputId": "midfootPain",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "ottawa-foot",
+    "inputId": "navicular",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "ottawa-foot",
+    "inputId": "base5",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "ottawa-foot",
+    "inputId": "walk",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "start-triage",
+    "inputId": "canWalk",
+    "optionLabel": "Yes",
+    "declared": -1,
+    "measured": -3
+  },
+  {
+    "calcId": "prevent-cvd",
+    "inputId": "treatedHtn",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 5
+  },
+  {
+    "calcId": "prevent-cvd",
+    "inputId": "smoker",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 19
+  },
+  {
+    "calcId": "prevent-cvd",
+    "inputId": "diabetes",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 16
+  },
+  {
+    "calcId": "lille-score",
+    "inputId": "renal",
+    "optionLabel": "Yes",
+    "declared": 0.023000000000000007,
+    "measured": 0.044999999999999984
+  },
+  {
+    "calcId": "nafld-fibrosis",
+    "inputId": "ifg",
+    "optionLabel": "Yes",
+    "declared": 1.1300000000000001,
+    "measured": 1.13
+  },
+  {
+    "calcId": "vbac-success",
+    "inputId": "priorVaginal",
+    "optionLabel": "Yes",
+    "declared": 5,
+    "measured": 21
+  },
+  {
+    "calcId": "vbac-success",
+    "inputId": "priorVbac",
+    "optionLabel": "Yes",
+    "declared": 4,
+    "measured": 14
+  },
+  {
+    "calcId": "vbac-success",
+    "inputId": "recurringIndication",
+    "optionLabel": "Yes",
+    "declared": -7,
+    "measured": -16
+  },
+  {
+    "calcId": "vbac-success",
+    "inputId": "induction",
+    "optionLabel": "Yes",
+    "declared": -4,
+    "measured": -10
+  },
+  {
+    "calcId": "pittsburgh-knee",
+    "inputId": "mechanism",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "pittsburgh-knee",
+    "inputId": "ageExtreme",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "pittsburgh-knee",
+    "inputId": "walk",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "ottawa-hip",
+    "inputId": "traumaPain",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "ottawa-hip",
+    "inputId": "age65",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "ottawa-hip",
+    "inputId": "walk",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "ottawa-hip",
+    "inputId": "limitedRom",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "triss",
+    "inputId": "age55",
+    "optionLabel": "Yes",
+    "declared": -28.9,
+    "measured": -2.6000000000000085
+  },
+  {
+    "calcId": "car-t-crs",
+    "inputId": "fever",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 4
+  },
+  {
+    "calcId": "hall-criteria",
+    "inputId": "temp",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 2
+  },
+  {
+    "calcId": "hall-criteria",
+    "inputId": "hr",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 2
+  },
+  {
+    "calcId": "hall-criteria",
+    "inputId": "rr",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 2
+  },
+  {
+    "calcId": "hall-criteria",
+    "inputId": "sbp",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 2
+  },
+  {
+    "calcId": "hall-criteria",
+    "inputId": "o2",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 2
+  },
+  {
+    "calcId": "hall-criteria",
+    "inputId": "mental",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 2
+  },
+  {
+    "calcId": "hall-criteria",
+    "inputId": "oral",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 2
+  },
+  {
+    "calcId": "hall-criteria",
+    "inputId": "stable24",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "ichd-migraine",
+    "inputId": "unilateral",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "ichd-migraine",
+    "inputId": "pulsating",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "ichd-migraine",
+    "inputId": "moderateSevere",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "ichd-migraine",
+    "inputId": "aggravation",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "free-phenytoin",
+    "inputId": "esrd",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1.19
+  },
+  {
+    "calcId": "score2-europe",
+    "inputId": "smoker",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 4
+  },
+  {
+    "calcId": "reynolds-risk",
+    "inputId": "smoker",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 4
+  },
+  {
+    "calcId": "reynolds-risk",
+    "inputId": "parentMi",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 3
+  },
+  {
+    "calcId": "reynolds-risk",
+    "inputId": "dm",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 3
+  },
+  {
+    "calcId": "meld-xi",
+    "inputId": "dialysis",
+    "optionLabel": "Yes",
+    "declared": 17,
+    "measured": 16
+  },
+  {
+    "calcId": "peld-score",
+    "inputId": "ageUnder1",
+    "optionLabel": "Yes",
+    "declared": 4,
+    "measured": 5
+  },
+  {
+    "calcId": "incomplete-kawasaki",
+    "inputId": "crpHigh",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 0
+  },
+  {
+    "calcId": "incomplete-kawasaki",
+    "inputId": "esrHigh",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 0
+  },
+  {
+    "calcId": "incomplete-kawasaki",
+    "inputId": "echoPos",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 0
+  },
+  {
+    "calcId": "fena-diuretic",
+    "inputId": "onDiuretic",
+    "optionLabel": "Yes",
+    "declared": 9.9,
+    "measured": 9.43
+  },
+  {
+    "calcId": "wfns-sah",
+    "inputId": "motorDeficit",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "pc-ptsd",
+    "inputId": "trauma",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 5
+  },
+  {
+    "calcId": "pc-ptsd",
+    "inputId": "q1",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "pc-ptsd",
+    "inputId": "q2",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "pc-ptsd",
+    "inputId": "q3",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "pc-ptsd",
+    "inputId": "q4",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "pc-ptsd",
+    "inputId": "q5",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "ort",
+    "inputId": "fhAlcohol",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 3
+  },
+  {
+    "calcId": "ort",
+    "inputId": "fhIllegal",
+    "optionLabel": "Yes",
+    "declared": 2,
+    "measured": 3
+  },
+  {
+    "calcId": "hypoglycemia-level",
+    "inputId": "severe",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 2
+  },
+  {
+    "calcId": "de-winter",
+    "inputId": "upslopeStd",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 4
+  },
+  {
+    "calcId": "de-winter",
+    "inputId": "tallT",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 4
+  },
+  {
+    "calcId": "sort-score",
+    "inputId": "highRiskSpecialty",
+    "optionLabel": "Yes",
+    "declared": 0.17000000000000004,
+    "measured": 16.17
+  },
+  {
+    "calcId": "sort-score",
+    "inputId": "cancer",
+    "optionLabel": "Yes",
+    "declared": 0.11,
+    "measured": 11.220000000000013
+  },
+  {
+    "calcId": "duke-activity",
+    "inputId": "q1",
+    "optionLabel": "Yes",
+    "declared": 0.3999999999999999,
+    "measured": 0.40000000000000036
+  },
+  {
+    "calcId": "duke-activity",
+    "inputId": "q3",
+    "optionLabel": "Yes",
+    "declared": 0.3999999999999999,
+    "measured": 0.40000000000000036
+  },
+  {
+    "calcId": "duke-activity",
+    "inputId": "q4",
+    "optionLabel": "Yes",
+    "declared": 0.6999999999999997,
+    "measured": 0.7000000000000011
+  },
+  {
+    "calcId": "duke-activity",
+    "inputId": "q5",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 1.0000000000000004
+  },
+  {
+    "calcId": "duke-activity",
+    "inputId": "q8",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 1.0000000000000004
+  },
+  {
+    "calcId": "duke-activity",
+    "inputId": "q9",
+    "optionLabel": "Yes",
+    "declared": 0.5999999999999996,
+    "measured": 0.6000000000000001
+  },
+  {
+    "calcId": "duke-activity",
+    "inputId": "q10",
+    "optionLabel": "Yes",
+    "declared": 0.6999999999999997,
+    "measured": 0.7000000000000002
+  },
+  {
+    "calcId": "duke-activity",
+    "inputId": "q11",
+    "optionLabel": "Yes",
+    "declared": 0.7999999999999998,
+    "measured": 0.8000000000000007
+  },
+  {
+    "calcId": "exchange-transfusion-threshold",
+    "inputId": "abeSigns",
+    "optionLabel": "Yes",
+    "declared": -4,
+    "measured": -7
+  },
+  {
+    "calcId": "who-pneumonia",
+    "inputId": "chestIndrawing",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 0
+  },
+  {
+    "calcId": "who-pneumonia",
+    "inputId": "danger",
+    "optionLabel": "Yes",
+    "declared": 2,
+    "measured": 1
+  },
+  {
+    "calcId": "who-pneumonia",
+    "inputId": "spo2Low",
+    "optionLabel": "Yes",
+    "declared": 2,
+    "measured": 1
+  },
+  {
+    "calcId": "who-pneumonia",
+    "inputId": "malnutrition",
+    "optionLabel": "Yes",
+    "declared": 2,
+    "measured": 1
+  },
+  {
+    "calcId": "organophosphate",
+    "inputId": "bronchorrhea",
+    "optionLabel": "Yes",
+    "declared": -0.75,
+    "measured": 1
+  },
+  {
+    "calcId": "needle-stick-pep",
+    "inputId": "within_72h",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 2
+  },
+  {
+    "calcId": "anaphylaxis-criteria",
+    "inputId": "hypotension_endorgan",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "anaphylaxis-criteria",
+    "inputId": "known_allergen",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "anaphylaxis-criteria",
+    "inputId": "hypotension_only",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "asq-suicide",
+    "inputId": "q1",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 5
+  },
+  {
+    "calcId": "asq-suicide",
+    "inputId": "q2",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 5
+  },
+  {
+    "calcId": "asq-suicide",
+    "inputId": "q3",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 5
+  },
+  {
+    "calcId": "asq-suicide",
+    "inputId": "q4",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 5
+  },
+  {
+    "calcId": "asq-suicide",
+    "inputId": "q5",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 4
+  },
+  {
+    "calcId": "meld-3-edu",
+    "inputId": "dialysis",
+    "optionLabel": "Yes",
+    "declared": 8,
+    "measured": 12
+  },
+  {
+    "calcId": "fena-contrast",
+    "inputId": "fenaKnown",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": -23.2
+  },
+  {
+    "calcId": "di-diagnosis",
+    "inputId": "lithium",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 2
+  },
+  {
+    "calcId": "di-diagnosis",
+    "inputId": "psych",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 0
+  },
+  {
+    "calcId": "berlin-sleep",
+    "inputId": "htn",
+    "optionLabel": "Yes",
+    "declared": 1,
+    "measured": 0
+  },
+  {
+    "calcId": "pediatric-sirs",
+    "inputId": "bands",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": 1
+  },
+  {
+    "calcId": "io-needle-size",
+    "inputId": "contraindications",
+    "optionLabel": "Yes",
+    "declared": -15,
+    "measured": -45
+  },
+  {
+    "calcId": "ttn-vs-rds",
+    "inputId": "grunting",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": -1
+  },
+  {
+    "calcId": "ttn-vs-rds",
+    "inputId": "cyanosisO2",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": -1
+  },
+  {
+    "calcId": "ttn-vs-rds",
+    "inputId": "prematurityRisk",
+    "optionLabel": "Yes",
+    "declared": -2,
+    "measured": 0
+  },
+  {
+    "calcId": "hsp-criteria",
+    "inputId": "alternate",
+    "optionLabel": "Yes",
+    "declared": 0,
+    "measured": -3
+  },
+  {
+    "calcId": "hep-score",
+    "inputId": "chronicTCP",
+    "optionLabel": "Yes",
+    "declared": -1,
+    "measured": -4
+  },
+  {
+    "calcId": "hep-score",
+    "inputId": "newDrug",
+    "optionLabel": "Yes",
+    "declared": -1,
+    "measured": -4
+  },
+  {
+    "calcId": "hep-score",
+    "inputId": "severeInfection",
+    "optionLabel": "Yes",
+    "declared": -2,
+    "measured": -5
+  },
+  {
+    "calcId": "hep-score",
+    "inputId": "dic",
+    "optionLabel": "Yes",
+    "declared": -2,
+    "measured": -5
+  },
+  {
+    "calcId": "hep-score",
+    "inputId": "arterialDevice",
+    "optionLabel": "Yes",
+    "declared": -2,
+    "measured": -5
+  },
+  {
+    "calcId": "hep-score",
+    "inputId": "cpb",
+    "optionLabel": "Yes",
+    "declared": -1,
+    "measured": -4
+  }
+]

@@ -230,7 +230,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         defaultValue: 18,
         helpText: '26 items; standard scored 0–3 after reverse coding of designated items',
       }),
-      yesNo('behaviors', 'Behavioral flags present (binge, purge, laxatives, extreme exercise, weight loss >20 lb / high concern)'),
+      yesNo('behaviors', 'Behavioral flags present (binge, purge, laxatives, extreme exercise, weight loss >20 lb / high concern)', 0),
       numberInput('bmi', 'BMI (optional context)', {
         min: 10,
         max: 60,
@@ -882,7 +882,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         { label: 'Methadone — often ≥48–72 h; specialist caution', value: 'methadone' },
         { label: 'Fentanyl / unknown — higher precipitated risk; low-dose protocols', value: 'fentanyl' },
       ]),
-      yesNo('prior_precip', 'History of precipitated withdrawal with buprenorphine'),
+      yesNo('prior_precip', 'History of precipitated withdrawal with buprenorphine', 0),
     ],
     calculate(values) {
       const cows = num(values.cows, 10);
@@ -1542,9 +1542,9 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       numberInput('rr', 'Respiratory rate (highest)', { unit: '/min', min: 4, max: 80, defaultValue: 24 }),
       numberInput('temp', 'Temperature (most abnormal, °C)', { unit: '°C', min: 30, max: 43, step: 0.1, defaultValue: 37.5 }),
       numberInput('uop', 'Urine output (24 h)', { unit: 'mL', min: 0, max: 10000, defaultValue: 1200 }),
-      yesNo('vent', 'Mechanical ventilation (day 1)'),
-      yesNo('elective', 'Elective surgery admission'),
-      yesNo('cancer', 'Pre-ICU hospital length of stay prolonged / cancer context (educational flag)'),
+      yesNo('vent', 'Mechanical ventilation (day 1)', 9),
+      yesNo('elective', 'Elective surgery admission', -2),
+      yesNo('cancer', 'Pre-ICU hospital length of stay prolonged / cancer context (educational flag)', 2),
     ],
     calculate(values) {
       // Educational simplified point approximation inspired by OASIS domains (not official table)
@@ -1685,11 +1685,11 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         { label: 'Planned / elective', value: 0 },
         { label: 'Unplanned / emergency', value: 5 },
       ]),
-      yesNo('infection', 'Infection at ICU admission'),
-      yesNo('cancer_meta', 'Metastatic cancer'),
-      yesNo('heme_cancer', 'Hematologic cancer'),
-      yesNo('cirrhosis', 'Cirrhosis'),
-      yesNo('heart_fail', 'Chronic heart failure NYHA IV / severe CHF flag'),
+      yesNo('infection', 'Infection at ICU admission', 5),
+      yesNo('cancer_meta', 'Metastatic cancer', 8),
+      yesNo('heme_cancer', 'Hematologic cancer', 6),
+      yesNo('cirrhosis', 'Cirrhosis', 6),
+      yesNo('heart_fail', 'Chronic heart failure NYHA IV / severe CHF flag', 4),
       numberInput('gcs', 'GCS', { min: 3, max: 15, defaultValue: 13 }),
       numberInput('sbp', 'Lowest systolic BP', { unit: 'mmHg', min: 40, max: 250, defaultValue: 100 }),
       numberInput('hr', 'Highest heart rate', { unit: '/min', min: 30, max: 250, defaultValue: 100 }),
@@ -1697,7 +1697,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       numberInput('cr', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.2 }),
       numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0, max: 100, step: 0.1, defaultValue: 12 }),
       numberInput('ph', 'Lowest pH', { min: 6.5, max: 7.8, step: 0.01, defaultValue: 7.35 }),
-      yesNo('vent', 'Mechanical ventilation'),
+      yesNo('vent', 'Mechanical ventilation', 5),
     ],
     calculate(values) {
       let pts = num(values.los_before) + num(values.admission);

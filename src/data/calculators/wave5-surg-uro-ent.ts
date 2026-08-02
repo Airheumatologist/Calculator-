@@ -369,8 +369,8 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: 'Intermediate', value: 'intermediate' },
         { label: 'Major / complex', value: 'major' },
       ]),
-      yesNo('highRiskSpecialty', 'High-risk specialty (GI, thoracic, vascular)', 1),
-      yesNo('cancer', 'Surgery for cancer', 1),
+      yesNo('highRiskSpecialty', 'High-risk specialty (GI, thoracic, vascular)', 0.17000000000000004),
+      yesNo('cancer', 'Surgery for cancer', 0.11),
       numberInput('age', 'Age', { unit: 'years', min: 16, max: 110, step: 1, defaultValue: 65 }),
     ],
     calculate(values) {
@@ -1836,7 +1836,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
           value: 5,
         },
       ]),
-      yesNo('hemodynamicUnstable', 'Hemodynamic instability attributable to renal injury', 1),
+      yesNo('hemodynamicUnstable', 'Hemodynamic instability attributable to renal injury', 0),
     ],
     calculate(values) {
       const g = num(values.grade, 1);
@@ -1944,8 +1944,8 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
           value: 5,
         },
       ]),
-      yesNo('contrastBlush', 'Active contrast extravasation / blush on CT', 1),
-      yesNo('unstable', 'Hemodynamically unstable', 1),
+      yesNo('contrastBlush', 'Active contrast extravasation / blush on CT', 0),
+      yesNo('unstable', 'Hemodynamically unstable', 0),
     ],
     calculate(values) {
       const g = num(values.grade, 1);
@@ -2047,8 +2047,8 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
           value: 5,
         },
       ]),
-      yesNo('unstable', 'Hemodynamically unstable', 1),
-      yesNo('blush', 'Active extravasation on CT', 1),
+      yesNo('unstable', 'Hemodynamically unstable', 0),
+      yesNo('blush', 'Active extravasation on CT', 0),
     ],
     calculate(values) {
       const g = num(values.grade, 1);

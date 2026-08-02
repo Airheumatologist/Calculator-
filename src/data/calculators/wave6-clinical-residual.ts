@@ -150,8 +150,8 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
           description: 'Gross ascites',
         },
       ]),
-      yesNo('refractory', 'Refractory to maximal diuretics / early recurrence after LVP', 1),
-      yesNo('infected', 'Suspected or confirmed SBP / infected ascites', 1),
+      yesNo('refractory', 'Refractory to maximal diuretics / early recurrence after LVP', 0),
+      yesNo('infected', 'Suspected or confirmed SBP / infected ascites', 0),
     ],
     calculate(values) {
       const grade = num(values.grade, 1);
@@ -468,7 +468,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
       ]),
-      yesNo('dialysis', 'Dialysis ≥2× in past week (or continuous RRT)', 1),
+      yesNo('dialysis', 'Dialysis ≥2× in past week (or continuous RRT)', 8),
     ],
     calculate(values) {
       let bili = Math.max(num(values.bili, 2), 1);
@@ -686,11 +686,11 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       yesNo('unaLow', 'Urine Na <20 mEq/L', 1),
       yesNo('highSpGrav', 'High urine specific gravity / osmolality (concentrated)', 1),
       yesNo('blandSed', 'Bland urine sediment', 1),
-      yesNo('shockIschemia', 'Prolonged shock, sepsis, or nephrotoxin exposure', 1),
-      yesNo('fenaHigh', 'FENa >2% (not on diuretics)', 1),
-      yesNo('muddy', 'Muddy brown casts / renal tubular epithelial cells', 1),
-      yesNo('noFluidResponse', 'No improvement after adequate volume/perfusion rescue', 1),
-      yesNo('ckRise', 'CK markedly elevated / pigment nephropathy context', 1),
+      yesNo('shockIschemia', 'Prolonged shock, sepsis, or nephrotoxin exposure', 0),
+      yesNo('fenaHigh', 'FENa >2% (not on diuretics)', 0),
+      yesNo('muddy', 'Muddy brown casts / renal tubular epithelial cells', 0),
+      yesNo('noFluidResponse', 'No improvement after adequate volume/perfusion rescue', 0),
+      yesNo('ckRise', 'CK markedly elevated / pigment nephropathy context', 0),
     ],
     calculate(values) {
       const preKeys = ['hypovol', 'response', 'dryMucosa', 'fenaLow', 'unaLow', 'highSpGrav', 'blandSed'] as const;
@@ -765,10 +765,10 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     inputs: [
       numberInput('hours', 'Hours since contrast exposure', { unit: 'h', min: 0, max: 168, defaultValue: 24 }),
       numberInput('fena', 'Measured FENa (if available)', { unit: '%', min: 0, max: 20, step: 0.1, defaultValue: 0.8 }),
-      yesNo('fenaKnown', 'FENa value entered / available', 1),
-      yesNo('creatinineUp', 'Creatinine rise ≥0.3 mg/dL or ≥1.5× baseline after contrast', 1),
-      yesNo('otherCause', 'Strong alternate AKI cause (hypotension, sepsis, obstruction, meds)', 1),
-      yesNo('onDiuretic', 'On diuretics (FENa unreliable)', 1),
+      yesNo('fenaKnown', 'FENa value entered / available', 0),
+      yesNo('creatinineUp', 'Creatinine rise ≥0.3 mg/dL or ≥1.5× baseline after contrast', 0),
+      yesNo('otherCause', 'Strong alternate AKI cause (hypotension, sepsis, obstruction, meds)', 0),
+      yesNo('onDiuretic', 'On diuretics (FENa unreliable)', 0),
     ],
     calculate(values) {
       const hours = num(values.hours, 24);
@@ -824,6 +824,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
           { label: 'FENa', value: known ? `${fena}%` : 'Not entered' },
           { label: 'Creatinine threshold met', value: crUp ? 'Yes' : 'No' },
           { label: 'Competing cause', value: other ? 'Yes' : 'No' },
+          { label: 'On diuretics (FENa unreliable)', value: diuretic ? 'Yes' : 'No' },
         ],
       };
     },
@@ -1452,8 +1453,8 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       numberInput('glu_bed', 'Bedtime glucose', { unit: 'mg/dL', min: 40, max: 500, defaultValue: 140 }),
       numberInput('glu_3am', 'Glucose ~3 a.m. (or overnight nadir)', { unit: 'mg/dL', min: 40, max: 500, defaultValue: 110 }),
       numberInput('glu_am', 'Pre-breakfast / fasting glucose', { unit: 'mg/dL', min: 40, max: 500, defaultValue: 200 }),
-      yesNo('nightSweats', 'Night sweats / nightmares / symptoms of nocturnal hypo', 1),
-      yesNo('cgmHypo', 'CGM confirms nocturnal hypoglycemia', 1),
+      yesNo('nightSweats', 'Night sweats / nightmares / symptoms of nocturnal hypo', 0),
+      yesNo('cgmHypo', 'CGM confirms nocturnal hypoglycemia', 0),
     ],
     calculate(values) {
       const bed = num(values.glu_bed, 140);
@@ -1492,6 +1493,8 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         details: [
           { label: 'Bedtime → 3 a.m. change', value: `${round(am3 - bed, 0)} mg/dL` },
           { label: '3 a.m. → fasting change', value: `${round(morningRise, 0)} mg/dL` },
+          { label: 'Night sweats / nocturnal hypo symptoms', value: sym ? 'Yes' : 'No' },
+          { label: 'CGM nocturnal hypo', value: cgm ? 'Yes' : 'No' },
           { label: 'Nocturnal hypo evidence', value: cgm || am3 < 70 ? 'Yes' : sym ? 'Symptoms only' : 'No' },
         ],
       };
@@ -1634,7 +1637,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         { label: 'None / small / trace', value: 'small' },
         { label: 'Moderate–large (mixed DKA possible)', value: 'large' },
       ]),
-      yesNo('ams', 'Altered mental status / stupor / coma', 1),
+      yesNo('ams', 'Altered mental status / stupor / coma', 0),
     ],
     calculate(values) {
       const glu = num(values.glu, 700);
@@ -1728,7 +1731,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       numberInput('na', 'Na (for AG)', { unit: 'mEq/L', min: 110, max: 170, defaultValue: 140 }),
       numberInput('cl', 'Cl (for AG)', { unit: 'mEq/L', min: 70, max: 140, defaultValue: 104 }),
       numberInput('albumin', 'Albumin (optional AG adjust)', { unit: 'g/dL', min: 1, max: 5.5, step: 0.1, defaultValue: 4 }),
-      yesNo('checkGap', 'Compute anion gap', 1),
+      yesNo('checkGap', 'Compute anion gap', 0),
     ],
     calculate(values) {
       const ph = num(values.ph, 7.28);

@@ -1980,11 +1980,19 @@ export const wave4EmIdCalcs: Calculator[] = [
         riskLevel = 'low';
       }
 
+      const sexUrl = String(values.sexUrl ?? 'na');
+      const sexLabel =
+        sexUrl === 'M' ? 'Male (higher URL context)' : sexUrl === 'F' ? 'Female (lower URL context)' : 'Not specified';
+
       return {
         score: absDelta,
         unit: 'ng/L Δ',
         label,
-        interpretation,
+        interpretation:
+          interpretation +
+          (sexUrl === 'na'
+            ? ''
+            : ` Sex-specific URL context: ${sexLabel} — apply your assay’s sex-specific 99th URL when classifying single-sample elevation.`),
         riskLevel,
         details: [
           { label: 'T0 → T1', value: `${t0} → ${t1} ng/L` },
@@ -1992,6 +2000,7 @@ export const wave4EmIdCalcs: Calculator[] = [
           { label: 'Relative delta', value: relStr },
           { label: 'Interval', value: `${hours} h` },
           { label: 'Educational abs threshold', value: `${absCut} ng/L` },
+          { label: 'Sex-specific URL context', value: sexLabel },
         ],
         recommendations: [
           'Apply your laboratory’s validated hs-Tn algorithm (not this educational cutoff alone)',
@@ -2045,8 +2054,8 @@ export const wave4EmIdCalcs: Calculator[] = [
     whyUse: 'de Winter pattern is an occlusion MI equivalent — activate reperfusion without waiting for classic STEMI.',
     inputs: [
       yesNo('symptoms', 'Symptoms of acute coronary occlusion (chest pain / equivalent)', 1),
-      yesNo('upslopeStd', '1–3 mm upsloping ST depression at J point in precordials (V1–V6)', 2),
-      yesNo('tallT', 'Tall, peaked, symmetric T waves in the same precordial leads', 2),
+      yesNo('upslopeStd', '1–3 mm upsloping ST depression at J point in precordials (V1–V6)', 0),
+      yesNo('tallT', 'Tall, peaked, symmetric T waves in the same precordial leads', 0),
       yesNo('slightSteavr', 'Slight ST elevation in aVR (0.5–1 mm) often present', 1),
       yesNo('noOvertSte', 'No frank STEMI criteria in precordial leads', 1),
       yesNo('dynamic', 'Pattern recognized in ACS time window (acute presentation)', 1),

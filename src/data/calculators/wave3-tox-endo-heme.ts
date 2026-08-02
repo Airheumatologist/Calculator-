@@ -312,6 +312,9 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         interpretation: `Weight used ${round(w, 1)} kg${cap && rawW > 100 ? ' (capped from ' + rawW + ' kg)' : ''}. Bag 1: ${bag1} g (150 mg/kg) over 1 h; Bag 2: ${bag2} g (50 mg/kg) over 4 h; Bag 3: ${bag3} g (100 mg/kg) over 16 h. Total 300 mg/kg = ${totalG} g. Follow local dilution/volume protocol and monitoring.`,
         riskLevel: 'info' as const,
         details: [
+          { label: 'Weight entered', value: `${round(rawW, 1)} kg` },
+          { label: '100 kg dose cap', value: cap ? 'Yes' : 'No' },
+          { label: 'Weight used', value: `${round(w, 1)} kg` },
           { label: 'Bag 1 (150 mg/kg, 1 h)', value: `${bag1} g (${round(150 * w, 0)} mg)` },
           { label: 'Bag 2 (50 mg/kg, 4 h)', value: `${bag2} g (${round(50 * w, 0)} mg)` },
           { label: 'Bag 3 (100 mg/kg, 16 h)', value: `${bag3} g (${round(100 * w, 0)} mg)` },
@@ -471,8 +474,8 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         { label: 'Acute single ingestion', value: 'acute' },
         { label: 'Chronic / repeated supratherapeutic', value: 'chronic' },
       ]),
-      yesNo('altered', 'Altered mental status / severe symptoms'),
-      yesNo('acidemia', 'Acidemia (low pH / falling HCO₃)'),
+      yesNo('altered', 'Altered mental status / severe symptoms', 0),
+      yesNo('acidemia', 'Acidemia (low pH / falling HCO₃)', 0),
     ],
     calculate(values) {
       const level = num(values.level, 45);
@@ -581,7 +584,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         { label: 'Early maintenance (10 mg/kg) — doses 2–5', value: 'maint10' },
         { label: 'Later maintenance (15 mg/kg) — dose ≥6', value: 'maint15' },
       ]),
-      yesNo('onHd', 'Currently on hemodialysis (dosing interval shortens)', 1, 'On HD, give q4h typically; redose more often'),
+      yesNo('onHd', 'Currently on hemodialysis (dosing interval shortens)', 0, 'On HD, give q4h typically; redose more often'),
     ],
     calculate(values) {
       const w = num(values.weight, 70);
@@ -770,6 +773,9 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
           { label: 'Spontaneous clonus', value: spont ? 'Yes' : 'No' },
           { label: 'Inducible clonus', value: induc ? 'Yes' : 'No' },
           { label: 'Ocular clonus', value: ocular ? 'Yes' : 'No' },
+          { label: 'Agitation', value: agitation ? 'Yes' : 'No' },
+          { label: 'Diaphoresis', value: diaph ? 'Yes' : 'No' },
+          { label: 'Inducible/ocular clonus + agitation/diaphoresis', value: (induc || ocular) && (agitation || diaph) ? 'Yes' : 'No' },
           { label: 'Tremor + hyperreflexia', value: tremor && hyperref ? 'Yes' : 'No' },
           { label: 'Hypertonia + fever + clonus', value: hypertonia && temp && (ocular || induc) ? 'Yes' : 'No' },
         ],
@@ -1985,7 +1991,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         { label: 'One abnormality (10)', value: 10 },
         { label: '≥2 abnormalities (20)', value: 20 },
       ]),
-      yesNo('knownHypo', 'Known history of hypothyroidism / thyroidectomy / RAI'),
+      yesNo('knownHypo', 'Known history of hypothyroidism / thyroidectomy / RAI', 10),
     ],
     calculate(values) {
       let score =

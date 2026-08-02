@@ -41,16 +41,28 @@ export function riskFromThresholds(
   return { riskLevel: last.level, label: last.label, interpretation: last.interpretation };
 }
 
-export function yesNo(id: string, label: string, pointsYes = 1, helpText?: string) {
+/**
+ * Boolean Yes/No input. Pass `pointsYes` for UI point badges (default 1).
+ * Pass `null` to omit points metadata (formula flags / pathway switches that
+ * change score non-linearly and should not show "+N" chips).
+ */
+export function yesNo(id: string, label: string, pointsYes: number | null = 1, helpText?: string) {
+  const options =
+    pointsYes === null
+      ? [
+          { label: 'No', value: false as const },
+          { label: 'Yes', value: true as const },
+        ]
+      : [
+          { label: 'No', value: false as const, points: 0 },
+          { label: 'Yes', value: true as const, points: pointsYes },
+        ];
   return {
     id,
     label,
     type: 'boolean' as const,
     defaultValue: false,
-    options: [
-      { label: 'No', value: false, points: 0 },
-      { label: 'Yes', value: true, points: pointsYes },
-    ],
+    options,
     helpText,
   };
 }

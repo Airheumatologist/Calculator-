@@ -245,10 +245,10 @@ export const missingPedsObToxCalcs: Calculator[] = [
         { label: 'African American', value: 'aa' },
         { label: 'Hispanic', value: 'hispanic' },
       ]),
-      yesNo('priorVaginal', 'Any prior vaginal delivery'),
-      yesNo('priorVbac', 'Prior VBAC (successful)'),
-      yesNo('recurringIndication', 'Recurring indication for cesarean (arrest / CPD / FTP)'),
-      yesNo('induction', 'Induction of labor (vs spontaneous)'),
+      yesNo('priorVaginal', 'Any prior vaginal delivery', 5),
+      yesNo('priorVbac', 'Prior VBAC (successful)', 4),
+      yesNo('recurringIndication', 'Recurring indication for cesarean (arrest / CPD / FTP)', -7),
+      yesNo('induction', 'Induction of labor (vs spontaneous)', -4),
     ],
     calculate(values) {
       // Educational simplification inspired by Grobman logistic predictors (not the full NICHD calculator).
@@ -351,13 +351,21 @@ export const missingPedsObToxCalcs: Calculator[] = [
       const htn = bool(values.bp140) || bool(values.bp160);
       const severeBp = bool(values.bp160);
       const protein = bool(values.proteinuria);
-      const endOrgan =
-        bool(values.platelets) ||
-        bool(values.creatinine) ||
-        bool(values.lfts) ||
-        bool(values.pulmEdema) ||
-        bool(values.neuro) ||
-        bool(values.epigastric);
+      const platelets = bool(values.platelets);
+      const creatinine = bool(values.creatinine);
+      const lfts = bool(values.lfts);
+      const pulmEdema = bool(values.pulmEdema);
+      const neuro = bool(values.neuro);
+      const epigastric = bool(values.epigastric);
+      const endOrgan = platelets || creatinine || lfts || pulmEdema || neuro || epigastric;
+      const endOrganDetails = [
+        { label: 'Platelets <100k', value: platelets ? 'Yes' : 'No' },
+        { label: 'Creatinine criterion', value: creatinine ? 'Yes' : 'No' },
+        { label: 'LFTs ≥2× ULN', value: lfts ? 'Yes' : 'No' },
+        { label: 'Pulmonary edema', value: pulmEdema ? 'Yes' : 'No' },
+        { label: 'Cerebral/visual symptoms', value: neuro ? 'Yes' : 'No' },
+        { label: 'RUQ / epigastric pain', value: epigastric ? 'Yes' : 'No' },
+      ];
 
       if (!htn) {
         return {
@@ -365,18 +373,16 @@ export const missingPedsObToxCalcs: Calculator[] = [
           label: 'No diagnostic HTN criterion',
           interpretation: 'Preeclampsia diagnosis requires new hypertension after 20 weeks (or superimposed pattern). Continue surveillance if clinically concerned.',
           riskLevel: 'info',
+          details: [
+            { label: 'Proteinuria', value: protein ? 'Yes' : 'No' },
+            ...endOrganDetails,
+          ],
         };
       }
 
       const preeclampsia = protein || endOrgan;
       const severeFeatures =
-        severeBp ||
-        bool(values.platelets) ||
-        bool(values.creatinine) ||
-        bool(values.lfts) ||
-        bool(values.pulmEdema) ||
-        bool(values.neuro) ||
-        bool(values.epigastric);
+        severeBp || platelets || creatinine || lfts || pulmEdema || neuro || epigastric;
 
       if (!preeclampsia) {
         return {
@@ -384,7 +390,11 @@ export const missingPedsObToxCalcs: Calculator[] = [
           label: 'Hypertension without protein/end-organ (yet)',
           interpretation: 'HTN after 20 weeks without proteinuria or end-organ criteria suggests gestational hypertension — monitor closely for progression to preeclampsia.',
           riskLevel: 'moderate',
-          details: [{ label: 'Severe-range BP', value: severeBp ? 'Yes' : 'No' }],
+          details: [
+            { label: 'Severe-range BP', value: severeBp ? 'Yes' : 'No' },
+            { label: 'Proteinuria', value: protein ? 'Yes' : 'No' },
+            ...endOrganDetails,
+          ],
         };
       }
 
@@ -399,6 +409,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
           { label: 'Proteinuria', value: protein ? 'Yes' : 'No' },
           { label: 'End-organ criteria', value: endOrgan ? 'Yes' : 'No' },
           { label: 'Severe-range BP', value: severeBp ? 'Yes' : 'No' },
+          ...endOrganDetails,
         ],
       };
     },

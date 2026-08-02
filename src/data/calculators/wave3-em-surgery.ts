@@ -15,8 +15,8 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     whyUse:
       'Structures the Rome IV definition (≥1 day/week pain for 3 months + ≥2 of 3 stool-related criteria; onset ≥6 months).',
     inputs: [
-      yesNo('recurrentPain', 'Recurrent abdominal pain ≥1 day/week in the last 3 months'),
-      yesNo('onset6mo', 'Symptom onset ≥6 months before diagnosis'),
+      yesNo('recurrentPain', 'Recurrent abdominal pain ≥1 day/week in the last 3 months', 0),
+      yesNo('onset6mo', 'Symptom onset ≥6 months before diagnosis', 0),
       yesNo('relatedDefecation', 'Pain related to defecation'),
       yesNo('changeFrequency', 'Associated with change in stool frequency'),
       yesNo('changeForm', 'Associated with change in stool form (appearance)'),
@@ -892,7 +892,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: 'Major (4)', value: 4 },
         { label: 'Major+ (8)', value: 8 },
       ]),
-      yesNo('emergency', 'Emergency surgery', 1),
+      yesNo('emergency', 'Emergency surgery', 3),
     ],
     calculate(values) {
       const phys =
@@ -978,7 +978,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: 'IV', value: 4 },
         { label: 'V', value: 5 },
       ]),
-      yesNo('emergency', 'Emergency case'),
+      yesNo('emergency', 'Emergency case', 2),
       selectInput('functional', 'Functional status', [
         { label: 'Independent', value: 0 },
         { label: 'Partially dependent', value: 1 },
@@ -1069,7 +1069,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: 'V — Moribund, not expected to survive without operation', value: 5 },
         { label: 'VI — Declared brain-dead organ donor', value: 6 },
       ]),
-      yesNo('emergency', 'Emergency modifier (E)'),
+      yesNo('emergency', 'Emergency modifier (E)', 0),
     ],
     calculate(values) {
       const asa = num(values.asa, 1);
@@ -1882,6 +1882,18 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         },
       };
       const row = table[classNum];
+      const mentalLabel: Record<string, string> = {
+        normal: 'Slightly anxious / normal',
+        mild: 'Mildly anxious',
+        confused: 'Anxious / confused',
+        lethargic: 'Confused / lethargic',
+      };
+      const urineLabel: Record<string, string> = {
+        normal: '>30 mL/h',
+        mild: '20–30 mL/h',
+        low: '5–15 mL/h',
+        anuric: 'Negligible',
+      };
       return {
         score: classNum,
         label: row.label,
@@ -1891,6 +1903,9 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
           { label: 'Estimated blood volume loss', value: row.blood },
           { label: 'HR', value: String(hr) },
           { label: 'SBP', value: String(sbp) },
+          { label: 'RR', value: String(rr) },
+          { label: 'Mental status', value: mentalLabel[mental] ?? mental },
+          { label: 'Urine output', value: urineLabel[urine] ?? urine },
         ],
         recommendations:
           classNum >= 3

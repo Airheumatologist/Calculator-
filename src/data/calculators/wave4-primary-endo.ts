@@ -411,7 +411,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         { label: 'No / not available', value: 0 },
       ]),
       yesNo('severe', 'Severe cognitive impairment requiring assistance (Level 3)'),
-      yesNo('symptoms', 'Hypoglycemic symptoms present'),
+      yesNo('symptoms', 'Hypoglycemic symptoms present', 0),
     ],
     calculate(values) {
       const g = num(values.glucose, 65);
@@ -756,7 +756,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         { label: '0.8 U/kg (insulin resistant / many type 2)', value: 0.8 },
         { label: '1.0 U/kg (high resistance)', value: 1.0 },
       ], 0.5),
-      yesNo('ketosis', 'Active ketosis / high A1c marked glucotoxicity (use caution)'),
+      yesNo('ketosis', 'Active ketosis / high A1c marked glucotoxicity (use caution)', 0),
     ],
     calculate(values) {
       const wt = num(values.weight, 70);
@@ -1016,7 +1016,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       numberInput('tshHigh', 'TSH upper ref limit', { unit: 'mIU/L', min: 2, max: 10, step: 0.1, defaultValue: 4.5 }),
       numberInput('ft4Low', 'FT4 lower ref limit', { unit: 'ng/dL', min: 0.3, max: 1.2, step: 0.1, defaultValue: 0.8 }),
       numberInput('ft4High', 'FT4 upper ref limit', { unit: 'ng/dL', min: 1.2, max: 3, step: 0.1, defaultValue: 1.8 }),
-      yesNo('ill', 'Acute non-thyroidal illness (sick euthyroid context)'),
+      yesNo('ill', 'Acute non-thyroidal illness (sick euthyroid context)', 0),
     ],
     calculate(values) {
       const tsh = num(values.tsh, 2.5);
@@ -1083,11 +1083,16 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         score: `${round(tsh, 2)} / ${round(ft4, 2)}`,
         unit: 'TSH / FT4',
         label,
-        interpretation,
+        interpretation: ill
+          ? interpretation + (interpretation.includes('non-thyroidal illness')
+            ? ''
+            : ' Non-thyroidal illness context selected — interpret with caution for NTIS.')
+          : interpretation,
         riskLevel,
         details: [
           { label: 'TSH', value: `${tsh} (ref ${tshL}–${tshH})` },
           { label: 'Free T4', value: `${ft4} (ref ${ft4L}–${ft4H})` },
+          { label: 'Non-thyroidal illness context', value: ill ? 'Yes' : 'No' },
         ],
       };
     },
@@ -1220,7 +1225,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       numberInput('caHigh', 'Calcium upper ref', { unit: 'mg/dL', min: 9.5, max: 11, step: 0.1, defaultValue: 10.5 }),
       numberInput('pthLow', 'PTH lower ref', { unit: 'pg/mL', min: 5, max: 20, defaultValue: 15 }),
       numberInput('pthHigh', 'PTH upper ref', { unit: 'pg/mL', min: 40, max: 90, defaultValue: 65 }),
-      yesNo('ckd', 'Known advanced CKD / ESRD'),
+      yesNo('ckd', 'Known advanced CKD / ESRD', 0),
     ],
     calculate(values) {
       const ca = num(values.ca, 10.8);
@@ -1283,11 +1288,14 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         score: `${round(ca, 1)} / ${round(pth, 0)}`,
         unit: 'Ca / PTH',
         label,
-        interpretation,
+        interpretation: ckd
+          ? `${interpretation} Advanced CKD/ESRD context selected — secondary/tertiary HPT patterns and KDIGO targets apply.`
+          : interpretation,
         riskLevel,
         details: [
           { label: 'Calcium', value: `${ca} mg/dL (ref ${caL}–${caH})` },
           { label: 'PTH', value: `${pth} pg/mL (ref ${pthL}–${pthH})` },
+          { label: 'Advanced CKD / ESRD', value: ckd ? 'Yes' : 'No' },
         ],
         recommendations: [
           'Prefer albumin-corrected or ionized calcium',
@@ -1551,7 +1559,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         defaultValue: -2.2,
         helpText: 'Usually lumbar spine, total hip, or femoral neck',
       }),
-      yesNo('fragilityFx', 'Fragility fracture (hip/spine) regardless of T-score'),
+      yesNo('fragilityFx', 'Fragility fracture (hip/spine) regardless of T-score', 0),
       selectInput('site', 'Site', [
         { label: 'Femoral neck / total hip', value: 'hip' },
         { label: 'Lumbar spine', value: 'spine' },
@@ -1903,7 +1911,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         { label: 'Male', value: 'M' },
         { label: 'Female (+2)', value: 'F' },
       ]),
-      yesNo('diabetes', 'Diabetes mellitus (+2)'),
+      yesNo('diabetes', 'Diabetes mellitus (+2)', 2),
     ],
     calculate(values) {
       const alt = num(values.alt, 45);
@@ -2179,7 +2187,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
     inputs: [
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 60, max: 300, defaultValue: 138 }),
       numberInput('dbp', 'Diastolic BP', { unit: 'mmHg', min: 30, max: 200, defaultValue: 88 }),
-      yesNo('crisisSymptoms', 'Severe BP with end-organ symptoms (encephalopathy, chest pain, acute HF, etc.)'),
+      yesNo('crisisSymptoms', 'Severe BP with end-organ symptoms (encephalopathy, chest pain, acute HF, etc.)', 0),
     ],
     calculate(values) {
       const sbp = num(values.sbp, 138);
@@ -2193,6 +2201,11 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
           label: 'Hypertensive emergency concern',
           interpretation: `BP ${sbp}/${dbp} with possible end-organ symptoms — treat as potential hypertensive emergency; urgent evaluation, not simple outpatient staging.`,
           riskLevel: 'critical',
+          details: [
+            { label: 'SBP', value: `${sbp}` },
+            { label: 'DBP', value: `${dbp}` },
+            { label: 'End-organ symptoms', value: 'Yes' },
+          ],
         };
       }
 
@@ -2228,6 +2241,11 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         interpretation = `BP ${sbp}/${dbp}: classified by highest category rule.`;
       }
 
+      if (crisis && !(sbp >= 180 || dbp >= 120)) {
+        interpretation += ' End-organ symptoms reported without crisis-range BP — reassess measurement and symptomatic differential urgently.';
+        if (riskLevel === 'normal' || riskLevel === 'low') riskLevel = 'moderate';
+      }
+
       return {
         score: `${sbp}/${dbp}`,
         unit: 'mmHg',
@@ -2238,6 +2256,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
           { label: 'SBP', value: `${sbp}` },
           { label: 'DBP', value: `${dbp}` },
           { label: 'Pulse pressure', value: `${sbp - dbp}` },
+          { label: 'End-organ symptoms', value: crisis ? 'Yes' : 'No' },
         ],
       };
     },

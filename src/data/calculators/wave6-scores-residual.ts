@@ -856,9 +856,10 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         score: logmar,
         unit: 'LogMAR',
         label,
-        interpretation: `LogMAR ${logmar} (decimal ${round(decimal, 3)}; Snellen-ish ${snellenApprox}). Lower LogMAR = better acuity. Each 0.1 LogMAR ≈ one ETDRS line.`,
+        interpretation: `LogMAR ${logmar} (decimal ${round(decimal, 3)}; Snellen-ish ${snellenApprox}). Input mode: ${mode === 'fraction' ? 'Snellen fraction' : 'decimal acuity'}. Lower LogMAR = better acuity. Each 0.1 LogMAR ≈ one ETDRS line.`,
         riskLevel,
         details: [
+          { label: 'Input mode', value: mode === 'fraction' ? 'Snellen fraction' : 'Decimal acuity' },
           { label: 'Decimal acuity', value: String(round(decimal, 3)) },
           { label: '0.0 LogMAR', value: '20/20 (1.0 decimal)' },
           { label: '1.0 LogMAR', value: '20/200 (0.1 decimal)' },
@@ -1168,6 +1169,8 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
           { label: 'Category 1 points (snoring)', value: `${cat1} (positive if ≥2)` },
           { label: 'Category 2 points (sleepiness)', value: `${cat2} (positive if ≥2)` },
           { label: 'Category 3 (HTN or BMI >30)', value: cat3Pos ? 'Positive' : 'Negative' },
+          { label: 'Hypertension', value: bool(values.htn) ? 'Yes' : 'No' },
+          { label: 'BMI >30', value: bmi > 30 ? 'Yes' : 'No' },
           { label: 'BMI', value: `${bmi} kg/m²` },
         ],
       };

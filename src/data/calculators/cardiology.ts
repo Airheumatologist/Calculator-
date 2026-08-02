@@ -323,60 +323,102 @@ export const cardiologyCalcs: Calculator[] = [
   },
   {
     id: 'grace',
-    name: 'GRACE Score (Simplified ACS)',
+    name: 'GRACE ACS Risk Score',
     shortName: 'GRACE',
-    description: 'Estimates in-hospital and 6-month mortality risk in ACS using key clinical variables.',
+    description: 'Estimates in-hospital mortality risk in ACS using the standard GRACE point tables (age, HR, SBP, creatinine, Killip, arrest, ST deviation, enzymes).',
     category: 'cardiology',
     tags: ['acs', 'mortality', 'grace'],
     whenToUse: 'UA, NSTEMI, or STEMI for mortality risk stratification.',
-    whyUse: 'Guideline-endorsed comprehensive ACS risk model.',
+    whyUse: 'Guideline-endorsed comprehensive ACS risk model; score >140 supports early invasive strategy in NSTE-ACS.',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 65 }),
       numberInput('hr', 'Heart rate', { unit: 'bpm', min: 20, max: 250, defaultValue: 80 }),
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, defaultValue: 130 }),
       numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.0 }),
       selectInput('killip', 'Killip class', [
-        { label: 'I — No HF', value: 1 },
-        { label: 'II — Rales / JVD', value: 2 },
-        { label: 'III — Pulmonary edema', value: 3 },
-        { label: 'IV — Cardiogenic shock', value: 4 },
+        { label: 'I — No HF (0)', value: 0, points: 0 },
+        { label: 'II — Rales / JVD (20)', value: 20, points: 20 },
+        { label: 'III — Pulmonary edema (39)', value: 39, points: 39 },
+        { label: 'IV — Cardiogenic shock (59)', value: 59, points: 59 },
       ]),
-      yesNo('arrest', 'Cardiac arrest at admission', 1),
-      yesNo('st', 'ST-segment deviation', 1),
-      yesNo('enzyme', 'Elevated cardiac enzymes/markers', 1),
+      yesNo('arrest', 'Cardiac arrest at admission', 39),
+      yesNo('st', 'ST-segment deviation', 28),
+      yesNo('enzyme', 'Elevated cardiac enzymes/markers', 14),
     ],
     calculate(values) {
-      // Simplified linear approximation of GRACE for educational bedside use
+      // GRACE in-hospital mortality point tables (Fox et al. / standard bedside chart)
       const age = num(values.age, 65);
       const hr = num(values.hr, 80);
       const sbp = num(values.sbp, 130);
       const cr = num(values.creat, 1);
-      const killip = num(values.killip, 1);
-      let score = 0;
-      score += age * 0.7;
-      score += hr * 0.4;
-      score += Math.max(0, 200 - sbp) * 0.3;
-      score += cr * 20;
-      score += (killip - 1) * 20;
-      if (bool(values.arrest)) score += 40;
-      if (bool(values.st)) score += 15;
-      if (bool(values.enzyme)) score += 10;
-      score = Math.round(score);
+
+      let agePts = 0;
+      if (age < 30) agePts = 0;
+      else if (age < 40) agePts = 8;
+      else if (age < 50) agePts = 25;
+      else if (age < 60) agePts = 41;
+      else if (age < 70) agePts = 58;
+      else if (age < 80) agePts = 75;
+      else if (age < 90) agePts = 91;
+      else agePts = 100;
+
+      let hrPts = 0;
+      if (hr < 50) hrPts = 0;
+      else if (hr < 70) hrPts = 3;
+      else if (hr < 90) hrPts = 9;
+      else if (hr < 110) hrPts = 15;
+      else if (hr < 150) hrPts = 24;
+      else if (hr < 200) hrPts = 38;
+      else hrPts = 46;
+
+      let sbpPts = 0;
+      if (sbp < 80) sbpPts = 58;
+      else if (sbp < 100) sbpPts = 53;
+      else if (sbp < 120) sbpPts = 43;
+      else if (sbp < 140) sbpPts = 34;
+      else if (sbp < 160) sbpPts = 24;
+      else if (sbp < 200) sbpPts = 10;
+      else sbpPts = 0;
+
+      let crPts = 1;
+      if (cr < 0.4) crPts = 1;
+      else if (cr < 0.8) crPts = 4;
+      else if (cr < 1.2) crPts = 7;
+      else if (cr < 1.6) crPts = 10;
+      else if (cr < 2.0) crPts = 13;
+      else if (cr < 4.0) crPts = 21;
+      else crPts = 28;
+
+      // Killip select stores point values directly (0/20/39/59)
+      const killipPts = num(values.killip, 0);
+      const arrestPts = bool(values.arrest) ? 39 : 0;
+      const stPts = bool(values.st) ? 28 : 0;
+      const enzymePts = bool(values.enzyme) ? 14 : 0;
+
+      const score = agePts + hrPts + sbpPts + crPts + killipPts + arrestPts + stPts + enzymePts;
       const r = riskFromThresholds(score, [
-        { max: 100, level: 'low', label: 'Lower risk', interpretation: 'Lower estimated mortality. Still treat ACS per guidelines.' },
-        { max: 140, level: 'moderate', label: 'Intermediate risk', interpretation: 'Intermediate estimated mortality. Consider early invasive strategy for NSTE-ACS.' },
-        { max: 400, level: 'high', label: 'High risk', interpretation: 'High estimated mortality. Aggressive care and early invasive approach.' },
+        { max: 108, level: 'low', label: 'Lower risk (≤108)', interpretation: 'Lower estimated in-hospital mortality band. Still treat ACS per guidelines.' },
+        { max: 140, level: 'moderate', label: 'Intermediate risk (109–140)', interpretation: 'Intermediate estimated mortality. Consider early invasive strategy for NSTE-ACS (guideline threshold often >140 for highest urgency).' },
+        { max: 400, level: 'high', label: 'High risk (>140)', interpretation: 'High estimated mortality. Aggressive care and early invasive approach for NSTE-ACS.' },
       ]);
       return {
         score,
         ...r,
-        details: [{ label: 'Note', value: 'Simplified educational approximation of GRACE' }],
-        recommendations: ['Use full GRACE 2.0 calculator for formal risk estimates when available'],
+        details: [
+          { label: 'Age points', value: String(agePts) },
+          { label: 'HR points', value: String(hrPts) },
+          { label: 'SBP points', value: String(sbpPts) },
+          { label: 'Creatinine points', value: String(crPts) },
+          { label: 'Killip points', value: String(killipPts) },
+          { label: 'Arrest / ST / enzymes', value: `${arrestPts} / ${stPts} / ${enzymePts}` },
+          { label: 'Note', value: 'Point-table GRACE (in-hospital model). GRACE 2.0 online tool may differ slightly for 6-month estimates.' },
+        ],
+        recommendations: ['Use institutional GRACE 2.0 tool when available for formal % mortality estimates'],
       };
     },
     evidence: {
-      summary: 'GRACE uses age, HR, SBP, creatinine, Killip class, arrest, ST deviation, and enzymes. Full model available from outcomes-umassmed.org.',
-      formula: 'Multivariable model (simplified linear form used here for education)',
+      summary: 'GRACE uses age, HR, SBP, creatinine, Killip class, cardiac arrest (39), ST deviation (28), and elevated enzymes (14). Killip I/II/III/IV = 0/20/39/59.',
+      formula: 'Sum of GRACE point-table weights (in-hospital death model)',
       validation: 'Derived from GRACE registry (>100,000 ACS patients); extensively validated.',
       references: [{ title: 'Prediction of risk of death and MI in the six months after presentation with ACS', citation: 'Fox KA et al. BMJ. 2006', year: 2006, pmid: '17032691',
           doi: '10.1136/bmj.38985.646481.55', }],
@@ -934,9 +976,9 @@ export const cardiologyCalcs: Calculator[] = [
       numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 100, max: 400, defaultValue: 200 }),
       numberInput('hdl', 'HDL-C', { unit: 'mg/dL', min: 20, max: 120, defaultValue: 50 }),
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, defaultValue: 130 }),
-      yesNo('txHtn', 'On antihypertensive treatment'),
-      yesNo('dm', 'Diabetes'),
-      yesNo('smoker', 'Current smoker'),
+      yesNo('txHtn', 'On antihypertensive treatment', 0),
+      yesNo('dm', 'Diabetes', 0),
+      yesNo('smoker', 'Current smoker', 0),
     ],
     calculate(values) {
       // Educational simplified logistic-style approximation (not official PCE coefficients)

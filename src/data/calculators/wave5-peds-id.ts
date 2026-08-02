@@ -1115,7 +1115,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
         { label: 'Medium risk', value: 'med' },
         { label: 'Higher risk', value: 'high' },
       ]),
-      yesNo('abeSigns', 'Signs of acute bilirubin encephalopathy (ABE)', 1,
+      yesNo('abeSigns', 'Signs of acute bilirubin encephalopathy (ABE)', -4,
         'Tone changes, retrocollis/opisthotonos, poor suck, abnormal cry, fever, altered alertness'),
     ],
     calculate(values) {
@@ -2065,9 +2065,9 @@ export const wave5PedsIdCalcs: Calculator[] = [
       ]),
       numberInput('rr', 'Respiratory rate', { unit: '/min', min: 10, max: 120, defaultValue: 50 }),
       yesNo('chestIndrawing', 'Chest indrawing', 1),
-      yesNo('danger', 'General danger sign (not able to drink, persistent vomiting, convulsions, lethargy/unconscious, stridor in calm child)', 1),
-      yesNo('spo2Low', 'SpO₂ <90% (if pulse oximetry available)', 1),
-      yesNo('malnutrition', 'Severe acute malnutrition (context)', 1),
+      yesNo('danger', 'General danger sign (not able to drink, persistent vomiting, convulsions, lethargy/unconscious, stridor in calm child)', 2),
+      yesNo('spo2Low', 'SpO₂ <90% (if pulse oximetry available)', 2),
+      yesNo('malnutrition', 'Severe acute malnutrition (context)', 2),
     ],
     calculate(values) {
       const age = String(values.ageBand ?? 'infant');

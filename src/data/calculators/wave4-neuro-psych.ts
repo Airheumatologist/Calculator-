@@ -52,9 +52,14 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     ],
     calculate(values) {
       const side = String(values.side ?? 'right');
+      const aphasia = num(values.aphasia);
+      const agnosia = num(values.agnosia);
       const cortical =
-        side === 'left' ? num(values.agnosia) : side === 'right' ? num(values.aphasia) : Math.max(num(values.aphasia), num(values.agnosia));
-      const score = num(values.face) + num(values.arm) + num(values.leg) + num(values.gaze) + cortical;
+        side === 'left' ? agnosia : side === 'right' ? aphasia : Math.max(aphasia, agnosia);
+      const motorFaceGaze = num(values.face) + num(values.arm) + num(values.leg) + num(values.gaze);
+      const score = motorFaceGaze + cortical;
+      const sideLabel =
+        side === 'left' ? 'Left hemiparesis (score agnosia)' : side === 'right' ? 'Right hemiparesis (score aphasia)' : 'No clear laterality / bilateral';
       const r = riskFromThresholds(score, [
         {
           max: 4,
@@ -74,8 +79,14 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         unit: '/9',
         ...r,
         details: [
-          { label: 'Motor + face + gaze', value: String(num(values.face) + num(values.arm) + num(values.leg) + num(values.gaze)) },
-          { label: 'Cortical branch', value: `${cortical} (${side === 'left' ? 'agnosia' : side === 'right' ? 'aphasia' : 'max of both'})` },
+          { label: 'Hemiparesis side / cortical branch', value: sideLabel },
+          { label: 'Motor + face + gaze', value: String(motorFaceGaze) },
+          { label: 'Aphasia score (right hemiparesis branch)', value: String(aphasia) },
+          { label: 'Agnosia / neglect score (left hemiparesis branch)', value: String(agnosia) },
+          {
+            label: 'Cortical points applied',
+            value: `${cortical} (${side === 'left' ? 'agnosia' : side === 'right' ? 'aphasia' : 'max of both'})`,
+          },
           { label: 'Common LVO cutoff', value: '≥5' },
         ],
       };
@@ -440,8 +451,8 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Spontaneous ICH with CTA performed or planned when assessing risk of hematoma expansion.',
     whyUse: 'Structures recognition of spot sign and companion clinical risk factors linked to growth and poor outcome.',
     inputs: [
-      yesNo('ctaDone', 'CTA available for review'),
-      yesNo('spotSign', 'Spot sign present (≥1 focus of contrast within hematoma, discontinuous from vessels)'),
+      yesNo('ctaDone', 'CTA available for review', 0),
+      yesNo('spotSign', 'Spot sign present (≥1 focus of contrast within hematoma, discontinuous from vessels)', 2),
       yesNo('multipleSpots', 'Multiple spot signs or large/serpiginous spot'),
       yesNo('earlyPresentation', 'Presentation within 6 hours of onset'),
       yesNo('anticoag', 'Anticoagulation or coagulopathy'),
@@ -548,7 +559,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whyUse: 'Widely used international grade linking GCS and focal motor deficit to outcome; complements Hunt-Hess and Fisher grades.',
     inputs: [
       numberInput('gcs', 'Glasgow Coma Scale total', { min: 3, max: 15, defaultValue: 15 }),
-      yesNo('motorDeficit', 'Major focal motor deficit present (hemiparesis/hemiplegia)'),
+      yesNo('motorDeficit', 'Major focal motor deficit present (hemiparesis/hemiplegia)', 0),
     ],
     calculate(values) {
       const gcs = num(values.gcs, 15);
@@ -660,8 +671,8 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: 'mFisher 3 (thick SAH, no IVH)', value: 3 },
         { label: 'mFisher 4 (thick SAH + IVH)', value: 4 },
       ]),
-      yesNo('secured', 'Aneurysm secured (clipped/coiled)'),
-      yesNo('nimodipine', 'Nimodipine ongoing'),
+      yesNo('secured', 'Aneurysm secured (clipped/coiled)', 0),
+      yesNo('nimodipine', 'Nimodipine ongoing', 0),
     ],
     calculate(values) {
       const day = num(values.day, 5);
@@ -757,9 +768,9 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whyUse: 'Universal mild (13–15) / moderate (9–12) / severe (≤8) bands drive imaging, airway, and disposition pathways.',
     inputs: [
       numberInput('gcs', 'Glasgow Coma Scale', { min: 3, max: 15, defaultValue: 15 }),
-      yesNo('intubated', 'Intubated / chemically paralyzed (GCS limited)'),
-      yesNo('postTraumaticAmnesia', 'Post-traumatic amnesia present'),
-      yesNo('loc', 'Loss of consciousness reported'),
+      yesNo('intubated', 'Intubated / chemically paralyzed (GCS limited)', 0),
+      yesNo('postTraumaticAmnesia', 'Post-traumatic amnesia present', 0),
+      yesNo('loc', 'Loss of consciousness reported', 0),
     ],
     calculate(values) {
       const gcs = num(values.gcs, 15);
@@ -957,9 +968,9 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: 'Stage 5 — Full-contact practice', value: 5 },
         { label: 'Stage 6 — Return to sport / competition', value: 6 },
       ]),
-      yesNo('symptomFreeRest', 'Asymptomatic at current stage (24 h minimum typically)'),
-      yesNo('returnToLearn', 'Return-to-learn successful / school tolerance adequate'),
-      yesNo('medicalClearance', 'Medical clearance documented for contact stages'),
+      yesNo('symptomFreeRest', 'Asymptomatic at current stage (24 h minimum typically)', 0),
+      yesNo('returnToLearn', 'Return-to-learn successful / school tolerance adequate', 0),
+      yesNo('medicalClearance', 'Medical clearance documented for contact stages', 0),
     ],
     calculate(values) {
       const stage = num(values.stage, 1);
@@ -1931,12 +1942,12 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Primary care or general medical screening when lifetime traumatic event exposure is endorsed.',
     whyUse: 'Ultra-brief DSM-5 PTSD screen; ≥3 positive items suggests further PTSD assessment.',
     inputs: [
-      yesNo('trauma', 'Lifetime trauma exposure criterion (// required before scoring symptoms)'),
-      yesNo('q1', '1. Nightmares or unwanted thoughts of the event(s)'),
-      yesNo('q2', '2. Tried hard not to think about it or avoided situations that remind you'),
-      yesNo('q3', '3. Been constantly on guard, watchful, or easily startled'),
-      yesNo('q4', '4. Felt numb or detached from people, activities, or surroundings'),
-      yesNo('q5', '5. Felt guilty or unable to stop blaming yourself or others'),
+      yesNo('trauma', 'Lifetime trauma exposure criterion (// required before scoring symptoms)', 0),
+      yesNo('q1', '1. Nightmares or unwanted thoughts of the event(s)', 0),
+      yesNo('q2', '2. Tried hard not to think about it or avoided situations that remind you', 0),
+      yesNo('q3', '3. Been constantly on guard, watchful, or easily startled', 0),
+      yesNo('q4', '4. Felt numb or detached from people, activities, or surroundings', 0),
+      yesNo('q5', '5. Felt guilty or unable to stop blaming yourself or others', 0),
     ],
     calculate(values) {
       const trauma = bool(values.trauma);
@@ -2028,9 +2039,9 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         defaultValue: 10,
         helpText: 'Enter scored total from institutional CIWA-B form',
       }),
-      yesNo('seizureHx', 'History of withdrawal seizures'),
-      yesNo('highDose', 'High-dose or prolonged benzodiazepine use'),
-      yesNo('concurrentAlcohol', 'Concurrent alcohol use disorder'),
+      yesNo('seizureHx', 'History of withdrawal seizures', 0),
+      yesNo('highDose', 'High-dose or prolonged benzodiazepine use', 0),
+      yesNo('concurrentAlcohol', 'Concurrent alcohol use disorder', 0),
     ],
     calculate(values) {
       const score = num(values.score, 10);
@@ -2126,14 +2137,14 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: 'Male', value: 'm' },
       ]),
       yesNo('fhAlcohol', 'Family history: alcohol abuse'),
-      yesNo('fhIllegal', 'Family history: illegal drug abuse'),
-      yesNo('fhRx', 'Family history: prescription drug abuse'),
-      yesNo('phAlcohol', 'Personal history: alcohol abuse'),
-      yesNo('phIllegal', 'Personal history: illegal drug abuse'),
-      yesNo('phRx', 'Personal history: prescription drug abuse'),
+      yesNo('fhIllegal', 'Family history: illegal drug abuse', 2),
+      yesNo('fhRx', 'Family history: prescription drug abuse', 4),
+      yesNo('phAlcohol', 'Personal history: alcohol abuse', 3),
+      yesNo('phIllegal', 'Personal history: illegal drug abuse', 4),
+      yesNo('phRx', 'Personal history: prescription drug abuse', 5),
       yesNo('age', 'Age 16–45 years'),
-      yesNo('sexualAbuse', 'History of preadolescent sexual abuse'),
-      yesNo('psychAdd', 'Psychiatric history: ADHD, OCD, bipolar, or schizophrenia'),
+      yesNo('sexualAbuse', 'History of preadolescent sexual abuse', 3),
+      yesNo('psychAdd', 'Psychiatric history: ADHD, OCD, bipolar, or schizophrenia', 2),
       yesNo('psychDep', 'Psychiatric history: depression'),
     ],
     calculate(values) {

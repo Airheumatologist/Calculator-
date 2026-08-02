@@ -241,7 +241,7 @@ export const missingGiLiverCalcs: Calculator[] = [
       numberInput('bili0', 'Bilirubin day 0', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 12 }),
       numberInput('bili7', 'Bilirubin day 7', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 10 }),
       numberInput('pt', 'Prothrombin time', { unit: 'sec', min: 8, max: 120, step: 0.1, defaultValue: 20 }),
-      yesNo('renal', 'Renal insufficiency (Cr >1.3 mg/dL or renal support at day 0)', 1),
+      yesNo('renal', 'Renal insufficiency (Cr >1.3 mg/dL or renal support at day 0)', 0.023000000000000007),
     ],
     calculate(values) {
       const age = num(values.age, 50);
@@ -329,21 +329,24 @@ export const missingGiLiverCalcs: Calculator[] = [
       ]),
       // Shared / APAP
       yesNo('ph', 'Arterial pH < 7.30 (after fluid resuscitation)', 1),
-      yesNo('enceph34', 'Hepatic encephalopathy grade III–IV', 1),
-      yesNo('inr65', 'INR > 6.5 (or PT > 100 sec)', 1),
-      yesNo('cr34', 'Creatinine > 3.4 mg/dL (>300 μmol/L)', 1),
+      yesNo('enceph34', 'Hepatic encephalopathy grade III–IV', 0),
+      yesNo('inr65', 'INR > 6.5 (or PT > 100 sec)', 0),
+      yesNo('cr34', 'Creatinine > 3.4 mg/dL (>300 μmol/L)', 0),
       // Non-APAP extras
-      yesNo('inr35', 'INR > 3.5 (or PT > 50 sec)', 1),
-      yesNo('bili175', 'Bilirubin > 17.5 mg/dL (>300 μmol/L)', 1),
-      yesNo('ageExtreme', 'Age <10 or >40 years', 1),
-      yesNo('unfavEtiol', 'Unfavorable etiology (idiosyncratic drug, seronegative, Wilson, Budd-Chiari, etc.)', 1),
-      yesNo('jaundiceEnceph7', 'Jaundice to encephalopathy interval > 7 days', 1),
+      yesNo('inr35', 'INR > 3.5 (or PT > 50 sec)', 0),
+      yesNo('bili175', 'Bilirubin > 17.5 mg/dL (>300 μmol/L)', 0),
+      yesNo('ageExtreme', 'Age <10 or >40 years', 0),
+      yesNo('unfavEtiol', 'Unfavorable etiology (idiosyncratic drug, seronegative, Wilson, Budd-Chiari, etc.)', 0),
+      yesNo('jaundiceEnceph7', 'Jaundice to encephalopathy interval > 7 days', 0),
     ],
     calculate(values) {
       const mode = String(values.etiology ?? 'apap');
+      const enceph34 = bool(values.enceph34);
+      const cr34 = bool(values.cr34);
       if (mode === 'apap') {
         const phMet = bool(values.ph);
-        const triad = bool(values.inr65) && bool(values.cr34) && bool(values.enceph34);
+        const inr65 = bool(values.inr65);
+        const triad = inr65 && cr34 && enceph34;
         const meets = phMet || triad;
         return {
           score: meets ? 1 : 0,
@@ -354,6 +357,9 @@ export const missingGiLiverCalcs: Calculator[] = [
           riskLevel: meets ? 'critical' : 'moderate',
           details: [
             { label: 'pH <7.3', value: phMet ? 'Yes' : 'No' },
+            { label: 'INR >6.5', value: inr65 ? 'Yes' : 'No' },
+            { label: 'Creatinine >3.4 mg/dL', value: cr34 ? 'Yes' : 'No' },
+            { label: 'Encephalopathy grade III–IV', value: enceph34 ? 'Yes' : 'No' },
             { label: 'INR>6.5 + Cr>3.4 + grade III–IV HE', value: triad ? 'Yes' : 'No' },
           ],
           recommendations: meets
@@ -381,6 +387,7 @@ export const missingGiLiverCalcs: Calculator[] = [
         details: [
           { label: 'INR >6.5', value: inr65 ? 'Yes' : 'No' },
           { label: 'Accessory factors positive', value: `${ofThree} / 5` },
+          { label: 'APAP triad inputs (not scored in non-APAP mode)', value: `HE III–IV: ${enceph34 ? 'yes' : 'no'}; Cr>3.4: ${cr34 ? 'yes' : 'no'}` },
         ],
       };
     },
@@ -881,7 +888,7 @@ export const missingGiLiverCalcs: Calculator[] = [
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 50 }),
       numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 70, step: 0.1, defaultValue: 32 }),
-      yesNo('ifg', 'Impaired fasting glucose or diabetes'),
+      yesNo('ifg', 'Impaired fasting glucose or diabetes', 1.1300000000000001),
       numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, defaultValue: 45 }),
       numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 2000, defaultValue: 50 }),
       numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 1000, defaultValue: 220 }),
@@ -953,7 +960,7 @@ export const missingGiLiverCalcs: Calculator[] = [
       numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 40, step: 0.1, defaultValue: 1.5 }),
       numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, defaultValue: 80 }),
       numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, defaultValue: 3.8 }),
-      yesNo('variceal', 'History of variceal bleeding'),
+      yesNo('variceal', 'History of variceal bleeding', 1.24),
     ],
     calculate(values) {
       const age = num(values.age, 40);

@@ -20,11 +20,11 @@ export const missingEmergencyCalcs: Calculator[] = [
         { label: '14', value: 14 },
         { label: '13', value: 13 },
       ], 15),
-      yesNo('gcsLow2h', 'GCS <15 at 2 hours after injury'),
-      yesNo('openDepressed', 'Suspected open or depressed skull fracture'),
-      yesNo('basalSkull', 'Any sign of basal skull fracture (hemotympanum, raccoon eyes, CSF leak, Battle sign)'),
-      yesNo('vomit2', 'Vomiting ≥2 episodes'),
-      yesNo('age65', 'Age ≥65 years'),
+      yesNo('gcsLow2h', 'GCS <15 at 2 hours after injury', 2),
+      yesNo('openDepressed', 'Suspected open or depressed skull fracture', 2),
+      yesNo('basalSkull', 'Any sign of basal skull fracture (hemotympanum, raccoon eyes, CSF leak, Battle sign)', 2),
+      yesNo('vomit2', 'Vomiting ≥2 episodes', 2),
+      yesNo('age65', 'Age ≥65 years', 2),
       yesNo('amnesia30', 'Amnesia before impact ≥30 minutes'),
       yesNo('dangerousMech', 'Dangerous mechanism (pedestrian struck, ejection, fall from ≥3 ft / 5 stairs)'),
     ],
@@ -508,15 +508,24 @@ export const missingEmergencyCalcs: Calculator[] = [
     whenToUse: 'Acute midfoot injury; reliable exam (typically within 10 days of injury).',
     whyUse: 'High sensitivity for clinically significant midfoot fractures; reduces unnecessary films.',
     inputs: [
-      yesNo('midfootPain', 'Pain in the midfoot zone'),
-      yesNo('navicular', 'Bone tenderness at the navicular'),
-      yesNo('base5', 'Bone tenderness at the base of the 5th metatarsal'),
-      yesNo('walk', 'Unable to bear weight 4 steps both immediately AND in the ED'),
+      yesNo('midfootPain', 'Pain in the midfoot zone', 0),
+      yesNo('navicular', 'Bone tenderness at the navicular', 0),
+      yesNo('base5', 'Bone tenderness at the base of the 5th metatarsal', 0),
+      yesNo('walk', 'Unable to bear weight 4 steps both immediately AND in the ED', 0),
     ],
     calculate(values) {
-      const xray =
-        bool(values.midfootPain) &&
-        (bool(values.navicular) || bool(values.base5) || bool(values.walk));
+      const midfootPain = bool(values.midfootPain);
+      const navicular = bool(values.navicular);
+      const base5 = bool(values.base5);
+      const walk = bool(values.walk);
+      const xray = midfootPain && (navicular || base5 || walk);
+
+      const details = [
+        { label: 'Midfoot zone pain', value: midfootPain ? 'Yes' : 'No' },
+        { label: 'Navicular tenderness', value: navicular ? 'Yes' : 'No' },
+        { label: 'Base of 5th metatarsal tenderness', value: base5 ? 'Yes' : 'No' },
+        { label: 'Unable to walk 4 steps (immediate + ED)', value: walk ? 'Yes' : 'No' },
+      ];
 
       if (xray) {
         return {
@@ -525,16 +534,18 @@ export const missingEmergencyCalcs: Calculator[] = [
           interpretation:
             'Ottawa Foot Rules positive (midfoot pain plus tenderness at navicular or 5th MT base, or inability to bear weight). Obtain foot radiographs.',
           riskLevel: 'moderate' as const,
+          details,
           recommendations: ['Foot X-ray series', 'Immobilize pending results if high suspicion'],
         };
       }
-      if (!bool(values.midfootPain)) {
+      if (!midfootPain) {
         return {
           score: 0,
           label: 'Rules not applicable / negative',
           interpretation:
             'No midfoot-zone pain — Ottawa Foot Rules target midfoot injuries. Assess ankle rules separately if malleolar-zone pain.',
           riskLevel: 'info' as const,
+          details,
         };
       }
       return {
@@ -543,6 +554,7 @@ export const missingEmergencyCalcs: Calculator[] = [
         interpretation:
           'Midfoot pain present but no navicular/5th MT tenderness and able to bear weight — radiograph not required if exam reliable.',
         riskLevel: 'low' as const,
+        details,
         recommendations: ['RICE', 'Weight bearing as tolerated', 'Follow-up if not improving'],
       };
     },
@@ -743,7 +755,7 @@ export const missingEmergencyCalcs: Calculator[] = [
     whenToUse: 'Multi-casualty / disaster scenes using START adult triage logic.',
     whyUse: 'Rapid categorization into Minor, Delayed, Immediate, or Expectant/Deceased to prioritize resources.',
     inputs: [
-      yesNo('canWalk', 'Able to walk (ambulatory / “walking wounded”)'),
+      yesNo('canWalk', 'Able to walk (ambulatory / “walking wounded”)', -1),
       selectInput('breathing', 'Spontaneous breathing', [
         { label: 'Breathing', value: 'yes' },
         { label: 'Apneic — starts breathing after airway opened', value: 'after_airway' },
@@ -1052,7 +1064,7 @@ export const missingEmergencyCalcs: Calculator[] = [
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 0, max: 120, step: 1, defaultValue: 40 }),
       numberInput('tbsa', 'TBSA burned', { unit: '%', min: 0, max: 100, step: 1, defaultValue: 20 }),
-      yesNo('inhalation', 'Inhalation injury (+17 on revised Baux)'),
+      yesNo('inhalation', 'Inhalation injury (+17 on revised Baux)', 17),
     ],
     calculate(values) {
       const age = num(values.age, 0);

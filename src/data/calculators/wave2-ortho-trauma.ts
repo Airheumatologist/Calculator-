@@ -12,28 +12,39 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'Acute knee injury from blunt trauma or fall (not twisting-only without fall).',
     whyUse: 'High sensitivity alternative/adjunct to Ottawa Knee Rules; mechanism-focused.',
     inputs: [
-      yesNo('mechanism', 'Blunt trauma or fall mechanism'),
-      yesNo('ageExtreme', 'Age <12 or >50 years'),
-      yesNo('walk', 'Unable to walk 4 weight-bearing steps in the ED'),
+      yesNo('mechanism', 'Blunt trauma or fall mechanism', 0),
+      yesNo('ageExtreme', 'Age <12 or >50 years', 0),
+      yesNo('walk', 'Unable to walk 4 weight-bearing steps in the ED', 0),
     ],
     calculate(values) {
-      if (!bool(values.mechanism)) {
+      const mechanism = bool(values.mechanism);
+      const ageExtreme = bool(values.ageExtreme);
+      const walk = bool(values.walk);
+      const pos = ageExtreme || walk;
+      const details = [
+        { label: 'Blunt trauma or fall mechanism', value: mechanism ? 'Yes' : 'No' },
+        { label: 'Age <12 or >50 years', value: ageExtreme ? 'Yes' : 'No' },
+        { label: 'Unable to walk 4 steps in ED', value: walk ? 'Yes' : 'No' },
+      ];
+
+      if (!mechanism) {
         return {
           score: 0,
           label: 'Rules not applicable',
           interpretation:
             'Pittsburgh rules apply to blunt trauma or fall. Use clinical judgment or Ottawa Knee Rules for other mechanisms.',
-          riskLevel: 'info',
+          riskLevel: 'info' as const,
+          details,
         };
       }
-      const pos = bool(values.ageExtreme) || bool(values.walk);
       if (pos) {
         return {
           score: 1,
           label: 'X-ray indicated',
           interpretation:
             'Mechanism + (age <12 or >50, or inability to walk 4 steps in ED) — obtain knee radiographs.',
-          riskLevel: 'moderate',
+          riskLevel: 'moderate' as const,
+          details,
         };
       }
       return {
@@ -41,7 +52,8 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
         label: 'X-ray not required by rules',
         interpretation:
           'Pittsburgh rules negative — clinically significant fracture unlikely if exam reliable.',
-        riskLevel: 'low',
+        riskLevel: 'low' as const,
+        details,
       };
     },
     evidence: {
@@ -74,28 +86,41 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'Adults with acute hip or groin pain after fall or blunt trauma.',
     whyUse: 'Structures common high-yield cues for hip radiographs after trauma; occult fracture still possible if nonambulatory.',
     inputs: [
-      yesNo('traumaPain', 'Acute hip/groin pain after fall or blunt trauma'),
-      yesNo('age65', 'Age ≥65 years'),
-      yesNo('walk', 'Unable to bear weight 4 steps both immediately AND in ED'),
-      yesNo('limitedRom', 'Painful limited active hip ROM (or inability to flex hip)'),
+      yesNo('traumaPain', 'Acute hip/groin pain after fall or blunt trauma', 0),
+      yesNo('age65', 'Age ≥65 years', 0),
+      yesNo('walk', 'Unable to bear weight 4 steps both immediately AND in ED', 0),
+      yesNo('limitedRom', 'Painful limited active hip ROM (or inability to flex hip)', 0),
     ],
     calculate(values) {
-      if (!bool(values.traumaPain)) {
+      const traumaPain = bool(values.traumaPain);
+      const age65 = bool(values.age65);
+      const walk = bool(values.walk);
+      const limitedRom = bool(values.limitedRom);
+      const pos = age65 || walk || limitedRom;
+      const details = [
+        { label: 'Acute post-traumatic hip/groin pain', value: traumaPain ? 'Yes' : 'No' },
+        { label: 'Age ≥65 years', value: age65 ? 'Yes' : 'No' },
+        { label: 'Unable to walk 4 steps (immediate + ED)', value: walk ? 'Yes' : 'No' },
+        { label: 'Painful limited active hip ROM', value: limitedRom ? 'Yes' : 'No' },
+      ];
+
+      if (!traumaPain) {
         return {
           score: 0,
           label: 'Rules not applicable',
           interpretation: 'Ottawa hip pathway assumes acute post-traumatic hip/groin pain.',
-          riskLevel: 'info',
+          riskLevel: 'info' as const,
+          details,
         };
       }
-      const pos = bool(values.age65) || bool(values.walk) || bool(values.limitedRom);
       if (pos) {
         return {
           score: 1,
           label: 'X-ray indicated',
           interpretation:
             '≥1 criterion present — obtain AP pelvis and lateral hip radiographs (consider full pelvis views).',
-          riskLevel: 'moderate',
+          riskLevel: 'moderate' as const,
+          details,
         };
       }
       return {
@@ -103,7 +128,8 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
         label: 'Lower likelihood by rules',
         interpretation:
           'No high-yield criteria. Occult fracture still possible in high-risk patients (elderly, osteoporosis); clinical judgment applies.',
-        riskLevel: 'low',
+        riskLevel: 'low' as const,
+        details,
       };
     },
     evidence: {
@@ -144,7 +170,7 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
       yesNo('esr40', 'ESR ≥40 mm/hr', 1),
       yesNo('fever', 'Fever >38.5 °C', 1),
       yesNo('wbc12', 'WBC >12,000 cells/mm³', 1),
-      yesNo('crp', 'CRP ≥2.0 mg/dL (Caird addition, optional)', 1),
+      yesNo('crp', 'CRP ≥2.0 mg/dL (Caird addition, optional)', 0),
     ],
     calculate(values) {
       const classic =
@@ -689,8 +715,8 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
         { label: '3-part — two segments displaced', value: 3 },
         { label: '4-part — three segments displaced (head + both tuberosities + shaft pattern)', value: 4 },
       ]),
-      yesNo('headSplit', 'Head-splitting or articular surface involvement'),
-      yesNo('dislocation', 'Associated glenohumeral dislocation'),
+      yesNo('headSplit', 'Head-splitting or articular surface involvement', 0),
+      yesNo('dislocation', 'Associated glenohumeral dislocation', 0),
     ],
     calculate(values) {
       const parts = num(values.parts, 1);
@@ -772,8 +798,8 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
         { label: 'B — Transsyndesmotic (at syndesmosis level)', value: 'B' },
         { label: 'C — Suprasyndesmotic (above syndesmosis)', value: 'C' },
       ]),
-      yesNo('medial', 'Medial malleolus fracture or deltoid incompetence (bimalleolar equivalent)'),
-      yesNo('unstable', 'Talar shift / mortise widening / positive stress test'),
+      yesNo('medial', 'Medial malleolus fracture or deltoid incompetence (bimalleolar equivalent)', 0),
+      yesNo('unstable', 'Talar shift / mortise widening / positive stress test', 0),
     ],
     calculate(values) {
       const w = String(values.weber ?? 'B');
@@ -1108,7 +1134,7 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
         helpText: 'RTS = 0.9368·GCSc + 0.7326·SBPc + 0.2908·RRc',
       }),
       numberInput('iss', 'ISS', { min: 0, max: 75, step: 1, defaultValue: 9 }),
-      yesNo('age55', 'Age ≥55 years'),
+      yesNo('age55', 'Age ≥55 years', -28.9),
     ],
     calculate(values) {
       const rts = num(values.rts, 7.84);

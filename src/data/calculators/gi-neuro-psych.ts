@@ -77,12 +77,13 @@ export const giNeuroPsychCalcs: Calculator[] = [
       numberInput('bili', 'Bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 2.0 }),
       numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, defaultValue: 1.5 }),
       numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0 }),
-      yesNo('dialysis', 'Dialysis ≥2 times in past week'),
+      yesNo('dialysis', 'Dialysis ≥2 times in past week (or 24h CVVHD)', null, 'Sets creatinine to 4.0 mg/dL per OPTN MELD rules (does not add a fixed point total)'),
     ],
     calculate(values) {
       let bili = Math.max(num(values.bili, 2), 1);
       let inr = Math.max(num(values.inr, 1.5), 1);
       let cr = Math.max(num(values.creat, 1), 1);
+      // Dialysis ≥2× in past week (or continuous RRT) → creatinine fixed at 4.0; also cap Cr at 4.0
       if (bool(values.dialysis) || cr > 4) cr = 4;
       const meld = round(10 * (0.957 * Math.log(cr) + 0.378 * Math.log(bili) + 1.12 * Math.log(inr) + 0.643), 0);
       const score = Math.max(6, Math.min(40, meld));
@@ -415,56 +416,62 @@ export const giNeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'nihss',
-    name: 'NIH Stroke Scale (Simplified Total)',
+    name: 'NIH Stroke Scale (NIHSS)',
     shortName: 'NIHSS',
-    description: 'Stroke severity scale — enter domain totals for live composite score.',
+    description: 'Stroke severity scale — enter each domain score for live composite (0–42).',
     category: 'neurology',
     tags: ['stroke', 'nihss'],
     whenToUse: 'Acute ischemic stroke severity and communication.',
     whyUse: 'Standard for tPA/thrombectomy trials and serial exams.',
     inputs: [
-      selectInput('loc', 'LOC (0–3)', [
-        { label: '0', value: 0 }, { label: '1', value: 1 }, { label: '2', value: 2 }, { label: '3', value: 3 },
+      selectInput('loc', '1a. LOC (0–3)', [
+        { label: '0 — Alert', value: 0 }, { label: '1 — Not alert, arousable', value: 1 }, { label: '2 — Not alert, obtunded', value: 2 }, { label: '3 — Unresponsive / reflex only', value: 3 },
       ]),
-      selectInput('locQ', 'LOC questions (0–2)', [
-        { label: '0', value: 0 }, { label: '1', value: 1 }, { label: '2', value: 2 },
+      selectInput('locQ', '1b. LOC questions (0–2)', [
+        { label: '0 — Both correct', value: 0 }, { label: '1 — One correct', value: 1 }, { label: '2 — Neither correct', value: 2 },
       ]),
-      selectInput('locC', 'LOC commands (0–2)', [
-        { label: '0', value: 0 }, { label: '1', value: 1 }, { label: '2', value: 2 },
+      selectInput('locC', '1c. LOC commands (0–2)', [
+        { label: '0 — Both correct', value: 0 }, { label: '1 — One correct', value: 1 }, { label: '2 — Neither correct', value: 2 },
       ]),
-      selectInput('gaze', 'Best gaze (0–2)', [
-        { label: '0', value: 0 }, { label: '1', value: 1 }, { label: '2', value: 2 },
+      selectInput('gaze', '2. Best gaze (0–2)', [
+        { label: '0 — Normal', value: 0 }, { label: '1 — Partial gaze palsy', value: 1 }, { label: '2 — Forced deviation', value: 2 },
       ]),
-      selectInput('visual', 'Visual (0–3)', [
-        { label: '0', value: 0 }, { label: '1', value: 1 }, { label: '2', value: 2 }, { label: '3', value: 3 },
+      selectInput('visual', '3. Visual (0–3)', [
+        { label: '0 — No loss', value: 0 }, { label: '1 — Partial hemianopia', value: 1 }, { label: '2 — Complete hemianopia', value: 2 }, { label: '3 — Bilateral / blind', value: 3 },
       ]),
-      selectInput('facial', 'Facial palsy (0–3)', [
-        { label: '0', value: 0 }, { label: '1', value: 1 }, { label: '2', value: 2 }, { label: '3', value: 3 },
+      selectInput('facial', '4. Facial palsy (0–3)', [
+        { label: '0 — Normal', value: 0 }, { label: '1 — Minor', value: 1 }, { label: '2 — Partial', value: 2 }, { label: '3 — Complete', value: 3 },
       ]),
-      selectInput('motorL', 'Motor arm/leg left max (0–4)', [
-        { label: '0', value: 0 }, { label: '1', value: 1 }, { label: '2', value: 2 }, { label: '3', value: 3 }, { label: '4', value: 4 },
+      selectInput('armL', '5a. Motor arm left (0–4)', [
+        { label: '0 — No drift', value: 0 }, { label: '1 — Drift', value: 1 }, { label: '2 — Some effort vs gravity', value: 2 }, { label: '3 — No effort vs gravity', value: 3 }, { label: '4 — No movement', value: 4 },
       ]),
-      selectInput('motorR', 'Motor arm/leg right max (0–4)', [
-        { label: '0', value: 0 }, { label: '1', value: 1 }, { label: '2', value: 2 }, { label: '3', value: 3 }, { label: '4', value: 4 },
+      selectInput('armR', '5b. Motor arm right (0–4)', [
+        { label: '0 — No drift', value: 0 }, { label: '1 — Drift', value: 1 }, { label: '2 — Some effort vs gravity', value: 2 }, { label: '3 — No effort vs gravity', value: 3 }, { label: '4 — No movement', value: 4 },
       ]),
-      selectInput('ataxia', 'Limb ataxia (0–2)', [
-        { label: '0', value: 0 }, { label: '1', value: 1 }, { label: '2', value: 2 },
+      selectInput('legL', '6a. Motor leg left (0–4)', [
+        { label: '0 — No drift', value: 0 }, { label: '1 — Drift', value: 1 }, { label: '2 — Some effort vs gravity', value: 2 }, { label: '3 — No effort vs gravity', value: 3 }, { label: '4 — No movement', value: 4 },
       ]),
-      selectInput('sensory', 'Sensory (0–2)', [
-        { label: '0', value: 0 }, { label: '1', value: 1 }, { label: '2', value: 2 },
+      selectInput('legR', '6b. Motor leg right (0–4)', [
+        { label: '0 — No drift', value: 0 }, { label: '1 — Drift', value: 1 }, { label: '2 — Some effort vs gravity', value: 2 }, { label: '3 — No effort vs gravity', value: 3 }, { label: '4 — No movement', value: 4 },
       ]),
-      selectInput('language', 'Language (0–3)', [
-        { label: '0', value: 0 }, { label: '1', value: 1 }, { label: '2', value: 2 }, { label: '3', value: 3 },
+      selectInput('ataxia', '7. Limb ataxia (0–2)', [
+        { label: '0 — Absent', value: 0 }, { label: '1 — One limb', value: 1 }, { label: '2 — Two limbs', value: 2 },
       ]),
-      selectInput('dysarthria', 'Dysarthria (0–2)', [
-        { label: '0', value: 0 }, { label: '1', value: 1 }, { label: '2', value: 2 },
+      selectInput('sensory', '8. Sensory (0–2)', [
+        { label: '0 — Normal', value: 0 }, { label: '1 — Mild–moderate loss', value: 1 }, { label: '2 — Severe / total loss', value: 2 },
       ]),
-      selectInput('extinction', 'Extinction/inattention (0–2)', [
-        { label: '0', value: 0 }, { label: '1', value: 1 }, { label: '2', value: 2 },
+      selectInput('language', '9. Best language (0–3)', [
+        { label: '0 — No aphasia', value: 0 }, { label: '1 — Mild–moderate', value: 1 }, { label: '2 — Severe', value: 2 }, { label: '3 — Mute / global', value: 3 },
+      ]),
+      selectInput('dysarthria', '10. Dysarthria (0–2)', [
+        { label: '0 — Normal', value: 0 }, { label: '1 — Mild–moderate', value: 1 }, { label: '2 — Severe / anarthric', value: 2 },
+      ]),
+      selectInput('extinction', '11. Extinction / inattention (0–2)', [
+        { label: '0 — No abnormality', value: 0 }, { label: '1 — Mild (one modality)', value: 1 }, { label: '2 — Profound (more than one)', value: 2 },
       ]),
     ],
     calculate(values) {
-      const keys = ['loc', 'locQ', 'locC', 'gaze', 'visual', 'facial', 'motorL', 'motorR', 'ataxia', 'sensory', 'language', 'dysarthria', 'extinction'];
+      const keys = ['loc', 'locQ', 'locC', 'gaze', 'visual', 'facial', 'armL', 'armR', 'legL', 'legR', 'ataxia', 'sensory', 'language', 'dysarthria', 'extinction'];
       const score = keys.reduce((s, k) => s + num(values[k]), 0);
       const r = riskFromThresholds(score, [
         { max: 4, level: 'low', label: 'Mild stroke', interpretation: 'NIHSS ≤4 often mild; still consider reperfusion if disabling deficit.' },
@@ -472,10 +479,10 @@ export const giNeuroPsychCalcs: Calculator[] = [
         { max: 20, level: 'high', label: 'Moderate–severe', interpretation: 'Moderate to severe stroke.' },
         { max: 42, level: 'critical', label: 'Severe', interpretation: 'Severe stroke — high risk of complications; aggressive supportive care.' },
       ]);
-      return { score, ...r, details: [{ label: 'Max (this form)', value: '~42 (simplified limb scoring)' }] };
+      return { score, ...r, details: [{ label: 'Max score', value: '42 (15 items; amputated/untestable limbs scored per NIH protocol)' }] };
     },
     evidence: {
-      summary: 'NIHSS is the standard acute stroke neurologic deficit scale (0–42).',
+      summary: 'NIHSS is the standard acute stroke neurologic deficit scale (0–42) with separate motor scores for each arm and leg.',
       validation: 'Excellent interrater reliability with trained examiners; predicts outcomes.',
       references: [{ title: 'Measurements of acute cerebral infarction: a clinical examination scale', citation: 'Brott T et al. Stroke. 1989', year: 1989, pmid: '2749846',
           doi: '10.1161/01.str.20.7.864', }],

@@ -179,7 +179,7 @@ export const wave2PulmIdCalcs: Calculator[] = [
       yesNo('o2', 'O₂ sat ≥ 90% on room air (or at baseline O₂ requirement)', 1),
       yesNo('mental', 'Normal mental status (or return to baseline)', 1),
       yesNo('oral', 'Able to take oral medications / functioning GI tract', 1),
-      yesNo('stable24', 'Criteria sustained ~24 hours (optional clinical check)', 1),
+      yesNo('stable24', 'Criteria sustained ~24 hours (optional clinical check)', 0),
     ],
     calculate(values) {
       const core = ['temp', 'hr', 'rr', 'sbp', 'o2', 'mental', 'oral'] as const;
@@ -1435,9 +1435,9 @@ export const wave2PulmIdCalcs: Calculator[] = [
       numberInput('age', 'Age', { unit: 'years', min: 0, max: 120, step: 1, defaultValue: 70 }),
       numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0, max: 100, step: 0.1, defaultValue: 12 }),
       numberInput('cr', 'Serum creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.0 }),
-      yesNo('hypotension', 'Hypotension or shock', 1),
-      yesNo('ileus', 'Ileus', 1),
-      yesNo('megacolon', 'Toxic megacolon', 1),
+      yesNo('hypotension', 'Hypotension or shock', 2),
+      yesNo('ileus', 'Ileus', 2),
+      yesNo('megacolon', 'Toxic megacolon', 2),
     ],
     calculate(values) {
       const age = num(values.age, 70);
@@ -1519,9 +1519,9 @@ export const wave2PulmIdCalcs: Calculator[] = [
     whenToUse: 'Patients with suspected infection and circulatory failure to apply Sepsis-3 septic shock criteria.',
     whyUse: 'Standardizes recognition of septic shock with substantially higher mortality than sepsis alone.',
     inputs: [
-      yesNo('infection', 'Suspected or documented infection', 1),
-      yesNo('fluids', 'Adequate fluid resuscitation given', 1),
-      yesNo('vasopressors', 'Vasopressors required to maintain MAP ≥ 65 mmHg', 1),
+      yesNo('infection', 'Suspected or documented infection', 0),
+      yesNo('fluids', 'Adequate fluid resuscitation given', 0),
+      yesNo('vasopressors', 'Vasopressors required to maintain MAP ≥ 65 mmHg', 0),
       numberInput('lactate', 'Lactate', { unit: 'mmol/L', min: 0, max: 30, step: 0.1, defaultValue: 1.5 }),
       numberInput('map', 'Current MAP (optional context)', { unit: 'mmHg', min: 0, max: 150, step: 1, defaultValue: 65 }),
     ],
@@ -1635,8 +1635,8 @@ export const wave2PulmIdCalcs: Calculator[] = [
         { label: 'Outpatient / ward LRTI (0.1 / 0.25 cutoffs)', value: 'lrti' },
         { label: 'ICU / critically ill (0.5 / 1.0 cutoffs)', value: 'icu' },
       ]),
-      yesNo('unstable', 'Hemodynamic instability or severe immunodeficiency (override)', 1),
-      yesNo('highSuspicion', 'Very high clinical suspicion for bacterial infection (override)', 1),
+      yesNo('unstable', 'Hemodynamic instability or severe immunodeficiency (override)', 0),
+      yesNo('highSuspicion', 'Very high clinical suspicion for bacterial infection (override)', 0),
     ],
     calculate(values) {
       const pct = num(values.pct, 0.25);
@@ -1761,8 +1761,8 @@ export const wave2PulmIdCalcs: Calculator[] = [
           value: 'low15',
         },
       ]),
-      yesNo('bcg', 'Prior BCG vaccination (context)', 1),
-      yesNo('igraPrefer', 'IGRA preferred / available in this context', 1),
+      yesNo('bcg', 'Prior BCG vaccination (context)', 0),
+      yesNo('igraPrefer', 'IGRA preferred / available in this context', 0),
     ],
     calculate(values) {
       const mm = num(values.induration, 8);

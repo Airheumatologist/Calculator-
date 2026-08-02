@@ -1190,9 +1190,11 @@ export const wave4FormulasCalcs: Calculator[] = [
       ]),
     ],
     calculate(values) {
+      const probUnit = String(values.probUnit ?? 'pct');
+      const probUnitLabel = probUnit === 'frac' ? 'Fraction (0–1)' : 'Percent (0–100)';
       if (values.direction === 'p2o') {
         let p = num(values.value, 20);
-        if (values.probUnit !== 'frac') p = p / 100;
+        if (probUnit !== 'frac') p = p / 100;
         p = Math.min(0.9999, Math.max(0.0001, p));
         const odds = p / (1 - p);
         return {
@@ -1200,7 +1202,10 @@ export const wave4FormulasCalcs: Calculator[] = [
           label: `Odds ≈ ${round(odds, 4)}`,
           interpretation: `Probability ${round(p * 100, 2)}% → odds ${round(odds, 4)} (≈ ${round(odds, 2)}:1).`,
           riskLevel: 'info',
-          details: [{ label: 'Probability', value: `${round(p * 100, 2)}%` }],
+          details: [
+            { label: 'Probability', value: `${round(p * 100, 2)}%` },
+            { label: 'Probability unit used', value: probUnitLabel },
+          ],
         };
       }
       const odds = Math.max(0, num(values.value, 0.25));
@@ -1214,6 +1219,7 @@ export const wave4FormulasCalcs: Calculator[] = [
         details: [
           { label: 'Odds', value: String(odds) },
           { label: 'Probability fraction', value: String(round(p, 4)) },
+          { label: 'Probability unit (for reverse convert)', value: probUnitLabel },
         ],
       };
     },

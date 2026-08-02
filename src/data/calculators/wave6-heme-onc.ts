@@ -23,18 +23,19 @@ export const wave6HemeOncCalcs: Calculator[] = [
         { label: '30–50%', value: 1, points: 1 },
         { label: '>50%', value: 3, points: 3 },
       ]),
+      // points omitted: pathway-conditional (only one timing arm applies)
       selectInput('timingTypical', 'Timing of fall — typical-onset pathway', [
-        { label: 'N/A (using rapid-onset pathway)', value: 0, points: 0 },
-        { label: '<4 days after heparin', value: -2, points: -2 },
-        { label: 'Day 4 after heparin', value: 2, points: 2 },
-        { label: 'Days 5–10 after heparin', value: 3, points: 3 },
-        { label: 'Days 11–14 after heparin', value: 2, points: 2 },
-        { label: '>14 days after heparin', value: -1, points: -1 },
+        { label: 'N/A (using rapid-onset pathway)', value: 0 },
+        { label: '<4 days after heparin', value: -2 },
+        { label: 'Day 4 after heparin', value: 2 },
+        { label: 'Days 5–10 after heparin', value: 3 },
+        { label: 'Days 11–14 after heparin', value: 2 },
+        { label: '>14 days after heparin', value: -1 },
       ], 0, 'Use when typical onset selected'),
       selectInput('timingRapid', 'Timing of fall — rapid-onset pathway', [
-        { label: 'N/A (using typical-onset pathway)', value: 0, points: 0 },
-        { label: 'Fall <48 h after re-exposure', value: 2, points: 2 },
-        { label: 'Fall ≥48 h after re-exposure', value: -1, points: -1 },
+        { label: 'N/A (using typical-onset pathway)', value: 0 },
+        { label: 'Fall <48 h after re-exposure', value: 2 },
+        { label: 'Fall ≥48 h after re-exposure', value: -1 },
       ], 0, 'Use when rapid onset selected'),
       selectInput('nadir', 'Nadir platelet count', [
         { label: '≤20 ×10⁹/L', value: -2, points: -2 },
@@ -1304,7 +1305,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'Adult cancer patient with fever and neutropenia when triaging home oral therapy vs admission.',
     whyUse: 'Structures red-flag features that usually mandate inpatient IV antibiotics even if MASCC falls in the low-risk band (≥21).',
     inputs: [
-      yesNo('fever', 'Fever ≥38.3 °C once or ≥38.0 °C sustained ≥1 h', 1),
+      yesNo('fever', 'Fever ≥38.3 °C once or ≥38.0 °C sustained ≥1 h', 0),
       numberInput('anc', 'ANC', { unit: '/µL', min: 0, max: 2000, defaultValue: 400 }),
       yesNo('hypotension', 'Hypotension / shock / needing pressors', 3),
       yesNo('hypoxia', 'Respiratory distress or O₂ sat <90–92% on RA', 3),
@@ -1322,24 +1323,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
       ]),
     ],
     calculate(values) {
-      if (!bool(values.fever)) {
-        return {
-          score: 0,
-          label: 'Fever criterion not met',
-          interpretation:
-            'Standard FN definitions require fever plus neutropenia. Without fever, evaluate afebrile neutropenia pathways and occult infection risk separately.',
-          riskLevel: 'info',
-        };
-      }
       const anc = num(values.anc, 400);
-      if (anc >= 1000) {
-        return {
-          score: anc,
-          label: 'ANC not in classic severe neutropenia range',
-          interpretation: `ANC ${anc}/µL. Classic febrile neutropenia uses ANC <500 (or <1000 with expected fall). Still treat fever seriously in cancer patients on chemo.`,
-          riskLevel: 'moderate',
-        };
-      }
+      const burden = num(values.burden, 0);
       const riskPts =
         (bool(values.hypotension) ? 3 : 0) +
         (bool(values.hypoxia) ? 3 : 0) +
@@ -1350,8 +1335,42 @@ export const wave6HemeOncCalcs: Calculator[] = [
         (bool(values.inpatientAtFever) ? 2 : 0) +
         (bool(values.comorbid) ? 1 : 0) +
         (bool(values.highRiskChemo) ? 2 : 0) +
-        num(values.burden) +
+        burden +
         (anc < 100 ? 1 : 0);
+      const flagDetails = [
+        { label: 'Fever met', value: bool(values.fever) ? 'Yes' : 'No' },
+        { label: 'ANC', value: `${anc} /µL` },
+        { label: 'Risk feature points', value: String(riskPts) },
+        { label: 'Hypotension/shock', value: bool(values.hypotension) ? 'Yes (+3)' : 'No' },
+        { label: 'Hypoxia', value: bool(values.hypoxia) ? 'Yes (+3)' : 'No' },
+        { label: 'Altered mental status', value: bool(values.altered) ? 'Yes (+2)' : 'No' },
+        { label: 'Severe mucositis / no PO', value: bool(values.severeMucositis) ? 'Yes (+2)' : 'No' },
+        { label: 'Uncontrolled cancer', value: bool(values.uncontrolledCancer) ? 'Yes (+1)' : 'No' },
+        { label: 'Allo-HCT / prolonged neutropenia', value: bool(values.allogeneic) ? 'Yes (+3)' : 'No' },
+        { label: 'Inpatient at fever onset', value: bool(values.inpatientAtFever) ? 'Yes (+2)' : 'No' },
+        { label: 'Significant comorbidity', value: bool(values.comorbid) ? 'Yes (+1)' : 'No' },
+        { label: 'High-risk chemo', value: bool(values.highRiskChemo) ? 'Yes (+2)' : 'No' },
+        { label: 'Symptom burden', value: String(burden) },
+      ];
+
+      if (!bool(values.fever)) {
+        return {
+          score: riskPts,
+          label: 'Fever criterion not met',
+          interpretation: `Standard FN definitions require fever plus neutropenia. Without fever, evaluate afebrile neutropenia pathways and occult infection risk separately. Informational red-flag points: ${riskPts}.`,
+          riskLevel: 'info',
+          details: flagDetails,
+        };
+      }
+      if (anc >= 1000) {
+        return {
+          score: riskPts,
+          label: 'ANC not in classic severe neutropenia range',
+          interpretation: `ANC ${anc}/µL. Classic febrile neutropenia uses ANC <500 (or <1000 with expected fall). Still treat fever seriously in cancer patients on chemo. Red-flag feature points: ${riskPts}.`,
+          riskLevel: 'moderate',
+          details: flagDetails,
+        };
+      }
 
       if (riskPts >= 3) {
         return {
@@ -1359,10 +1378,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
           label: 'High-risk FN — inpatient pathway',
           interpretation: `Risk feature points ${riskPts}. Features favor inpatient IV antipseudomonal β-lactam (± MRSA/fungal coverage per risk), cultures, and continuous monitoring. Do not plan initial outpatient oral therapy.`,
           riskLevel: 'high',
-          details: [
-            { label: 'ANC', value: `${anc} /µL` },
-            { label: 'Risk points', value: String(riskPts) },
-          ],
+          details: flagDetails,
           recommendations: [
             'Blood cultures ×2 before abx if no delay',
             'IV antipseudomonal β-lactam promptly',
@@ -1376,10 +1392,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
         label: 'Lower-risk features — consider formal MASCC/CISNE',
         interpretation: `Risk feature points ${riskPts}. No automatic high-risk red flags selected. Eligible patients may be considered for outpatient oral therapy only after formal MASCC (≥21) and/or CISNE, reliable follow-up, and no social barriers—still give first dose promptly.`,
         riskLevel: 'moderate',
-        details: [
-          { label: 'ANC', value: `${anc} /µL` },
-          { label: 'Risk points', value: String(riskPts) },
-        ],
+        details: flagDetails,
         recommendations: [
           'Calculate MASCC and CISNE',
           'Ensure 24h access and caregiver',
@@ -1606,7 +1619,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'When laboratory TLS is present or suspected and organ complications are being assessed.',
     whyUse: 'Clinical TLS upgrades severity and urgency—drives ICU-level monitoring and renal replacement readiness.',
     inputs: [
-      yesNo('labTls', 'Laboratory TLS criteria met (≥2 metabolic abnormalities)', 1),
+      yesNo('labTls', 'Laboratory TLS criteria met (≥2 metabolic abnormalities)', 0),
       yesNo('aki', 'Creatinine ≥1.5× ULN or AKI / oliguria attributed to TLS', 1),
       yesNo('cardiac', 'Cardiac arrhythmia, sudden death, or symptomatic cardiac involvement', 1),
       yesNo('seizure', 'Seizure, tetany, or symptomatic hypocalcemia (neuromuscular)', 1),
@@ -1696,8 +1709,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
     inputs: [
       numberInput('calcium', 'Serum total calcium', { unit: 'mg/dL', min: 5, max: 20, step: 0.1, defaultValue: 11.5 }),
       numberInput('albumin', 'Serum albumin', { unit: 'g/dL', min: 1, max: 5.5, step: 0.1, defaultValue: 3.0 }),
-      yesNo('symptoms', 'Symptoms of hypercalcemia present', 1),
-      yesNo('neuro', 'Significant neuropsychiatric symptoms / stupor', 1),
+      yesNo('symptoms', 'Symptoms of hypercalcemia present', 0),
+      yesNo('neuro', 'Significant neuropsychiatric symptoms / stupor', 0),
     ],
     calculate(values) {
       const ca = num(values.calcium, 11.5);
@@ -1742,6 +1755,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
           { label: 'Measured Ca', value: `${ca} mg/dL` },
           { label: 'Albumin', value: `${alb} g/dL` },
           { label: 'Corrected Ca', value: `${corrected} mg/dL` },
+          { label: 'Hypercalcemia symptoms', value: bool(values.symptoms) ? 'Yes' : 'No' },
+          { label: 'Significant neuro symptoms / stupor', value: bool(values.neuro) ? 'Yes' : 'No' },
         ],
       };
     },
@@ -1976,10 +1991,11 @@ export const wave6HemeOncCalcs: Calculator[] = [
       yesNo('mucositis', 'Concurrent severe mucositis', 1),
       yesNo('hypotension', 'Sepsis / hypotension', 3),
       yesNo('ctSuggestive', 'CT with bowel wall thickening (esp. ileocecal)', 3),
-      yesNo('cDiff', 'C. difficile testing pending/positive (alternate/coexist)', 1),
+      yesNo('cDiff', 'C. difficile testing pending/positive (alternate/coexist)', 0),
     ],
     calculate(values) {
       const anc = num(values.anc, 100);
+      const cDiff = bool(values.cDiff);
       const score =
         (anc < 500 ? 2 : anc < 1000 ? 1 : 0) +
         (bool(values.fever) ? 1 : 0) +
@@ -1989,13 +2005,25 @@ export const wave6HemeOncCalcs: Calculator[] = [
         (bool(values.mucositis) ? 1 : 0) +
         (bool(values.hypotension) ? 3 : 0) +
         (bool(values.ctSuggestive) ? 3 : 0);
+      const details = [
+        { label: 'ANC', value: `${anc} /µL` },
+        { label: 'Checklist points', value: String(score) },
+        { label: 'C. difficile pending/positive', value: cDiff ? 'Yes — treat/coexist on DDx' : 'No / not flagged' },
+        { label: 'Fever', value: bool(values.fever) ? 'Yes' : 'No' },
+        { label: 'RLQ / abdominal pain', value: bool(values.rLQPain) ? 'Yes' : 'No' },
+        { label: 'CT suggestive', value: bool(values.ctSuggestive) ? 'Yes' : 'No' },
+      ];
+      const cDiffNote = cDiff
+        ? ' C. difficile flagged — typhlitis and CDI can coexist; send stool PCR/toxin and cover per local CDI + FN protocols.'
+        : '';
 
       if (bool(values.ctSuggestive) && anc < 500 && (bool(values.fever) || bool(values.rLQPain))) {
         return {
           score,
           label: 'Features highly consistent with neutropenic colitis',
-          interpretation: `Checklist points ${score}. Neutropenic enterocolitis likely. NPO, IV fluids, broad IV antibiotics including anaerobic coverage, G-CSF per oncology, serial exams; surgery for perforation/necrosis/uncontrolled bleed/unrelenting peritonitis.`,
+          interpretation: `Checklist points ${score}. Neutropenic enterocolitis likely. NPO, IV fluids, broad IV antibiotics including anaerobic coverage, G-CSF per oncology, serial exams; surgery for perforation/necrosis/uncontrolled bleed/unrelenting peritonitis.${cDiffNote}`,
           riskLevel: 'critical',
+          details,
           recommendations: [
             'CT abdomen/pelvis if not done',
             'Blood cultures + C. diff testing',
@@ -2008,23 +2036,26 @@ export const wave6HemeOncCalcs: Calculator[] = [
         return {
           score,
           label: 'High concern for typhlitis — urgent CT',
-          interpretation: `Checklist points ${score} with neutropenia. Urgent abdominal imaging and empiric FN + intra-abdominal infection coverage while evaluating C. diff and other acute abdomen causes.`,
+          interpretation: `Checklist points ${score} with neutropenia. Urgent abdominal imaging and empiric FN + intra-abdominal infection coverage while evaluating C. diff and other acute abdomen causes.${cDiffNote}`,
           riskLevel: 'high',
+          details,
         };
       }
       if (score >= 3) {
         return {
           score,
           label: 'Intermediate concern',
-          interpretation: `Checklist points ${score}. Maintain high suspicion; low threshold for CT and early antibiotics in neutropenia with abdominal symptoms.`,
+          interpretation: `Checklist points ${score}. Maintain high suspicion; low threshold for CT and early antibiotics in neutropenia with abdominal symptoms.${cDiffNote}`,
           riskLevel: 'moderate',
+          details,
         };
       }
       return {
         score,
         label: 'Lower checklist concern',
-        interpretation: `Checklist points ${score}. Continue standard FN pathways; reassess if pain or diarrhea evolves.`,
+        interpretation: `Checklist points ${score}. Continue standard FN pathways; reassess if pain or diarrhea evolves.${cDiffNote}`,
         riskLevel: 'low',
+        details,
       };
     },
     evidence: {

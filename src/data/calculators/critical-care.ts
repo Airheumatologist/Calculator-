@@ -546,7 +546,7 @@ export const criticalCareCalcs: Calculator[] = [
         { label: '1–2.9 or 20–39.9 (2)', value: 2 },
         { label: '<1 or ≥40 (4)', value: 4 },
       ]),
-      yesNo('chronic', 'Severe chronic organ insufficiency or immunocompromise', 1),
+      yesNo('chronic', 'Severe chronic organ insufficiency or immunocompromise', 0),
       selectInput('admitType', 'Admission type (chronic-health points only if chronic disease present)', [
         { label: 'No chronic disease / none applicable (0)', value: 0 },
         { label: 'Elective postoperative (+2 if chronic)', value: 2 },

@@ -35,7 +35,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         { label: 'GBS prophylaxis only ≥2–4 h (partial)', value: 'partial' },
         { label: 'None or <2 h before birth', value: 'none' },
       ]),
-      yesNo('clinicalIllness', 'Newborn clinical illness (resp distress, hemodynamic instability, encephalopathy)', 3),
+      yesNo('clinicalIllness', 'Newborn clinical illness (resp distress, hemodynamic instability, encephalopathy)', 4),
     ],
     calculate(values) {
       const ga = num(values.gaWeeks, 39);
@@ -402,7 +402,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
       numberInput('hr', 'Heart rate', { unit: 'bpm', min: 40, max: 280, defaultValue: 140 }),
       numberInput('rr', 'Respiratory rate', { unit: '/min', min: 5, max: 120, defaultValue: 30 }),
       numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 100, step: 0.1, defaultValue: 14 }),
-      yesNo('bands', 'Immature neutrophils (bands) >10%', 1),
+      yesNo('bands', 'Immature neutrophils (bands) >10%', 0),
       yesNo('mechVent', 'Mechanical ventilation for acute process (counts as respiratory criterion)', 1),
     ],
     calculate(values) {
@@ -465,6 +465,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
           { label: 'HR abnormal', value: hrAbn || bradycardia ? 'Yes' : 'No' },
           { label: 'RR / vent abnormal', value: rrAbn ? 'Yes' : 'No' },
           { label: 'WBC / bands abnormal', value: wbcAbn ? 'Yes' : 'No' },
+          { label: 'Bands >10%', value: bool(values.bands) ? 'Yes' : 'No' },
           { label: 'Age HR cutoff used', value: `>${c.hr} bpm` },
           { label: 'Age RR cutoff used', value: `>${c.rr}/min` },
         ],
@@ -645,7 +646,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whenToUse: 'Children with suspected infection when applying modern organ-dysfunction-based sepsis definitions (teaching aid).',
     whyUse: 'Phoenix (2024) redefined pediatric sepsis around organ dysfunction rather than SIRS; this checklist surfaces the major domains.',
     inputs: [
-      yesNo('infection', 'Suspected or confirmed infection', 1),
+      yesNo('infection', 'Suspected or confirmed infection', 0),
       selectInput('resp', 'Respiratory dysfunction', [
         { label: 'None (0)', value: 0 },
         { label: 'Mild–moderate (high-flow / mild hypoxia) (1)', value: 1 },
@@ -760,7 +761,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         { label: 'Single rescuer', value: 'single' },
         { label: 'Two rescuers', value: 'two' },
       ]),
-      yesNo('advancedAirway', 'Advanced airway in place', 1),
+      yesNo('advancedAirway', 'Advanced airway in place', 0),
       numberInput('measuredRate', 'Observed compression rate (optional)', {
         unit: '/min',
         min: 0,
@@ -866,7 +867,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         { label: 'Proximal humerus', value: 'hum' },
         { label: 'Distal femur (peds option)', value: 'fem' },
       ]),
-      yesNo('contraindications', 'Local infection, fracture, prior IO same bone, or osteogenesis imperfecta concern', 1),
+      yesNo('contraindications', 'Local infection, fracture, prior IO same bone, or osteogenesis imperfecta concern', -15),
     ],
     calculate(values) {
       const band = String(values.ageBand ?? 'pink');
@@ -1527,8 +1528,9 @@ export const wave6EmPedsCalcs: Calculator[] = [
       ]),
     ],
     calculate(values) {
-      const eff =
-        String(values.effaceMode ?? 'pct') === 'len' ? num(values.cervLength) : num(values.effacement);
+      const effaceMode = String(values.effaceMode ?? 'pct');
+      const useLength = effaceMode === 'len';
+      const eff = useLength ? num(values.cervLength) : num(values.effacement);
       const score =
         num(values.dilation) +
         eff +
@@ -1561,7 +1563,10 @@ export const wave6EmPedsCalcs: Calculator[] = [
         ...r,
         details: [
           { label: 'Dilation', value: String(num(values.dilation)) },
+          { label: 'Effacement input mode', value: useLength ? 'Cervical length' : 'Percent effacement' },
           { label: 'Effacement/length points', value: String(eff) },
+          { label: 'Effacement % points (if mode=pct)', value: String(num(values.effacement)) },
+          { label: 'Cervical length points (if mode=len)', value: String(num(values.cervLength)) },
           { label: 'Station', value: String(num(values.station)) },
           { label: 'Consistency', value: String(num(values.consistency)) },
           { label: 'Position', value: String(num(values.position)) },
@@ -1617,7 +1622,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         { label: 'Nulliparous', value: 'nullip' },
         { label: 'Multiparous', value: 'multip' },
       ]),
-      yesNo('epidural', 'Epidural anesthesia', 1),
+      yesNo('epidural', 'Epidural anesthesia', 0),
       numberInput('dilationCm', 'Current cervical dilation (first stage)', {
         unit: 'cm',
         min: 0,
@@ -1625,8 +1630,8 @@ export const wave6EmPedsCalcs: Calculator[] = [
         step: 0.5,
         defaultValue: 6,
       }),
-      yesNo('ruptured', 'Membranes ruptured', 1),
-      yesNo('adequateUv', 'Adequate uterine activity (≥200 MVU / clinical adequacy)', 1),
+      yesNo('ruptured', 'Membranes ruptured', 0),
+      yesNo('adequateUv', 'Adequate uterine activity (≥200 MVU / clinical adequacy)', 0),
       numberInput('hoursNoChange', 'Hours without cervical change (first) or hours in second stage', {
         unit: 'hours',
         min: 0,
@@ -1634,7 +1639,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         step: 0.5,
         defaultValue: 4,
       }),
-      yesNo('malpresentation', 'Known malposition/CPD concern or nonreassuring fetal status', 1),
+      yesNo('malpresentation', 'Known malposition/CPD concern or nonreassuring fetal status', 0),
     ],
     calculate(values) {
       const stage = String(values.stage ?? 'first');
@@ -1646,6 +1651,16 @@ export const wave6EmPedsCalcs: Calculator[] = [
       const rom = bool(values.ruptured);
       const fetalIssue = bool(values.malpresentation);
 
+      const laborDetails = [
+        { label: 'Stage', value: stage === 'second' ? 'Second stage' : 'First stage (active)' },
+        { label: 'Parity', value: nullip ? 'Nulliparous' : 'Multiparous' },
+        { label: 'Epidural', value: epidural ? 'Yes' : 'No' },
+        { label: 'ROM', value: rom ? 'Yes' : 'No' },
+        { label: 'Adequate UCs / MVUs', value: adequate ? 'Yes' : 'No' },
+        { label: 'Hours without change / in stage', value: `${hours} h` },
+        { label: 'Dilation', value: `${dil} cm` },
+      ];
+
       if (fetalIssue) {
         return {
           score: hours,
@@ -1653,6 +1668,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
           interpretation:
             'Nonreassuring fetal status, true CPD, or uncorrectable malpresentation may mandate intervention regardless of time-based arrest definitions. Manage for the fetal/maternal indication.',
           riskLevel: 'high' as const,
+          details: laborDetails,
         };
       }
 
@@ -1665,6 +1681,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
             label: 'Likely latent / before active-phase arrest rules',
             interpretation: `Dilation ${dil} cm is before the common 6 cm active-phase threshold used in contemporary ACOG guidance. Avoid diagnosing active-phase arrest too early; support progress and reassess.`,
             riskLevel: 'moderate' as const,
+            details: laborDetails,
             recommendations: ['Allow latent labor time', 'Avoid premature CS for FTP', 'Support coping / consider ROM-oxytocin carefully'],
           };
         }
@@ -1679,12 +1696,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
             ? `At ≥6 cm with ruptured membranes and ${hours} h without change (${adequate ? 'adequate' : 'inadequate'} UCs), simplified ACOG active-phase arrest criteria are met. Discuss cesarean vs further efforts based on full clinical picture.`
             : `Not meeting simplified arrest definition yet (need ≥6 cm, ROM, and ≥4 h with adequate UCs or ≥6 h if inadequate). Current: ${dil} cm, ${hours} h, ROM=${rom ? 'yes' : 'no'}. Continue labor support and optimize contractions if safe.`,
           riskLevel: arrest ? 'high' : 'moderate',
-          details: [
-            { label: 'Dilation', value: `${dil} cm` },
-            { label: 'Hours no change', value: `${hours} h` },
-            { label: 'ROM', value: rom ? 'Yes' : 'No' },
-            { label: 'Adequate UCs', value: adequate ? 'Yes' : 'No' },
-          ],
+          details: laborDetails,
         };
       }
 
@@ -1702,9 +1714,8 @@ export const wave6EmPedsCalcs: Calculator[] = [
         }`,
         riskLevel: arrest2 ? 'high' : 'moderate',
         details: [
-          { label: 'Parity', value: nullip ? 'Nulliparous' : 'Multiparous' },
-          { label: 'Epidural', value: epidural ? 'Yes' : 'No' },
-          { label: 'Common limit', value: `${limit} h` },
+          ...laborDetails,
+          { label: 'Common second-stage limit', value: `${limit} h` },
         ],
         recommendations: [
           'Manual rotation / position changes for malposition',
@@ -1760,10 +1771,10 @@ export const wave6EmPedsCalcs: Calculator[] = [
         { label: 'Vaginal', value: 'vaginal' },
         { label: 'Cesarean', value: 'cesarean' },
       ]),
-      yesNo('tachycardia', 'Tachycardia', 1),
-      yesNo('hypotension', 'Hypotension / narrow pulse pressure', 1),
-      yesNo('altered', 'Altered mentation / marked distress', 1),
-      yesNo('ongoing', 'Ongoing uncontrolled bleeding', 1),
+      yesNo('tachycardia', 'Tachycardia', 0),
+      yesNo('hypotension', 'Hypotension / narrow pulse pressure', 0),
+      yesNo('altered', 'Altered mentation / marked distress', 0),
+      yesNo('ongoing', 'Ongoing uncontrolled bleeding', 0),
     ],
     calculate(values) {
       const ebl = num(values.ebl, 600);
@@ -1800,6 +1811,8 @@ export const wave6EmPedsCalcs: Calculator[] = [
           { label: 'Stage helper', value: String(stage) },
           { label: 'Tachycardia', value: bool(values.tachycardia) ? 'Yes' : 'No' },
           { label: 'Hypotension', value: bool(values.hypotension) ? 'Yes' : 'No' },
+          { label: 'Ongoing uncontrolled bleeding', value: bool(values.ongoing) ? 'Yes' : 'No' },
+          { label: 'Altered mentation / distress', value: bool(values.altered) ? 'Yes' : 'No' },
         ],
         recommendations: [
           '4 Ts: Tone, Trauma, Tissue, Thrombin',
@@ -1959,7 +1972,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         { label: '1 g/h', value: 1 },
         { label: '2 g/h', value: 2 },
       ]),
-      yesNo('renalImpair', 'Significant renal impairment / oliguria', 1),
+      yesNo('renalImpair', 'Significant renal impairment / oliguria', 0),
       numberInput('weightKg', 'Weight (optional, for context)', { unit: 'kg', min: 40, max: 200, defaultValue: 80 }),
     ],
     calculate(values) {
@@ -2054,7 +2067,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
       }),
       numberInput('h1', '1-hour glucose', { unit: 'mg/dL', min: 40, max: 400, step: 1, defaultValue: 175 }),
       numberInput('h2', '2-hour glucose', { unit: 'mg/dL', min: 40, max: 400, step: 1, defaultValue: 140 }),
-      yesNo('overtCheck', 'Also flag possible overt diabetes in pregnancy thresholds', 1),
+      yesNo('overtCheck', 'Also flag possible overt diabetes in pregnancy thresholds', 0),
     ],
     calculate(values) {
       const f = num(values.fasting, 90);
@@ -2089,6 +2102,14 @@ export const wave6EmPedsCalcs: Calculator[] = [
           { label: 'Fasting ≥92', value: failF ? 'Yes' : 'No' },
           { label: '1-h ≥180', value: fail1 ? 'Yes' : 'No' },
           { label: '2-h ≥153', value: fail2 ? 'Yes' : 'No' },
+          {
+            label: 'Overt DM screen enabled',
+            value: bool(values.overtCheck) ? 'Yes' : 'No',
+          },
+          {
+            label: 'Overt thresholds (FPG≥126 or 2-h≥200)',
+            value: f >= 126 || h2 >= 200 ? 'Met' : 'Not met',
+          },
         ],
         recommendations: [
           'Nutrition therapy + glucose monitoring if GDM',
@@ -2244,14 +2265,14 @@ export const wave6EmPedsCalcs: Calculator[] = [
         { label: 'Immediate / first minutes–hours', value: 'early' },
         { label: 'After a period of relative wellness', value: 'delayed' },
       ]),
-      yesNo('csection', 'Cesarean without labor', 1),
-      yesNo('grunting', 'Prominent grunting / marked retractions', 1),
-      yesNo('cyanosisO2', 'Cyanosis or significant O₂ need', 1),
-      yesNo('fluidCXR', 'CXR: fluid in fissures / perihilar streaking (TTN-like)', 1),
-      yesNo('reticCXR', 'CXR: diffuse reticulogranular / air bronchograms (RDS-like)', 1),
-      yesNo('improving6_12', 'Clear improvement by 6–12–24 h', 1),
-      yesNo('worsening', 'Progressive worsening over first day', 1),
-      yesNo('prematurityRisk', 'No/late antenatal steroids if preterm', 1),
+      yesNo('csection', 'Cesarean without labor', 2),
+      yesNo('grunting', 'Prominent grunting / marked retractions', 0),
+      yesNo('cyanosisO2', 'Cyanosis or significant O₂ need', 0),
+      yesNo('fluidCXR', 'CXR: fluid in fissures / perihilar streaking (TTN-like)', 3),
+      yesNo('reticCXR', 'CXR: diffuse reticulogranular / air bronchograms (RDS-like)', -3),
+      yesNo('improving6_12', 'Clear improvement by 6–12–24 h', 3),
+      yesNo('worsening', 'Progressive worsening over first day', -2),
+      yesNo('prematurityRisk', 'No/late antenatal steroids if preterm', -2),
     ],
     calculate(values) {
       let ttn = 0;
@@ -2294,6 +2315,14 @@ export const wave6EmPedsCalcs: Calculator[] = [
           { label: 'TTN points', value: String(ttn) },
           { label: 'RDS points', value: String(rds) },
           { label: 'GA', value: `${ga} wks` },
+          {
+            label: 'No/late antenatal steroids (preterm risk)',
+            value: bool(values.prematurityRisk)
+              ? ga < 35
+                ? 'Yes (counted toward RDS)'
+                : 'Yes (noted; scores mainly if GA <35)'
+              : 'No',
+          },
         ],
         recommendations: [
           'Supportive O₂/CPAP as needed',
@@ -2648,7 +2677,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
       yesNo('abdominal', 'Acute abdominal pain (diffuse colicky) or GI bleeding / intussusception concern', 1),
       yesNo('arthritis', 'Arthritis or arthralgia', 1),
       yesNo('renal', 'Renal involvement (proteinuria, hematuria, or renal insufficiency)', 1),
-      yesNo('histology', 'Histology: leukocytoclastic vasculitis or proliferative GN with predominant IgA', 2),
+      yesNo('histology', 'Histology: leukocytoclastic vasculitis or proliferative GN with predominant IgA', 1),
       yesNo('scrotal', 'Scrotal edema/orchitis-like involvement (supportive)', 1),
       yesNo('alternate', 'More likely alternate diagnosis (ITP, meningococcemia, other vasculitis)', 0),
     ],

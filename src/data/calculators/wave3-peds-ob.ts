@@ -1428,8 +1428,8 @@ export const wave3PedsObCalcs: Calculator[] = [
     inputs: [
       numberInput('baselineCr', 'Baseline creatinine', { unit: 'mg/dL', min: 0.1, max: 10, step: 0.01, defaultValue: 0.4 }),
       numberInput('currentCr', 'Current creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.01, defaultValue: 0.6 }),
-      yesNo('dialysis', 'Renal replacement therapy initiated'),
-      yesNo('egfr35', 'eGFR <35 mL/min/1.73m² (for patients <18 y) — stage 3 criterion'),
+      yesNo('dialysis', 'Renal replacement therapy initiated', 3),
+      yesNo('egfr35', 'eGFR <35 mL/min/1.73m² (for patients <18 y) — stage 3 criterion', 3),
     ],
     calculate(values) {
       const base = num(values.baselineCr, 0.4);
@@ -1605,7 +1605,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       yesNo('decreasedBreath', 'Decreased breath sounds'),
       yesNo('vomiting', 'Vomiting'),
       yesNo('gcsLow', 'GCS ≤13 or altered mentation'),
-      yesNo('distracting', 'Distracting painful injury (optional clinical judgment)'),
+      yesNo('distracting', 'Distracting painful injury (optional clinical judgment)', 0),
     ],
     calculate(values) {
       const predictors = [
@@ -1697,8 +1697,8 @@ export const wave3PedsObCalcs: Calculator[] = [
         { label: 'Irritable or mildly lethargic', value: 1 },
         { label: 'Lethargic, poorly responsive', value: 2 },
       ]),
-      yesNo('apnea', 'Apnea observed'),
-      yesNo('highRisk', 'High-risk host (prematurity, hemodynamically significant CHD, immunodeficiency, etc.)'),
+      yesNo('apnea', 'Apnea observed', 0),
+      yesNo('highRisk', 'High-risk host (prematurity, hemodynamically significant CHD, immunodeficiency, etc.)', 0),
     ],
     calculate(values) {
       const sum =
@@ -1801,7 +1801,7 @@ export const wave3PedsObCalcs: Calculator[] = [
         { label: '90–93%', value: 1 },
         { label: '<90%', value: 2 },
       ]),
-      yesNo('altered', 'Altered consciousness / exhaustion / cyanosis'),
+      yesNo('altered', 'Altered consciousness / exhaustion / cyanosis', 0),
     ],
     calculate(values) {
       const sum =
@@ -2191,12 +2191,30 @@ export const wave3PedsObCalcs: Calculator[] = [
       ].filter(Boolean).length;
       const echo = bool(values.echoPos);
 
+      const labDetails = [
+        { label: 'CRP ≥3.0 mg/dL', value: bool(values.crpHigh) ? 'Yes' : 'No' },
+        { label: 'ESR ≥40 mm/h', value: bool(values.esrHigh) ? 'Yes' : 'No' },
+        { label: 'Anemia for age', value: bool(values.anemia) ? 'Yes' : 'No' },
+        { label: 'Platelets ≥450k after d7', value: bool(values.pltHigh) ? 'Yes' : 'No' },
+        { label: 'Albumin ≤3.0 g/dL', value: bool(values.albuminLow) ? 'Yes' : 'No' },
+        { label: 'ALT elevated', value: bool(values.altHigh) ? 'Yes' : 'No' },
+        { label: 'WBC ≥15,000', value: bool(values.wbcHigh) ? 'Yes' : 'No' },
+        { label: 'Urine ≥10 WBC/hpf', value: bool(values.uaWbc) ? 'Yes' : 'No' },
+        { label: 'Echo positive', value: echo ? 'Yes' : 'No' },
+        { label: 'Supplemental labs', value: `${labs}/6 (≥3 treats if inflam gate passed)` },
+      ];
+
       if (feverDays < 5) {
         return {
           score: 'Fever <5 days',
           label: 'Too early for standard incomplete algorithm',
           interpretation: 'Classic incomplete KD algorithm usually requires ≥5 days of fever (or shorter with coronary changes). Continue evaluation if high suspicion.',
           riskLevel: 'info',
+          details: [
+            { label: 'Fever days', value: String(feverDays) },
+            { label: 'Clinical features', value: String(features) },
+            ...labDetails,
+          ],
         };
       }
 
@@ -2206,6 +2224,11 @@ export const wave3PedsObCalcs: Calculator[] = [
           label: 'Treat as complete KD if fever criteria met',
           interpretation: `≥4 clinical features with fever — this is complete KD territory; treat with IVIG/ASA per AHA if diagnostic criteria met. Incomplete lab helper not required.`,
           riskLevel: 'high',
+          details: [
+            { label: 'Fever days', value: String(feverDays) },
+            { label: 'Clinical features', value: String(features) },
+            ...labDetails,
+          ],
         };
       }
 
@@ -2242,8 +2265,7 @@ export const wave3PedsObCalcs: Calculator[] = [
           { label: 'Fever days', value: String(feverDays) },
           { label: 'Clinical features', value: String(features) },
           { label: 'CRP/ESR gate', value: inflam ? 'Passed' : 'Not elevated' },
-          { label: 'Supplemental labs', value: `${labs}/6 (≥3 treats)` },
-          { label: 'Echo positive', value: echo ? 'Yes' : 'No' },
+          ...labDetails,
         ],
         recommendations: [
           'Cardiology / echo as algorithm indicates',
@@ -2468,8 +2490,8 @@ export const wave3PedsObCalcs: Calculator[] = [
         { label: 'Nulliparous', value: 'nullip' },
         { label: 'Multiparous', value: 'multip' },
       ]),
-      yesNo('ruptured', 'Membranes ruptured'),
-      yesNo('adequateMvus', 'Adequate contractions (if IUPC; ≥200 MVU)'),
+      yesNo('ruptured', 'Membranes ruptured', 0),
+      yesNo('adequateMvus', 'Adequate contractions (if IUPC; ≥200 MVU)', 0),
     ],
     calculate(values) {
       const start = num(values.dilationStart, 6);
@@ -2519,6 +2541,8 @@ export const wave3PedsObCalcs: Calculator[] = [
         details: [
           { label: 'Start → now', value: `${start} → ${now} cm` },
           { label: 'Rate', value: `${round(rate, 2)} cm/h` },
+          { label: 'Parity', value: parity === 'multip' ? 'Multiparous' : 'Nulliparous' },
+          { label: 'Educational min rate', value: `${expectedMinRate} cm/h` },
           { label: 'Membranes / adequate MVU', value: `${bool(values.ruptured) ? 'ROM' : 'intact'} / ${bool(values.adequateMvus) ? 'yes' : 'no/unknown'}` },
         ],
       };
@@ -2567,6 +2591,13 @@ export const wave3PedsObCalcs: Calculator[] = [
       const protein = bool(values.proteinuria);
       const endOrg = bool(values.endOrgan);
       const severe = bool(values.severeBp);
+      const resolved = bool(values.resolvedPostpartum);
+      const ghtnDetails = [
+        { label: 'Severe-range BP', value: severe ? 'Yes' : 'No' },
+        { label: 'Proteinuria', value: protein ? 'Yes' : 'No' },
+        { label: 'End-organ', value: endOrg ? 'Yes' : 'No' },
+        { label: 'Postpartum resolution by 12 weeks', value: resolved ? 'Yes' : 'No / not known' },
+      ];
 
       if (!after20 && !chronic) {
         return {
@@ -2574,6 +2605,7 @@ export const wave3PedsObCalcs: Calculator[] = [
           label: 'Criteria not entered',
           interpretation: 'No diagnostic hypertension flag selected.',
           riskLevel: 'info',
+          details: ghtnDetails,
         };
       }
 
@@ -2583,6 +2615,7 @@ export const wave3PedsObCalcs: Calculator[] = [
           label: 'Chronic hypertension pattern',
           interpretation: 'Known HTN before 20 weeks suggests chronic hypertension. Watch for superimposed preeclampsia if protein or end-organ findings develop.',
           riskLevel: 'moderate',
+          details: ghtnDetails,
         };
       }
 
@@ -2591,8 +2624,10 @@ export const wave3PedsObCalcs: Calculator[] = [
           score: severe || endOrg ? 'Preeclampsia ± severe features' : 'Preeclampsia',
           label: 'Preeclampsia pattern (not gestational HTN alone)',
           interpretation:
-            'HTN after 20 weeks with proteinuria and/or end-organ criteria = preeclampsia spectrum — manage accordingly (not isolated gestational HTN).',
+            'HTN after 20 weeks with proteinuria and/or end-organ criteria = preeclampsia spectrum — manage accordingly (not isolated gestational HTN).' +
+            (severe ? ' Severe-range BP present — manage as preeclampsia with severe features pathway as indicated.' : ''),
           riskLevel: 'high',
+          details: ghtnDetails,
         };
       }
 
@@ -2602,13 +2637,12 @@ export const wave3PedsObCalcs: Calculator[] = [
           label: severe ? 'Gestational HTN (severe-range BP)' : 'Gestational hypertension',
           interpretation: severe
             ? 'New HTN after 20 weeks without protein/end-organ but with severe-range BP — treat BP, evaluate closely for evolving preeclampsia, and manage per obstetric protocol (often similar vigilance to severe-feature pathways).'
-            : 'New HTN ≥140/90 after 20 weeks without proteinuria or end-organ criteria suggests gestational hypertension. Serial labs/BP and fetal surveillance; many progress to preeclampsia.',
+            : 'New HTN ≥140/90 after 20 weeks without proteinuria or end-organ criteria suggests gestational hypertension. Serial labs/BP and fetal surveillance; many progress to preeclampsia.' +
+              (resolved
+                ? ' Postpartum resolution by 12 weeks supports gestational (not chronic) HTN retrospectively.'
+                : ''),
           riskLevel: severe ? 'high' : 'moderate',
-          details: [
-            { label: 'Proteinuria', value: 'No' },
-            { label: 'End-organ', value: 'No' },
-            { label: 'Postpartum resolution known', value: bool(values.resolvedPostpartum) ? 'Yes' : 'Not provided' },
-          ],
+          details: ghtnDetails,
         };
       }
 
@@ -2617,6 +2651,7 @@ export const wave3PedsObCalcs: Calculator[] = [
         label: 'Reassess classification',
         interpretation: 'Mixed chronic and gestational features — consider chronic HTN with superimposed preeclampsia if protein/end-organ present after 20 weeks.',
         riskLevel: 'moderate',
+        details: ghtnDetails,
       };
     },
     evidence: {

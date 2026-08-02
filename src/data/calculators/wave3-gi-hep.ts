@@ -14,7 +14,7 @@ export const wave3GiHepCalcs: Calculator[] = [
     inputs: [
       numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 2.0 }),
       numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0 }),
-      yesNo('dialysis', 'Dialysis ≥2 times in past week (or continuous RRT)'),
+      yesNo('dialysis', 'Dialysis ≥2 times in past week (or continuous RRT)', 17),
     ],
     calculate(values) {
       let bili = Math.max(num(values.bili, 2), 1);
@@ -76,8 +76,8 @@ export const wave3GiHepCalcs: Calculator[] = [
       numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 3.0 }),
       numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, defaultValue: 1.5 }),
       numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, defaultValue: 3.0 }),
-      yesNo('ageUnder1', 'Age < 1 year'),
-      yesNo('growthFailure', 'Growth failure (<2 SD height or weight for age)'),
+      yesNo('ageUnder1', 'Age < 1 year', 4),
+      yesNo('growthFailure', 'Growth failure (<2 SD height or weight for age)', 7),
     ],
     calculate(values) {
       // OPTN-style floors: bilirubin, INR, and albumin values <1.0 are set to 1.0
@@ -625,8 +625,8 @@ export const wave3GiHepCalcs: Calculator[] = [
       yesNo('protein', 'Ascites total protein > 1.0 g/dL', 1),
       yesNo('glucose', 'Ascites glucose < 50 mg/dL', 1),
       yesNo('ldh', 'Ascites LDH > upper limit of normal for serum', 1),
-      yesNo('polyMicro', 'Polymicrobial Gram stain or culture (optional clue)', 1),
-      yesNo('noResponse', 'No clinical improvement on antibiotics (optional)', 1),
+      yesNo('polyMicro', 'Polymicrobial Gram stain or culture (optional clue)', 0),
+      yesNo('noResponse', 'No clinical improvement on antibiotics (optional)', 0),
     ],
     calculate(values) {
       const chemical =
@@ -1643,7 +1643,7 @@ export const wave3GiHepCalcs: Calculator[] = [
         defaultValue: 0,
         helpText: 'If traumatic tap, correct PMN −1 per 250 RBC',
       }),
-      yesNo('symptoms', 'Symptoms/signs of infection or unexplained decompensation'),
+      yesNo('symptoms', 'Symptoms/signs of infection or unexplained decompensation', 0),
     ],
     calculate(values) {
       const pmnRaw = num(values.pmn, 100);
@@ -1658,12 +1658,16 @@ export const wave3GiHepCalcs: Calculator[] = [
           unit: 'PMN/µL',
           label: 'SBP criteria met (PMN ≥250)',
           interpretation:
-            'Corrected PMN ≥250 cells/µL: treat as SBP immediately. Start empiric antibiotics; obtain culture in blood culture bottles at bedside; give albumin if indicated (Cr >1, BUN >30, or bili >4).',
+            'Corrected PMN ≥250 cells/µL: treat as SBP immediately. Start empiric antibiotics; obtain culture in blood culture bottles at bedside; give albumin if indicated (Cr >1, BUN >30, or bili >4).' +
+            (symptomatic
+              ? ' Clinical infection signs/decompensation noted — supports urgent treatment pathway.'
+              : ' Treat on PMN criterion even if relatively asymptomatic (common teaching).'),
           riskLevel: 'high',
           details: [
             { label: 'Reported PMN', value: `${pmnRaw}` },
             { label: 'Traumatic-tap correction', value: correction ? `−${correction}` : 'None' },
             { label: 'Corrected PMN', value: `${pmn}` },
+            { label: 'Symptoms / decompensation', value: symptomatic ? 'Yes' : 'No' },
           ],
           recommendations: [
             '3rd-gen cephalosporin (typical community SBP)',
@@ -1680,18 +1684,24 @@ export const wave3GiHepCalcs: Calculator[] = [
           interpretation:
             'PMN <250 does not meet classic SBP cut-off. If high clinical suspicion, consider early antibiotics and culture; bacterascites (culture-positive, PMN <250) may progress.',
           riskLevel: 'moderate',
-          details: [{ label: 'Corrected PMN', value: `${pmn}` }],
+          details: [
+            { label: 'Corrected PMN', value: `${pmn}` },
+            { label: 'Symptoms / decompensation', value: 'Yes' },
+          ],
         };
       }
       return {
         score: round(pmn, 0),
         unit: 'PMN/µL',
         label: 'SBP not diagnosed by PMN',
-        interpretation: 'Corrected PMN <250 cells/µL: does not meet diagnostic threshold for SBP. Culture if concerned; investigate other causes of decompensation.',
+        interpretation: symptomatic
+          ? 'Corrected PMN <250 cells/µL: does not meet diagnostic threshold for SBP despite symptoms — culture if concerned, investigate other causes of decompensation, and reassess if clinical suspicion remains high.'
+          : 'Corrected PMN <250 cells/µL: does not meet diagnostic threshold for SBP. Culture if concerned; investigate other causes of decompensation.',
         riskLevel: 'low',
         details: [
           { label: 'Corrected PMN', value: `${pmn}` },
           { label: 'Threshold', value: '≥250 cells/µL' },
+          { label: 'Symptoms / decompensation', value: symptomatic ? 'Yes' : 'No' },
         ],
       };
     },

@@ -436,7 +436,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         { label: 'Stage 2 — UO <0.5 mL/kg/h × 12 h', value: 2 },
         { label: 'Stage 3 — UO <0.3 mL/kg/h × 24 h or anuria × 12 h', value: 3 },
       ]),
-      yesNo('rrt', 'Receiving RRT for AKI', 1),
+      yesNo('rrt', 'Receiving RRT for AKI', 3),
     ],
     calculate(values) {
       let stage = Math.max(num(values.crStage, 0), num(values.uoStage, 0));
@@ -644,7 +644,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', min: 1, max: 500, defaultValue: 100 }),
       numberInput('purea', 'Plasma urea (BUN)', { unit: 'mg/dL', min: 1, max: 200, defaultValue: 40 }),
       numberInput('uurea', 'Urine urea nitrogen', { unit: 'mg/dL', min: 1, max: 2000, defaultValue: 200 }),
-      yesNo('onDiuretic', 'Recent loop/thiazide diuretic', 1),
+      yesNo('onDiuretic', 'Recent loop/thiazide diuretic', 9.9),
     ],
     calculate(values) {
       const pna = num(values.pna, 140);
@@ -1023,8 +1023,8 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         { label: 'Peripheral IV', value: 'peripheral' },
         { label: 'Central line', value: 'central' },
       ]),
-      yesNo('monitor', 'Continuous cardiac monitoring', 1),
-      yesNo('icu', 'ICU / high-acuity setting', 1),
+      yesNo('monitor', 'Continuous cardiac monitoring', 0),
+      yesNo('icu', 'ICU / high-acuity setting', 0),
     ],
     calculate(values) {
       const meq = num(values.meq, 10);
@@ -1068,6 +1068,10 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         riskLevel,
         details: [
           { label: 'Planned', value: `${meq} mEq over ${hours} h` },
+          { label: 'Access', value: access === 'central' ? 'Central line' : 'Peripheral IV' },
+          { label: 'Continuous cardiac monitoring', value: monitor ? 'Yes' : 'No' },
+          { label: 'ICU / high-acuity setting', value: icu ? 'Yes' : 'No' },
+          { label: 'Suggested max for context', value: `${maxUsual} mEq/h` },
           { label: 'Typical peripheral max', value: '10 mEq/h' },
           { label: 'Typical central max', value: '20 mEq/h (up to ~40 monitored emergency)' },
         ],
@@ -1487,17 +1491,22 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       }
       const pct = round(((plr - base) / base) * 100, 1);
       const responder = pct >= 10;
+      const metricKey = str(values.metric, 'sv');
+      const metricLabel =
+        metricKey === 'co' ? 'Cardiac output / index' : metricKey === 'vti' ? 'LVOT VTI' : 'Stroke volume';
       return {
         score: pct,
         unit: '% change',
         label: responder ? 'Likely fluid responsive (Δ ≥10%)' : 'Likely non-responsive (Δ <10%)',
         interpretation: responder
-          ? `PLR increased ${str(values.metric, 'sv')} by ${pct}% (≥10–15% threshold). Patient likely to increase CO with fluids if still hypoperfused — give challenge and reassess.`
-          : `PLR change ${pct}% (<10%). Unlikely fluid responsive; avoid unnecessary volume — pursue vasopressors/inotropes or other causes of shock.`,
+          ? `PLR increased ${metricLabel} by ${pct}% (≥10–15% threshold). Patient likely to increase CO with fluids if still hypoperfused — give challenge and reassess.`
+          : `PLR change in ${metricLabel}: ${pct}% (<10%). Unlikely fluid responsive; avoid unnecessary volume — pursue vasopressors/inotropes or other causes of shock.`,
         riskLevel: responder ? 'low' : 'moderate',
         details: [
+          { label: 'Metric used', value: metricLabel },
           { label: 'Baseline', value: String(base) },
           { label: 'During PLR', value: String(plr) },
+          { label: 'Percent change', value: `${pct}%` },
           { label: 'Common threshold', value: '≥10% (some use ≥15%)' },
         ],
         recommendations: [
@@ -1539,7 +1548,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     inputs: [
       numberInput('ppmax', 'PPmax (or SPmax−DPmax)', { unit: 'mmHg', min: 1, max: 150, defaultValue: 50 }),
       numberInput('ppmin', 'PPmin', { unit: 'mmHg', min: 1, max: 150, defaultValue: 40 }),
-      yesNo('valid', 'Validity conditions met (controlled MV, TV≥8 mL/kg, no efforts, sinus, closed chest)', 1),
+      yesNo('valid', 'Validity conditions met (controlled MV, TV≥8 mL/kg, no efforts, sinus, closed chest)', 0),
     ],
     calculate(values) {
       const ppmax = num(values.ppmax, 50);

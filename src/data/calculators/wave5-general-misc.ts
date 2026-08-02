@@ -1707,12 +1707,40 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
       ]),
     ],
     calculate(values) {
+      const patternPts = num(values.pattern, 0);
+      const charPts = num(values.charCount, 0);
+      const timePts = num(values.timeCourse, 0);
+      const tophusPts = num(values.tophus, 0);
+      const suaPts = num(values.sua, 0);
+      const synovialPts = num(values.synovial, 0);
+      const imagingPts = num(values.imaging, 0);
+      const additive =
+        patternPts + charPts + timePts + tophusPts + suaPts + synovialPts + imagingPts;
+      const domainDetails = (scored: boolean) => [
+        { label: 'Joint pattern', value: scored ? `${patternPts} pt` : `${patternPts} pt (not scored — MSU sufficient)` },
+        { label: 'Episode characteristics', value: scored ? `${charPts} pt` : `${charPts} pt (not scored — MSU sufficient)` },
+        { label: 'Time course', value: scored ? `${timePts} pt` : `${timePts} pt (not scored — MSU sufficient)` },
+        { label: 'Clinical tophus', value: scored ? `${tophusPts} pt` : `${tophusPts} pt (not scored — MSU sufficient)` },
+        { label: 'Serum urate', value: scored ? `${suaPts} pt` : `${suaPts} pt (not scored — MSU sufficient)` },
+        { label: 'Synovial microscopy', value: scored ? `${synovialPts} pt` : `${synovialPts} pt (not scored — MSU sufficient)` },
+        { label: 'Imaging', value: scored ? `${imagingPts} pt` : `${imagingPts} pt (not scored — MSU sufficient)` },
+        { label: 'Additive domain total', value: scored ? String(round(additive, 0)) : `${round(additive, 0)} (not required — MSU+)` },
+      ];
+
       if (values.entry === 'no') {
         return {
           score: '—',
           label: 'Entry criterion not met',
           interpretation: 'ACR/EULAR classification requires at least one episode of peripheral joint/bursa swelling, pain, or tenderness.',
           riskLevel: 'info',
+          details: [
+            { label: 'Entry criterion', value: 'Not met' },
+            ...domainDetails(false).map((d) =>
+              d.label === 'Additive domain total'
+                ? { label: d.label, value: `${round(additive, 0)} (not scored — no entry)` }
+                : { label: d.label, value: d.value.replace('MSU sufficient', 'no entry') }
+            ),
+          ],
         };
       }
       if (values.msu === 'pos') {
@@ -1722,18 +1750,15 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
           interpretation:
             'Presence of MSU crystals in a symptomatic joint/bursa (or tophus) is sufficient for classification as gout regardless of score.',
           riskLevel: 'high',
+          details: [
+            { label: 'Entry criterion', value: 'Met' },
+            { label: 'MSU crystals', value: 'Positive — sufficient' },
+            ...domainDetails(false),
+          ],
           recommendations: ['Acute therapy as indicated', 'Long-term urate-lowering plan', 'Lifestyle counseling'],
         };
       }
-      const score =
-        num(values.pattern, 0) +
-        num(values.charCount, 0) +
-        num(values.timeCourse, 0) +
-        num(values.tophus, 0) +
-        num(values.sua, 0) +
-        num(values.synovial, 0) +
-        num(values.imaging, 0);
-      const s = round(score, 0);
+      const s = round(additive, 0);
       if (s >= 8) {
         return {
           score: s,
@@ -1741,7 +1766,12 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
           label: 'Classifies as gout (≥8)',
           interpretation: `Total ${s} points (≥8 threshold). Meets ACR/EULAR 2015 classification for gout (simplified educational entry). Clinical diagnosis still requires judgment.`,
           riskLevel: 'high',
-          details: [{ label: 'Threshold', value: '≥8 with entry criterion' }],
+          details: [
+            { label: 'Entry criterion', value: 'Met' },
+            { label: 'MSU crystals', value: 'Not positive / not sufficient alone' },
+            { label: 'Threshold', value: '≥8 with entry criterion' },
+            ...domainDetails(true),
+          ],
           recommendations: ['Confirm clinically', 'Consider aspiration when safe/feasible', 'Address hyperuricemia long-term'],
         };
       }
@@ -1751,7 +1781,12 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
         label: 'Does not classify as gout (<8)',
         interpretation: `Total ${s} points (<8). Does not meet classification threshold. Consider alternative arthritis, repeat urate, imaging, or aspiration if still suspected.`,
         riskLevel: 'low',
-        details: [{ label: 'Points needed', value: `${8 - s} more to reach 8` }],
+        details: [
+          { label: 'Entry criterion', value: 'Met' },
+          { label: 'MSU crystals', value: 'Not positive / not sufficient alone' },
+          { label: 'Points needed', value: `${8 - s} more to reach 8` },
+          ...domainDetails(true),
+        ],
       };
     },
     evidence: {

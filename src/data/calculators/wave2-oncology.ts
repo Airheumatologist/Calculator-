@@ -509,7 +509,7 @@ export const wave2OncologyCalcs: Calculator[] = [
         defaultValue: 70,
         helpText: 'Many protocols cap GFR at 125 mL/min for Calvert',
       }),
-      yesNo('capGfr', 'Cap GFR at 125 mL/min (FDA/common practice)', 1),
+      yesNo('capGfr', 'Cap GFR at 125 mL/min (FDA/common practice)', 0),
     ],
     calculate(values) {
       const auc = num(values.auc, 5);
@@ -524,7 +524,9 @@ export const wave2OncologyCalcs: Calculator[] = [
         interpretation: `Dose = AUC ${auc} × (GFR ${gfrUsed} + 25) = ${dose} mg. Educational estimate — confirm GFR method (not always interchangeable with eGFR), obesity adjustments, and AUC target with the treating regimen.`,
         riskLevel: 'info',
         details: [
-          { label: 'GFR used', value: `${gfrUsed} mL/min${capped && gfr > 125 ? ' (capped)' : ''}` },
+          { label: 'GFR entered', value: `${gfr} mL/min` },
+          { label: 'Cap GFR at 125', value: capped ? 'Yes' : 'No' },
+          { label: 'GFR used', value: `${gfrUsed} mL/min${capped && gfr > 125 ? ' (capped from ' + gfr + ')' : ''}` },
           { label: 'Target AUC', value: String(auc) },
           { label: 'Formula', value: 'AUC × (GFR + 25)' },
         ],
@@ -835,8 +837,8 @@ export const wave2OncologyCalcs: Calculator[] = [
       ]),
       numberInput('largest', 'Largest tumor diameter', { unit: 'cm', min: 0.1, max: 30, step: 0.1, defaultValue: 3 }),
       numberInput('count', 'Number of tumors (if multiple)', { min: 1, max: 20, step: 1, defaultValue: 2 }),
-      yesNo('vascular', 'Macrovascular invasion', 1),
-      yesNo('extrahepatic', 'Extrahepatic disease', 1),
+      yesNo('vascular', 'Macrovascular invasion', -1),
+      yesNo('extrahepatic', 'Extrahepatic disease', -1),
     ],
     calculate(values) {
       const pattern = String(values.pattern ?? 'single');
@@ -844,6 +846,9 @@ export const wave2OncologyCalcs: Calculator[] = [
       const count = num(values.count, 2);
       const vascular = bool(values.vascular);
       const ehd = bool(values.extrahepatic);
+
+      const patternLabel =
+        pattern === 'single' ? 'Single tumor' : pattern === 'multi' ? 'Multiple tumors (2–3)' : 'More than 3 tumors';
 
       if (vascular || ehd) {
         return {
@@ -853,28 +858,35 @@ export const wave2OncologyCalcs: Calculator[] = [
             'Macrovascular invasion or extrahepatic disease excludes Milan criteria. Consider downstaging protocols, systemic therapy, or non-transplant pathways.',
           riskLevel: 'high',
           details: [
+            { label: 'Tumor pattern', value: patternLabel },
+            { label: 'Largest tumor', value: `${largest} cm` },
+            { label: 'Tumor count entered', value: String(count) },
             { label: 'Vascular invasion', value: vascular ? 'Yes' : 'No' },
             { label: 'Extrahepatic disease', value: ehd ? 'Yes' : 'No' },
           ],
         };
       }
 
+      // Milan: single ≤5 cm OR up to 3 lesions each ≤3 cm — pattern drives branch when count is ambiguous
       let within = false;
       let reason = '';
-      if (pattern === 'single' || count === 1) {
+      if (pattern === 'many' || count > 3) {
+        within = false;
+        reason = pattern === 'many' || count > 3
+          ? `>3 tumors (pattern: ${patternLabel}, count ${count}) exceeds Milan number limit`
+          : '>3 tumors exceeds Milan number limit';
+      } else if (pattern === 'single' || (pattern !== 'multi' && count === 1)) {
         within = largest <= 5;
         reason = within
           ? `Single tumor ${largest} cm ≤ 5 cm`
           : `Single tumor ${largest} cm > 5 cm`;
-      } else if (pattern === 'multi' || (count >= 2 && count <= 3)) {
-        const n = pattern === 'multi' ? Math.min(Math.max(count, 2), 3) : count;
+      } else {
+        // multi (2–3)
+        const n = Math.min(Math.max(count, 2), 3);
         within = n <= 3 && largest <= 3;
         reason = within
           ? `${n} tumors, largest ${largest} cm — each ≤3 cm and ≤3 nodules`
           : `${count} tumors, largest ${largest} cm — fails ≤3 nodules each ≤3 cm`;
-      } else {
-        within = false;
-        reason = '>3 tumors exceeds Milan number limit';
       }
 
       if (within) {
@@ -883,6 +895,13 @@ export const wave2OncologyCalcs: Calculator[] = [
           label: 'Within Milan criteria',
           interpretation: `${reason}. Eligible size/number criteria for classic Milan transplant listing (center protocols and AFP/biology still apply).`,
           riskLevel: 'low',
+          details: [
+            { label: 'Tumor pattern', value: patternLabel },
+            { label: 'Largest tumor', value: `${largest} cm` },
+            { label: 'Tumor count used', value: String(count) },
+            { label: 'Vascular invasion', value: 'No' },
+            { label: 'Extrahepatic disease', value: 'No' },
+          ],
           recommendations: ['Transplant center referral if candidate', 'Bridge therapy as indicated', 'Surveillance imaging'],
         };
       }
@@ -891,6 +910,13 @@ export const wave2OncologyCalcs: Calculator[] = [
         label: 'Outside Milan criteria',
         interpretation: `${reason}. May still qualify for expanded criteria (e.g., UCSF), downstaging, or living-donor pathways at selected centers.`,
         riskLevel: 'moderate',
+        details: [
+          { label: 'Tumor pattern', value: patternLabel },
+          { label: 'Largest tumor', value: `${largest} cm` },
+          { label: 'Tumor count used', value: String(count) },
+          { label: 'Vascular invasion', value: 'No' },
+          { label: 'Extrahepatic disease', value: 'No' },
+        ],
         recommendations: ['Discuss expanded criteria / downstaging', 'Oncology + hepatology MDT'],
       };
     },
@@ -1218,18 +1244,18 @@ export const wave2OncologyCalcs: Calculator[] = [
         { label: '1', value: 1 },
         { label: '≥2', value: 2 },
       ]),
-      yesNo('atypia', 'Atypical hyperplasia on biopsy', 1),
+      yesNo('atypia', 'Atypical hyperplasia on biopsy', 2),
       selectInput('relatives', 'First-degree relatives with breast cancer', [
         { label: '0', value: 0 },
         { label: '1', value: 1 },
         { label: '≥2', value: 2 },
       ]),
       selectInput('race', 'Race/ethnicity (educational strata)', [
-        { label: 'White / other (reference educational weight)', value: 0 },
-        { label: 'Black / African American', value: 0 },
-        { label: 'Hispanic / Latina', value: 0 },
-        { label: 'Asian / Pacific Islander', value: 0 },
-        { label: 'American Indian / Alaska Native', value: 0 },
+        { label: 'White / other (reference educational weight)', value: 'white' },
+        { label: 'Black / African American', value: 'black' },
+        { label: 'Hispanic / Latina', value: 'hispanic' },
+        { label: 'Asian / Pacific Islander', value: 'asian' },
+        { label: 'American Indian / Alaska Native', value: 'aian' },
       ]),
     ],
     calculate(values) {
@@ -1238,6 +1264,15 @@ export const wave2OncologyCalcs: Calculator[] = [
       if (age >= 50) agePts = 3;
       else if (age >= 45) agePts = 2;
       else if (age >= 40) agePts = 1;
+
+      const race = String(values.race ?? 'white');
+      const raceLabel: Record<string, string> = {
+        white: 'White / other',
+        black: 'Black / African American',
+        hispanic: 'Hispanic / Latina',
+        asian: 'Asian / Pacific Islander',
+        aian: 'American Indian / Alaska Native',
+      };
 
       const score =
         agePts +
@@ -1280,10 +1315,11 @@ export const wave2OncologyCalcs: Calculator[] = [
       return {
         score,
         ...r,
+        interpretation: `${r.interpretation} Race/ethnicity selected: ${raceLabel[race] ?? race} (official Gail/BCRAT is race-specific — use NCI tool for calibrated %).`,
         details: [
           { label: 'Educational factor points', value: String(score) },
           { label: 'Approx 5-year risk', value: fiveYear },
-          { label: 'Race input', value: 'Captured for counseling — official Gail is race-specific' },
+          { label: 'Race/ethnicity', value: raceLabel[race] ?? race },
         ],
         recommendations: [
           'Use official NCI Gail / IBIS-Tyrer-Cuzick for numeric risk',
@@ -1331,11 +1367,11 @@ export const wave2OncologyCalcs: Calculator[] = [
         defaultValue: 3,
         helpText: '0 = no distress, 10 = extreme distress',
       }),
-      yesNo('practical', 'Practical problems (housing, bills, transport, work)', 1),
-      yesNo('family', 'Family problems', 1),
-      yesNo('emotional', 'Emotional problems (worry, depression, nervousness)', 1),
-      yesNo('spiritual', 'Spiritual / religious concerns', 1),
-      yesNo('physical', 'Physical problems contributing to distress', 1),
+      yesNo('practical', 'Practical problems (housing, bills, transport, work)', 0),
+      yesNo('family', 'Family problems', 0),
+      yesNo('emotional', 'Emotional problems (worry, depression, nervousness)', 0),
+      yesNo('spiritual', 'Spiritual / religious concerns', 0),
+      yesNo('physical', 'Physical problems contributing to distress', 0),
     ],
     calculate(values) {
       const score = num(values.score, 3);

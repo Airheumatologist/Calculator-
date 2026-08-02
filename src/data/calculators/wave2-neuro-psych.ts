@@ -230,10 +230,10 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         { label: 'No', value: 0 },
         { label: 'Yes', value: 1 },
       ]),
-      yesNo('unilateral', 'C1. Unilateral location'),
-      yesNo('pulsating', 'C2. Pulsating quality'),
-      yesNo('moderateSevere', 'C3. Moderate or severe pain intensity'),
-      yesNo('aggravation', 'C4. Aggravation by / causing avoidance of routine physical activity'),
+      yesNo('unilateral', 'C1. Unilateral location', 0),
+      yesNo('pulsating', 'C2. Pulsating quality', 0),
+      yesNo('moderateSevere', 'C3. Moderate or severe pain intensity', 0),
+      yesNo('aggravation', 'C4. Aggravation by / causing avoidance of routine physical activity', 0),
       yesNo('nausea', 'D1. Nausea and/or vomiting'),
       yesNo('photoPhono', 'D2. Photophobia and phonophobia'),
       yesNo('notBetter', 'E. Not better accounted for by another ICHD-3 diagnosis'),
@@ -346,7 +346,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         defaultValue: 5,
         helpText: 'Time of ongoing seizure activity or incomplete recovery between seizures',
       }),
-      yesNo('recurrent', 'Seizures recur without recovery between (operational SE if past t1)'),
+      yesNo('recurrent', 'Seizures recur without recovery between (operational SE if past t1)', 0),
     ],
     calculate(values) {
       const type = String(values.type || 'tc');
@@ -470,8 +470,8 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         step: 0.1,
         defaultValue: 10,
       }),
-      yesNo('toxicSx', 'Clinical toxicity symptoms present'),
-      yesNo('breakthrough', 'Breakthrough seizures / inadequate control'),
+      yesNo('toxicSx', 'Clinical toxicity symptoms present', 0),
+      yesNo('breakthrough', 'Breakthrough seizures / inadequate control', 0),
     ],
     calculate(values) {
       const drug = String(values.drug || 'pht');
@@ -582,8 +582,8 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         step: 0.1,
         defaultValue: 2.5,
       }),
-      yesNo('esrd', 'ESRD / CrCl <20 mL/min (use 0.1 binding factor variant)', 1),
-      yesNo('toxicSx', 'Clinical phenytoin toxicity symptoms'),
+      yesNo('esrd', 'ESRD / CrCl <20 mL/min (use 0.1 binding factor variant)', 0),
+      yesNo('toxicSx', 'Clinical phenytoin toxicity symptoms', 0),
     ],
     calculate(values) {
       const total = num(values.total, 10);

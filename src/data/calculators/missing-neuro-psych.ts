@@ -130,7 +130,7 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         { label: 'Thin SAH (focal or diffuse, <1 mm layers)', value: 1 },
         { label: 'Thick SAH (completely filling ≥1 cistern/fissure or ≥1 mm layers)', value: 2 },
       ]),
-      yesNo('ivh', 'Intraventricular hemorrhage present'),
+      yesNo('ivh', 'Intraventricular hemorrhage present', 2),
     ],
     calculate(values) {
       const sah = num(values.sah, 0);
@@ -1288,6 +1288,7 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         score,
         ...r,
         details: [
+          { label: 'Entry mode', value: mode === 'regions' ? 'Count regions (10 − n)' : 'Direct ASPECTS total' },
           { label: 'Regions involved', value: String(regions) },
           { label: 'MCA ASPECTS regions', value: 'Caudate, lentiform, internal capsule, insula, M1–M6' },
           { label: 'Range', value: '0–10 (higher = less early change)' },
@@ -1438,11 +1439,11 @@ export const missingNeuroPsychCalcs: Calculator[] = [
     whyUse: 'Widely adopted severity ladder from wish to die through intent/plan and recent behavior.',
     inputs: [
       yesNo('wishDead', '1. Wish to be dead (passive ideation)'),
-      yesNo('siNonSpecific', '2. Non-specific active suicidal thoughts'),
-      yesNo('siMethod', '3. Active suicidal ideation with any method (no plan/intent)'),
-      yesNo('siIntent', '4. Active suicidal ideation with some intent to act (no specific plan)'),
-      yesNo('siPlanIntent', '5. Active suicidal ideation with specific plan and intent'),
-      yesNo('behavior', 'Suicidal behavior (actual/aborted/interrupted attempt or preparatory acts) in past 3 months'),
+      yesNo('siNonSpecific', '2. Non-specific active suicidal thoughts', 2),
+      yesNo('siMethod', '3. Active suicidal ideation with any method (no plan/intent)', 3),
+      yesNo('siIntent', '4. Active suicidal ideation with some intent to act (no specific plan)', 4),
+      yesNo('siPlanIntent', '5. Active suicidal ideation with specific plan and intent', 5),
+      yesNo('behavior', 'Suicidal behavior (actual/aborted/interrupted attempt or preparatory acts) in past 3 months', 0),
     ],
     calculate(values) {
       const wish = bool(values.wishDead);
@@ -1566,7 +1567,7 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         'Did things that were unusual for you or that others might have thought were excessive, foolish, or risky',
         'Spending money got you or your family into trouble',
       ].map((label, i) => yesNo(`s${i + 1}`, `${i + 1}. ${label}`)),
-      yesNo('samePeriod', 'Several of the above ever happened during the same period of time?'),
+      yesNo('samePeriod', 'Several of the above ever happened during the same period of time?', 0),
       selectInput('impairment', 'How much of a problem did any of this cause?', [
         { label: 'No problem', value: 0 },
         { label: 'Minor problem', value: 1 },

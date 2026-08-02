@@ -40,9 +40,9 @@ export const wave3CardioVascCalcs: Calculator[] = [
           description: 'Circulatory collapse, actual/impending arrest, refractory shock',
         },
       ]),
-      yesNo('lactateHigh', 'Lactate elevated (e.g. >2 mmol/L) or rising', 1),
-      yesNo('vasoactive', 'On vasopressor and/or inotrope', 1),
-      yesNo('mcs', 'Mechanical circulatory support in use or imminent', 1),
+      yesNo('lactateHigh', 'Lactate elevated (e.g. >2 mmol/L) or rising', 0),
+      yesNo('vasoactive', 'On vasopressor and/or inotrope', 0),
+      yesNo('mcs', 'Mechanical circulatory support in use or imminent', 0),
     ],
     calculate(values) {
       const stage = num(values.stage, 0);
@@ -123,8 +123,8 @@ export const wave3CardioVascCalcs: Calculator[] = [
         { label: '6 — Exertion limited; can do mild activity', value: 6 },
         { label: '7 — Advanced NYHA III', value: 7 },
       ]),
-      yesNo('tempModifier', 'Temporary circulatory support modifier (e.g. IABP/Impella/ECMO)', 1),
-      yesNo('arrhythmiaModifier', 'Frequent ventricular arrhythmia modifier', 1),
+      yesNo('tempModifier', 'Temporary circulatory support modifier (e.g. IABP/Impella/ECMO)', 0),
+      yesNo('arrhythmiaModifier', 'Frequent ventricular arrhythmia modifier', 0),
     ],
     calculate(values) {
       const p = num(values.profile, 4);
@@ -334,9 +334,9 @@ export const wave3CardioVascCalcs: Calculator[] = [
       numberInput('crcl', 'Creatinine clearance', { unit: 'mL/min', min: 5, max: 200, defaultValue: 80 }),
       numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 200, defaultValue: 80 }),
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, defaultValue: 130 }),
-      yesNo('hf', 'Signs of heart failure at presentation', 1),
-      yesNo('vascular', 'Prior vascular disease (PAD / stroke)', 1),
-      yesNo('dm', 'Diabetes mellitus', 1),
+      yesNo('hf', 'Signs of heart failure at presentation', 7),
+      yesNo('vascular', 'Prior vascular disease (PAD / stroke)', 6),
+      yesNo('dm', 'Diabetes mellitus', 6),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
@@ -570,7 +570,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
       numberInput('crcl', 'Creatinine clearance', { unit: 'mL/min', min: 5, max: 200, defaultValue: 70 }),
       numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 5, max: 20, step: 0.1, defaultValue: 13 }),
       numberInput('wbc', 'White blood cell count', { unit: '×10⁹/L', min: 1, max: 50, step: 0.1, defaultValue: 8 }),
-      yesNo('priorBleed', 'Prior bleeding', 1),
+      yesNo('priorBleed', 'Prior bleeding', 15),
     ],
     calculate(values) {
       const age = num(values.age, 68);
@@ -790,29 +790,43 @@ export const wave3CardioVascCalcs: Calculator[] = [
         },
         { label: 'Nondiagnostic / incomplete RBBB-like only', value: 0 },
       ]),
-      yesNo('highLeads', 'Recorded with V1–V2 in 2nd intercostal space', 1),
-      yesNo('fever', 'Fever at time of ECG', 1),
-      yesNo('syncope', 'Syncope (especially nocturnal/at rest)', 1),
-      yesNo('fhScd', 'Family history of SCD / Brugada', 1),
-      yesNo('drugs', 'Possible sodium-channel blocker or other Brugada-inducing drug', 1),
+      yesNo('highLeads', 'Recorded with V1–V2 in 2nd intercostal space', 0),
+      yesNo('fever', 'Fever at time of ECG', 0),
+      yesNo('syncope', 'Syncope (especially nocturnal/at rest)', 0),
+      yesNo('fhScd', 'Family history of SCD / Brugada', 0),
+      yesNo('drugs', 'Possible sodium-channel blocker or other Brugada-inducing drug', 0),
     ],
     calculate(values) {
       const p = num(values.pattern, 0);
-      const clinical =
-        (bool(values.syncope) ? 1 : 0) + (bool(values.fhScd) ? 1 : 0) + (bool(values.fever) ? 1 : 0);
+      const highLeads = bool(values.highLeads);
+      const fever = bool(values.fever);
+      const syncope = bool(values.syncope);
+      const fhScd = bool(values.fhScd);
+      const drugs = bool(values.drugs);
+      const clinical = (syncope ? 1 : 0) + (fhScd ? 1 : 0) + (fever ? 1 : 0);
+
+      const details = [
+        {
+          label: 'Pattern',
+          value: p === 1 ? 'Type 1 (coved)' : p === 2 ? 'Type 2 (saddleback)' : 'Nondiagnostic',
+        },
+        { label: 'High leads (2nd ICS)', value: highLeads ? 'Yes' : 'No / unknown' },
+        { label: 'Fever at ECG', value: fever ? 'Yes' : 'No' },
+        { label: 'Syncope', value: syncope ? 'Yes' : 'No' },
+        { label: 'Family history SCD / Brugada', value: fhScd ? 'Yes' : 'No' },
+        { label: 'Possible Na-channel blocker / inducing drug', value: drugs ? 'Yes' : 'No' },
+        { label: 'Clinical risk flags', value: clinical ? `${clinical} selected` : 'None' },
+      ];
 
       if (p === 1) {
         return {
           score: 1,
           label: 'Type 1 Brugada pattern',
           interpretation:
-            'Spontaneous type 1 pattern is diagnostic of Brugada ECG pattern. Risk stratify for ICD (prior arrest, arrhythmic syncope) with electrophysiology/cardiogenetics expertise. Avoid fever and culprit drugs.',
-          riskLevel: clinical >= 1 ? 'high' : 'moderate',
-          details: [
-            { label: 'Pattern', value: 'Type 1 (coved)' },
-            { label: 'High leads used', value: bool(values.highLeads) ? 'Yes' : 'No / unknown' },
-            { label: 'Clinical risk flags', value: clinical ? `${clinical} selected` : 'None' },
-          ],
+            'Spontaneous type 1 pattern is diagnostic of Brugada ECG pattern. Risk stratify for ICD (prior arrest, arrhythmic syncope) with electrophysiology/cardiogenetics expertise. Avoid fever and culprit drugs.' +
+            (drugs ? ' Review and stop possible Brugada-inducing drugs (brugadadrugs.org).' : ''),
+          riskLevel: clinical >= 1 || drugs ? 'high' : 'moderate',
+          details,
           recommendations: [
             'Urgent specialist referral (EP / inherited arrhythmia)',
             'Treat fever aggressively; review drug list (brugadadrugs.org)',
@@ -825,12 +839,10 @@ export const wave3CardioVascCalcs: Calculator[] = [
           score: 2,
           label: 'Type 2 Brugada pattern (nondiagnostic alone)',
           interpretation:
-            'Type 2 (saddleback) is not diagnostic of Brugada syndrome by itself. Consider high lead placement, drug challenge in expert hands if clinical suspicion, and clinical risk assessment.',
-          riskLevel: clinical >= 1 ? 'moderate' : 'low',
-          details: [
-            { label: 'Pattern', value: 'Type 2 (saddleback)' },
-            { label: 'Inducing drug concern', value: bool(values.drugs) ? 'Yes' : 'No' },
-          ],
+            'Type 2 (saddleback) is not diagnostic of Brugada syndrome by itself. Consider high lead placement, drug challenge in expert hands if clinical suspicion, and clinical risk assessment.' +
+            (drugs ? ' Drug exposure may unmask type 1 — stop culprit agents and repeat ECG when feasible.' : ''),
+          riskLevel: clinical >= 1 || drugs ? 'moderate' : 'low',
+          details,
           recommendations: [
             'Repeat ECG with V1–V2 at 2nd ICS',
             'Expert evaluation if syncope/family history',
@@ -842,9 +854,10 @@ export const wave3CardioVascCalcs: Calculator[] = [
         score: 0,
         label: 'Nondiagnostic for Brugada pattern',
         interpretation:
-          'ECG does not meet type 1 or type 2 Brugada pattern criteria. Differential includes incomplete RBBB, athlete ECG, lead misplacement.',
-        riskLevel: 'low',
-        details: [{ label: 'Pattern', value: 'Nondiagnostic' }],
+          'ECG does not meet type 1 or type 2 Brugada pattern criteria. Differential includes incomplete RBBB, athlete ECG, lead misplacement.' +
+          (drugs ? ' If drug-induced Brugada concern persists, stop agent and obtain expert ECG review.' : ''),
+        riskLevel: drugs || clinical >= 1 ? 'moderate' : 'low',
+        details,
         recommendations: ['Correlate symptoms', 'Consider alternative diagnoses', 'Repeat ECG with correct lead placement if suspicion remains'],
       };
     },
@@ -883,8 +896,8 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whyUse: 'Recognizing Wellens pattern prompts urgent angiography rather than stress testing.',
     inputs: [
       yesNo('anginaHx', 'Recent anginal chest pain (often resolved at time of ECG)', 1),
-      yesNo('patternA', 'Type A: biphasic T waves in V2–V3 (±V1–V4)', 1),
-      yesNo('patternB', 'Type B: deep symmetric inverted T waves in V2–V3 (±V1–V6)', 1),
+      yesNo('patternA', 'Type A: biphasic T waves in V2–V3 (±V1–V4)', 2),
+      yesNo('patternB', 'Type B: deep symmetric inverted T waves in V2–V3 (±V1–V6)', 2),
       yesNo('isoelectric', 'Isoelectric or minimally elevated ST (<1 mm) in precordials', 1),
       yesNo('noQ', 'No precordial pathologic Q waves / loss of R progression', 1),
       yesNo('tropNormal', 'Normal or only slightly elevated cardiac troponin', 1),
@@ -1407,7 +1420,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
       ]),
-      yesNo('smoker', 'Current smoker', 1),
+      yesNo('smoker', 'Current smoker', 0),
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 220, defaultValue: 140 }),
       numberInput('nonhdl', 'Non-HDL cholesterol', {
         unit: 'mmol/L',
@@ -1531,9 +1544,9 @@ export const wave3CardioVascCalcs: Calculator[] = [
       numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 100, max: 400, defaultValue: 210 }),
       numberInput('hdl', 'HDL-C', { unit: 'mg/dL', min: 15, max: 120, defaultValue: 50 }),
       numberInput('hscrp', 'hsCRP', { unit: 'mg/L', min: 0.1, max: 20, step: 0.1, defaultValue: 2 }),
-      yesNo('smoker', 'Current smoker', 1),
-      yesNo('parentMi', 'Parental MI before age 60', 1),
-      yesNo('dm', 'Diabetes', 1),
+      yesNo('smoker', 'Current smoker', 0),
+      yesNo('parentMi', 'Parental MI before age 60', 0),
+      yesNo('dm', 'Diabetes', 0),
       numberInput('hba1c', 'HbA1c if diabetes', {
         unit: '%',
         min: 4,

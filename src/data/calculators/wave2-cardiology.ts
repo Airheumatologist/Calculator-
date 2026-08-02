@@ -38,7 +38,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
         { label: '1–3× normal limit', value: 1, points: 1 },
         { label: '> 3× normal limit', value: 2, points: 2 },
       ]),
-      yesNo('serialTropNeg', 'Serial troponins negative (0 and 3h, assay-specific)', 1, 'Both measurements below local 99th percentile / pathway threshold'),
+      yesNo('serialTropNeg', 'Serial troponins negative (0 and 3h, assay-specific)', 0, 'Both measurements below local 99th percentile / pathway threshold'),
     ],
     calculate(values) {
       const heart =
@@ -229,11 +229,11 @@ export const wave2CardiologyCalcs: Calculator[] = [
       numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, defaultValue: 30 }),
       numberInput('na', 'Sodium', { unit: 'mEq/L', min: 110, max: 160, defaultValue: 138 }),
       numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 4, max: 20, step: 0.1, defaultValue: 12 }),
-      yesNo('cvd', 'Cerebrovascular disease', 1),
-      yesNo('dementia', 'Dementia', 1),
-      yesNo('copd', 'COPD', 1),
-      yesNo('cirrhosis', 'Hepatic cirrhosis', 1),
-      yesNo('cancer', 'Cancer', 1),
+      yesNo('cvd', 'Cerebrovascular disease', 6),
+      yesNo('dementia', 'Dementia', 8),
+      yesNo('copd', 'COPD', 4),
+      yesNo('cirrhosis', 'Hepatic cirrhosis', 10),
+      yesNo('cancer', 'Cancer', 8),
     ],
     calculate(values) {
       const age = num(values.age, 75);
@@ -351,7 +351,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
       numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, defaultValue: 25 }),
       numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 200, defaultValue: 80 }),
       numberInput('na', 'Sodium', { unit: 'mEq/L', min: 110, max: 160, defaultValue: 138 }),
-      yesNo('copd', 'COPD', 1),
+      yesNo('copd', 'COPD', 3),
       selectInput('race', 'Race category (GWTG variable)', [
         { label: 'Black', value: 'black' },
         { label: 'Non-black', value: 'nonblack' },
@@ -1144,8 +1144,8 @@ export const wave2CardiologyCalcs: Calculator[] = [
         { label: 'Atrial fibrillation rate control', value: 'af' },
         { label: 'Suspected toxicity', value: 'tox' },
       ]),
-      yesNo('symptoms', 'Symptoms concerning for digoxin toxicity', 1, 'Nausea, visual changes, confusion, new arrhythmias, etc.'),
-      yesNo('renalImpair', 'Significant renal impairment / acute kidney injury', 1),
+      yesNo('symptoms', 'Symptoms concerning for digoxin toxicity', 0, 'Nausea, visual changes, confusion, new arrhythmias, etc.'),
+      yesNo('renalImpair', 'Significant renal impairment / acute kidney injury', 0),
     ],
     calculate(values) {
       const level = num(values.level, 0.8);
@@ -1197,6 +1197,14 @@ export const wave2CardiologyCalcs: Calculator[] = [
         interpretation += ' AF rate-control targets are individualized; lower levels often preferred in older adults.';
       }
 
+      const indicationLabel =
+        indication === 'af' ? 'Atrial fibrillation rate control' : indication === 'tox' ? 'Suspected toxicity' : 'Heart failure rate/symptom adjunct';
+
+      if (indication === 'tox' && riskLevel !== 'critical') {
+        interpretation += ' Toxicity-context review: correlate ECG, electrolytes, and symptoms even when level is not frankly toxic.';
+        if (riskLevel === 'normal' || riskLevel === 'low') riskLevel = 'moderate';
+      }
+
       return {
         score: level,
         unit: 'ng/mL',
@@ -1204,6 +1212,9 @@ export const wave2CardiologyCalcs: Calculator[] = [
         interpretation,
         riskLevel,
         details: [
+          { label: 'Primary context', value: indicationLabel },
+          { label: 'Toxicity symptoms', value: sx ? 'Yes' : 'No' },
+          { label: 'Significant renal impairment', value: renal ? 'Yes' : 'No' },
           { label: 'HF preferred window', value: '0.5–0.9 ng/mL' },
           { label: 'Traditional toxicity concern', value: '>2.0 ng/mL (clinical correlation required)' },
           { label: 'Timing note', value: 'Draw ≥6–8h after dose (steady state preferred)' },
@@ -1252,7 +1263,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
         { label: '75–84 years', value: '75_84' },
         { label: '≥ 85 years', value: 'ge85' },
       ]),
-      yesNo('priorStroke', 'Prior stroke / TIA', 1),
+      yesNo('priorStroke', 'Prior stroke / TIA', null, 'Does not add a fixed point total — switches age weights (e.g. <65 → 8 pts if prior stroke)'),
       yesNo('female', 'Female sex', 1),
       yesNo('dm', 'Diabetes mellitus', 1),
       yesNo('chf', 'Congestive heart failure', 1),
@@ -1263,6 +1274,9 @@ export const wave2CardiologyCalcs: Calculator[] = [
     calculate(values) {
       const age = String(values.age ?? 'lt65');
       const prior = bool(values.priorStroke);
+      // ATRIA: prior stroke changes age points only (not a separate +8 for all ages)
+      // No prior: <65=0, 65–74=3, 75–84=5, ≥85=6
+      // Prior stroke: <65=8, 65–74=7, 75–84=7, ≥85=9
       let agePts = 0;
       if (!prior) {
         if (age === 'lt65') agePts = 0;
@@ -1612,13 +1626,13 @@ export const wave2CardiologyCalcs: Calculator[] = [
         { label: 'Severe (CC <50)', value: 2 },
         { label: 'Dialysis', value: 3 },
       ]),
-      yesNo('extracardiac', 'Extracardiac arteriopathy', 1),
-      yesNo('poorMobility', 'Poor mobility', 1),
-      yesNo('prevCardiacSx', 'Previous cardiac surgery', 1),
-      yesNo('copd', 'Chronic lung disease', 1),
-      yesNo('endocarditis', 'Active endocarditis', 1),
-      yesNo('critical', 'Critical preoperative state', 1),
-      yesNo('dmInsulin', 'Diabetes on insulin', 1),
+      yesNo('extracardiac', 'Extracardiac arteriopathy', 2),
+      yesNo('poorMobility', 'Poor mobility', 2),
+      yesNo('prevCardiacSx', 'Previous cardiac surgery', 3),
+      yesNo('copd', 'Chronic lung disease', 2),
+      yesNo('endocarditis', 'Active endocarditis', 3),
+      yesNo('critical', 'Critical preoperative state', 4),
+      yesNo('dmInsulin', 'Diabetes on insulin', 2),
       selectInput('nyha', 'NYHA class', [
         { label: 'I', value: 1 },
         { label: 'II', value: 2 },
@@ -1631,7 +1645,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
         { label: 'Poor (EF 21–30%)', value: 2 },
         { label: 'Very poor (EF ≤20%)', value: 3 },
       ]),
-      yesNo('recentMi', 'Recent MI (≤90 days)', 1),
+      yesNo('recentMi', 'Recent MI (≤90 days)', 2),
       selectInput('urgency', 'Urgency', [
         { label: 'Elective', value: 0 },
         { label: 'Urgent', value: 1 },

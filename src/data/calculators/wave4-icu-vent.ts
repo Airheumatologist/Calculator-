@@ -1453,46 +1453,67 @@ export const wave4IcuVentCalcs: Calculator[] = [
       ]),
     ],
     calculate(values) {
-      if (String(values.walk) === 'walk') {
+      const walk = String(values.walk ?? 'walk');
+      const breathing = String(values.breathing ?? 'na');
+      const obeys = String(values.obeys ?? 'yes');
+      const pulse = String(values.pulse ?? 'yes');
+      const distress = String(values.distress ?? 'no');
+      const likelySurvive = String(values.likelySurvive ?? 'yes');
+      const lsiDone = bool(values.lsiDone);
+
+      const details = [
+        { label: 'Can walk', value: walk === 'walk' ? 'Yes' : 'No' },
+        { label: 'Breathing after airway/LSI', value: breathing === 'na' ? 'N/A' : breathing === 'yes' ? 'Yes' : 'No — apneic' },
+        { label: 'Lifesaving interventions', value: lsiDone ? 'Indicated/performed' : 'Not done / N/A' },
+        { label: 'Obeys commands / purposeful movement', value: obeys === 'yes' ? 'Yes / N/A' : 'No' },
+        { label: 'Peripheral pulse', value: pulse === 'yes' ? 'Yes / N/A' : 'No' },
+        { label: 'Respiratory distress / uncontrolled hemorrhage', value: distress === 'yes' ? 'Yes' : 'No / N/A' },
+        { label: 'Likely to survive given resources', value: likelySurvive === 'no' ? 'No — expectant consideration' : 'Yes / unknown / N/A' },
+      ];
+
+      // Global sort: walkers → Minimal (still re-triage)
+      if (walk === 'walk') {
         return {
           score: 'Minimal',
           label: 'Minimal (Green)',
           interpretation:
             'Able to walk — SALT Minimal category for delayed individual assessment. Still re-triage if deteriorates.',
-          riskLevel: 'low',
-          details: [{ label: 'Step', value: 'Global sorting — walkers' }],
+          riskLevel: 'low' as const,
+          details,
         };
       }
-      if (String(values.breathing) === 'no') {
+      // Individual assessment: apneic after LSI → Dead
+      if (breathing === 'no') {
         return {
           score: 'Dead',
           label: 'Dead (Black)',
           interpretation:
             'Apneic after airway opening (and age-appropriate rescue breaths in pediatric protocols if used). SALT Dead category — do not move to immediate care when resources constrained.',
-          riskLevel: 'critical',
-          details: [{ label: 'LSI attempted context', value: bool(values.lsiDone) ? 'Considered/done' : 'Not done / not applicable' }],
+          riskLevel: 'critical' as const,
+          details,
         };
       }
-      const fails =
-        String(values.obeys) === 'no' ||
-        String(values.pulse) === 'no' ||
-        String(values.distress) === 'yes';
+      // Immediate physiology: does not obey OR no pulse OR distress/uncontrolled hemorrhage
+      const fails = obeys === 'no' || pulse === 'no' || distress === 'yes';
       if (!fails) {
         return {
           score: 'Delayed',
           label: 'Delayed (Yellow)',
           interpretation:
             'Breathing with pulse, follows commands, no respiratory distress or uncontrolled major bleed — SALT Delayed. Serious injuries possible but can wait relative to Immediate.',
-          riskLevel: 'moderate',
+          riskLevel: 'moderate' as const,
+          details,
         };
       }
-      if (String(values.likelySurvive) === 'no') {
+      // Resource-based expectant among those meeting Immediate criteria
+      if (likelySurvive === 'no') {
         return {
           score: 'Expectant',
           label: 'Expectant (Gray)',
           interpretation:
             'Meets Immediate physiologic criteria but unlikely to survive given available resources — SALT Expectant. Provide comfort care; re-triage if resources improve.',
-          riskLevel: 'high',
+          riskLevel: 'high' as const,
+          details,
         };
       }
       return {
@@ -1500,7 +1521,8 @@ export const wave4IcuVentCalcs: Calculator[] = [
         label: 'Immediate (Red)',
         interpretation:
           'Does not follow commands and/or no peripheral pulse and/or respiratory distress/uncontrolled hemorrhage — SALT Immediate. Prioritize lifesaving interventions and transport.',
-        riskLevel: 'critical',
+        riskLevel: 'critical' as const,
+        details,
         recommendations: ['Control major hemorrhage', 'Open airway', 'Decompress tension pneumothorax if trained', 'Auto-injector if indicated'],
       };
     },
@@ -1580,45 +1602,78 @@ export const wave4IcuVentCalcs: Calculator[] = [
       ]),
     ],
     calculate(values) {
-      if (String(values.ambulate) === 'yes') {
+      const ambulate = String(values.ambulate ?? 'no');
+      const breatheSpont = String(values.breatheSpont ?? 'yes');
+      const afterPosition = String(values.afterPosition ?? 'na');
+      const pulseIfApnea = String(values.pulseIfApnea ?? 'na');
+      const afterBreaths = String(values.afterBreaths ?? 'na');
+      const rr = String(values.rr ?? 'na');
+      const perfusion = String(values.perfusion ?? 'na');
+      const mental = String(values.mental ?? 'na');
+      const branchDetails = [
+        { label: 'Ambulatory', value: ambulate === 'yes' ? 'Yes' : 'No' },
+        { label: 'Spontaneous breathing', value: breatheSpont === 'yes' ? 'Yes' : breatheSpont === 'no' ? 'No' : String(breatheSpont) },
+        { label: 'Airway position result', value: afterPosition },
+        { label: 'Pulse if apneic', value: pulseIfApnea },
+        { label: 'After 5 rescue breaths', value: afterBreaths },
+        {
+          label: 'Respiratory rate',
+          value: rr === 'ok' ? '15–45 /min' : rr === 'bad' ? '<15 or >45 /min' : rr === 'na' ? 'N/A' : rr,
+        },
+        {
+          label: 'Peripheral pulse (perfusion)',
+          value: perfusion === 'yes' ? 'Yes' : perfusion === 'no' ? 'No' : perfusion === 'na' ? 'N/A' : perfusion,
+        },
+        {
+          label: 'Mental status (AVPU)',
+          value: mental === 'av' ? 'A/V' : mental === 'pu' ? 'P/U' : mental === 'na' ? 'N/A' : mental,
+        },
+      ];
+
+      if (ambulate === 'yes') {
         return {
           score: 'Minor',
           label: 'Minor (Green)',
           interpretation: 'Ambulatory pediatric casualty — JumpSTART Minor. Secondary triage still required.',
           riskLevel: 'low',
+          details: branchDetails,
         };
       }
-      if (String(values.breatheSpont) === 'no') {
-        if (String(values.afterPosition) === 'yes') {
+      if (breatheSpont === 'no') {
+        if (afterPosition === 'yes') {
           return {
             score: 'Immediate',
             label: 'Immediate (Red)',
             interpretation: 'Breathing only after airway positioning — JumpSTART Immediate.',
             riskLevel: 'critical',
+            details: branchDetails,
           };
         }
-        if (String(values.pulseIfApnea) === 'no') {
+        if (pulseIfApnea === 'no') {
           return {
             score: 'Deceased',
             label: 'Deceased (Black)',
             interpretation: 'Apneic without pulse — JumpSTART Deceased.',
             riskLevel: 'critical',
+            details: branchDetails,
           };
         }
-        if (String(values.afterBreaths) === 'yes') {
+        if (afterBreaths === 'yes') {
           return {
             score: 'Immediate',
             label: 'Immediate (Red)',
             interpretation: 'Breathing restored after 5 rescue breaths — JumpSTART Immediate.',
             riskLevel: 'critical',
+            details: branchDetails,
           };
         }
-        if (String(values.afterBreaths) === 'no') {
+        if (afterBreaths === 'no') {
           return {
             score: 'Deceased',
             label: 'Deceased (Black)',
             interpretation: 'Still apneic after rescue breaths — JumpSTART Deceased.',
             riskLevel: 'critical',
+            details: branchDetails,
           };
         }
         return {
@@ -1626,38 +1681,43 @@ export const wave4IcuVentCalcs: Calculator[] = [
           label: 'Complete apnea branch',
           interpretation: 'Apneic non-walker: enter airway position, pulse, and rescue-breath outcomes.',
           riskLevel: 'info',
+          details: branchDetails,
         };
       }
-      if (String(values.rr) === 'bad') {
+      if (rr === 'bad') {
         return {
           score: 'Immediate',
           label: 'Immediate (Red)',
           interpretation: 'RR <15 or >45 — JumpSTART Immediate.',
           riskLevel: 'critical',
+          details: branchDetails,
         };
       }
-      if (String(values.perfusion) === 'no') {
+      if (perfusion === 'no') {
         return {
           score: 'Immediate',
           label: 'Immediate (Red)',
           interpretation: 'No peripheral pulse — JumpSTART Immediate.',
           riskLevel: 'critical',
+          details: branchDetails,
         };
       }
-      if (String(values.mental) === 'pu') {
+      if (mental === 'pu') {
         return {
           score: 'Immediate',
           label: 'Immediate (Red)',
           interpretation: 'Postures to pain or unresponsive (P/U) — JumpSTART Immediate.',
           riskLevel: 'critical',
+          details: branchDetails,
         };
       }
-      if (String(values.rr) === 'ok' && String(values.perfusion) === 'yes' && String(values.mental) === 'av') {
+      if (rr === 'ok' && perfusion === 'yes' && mental === 'av') {
         return {
           score: 'Delayed',
           label: 'Delayed (Yellow)',
           interpretation: 'Non-ambulatory but RR 15–45, pulse present, A/V mentation — JumpSTART Delayed.',
           riskLevel: 'moderate',
+          details: branchDetails,
         };
       }
       return {
@@ -1665,6 +1725,7 @@ export const wave4IcuVentCalcs: Calculator[] = [
         label: 'Incomplete inputs',
         interpretation: 'Select RR, pulse, and AVPU for breathing non-walkers to assign Delayed vs Immediate.',
         riskLevel: 'info',
+        details: branchDetails,
       };
     },
     evidence: {

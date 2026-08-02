@@ -16,36 +16,66 @@ export const emergencyMiscCalcs: Calculator[] = [
         { label: 'Ankle', value: 'ankle' },
         { label: 'Midfoot', value: 'midfoot' },
       ]),
-      yesNo('malleolarPain', 'Pain in malleolar zone'),
-      yesNo('midfootPain', 'Pain in midfoot zone'),
-      yesNo('postLat', 'Bone tenderness posterior distal 6 cm lateral malleolus'),
-      yesNo('postMed', 'Bone tenderness posterior distal 6 cm medial malleolus'),
-      yesNo('navicular', 'Bone tenderness navicular'),
-      yesNo('base5', 'Bone tenderness base of 5th metatarsal'),
-      yesNo('walk', 'Unable to bear weight 4 steps both immediately AND in ED'),
+      yesNo('malleolarPain', 'Pain in malleolar zone', 0),
+      yesNo('midfootPain', 'Pain in midfoot zone', 0),
+      yesNo('postLat', 'Bone tenderness posterior distal 6 cm lateral malleolus', 0),
+      yesNo('postMed', 'Bone tenderness posterior distal 6 cm medial malleolus', 0),
+      yesNo('navicular', 'Bone tenderness navicular', 0),
+      yesNo('base5', 'Bone tenderness base of 5th metatarsal', 0),
+      yesNo('walk', 'Unable to bear weight 4 steps both immediately AND in ED', 0),
     ],
     calculate(values) {
-      const ankle = values.zone === 'ankle';
-      let xray = false;
-      if (ankle && bool(values.malleolarPain) && (bool(values.postLat) || bool(values.postMed) || bool(values.walk))) xray = true;
-      if (!ankle && bool(values.midfootPain) && (bool(values.navicular) || bool(values.base5) || bool(values.walk))) xray = true;
-      // Also if user selected criteria without pain zone flags, still compute liberally
-      if (ankle && (bool(values.postLat) || bool(values.postMed) || bool(values.walk)) && bool(values.malleolarPain)) xray = true;
-      if (values.zone === 'midfoot' && bool(values.midfootPain) && (bool(values.navicular) || bool(values.base5) || bool(values.walk))) xray = true;
+      const ankle = String(values.zone ?? 'ankle') === 'ankle';
+      const malleolarPain = bool(values.malleolarPain);
+      const midfootPain = bool(values.midfootPain);
+      const postLat = bool(values.postLat);
+      const postMed = bool(values.postMed);
+      const navicular = bool(values.navicular);
+      const base5 = bool(values.base5);
+      const walk = bool(values.walk);
+
+      // Ankle x-ray: malleolar-zone pain AND (post lat OR post med OR unable 4 steps)
+      const ankleXray = malleolarPain && (postLat || postMed || walk);
+      // Foot x-ray: midfoot pain AND (navicular OR base 5th OR unable 4 steps)
+      const footXray = midfootPain && (navicular || base5 || walk);
+      const xray = ankle ? ankleXray : footXray;
+
+      const details = [
+        { label: 'Zone assessed', value: ankle ? 'Ankle (malleolar)' : 'Midfoot' },
+        { label: 'Malleolar zone pain', value: malleolarPain ? 'Yes' : 'No' },
+        { label: 'Midfoot zone pain', value: midfootPain ? 'Yes' : 'No' },
+        { label: 'Posterior lateral malleolus tenderness', value: postLat ? 'Yes' : 'No' },
+        { label: 'Posterior medial malleolus tenderness', value: postMed ? 'Yes' : 'No' },
+        { label: 'Navicular tenderness', value: navicular ? 'Yes' : 'No' },
+        { label: 'Base of 5th metatarsal tenderness', value: base5 ? 'Yes' : 'No' },
+        { label: 'Unable to walk 4 steps (immediate + ED)', value: walk ? 'Yes' : 'No' },
+        { label: 'Ankle x-ray criteria', value: ankleXray ? 'Positive' : 'Negative' },
+        { label: 'Foot x-ray criteria', value: footXray ? 'Positive' : 'Negative' },
+      ];
 
       if (xray) {
         return {
           score: 1,
           label: 'X-ray indicated',
-          interpretation: 'Ottawa rules positive — obtain appropriate radiographs.',
-          riskLevel: 'moderate',
+          interpretation: ankle
+            ? 'Ottawa Ankle Rules positive — obtain ankle radiographs.'
+            : 'Ottawa Foot Rules positive — obtain foot radiographs.',
+          riskLevel: 'moderate' as const,
+          details,
+          recommendations: ankle
+            ? ['Ankle series radiographs']
+            : ['Foot series radiographs'],
         };
       }
       return {
         score: 0,
         label: 'X-ray not required',
-        interpretation: 'Rules negative — fracture unlikely; radiograph not required if exam reliable.',
-        riskLevel: 'low',
+        interpretation: ankle
+          ? 'Ankle rules negative — malleolar fracture unlikely; radiograph not required if exam reliable.'
+          : 'Foot rules negative — midfoot fracture unlikely; radiograph not required if exam reliable.',
+        riskLevel: 'low' as const,
+        details,
+        recommendations: ['RICE', 'Weight bearing as tolerated', 'Follow-up if not improving'],
       };
     },
     evidence: {
@@ -146,21 +176,54 @@ export const emergencyMiscCalcs: Calculator[] = [
     whenToUse: 'Alert (GCS 15) stable adults with blunt trauma.',
     whyUse: 'Slightly more sensitive/specific than NEXUS in some comparisons.',
     inputs: [
-      yesNo('highRisk', 'High-risk factor: age≥65 OR dangerous mechanism OR paresthesias'),
-      yesNo('lowRisk', 'Any low-risk factor allowing assessment: simple rear-end MVC, sitting in ED, ambulatory, delayed neck pain, or absence of midline tenderness'),
-      yesNo('rotate', 'Unable to actively rotate neck 45° left AND right'),
+      yesNo('highRisk', 'High-risk factor: age≥65 OR dangerous mechanism OR paresthesias', 0),
+      yesNo('lowRisk', 'Any low-risk factor allowing assessment: simple rear-end MVC, sitting in ED, ambulatory, delayed neck pain, or absence of midline tenderness', -1),
+      yesNo('rotate', 'Unable to actively rotate neck 45° left AND right', 0),
     ],
     calculate(values) {
-      if (bool(values.highRisk)) {
-        return { score: 1, label: 'Imaging required', interpretation: 'High-risk factor present — radiography/CT indicated.', riskLevel: 'high' };
+      const highRisk = bool(values.highRisk);
+      const lowRisk = bool(values.lowRisk);
+      const rotate = bool(values.rotate);
+      const details = [
+        { label: 'High-risk factor', value: highRisk ? 'Yes' : 'No' },
+        { label: 'Low-risk factor allowing ROM assessment', value: lowRisk ? 'Yes' : 'No' },
+        { label: 'Unable to rotate neck 45° left AND right', value: rotate ? 'Yes' : 'No' },
+      ];
+
+      if (highRisk) {
+        return {
+          score: 1,
+          label: 'Imaging required',
+          interpretation: 'High-risk factor present — radiography/CT indicated.',
+          riskLevel: 'high' as const,
+          details,
+        };
       }
-      if (!bool(values.lowRisk)) {
-        return { score: 1, label: 'Imaging required', interpretation: 'No low-risk factor — imaging indicated.', riskLevel: 'moderate' };
+      if (!lowRisk) {
+        return {
+          score: 1,
+          label: 'Imaging required',
+          interpretation: 'No low-risk factor — imaging indicated.',
+          riskLevel: 'moderate' as const,
+          details,
+        };
       }
-      if (bool(values.rotate)) {
-        return { score: 1, label: 'Imaging required', interpretation: 'Cannot rotate 45° bilaterally — imaging indicated.', riskLevel: 'moderate' };
+      if (rotate) {
+        return {
+          score: 1,
+          label: 'Imaging required',
+          interpretation: 'Cannot rotate 45° bilaterally — imaging indicated.',
+          riskLevel: 'moderate' as const,
+          details,
+        };
       }
-      return { score: 0, label: 'No imaging needed', interpretation: 'Rule negative — C-spine imaging not required.', riskLevel: 'low' };
+      return {
+        score: 0,
+        label: 'No imaging needed',
+        interpretation: 'Rule negative — C-spine imaging not required.',
+        riskLevel: 'low' as const,
+        details,
+      };
     },
     evidence: {
       summary: 'Canadian C-Spine Rule algorithm: high-risk → image; else low-risk assessment → ROM testing.',
@@ -223,13 +286,13 @@ export const emergencyMiscCalcs: Calculator[] = [
     whenToUse: 'Adult burn TBSA estimation for Parkland and transfer criteria.',
     whyUse: 'Rapid field estimate; Lund-Browder better for children.',
     inputs: [
-      yesNo('head', 'Head & neck (9%)'),
-      yesNo('antTrunk', 'Anterior trunk (18%)'),
-      yesNo('postTrunk', 'Posterior trunk (18%)'),
-      yesNo('armR', 'Right arm (9%)'),
-      yesNo('armL', 'Left arm (9%)'),
-      yesNo('legR', 'Right leg (18%)'),
-      yesNo('legL', 'Left leg (18%)'),
+      yesNo('head', 'Head & neck (9%)', 9),
+      yesNo('antTrunk', 'Anterior trunk (18%)', 18),
+      yesNo('postTrunk', 'Posterior trunk (18%)', 18),
+      yesNo('armR', 'Right arm (9%)', 9),
+      yesNo('armL', 'Left arm (9%)', 9),
+      yesNo('legR', 'Right leg (18%)', 18),
+      yesNo('legL', 'Left leg (18%)', 18),
       yesNo('perineum', 'Perineum (1%)'),
     ],
     calculate(values) {
@@ -533,34 +596,60 @@ export const emergencyMiscCalcs: Calculator[] = [
         { label: '<2 years', value: 'young' },
         { label: '≥2 years', value: 'old' },
       ]),
-      yesNo('gcs14', 'GCS = 14 or other signs of AMS'),
-      yesNo('palpable', 'Palpable skull fracture (or basilar signs if ≥2y)'),
+      yesNo('gcs14', 'GCS = 14 or other signs of AMS', 2),
+      yesNo('palpable', 'Palpable skull fracture (or basilar signs if ≥2y)', 2),
       yesNo('loc', 'LOC ≥5 sec (<2y) or any LOC/vomiting/severe HA/severe mechanism (≥2y) — risk factors'),
       yesNo('nonfrontal', 'Non-frontal hematoma (<2y) or history of vomiting/severe HA etc.'),
       yesNo('notActing', 'Not acting normally per parent (<2y)'),
     ],
     calculate(values) {
+      const ageGroup = String(values.ageGroup ?? 'young');
+      const ageLabel = ageGroup === 'young' ? '<2 years' : '≥2 years';
+      const details = [
+        { label: 'Age group', value: ageLabel },
+        { label: 'AMS / GCS 14', value: bool(values.gcs14) ? 'Yes' : 'No' },
+        { label: 'Palpable / basilar fracture signs', value: bool(values.palpable) ? 'Yes' : 'No' },
+        {
+          label: ageGroup === 'young' ? 'LOC ≥5 s / severe mechanism' : 'LOC / vomiting / severe HA / severe mechanism',
+          value: bool(values.loc) ? 'Yes' : 'No',
+        },
+        {
+          label: ageGroup === 'young' ? 'Non-frontal hematoma' : 'Vomiting / severe HA (additional)',
+          value: bool(values.nonfrontal) ? 'Yes' : 'No',
+        },
+        { label: 'Not acting normally (parent, <2y)', value: bool(values.notActing) ? 'Yes' : 'No' },
+      ];
+
       if (bool(values.gcs14) || bool(values.palpable)) {
         return {
           score: 2,
           label: 'Higher risk — CT recommended',
-          interpretation: 'AMS or palpable/basilar fracture signs: CT generally recommended.',
+          interpretation: `${ageLabel}: AMS or palpable/basilar fracture signs — CT generally recommended per PECARN high-risk branch.`,
           riskLevel: 'high',
+          details,
         };
       }
-      if (bool(values.loc) || bool(values.nonfrontal) || bool(values.notActing)) {
+      // Age-specific intermediate features (simplified PECARN branches)
+      const intermediate =
+        ageGroup === 'young'
+          ? bool(values.loc) || bool(values.nonfrontal) || bool(values.notActing)
+          : bool(values.loc) || bool(values.nonfrontal);
+      // notActing is primarily a <2y criterion; still surface for ≥2y if selected as caregiver concern
+      if (intermediate || (ageGroup === 'old' && bool(values.notActing))) {
         return {
           score: 1,
           label: 'Intermediate — observation vs CT',
-          interpretation: 'Intermediate risk features: observation or CT based on shared decision-making and multiple factors.',
+          interpretation: `${ageLabel}: Intermediate PECARN risk features — observation vs CT with shared decision-making.`,
           riskLevel: 'moderate',
+          details,
         };
       }
       return {
         score: 0,
         label: 'Very low risk',
-        interpretation: 'No PECARN predictors: ciTBI risk very low; CT not routinely recommended.',
+        interpretation: `${ageLabel}: No PECARN predictors — ciTBI risk very low; CT not routinely recommended.`,
         riskLevel: 'low',
+        details,
       };
     },
     evidence: {
@@ -1005,7 +1094,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     inputs: [
       numberInput('total', 'Total phenytoin', { unit: 'µg/mL', min: 0, max: 50, step: 0.1, defaultValue: 10 }),
       numberInput('alb', 'Albumin', { unit: 'g/dL', min: 1, max: 5, step: 0.1, defaultValue: 2.5 }),
-      yesNo('esrd', 'ESRD / CrCl <20 (use 0.1 binding factor)'),
+      yesNo('esrd', 'ESRD / CrCl <20 (use 0.1 binding factor)', 0),
     ],
     calculate(values) {
       const total = num(values.total, 10);

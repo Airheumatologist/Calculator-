@@ -794,7 +794,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
         { label: '2 mEq/kg/day', value: 2 },
         { label: '3 mEq/kg/day (higher)', value: 3 },
       ]),
-      yesNo('anuria', 'Anuria / severe oliguria (hold K teaching flag)'),
+      yesNo('anuria', 'Anuria / severe oliguria (hold K teaching flag)', 0),
     ],
     calculate(values) {
       const w = num(values.weight, 20);
@@ -1959,7 +1959,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
         defaultValue: 0,
         helpText: 'Enter 0 to show targets only',
       }),
-      yesNo('onOxygen', 'Currently on supplemental oxygen'),
+      yesNo('onOxygen', 'Currently on supplemental oxygen', 0),
     ],
     calculate(values) {
       const pop = String(values.population ?? 'copd');

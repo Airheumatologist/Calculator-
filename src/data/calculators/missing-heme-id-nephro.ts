@@ -486,7 +486,7 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Febrile children with possible mucocutaneous lymph node syndrome.',
     whyUse: 'Classic criteria support timely IVIG to reduce coronary artery complications.',
     inputs: [
-      yesNo('fever', 'Fever lasting ≥ 5 days (or fever present and KD strongly suspected)', 1),
+      yesNo('fever', 'Fever lasting ≥ 5 days (or fever present and KD strongly suspected)', 0),
       yesNo('conjunctivitis', 'Bilateral bulbar conjunctival injection (nonexudative)', 1),
       yesNo('oral', 'Oral mucosal changes (strawberry tongue, red cracked lips, injected pharynx)', 1),
       yesNo('extremity', 'Extremity changes (erythema/edema of hands/feet or periungual peeling)', 1),
@@ -612,17 +612,17 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Medical inpatients when balancing pharmacologic VTE prophylaxis against bleed risk.',
     whyUse: 'Identifies higher bleeding risk (≥7 often used) to favor mechanical prophylaxis or closer monitoring.',
     inputs: [
-      yesNo('ulcer', 'Active gastroduodenal ulcer (4.5)', 1),
-      yesNo('bleed3mo', 'Bleeding in 3 months before admission (4)', 1),
-      yesNo('plt', 'Admission platelets < 50 × 10⁹/L (4)', 1),
-      yesNo('age85', 'Age ≥ 85 years (3.5)', 1),
-      yesNo('hepatic', 'Hepatic failure (INR > 1.5) (2.5)', 1),
-      yesNo('renal', 'Severe renal failure GFR < 30 mL/min/m² (2.5)', 1),
-      yesNo('icu', 'ICU / CCU stay (2.5)', 1),
-      yesNo('cvc', 'Central venous catheter (2)', 1),
-      yesNo('rheum', 'Rheumatic disease (2)', 1),
-      yesNo('cancer', 'Current cancer (2)', 1),
-      yesNo('age40', 'Age 40–84 years (1.5) — skip if ≥85 already counted', 1),
+      yesNo('ulcer', 'Active gastroduodenal ulcer (4.5)', 4.5),
+      yesNo('bleed3mo', 'Bleeding in 3 months before admission (4)', 4),
+      yesNo('plt', 'Admission platelets < 50 × 10⁹/L (4)', 4),
+      yesNo('age85', 'Age ≥ 85 years (3.5)', 3.5),
+      yesNo('hepatic', 'Hepatic failure (INR > 1.5) (2.5)', 2.5),
+      yesNo('renal', 'Severe renal failure GFR < 30 mL/min/m² (2.5)', 2.5),
+      yesNo('icu', 'ICU / CCU stay (2.5)', 2.5),
+      yesNo('cvc', 'Central venous catheter (2)', 2),
+      yesNo('rheum', 'Rheumatic disease (2)', 2),
+      yesNo('cancer', 'Current cancer (2)', 2),
+      yesNo('age40', 'Age 40–84 years (1.5) — skip if ≥85 already counted', 1.5),
       yesNo('male', 'Male sex (1)', 1),
     ],
     calculate(values) {
@@ -989,24 +989,26 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
         helpText: 'If baseline unknown, Sepsis-3 allows assuming baseline SOFA = 0',
       }),
       numberInput('current', 'Current total SOFA', { unit: 'points', min: 0, max: 24, defaultValue: 2 }),
-      yesNo('infection', 'Suspected or documented infection', 1),
+      yesNo('infection', 'Suspected or documented infection', 0),
     ],
     calculate(values) {
       const baseline = num(values.baseline, 0);
       const current = num(values.current, 2);
       const delta = round(current - baseline, 0);
       const infection = bool(values.infection);
+      const details = [
+        { label: 'Baseline SOFA', value: String(baseline) },
+        { label: 'Current SOFA', value: String(current) },
+        { label: 'ΔSOFA', value: String(delta) },
+        { label: 'Suspected or documented infection', value: infection ? 'Yes' : 'No' },
+      ];
       if (delta >= 2 && infection) {
         return {
           score: delta,
           label: 'Meets Sepsis-3 organ dysfunction (ΔSOFA ≥2)',
           interpretation: `ΔSOFA = ${delta} with suspected infection supports sepsis definition (life-threatening organ dysfunction due to dysregulated host response). Escalate sepsis care bundles as indicated.`,
-          riskLevel: 'high',
-          details: [
-            { label: 'Baseline SOFA', value: String(baseline) },
-            { label: 'Current SOFA', value: String(current) },
-            { label: 'ΔSOFA', value: String(delta) },
-          ],
+          riskLevel: 'high' as const,
+          details,
         };
       }
       if (delta >= 2 && !infection) {
@@ -1014,22 +1016,18 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
           score: delta,
           label: 'Organ dysfunction without infection flag',
           interpretation: `ΔSOFA = ${delta} indicates acute organ dysfunction, but infection not marked — does not fulfill sepsis definition on this form.`,
-          riskLevel: 'moderate',
-          details: [
-            { label: 'Baseline SOFA', value: String(baseline) },
-            { label: 'Current SOFA', value: String(current) },
-          ],
+          riskLevel: 'moderate' as const,
+          details,
         };
       }
       return {
         score: delta,
         label: 'ΔSOFA < 2',
-        interpretation: `ΔSOFA = ${delta}. Does not meet Sepsis-3 ΔSOFA ≥2 threshold. Infection may still be present — use clinical judgment, lactate, and serial exams.`,
-        riskLevel: 'low',
-        details: [
-          { label: 'Baseline SOFA', value: String(baseline) },
-          { label: 'Current SOFA', value: String(current) },
-        ],
+        interpretation: infection
+          ? `ΔSOFA = ${delta} with infection suspected. Does not meet Sepsis-3 ΔSOFA ≥2 threshold — continue monitoring; use clinical judgment, lactate, and serial exams.`
+          : `ΔSOFA = ${delta}. Does not meet Sepsis-3 ΔSOFA ≥2 threshold. Infection not marked — use clinical judgment, lactate, and serial exams.`,
+        riskLevel: 'low' as const,
+        details,
       };
     },
     evidence: {
