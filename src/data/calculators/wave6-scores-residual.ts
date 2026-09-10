@@ -355,6 +355,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         step: 1,
         defaultValue: 8,
         helpText: '5 items × 0–4',
+        required: false,
       }),
       numberInput('function', 'Function subscale (optional)', {
         min: 0,
@@ -362,6 +363,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         step: 1,
         defaultValue: 28,
         helpText: '17 items × 0–4',
+        required: false,
       }),
     ],
     calculate(values) {

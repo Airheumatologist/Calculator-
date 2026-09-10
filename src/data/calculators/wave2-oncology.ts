@@ -418,6 +418,7 @@ export const wave2OncologyCalcs: Calculator[] = [
         step: 0.01,
         defaultValue: 0,
         helpText: 'Leave 0 to compute Mosteller BSA from height/weight',
+        required: false,
       }),
       numberInput('height', 'Height', { unit: 'cm', min: 0, max: 250, step: 0.1, defaultValue: 170 }),
       numberInput('weight', 'Weight', { unit: 'kg', min: 0, max: 300, step: 0.1, defaultValue: 70 }),

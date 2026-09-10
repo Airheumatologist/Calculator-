@@ -1248,11 +1248,11 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         defaultValue: 88,
         helpText: 'Attention 18 + Memory 26 + Fluency 14 + Language 26 + Visuospatial 16',
       }),
-      numberInput('attention', 'Attention / Orientation (0–18, optional)', { min: 0, max: 18, defaultValue: 0 }),
-      numberInput('memory', 'Memory (0–26, optional)', { min: 0, max: 26, defaultValue: 0 }),
-      numberInput('fluency', 'Fluency (0–14, optional)', { min: 0, max: 14, defaultValue: 0 }),
-      numberInput('language', 'Language (0–26, optional)', { min: 0, max: 26, defaultValue: 0 }),
-      numberInput('visuospatial', 'Visuospatial (0–16, optional)', { min: 0, max: 16, defaultValue: 0 }),
+      numberInput('attention', 'Attention / Orientation (0–18, optional)', { min: 0, max: 18, defaultValue: 0, required: false }),
+      numberInput('memory', 'Memory (0–26, optional)', { min: 0, max: 26, defaultValue: 0, required: false }),
+      numberInput('fluency', 'Fluency (0–14, optional)', { min: 0, max: 14, defaultValue: 0, required: false }),
+      numberInput('language', 'Language (0–26, optional)', { min: 0, max: 26, defaultValue: 0, required: false }),
+      numberInput('visuospatial', 'Visuospatial (0–16, optional)', { min: 0, max: 16, defaultValue: 0, required: false }),
     ],
     calculate(values) {
       const total = num(values.total, 88);

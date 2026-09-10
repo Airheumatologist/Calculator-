@@ -230,8 +230,8 @@ export const wave2GeneralLabCalcs: Calculator[] = [
         ],
         'high'
       ),
-      numberInput('ldl', 'Current LDL-C (optional)', { unit: 'mg/dL', min: 0, max: 400, defaultValue: 120, helpText: 'Optional — for gap-to-goal display' }),
-      numberInput('nonHdl', 'Current non-HDL-C (optional)', { unit: 'mg/dL', min: 0, max: 500, defaultValue: 150 }),
+      numberInput('ldl', 'Current LDL-C (optional)', { unit: 'mg/dL', min: 0, max: 400, defaultValue: 120, helpText: 'Optional — for gap-to-goal display', required: false }),
+      numberInput('nonHdl', 'Current non-HDL-C (optional)', { unit: 'mg/dL', min: 0, max: 500, defaultValue: 150, required: false }),
     ],
     calculate(values) {
       const tier = String(values.riskTier ?? 'high');
@@ -841,7 +841,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       numberInput('una', 'Urine Na', { unit: 'mEq/L', min: 1, max: 300, defaultValue: 40 }),
       numberInput('uk', 'Urine K', { unit: 'mEq/L', min: 1, max: 200, defaultValue: 20 }),
       numberInput('uurea', 'Urine urea nitrogen', { unit: 'mg/dL', min: 0, max: 2000, defaultValue: 200, helpText: 'UUN; if only urea given, convert appropriately' }),
-      numberInput('uglu', 'Urine glucose (optional)', { unit: 'mg/dL', min: 0, max: 1000, defaultValue: 0 }),
+      numberInput('uglu', 'Urine glucose (optional)', { unit: 'mg/dL', min: 0, max: 1000, defaultValue: 0, required: false }),
     ],
     calculate(values) {
       const uosm = num(values.uosm, 400);

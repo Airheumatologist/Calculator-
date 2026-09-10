@@ -684,7 +684,7 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, defaultValue: 140 }),
       numberInput('cl', 'Chloride', { unit: 'mEq/L', min: 70, max: 140, defaultValue: 100 }),
       numberInput('hco3', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 50, defaultValue: 12 }),
-      numberInput('albumin', 'Albumin (optional)', { unit: 'g/dL', min: 1, max: 6, step: 0.1, defaultValue: 4.0 }),
+      numberInput('albumin', 'Albumin (optional)', { unit: 'g/dL', min: 1, max: 6, step: 0.1, defaultValue: 4.0, required: false }),
       numberInput('normalAg', 'Assumed normal AG', { unit: 'mEq/L', min: 6, max: 16, defaultValue: 12, helpText: 'Lab-specific normal; often 10–12' }),
     ],
     calculate(values) {
@@ -773,6 +773,7 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
         max: 100,
         defaultValue: 0,
         helpText: 'If K in fluid, effective cation = Na_inf + K_inf',
+        required: false,
       }),
     ],
     calculate(values) {
@@ -987,6 +988,7 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
         max: 24,
         defaultValue: 0,
         helpText: 'If baseline unknown, Sepsis-3 allows assuming baseline SOFA = 0',
+        required: false,
       }),
       numberInput('current', 'Current total SOFA', { unit: 'points', min: 0, max: 24, defaultValue: 2 }),
       yesNo('infection', 'Suspected or documented infection', 0),

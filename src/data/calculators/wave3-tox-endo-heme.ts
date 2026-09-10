@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave3ToxEndoHemeCalcs: Calculator[] = [
   // ─── 1. Osmolar gap (tox interpretation) ───────────────────────────────────
@@ -18,9 +18,9 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, defaultValue: 140 }),
       numberInput('glucose', 'Glucose', { unit: 'mg/dL', min: 20, max: 1000, defaultValue: 100 }),
       numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, defaultValue: 14 }),
-      numberInput('ethanol', 'Ethanol (if known)', { unit: 'mg/dL', min: 0, max: 600, defaultValue: 0, helpText: 'Leave 0 if not measured' }),
-      numberInput('methanol', 'Methanol level (if known)', { unit: 'mg/dL', min: 0, max: 500, defaultValue: 0 }),
-      numberInput('eg', 'Ethylene glycol level (if known)', { unit: 'mg/dL', min: 0, max: 500, defaultValue: 0 }),
+      numberInput('ethanol', 'Ethanol (if known)', { unit: 'mg/dL', min: 0, max: 600, defaultValue: 0, helpText: 'Leave 0 if not measured', required: false }),
+      numberInput('methanol', 'Methanol level (if known)', { unit: 'mg/dL', min: 0, max: 500, defaultValue: 0, required: false }),
+      numberInput('eg', 'Ethylene glycol level (if known)', { unit: 'mg/dL', min: 0, max: 500, defaultValue: 0, required: false }),
     ],
     calculate(values) {
       const measured = num(values.measured, 320);
@@ -58,7 +58,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
           'Gap >10 mOsm is elevated in many labs. Evaluate ethanol and toxic alcohols, clinical toxidrome, and anion-gap metabolic acidosis. Normal gap does not rule out toxic alcohol later in course.';
         riskLevel = gapAfterEtOH > 10 ? 'high' : 'moderate';
       } else if (gapRaw < -10) {
-        label = 'Negative gap (lab/formula)',
+        label = 'Negative gap (lab/formula)';
         interpretation = 'Large negative gap often reflects formula choice, lab variation, or pseudohyponatremia context — interpret carefully.';
         riskLevel = 'info';
       }
@@ -663,24 +663,28 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         min: 3,
         max: 200,
         defaultValue: 70,
+        required: false,
       }),
     ],
     calculate(values) {
       const bolus = num(values.bolus, 0.4);
-      const weight = num(values.weight, 70);
+      const weightProvided = !isMissingValue(values.weight, true);
+      const weight = num(values.weight, 0);
       const rateMgH = round((2 / 3) * bolus, 3);
-      const rateMcgKgH = weight > 0 ? round((rateMgH * 1000) / weight, 1) : 0;
+      const rateMcgKgH = weightProvided && weight > 0 ? round((rateMgH * 1000) / weight, 1) : null;
 
       return {
         score: rateMgH,
         unit: 'mg/h',
         label: 'Suggested starting infusion',
-        interpretation: `Rule of thumb: infusion ≈ (2/3) × effective bolus per hour → ${rateMgH} mg/h (≈${rateMcgKgH} µg/kg/h at ${weight} kg). Give half the effective bolus as a re-bolus when starting the drip if renarcotization is present. Titrate to respiratory status — not a fixed protocol.`,
+        interpretation: `Rule of thumb: infusion ≈ (2/3) × effective bolus per hour → ${rateMgH} mg/h${
+          rateMcgKgH != null ? ` (≈${rateMcgKgH} µg/kg/h at ${weight} kg)` : ' (weight not entered, so no µg/kg/h shown)'
+        }. Give half the effective bolus as a re-bolus when starting the drip if renarcotization is present. Titrate to respiratory status — not a fixed protocol.`,
         riskLevel: 'info' as const,
         details: [
           { label: 'Effective bolus', value: `${bolus} mg` },
           { label: 'Infusion start', value: `${rateMgH} mg/h` },
-          { label: 'Approx µg/kg/h', value: `${rateMcgKgH}` },
+          { label: 'Approx µg/kg/h', value: rateMcgKgH != null ? `${rateMcgKgH}` : 'Not calculated — weight not entered' },
         ],
         recommendations: [
           'Monitor SpO₂/ETCO₂ and level of consciousness',
@@ -1168,6 +1172,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         max: 100,
         defaultValue: 0,
         helpText: 'If >0, packs/day is computed as cig/day ÷ 20',
+        required: false,
       }),
     ],
     calculate(values) {
@@ -1519,9 +1524,13 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       validation: 'Military population method; error vs DEXA can be several percentage points.',
       references: [
         {
-          title: 'US Navy body composition equations',
-          citation: 'Hodgdon JA, Beckett MB. Naval Health Research Center',
-          year: 1984, url: 'https://www.usna.edu/PEDept/documents/navypep/Hodgdon_Beckett_1996.pdf' },
+          title: 'Prediction of percent body fat for U.S. Navy men from body circumferences and height',
+          citation: 'Hodgdon JA, Beckett MB. Naval Health Research Center Report No. 84-11',
+          year: 1984, doi: '10.21236/ada143890' },
+        {
+          title: 'Prediction of percent body fat for U.S. Navy women from body circumferences and height',
+          citation: 'Hodgdon JA, Beckett MB. Naval Health Research Center Report No. 84-29',
+          year: 1984, doi: '10.21236/ada146456' },
       ],
     },
     nextSteps: [
@@ -1612,7 +1621,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         {
           title: 'Waist circumference and waist–hip ratio (WHO)',
           citation: 'WHO Expert Consultation',
-          year: 2008, url: 'https://www.who.int/publications/i/item/9241208945' },
+          year: 2008, url: 'https://www.who.int/publications/i/item/9789241501491' },
       ],
     },
     nextSteps: [

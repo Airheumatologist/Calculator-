@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave3GiHepCalcs: Calculator[] = [
   {
@@ -548,18 +548,21 @@ export const wave3GiHepCalcs: Calculator[] = [
         step: 0.1,
         defaultValue: 1.5,
         helpText: 'Helps cardiac vs cirrhotic high-SAAG differential',
+        required: false,
       }),
     ],
     calculate(values) {
       const serum = num(values.serumAlb, 2.8);
       const asc = num(values.ascitesAlb, 1.0);
-      const protein = num(values.ascitesProtein, 1.5);
+      const proteinProvided = !isMissingValue(values.ascitesProtein, true);
+      const protein = num(values.ascitesProtein, 0);
       const saag = round(serum - asc, 2);
       const highSaag = saag >= 1.1;
       let subtype = '';
       if (highSaag) {
-        subtype =
-          protein >= 2.5
+        subtype = !proteinProvided
+          ? 'High SAAG: ascites total protein was not entered, so the cardiac-vs-cirrhotic split (protein ≥2.5 vs <2.5 g/dL) cannot be applied.'
+          : protein >= 2.5
             ? 'High SAAG + high protein (≥2.5): consider cardiac ascites, Budd-Chiari, or mixed picture.'
             : 'High SAAG + low protein (<2.5): typical of cirrhotic portal hypertension.';
       } else {
@@ -574,7 +577,7 @@ export const wave3GiHepCalcs: Calculator[] = [
         riskLevel: highSaag ? 'moderate' : 'info',
         details: [
           { label: 'SAAG', value: `${saag} g/dL` },
-          { label: 'Ascites protein', value: `${protein} g/dL` },
+          { label: 'Ascites protein', value: proteinProvided ? `${protein} g/dL` : 'Not entered' },
         ],
         recommendations: highSaag
           ? ['Salt restriction / diuretics if cirrhotic', 'Evaluate for SBP (PMN count)', 'Avoid NSAIDs/ACEI if tense/refractory']
@@ -1642,6 +1645,7 @@ export const wave3GiHepCalcs: Calculator[] = [
         max: 1e7,
         defaultValue: 0,
         helpText: 'If traumatic tap, correct PMN −1 per 250 RBC',
+        required: false,
       }),
       yesNo('symptoms', 'Symptoms/signs of infection or unexplained decompensation', 0),
     ],
@@ -1826,12 +1830,14 @@ export const wave3GiHepCalcs: Calculator[] = [
         step: 1,
         defaultValue: 15,
         helpText: 'Prefer IQR/med ≤30% with ≥10 valid measurements',
+        required: false,
       }),
     ],
     calculate(values) {
       const lsm = num(values.lsm, 8);
       const et = String(values.etiology ?? 'viral');
-      const iqr = num(values.iqrMed, 15);
+      const iqrProvided = !isMissingValue(values.iqrMed, true);
+      const iqr = num(values.iqrMed, 0);
       // Simplified educational cutoffs (approximate common clinical bands)
       // Viral: F0-1 <7.0, F2 ~7-9.5, F3 ~9.5-12.5, F4 ≥12.5
       // NAFLD: F0-1 <8, F2 8-10, F3 10-13.6, F4 ≥13.6 (varies; EASL often uses rule-out <8 rule-in >12)
@@ -1876,8 +1882,9 @@ export const wave3GiHepCalcs: Calculator[] = [
           break;
         }
       }
-      const quality =
-        iqr > 30
+      const quality = !iqrProvided
+        ? 'IQR/median ratio not entered — exam quality/reliability not assessed here (prefer ≤30% with ≥10 valid measurements).'
+        : iqr > 30
           ? 'IQR/median >30% — result less reliable; repeat exam or alternative modality.'
           : 'IQR/median acceptable (≤30%) if adequate valid shots.';
       return {
@@ -1888,7 +1895,7 @@ export const wave3GiHepCalcs: Calculator[] = [
         riskLevel,
         details: [
           { label: 'Etiology profile', value: et },
-          { label: 'IQR/median', value: `${iqr}%` },
+          { label: 'IQR/median', value: iqrProvided ? `${iqr}%` : 'Not entered' },
           { label: 'CSPH non-invasive hint', value: lsm >= 20 ? 'LSM ≥20 favors CSPH risk (with low platelets)' : 'CSPH less likely if LSM <20 and plt high (Baveno)' },
         ],
         recommendations:
@@ -1934,7 +1941,7 @@ export const wave3GiHepCalcs: Calculator[] = [
       numberInput('pt', 'Patient PT', { unit: 'sec', min: 8, max: 120, step: 0.1, defaultValue: 18 }),
       numberInput('control', 'Control / mean normal PT', { unit: 'sec', min: 8, max: 20, step: 0.1, defaultValue: 12 }),
       numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 8 }),
-      numberInput('inr', 'INR (optional, for note only)', { min: 0.8, max: 10, step: 0.1, defaultValue: 1.5 }),
+      numberInput('inr', 'INR (optional, for note only)', { min: 0.8, max: 10, step: 0.1, defaultValue: 1.5, required: false }),
       selectInput('biliUnit', 'Bilirubin unit entered as', [
         { label: 'mg/dL (correct for DF)', value: 'mg' },
         { label: 'µmol/L (will convert)', value: 'umol' },
@@ -1948,9 +1955,10 @@ export const wave3GiHepCalcs: Calculator[] = [
       if (unit === 'umol') bili = bili / 17.1;
       const prolong = round(pt - control, 1);
       const df = round(4.6 * (pt - control) + bili, 1);
-      const inr = num(values.inr, 1.5);
+      const inrProvided = !isMissingValue(values.inr, true);
+      const inr = num(values.inr, 0);
       // Rough educational INR-based variant sometimes seen: 4.6×(INR-based proxy) — NOT recommended as equivalent
-      const dfInrApprox = round(4.6 * (inr * control - control) + bili, 1);
+      const dfInrApprox = inrProvided ? round(4.6 * (inr * control - control) + bili, 1) : null;
       const severe = df >= 32;
       return {
         score: df,
@@ -1963,7 +1971,7 @@ export const wave3GiHepCalcs: Calculator[] = [
         details: [
           { label: 'PT prolongation', value: `${prolong} sec` },
           { label: 'Bilirubin used', value: `${round(bili, 2)} mg/dL` },
-          { label: 'INR-based crude approx (not validated equivalent)', value: String(dfInrApprox) },
+          { label: 'INR-based crude approx (not validated equivalent)', value: dfInrApprox != null ? String(dfInrApprox) : 'Not calculated — INR not entered' },
         ],
         recommendations: [
           'Enter PT and control from the same lab',

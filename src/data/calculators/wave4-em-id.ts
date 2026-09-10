@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave4EmIdCalcs: Calculator[] = [
   {
@@ -115,7 +115,7 @@ export const wave4EmIdCalcs: Calculator[] = [
         { label: 'Intermediate', value: 'mid' },
         { label: 'High / positive', value: 'high' },
       ]),
-      numberInput('age', 'Age (optional context)', { unit: 'years', min: 18, max: 100, step: 1, defaultValue: 55 }),
+      numberInput('age', 'Age (optional context)', { unit: 'years', min: 18, max: 100, step: 1, defaultValue: 55, required: false }),
     ],
     calculate(values) {
       const sex = String(values.sex ?? 'F');
@@ -163,7 +163,7 @@ export const wave4EmIdCalcs: Calculator[] = [
             label: 'D-dimer band',
             value: dd === 'low' ? 'Low (0)' : dd === 'mid' ? 'Intermediate (+1)' : 'High (+2)',
           },
-          { label: 'Age (context only)', value: String(num(values.age, 55)) },
+          { label: 'Age (context only)', value: isMissingValue(values.age, true) ? 'Not entered' : String(num(values.age, 0)) },
         ],
         recommendations:
           score >= 4

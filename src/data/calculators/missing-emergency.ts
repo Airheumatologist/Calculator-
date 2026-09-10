@@ -861,7 +861,7 @@ export const missingEmergencyCalcs: Calculator[] = [
         {
           title: 'START triage methodology (Simple Triage and Rapid Treatment)',
           citation: 'Community EMS / disaster medicine literature (Newport Beach Fire Department origins; modern START teaching)',
-          year: 1983, url: 'https://www.remm.nlm.gov/startadult.htm' },
+          year: 1983, url: 'https://remm.hhs.gov/startadult.htm' },
       ],
     },
     nextSteps: [

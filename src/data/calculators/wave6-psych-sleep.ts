@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 1. PDSS (Panic Disorder Severity Scale) ───────────────────────────────
@@ -237,12 +237,13 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         step: 0.1,
         defaultValue: 22,
         helpText: 'Low BMI raises urgency independent of score',
+        required: false,
       }),
     ],
     calculate(values) {
       const score = num(values.score, 18);
       const behaviors = bool(values.behaviors);
-      const bmi = num(values.bmi, 22);
+      const bmi = num(values.bmi, 0);
       const r = riskFromThresholds(score, [
         {
           max: 19,
@@ -1191,11 +1192,13 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         max: 10,
         step: 0.5,
         defaultValue: 6,
+        required: false,
       }),
     ],
     calculate(values) {
       const avg = num(values.avg, 4.5);
-      const worst = num(values.worst, 6);
+      const worstProvided = !isMissingValue(values.worst, true);
+      const worst = num(values.worst, 0);
       const r = riskFromThresholds(avg, [
         {
           max: 1,
@@ -1228,7 +1231,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         ...r,
         details: [
           { label: 'Interference average', value: String(avg) },
-          { label: 'Worst pain (optional)', value: String(worst) },
+          { label: 'Worst pain (optional)', value: worstProvided ? String(worst) : 'Not entered' },
           { label: 'Domains', value: '7 items averaged' },
         ],
       };

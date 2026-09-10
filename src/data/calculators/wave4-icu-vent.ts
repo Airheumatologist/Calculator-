@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave4IcuVentCalcs: Calculator[] = [
   // 1. Arterial oxygen content (CaO₂)
@@ -1236,12 +1236,13 @@ export const wave4IcuVentCalcs: Calculator[] = [
     inputs: [
       numberInput('initial', 'Initial lactate', { unit: 'mmol/L', min: 0.1, max: 30, step: 0.1, defaultValue: 4.0 }),
       numberInput('delayed', 'Repeat lactate', { unit: 'mmol/L', min: 0.1, max: 30, step: 0.1, defaultValue: 3.0 }),
-      numberInput('hours', 'Interval (optional)', { unit: 'hours', min: 0.5, max: 24, step: 0.5, defaultValue: 2 }),
+      numberInput('hours', 'Interval (optional)', { unit: 'hours', min: 0.5, max: 24, step: 0.5, defaultValue: 2, required: false }),
     ],
     calculate(values) {
       const initial = num(values.initial, 4);
       const delayed = num(values.delayed, 3);
-      const hours = num(values.hours, 2);
+      const hoursProvided = !isMissingValue(values.hours, true);
+      const hours = num(values.hours, 0);
       if (initial <= 0) {
         return {
           score: '—',
@@ -1258,7 +1259,7 @@ export const wave4IcuVentCalcs: Calculator[] = [
       if (clearance >= 20) {
         riskLevel = 'low';
         label = 'Good clearance (≥20%)';
-        interpretation = `Lactate clearance ${clearance}% over ~${hours} h (Δ ${absolute} mmol/L). Favorable trend if clinical perfusion also improving.`;
+        interpretation = `Lactate clearance ${clearance}%${hoursProvided ? ` over ~${hours} h` : ' (measurement interval not entered)'} (Δ ${absolute} mmol/L). Favorable trend if clinical perfusion also improving.`;
       } else if (clearance >= 10) {
         riskLevel = 'moderate';
         label = 'Partial clearance (10–19%)';
@@ -1281,7 +1282,7 @@ export const wave4IcuVentCalcs: Calculator[] = [
         details: [
           { label: 'Initial → repeat', value: `${initial} → ${delayed} mmol/L` },
           { label: 'Absolute change', value: `${absolute} mmol/L` },
-          { label: 'Interval', value: `${hours} h` },
+          { label: 'Interval', value: hoursProvided ? `${hours} h` : 'Not entered' },
         ],
       };
     },

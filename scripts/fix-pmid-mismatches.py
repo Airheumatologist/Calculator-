@@ -2,7 +2,8 @@
 """
 Auto-fix mismatched PMIDs/DOIs by searching PubMed for the cited paper.
 
-Reads scripts/audit-evidence/pmid-v2-problems.json (mismatch + doi_wrong),
+Reads scripts/audit-evidence/pmid-relevance-problems.json (mismatch + doi_wrong),
+produced by `python3 scripts/audit-pmid-relevance.py`,
 searches NCBI for each citation, and patches src/data/calculators/*.ts.
 
 Usage:
@@ -23,7 +24,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CALC_DIR = ROOT / "src" / "data" / "calculators"
-PROBLEMS = ROOT / "scripts" / "audit-evidence" / "pmid-v2-problems.json"
+PROBLEMS = ROOT / "scripts" / "audit-evidence" / "pmid-relevance-problems.json"
 OUT = ROOT / "scripts" / "audit-evidence" / "pmid-fix-results.json"
 
 
@@ -329,8 +330,21 @@ def main() -> int:
     if not args.apply and not args.dry_run:
         args.dry_run = True
 
+    if not PROBLEMS.exists():
+        print(
+            f"ERROR: {PROBLEMS.relative_to(ROOT)} not found.\n"
+            "Run `npm run audit:evidence` then `npm run audit:relevance` first.",
+            file=sys.stderr,
+        )
+        return 2
+
     problems = json.loads(PROBLEMS.read_text())
-    problems = [p for p in problems if p.get("verdict") in ("mismatch", "doi_wrong")]
+    problems = [
+        p
+        for p in problems
+        if (p.get("verdict") or p.get("status"))
+        in ("mismatch", "doi_wrong", "doi_mismatch")
+    ]
     if args.only:
         allow = set(args.only.split(","))
         problems = [p for p in problems if p.get("calcId") in allow]

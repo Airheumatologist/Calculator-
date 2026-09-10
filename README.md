@@ -29,7 +29,7 @@ MDCalc-style clinical calculator web application with **900+ medical calculators
 ## Quick start
 
 ```bash
-# Requires Node.js 18+
+# Requires Node.js 20.19+ or 22.12+ (Vite 8 engine range)
 npm install
 npm run dev
 ```
@@ -97,7 +97,7 @@ npm run lint      # oxlint
 │                    ┌──────────────────────────┐                          │
 │                    │  Calculator Registry     │                          │
 │                    │  src/data/calculators/   │                          │
-│                    │  (922 Calculator defs)   │                          │
+│                    │  (918 Calculator defs)   │                          │
 │                    └──────────────────────────┘                          │
 │                                                                          │
 └──────────────────────────────────────────────────────────────────────────┘
@@ -136,7 +136,8 @@ mdcalc/
     │       ├── missing-gi-liver.ts
     │       ├── missing-neuro-psych.ts
     │       ├── missing-heme-id-nephro.ts
-    │       └── missing-peds-ob-tox.ts
+    │       ├── missing-peds-ob-tox.ts
+    │       └── wave2-*.ts … wave6-*.ts   # 30 further modules (42 data modules total)
     ├── components/
     │   ├── Layout.tsx         # sticky header, search, footer
     │   ├── CalculatorCard.tsx # home grid card
@@ -205,16 +206,16 @@ Calculator
 ### Routing map
 
 ```
-  BrowserRouter
+  HashRouter
        │
        ├── /                    → HomePage
        │     query: ?q=heart      search
        │     query: ?cat=cardiology  specialty filter
        │
        └── /calc/:id            → CalculatorPage
-             e.g. /calc/cha2ds2-vasc
-             e.g. /calc/heart-score
-             e.g. /calc/gcs
+             e.g. #/calc/cha2ds2-vasc
+             e.g. #/calc/heart-score
+             e.g. #/calc/gcs
 ```
 
 ### Calculator registry composition
@@ -230,9 +231,10 @@ Calculator
      └───────────┴─────────┴────────┴──────────┴─────────┘
      + missing-emergency | cardio-pulm | gi-liver
      + missing-neuro-psych | heme-id-nephro | peds-ob-tox
+     + wave2-* … wave6-* (30 modules)
                          │
                          ▼
-              calculators: Calculator[]   (922 tools)
+              calculators: Calculator[]   (918 tools)
                          │
          ┌───────────────┼────────────────┐
          ▼               ▼                ▼
@@ -286,6 +288,14 @@ Calculator
                      any static host ◄─────────┘
                      (nginx, S3, Netlify, GH Pages, …)
 ```
+
+**Chunking.** The registry is ~2.9 MB minified and is consumed synchronously (`export const calculators`),
+so it cannot be lazy-loaded without breaking the test suite. `vite.config.ts` therefore uses
+`build.rollupOptions.output.manualChunks` to emit one chunk per data family (`calc-base`,
+`calc-missing-a/b`, `calc-wave2-a/b` … `calc-wave6-a/b`) plus a `vendor-react` chunk. Total transfer for a
+cold first load is unchanged, but the chunks download in parallel and a change to one data family
+invalidates only that chunk instead of the whole bundle. Every chunk stays under Vite's 500 kB warning
+threshold, so `chunkSizeWarningLimit` is left at its default.
 
 ---
 

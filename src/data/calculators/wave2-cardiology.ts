@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave2CardiologyCalcs: Calculator[] = [
   {
@@ -544,12 +544,13 @@ export const wave2CardiologyCalcs: Calculator[] = [
     inputs: [
       numberInput('edv', 'End-diastolic volume (EDV)', { unit: 'mL', min: 20, max: 500, defaultValue: 120 }),
       numberInput('esv', 'End-systolic volume (ESV)', { unit: 'mL', min: 5, max: 400, defaultValue: 50 }),
-      numberInput('hr', 'Heart rate (optional, for CO)', { unit: 'bpm', min: 30, max: 220, defaultValue: 70 }),
+      numberInput('hr', 'Heart rate (optional, for CO)', { unit: 'bpm', min: 30, max: 220, defaultValue: 70, required: false }),
     ],
     calculate(values) {
       const edv = num(values.edv, 120);
       const esv = num(values.esv, 50);
-      const hr = num(values.hr, 70);
+      const hrProvided = !isMissingValue(values.hr, true);
+      const hr = num(values.hr, 0);
       if (edv <= 0) {
         return { score: 0, label: 'Invalid EDV', interpretation: 'EDV must be > 0.', riskLevel: 'info' };
       }
@@ -563,7 +564,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
       }
       const sv = edv - esv;
       const ef = round((sv / edv) * 100, 1);
-      const co = round((sv * hr) / 1000, 2);
+      const co = hrProvided ? round((sv * hr) / 1000, 2) : null;
 
       const r = riskFromThresholds(ef, [
         {
@@ -605,7 +606,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
         details: [
           { label: 'Stroke volume', value: `${sv} mL` },
           { label: 'Ejection fraction', value: `${ef}%` },
-          { label: 'Cardiac output (SV×HR)', value: `${co} L/min` },
+          { label: 'Cardiac output (SV×HR)', value: co != null ? `${co} L/min` : 'Not calculated — heart rate not entered' },
           { label: 'EDV / ESV', value: `${edv} / ${esv} mL` },
         ],
         recommendations:

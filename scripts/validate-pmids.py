@@ -2,59 +2,37 @@
 """
 Validate all PMID fields in calculator data against NCBI PubMed.
 
+References come from scripts/audit-evidence/refs-inventory.json, produced by
+`npm run audit:evidence`. This script never parses the TypeScript sources
+itself, so its counts always match the evidence audit.
+
 Usage:
   python3 scripts/validate-pmids.py
   python3 scripts/validate-pmids.py --strict
+  python3 scripts/validate-pmids.py --offline   # counts only, no network
 
-Exit 0 if all PMIDs resolve; 1 if any are missing/invalid.
+Exit 0 if all PMIDs resolve; 1 if any are missing/invalid; 2 if the inventory
+is missing or stale.
 """
 from __future__ import annotations
 
 import argparse
 import json
-import re
 import subprocess
 import sys
 import time
 import urllib.parse
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-CALC_DIR = ROOT / "src" / "data" / "calculators"
+sys.path.insert(0, str(Path(__file__).resolve().parent / "lib"))
 
-REF_RE = re.compile(
-    r"\{\s*title:\s*'(?:\\'|[^'])*'\s*,\s*citation:\s*'(?:\\'|[^'])*'[^}]*\}"
+from inventory import (  # noqa: E402
+    INVENTORY,
+    ROOT,
+    InventoryError,
+    fail,
+    load_inventory,
 )
-PMID_RE = re.compile(r"pmid:\s*'(\d+)'")
-DOI_RE = re.compile(r"doi:\s*'([^']+)'")
-URL_RE = re.compile(r"url:\s*'([^']+)'")
-
-
-def extract_refs() -> list[dict]:
-    refs: list[dict] = []
-    files = sorted(
-        p for p in CALC_DIR.glob("*.ts") if not p.name.startswith("._") and p.name != "index.ts"
-    )
-    for fpath in files:
-        text = fpath.read_text(encoding="utf-8")
-        for m in REF_RE.finditer(text):
-            obj = m.group(0)
-            pmid = PMID_RE.search(obj)
-            doi = DOI_RE.search(obj)
-            url = URL_RE.search(obj)
-            title_m = re.search(r"title:\s*'((?:\\'|[^'])*)'", obj)
-            cit_m = re.search(r"citation:\s*'((?:\\'|[^'])*)'", obj)
-            refs.append(
-                {
-                    "file": fpath.name,
-                    "title": title_m.group(1) if title_m else "",
-                    "citation": cit_m.group(1) if cit_m else "",
-                    "pmid": pmid.group(1) if pmid else None,
-                    "doi": doi.group(1) if doi else None,
-                    "url": url.group(1) if url else None,
-                }
-            )
-    return refs
 
 
 def curl_json(url: str) -> dict:
@@ -131,19 +109,46 @@ def validate_pmids(pmids: list[str]) -> dict[str, str | None]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--strict", action="store_true")
+    parser.add_argument(
+        "--offline",
+        action="store_true",
+        help="report inventory counts only; do not contact NCBI",
+    )
+    parser.add_argument(
+        "--allow-stale-inventory",
+        action="store_true",
+        help="use refs-inventory.json even if the sources changed since it was written",
+    )
     args = parser.parse_args()
 
-    refs = extract_refs()
+    try:
+        inventory = load_inventory(allow_stale=args.allow_stale_inventory)
+    except InventoryError as exc:
+        return fail(exc)
+
+    refs = inventory["references"]
     with_pmid = [r for r in refs if r["pmid"]]
     without_link = [r for r in refs if not (r["pmid"] or r["doi"] or r["url"])]
 
+    print(f"Inventory: {INVENTORY.relative_to(ROOT)} (generated {inventory['generatedAt']})")
     print(f"References scanned: {len(refs)}")
     print(f"With PMID: {len(with_pmid)}")
+    print(f"Unique PMIDs: {len({r['pmid'] for r in with_pmid})}")
     print(f"With DOI: {sum(1 for r in refs if r['doi'])}")
     print(f"With URL: {sum(1 for r in refs if r['url'])}")
     print(f"Without any active link: {len(without_link)}")
 
     pmids = [r["pmid"] for r in with_pmid if r["pmid"]]
+
+    if args.offline:
+        print("\n--offline: skipping NCBI resolution check.")
+        if args.strict and without_link:
+            print(f"\nSTRICT: {len(without_link)} refs lack pmid/doi/url")
+            for r in without_link[:20]:
+                print(f"  {r['file']}: {r['citation'][:70]}")
+            return 1
+        return 0
+
     print(f"\nValidating {len(set(pmids))} unique PMIDs via NCBI…")
     status = validate_pmids(pmids)
 

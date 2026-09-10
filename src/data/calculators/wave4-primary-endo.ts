@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave4PrimaryEndoCalcs: Calculator[] = [
   // ─── 1. ADA Diabetes Risk Test ─────────────────────────────────────────────
@@ -249,6 +249,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         step: 0.1,
         defaultValue: 5.7,
         helpText: 'Leave at default only if using A1c; set unused tests carefully',
+        required: false,
       }),
       selectInput('useA1c', 'Include A1c in interpretation', [
         { label: 'Yes', value: 1 },
@@ -259,6 +260,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         min: 40,
         max: 600,
         defaultValue: 100,
+        required: false,
       }),
       selectInput('useFpg', 'Include FPG', [
         { label: 'Yes', value: 1 },
@@ -269,6 +271,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         min: 40,
         max: 600,
         defaultValue: 140,
+        required: false,
       }),
       selectInput('useOgtt', 'Include 2-h OGTT', [
         { label: 'Yes', value: 1 },
@@ -280,9 +283,12 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       const useA1c = num(values.useA1c, 1) === 1;
       const useFpg = num(values.useFpg, 1) === 1;
       const useOgtt = num(values.useOgtt, 1) === 1;
-      const a1c = num(values.a1c, 5.7);
-      const fpg = num(values.fpg, 100);
-      const ogtt = num(values.ogtt, 140);
+      const a1cProvided = !isMissingValue(values.a1c, true);
+      const fpgProvided = !isMissingValue(values.fpg, true);
+      const ogttProvided = !isMissingValue(values.ogtt, true);
+      const a1c = num(values.a1c, 0);
+      const fpg = num(values.fpg, 0);
+      const ogtt = num(values.ogtt, 0);
       const symptoms = bool(values.symptoms);
 
       type Cat = 'normal' | 'prediabetes' | 'diabetes';
@@ -293,32 +299,47 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       const catFpg = (x: number): Cat => (x >= 126 ? 'diabetes' : x >= 100 ? 'prediabetes' : 'normal');
       const catOgtt = (x: number): Cat => (x >= 200 ? 'diabetes' : x >= 140 ? 'prediabetes' : 'normal');
 
-      if (useA1c) {
+      if (useA1c && a1cProvided) {
         const c = catA1c(a1c);
         cats.push(c);
         details.push({ label: 'A1c', value: `${a1c}% → ${c}` });
+      } else if (useA1c) {
+        details.push({ label: 'A1c', value: 'Not entered — excluded from interpretation' });
       }
-      if (useFpg) {
+      if (useFpg && fpgProvided) {
         const c = catFpg(fpg);
         cats.push(c);
         details.push({ label: 'FPG', value: `${fpg} mg/dL → ${c}` });
+      } else if (useFpg) {
+        details.push({ label: 'FPG', value: 'Not entered — excluded from interpretation' });
       }
-      if (useOgtt) {
+      if (useOgtt && ogttProvided) {
         const c = catOgtt(ogtt);
         cats.push(c);
         details.push({ label: '2-h OGTT', value: `${ogtt} mg/dL → ${c}` });
+      } else if (useOgtt) {
+        details.push({ label: '2-h OGTT', value: 'Not entered — excluded from interpretation' });
       }
       if (symptoms) {
         cats.push('diabetes');
         details.push({ label: 'Symptomatic hyperglycemia', value: 'Meets clinical diabetes criterion' });
       }
 
+      const blankEnabled = [
+        useA1c && !a1cProvided ? 'A1c' : null,
+        useFpg && !fpgProvided ? 'FPG' : null,
+        useOgtt && !ogttProvided ? '2-h OGTT' : null,
+      ].filter(Boolean) as string[];
+
       if (cats.length === 0) {
         return {
           score: '—',
-          label: 'No tests selected',
-          interpretation: 'Enable at least one of A1c, FPG, or OGTT (or symptomatic criterion).',
+          label: blankEnabled.length ? 'No usable test values entered' : 'No tests selected',
+          interpretation: blankEnabled.length
+            ? `No glycemic category assigned: ${blankEnabled.join(', ')} ${blankEnabled.length === 1 ? 'is' : 'are'} enabled but left blank. Enter a value for at least one of A1c, FPG, or OGTT (or mark the symptomatic criterion).`
+            : 'Enable at least one of A1c, FPG, or OGTT (or symptomatic criterion).',
           riskLevel: 'info',
+          details,
         };
       }
 
@@ -347,6 +368,10 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
 
       if (!allSame && anyPre && !anyDiabetes) {
         interpretation += ' Mild discordance among prediabetes/normal — use clinical context.';
+      }
+
+      if (blankEnabled.length) {
+        interpretation += ` ${blankEnabled.join(' and ')} ${blankEnabled.length === 1 ? 'was' : 'were'} enabled but left blank, so ${blankEnabled.length === 1 ? 'it was' : 'they were'} not used — this category rests only on the values entered.`;
       }
 
       return {
@@ -405,6 +430,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         max: 200,
         defaultValue: 65,
         helpText: 'Use capillary or plasma as available',
+        required: false,
       }),
       selectInput('measured', 'Glucose measured?', [
         { label: 'Yes', value: 1 },
@@ -414,8 +440,9 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       yesNo('symptoms', 'Hypoglycemic symptoms present', 0),
     ],
     calculate(values) {
-      const g = num(values.glucose, 65);
-      const measured = num(values.measured, 1) === 1;
+      const glucoseProvided = !isMissingValue(values.glucose, true);
+      const g = num(values.glucose, 0);
+      const measured = num(values.measured, 1) === 1 && glucoseProvided;
       const severe = bool(values.severe);
       const symptoms = bool(values.symptoms);
 
@@ -428,7 +455,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
             'Level 3: severe event characterized by altered mental/physical status requiring assistance for treatment, regardless of glucose value. Urgent evaluation of causes and regimen.',
           riskLevel: 'critical',
           details: [
-            { label: 'Glucose', value: measured ? `${g} mg/dL` : 'Not measured' },
+            { label: 'Glucose', value: measured ? `${g} mg/dL` : glucoseProvided ? 'Not measured' : 'Not entered' },
             { label: 'Symptoms', value: symptoms ? 'Yes' : 'No / unknown' },
           ],
           recommendations: [
@@ -440,10 +467,13 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       }
 
       if (!measured) {
+        const selectedMeasured = num(values.measured, 1) === 1;
         return {
           score: '—',
-          label: 'Unclassified (no glucose, not Level 3)',
-          interpretation: 'Without a measured glucose and without Level 3 criteria, formal ADA level cannot be assigned. Treat symptomatic suspected hypo and measure glucose when possible.',
+          label: selectedMeasured && !glucoseProvided ? 'Unclassified (glucose value blank)' : 'Unclassified (no glucose, not Level 3)',
+          interpretation: selectedMeasured && !glucoseProvided
+            ? 'Glucose is marked as measured but the value is blank, so no ADA level was assigned. Enter the glucose value, or mark it as not available. Treat symptomatic suspected hypoglycemia while measuring.'
+            : 'Without a measured glucose and without Level 3 criteria, formal ADA level cannot be assigned. Treat symptomatic suspected hypo and measure glucose when possible.',
           riskLevel: 'info',
         };
       }
@@ -675,6 +705,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         max: 50,
         step: 0.1,
         defaultValue: 0,
+        required: false,
       }),
     ],
     calculate(values) {
@@ -1437,7 +1468,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
       ]),
-      numberInput('bmi', 'BMI (optional risk flag if low)', { unit: 'kg/m²', min: 12, max: 50, defaultValue: 24 }),
+      numberInput('bmi', 'BMI (optional risk flag if low)', { unit: 'kg/m²', min: 12, max: 50, defaultValue: 24, required: false }),
       yesNo('priorFx', 'Prior osteoporotic fracture'),
       yesNo('parentHip', 'Parent fractured hip'),
       yesNo('smoker', 'Current smoking'),

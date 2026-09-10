@@ -1020,12 +1020,12 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     inputs: [
       numberInput('na', 'Sodium', { unit: 'mEq/L', min: 0, max: 1000, defaultValue: 154 }),
       numberInput('k', 'Potassium', { unit: 'mEq/L', min: 0, max: 200, defaultValue: 0 }),
-      numberInput('cl', 'Chloride (optional, not doubled)', {
+      numberInput('cl', 'Chloride', {
         unit: 'mEq/L',
         min: 0,
         max: 1000,
         defaultValue: 154,
-        helpText: 'Shown for reference; simple osmolarity uses cations + glucose + other, not 2× all ions',
+        helpText: 'Counted once (not 2×) — this is the ionic sum Na + K + Cl + glucose + other, not the serum 2×Na formula',
       }),
       numberInput('glucose', 'Glucose / dextrose', {
         unit: 'g/L',
@@ -1797,6 +1797,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
         max: 700,
         defaultValue: 0,
         helpText: 'Enter 0 to skip comparison',
+        required: false,
       }),
     ],
     calculate(values) {
@@ -1956,8 +1957,8 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
         unit: '%',
         min: 50,
         max: 100,
-        defaultValue: 0,
-        helpText: 'Enter 0 to show targets only',
+        required: false,
+        helpText: 'Leave blank to show targets only',
       }),
       yesNo('onOxygen', 'Currently on supplemental oxygen', 0),
     ],
