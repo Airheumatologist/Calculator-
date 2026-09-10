@@ -5,27 +5,46 @@ Audit PMID/DOI relevance for calculator evidence references.
 1. Load refs with calculator context from the shared inventory
    (scripts/audit-evidence/refs-inventory.json — run `npm run audit:evidence` first)
 2. Fetch PubMed titles for all PMIDs via NCBI E-utilities
-3. Optionally fetch Crossref titles for DOIs
+3. Optionally fetch Crossref titles for DOIs (--with-doi; skipped by default)
 4. Score token overlap between PubMed/Crossref title vs calc name + ref title + citation
 5. Write heuristic scratch reports (pmid-relevance-*.json,
    PMID-RELEVANCE-SUMMARY.md) — triage input, NOT the authoritative audit;
    see scripts/audit-evidence/README.md
 
+Caching: every successful NCBI/Crossref response is cached as one small JSON
+file under scripts/audit-evidence/.cache/ (pmids/<pmid>.json,
+dois/<url-encoded-doi>.json), so a warm run skips HTTP entirely for cached
+keys. --refresh bypasses the cache (re-fetches and overwrites entries).
+Interrupted runs cannot poison the cache: each key is written via a temp file
+that is atomically renamed into place, and only successful lookups are cached.
+
+Rate limits: set NCBI_API_KEY in the environment to raise NCBI E-utilities
+from 3 to 10 requests/second (URLs are identical when unset). Crossref
+requests are parallelised (8 workers) and send a polite User-Agent with a
+contact address, as Crossref requests for higher throughput.
+
 Usage:
-  python3 scripts/audit-pmid-relevance.py
-  python3 scripts/audit-pmid-relevance.py --skip-doi
-  python3 scripts/audit-pmid-relevance.py --limit 50   # smoke test
+  python3 scripts/audit-pmid-relevance.py                 # PMID phase only (default)
+  python3 scripts/audit-pmid-relevance.py --with-doi      # also check DOIs via Crossref
+  python3 scripts/audit-pmid-relevance.py --with-doi --refresh   # ignore cache, re-fetch
+  python3 scripts/audit-pmid-relevance.py --limit 50      # smoke test
+  python3 scripts/audit-pmid-relevance.py --skip-doi      # same as the default (kept for
+                                                          # backwards compatibility)
 """
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
+import os
 import re
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.parse
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "lib"))
@@ -34,6 +53,15 @@ from inventory import InventoryError, fail, load_refs  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / "scripts" / "audit-evidence"
+CACHE_DIR = OUT_DIR / ".cache"
+PMID_CACHE_DIR = CACHE_DIR / "pmids"
+DOI_CACHE_DIR = CACHE_DIR / "dois"
+
+CROSSREF_UA = "MedCalcLive evidence audit/1.0 (mailto:incognitoman1993@gmail.com)"
+CROSSREF_WORKERS = 8
+CROSSREF_RETRIES = 3
+
+NCBI_API_KEY = os.environ.get("NCBI_API_KEY")
 
 STOPWORDS = {
     "a", "an", "the", "of", "and", "or", "in", "on", "for", "to", "with", "from",
@@ -116,12 +144,45 @@ def extract_refs(allow_stale: bool = False) -> list[dict]:
     return load_refs(allow_stale=allow_stale)
 
 
-def curl_json(url: str, timeout: int = 40) -> dict:
-    r = subprocess.run(
-        ["curl", "-sS", "--max-time", str(timeout), url],
-        capture_output=True,
-        text=True,
-    )
+# --- on-disk cache (one small JSON file per PMID / DOI) ----------------------
+
+
+def cache_read(cache_dir: Path, key: str):
+    """Return the cached payload for key, or None on any miss/read error."""
+    try:
+        return json.loads((cache_dir / f"{key}.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+def cache_write(cache_dir: Path, key: str, payload) -> None:
+    """Atomically write one cache entry (temp file + rename)."""
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    path = cache_dir / f"{key}.json"
+    fd, tmp = tempfile.mkstemp(dir=cache_dir, prefix=".tmp-", suffix=".json")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            json.dump(payload, fh, indent=2, sort_keys=True)
+            fh.write("\n")
+        os.replace(tmp, path)
+    except OSError:
+        with contextlib.suppress(OSError):
+            os.unlink(tmp)
+
+
+def doi_cache_key(doi: str) -> str:
+    return urllib.parse.quote(doi, safe="")
+
+
+# --- HTTP helpers -------------------------------------------------------------
+
+
+def curl_json(url: str, timeout: int = 40, headers: dict | None = None) -> dict:
+    cmd = ["curl", "-sS", "--max-time", str(timeout)]
+    for k, v in (headers or {}).items():
+        cmd += ["-H", f"{k}: {v}"]
+    cmd.append(url)
+    r = subprocess.run(cmd, capture_output=True, text=True)
     if r.returncode != 0:
         raise RuntimeError(r.stderr or "curl failed")
     if not r.stdout.strip():
@@ -130,10 +191,10 @@ def curl_json(url: str, timeout: int = 40) -> dict:
 
 
 def esummary_chunk(pmids: list[str]) -> dict[str, dict]:
-    params = urllib.parse.urlencode(
-        {"db": "pubmed", "id": ",".join(pmids), "retmode": "json"}
-    )
-    url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?{params}"
+    params = {"db": "pubmed", "id": ",".join(pmids), "retmode": "json"}
+    if NCBI_API_KEY:
+        params["api_key"] = NCBI_API_KEY
+    url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?{urllib.parse.urlencode(params)}"
     data = curl_json(url)
     result = data.get("result", {})
     out: dict[str, dict] = {}
@@ -157,13 +218,25 @@ def esummary_chunk(pmids: list[str]) -> dict[str, dict]:
     return out
 
 
-def fetch_all_pmids(pmids: list[str]) -> dict[str, dict]:
-    out: dict[str, dict] = {}
+def fetch_all_pmids(pmids: list[str], use_cache: bool = True) -> dict[str, dict]:
     unique = sorted(set(pmids), key=lambda x: int(x) if x.isdigit() else 0)
+    out: dict[str, dict] = {}
+
+    if use_cache:
+        for pid in unique:
+            cached = cache_read(PMID_CACHE_DIR, pid)
+            if isinstance(cached, dict) and cached.get("title"):
+                out[pid] = cached
+    todo = [pid for pid in unique if pid not in out]
+    if out:
+        print(f"  {len(out)}/{len(unique)} PMIDs from cache", file=sys.stderr)
+    if not todo:
+        return out
+
     batch = 20
-    total = len(unique)
+    total = len(todo)
     for i in range(0, total, batch):
-        chunk = unique[i : i + batch]
+        chunk = todo[i : i + batch]
         ok = False
         for attempt in range(5):
             try:
@@ -173,6 +246,9 @@ def fetch_all_pmids(pmids: list[str]) -> dict[str, dict]:
                     time.sleep(1.5 * (attempt + 1))
                     continue
                 out.update(part)
+                for pid, meta in part.items():
+                    if meta.get("title"):
+                        cache_write(PMID_CACHE_DIR, pid, meta)
                 ok = True
                 break
             except Exception as e:
@@ -187,7 +263,7 @@ def fetch_all_pmids(pmids: list[str]) -> dict[str, dict]:
         time.sleep(0.4)
 
     # retry failures individually
-    failed = [pid for pid, meta in out.items() if not meta.get("title")]
+    failed = [pid for pid, meta in out.items() if pid in todo and not meta.get("title")]
     if failed:
         print(f"  Retrying {len(failed)} failed PMIDs…", file=sys.stderr)
         for pid in failed:
@@ -196,6 +272,7 @@ def fetch_all_pmids(pmids: list[str]) -> dict[str, dict]:
                     part = esummary_chunk([pid])
                     if part.get(pid, {}).get("title"):
                         out[pid] = part[pid]
+                        cache_write(PMID_CACHE_DIR, pid, part[pid])
                         break
                 except Exception:
                     pass
@@ -206,13 +283,47 @@ def fetch_all_pmids(pmids: list[str]) -> dict[str, dict]:
 
 def crossref_title(doi: str) -> str | None:
     url = f"https://api.crossref.org/works/{urllib.parse.quote(doi, safe='')}"
-    try:
-        data = curl_json(url, timeout=25)
-        msg = data.get("message", {})
-        titles = msg.get("title") or []
-        return titles[0] if titles else None
-    except Exception:
-        return None
+    for attempt in range(CROSSREF_RETRIES):
+        try:
+            data = curl_json(url, timeout=25, headers={"User-Agent": CROSSREF_UA})
+            msg = data.get("message", {})
+            titles = msg.get("title") or []
+            return titles[0] if titles else None
+        except Exception:
+            if attempt == CROSSREF_RETRIES - 1:
+                return None
+            time.sleep(0.5 * (attempt + 1))
+    return None
+
+
+def fetch_all_dois(dois: list[str], use_cache: bool = True) -> dict[str, str | None]:
+    titles: dict[str, str | None] = {}
+    todo: list[str] = []
+    for doi in dois:
+        cached = cache_read(DOI_CACHE_DIR, doi_cache_key(doi)) if use_cache else None
+        if isinstance(cached, dict) and isinstance(cached.get("title"), str):
+            titles[doi] = cached["title"]
+        else:
+            todo.append(doi)
+    if titles:
+        print(f"  {len(titles)}/{len(dois)} DOIs from cache", file=sys.stderr)
+    if not todo:
+        return titles
+
+    print(f"  fetching {len(todo)} DOIs with {CROSSREF_WORKERS} workers…", file=sys.stderr)
+    done = 0
+    with ThreadPoolExecutor(max_workers=CROSSREF_WORKERS) as pool:
+        futures = {pool.submit(crossref_title, d): d for d in todo}
+        for fut in as_completed(futures):
+            doi = futures[fut]
+            title = fut.result()
+            titles[doi] = title
+            if title is not None:
+                cache_write(DOI_CACHE_DIR, doi_cache_key(doi), {"title": title})
+            done += 1
+            if done % 100 == 0 or done == len(todo):
+                print(f"  DOIs: {done}/{len(todo)}", file=sys.stderr)
+    return titles
 
 
 def classify(score: float, overlap: list[str], pubmed_title: str | None) -> str:
@@ -230,7 +341,24 @@ def classify(score: float, overlap: list[str], pubmed_title: str | None) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--skip-doi", action="store_true")
+    parser.add_argument(
+        "--with-doi",
+        action="store_true",
+        help="also fetch Crossref titles for DOIs and run the DOI consistency "
+        "checks (slower on a cold cache; cached afterwards)",
+    )
+    parser.add_argument(
+        "--skip-doi",
+        action="store_true",
+        help="skip the Crossref DOI phase (this is the default; kept for "
+        "backwards compatibility)",
+    )
+    parser.add_argument(
+        "--refresh",
+        action="store_true",
+        help="bypass the on-disk cache: re-fetch every PMID/DOI and overwrite "
+        "its cache entry",
+    )
     parser.add_argument("--limit", type=int, default=0, help="Limit refs for smoke test")
     parser.add_argument("--threshold-ok", type=float, default=0.28)
     parser.add_argument(
@@ -239,6 +367,10 @@ def main() -> int:
         help="use refs-inventory.json even if the sources changed since it was written",
     )
     args = parser.parse_args()
+
+    if args.with_doi and args.skip_doi:
+        parser.error("--with-doi and --skip-doi are contradictory")
+    do_doi = args.with_doi
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -253,18 +385,14 @@ def main() -> int:
 
     pmids = [r["pmid"] for r in refs if r.get("pmid")]
     print(f"Fetching {len(set(pmids))} unique PMIDs from NCBI…", file=sys.stderr)
-    pmid_meta = fetch_all_pmids(pmids) if pmids else {}
+    pmid_meta = fetch_all_pmids(pmids, use_cache=not args.refresh) if pmids else {}
 
     # optional DOI check for refs that have DOI but mismatch or no pmid
     doi_titles: dict[str, str | None] = {}
-    if not args.skip_doi:
+    if do_doi:
         dois = sorted({r["doi"] for r in refs if r.get("doi")})
-        print(f"Fetching {len(dois)} DOIs from Crossref (slow)…", file=sys.stderr)
-        for i, doi in enumerate(dois):
-            doi_titles[doi] = crossref_title(doi)
-            if (i + 1) % 50 == 0:
-                print(f"  DOIs: {i+1}/{len(dois)}", file=sys.stderr)
-            time.sleep(0.15)
+        print(f"Fetching {len(dois)} DOIs from Crossref…", file=sys.stderr)
+        doi_titles = fetch_all_dois(dois, use_cache=not args.refresh) if dois else {}
 
     results = []
     by_status = defaultdict(list)
@@ -304,7 +432,7 @@ def main() -> int:
             if doi_rel:
                 status = classify(doi_rel["score"], doi_rel["overlap"], doi_title)
             else:
-                status = "doi_only_unchecked" if args.skip_doi else "unresolved"
+                status = "doi_only_unchecked" if not do_doi else "unresolved"
 
         row = {
             **{k: r[k] for k in ("file", "calcId", "calcName", "title", "citation", "pmid", "doi", "url", "year")},

@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# evidence-audit HTTP cache (scripts/audit-pmid-relevance.py)
+scripts/audit-evidence/.cache/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
