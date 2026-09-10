@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave2PulmIdCalcs: Calculator[] = [
   {
@@ -697,6 +697,7 @@ export const wave2PulmIdCalcs: Calculator[] = [
         step: 1,
         defaultValue: 80,
         helpText: 'Leave interpretation comparative; room air assumed',
+        required: false,
       }),
       numberInput('fio2', 'FiO₂', {
         unit: 'fraction',
@@ -709,15 +710,24 @@ export const wave2PulmIdCalcs: Calculator[] = [
     ],
     calculate(values) {
       const age = num(values.age, 60);
-      const measured = num(values.pao2, 80);
+      const pao2Provided = !isMissingValue(values.pao2, true);
+      const measured = num(values.pao2, 0);
       const fio2 = num(values.fio2, 0.21);
       const expected = round(100 - 0.3 * age, 1);
       const delta = round(measured - expected, 1);
       const onRoomAir = fio2 <= 0.22;
-      let interpretation = `Age-expected PaO₂ ≈ ${expected} mmHg using 100 − 0.3×age. Measured ${measured} mmHg (${delta >= 0 ? '+' : ''}${delta} vs expected).`;
+      let interpretation = pao2Provided
+        ? `Age-expected PaO₂ ≈ ${expected} mmHg using 100 − 0.3×age. Measured ${measured} mmHg (${delta >= 0 ? '+' : ''}${delta} vs expected).`
+        : `Age-expected PaO₂ ≈ ${expected} mmHg using 100 − 0.3×age. No measured PaO₂ entered, so no comparison was made.`;
       let riskLevel: 'low' | 'moderate' | 'high' | 'info' | 'normal' = 'normal';
       let label = 'Within expected range';
-      if (!onRoomAir) {
+      if (!pao2Provided) {
+        label = 'Age-expected PaO₂ only';
+        riskLevel = 'info';
+        interpretation += onRoomAir
+          ? ' Enter a measured PaO₂ (room air) to judge oxygenation against this expected value.'
+          : ' Note: the age formula assumes room air; on supplemental O₂ use the A–a gradient with the actual FiO₂.';
+      } else if (!onRoomAir) {
         label = 'Expected value is for room air';
         riskLevel = 'info';
         interpretation += ' Note: simple age formula assumes room air; measured value on supplemental O₂ cannot be judged by this expected number alone.';
@@ -739,8 +749,8 @@ export const wave2PulmIdCalcs: Calculator[] = [
         interpretation,
         riskLevel,
         details: [
-          { label: 'Measured PaO₂', value: `${measured} mmHg` },
-          { label: 'Δ (measured − expected)', value: `${delta} mmHg` },
+          { label: 'Measured PaO₂', value: pao2Provided ? `${measured} mmHg` : 'Not entered' },
+          { label: 'Δ (measured − expected)', value: pao2Provided ? `${delta} mmHg` : 'Not calculated' },
           { label: 'Formula', value: '100 − 0.3 × age' },
         ],
       };
@@ -1523,14 +1533,15 @@ export const wave2PulmIdCalcs: Calculator[] = [
       yesNo('fluids', 'Adequate fluid resuscitation given', 0),
       yesNo('vasopressors', 'Vasopressors required to maintain MAP ≥ 65 mmHg', 0),
       numberInput('lactate', 'Lactate', { unit: 'mmol/L', min: 0, max: 30, step: 0.1, defaultValue: 1.5 }),
-      numberInput('map', 'Current MAP (optional context)', { unit: 'mmHg', min: 0, max: 150, step: 1, defaultValue: 65 }),
+      numberInput('map', 'Current MAP (optional context)', { unit: 'mmHg', min: 0, max: 150, step: 1, defaultValue: 65, required: false }),
     ],
     calculate(values) {
       const infection = bool(values.infection);
       const fluids = bool(values.fluids);
       const vasopressors = bool(values.vasopressors);
       const lactate = num(values.lactate, 1.5);
-      const map = num(values.map, 65);
+      const mapProvided = !isMissingValue(values.map, true);
+      const map = num(values.map, 0);
       const lactateHigh = lactate > 2;
 
       if (!infection) {
@@ -1551,7 +1562,7 @@ export const wave2PulmIdCalcs: Calculator[] = [
           riskLevel: 'critical',
           details: [
             { label: 'Lactate', value: `${lactate} mmol/L` },
-            { label: 'MAP (context)', value: `${map} mmHg` },
+            { label: 'MAP (context)', value: mapProvided ? `${map} mmHg` : 'Not entered' },
             { label: 'Fluids completed', value: fluids ? 'Yes' : 'No' },
           ],
           recommendations: [

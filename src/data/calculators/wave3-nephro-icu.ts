@@ -1475,8 +1475,8 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Predict fluid responsiveness without committing to a fluid bolus.',
     whyUse: 'PLR reversibly mobilizes ~300 mL venous blood; SV/CO increase ≥10–15% predicts responders.',
     inputs: [
-      numberInput('svBase', 'Baseline SV or CO (or VTI)', { unit: 'any unit', min: 0.1, max: 20, step: 0.1, defaultValue: 50 }),
-      numberInput('svPlr', 'SV/CO/VTI during PLR', { unit: 'same unit', min: 0.1, max: 20, step: 0.1, defaultValue: 58 }),
+      numberInput('svBase', 'Baseline SV or CO (or VTI)', { unit: 'any unit', min: 0.1, max: 300, step: 0.1, defaultValue: 50 }),
+      numberInput('svPlr', 'SV/CO/VTI during PLR', { unit: 'same unit', min: 0.1, max: 300, step: 0.1, defaultValue: 58 }),
       selectInput('metric', 'Metric used', [
         { label: 'Stroke volume', value: 'sv' },
         { label: 'Cardiac output / index', value: 'co' },
@@ -1622,7 +1622,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     inputs: [
       numberInput('map', 'MAP', { unit: 'mmHg', min: 30, max: 200, defaultValue: 80 }),
       numberInput('icp', 'ICP', { unit: 'mmHg', min: 0, max: 80, defaultValue: 15 }),
-      numberInput('cvp', 'CVP (optional; used if > ICP)', { unit: 'mmHg', min: 0, max: 40, defaultValue: 0 }),
+      numberInput('cvp', 'CVP (optional; used if > ICP)', { unit: 'mmHg', min: 0, max: 40, defaultValue: 0, required: false }),
     ],
     calculate(values) {
       const map = num(values.map, 80);

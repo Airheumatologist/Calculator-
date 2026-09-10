@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave5PedsIdCalcs: Calculator[] = [
   // ─── 1. Full PEWS (multi-domain) ───────────────────────────────────────────
@@ -339,12 +339,14 @@ export const wave5PedsIdCalcs: Calculator[] = [
         max: 220,
         defaultValue: 90,
         helpText: 'Leave meaningful value to compare against minimum',
+        required: false,
       }),
     ],
     calculate(values) {
       const band = String(values.ageBand ?? 'child');
       const ageY = num(values.ageYears, 4);
-      const sbp = num(values.sbp, 90);
+      const sbpProvided = !isMissingValue(values.sbp, true);
+      const sbp = num(values.sbp, 0);
       let minSbp = 90;
       let bandLabel = '>10 years';
       if (band === 'neonate') {
@@ -363,7 +365,10 @@ export const wave5PedsIdCalcs: Calculator[] = [
       const delta = sbp - minSbp;
       let riskLevel: 'low' | 'moderate' | 'high' | 'critical' | 'info' = 'info';
       let label = `Minimum SBP ≈ ${minSbp} mmHg`;
-      if (sbp < minSbp - 10) {
+      if (!sbpProvided) {
+        riskLevel = 'info';
+        label = `Minimum SBP ≈ ${minSbp} mmHg`;
+      } else if (sbp < minSbp - 10) {
         riskLevel = 'critical';
         label = 'Hypotension (well below threshold)';
       } else if (sbp < minSbp) {
@@ -380,12 +385,16 @@ export const wave5PedsIdCalcs: Calculator[] = [
         score: minSbp,
         unit: 'mmHg',
         label,
-        interpretation: `PALS-style minimum SBP for ${bandLabel} is ≈ ${minSbp} mmHg. Measured SBP ${sbp} mmHg (${delta >= 0 ? '+' : ''}${delta} from threshold). Compensated shock may still have “normal” BP — assess perfusion, lactate, and mental status.`,
+        interpretation: `PALS-style minimum SBP for ${bandLabel} is ≈ ${minSbp} mmHg. ${
+          sbpProvided
+            ? `Measured SBP ${sbp} mmHg (${delta >= 0 ? '+' : ''}${delta} from threshold).`
+            : 'No measured SBP entered, so no comparison against the threshold was made.'
+        } Compensated shock may still have “normal” BP — assess perfusion, lactate, and mental status.`,
         riskLevel,
         details: [
           { label: 'Age band', value: bandLabel },
           { label: 'Minimum SBP', value: `${minSbp} mmHg` },
-          { label: 'Measured SBP', value: `${sbp} mmHg` },
+          { label: 'Measured SBP', value: sbpProvided ? `${sbp} mmHg` : 'Not entered' },
           {
             label: 'Formula note',
             value: band === 'child' ? '70 + 2×age (years)' : 'Fixed band cutoff',
@@ -441,6 +450,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
         step: 0.1,
         defaultValue: 16,
         helpText: 'Weight-based depth ≈ weight(kg)/2 + 6 sometimes used in infants',
+        required: false,
       }),
       selectInput('route', 'Route', [
         { label: 'Oral', value: 'oral' },
@@ -449,23 +459,26 @@ export const wave5PedsIdCalcs: Calculator[] = [
     ],
     calculate(values) {
       const age = num(values.age, 4);
-      const wt = num(values.weight, 16);
+      const wtProvided = !isMissingValue(values.weight, true);
+      const wt = num(values.weight, 0);
       const route = String(values.route ?? 'oral');
       const oralAge = round(age / 2 + 12, 1);
-      const oralWt = round(wt / 2 + 6, 1);
+      const oralWt = wtProvided ? round(wt / 2 + 6, 1) : null;
       const oral = oralAge;
       const depth = route === 'nasal' ? round(oral + 2.5, 1) : oral;
       return {
         score: depth,
         unit: 'cm',
         label: `${route === 'nasal' ? 'Nasal' : 'Oral'} depth ≈ ${depth} cm`,
-        interpretation: `Age-based oral depth ≈ age/2 + 12 = ${oralAge} cm at lips. Weight-based alternative ≈ wt/2 + 6 = ${oralWt} cm. ${
+        interpretation: `Age-based oral depth ≈ age/2 + 12 = ${oralAge} cm at lips. ${
+          oralWt != null ? `Weight-based alternative ≈ wt/2 + 6 = ${oralWt} cm. ` : 'Weight not entered, so the weight-based alternative was not calculated. '
+        }${
           route === 'nasal' ? `Nasal estimate ≈ ${depth} cm (oral + ~2.5). ` : ''
         }Confirm bilateral breath sounds, ETCO₂, and chest rise; adjust for mainstem intubation risk.`,
         riskLevel: 'info',
         details: [
           { label: 'Age formula', value: `${oralAge} cm` },
-          { label: 'Weight formula', value: `${oralWt} cm` },
+          { label: 'Weight formula', value: oralWt != null ? `${oralWt} cm` : 'Not calculated — weight not entered' },
           { label: 'Reported', value: `${depth} cm (${route})` },
         ],
         recommendations: [
@@ -1220,13 +1233,14 @@ export const wave5PedsIdCalcs: Calculator[] = [
         step: 0.1,
         defaultValue: 1,
         helpText: 'For volume estimate of oral liquid',
+        required: false,
       }),
     ],
     calculate(values) {
       const w = num(values.weight, 12);
       const reg = num(values.regimen, 0.6);
       const maxD = num(values.maxDose, 10);
-      const conc = num(values.conc, 1);
+      const conc = num(values.conc, 0);
       const raw = reg * w;
       const dose = round(Math.min(raw, maxD), 2);
       const capped = raw > maxD;
@@ -1321,11 +1335,13 @@ export const wave5PedsIdCalcs: Calculator[] = [
         min: 50,
         max: 100,
         defaultValue: 96,
+        required: false,
       }),
     ],
     calculate(values) {
       const score = num(values.rr) + num(values.wheeze) + num(values.accessory);
-      const spo2 = num(values.spo2, 96);
+      const spo2Provided = !isMissingValue(values.spo2, true);
+      const spo2 = num(values.spo2, 0);
       const r = riskFromThresholds(score, [
         {
           max: 3,
@@ -1347,18 +1363,18 @@ export const wave5PedsIdCalcs: Calculator[] = [
         },
       ]);
       let riskLevel = r.riskLevel;
-      if (spo2 < 90 && riskLevel !== 'high') riskLevel = 'high';
+      if (spo2Provided && spo2 < 90 && riskLevel !== 'high') riskLevel = 'high';
       return {
         score,
         unit: 'points',
         label: r.label,
-        interpretation: `${r.interpretation} SpO₂ ${spo2}% on RA (context). Age band for RR norms: ${String(values.ageBand ?? 'young')}.`,
+        interpretation: `${r.interpretation} ${spo2Provided ? `SpO₂ ${spo2}% on RA (context).` : 'SpO₂ not entered.'} Age band for RR norms: ${String(values.ageBand ?? 'young')}.`,
         riskLevel,
         details: [
           { label: 'RR points', value: String(num(values.rr)) },
           { label: 'Wheeze points', value: String(num(values.wheeze)) },
           { label: 'Accessory points', value: String(num(values.accessory)) },
-          { label: 'SpO₂', value: `${spo2}%` },
+          { label: 'SpO₂', value: spo2Provided ? `${spo2}%` : 'Not entered' },
         ],
         recommendations: [
           'Repeat score after each therapy cycle',

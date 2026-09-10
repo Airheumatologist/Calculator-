@@ -138,12 +138,14 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         max: 90,
         defaultValue: 0,
         helpText: 'Not part of MIDAS sum; for context',
+        required: false,
       }),
       numberInput('pain', 'B. Average pain intensity 0–10 (optional)', {
         min: 0,
         max: 10,
         step: 1,
         defaultValue: 0,
+        required: false,
       }),
     ],
     calculate(values) {
@@ -1667,16 +1669,19 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         min: 7,
         max: 49,
         defaultValue: 7,
+        required: false,
       }),
       numberInput('negative', 'Negative subscale (optional, 7–49)', {
         min: 7,
         max: 49,
         defaultValue: 7,
+        required: false,
       }),
       numberInput('general', 'General psychopathology (optional, 16–112)', {
         min: 16,
         max: 112,
         defaultValue: 16,
+        required: false,
       }),
     ],
     calculate(values) {

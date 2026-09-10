@@ -1298,7 +1298,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
         { label: 'Traub-Johnson (preferred here)', value: 'tj' },
         { label: 'Simple BMI-method at BMI 50th≈18 (approx)', value: 'bmi18' },
       ]),
-      numberInput('actualWt', 'Actual weight (optional, for %IBW)', { unit: 'kg', min: 0, max: 200, step: 0.1, defaultValue: 0 }),
+      numberInput('actualWt', 'Actual weight (optional, for %IBW)', { unit: 'kg', min: 0, max: 200, step: 0.1, defaultValue: 0, required: false }),
     ],
     calculate(values) {
       const ht = num(values.height, 120);

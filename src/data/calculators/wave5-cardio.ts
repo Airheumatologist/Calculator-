@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave5CardioCalcs: Calculator[] = [
   // ─── 1. EHRA AF symptom score ─────────────────────────────────────────────
@@ -407,15 +407,16 @@ export const wave5CardioCalcs: Calculator[] = [
     inputs: [
       numberInput('sV1', 'S-wave amplitude in V1', { unit: 'mm', min: 0, max: 50, step: 0.5, defaultValue: 15, helpText: '1 mm = 0.1 mV standard calibration' }),
       numberInput('rV5V6', 'Tallest R in V5 or V6', { unit: 'mm', min: 0, max: 50, step: 0.5, defaultValue: 15 }),
-      numberInput('rAvl', 'R-wave in aVL (optional limb criterion)', { unit: 'mm', min: 0, max: 30, step: 0.5, defaultValue: 5 }),
+      numberInput('rAvl', 'R-wave in aVL (optional limb criterion)', { unit: 'mm', min: 0, max: 30, step: 0.5, defaultValue: 5, required: false }),
     ],
     calculate(values) {
       const sV1 = num(values.sV1, 15);
       const rV5V6 = num(values.rV5V6, 15);
-      const rAvl = num(values.rAvl, 5);
+      const rAvlProvided = !isMissingValue(values.rAvl, true);
+      const rAvl = num(values.rAvl, 0);
       const sum = round(sV1 + rV5V6, 1);
       const precordialPos = sum >= 35;
-      const limbPos = rAvl >= 11;
+      const limbPos = rAvlProvided && rAvl >= 11;
       const positive = precordialPos || limbPos;
 
       return {
@@ -424,12 +425,12 @@ export const wave5CardioCalcs: Calculator[] = [
         label: positive ? 'Meets Sokolow–Lyon LVH voltage' : 'Does not meet Sokolow–Lyon voltage',
         interpretation: positive
           ? `S V1 + R V5/V6 = ${sum} mm${precordialPos ? ' (≥35)' : ''}${limbPos ? `; R aVL ${rAvl} mm (≥11)` : ''}. Voltage criteria for LVH met — correlate with imaging; consider strain pattern and clinical context.`
-          : `S V1 + R V5/V6 = ${sum} mm (<35) and R aVL ${rAvl} mm (<11). Voltage criteria not met; ECG LVH not excluded (low sensitivity).`,
+          : `S V1 + R V5/V6 = ${sum} mm (<35)${rAvlProvided ? ` and R aVL ${rAvl} mm (<11)` : '; R aVL not entered, so the limb criterion was not assessed'}. Voltage criteria not met; ECG LVH not excluded (low sensitivity).`,
         riskLevel: positive ? 'moderate' : 'normal',
         details: [
           { label: 'S V1 + R V5/V6', value: `${sum} mm` },
           { label: 'Precordial criterion (≥35 mm)', value: precordialPos ? 'Positive' : 'Negative' },
-          { label: 'R aVL criterion (≥11 mm)', value: limbPos ? 'Positive' : 'Negative' },
+          { label: 'R aVL criterion (≥11 mm)', value: rAvlProvided ? (limbPos ? 'Positive' : 'Negative') : 'Not assessed — R aVL not entered' },
         ],
         recommendations: positive
           ? ['Correlate with echo/CMR when management would change', 'Assess BP control and secondary causes', 'Note strain pattern if present']
@@ -483,18 +484,20 @@ export const wave5CardioCalcs: Calculator[] = [
         max: 200,
         defaultValue: 90,
         helpText: 'Product = voltage(mm) × QRS(ms); threshold often >2440 mm·ms',
+        required: false,
       }),
     ],
     calculate(values) {
       const sex = String(values.sex ?? 'M');
       const rAvl = num(values.rAvl, 8);
       const sV3 = num(values.sV3, 12);
-      const qrs = num(values.qrsMs, 90);
+      const qrsProvided = !isMissingValue(values.qrsMs, true);
+      const qrs = num(values.qrsMs, 0);
       const voltage = round(rAvl + sV3, 1);
       const threshold = sex === 'F' ? 20 : 28;
       const voltagePos = voltage >= threshold;
-      const product = round(voltage * qrs, 0);
-      const productPos = product > 2440;
+      const product = qrsProvided ? round(voltage * qrs, 0) : null;
+      const productPos = product != null && product > 2440;
 
       const positive = voltagePos || productPos;
       return {
@@ -502,16 +505,20 @@ export const wave5CardioCalcs: Calculator[] = [
         unit: 'mm',
         label: positive ? 'Meets Cornell LVH criteria' : 'Does not meet Cornell criteria',
         interpretation: voltagePos
-          ? `Cornell voltage ${voltage} mm ≥ ${threshold} mm (${sex === 'F' ? 'women' : 'men'}). LVH by Cornell voltage. Cornell product ${product} mm·ms ${productPos ? '(also >2440)' : ''}.`
+          ? `Cornell voltage ${voltage} mm ≥ ${threshold} mm (${sex === 'F' ? 'women' : 'men'}). LVH by Cornell voltage. ${
+              product != null ? `Cornell product ${product} mm·ms ${productPos ? '(also >2440)' : ''}.` : 'Cornell product not computed — QRS duration not entered.'
+            }`
           : productPos
             ? `Voltage ${voltage} mm below ${threshold} mm threshold, but Cornell product ${product} mm·ms >2440 — positive by product criterion.`
-            : `Cornell voltage ${voltage} mm (<${threshold} mm for ${sex === 'F' ? 'women' : 'men'}); product ${product} mm·ms (≤2440). Criteria not met.`,
+            : `Cornell voltage ${voltage} mm (<${threshold} mm for ${sex === 'F' ? 'women' : 'men'}); ${
+                product != null ? `product ${product} mm·ms (≤2440)` : 'product not computed because QRS duration was not entered'
+              }. Criteria not met.`,
         riskLevel: positive ? 'moderate' : 'normal',
         details: [
           { label: 'R aVL + S V3', value: `${voltage} mm` },
           { label: 'Sex-specific cutoff', value: `≥${threshold} mm` },
-          { label: 'Cornell product', value: `${product} mm·ms` },
-          { label: 'Product criterion', value: productPos ? 'Positive (>2440)' : 'Negative' },
+          { label: 'Cornell product', value: product != null ? `${product} mm·ms` : 'Not calculated — QRS duration not entered' },
+          { label: 'Product criterion', value: product == null ? 'Not assessed' : productPos ? 'Positive (>2440)' : 'Negative' },
         ],
         recommendations: positive
           ? ['Correlate with imaging', 'Assess hypertensive heart disease / AS / HCM as indicated']

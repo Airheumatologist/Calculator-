@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave5NephroGiCalcs: Calculator[] = [
   // 1. CKD-EPI 2021 creatinine + cystatin C combined
@@ -922,11 +922,12 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whyUse: 'Distinguishes pure chronic compensation from concurrent metabolic acid–base disorders.',
     inputs: [
       numberInput('pco2', 'PaCO₂', { unit: 'mmHg', min: 40, max: 120, defaultValue: 60 }),
-      numberInput('hco3', 'Measured HCO₃⁻ (optional compare)', { unit: 'mEq/L', min: 10, max: 60, step: 0.1, defaultValue: 32 }),
+      numberInput('hco3', 'Measured HCO₃⁻ (optional compare)', { unit: 'mEq/L', min: 10, max: 60, step: 0.1, defaultValue: 32, required: false }),
     ],
     calculate(values) {
       const pco2 = num(values.pco2, 60);
-      const hco3 = num(values.hco3, 32);
+      const hco3Provided = !isMissingValue(values.hco3, true);
+      const hco3 = num(values.hco3, 0);
       const dP = pco2 - 40;
       // Chronic: HCO3 rises ~0.35–0.4 per 1 mmHg PCO2; use 0.4 Boston
       const expected = round(24 + 0.4 * dP, 1);
@@ -934,8 +935,14 @@ export const wave5NephroGiCalcs: Calculator[] = [
       const delta = round(hco3 - expected, 1);
       let label = 'Compare measured HCO₃ to expected';
       let riskLevel: 'normal' | 'moderate' | 'high' | 'info' = 'info';
-      let interpretation = `For chronic respiratory acidosis at PaCO₂ ${pco2}, expected HCO₃ ≈ ${expected} mEq/L (range ~${expectedLow} using 0.35 rule). Measured ${hco3} (Δ ${delta} vs 0.4 rule).`;
-      if (Math.abs(delta) <= 2) {
+      let interpretation = hco3Provided
+        ? `For chronic respiratory acidosis at PaCO₂ ${pco2}, expected HCO₃ ≈ ${expected} mEq/L (range ~${expectedLow} using 0.35 rule). Measured ${hco3} (Δ ${delta} vs 0.4 rule).`
+        : `For chronic respiratory acidosis at PaCO₂ ${pco2}, expected HCO₃ ≈ ${expected} mEq/L (range ~${expectedLow} using 0.35 rule). No measured HCO₃ entered, so compensation was not assessed.`;
+      if (!hco3Provided) {
+        label = 'Expected HCO₃ for chronic compensation';
+        riskLevel = 'info';
+        interpretation += ' Enter the measured HCO₃ to check whether compensation is appropriate.';
+      } else if (Math.abs(delta) <= 2) {
         label = 'HCO₃ matches chronic compensation';
         riskLevel = 'normal';
         interpretation += ' Appropriate chronic metabolic compensation likely.';
@@ -957,7 +964,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
         details: [
           { label: 'Expected HCO₃ (0.4 rule)', value: `${expected} mEq/L` },
           { label: 'Expected HCO₃ (0.35 rule)', value: `${expectedLow} mEq/L` },
-          { label: 'Measured HCO₃', value: `${hco3} mEq/L` },
+          { label: 'Measured HCO₃', value: hco3Provided ? `${hco3} mEq/L` : 'Not entered' },
           { label: 'ΔPaCO₂', value: `${dP} mmHg` },
         ],
       };
@@ -995,25 +1002,28 @@ export const wave5NephroGiCalcs: Calculator[] = [
     inputs: [
       numberInput('pco2', 'PaCO₂', { unit: 'mmHg', min: 40, max: 120, defaultValue: 60 }),
       numberInput('hco3', 'Measured HCO₃⁻', { unit: 'mEq/L', min: 10, max: 50, step: 0.1, defaultValue: 26 }),
-      numberInput('ph', 'Measured pH (optional)', { unit: '', min: 6.8, max: 7.8, step: 0.01, defaultValue: 7.25 }),
+      numberInput('ph', 'Measured pH (optional)', { unit: '', min: 6.8, max: 7.8, step: 0.01, defaultValue: 7.25, required: false }),
     ],
     calculate(values) {
       const pco2 = num(values.pco2, 60);
       const hco3 = num(values.hco3, 26);
-      const ph = num(values.ph, 7.25);
+      const phProvided = !isMissingValue(values.ph, true);
+      const ph = num(values.ph, 0);
       const dP = pco2 - 40;
       const expHco3 = round(24 + 0.1 * dP, 1);
       // Rule of thumb: pH falls ~0.008 × ΔPCO2 acutely
       const expPh = round(7.4 - 0.008 * dP, 2);
       const dHco3 = round(hco3 - expHco3, 1);
-      const dPh = round(ph - expPh, 2);
+      const dPh = phProvided ? round(ph - expPh, 2) : null;
       let label = 'Acute compensation estimate';
       let riskLevel: 'moderate' | 'high' | 'critical' | 'info' | 'normal' = 'info';
-      if (pco2 >= 80 || ph < 7.2) riskLevel = 'critical';
-      else if (pco2 >= 60 || ph < 7.3) riskLevel = 'high';
+      if (pco2 >= 80 || (phProvided && ph < 7.2)) riskLevel = 'critical';
+      else if (pco2 >= 60 || (phProvided && ph < 7.3)) riskLevel = 'high';
       else riskLevel = 'moderate';
 
-      let interpretation = `Acute expected HCO₃ ≈ ${expHco3} mEq/L (measured ${hco3}, Δ ${dHco3}). Approximate expected pH ≈ ${expPh} (measured ${ph}, Δ ${dPh}).`;
+      let interpretation = `Acute expected HCO₃ ≈ ${expHco3} mEq/L (measured ${hco3}, Δ ${dHco3}). Approximate expected pH ≈ ${expPh}${
+        phProvided ? ` (measured ${ph}, Δ ${dPh})` : ' (no measured pH entered, so no pH comparison was made)'
+      }.`;
       if (Math.abs(dHco3) <= 2) {
         label = 'HCO₃ consistent with acute rise';
         interpretation += ' HCO₃ fits acute buffering. Treat hypoventilation cause.';
@@ -1033,6 +1043,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
         details: [
           { label: 'Expected HCO₃', value: `${expHco3} mEq/L` },
           { label: 'Approx. expected pH', value: String(expPh) },
+          { label: 'Measured pH', value: phProvided ? String(ph) : 'Not entered' },
           { label: 'ΔPaCO₂', value: `${dP} mmHg` },
           { label: 'Rule', value: 'ΔHCO₃≈0.1×ΔPCO₂; ΔpH≈−0.008×ΔPCO₂' },
         ],
@@ -1285,7 +1296,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Known or suspected hyperkalemia — triage membrane-stabilization urgency from ECG features.',
     whyUse: 'ECG changes mark increased risk of arrhythmia; guide calcium, shift, and removal therapies.',
     inputs: [
-      numberInput('k', 'Serum K⁺ (if known)', { unit: 'mEq/L', min: 2, max: 12, step: 0.1, defaultValue: 6.2 }),
+      numberInput('k', 'Serum K⁺ (if known)', { unit: 'mEq/L', min: 2, max: 12, step: 0.1, defaultValue: 6.2, required: false }),
       yesNo('peakedT', 'Peaked T waves'),
       yesNo('prProlong', 'PR prolongation / flattened P', 2),
       yesNo('lossP', 'Loss of P waves', 3),
@@ -1294,7 +1305,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
       yesNo('bradyVf', 'Severe bradyarrhythmia / VT/VF / arrest', 6),
     ],
     calculate(values) {
-      const k = num(values.k, 6.2);
+      const kProvided = !isMissingValue(values.k, true);
+      const k = num(values.k, 0);
       const flags = [
         bool(values.peakedT) ? 1 : 0,
         bool(values.prProlong) ? 2 : 0,
@@ -1320,7 +1332,9 @@ export const wave5NephroGiCalcs: Calculator[] = [
       if (maxSeverity >= 5 || bool(values.bradyVf)) {
         label = 'Critical ECG toxicity pattern';
         riskLevel = 'critical';
-        interpretation = `Critical conduction toxicity pattern (sine wave and/or malignant arrhythmia). Immediate IV calcium, continuous monitoring, shift therapies, emergent K removal, and ACLS as needed. Serum K entered: ${k}.`;
+        interpretation = `Critical conduction toxicity pattern (sine wave and/or malignant arrhythmia). Immediate IV calcium, continuous monitoring, shift therapies, emergent K removal, and ACLS as needed. ${
+          kProvided ? `Serum K entered: ${k}.` : 'No serum K entered.'
+        }`;
       } else if (maxSeverity >= 4 || bool(values.wideQrs)) {
         label = 'High-risk ECG changes (wide QRS)';
         riskLevel = 'critical';
@@ -1335,8 +1349,10 @@ export const wave5NephroGiCalcs: Calculator[] = [
         interpretation = `Peaked T waves can be early. Treat based on K level, trajectory, renal function, and symptoms — ECG can lag or be insensitive.`;
       } else {
         label = 'No checklist ECG changes selected';
-        riskLevel = k >= 6.5 ? 'high' : k >= 5.5 ? 'moderate' : 'low';
-        interpretation = `No selected ECG changes — ECG can be normal despite dangerous hyperkalemia. Treat according to K (${k}), rate of rise, and clinical context.`;
+        riskLevel = !kProvided ? 'info' : k >= 6.5 ? 'high' : k >= 5.5 ? 'moderate' : 'low';
+        interpretation = kProvided
+          ? `No selected ECG changes — ECG can be normal despite dangerous hyperkalemia. Treat according to K (${k}), rate of rise, and clinical context.`
+          : 'No selected ECG changes and no serum K entered — no severity assigned. ECG can be normal despite dangerous hyperkalemia; treat according to the measured K, its rate of rise, and clinical context.';
       }
       return {
         score: maxSeverity,
@@ -1346,7 +1362,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
         riskLevel,
         details: [
           { label: 'ECG features selected', value: String(count) },
-          { label: 'Serum K', value: `${k} mEq/L` },
+          { label: 'Serum K', value: kProvided ? `${k} mEq/L` : 'Not entered' },
           { label: 'Tier', value: '0 none → 1 T peaks → 2–3 atrial → 4 wide QRS → 5–6 sine/arrest' },
         ],
       };

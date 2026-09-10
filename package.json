@@ -13,12 +13,13 @@
     "test:watch": "vitest",
     "audit:evidence": "node scripts/audit-evidence.mjs",
     "validate:pmids": "python3 scripts/validate-pmids.py",
-    "validate:pmids:strict": "python3 scripts/validate-pmids.py --strict"
+    "validate:pmids:strict": "python3 scripts/validate-pmids.py --strict",
+    "audit:relevance": "python3 scripts/audit-pmid-relevance.py"
   },
   "dependencies": {
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-router-dom": "^7.18.1"
+    "react-router-dom": "^7.18.3"
   },
   "devDependencies": {
     "@types/node": "^24.13.2",
@@ -28,6 +29,6 @@
     "oxlint": "^1.71.0",
     "typescript": "~6.0.2",
     "vite": "^8.1.1",
-    "vitest": "^3.2.7"
+    "vitest": "^4.1.11"
   }
 }

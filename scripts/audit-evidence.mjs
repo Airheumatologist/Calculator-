@@ -1,118 +1,107 @@
 #!/usr/bin/env node
 /**
- * Evidence reference audit for MedCalc Live.
+ * Evidence reference audit for MedCalc Live — the authoritative inventory pass.
  *
  * Usage:
- *   node scripts/audit-evidence.mjs
+ *   npm run audit:evidence            # print stats, write inventory + report
  *   node scripts/audit-evidence.mjs --json > evidence-audit.json
+ *   node scripts/audit-evidence.mjs --no-write
  *
- * Reports PMID / DOI / URL coverage across calculator references.
- * Does not call external APIs (offline scan of source only).
+ * Parsing lives in scripts/lib/reference-parser.mjs; every other audit tool
+ * consumes the inventory JSON this script writes instead of re-parsing the
+ * TypeScript sources.
+ *
+ * Offline: reads source only, never calls an external API.
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { extractAllRefs, summarize } from './lib/reference-parser.mjs';
 
-const dir = path.join(process.cwd(), 'src/data/calculators');
-const files = fs
-  .readdirSync(dir)
-  .filter((f) => f.endsWith('.ts') && !f.startsWith('._') && f !== 'index.ts');
+const CALC_DIR = path.join(process.cwd(), 'src/data/calculators');
+const OUT_DIR = path.join(process.cwd(), 'scripts/audit-evidence');
+export const INVENTORY_PATH = path.join(OUT_DIR, 'refs-inventory.json');
+const REPORT_PATH = path.join(OUT_DIR, 'EVIDENCE-AUDIT.md');
 
-function extractRefs(s, file) {
-  const out = [];
-  let idx = 0;
-  while (true) {
-    const start = s.indexOf('references:', idx);
-    if (start < 0) break;
-    const before = s.slice(Math.max(0, start - 2500), start);
-    const ids = [...before.matchAll(/id:\s*'([^']+)'/g)];
-    const calcId = ids.length ? ids[ids.length - 1][1] : '?';
-    const bracket = s.indexOf('[', start);
-    let depth = 0;
-    let end = -1;
-    for (let i = bracket; i < s.length; i++) {
-      if (s[i] === '[') depth++;
-      else if (s[i] === ']') {
-        depth--;
-        if (depth === 0) {
-          end = i;
-          break;
-        }
-      }
-    }
-    if (end < 0) break;
-    const block = s.slice(bracket + 1, end);
-    let d = 0;
-    let o = -1;
-    for (let i = 0; i < block.length; i++) {
-      if (block[i] === '{') {
-        if (d === 0) o = i;
-        d++;
-      } else if (block[i] === '}') {
-        d--;
-        if (d === 0 && o >= 0) {
-          const body = block.slice(o, i + 1);
-          if (/title:|citation:/.test(body)) {
-            out.push({
-              file,
-              calcId,
-              title: (body.match(/title:\s*'((?:\\'|[^'])*)'/) || [])[1] || '',
-              citation: (body.match(/citation:\s*'((?:\\'|[^'])*)'/) || [])[1] || '',
-              pmid: (body.match(/pmid:\s*'([^']*)'/) || [])[1],
-              doi: (body.match(/doi:\s*'([^']*)'/) || [])[1],
-              url: (body.match(/url:\s*'([^']*)'/) || [])[1],
-              year: (() => {
-                const m = body.match(/year:\s*(\d{4})/);
-                return m ? +m[1] : null;
-              })(),
-            });
-          }
-          o = -1;
-        }
-      }
-    }
-    idx = end + 1;
-  }
-  return out;
-}
+const { files, refs, sourceHash } = extractAllRefs(CALC_DIR);
+const report = summarize(refs, files);
 
-const all = [];
-for (const f of files) {
-  all.push(...extractRefs(fs.readFileSync(path.join(dir, f), 'utf8'), f));
-}
-
-const withPmid = all.filter((r) => r.pmid);
-const withDoi = all.filter((r) => r.doi);
-const withUrl = all.filter((r) => r.url);
-const anyLink = all.filter((r) => r.pmid || r.doi || r.url);
-const noLink = all.filter((r) => !r.pmid && !r.doi && !r.url);
-const pmidNoDoi = all.filter((r) => r.pmid && !r.doi);
-
-const report = {
-  files: files.length,
-  refs: all.length,
-  withPmid: withPmid.length,
-  withDoi: withDoi.length,
-  withUrl: withUrl.length,
-  anyLink: anyLink.length,
-  noLink: noLink.length,
-  pmidNoDoi: pmidNoDoi.length,
-  pctPmid: +((100 * withPmid.length) / all.length).toFixed(1),
-  pctDoi: +((100 * withDoi.length) / all.length).toFixed(1),
-  pctAnyLink: +((100 * anyLink.length) / all.length).toFixed(1),
-  noLinkSample: noLink.slice(0, 25).map((r) => ({
-    file: r.file,
-    calcId: r.calcId,
-    citation: r.citation.slice(0, 100),
-  })),
+const inventory = {
+  schema: 'medcalc-refs-inventory/1',
+  generatedBy: 'scripts/audit-evidence.mjs',
+  generatedAt: new Date().toISOString(),
+  sourceDir: 'src/data/calculators',
+  sourceFiles: files,
+  sourceHash,
+  summary: report,
+  references: refs,
 };
 
+function markdown() {
+  const s = report;
+  const byFile = new Map();
+  for (const r of refs) byFile.set(r.file, (byFile.get(r.file) ?? 0) + 1);
+  return [
+    '# Evidence reference audit — authoritative report',
+    '',
+    '<!-- GENERATED FILE. Do not edit by hand. Regenerate with: npm run audit:evidence -->',
+    '',
+    `Generated: ${inventory.generatedAt}`,
+    `Source: \`src/data/calculators/*.ts\` (${s.files} files, sha256 \`${sourceHash.slice(0, 16)}…\`)`,
+    '',
+    'This file and `refs-inventory.json` are the only authoritative evidence-audit',
+    'outputs in this repository. Both come from the same parser',
+    '(`scripts/lib/reference-parser.mjs`), so the counts here always match what',
+    '`npm run validate:pmids` and `npm run audit:relevance` report.',
+    '',
+    '## Coverage',
+    '',
+    '| Metric | Count |',
+    '|--------|------:|',
+    `| Calculator source files | ${s.files} |`,
+    `| Calculators with references | ${s.calculatorsWithRefs} |`,
+    `| Total references | ${s.refs} |`,
+    `| With PMID | ${s.withPmid} (${s.pctPmid}%) |`,
+    `| Unique PMIDs | ${s.uniquePmids} |`,
+    `| With DOI | ${s.withDoi} (${s.pctDoi}%) |`,
+    `| Unique DOIs | ${s.uniqueDois} |`,
+    `| With direct URL | ${s.withUrl} |`,
+    `| URL only (no PMID, no DOI) | ${s.urlOnly} |`,
+    `| Without a PMID | ${s.noPmid} |`,
+    `| PMID without DOI | ${s.pmidNoDoi} |`,
+    `| With at least one identifier or link | ${s.anyLink} (${s.pctAnyLink}%) |`,
+    `| Without any identifier or link | ${s.noLink} |`,
+    '',
+    '## References per source file',
+    '',
+    '| File | References |',
+    '|------|-----------:|',
+    ...[...byFile.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([f, n]) => `| \`${f}\` | ${n} |`),
+    '',
+    '## Notes',
+    '',
+    '- Reference *resolution* (does each PMID exist in PubMed) is checked by',
+    '  `npm run validate:pmids`, which needs network access and is not part of',
+    '  the build.',
+    '- Reference *relevance* (does each PMID match the calculator) is checked by',
+    '  `npm run audit:relevance`. That check is a heuristic title-token overlap',
+    '  score: citations such as EDACS and sPESI score as mismatches because the',
+    '  stored title uses the acronym while PubMed stores the expanded phrase.',
+    '  Those are known false positives, not citation errors.',
+    '- The last curated relevance pass (archived under `archive/`) resolved every',
+    '  confirmed mismatch; it ended at 0 confirmed mismatches and 1 soft suspect.',
+    '',
+  ].join('\n');
+}
+
 if (process.argv.includes('--json')) {
-  console.log(JSON.stringify({ report, refs: all }, null, 2));
+  console.log(JSON.stringify({ report, refs }, null, 2));
 } else {
   console.log('MedCalc Live — evidence audit');
   console.log('------------------------------');
+  console.log(`Source files:   ${report.files}`);
   console.log(`References:     ${report.refs}`);
   console.log(`With PMID:      ${report.withPmid} (${report.pctPmid}%)`);
+  console.log(`Unique PMIDs:   ${report.uniquePmids}`);
   console.log(`With DOI:       ${report.withDoi} (${report.pctDoi}%)`);
   console.log(`With URL:       ${report.withUrl}`);
   console.log(`Any link:       ${report.anyLink} (${report.pctAnyLink}%)`);
@@ -123,5 +112,15 @@ if (process.argv.includes('--json')) {
     for (const r of report.noLinkSample) {
       console.log(`  [${r.file}/${r.calcId}] ${r.citation}`);
     }
+  }
+}
+
+if (!process.argv.includes('--no-write')) {
+  fs.mkdirSync(OUT_DIR, { recursive: true });
+  fs.writeFileSync(INVENTORY_PATH, JSON.stringify(inventory, null, 2) + '\n');
+  fs.writeFileSync(REPORT_PATH, markdown());
+  if (!process.argv.includes('--json')) {
+    console.log(`\nWrote ${path.relative(process.cwd(), INVENTORY_PATH)}`);
+    console.log(`Wrote ${path.relative(process.cwd(), REPORT_PATH)}`);
   }
 }

@@ -508,6 +508,29 @@ p {
   color: var(--danger);
 }
 
+.number-row input.input-incomplete {
+  border-color: var(--border-strong);
+  border-style: dashed;
+  background: var(--bg-muted);
+}
+
+.number-row input.input-incomplete:focus {
+  border-style: solid;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.input-group.is-incomplete .input-label strong {
+  color: var(--text-secondary);
+}
+
+.input-hint-required {
+  margin: 0.4rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
 .unit {
   color: var(--text-muted);
   font-size: 0.85rem;

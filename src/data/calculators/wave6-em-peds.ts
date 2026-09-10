@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave6EmPedsCalcs: Calculator[] = [
   // ─── 1. Kaiser EOS (simplified educational) ────────────────────────────────
@@ -768,6 +768,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         max: 200,
         defaultValue: 110,
         helpText: 'Enter 0 if not measuring',
+        required: false,
       }),
       numberInput('measuredDepthCm', 'Observed depth if known (optional)', {
         unit: 'cm',
@@ -775,6 +776,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         max: 8,
         step: 0.5,
         defaultValue: 4,
+        required: false,
       }),
     ],
     calculate(values) {
@@ -785,8 +787,8 @@ export const wave6EmPedsCalcs: Calculator[] = [
         age === 'infant' ? '≈4 cm (⅓ AP chest diameter)' : age === 'child' ? '≈5 cm (⅓ AP diameter)' : '5–6 cm (adult)';
       const depthTarget = age === 'infant' ? 4 : age === 'child' ? 5 : 5.5;
       const ratio = aaw ? 'Continuous compressions; ventilate 1 breath every 2–3 s (~20–30/min peds)' : two ? '15:2' : '30:2';
-      const rate = num(values.measuredRate, 110);
-      const depthM = num(values.measuredDepthCm, depthTarget);
+      const rate = num(values.measuredRate, 0);
+      const depthM = num(values.measuredDepthCm, 0);
       let rateOk = rate >= 100 && rate <= 120;
       if (rate === 0) rateOk = true;
       const depthOk = Math.abs(depthM - depthTarget) <= 1.2 || depthM === 0;
@@ -1139,12 +1141,14 @@ export const wave6EmPedsCalcs: Calculator[] = [
         max: 20,
         step: 0.1,
         defaultValue: 4,
+        required: false,
       }),
     ],
     calculate(values) {
       const afi = num(values.afi, 12);
-      const mvp = num(values.mvp, 4);
-      const useMvp = bool(values.useMvp);
+      const mvpProvided = !isMissingValue(values.mvp, true);
+      const mvp = num(values.mvp, 0);
+      const useMvp = bool(values.useMvp) && mvpProvided;
       let riskLevel: 'low' | 'moderate' | 'high' | 'info' = 'low';
       let label = 'Normal AFI';
       let interpretation = '';
@@ -1173,6 +1177,8 @@ export const wave6EmPedsCalcs: Calculator[] = [
         interpretation += ` MVP ${mvp} cm: ${
           mvp < 2 ? 'MVP oligohydramnios criterion met (<2 cm).' : mvp >= 8 ? 'MVP suggests polyhydramnios (≥8 cm).' : 'MVP not in extreme range.'
         }`;
+      } else if (bool(values.useMvp)) {
+        interpretation += ' MVP was marked as available but left blank, so no MVP criterion was applied.';
       }
       return {
         score: afi,
@@ -1182,7 +1188,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         riskLevel,
         details: [
           { label: 'AFI', value: `${afi} cm` },
-          { label: 'MVP', value: useMvp ? `${mvp} cm` : '—' },
+          { label: 'MVP', value: useMvp ? `${mvp} cm` : bool(values.useMvp) ? 'Not entered' : '—' },
         ],
         recommendations: [
           'Many guidelines prefer MVP for oligohydramnios diagnosis',
@@ -1973,7 +1979,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         { label: '2 g/h', value: 2 },
       ]),
       yesNo('renalImpair', 'Significant renal impairment / oliguria', 0),
-      numberInput('weightKg', 'Weight (optional, for context)', { unit: 'kg', min: 40, max: 200, defaultValue: 80 }),
+      numberInput('weightKg', 'Weight (optional, for context)', { unit: 'kg', min: 40, max: 200, defaultValue: 80, required: false }),
     ],
     calculate(values) {
       const ind = String(values.indication ?? 'prophylaxis');

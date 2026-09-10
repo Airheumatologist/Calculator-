@@ -2048,9 +2048,11 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       references: [
         {
           title: 'ABA Burn Center Referral Criteria',
-          citation: 'American Burn Association',
-          year: 2018,
-          url: 'https://ameriburn.org/public-resources/burn-center-referral-criteria/',
+          citation:
+            'Bettencourt AP, Romanowski KS, Joe V, et al. Updating the Burn Center Referral Criteria: Results From the 2018 eDelphi Consensus Study. J Burn Care Res. 2020;41(5):1052-1062 (American Burn Association)',
+          year: 2020,
+          pmid: '32123911',
+          url: 'https://www.ameriburn.org/burn-care-team/resources/guidelines-for-burn-patient-referral',
         },
       ],
     },
@@ -2269,8 +2271,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       numberInput('work', 'Work / school impairment', { min: 0, max: 10, defaultValue: 5, helpText: '0 = not at all; 10 = extremely' }),
       numberInput('social', 'Social life impairment', { min: 0, max: 10, defaultValue: 5 }),
       numberInput('family', 'Family life / home responsibilities', { min: 0, max: 10, defaultValue: 4 }),
-      numberInput('days_lost', 'Days lost (optional)', { min: 0, max: 7, defaultValue: 0, helpText: 'Days unable to fulfill role in past week' }),
-      numberInput('days_unprod', 'Days underproductive (optional)', { min: 0, max: 7, defaultValue: 0 }),
+      numberInput('days_lost', 'Days lost (optional)', { min: 0, max: 7, defaultValue: 0, helpText: 'Days unable to fulfill role in past week', required: false }),
+      numberInput('days_unprod', 'Days underproductive (optional)', { min: 0, max: 7, defaultValue: 0, required: false }),
     ],
     calculate(values) {
       const work = num(values.work, 5);
@@ -2527,8 +2529,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         defaultValue: 20,
         helpText: '10 items (5 obsession + 5 compulsion) scored 0–4 each',
       }),
-      numberInput('obsessions', 'Obsession subtotal (optional)', { min: 0, max: 20, defaultValue: 10 }),
-      numberInput('compulsions', 'Compulsion subtotal (optional)', { min: 0, max: 20, defaultValue: 10 }),
+      numberInput('obsessions', 'Obsession subtotal (optional)', { min: 0, max: 20, defaultValue: 10, required: false }),
+      numberInput('compulsions', 'Compulsion subtotal (optional)', { min: 0, max: 20, defaultValue: 10, required: false }),
     ],
     calculate(values) {
       const score = num(values.score, 20);

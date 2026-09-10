@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave3PedsObCalcs: Calculator[] = [
   {
@@ -22,6 +22,7 @@ export const wave3PedsObCalcs: Calculator[] = [
         max: 50,
         defaultValue: 30,
         helpText: 'Used when mode = total. Typical range −10 to 50.',
+        required: false,
       }),
       selectInput('posture', 'Posture (neuromuscular)', [
         { label: 'Fully extended (0)', value: 0 },
@@ -139,7 +140,17 @@ export const wave3PedsObCalcs: Calculator[] = [
           num(values.eyeEar) +
           num(values.genitals);
       } else {
-        score = num(values.totalScore, 30);
+        if (isMissingValue(values.totalScore, true)) {
+          return {
+            score: '—',
+            label: 'Total New Ballard score not entered',
+            interpretation:
+              'No gestational age estimated: input mode is “total score only” but the total New Ballard score is blank. Enter the total, or switch to “Sum simplified domains” and score each domain.',
+            riskLevel: 'info',
+            details: [{ label: 'Mode', value: 'Total entered' }],
+          };
+        }
+        score = num(values.totalScore, 0);
       }
 
       // Approximate Ballard mapping (published tables; educational interpolation).
@@ -2024,7 +2035,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       numberInput('uaWbc', 'UA WBC', { unit: '/hpf', min: 0, max: 100, defaultValue: 2 }),
       numberInput('csfWbc', 'CSF WBC', { unit: '/µL', min: 0, max: 5000, defaultValue: 2 }),
       yesNo('cxrAbn', 'Infiltrate on CXR (if obtained)'),
-      numberInput('stoolWbc', 'Stool WBC /hpf if diarrhea (0 if N/A)', { min: 0, max: 100, defaultValue: 0 }),
+      numberInput('stoolWbc', 'Stool WBC /hpf if diarrhea (0 if N/A)', { min: 0, max: 100, defaultValue: 0, required: false }),
     ],
     calculate(values) {
       const reasons: string[] = [];
@@ -2764,14 +2775,15 @@ export const wave3PedsObCalcs: Calculator[] = [
         defaultValue: -6,
         helpText: 'e.g. −12 means base deficit 12',
       }),
-      numberInput('pco2', 'PCO₂ (optional)', { unit: 'mmHg', min: 10, max: 120, defaultValue: 55 }),
+      numberInput('pco2', 'PCO₂ (optional)', { unit: 'mmHg', min: 10, max: 120, defaultValue: 55, required: false }),
     ],
     calculate(values) {
       const vessel = String(values.vessel ?? 'artery');
       const ph = num(values.ph, 7.2);
       const be = num(values.be, -6);
       const deficit = Math.abs(Math.min(be, 0));
-      const pco2 = num(values.pco2, 55);
+      const pco2Provided = !isMissingValue(values.pco2, true);
+      const pco2 = num(values.pco2, 0);
 
       let band = 'Normal / near-normal';
       let riskLevel: 'low' | 'moderate' | 'high' | 'critical' = 'low';
@@ -2788,8 +2800,10 @@ export const wave3PedsObCalcs: Calculator[] = [
       }
 
       let respNote = '';
-      if (pco2 >= 70 && deficit < 8) respNote = ' Pattern suggests larger respiratory component (high PCO₂).';
-      else if (deficit >= 12 && pco2 < 60) respNote = ' Pattern suggests larger metabolic component (base deficit).';
+      if (pco2Provided) {
+        if (pco2 >= 70 && deficit < 8) respNote = ' Pattern suggests larger respiratory component (high PCO₂).';
+        else if (deficit >= 12 && pco2 < 60) respNote = ' Pattern suggests larger metabolic component (base deficit).';
+      }
 
       return {
         score: ph,
@@ -2800,7 +2814,7 @@ export const wave3PedsObCalcs: Calculator[] = [
           { label: 'Vessel', value: vessel },
           { label: 'pH', value: String(ph) },
           { label: 'Base deficit', value: String(round(deficit, 1)) },
-          { label: 'PCO₂', value: `${pco2} mmHg` },
+          { label: 'PCO₂', value: pco2Provided ? `${pco2} mmHg` : 'Not entered' },
         ],
       };
     },

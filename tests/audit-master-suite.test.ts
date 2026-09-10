@@ -2,8 +2,7 @@ import { describe, it } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 import { calculators } from '../src/data/calculators/index';
-import type { Calculator, CalcInput } from '../src/types/calculator';
-import { bool, num } from '../src/utils/helpers';
+import { assertAuditPolicy, type NormalizedFinding } from './audit-failure-policy';
 
 export interface AuditFinding {
   calcId: string;
@@ -189,7 +188,7 @@ describe('Master Scoring Audit Suite', () => {
                 }
               }
             }
-          } catch (e) {}
+          } catch {}
         }
       }
 
@@ -224,7 +223,7 @@ describe('Master Scoring Audit Suite', () => {
               hasVariation = true;
               break;
             }
-          } catch (e) {
+          } catch {
             hasVariation = true;
             break;
           }
@@ -255,7 +254,7 @@ describe('Master Scoring Audit Suite', () => {
                 hasVariation = true;
                 break;
               }
-            } catch (e) {
+            } catch {
               hasVariation = true;
               break;
             }
@@ -301,5 +300,15 @@ describe('Master Scoring Audit Suite', () => {
     const outputPath = path.join(__dirname, '../scripts/master_audit_findings.json');
     fs.writeFileSync(outputPath, JSON.stringify(auditFindings, null, 2));
     console.log(`Master Audit Complete! Wrote ${auditFindings.length} findings to ${outputPath}`);
+
+    // Audit finding #2: the suite must fail CI when it produces findings.
+    // See tests/audit-failure-policy.ts for the full, documented policy.
+    const normalized: NormalizedFinding[] = auditFindings.map((f) => ({
+      calcId: f.calcId,
+      issueType: f.issueType,
+      severity: f.severity,
+      message: f.summary,
+    }));
+    assertAuditPolicy('Master Scoring Audit Suite', normalized, outputPath);
   });
 });

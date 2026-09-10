@@ -1554,6 +1554,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
         step: 0.1,
         defaultValue: 7,
         helpText: 'Used only if diabetes = yes (educational)',
+        required: false,
       }),
     ],
     calculate(values) {

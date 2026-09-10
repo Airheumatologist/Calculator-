@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getCalculator } from '../data/calculators';
 import { CATEGORIES } from '../types/calculator';
@@ -6,7 +6,14 @@ import { CalculatorForm } from '../components/CalculatorForm';
 import { LiveResult } from '../components/LiveResult';
 import { EvidencePanel } from '../components/EvidencePanel';
 import { NextStepsPanel } from '../components/NextStepsPanel';
-import { getRangeViolations, rangeBlockedResult } from '../utils/helpers';
+import {
+  getMissingRequiredInputs,
+  getRangeViolations,
+  getStepViolations,
+  incompleteResult,
+  rangeBlockedResult,
+  stepBlockedResult,
+} from '../utils/helpers';
 
 function initialValues(calc: ReturnType<typeof getCalculator>) {
   const values: Record<string, number | string | boolean | null> = {};
@@ -27,24 +34,45 @@ function initialValues(calc: ReturnType<typeof getCalculator>) {
 
 export function CalculatorPage() {
   const { id } = useParams();
-  const calc = getCalculator(id ?? '');
-  const [values, setValues] = useState(() => initialValues(calc));
+  const calcId = id ?? '';
+  const calc = getCalculator(calcId);
+  const [formState, setFormState] = useState(() => ({ calcId, values: initialValues(calc) }));
   const [tab, setTab] = useState<'evidence' | 'next'>('next');
 
-  useEffect(() => {
-    setValues(initialValues(getCalculator(id ?? '')));
+  // Derive-on-render reset: an effect would leave one render (and one
+  // calculate() call) pairing the new calculator with the previous values.
+  let values = formState.values;
+  if (formState.calcId !== calcId) {
+    values = initialValues(calc);
+    setFormState({ calcId, values });
     setTab('next');
-  }, [id]);
+  }
+
+  const missingRequired = useMemo(
+    () => (calc ? getMissingRequiredInputs(calc.inputs, values) : []),
+    [calc, values]
+  );
 
   const rangeViolations = useMemo(
     () => (calc ? getRangeViolations(calc.inputs, values) : []),
     [calc, values]
   );
 
+  const stepViolations = useMemo(
+    () => (calc ? getStepViolations(calc.inputs, values) : []),
+    [calc, values]
+  );
+
   const result = useMemo(() => {
     if (!calc) return null;
+    if (missingRequired.length > 0) {
+      return incompleteResult(missingRequired);
+    }
     if (rangeViolations.length > 0) {
       return rangeBlockedResult(rangeViolations);
+    }
+    if (stepViolations.length > 0) {
+      return stepBlockedResult(stepViolations);
     }
     try {
       return calc.calculate(values);
@@ -56,7 +84,7 @@ export function CalculatorPage() {
         riskLevel: 'info' as const,
       };
     }
-  }, [calc, values, rangeViolations]);
+  }, [calc, values, missingRequired, rangeViolations, stepViolations]);
 
   if (!calc || !result) {
     return (
@@ -101,8 +129,13 @@ export function CalculatorPage() {
         <CalculatorForm
           inputs={calc.inputs}
           values={values}
-          onChange={(inputId, value) => setValues((prev) => ({ ...prev, [inputId]: value }))}
-          onReset={() => setValues(initialValues(calc))}
+          onChange={(inputId, value) =>
+            setFormState((prev) => ({
+              calcId: prev.calcId,
+              values: { ...prev.values, [inputId]: value },
+            }))
+          }
+          onReset={() => setFormState({ calcId, values: initialValues(calc) })}
         />
         <LiveResult result={result} />
       </div>

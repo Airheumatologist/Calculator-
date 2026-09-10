@@ -1,4 +1,9 @@
-# PMID / DOI Evidence Audit — Final Report
+# PMID / DOI Evidence Audit — Final Report (HISTORICAL)
+
+> **Historical record, not authoritative.** This describes the 2026-07 multi-wave
+> PMID repair campaign. Its counts are frozen at that pass and no longer match the
+> live data. For current numbers see `../EVIDENCE-AUDIT.md`, regenerated with
+> `npm run audit:evidence`.
 
 **Completed:** 2026-07-28
 

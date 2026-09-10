@@ -2,7 +2,8 @@ import { describe, it } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 import { calculators } from '../src/data/calculators/index';
-import type { Calculator, CalcInput } from '../src/types/calculator';
+import { assertAuditPolicy, type NormalizedFinding } from './audit-failure-policy';
+import type { CalcInput } from '../src/types/calculator';
 
 interface Finding {
   calcId: string;
@@ -115,7 +116,7 @@ describe('Comprehensive Automated Scoring Audit', () => {
                   details: { inputId: inp.id, optValue: val, resStrScore: resStr.score, resRawScore: resRaw.score },
                 });
               }
-            } catch (e) {}
+            } catch {}
           }
         }
 
@@ -165,7 +166,7 @@ describe('Comprehensive Automated Scoring Audit', () => {
                   }
                 }
               }
-            } catch (e) {}
+            } catch {}
           }
         }
       }
@@ -297,5 +298,15 @@ describe('Comprehensive Automated Scoring Audit', () => {
     const outputPath = path.join(__dirname, '../scripts/auto_audit_results.json');
     fs.writeFileSync(outputPath, JSON.stringify(findings, null, 2));
     console.log(`Wrote ${findings.length} findings to ${outputPath}`);
+
+    // Audit finding #2: the suite must fail CI when it produces findings.
+    // See tests/audit-failure-policy.ts for the full, documented policy.
+    const normalized: NormalizedFinding[] = findings.map((f) => ({
+      calcId: f.calcId,
+      issueType: f.type,
+      severity: f.severity,
+      message: f.message,
+    }));
+    assertAuditPolicy('Comprehensive Automated Scoring Audit', normalized, outputPath);
   });
 });

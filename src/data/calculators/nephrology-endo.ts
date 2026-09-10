@@ -253,7 +253,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
       numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, defaultValue: 140 }),
       numberInput('cl', 'Chloride', { unit: 'mEq/L', min: 70, max: 140, defaultValue: 104 }),
       numberInput('hco3', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 50, defaultValue: 24 }),
-      numberInput('albumin', 'Albumin (optional correction)', { unit: 'g/dL', min: 1, max: 6, step: 0.1, defaultValue: 4.0 }),
+      numberInput('albumin', 'Albumin (optional correction)', { unit: 'g/dL', min: 1, max: 6, step: 0.1, defaultValue: 4.0, required: false }),
     ],
     calculate(values) {
       const na = num(values.na, 140);
@@ -427,8 +427,8 @@ export const nephrologyEndoCalcs: Calculator[] = [
       numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, defaultValue: 140 }),
       numberInput('glu', 'Glucose', { unit: 'mg/dL', min: 40, max: 2000, defaultValue: 100 }),
       numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, defaultValue: 14 }),
-      numberInput('etoh', 'Ethanol (optional)', { unit: 'mg/dL', min: 0, max: 500, defaultValue: 0 }),
-      numberInput('measured', 'Measured osm (optional)', { unit: 'mOsm/kg', min: 0, max: 500, defaultValue: 0 }),
+      numberInput('etoh', 'Ethanol (optional)', { unit: 'mg/dL', min: 0, max: 500, defaultValue: 0, required: false }),
+      numberInput('measured', 'Measured osm (optional)', { unit: 'mOsm/kg', min: 0, max: 500, defaultValue: 0, required: false }),
     ],
     calculate(values) {
       const na = num(values.na, 140);

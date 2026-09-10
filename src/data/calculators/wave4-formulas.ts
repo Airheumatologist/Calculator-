@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 // Keep shared helpers type-checked even if a given calc omits some.
 const _sharedHelpers = { bool, yesNo, riskFromThresholds };
@@ -1490,6 +1490,7 @@ export const wave4FormulasCalcs: Calculator[] = [
         step: 1,
         defaultValue: 50,
         helpText: 'Use 50% if unknown (most conservative)',
+        required: false,
       }),
       numberInput('margin', 'Desired margin of error (half-width)', { unit: '%', min: 0.5, max: 20, step: 0.5, defaultValue: 5 }),
       selectInput('confidence', 'Confidence level', [
@@ -1563,11 +1564,12 @@ export const wave4FormulasCalcs: Calculator[] = [
     whyUse: 'MCV directs differential (iron/thalassemia vs bleed/hemolysis/CKD vs B12/folate/etc.).',
     inputs: [
       numberInput('mcv', 'MCV', { unit: 'fL', min: 40, max: 150, defaultValue: 78 }),
-      numberInput('hb', 'Hemoglobin (optional)', { unit: 'g/dL', min: 3, max: 20, step: 0.1, defaultValue: 10 }),
+      numberInput('hb', 'Hemoglobin (optional)', { unit: 'g/dL', min: 3, max: 20, step: 0.1, defaultValue: 10, required: false }),
     ],
     calculate(values) {
       const mcv = num(values.mcv, 78);
-      const hb = num(values.hb, 10);
+      const hbProvided = !isMissingValue(values.hb, true);
+      const hb = num(values.hb, 0);
       let label: string;
       let interpretation: string;
       let riskLevel: 'low' | 'moderate' | 'high' | 'info' = 'info';
@@ -1584,7 +1586,7 @@ export const wave4FormulasCalcs: Calculator[] = [
         interpretation = `MCV ${mcv} fL → macrocytic pathway. Consider B12/folate deficiency, alcohol, liver disease, hypothyroidism, drugs (e.g., hydroxyurea, AZT), MDS, reticulocytosis. Check B12/folate, smear, meds.`;
         riskLevel = 'moderate';
       }
-      if (hb < 7) riskLevel = 'high';
+      if (hbProvided && hb < 7) riskLevel = 'high';
       return {
         score: mcv,
         unit: 'fL',
@@ -1593,7 +1595,7 @@ export const wave4FormulasCalcs: Calculator[] = [
         riskLevel,
         details: [
           { label: 'MCV class', value: label },
-          { label: 'Hb (entered)', value: `${hb} g/dL` },
+          { label: 'Hb (entered)', value: hbProvided ? `${hb} g/dL` : 'Not entered' },
         ],
         recommendations: ['Always review smear and clinical context', 'Lab reference ranges for MCV may vary slightly'],
       };

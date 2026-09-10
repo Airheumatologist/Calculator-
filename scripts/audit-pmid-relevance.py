@@ -2,11 +2,14 @@
 """
 Audit PMID/DOI relevance for calculator evidence references.
 
-1. Extract refs with calculator context from src/data/calculators/*.ts
+1. Load refs with calculator context from the shared inventory
+   (scripts/audit-evidence/refs-inventory.json — run `npm run audit:evidence` first)
 2. Fetch PubMed titles for all PMIDs via NCBI E-utilities
 3. Optionally fetch Crossref titles for DOIs
 4. Score token overlap between PubMed/Crossref title vs calc name + ref title + citation
-5. Write full report + mismatches for agent waves
+5. Write heuristic scratch reports (pmid-relevance-*.json,
+   PMID-RELEVANCE-SUMMARY.md) — triage input, NOT the authoritative audit;
+   see scripts/audit-evidence/README.md
 
 Usage:
   python3 scripts/audit-pmid-relevance.py
@@ -25,8 +28,11 @@ import urllib.parse
 from collections import defaultdict
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent / "lib"))
+
+from inventory import InventoryError, fail, load_refs  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
-CALC_DIR = ROOT / "src" / "data" / "calculators"
 OUT_DIR = ROOT / "scripts" / "audit-evidence"
 
 STOPWORDS = {
@@ -105,77 +111,9 @@ def score_relevance(expected_blob: str, actual_title: str) -> dict:
     }
 
 
-def extract_refs() -> list[dict]:
-    refs: list[dict] = []
-    files = sorted(
-        p for p in CALC_DIR.glob("*.ts") if p.name != "index.ts" and not p.name.startswith("._")
-    )
-    for fpath in files:
-        s = fpath.read_text(encoding="utf-8")
-        idx = 0
-        while True:
-            start = s.find("references:", idx)
-            if start < 0:
-                break
-            before = s[max(0, start - 3500) : start]
-            ids = list(re.finditer(r"id:\s*'([^']+)'", before))
-            names = list(re.finditer(r"name:\s*'((?:\\'|[^'])*)'", before))
-            calc_id = ids[-1].group(1) if ids else "?"
-            calc_name = (names[-1].group(1) if names else "?").replace("\\'", "'")
-            bracket = s.find("[", start)
-            depth = 0
-            end = -1
-            for i in range(bracket, len(s)):
-                if s[i] == "[":
-                    depth += 1
-                elif s[i] == "]":
-                    depth -= 1
-                    if depth == 0:
-                        end = i
-                        break
-            if end < 0:
-                break
-            block = s[bracket + 1 : end]
-            d = 0
-            o = -1
-            for i, ch in enumerate(block):
-                if ch == "{":
-                    if d == 0:
-                        o = i
-                    d += 1
-                elif ch == "}":
-                    d -= 1
-                    if d == 0 and o >= 0:
-                        body = block[o : i + 1]
-                        if "title:" in body or "citation:" in body:
-
-                            def g(pat: str):
-                                mm = re.search(pat, body)
-                                return mm.group(1) if mm else None
-
-                            title = (g(r"title:\s*'((?:\\'|[^'])*)'") or "").replace("\\'", "'")
-                            citation = (g(r"citation:\s*'((?:\\'|[^'])*)'") or "").replace(
-                                "\\'", "'"
-                            )
-                            refs.append(
-                                {
-                                    "file": fpath.name,
-                                    "calcId": calc_id,
-                                    "calcName": calc_name,
-                                    "title": title,
-                                    "citation": citation,
-                                    "pmid": g(r"pmid:\s*'([^']*)'"),
-                                    "doi": g(r"doi:\s*'([^']*)'"),
-                                    "url": g(r"url:\s*'([^']*)'"),
-                                    "year": int(g(r"year:\s*(\d{4})"))
-                                    if g(r"year:\s*(\d{4})")
-                                    else None,
-                                    "body_snippet": body[:200],
-                                }
-                            )
-                        o = -1
-            idx = end + 1
-    return refs
+def extract_refs(allow_stale: bool = False) -> list[dict]:
+    """Load references from the shared inventory (npm run audit:evidence)."""
+    return load_refs(allow_stale=allow_stale)
 
 
 def curl_json(url: str, timeout: int = 40) -> dict:
@@ -295,12 +233,20 @@ def main() -> int:
     parser.add_argument("--skip-doi", action="store_true")
     parser.add_argument("--limit", type=int, default=0, help="Limit refs for smoke test")
     parser.add_argument("--threshold-ok", type=float, default=0.28)
+    parser.add_argument(
+        "--allow-stale-inventory",
+        action="store_true",
+        help="use refs-inventory.json even if the sources changed since it was written",
+    )
     args = parser.parse_args()
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    print("Extracting references…", file=sys.stderr)
-    refs = extract_refs()
+    print("Loading reference inventory…", file=sys.stderr)
+    try:
+        refs = extract_refs(allow_stale=args.allow_stale_inventory)
+    except InventoryError as exc:
+        return fail(exc)
     if args.limit:
         refs = refs[: args.limit]
     print(f"  {len(refs)} references", file=sys.stderr)

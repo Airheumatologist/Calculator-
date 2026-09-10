@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave6ClinicalResidualCalcs: Calculator[] = [
   // ─── 1. Expanded Baveno VI ─────────────────────────────────────────────────
@@ -764,7 +764,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whyUse: 'Contrast-associated AKI can show low FENa early; timing and alternatives matter more than a single cut-off.',
     inputs: [
       numberInput('hours', 'Hours since contrast exposure', { unit: 'h', min: 0, max: 168, defaultValue: 24 }),
-      numberInput('fena', 'Measured FENa (if available)', { unit: '%', min: 0, max: 20, step: 0.1, defaultValue: 0.8 }),
+      numberInput('fena', 'Measured FENa (if available)', { unit: '%', min: 0, max: 20, step: 0.1, defaultValue: 0.8, required: false }),
       yesNo('fenaKnown', 'FENa value entered / available', 0),
       yesNo('creatinineUp', 'Creatinine rise ≥0.3 mg/dL or ≥1.5× baseline after contrast', 0),
       yesNo('otherCause', 'Strong alternate AKI cause (hypotension, sepsis, obstruction, meds)', 0),
@@ -772,8 +772,9 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     ],
     calculate(values) {
       const hours = num(values.hours, 24);
-      const fena = num(values.fena, 0.8);
-      const known = bool(values.fenaKnown);
+      const fenaProvided = !isMissingValue(values.fena, true);
+      const fena = num(values.fena, 0);
+      const known = bool(values.fenaKnown) && fenaProvided;
       const crUp = bool(values.creatinineUp);
       const other = bool(values.otherCause);
       const diuretic = bool(values.onDiuretic);
@@ -813,11 +814,14 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
           : hours <= 72
             ? 'Typical CA-AKI window (24–72 h peak)'
             : 'Beyond 72 h: ongoing rise suggests ongoing insult or alternate diagnosis';
+      const fenaBlankButFlagged = bool(values.fenaKnown) && !fenaProvided;
       return {
         score: known ? fena : hours,
         unit: known ? '%' : 'h',
         label,
-        interpretation: `${interpretation} Timing: ${window}.`,
+        interpretation: `${interpretation} Timing: ${window}.${
+          fenaBlankButFlagged ? ' FENa was marked as available but the value is blank, so no FENa-based statement was made.' : ''
+        }`,
         riskLevel,
         details: [
           { label: 'Hours post-contrast', value: `${hours} h` },
@@ -1730,7 +1734,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       numberInput('hco3', 'HCO₃⁻', { unit: 'mEq/L', min: 2, max: 60, step: 0.1, defaultValue: 18 }),
       numberInput('na', 'Na (for AG)', { unit: 'mEq/L', min: 110, max: 170, defaultValue: 140 }),
       numberInput('cl', 'Cl (for AG)', { unit: 'mEq/L', min: 70, max: 140, defaultValue: 104 }),
-      numberInput('albumin', 'Albumin (optional AG adjust)', { unit: 'g/dL', min: 1, max: 5.5, step: 0.1, defaultValue: 4 }),
+      numberInput('albumin', 'Albumin (optional AG adjust)', { unit: 'g/dL', min: 1, max: 5.5, step: 0.1, defaultValue: 4, required: false }),
       yesNo('checkGap', 'Compute anion gap', 0),
     ],
     calculate(values) {
@@ -2016,7 +2020,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       numberInput('fio2', 'FiO₂', { unit: 'fraction', min: 0.21, max: 1, step: 0.01, defaultValue: 1.0 }),
       numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 100, defaultValue: 40 }),
       numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 5, max: 20, step: 0.1, defaultValue: 12 }),
-      numberInput('pvO2', 'Mixed venous PO₂ (assume if unknown)', { unit: 'mmHg', min: 20, max: 50, defaultValue: 40 }),
+      numberInput('pvO2', 'Mixed venous PO₂ (assume if unknown)', { unit: 'mmHg', min: 20, max: 50, defaultValue: 40, required: false }),
       selectInput('mode', 'Method', [
         { label: 'Simplified content shunt (educational)', value: 'content' },
         { label: 'Rough iso-shunt from P/F only', value: 'pf' },
@@ -2027,6 +2031,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       const fio2 = num(values.fio2, 1);
       const paco2 = num(values.paco2, 40);
       const hb = num(values.hb, 12);
+      const pvProvided = !isMissingValue(values.pvO2, true);
       const pvo2 = num(values.pvO2, 40);
       const mode = str(values.mode, 'content');
       // Ideal alveolar PO2
@@ -2082,10 +2087,17 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         score: qsR,
         unit: '%',
         ...r,
+        interpretation:
+          r.interpretation +
+          (mode === 'pf'
+            ? ''
+            : pvProvided
+              ? ''
+              : ' Mixed venous PO₂ was not entered — a default of 40 mmHg was assumed for this content-based estimate, so the shunt fraction is not based on a measured mixed venous sample.'),
         details: [
           { label: 'PAO₂ (ideal alveolar)', value: `${round(pao2A, 0)} mmHg` },
           { label: 'Method', value: mode === 'pf' ? 'Rough P/F iso-shunt' : 'Simplified content' },
-          { label: 'Assumed PvO₂', value: `${pvo2} mmHg` },
+          { label: 'Assumed PvO₂', value: pvProvided ? `${pvo2} mmHg (entered)` : `${pvo2} mmHg (assumed — not entered)` },
         ],
         recommendations: ['Requires accurate mixed venous sampling for true Qs/Qt', 'Educational estimate only'],
       };
@@ -2131,6 +2143,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         max: 600,
         defaultValue: 95,
         helpText: 'Enter 0 if unknown — only expected value shown',
+        required: false,
       }),
       selectInput('fio2', 'FiO₂ context', [
         { label: 'Room air (0.21) — rule applies', value: 'ra' },
@@ -2139,7 +2152,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     ],
     calculate(values) {
       const paco2 = num(values.paco2, 40);
-      const pao2 = num(values.pao2, 95);
+      const pao2 = num(values.pao2, 0);
       const ra = str(values.fio2, 'ra') === 'ra';
       const expected = round(150 - paco2, 0);
       // slightly more precise: 150 - 1.25*PaCO2 sometimes taught

@@ -2,7 +2,13 @@ import type { CalcResult } from '../types/calculator';
 
 export function LiveResult({ result }: { result: CalcResult }) {
   return (
-    <div className="panel live-panel">
+    <div
+      className="panel live-panel"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      aria-label="Calculator result"
+    >
       <div className="panel-header">
         Result
         <span className="live-hint">
