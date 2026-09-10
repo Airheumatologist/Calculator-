@@ -1202,7 +1202,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
 
       if (indication === 'tox' && riskLevel !== 'critical') {
         interpretation += ' Toxicity-context review: correlate ECG, electrolytes, and symptoms even when level is not frankly toxic.';
-        if (riskLevel === 'normal' || riskLevel === 'low') riskLevel = 'moderate';
+        if (riskLevel === 'normal') riskLevel = 'moderate';
       }
 
       return {
