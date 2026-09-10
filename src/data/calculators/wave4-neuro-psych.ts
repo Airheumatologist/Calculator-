@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave4NeuroPsychCalcs: Calculator[] = [
   {
@@ -98,11 +98,11 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       validation: 'Derived and validated in EMS stroke cohorts for large-artery occlusion detection; sensitivity/specificity trade-offs vs other LVO scales.',
       references: [
         {
-          title: 'Design and validation of a prehospital stroke scale to predict LVO: RACE scale',
+          title: 'Design and validation of a prehospital stroke scale to predict large arterial occlusion: the rapid arterial occlusion evaluation scale',
           citation: 'Pérez de la Ossa N et al. Stroke. 2014',
           year: 2014,
-          pmid: '24335227',
-          doi: '10.1161/STROKEAHA.113.003580',
+          pmid: '24281224',
+          doi: '10.1161/STROKEAHA.113.003071',
         },
       ],
     },
@@ -1256,6 +1256,9 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     ],
     calculate(values) {
       const total = num(values.total, 88);
+      // A blank optional domain is not a 0 score (0 is a real result); mark it unentered.
+      const domainOrDash = (raw: number | string | boolean | null | undefined) =>
+        isMissingValue(raw, true) ? '—' : String(num(raw));
       const r = riskFromThresholds(total, [
         {
           max: 74,
@@ -1290,7 +1293,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
           { label: 'Common cutoffs', value: '≤82 (higher specificity) · ≤88 (higher sensitivity) — education matters' },
           {
             label: 'Domains entered',
-            value: `A${num(values.attention)} M${num(values.memory)} F${num(values.fluency)} L${num(values.language)} V${num(values.visuospatial)}`,
+            value: `A${domainOrDash(values.attention)} M${domainOrDash(values.memory)} F${domainOrDash(values.fluency)} L${domainOrDash(values.language)} V${domainOrDash(values.visuospatial)}`,
           },
         ],
       };

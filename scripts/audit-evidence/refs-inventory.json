@@ -1,7 +1,7 @@
 {
   "schema": "medcalc-refs-inventory/1",
   "generatedBy": "scripts/audit-evidence.mjs",
-  "generatedAt": "2026-09-10T12:14:35.433Z",
+  "generatedAt": "2026-09-10T13:56:05.979Z",
   "sourceDir": "src/data/calculators",
   "sourceFiles": [
     "cardiology.ts",
@@ -47,23 +47,23 @@
     "wave6-psych-sleep.ts",
     "wave6-scores-residual.ts"
   ],
-  "sourceHash": "290878e8bb9662a8c4757c0fa15584e245e9b0ad777e8896d333236b2aad6c0a",
+  "sourceHash": "a33cb8b7f1a886d6df619593d2c851a716edb82565d32669e01c8694787f9421",
   "summary": {
     "files": 42,
     "calculatorsWithRefs": 918,
     "refs": 982,
-    "withPmid": 840,
-    "uniquePmids": 724,
-    "withDoi": 766,
-    "uniqueDois": 663,
-    "withUrl": 154,
+    "withPmid": 838,
+    "uniquePmids": 725,
+    "withDoi": 762,
+    "uniqueDois": 662,
+    "withUrl": 153,
     "anyLink": 982,
     "noLink": 0,
-    "pmidNoDoi": 77,
-    "urlOnly": 139,
-    "noPmid": 142,
-    "pctPmid": 85.5,
-    "pctDoi": 78,
+    "pmidNoDoi": 79,
+    "urlOnly": 141,
+    "noPmid": 144,
+    "pctPmid": 85.3,
+    "pctDoi": 77.6,
     "pctAnyLink": 100,
     "noLinkSample": []
   },
@@ -120,7 +120,7 @@
       "file": "cardiology.ts",
       "calcId": "heart-score",
       "calcName": "HEART Score for Major Cardiac Events",
-      "title": "A prospective validation of the HEART score",
+      "title": "A prospective validation of the HEART score for chest pain patients at the emergency department",
       "citation": "Backus BE et al. Int J Cardiol. 2013",
       "pmid": "23465250",
       "doi": "10.1016/j.ijcard.2013.01.255",
@@ -144,7 +144,7 @@
       "file": "cardiology.ts",
       "calcId": "timi-stemi",
       "calcName": "TIMI Risk Score (STEMI)",
-      "title": "TIMI risk score for STEMI",
+      "title": "TIMI risk score for ST-elevation myocardial infarction: A convenient, bedside, clinical score for risk assessment at presentation: An intravenous nPA for treatment of infarcting myocardium early II trial substudy",
       "citation": "Morrow DA et al. Circulation. 2000",
       "pmid": "11044416",
       "doi": "10.1161/01.cir.102.17.2031",
@@ -204,7 +204,7 @@
       "file": "cardiology.ts",
       "calcId": "perc",
       "calcName": "PERC Rule for PE",
-      "title": "Prospective multicenter evaluation of the PERC rule",
+      "title": "Prospective multicenter evaluation of the pulmonary embolism rule-out criteria",
       "citation": "Kline JA et al. J Thromb Haemost. 2008",
       "pmid": "18318689",
       "doi": "10.1111/j.1538-7836.2008.02944.x",
@@ -216,7 +216,7 @@
       "file": "cardiology.ts",
       "calcId": "revised-geneva",
       "calcName": "Revised Geneva Score (PE)",
-      "title": "Prediction of PE in the emergency department: the revised Geneva score",
+      "title": "Prediction of pulmonary embolism in the emergency department: the revised Geneva score",
       "citation": "Le Gal G et al. Ann Intern Med. 2006",
       "pmid": "16461960",
       "doi": "10.7326/0003-4819-144-3-200602070-00004",
@@ -240,7 +240,7 @@
       "file": "cardiology.ts",
       "calcId": "spesi",
       "calcName": "Simplified PESI (sPESI)",
-      "title": "Simplified PESI",
+      "title": "Simplification of the pulmonary embolism severity index for prognostication in patients with acute symptomatic pulmonary embolism",
       "citation": "Jiménez D et al. Arch Intern Med. 2010",
       "pmid": "20696966",
       "doi": "10.1001/archinternmed.2010.199",
@@ -576,7 +576,7 @@
       "file": "emergency-misc.ts",
       "calcId": "gestational-age",
       "calcName": "Gestational Age & Naegele Due Date",
-      "title": "Naegele's rule for estimated date of delivery",
+      "title": "Naegele's rule and the length of pregnancy - A review",
       "citation": "Lawson GW. Aust N Z J Obstet Gynaecol. 2021 (review of Naegele's rule)",
       "pmid": "33079400",
       "doi": "10.1111/ajo.13253",
@@ -624,7 +624,7 @@
       "file": "emergency-misc.ts",
       "calcId": "wells-hit",
       "calcName": "4Ts Score for HIT",
-      "title": "Evaluation of pretest clinical score (4 T's) for HIT",
+      "title": "Evaluation of pretest clinical score (4 T's) for the diagnosis of heparin-induced thrombocytopenia in two clinical settings",
       "citation": "Lo GK et al. J Thromb Haemost. 2006",
       "pmid": "16634744",
       "doi": "10.1111/j.1538-7836.2006.01787.x",
@@ -720,7 +720,7 @@
       "file": "emergency-misc.ts",
       "calcId": "corrected-phenytoin",
       "calcName": "Corrected Phenytoin (Albumin)",
-      "title": "Phenytoin dosing and levels",
+      "title": "The clinical pharmacokinetics of phenytoin",
       "citation": "Sheiner-Tozer equation clinical pharmacy references",
       "pmid": "599408",
       "doi": "10.1007/BF01059685",
@@ -780,7 +780,7 @@
       "file": "extra.ts",
       "calcId": "centor-feverpain",
       "calcName": "FeverPAIN Score",
-      "title": "PRISM trial / FeverPAIN",
+      "title": "Clinical score and rapid antigen detection test to guide antibiotic use for sore throats: randomised controlled trial of PRISM (primary care streptococcal management)",
       "citation": "Little P et al. BMJ. 2013",
       "pmid": "24114306",
       "doi": "10.1136/bmj.f5806",
@@ -960,7 +960,7 @@
       "file": "gi-neuro-psych.ts",
       "calcId": "bisap",
       "calcName": "BISAP Score",
-      "title": "A prospective evaluation of BISAP",
+      "title": "The early prediction of mortality in acute pancreatitis: a large population-based study",
       "citation": "Wu BU et al. Gut. 2008",
       "pmid": "18519429",
       "doi": "10.1136/gut.2008.152702",
@@ -1272,7 +1272,7 @@
       "file": "missing-cardio-pulm.ts",
       "calcId": "prevent-cvd",
       "calcName": "Framingham-Style 10-Year Hard CHD Risk (Educational)",
-      "title": "AHA PREVENT equations for CV risk",
+      "title": "Novel Prediction Equations for Absolute Risk Assessment of Total Cardiovascular Disease Incorporating Cardiovascular-Kidney-Metabolic Health: A Scientific Statement From the American Heart Association",
       "citation": "Khan SS et al. Circulation. 2023",
       "pmid": "37947094",
       "doi": "10.1161/CIR.0000000000001191",
@@ -1452,7 +1452,7 @@
       "file": "missing-emergency.ts",
       "calcId": "lemon-airway",
       "calcName": "LEMON Difficult Airway Assessment",
-      "title": "LEMON airway assessment (ATLS / emergency airway literature)",
+      "title": "Can an airway assessment score predict difficulty at intubation in the emergency department?",
       "citation": "Reed MJ et al. Emerg Med J. 2005;22:99-102; ATLS difficult airway teaching",
       "pmid": "15662057",
       "doi": "10.1136/emj.2003.008771",
@@ -1740,7 +1740,7 @@
       "file": "missing-heme-id-nephro.ts",
       "calcId": "mcisaac",
       "calcName": "McIsaac Score (Modified Centor)",
-      "title": "Centor criteria original derivation",
+      "title": "The diagnosis of strep throat in adults in the emergency room",
       "citation": "Centor RM et al. Med Decis Making. 1981",
       "pmid": "6763125",
       "doi": "10.1177/0272989X8100100304",
@@ -1794,7 +1794,7 @@
       "doi": "10.1016/s0196-0644(05)82292-9",
       "url": null,
       "year": 1990,
-      "line": 736
+      "line": 744
     },
     {
       "file": "missing-heme-id-nephro.ts",
@@ -1806,31 +1806,31 @@
       "doi": "10.1056/NEJM200005253422107",
       "url": null,
       "year": 2000,
-      "line": 808
+      "line": 816
     },
     {
       "file": "missing-heme-id-nephro.ts",
       "calcId": "ttkg",
       "calcName": "Transtubular Potassium Gradient (TTKG)",
-      "title": "The transtubular potassium concentration in patients with hypokalemia and hyperkalemia",
-      "citation": "West ML et al. Am J Kidney Dis. 1986",
+      "title": "New clinical approach to evaluate disorders of potassium excretion",
+      "citation": "West ML et al. Miner Electrolyte Metab. 1986",
       "pmid": "3762510",
-      "doi": "10.1093/oxfordjournals.aje.a114366",
+      "doi": null,
       "url": null,
       "year": 1986,
-      "line": 897
+      "line": 905
     },
     {
       "file": "missing-heme-id-nephro.ts",
       "calcId": "ttkg",
       "calcName": "Transtubular Potassium Gradient (TTKG)",
-      "title": "TTKG limitations (urea effect)",
-      "citation": "Kamel KS, Halperin ML. various reviews",
-      "pmid": "3762510",
-      "doi": "10.1093/oxfordjournals.aje.a114366",
+      "title": "Intrarenal urea recycling leads to a higher rate of renal excretion of potassium: an hypothesis with clinical implications",
+      "citation": "Kamel KS, Halperin ML. Curr Opin Nephrol Hypertens. 2011",
+      "pmid": "21788894",
+      "doi": "10.1097/MNH.0b013e328349b8f9",
       "url": null,
       "year": 2011,
-      "line": 899
+      "line": 906
     },
     {
       "file": "missing-heme-id-nephro.ts",
@@ -1842,7 +1842,7 @@
       "doi": "10.1681/ASN.V1071616",
       "url": null,
       "year": 1999,
-      "line": 966
+      "line": 973
     },
     {
       "file": "missing-heme-id-nephro.ts",
@@ -1854,7 +1854,7 @@
       "doi": "10.1001/jama.2016.0287",
       "url": null,
       "year": 2016,
-      "line": 1040
+      "line": 1048
     },
     {
       "file": "missing-heme-id-nephro.ts",
@@ -1866,7 +1866,7 @@
       "doi": "10.1590/1518-8345.1733.2912",
       "url": null,
       "year": 2005,
-      "line": 1117
+      "line": 1125
     },
     {
       "file": "missing-heme-id-nephro.ts",
@@ -1878,7 +1878,7 @@
       "doi": "10.1016/j.ahj.2005.04.017",
       "url": null,
       "year": 2006,
-      "line": 1193
+      "line": 1201
     },
     {
       "file": "missing-heme-id-nephro.ts",
@@ -1890,7 +1890,7 @@
       "doi": "10.1093/eurheartj/ehv476",
       "url": null,
       "year": 2015,
-      "line": 1259
+      "line": 1267
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -2064,7 +2064,7 @@
       "file": "missing-neuro-psych.ts",
       "calcId": "abcd3i",
       "calcName": "ABCD3-I Score (TIA)",
-      "title": "ABCD3 and ABCD3-I scores to detect stroke risk after TIA",
+      "title": "Addition of brain and carotid imaging to the ABCD² score to identify patients at early risk of stroke after transient ischaemic attack: a multicentre observational study",
       "citation": "Merwick Á et al. Lancet Neurol. 2010",
       "pmid": "20934388",
       "doi": "10.1016/S1474-4422(10)70240-4",
@@ -2076,7 +2076,7 @@
       "file": "missing-neuro-psych.ts",
       "calcId": "abcd3i",
       "calcName": "ABCD3-I Score (TIA)",
-      "title": "ABCD² validation",
+      "title": "Validation and refinement of scores to predict very early stroke risk after transient ischaemic attack",
       "citation": "Johnston SC et al. Lancet. 2007",
       "pmid": "17258668",
       "doi": "10.1016/S0140-6736(07)60150-0",
@@ -2112,7 +2112,7 @@
       "file": "missing-peds-ob-tox.ts",
       "calcId": "sipa",
       "calcName": "Shock Index, Pediatric Adjusted (SIPA)",
-      "title": "Shock index pediatric adjusted (SIPA) in blunt trauma",
+      "title": "Pediatric specific shock index accurately identifies severely injured children",
       "citation": "Acker SN et al. J Pediatr Surg. 2015",
       "pmid": "25638631",
       "doi": "10.1016/j.jpedsurg.2014.08.009",
@@ -2148,7 +2148,7 @@
       "file": "missing-peds-ob-tox.ts",
       "calcId": "vbac-success",
       "calcName": "VBAC Success (Grobman Educational Model)",
-      "title": "Development of a nomogram for prediction of VBAC",
+      "title": "Development of a nomogram for prediction of vaginal birth after cesarean delivery",
       "citation": "Grobman WA et al. Obstet Gynecol. 2007",
       "pmid": "17400840",
       "doi": "10.1097/01.AOG.0000259312.36053.02",
@@ -2172,7 +2172,7 @@
       "file": "missing-peds-ob-tox.ts",
       "calcId": "hellp",
       "calcName": "HELLP Syndrome Lab Pattern Helper",
-      "title": "HELLP syndrome",
+      "title": "Diagnosis and management of hemolysis, elevated liver enzymes, and low platelets syndrome",
       "citation": "Sibai BM. Obstet Gynecol. / Tennessee & Mississippi classifications",
       "pmid": "15519429",
       "doi": "10.1016/j.clp.2004.06.008",
@@ -2430,19 +2430,19 @@
       "doi": null,
       "url": null,
       "year": 1977,
-      "line": 283
+      "line": 289
     },
     {
       "file": "nephrology-endo.ts",
       "calcId": "corrected-calcium",
       "calcName": "Corrected Calcium",
-      "title": "Calcium correction formulas",
+      "title": "Interpretation of serum calcium in patients with abnormal serum proteins",
       "citation": "Payne RB et al. Br Med J. 1973",
       "pmid": "4758544",
       "doi": "10.1136/bmj.4.5893.643",
       "url": null,
       "year": 1973,
-      "line": 316
+      "line": 322
     },
     {
       "file": "nephrology-endo.ts",
@@ -2454,7 +2454,7 @@
       "doi": "10.1056/NEJM197310182891607",
       "url": null,
       "year": 1973,
-      "line": 355
+      "line": 361
     },
     {
       "file": "nephrology-endo.ts",
@@ -2466,7 +2466,7 @@
       "doi": "10.1016/s0002-9343(99)00055-8",
       "url": null,
       "year": 1999,
-      "line": 357
+      "line": 363
     },
     {
       "file": "nephrology-endo.ts",
@@ -2478,19 +2478,19 @@
       "doi": "10.1097/00005792-198005000-00001",
       "url": null,
       "year": 1980,
-      "line": 410
+      "line": 416
     },
     {
       "file": "nephrology-endo.ts",
       "calcId": "serum-osmolality",
       "calcName": "Calculated Serum Osmolality",
-      "title": "Serum osmolality and the osmolar gap",
+      "title": "An evaluation of the osmole gap as a screening test for toxic alcohol poisoning",
       "citation": "Purssell RA et al. various reviews",
       "pmid": "18442409",
       "doi": "10.1186/1471-227X-8-5",
       "url": null,
       "year": 2001,
-      "line": 468
+      "line": 474
     },
     {
       "file": "nephrology-endo.ts",
@@ -2502,7 +2502,7 @@
       "doi": "10.1081/clt-120006745",
       "url": null,
       "year": 2002,
-      "line": 501
+      "line": 507
     },
     {
       "file": "nephrology-endo.ts",
@@ -2514,7 +2514,7 @@
       "doi": "10.1056/NEJM200005183422006",
       "url": null,
       "year": 2000,
-      "line": 544
+      "line": 550
     },
     {
       "file": "nephrology-endo.ts",
@@ -2526,7 +2526,7 @@
       "doi": "10.1056/NEJMra1309483",
       "url": null,
       "year": 2014,
-      "line": 581
+      "line": 587
     },
     {
       "file": "nephrology-endo.ts",
@@ -2538,7 +2538,7 @@
       "doi": null,
       "url": "https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index",
       "year": 2000,
-      "line": 615
+      "line": 621
     },
     {
       "file": "nephrology-endo.ts",
@@ -2550,7 +2550,7 @@
       "doi": null,
       "url": "https://pubmed.ncbi.nlm.nih.gov/?term=Devine+BJ+gentamicin+1974",
       "year": 1974,
-      "line": 658
+      "line": 664
     },
     {
       "file": "nephrology-endo.ts",
@@ -2562,7 +2562,7 @@
       "doi": "10.2165/11318100-000000000-00000",
       "url": null,
       "year": 2010,
-      "line": 692
+      "line": 698
     },
     {
       "file": "nephrology-endo.ts",
@@ -2574,7 +2574,7 @@
       "doi": "10.1056/NEJM198710223171717",
       "url": null,
       "year": 1987,
-      "line": 725
+      "line": 731
     },
     {
       "file": "nephrology-endo.ts",
@@ -2586,19 +2586,19 @@
       "doi": null,
       "url": null,
       "year": 1957,
-      "line": 759
+      "line": 765
     },
     {
       "file": "nephrology-endo.ts",
       "calcId": "homa-ir",
       "calcName": "HOMA-IR",
-      "title": "Homeostasis model assessment",
+      "title": "Homeostasis model assessment: insulin resistance and beta-cell function from fasting plasma glucose and insulin concentrations in man",
       "citation": "Matthews DR et al. Diabetologia. 1985",
       "pmid": "3899825",
       "doi": "10.1007/BF00280883",
       "url": null,
       "year": 1985,
-      "line": 790
+      "line": 796
     },
     {
       "file": "nephrology-endo.ts",
@@ -2610,7 +2610,7 @@
       "doi": "10.2337/dc08-0545",
       "url": null,
       "year": 2008,
-      "line": 818
+      "line": 824
     },
     {
       "file": "nephrology-endo.ts",
@@ -2622,7 +2622,7 @@
       "doi": null,
       "url": null,
       "year": 1972,
-      "line": 861
+      "line": 867
     },
     {
       "file": "nephrology-endo.ts",
@@ -2634,7 +2634,7 @@
       "doi": null,
       "url": "https://ctep.cancer.gov/protocoldevelopment/electronic_applications/ctc.htm",
       "year": 2017,
-      "line": 895
+      "line": 901
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2736,7 +2736,7 @@
       "file": "wave2-cardiology.ts",
       "calcId": "cardiac-index",
       "calcName": "Cardiac Index",
-      "title": "Hemodynamic patterns in MI (Forrester)",
+      "title": "Medical therapy of acute myocardial infarction by application of hemodynamic subsets (second of two parts)",
       "citation": "Forrester JS et al. N Engl J Med. 1976",
       "pmid": "790194",
       "doi": "10.1056/NEJM197612162952505",
@@ -3102,7 +3102,7 @@
       "doi": "10.1159/000168150",
       "url": null,
       "year": 1990,
-      "line": 883
+      "line": 891
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3114,7 +3114,7 @@
       "doi": "10.1139/y83-207",
       "url": null,
       "year": 1983,
-      "line": 935
+      "line": 943
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3126,7 +3126,7 @@
       "doi": "10.1097/00003246-199811000-00019",
       "url": null,
       "year": 1998,
-      "line": 986
+      "line": 994
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3138,7 +3138,7 @@
       "doi": "10.1681/ASN.2006121408",
       "url": null,
       "year": 2005,
-      "line": 1064
+      "line": 1072
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3150,7 +3150,7 @@
       "doi": "10.1139/y83-207",
       "url": null,
       "year": 1983,
-      "line": 1119
+      "line": 1127
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3162,7 +3162,7 @@
       "doi": "10.1097/01.CCM.0000286399.21008.64",
       "url": null,
       "year": 2000,
-      "line": 1121
+      "line": 1129
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3174,7 +3174,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK482389/",
       "year": 1960,
-      "line": 1183
+      "line": 1191
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3186,7 +3186,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK482389/",
       "year": 1960,
-      "line": 1234
+      "line": 1242
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3198,7 +3198,7 @@
       "doi": null,
       "url": "https://kdigo.org/guidelines/ckd-evaluation-and-management/",
       "year": 2012,
-      "line": 1289
+      "line": 1297
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3426,7 +3426,7 @@
       "doi": "10.1093/schbul/13.2.261",
       "url": null,
       "year": 1987,
-      "line": 1733
+      "line": 1739
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3438,7 +3438,7 @@
       "doi": null,
       "url": "https://www.who.int/publications/i/item/WHO-MSD-MSB-01.6a",
       "year": 2001,
-      "line": 1844
+      "line": 1850
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3450,31 +3450,31 @@
       "doi": "10.1016/0306-4603(82)90005-3",
       "url": null,
       "year": 1982,
-      "line": 1939
+      "line": 1945
     },
     {
       "file": "wave2-neuro-psych.ts",
       "calcId": "cage-aid",
       "calcName": "CAGE-AID Questionnaire",
-      "title": "The CAGE questionnaire adapted to include drugs (CAGE-AID)",
+      "title": "Conjoint screening questionnaires for alcohol and other drug abuse: criterion validity in a primary care practice",
       "citation": "Brown RL, Rounds LA. Wisconsin Med J. 1995; Ewing JA CAGE 1984",
       "pmid": "7778330",
       "doi": null,
       "url": null,
       "year": 1995,
-      "line": 2007
+      "line": 2013
     },
     {
       "file": "wave2-neuro-psych.ts",
       "calcId": "asrs-adhd",
       "calcName": "ASRS-v1.1 Adult ADHD Screen (Part A)",
-      "title": "World Health Organization clinical / growth standards resources",
-      "citation": "World Health Organization",
-      "pmid": "16416313",
-      "doi": "10.1007/s00109-005-0002-8",
-      "url": "https://www.who.int/",
-      "year": 2006,
-      "line": 2116
+      "title": "The World Health Organization Adult ADHD Self-Report Scale (ASRS): a short screening scale for use in the general population",
+      "citation": "Kessler RC et al. Psychol Med. 2005",
+      "pmid": "15841682",
+      "doi": null,
+      "url": null,
+      "year": 2005,
+      "line": 2122
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3486,7 +3486,7 @@
       "doi": "10.1016/s1389-9457(00)00065-4",
       "url": null,
       "year": 2001,
-      "line": 2195
+      "line": 2200
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3498,7 +3498,7 @@
       "doi": "10.1002/jts.22059",
       "url": null,
       "year": 2015,
-      "line": 2277
+      "line": 2282
     },
     {
       "file": "wave2-oncology.ts",
@@ -4368,7 +4368,7 @@
       "file": "wave3-cardio-vasc.ts",
       "calcId": "right-heart-strain",
       "calcName": "Right Heart Strain Flags (PE Helper)",
-      "title": "ESC guidelines for diagnosis and management of acute PE",
+      "title": "Management of acute pulmonary embolism 2019: what is new in the updated European guidelines?",
       "citation": "Konstantinides SV et al. Eur Heart J. 2020",
       "pmid": "32458205",
       "doi": "10.1007/s11739-020-02340-0",
@@ -4434,7 +4434,7 @@
       "doi": "10.1001/jama.297.6.611",
       "url": null,
       "year": 2007,
-      "line": 1630
+      "line": 1647
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4446,7 +4446,7 @@
       "doi": "10.1093/ajcn/88.3.645",
       "url": null,
       "year": 2008,
-      "line": 1739
+      "line": 1756
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4458,7 +4458,7 @@
       "doi": "10.1016/0735-1097(90)90282-t",
       "url": null,
       "year": 1990,
-      "line": 1826
+      "line": 1843
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4470,7 +4470,7 @@
       "doi": "10.1161/CIR.0b013e318276fbcb",
       "url": null,
       "year": 2012,
-      "line": 1907
+      "line": 1924
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4482,7 +4482,7 @@
       "doi": "10.1160/TH07-08-0485",
       "url": null,
       "year": 2008,
-      "line": 1997
+      "line": 2014
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4494,7 +4494,7 @@
       "doi": "10.1161/CIRCULATIONAHA.111.051920",
       "url": null,
       "year": 2012,
-      "line": 2079
+      "line": 2096
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4506,13 +4506,13 @@
       "doi": "10.1136/bmj.j1065",
       "url": null,
       "year": 2017,
-      "line": 2160
+      "line": 2177
     },
     {
       "file": "wave3-em-surgery.ts",
       "calcId": "rome-iv-ibs",
       "calcName": "Rome IV IBS Criteria Helper",
-      "title": "Rome IV diagnostic criteria for irritable bowel syndrome",
+      "title": "Bowel Disorders",
       "citation": "Lacy BE et al. Gastroenterology. 2016;150:1393-1407",
       "pmid": "27144627",
       "doi": "10.1053/j.gastro.2016.02.031",
@@ -4800,19 +4800,19 @@
       "file": "wave3-gi-hep.ts",
       "calcId": "ukeld",
       "calcName": "UKELD Score",
-      "title": "Development of the UKELD score",
-      "citation": "Barber K et al. / UK transplant selection literature; Neuberger J et al. Gut related guidance",
-      "pmid": "34085606",
-      "doi": "10.6002/ect.2020.0513",
+      "title": "Elective liver transplant list mortality: development of a United Kingdom end-stage liver disease score",
+      "citation": "Barber K et al. Transplantation. 2011",
+      "pmid": "21775931",
+      "doi": "10.1097/TP.0b013e318225db4d",
       "url": null,
-      "year": 2008,
+      "year": 2011,
       "line": 198
     },
     {
       "file": "wave3-gi-hep.ts",
       "calcId": "clif-c-aclf",
       "calcName": "CLIF-C ACLF Score (Simplified)",
-      "title": "Development and validation of a prognostic score to predict mortality in patients with ACLF",
+      "title": "Development and validation of a prognostic score to predict mortality in patients with acute-on-chronic liver failure",
       "citation": "Jalan R et al. J Hepatol. 2014",
       "pmid": "24950482",
       "doi": "10.1016/j.jhep.2014.06.012",
@@ -4848,12 +4848,12 @@
       "file": "wave3-gi-hep.ts",
       "calcId": "arr",
       "calcName": "AST/ALT Ratio (De Ritis)",
-      "title": "De Ritis ratio (AST/ALT) historical and modern ALD context",
-      "citation": "De Ritis F et al. Clin Chim Acta (historical); modern ALD reviews",
+      "title": "Anicteric virus hepatitis in a closed environment as shown by serum transaminase activity",
+      "citation": "De Ritis F, Coltorti M, Giusti G. Bull World Health Organ. 1959",
       "pmid": "13814987",
       "doi": null,
       "url": null,
-      "year": 1957,
+      "year": 1959,
       "line": 516
     },
     {
@@ -4908,10 +4908,10 @@
       "file": "wave3-gi-hep.ts",
       "calcId": "pned",
       "calcName": "PNED Score (UGIB Mortality, Simplified)",
-      "title": "Predictive factors of mortality from nonvariceal upper gastrointestinal hemorrhage: PNED study",
+      "title": "Predicting mortality in non-variceal upper gastrointestinal bleeders: validation of the Italian PNED Score and Prospective Comparison with the Rockall Score",
       "citation": "Marmo R et al. Am J Gastroenterol. 2010",
-      "pmid": "19497799",
-      "doi": "10.1016/j.dld.2009.04.019",
+      "pmid": "20051943",
+      "doi": "10.1038/ajg.2009.687",
       "url": null,
       "year": 2010,
       "line": 837
@@ -5346,7 +5346,7 @@
       "doi": null,
       "url": "https://braintrauma.org/coma/guidelines",
       "year": 2016,
-      "line": 1675
+      "line": 1686
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5358,7 +5358,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK482255/",
       "year": 2015,
-      "line": 1752
+      "line": 1763
     },
     {
       "file": "wave3-peds-ob.ts",
@@ -5546,8 +5546,8 @@
       "calcName": "Pediatric KDIGO AKI Stage (Creatinine)",
       "title": "KDIGO Clinical Practice Guideline for Acute Kidney Injury",
       "citation": "Kidney Int Suppl. 2012 (KDIGO AKI)",
-      "pmid": "23732715",
-      "doi": "10.7326/0003-4819-158-11-201306040-00007",
+      "pmid": null,
+      "doi": null,
       "url": "https://kdigo.org/guidelines/acute-kidney-injury/",
       "year": 2012,
       "line": 1500
@@ -5558,8 +5558,8 @@
       "calcName": "Pediatric Urine Output / Oliguria",
       "title": "KDIGO Clinical Practice Guideline for Acute Kidney Injury",
       "citation": "Kidney Int Suppl. 2012 (KDIGO AKI)",
-      "pmid": "23732715",
-      "doi": "10.7326/0003-4819-158-11-201306040-00007",
+      "pmid": null,
+      "doi": null,
       "url": "https://kdigo.org/guidelines/acute-kidney-injury/",
       "year": 2012,
       "line": 1589
@@ -5580,7 +5580,7 @@
       "file": "wave3-peds-ob.ts",
       "calcId": "bronchiolitis-severity",
       "calcName": "Bronchiolitis Clinical Severity Bands",
-      "title": "AAP Clinical Practice Guideline: Bronchiolitis",
+      "title": "Clinical practice guideline: the diagnosis, management, and prevention of bronchiolitis",
       "citation": "Ralston SL et al. Pediatrics. 2014",
       "pmid": "25349312",
       "doi": "10.1542/peds.2014-2742",
@@ -5820,7 +5820,7 @@
       "file": "wave3-tox-endo-heme.ts",
       "calcId": "methanol-osmol",
       "calcName": "Estimated Methanol from Osmolar Gap",
-      "title": "Toxic alcohol calculations",
+      "title": "Toxic Alcohols",
       "citation": "Kraut JA, Mullins ME. N Engl J Med. 2018",
       "pmid": "29342392",
       "doi": "10.1056/NEJMra1615295",
@@ -6372,7 +6372,7 @@
       "file": "wave4-em-id.ts",
       "calcId": "delta-troponin",
       "calcName": "Delta Troponin Interpreter (Educational)",
-      "title": "ESC guidelines for NSTE-ACS / hs-cTn algorithms",
+      "title": "2020 ESC Guidelines for the management of acute coronary syndromes in patients presenting without persistent ST-segment elevation",
       "citation": "Collet JP et al. Eur Heart J. 2021",
       "pmid": "32860058",
       "doi": "10.1093/eurheartj/ehaa575",
@@ -6408,7 +6408,7 @@
       "file": "wave4-em-id.ts",
       "calcId": "stemi-equivalent",
       "calcName": "STEMI Equivalent Patterns Checklist",
-      "title": "de Winter ECG pattern",
+      "title": "A new ECG sign of proximal LAD occlusion",
       "citation": "de Winter RJ et al. N Engl J Med. 2008",
       "pmid": "18987380",
       "doi": "10.1056/NEJMc0804737",
@@ -7080,7 +7080,7 @@
       "file": "wave4-icu-vent.ts",
       "calcId": "tidal-volume-ards",
       "calcName": "ARDS Tidal Volume Target (6 mL/kg PBW)",
-      "title": "ARDS Network low tidal volume trial",
+      "title": "Ventilation with lower tidal volumes as compared with traditional tidal volumes for acute lung injury and the acute respiratory distress syndrome",
       "citation": "ARDS Network. N Engl J Med. 2000",
       "pmid": "10793162",
       "doi": "10.1056/NEJM200005043421801",
@@ -7320,10 +7320,10 @@
       "file": "wave4-neuro-psych.ts",
       "calcId": "race-scale",
       "calcName": "RACE Scale (Prehospital LVO)",
-      "title": "Design and validation of a prehospital stroke scale to predict LVO: RACE scale",
+      "title": "Design and validation of a prehospital stroke scale to predict large arterial occlusion: the rapid arterial occlusion evaluation scale",
       "citation": "Pérez de la Ossa N et al. Stroke. 2014",
-      "pmid": "24335227",
-      "doi": "10.1161/STROKEAHA.113.003580",
+      "pmid": "24281224",
+      "doi": "10.1161/STROKEAHA.113.003071",
       "url": null,
       "year": 2014,
       "line": 100
@@ -7482,7 +7482,7 @@
       "doi": "10.1159/000351671",
       "url": null,
       "year": 2013,
-      "line": 1304
+      "line": 1307
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7494,7 +7494,7 @@
       "doi": "10.1017/s1041610204000390",
       "url": null,
       "year": 2004,
-      "line": 1394
+      "line": 1397
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7506,7 +7506,7 @@
       "doi": "10.1212/01.wnl.0000172958.95282.2a",
       "url": null,
       "year": 2005,
-      "line": 1464
+      "line": 1467
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7518,7 +7518,7 @@
       "doi": "10.1016/0022-3956(82)90033-4",
       "url": null,
       "year": 1982,
-      "line": 1543
+      "line": 1546
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7530,7 +7530,7 @@
       "doi": "10.1016/0006-3223(88)90038-8",
       "url": null,
       "year": 1988,
-      "line": 1622
+      "line": 1625
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7542,7 +7542,7 @@
       "doi": "10.1093/geront/20.6.649",
       "url": null,
       "year": 1980,
-      "line": 1745
+      "line": 1748
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7554,7 +7554,7 @@
       "doi": "10.1016/0165-1781(89)90047-4",
       "url": null,
       "year": 1989,
-      "line": 1826
+      "line": 1829
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7566,7 +7566,7 @@
       "doi": "10.1016/s1389-9457(03)00006-6",
       "url": null,
       "year": 2003,
-      "line": 1910
+      "line": 1913
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7578,7 +7578,7 @@
       "doi": "10.1007/s11606-016-3703-5",
       "url": null,
       "year": 2016,
-      "line": 1999
+      "line": 2002
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7590,7 +7590,7 @@
       "doi": null,
       "url": null,
       "year": 1989,
-      "line": 2100
+      "line": 2103
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7602,7 +7602,7 @@
       "doi": "10.1111/j.1526-4637.2005.00072.x",
       "url": null,
       "year": 2005,
-      "line": 2210
+      "line": 2213
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7740,7 +7740,7 @@
       "file": "wave4-primary-endo.ts",
       "calcId": "steroid-hyperglycemia",
       "calcName": "Steroid Hyperglycemia Risk / Expected Rise Helper",
-      "title": "Management of Hyperglycemia in Hospitalized Patients / steroid hyperglycemia reviews",
+      "title": "Management of hyperglycaemia and steroid (glucocorticoid) therapy: a guideline from the Joint British Diabetes Societies (JBDS) for Inpatient Care group",
       "citation": "Roberts A et al. / ADA hospital glycemic guidance",
       "pmid": "30152586",
       "doi": "10.1111/dme.13675",
@@ -7818,7 +7818,7 @@
       "doi": "10.1007/s00198-007-0543-5",
       "url": null,
       "year": 2008,
-      "line": 1556
+      "line": 1565
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7830,7 +7830,7 @@
       "doi": null,
       "url": null,
       "year": 1994,
-      "line": 1646
+      "line": 1655
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7842,7 +7842,7 @@
       "doi": null,
       "url": null,
       "year": 2000,
-      "line": 1737
+      "line": 1746
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7854,7 +7854,7 @@
       "doi": "10.1542/peds.2007-2329C",
       "url": null,
       "year": 2007,
-      "line": 1827
+      "line": 1836
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7866,7 +7866,7 @@
       "doi": "10.1186/1471-230X-6-33",
       "url": null,
       "year": 2006,
-      "line": 1911
+      "line": 1920
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7878,7 +7878,7 @@
       "doi": "10.1016/j.dld.2009.08.002",
       "url": null,
       "year": 2010,
-      "line": 1994
+      "line": 2003
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7890,7 +7890,7 @@
       "doi": null,
       "url": "https://nida.nih.gov/nidamed-medical-health-professionals/screening-tools-resources/resource-guide-clinicians",
       "year": 2012,
-      "line": 2098
+      "line": 2107
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7902,7 +7902,7 @@
       "doi": null,
       "url": null,
       "year": 2008,
-      "line": 2186
+      "line": 2195
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7914,7 +7914,7 @@
       "doi": "10.1037//0003-066x.47.9.1102",
       "url": null,
       "year": 1992,
-      "line": 2192
+      "line": 2201
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7926,7 +7926,7 @@
       "doi": "10.1161/HYP.0000000000000065",
       "url": null,
       "year": 2018,
-      "line": 2300
+      "line": 2309
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7938,7 +7938,7 @@
       "doi": null,
       "url": null,
       "year": 1999,
-      "line": 2392
+      "line": 2401
     },
     {
       "file": "wave5-cardio.ts",
@@ -8016,24 +8016,24 @@
       "file": "wave5-cardio.ts",
       "calcId": "qtc-rautaharju",
       "calcName": "Corrected QT (Rautaharju)",
-      "title": "A simple method for QT correction (Rautaharju et al. formulations in ECG literature)",
-      "citation": "Rautaharju PM et al. various ECG methodology papers; common form QT×(120+HR)/180",
-      "pmid": "15081446",
-      "doi": "10.1016/j.amjcard.2003.12.055",
+      "title": "New age- and sex-specific criteria for QT prolongation based on rate correction formulas that minimize bias at the upper normal limits",
+      "citation": "Rautaharju PM, Mason JW, Akiyama T. Int J Cardiol. 2014",
+      "pmid": "24825030",
+      "doi": "10.1016/j.ijcard.2014.04.133",
       "url": null,
-      "year": 2004,
+      "year": 2014,
       "line": 619
     },
     {
       "file": "wave5-cardio.ts",
       "calcId": "jtc-interval",
       "calcName": "JT / JTc Interval",
-      "title": "The JT interval as a depolarization-independent measure of repolarization",
-      "citation": "Zhou SH / Rautaharju et al. related ECG methodology; clinical reviews on JTc in wide QRS",
+      "title": "Assessment of prolonged QT and JT intervals in ventricular conduction defects",
+      "citation": "Rautaharju PM et al. Am J Cardiol. 2004",
       "pmid": "15081446",
       "doi": "10.1016/j.amjcard.2003.12.055",
       "url": null,
-      "year": 1992,
+      "year": 2004,
       "line": 726
     },
     {
@@ -9696,7 +9696,7 @@
       "file": "wave5-tox-psych.ts",
       "calcId": "carbamazepine-level",
       "calcName": "Carbamazepine Level Interpretation",
-      "title": "Carbamazepine poisoning",
+      "title": "Management of carbamazepine overdose",
       "citation": "Spiller HA. Toxicol Rev. / standard toxicology references",
       "pmid": "11753195",
       "doi": "10.1097/00006565-200112000-00015",
@@ -9708,7 +9708,7 @@
       "file": "wave5-tox-psych.ts",
       "calcId": "theophylline-level",
       "calcName": "Theophylline Level Interpretation",
-      "title": "Theophylline toxicity",
+      "title": "Life-threatening events after theophylline overdose: a 10-year prospective analysis",
       "citation": "Shannon M. / EXTRIP theophylline recommendations",
       "pmid": "10326941",
       "doi": "10.1001/archinte.159.9.989",
@@ -9816,7 +9816,7 @@
       "file": "wave5-tox-psych.ts",
       "calcId": "needle-stick-pep",
       "calcName": "Occupational Needle-Stick PEP Helper",
-      "title": "Updated USPHS guidelines for occupational HIV PEP",
+      "title": "Updated US Public Health Service guidelines for the management of occupational exposures to human immunodeficiency virus and recommendations for postexposure prophylaxis",
       "citation": "Kuhar DT et al. Infect Control Hosp Epidemiol. 2013",
       "pmid": "23917901",
       "doi": "10.1086/672271",
@@ -9948,7 +9948,7 @@
       "file": "wave6-clinical-residual.ts",
       "calcId": "expanded-baveno",
       "calcName": "Expanded Baveno VI Criteria",
-      "title": "Expanded Baveno VI criteria",
+      "title": "Expanding the Baveno VI criteria for the screening of varices in patients with compensated advanced chronic liver disease",
       "citation": "Augustin S et al. Hepatology. 2017 / subsequent validations",
       "pmid": "28696510",
       "doi": "10.1002/hep.29363",
@@ -10194,7 +10194,7 @@
       "doi": "10.1056/NEJMra1003327",
       "url": null,
       "year": 2014,
-      "line": 1844
+      "line": 1849
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10206,7 +10206,7 @@
       "doi": "10.1056/NEJMra1003327",
       "url": null,
       "year": 2014,
-      "line": 1989
+      "line": 1994
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10218,7 +10218,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK482316/",
       "year": 2012,
-      "line": 2111
+      "line": 2126
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10230,7 +10230,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK482268/",
       "year": 2012,
-      "line": 2212
+      "line": 2227
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10242,7 +10242,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK539701/",
       "year": 2012,
-      "line": 2305
+      "line": 2320
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10254,7 +10254,7 @@
       "doi": "10.21037/med-21-7",
       "url": null,
       "year": 2017,
-      "line": 2386
+      "line": 2401
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10266,7 +10266,7 @@
       "doi": "10.1056/NEJMcp0808891",
       "url": null,
       "year": 2009,
-      "line": 2479
+      "line": 2494
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10278,7 +10278,7 @@
       "doi": "10.1111/bcp.12763",
       "url": null,
       "year": 2016,
-      "line": 2575
+      "line": 2590
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10416,7 +10416,7 @@
       "file": "wave6-em-peds.ts",
       "calcId": "umbilical-catheter-depth",
       "calcName": "Umbilical Catheter Depth (UVC / UAC)",
-      "title": "Determination of umbilical catheter placement",
+      "title": "Rapid estimation of insertional length of umbilical catheters in newborns",
       "citation": "Shukla H, Ferrara A. Am J Dis Child. 1986",
       "pmid": "3728405",
       "doi": "10.1001/archpedi.1986.02140220068034",
@@ -10530,7 +10530,7 @@
       "doi": "10.1016/s0140-6736(02)08778-0",
       "url": null,
       "year": 2002,
-      "line": 2030
+      "line": 2046
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10542,7 +10542,7 @@
       "doi": "10.1097/AOG.0000000000003891",
       "url": null,
       "year": 2020,
-      "line": 2037
+      "line": 2053
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10554,7 +10554,7 @@
       "doi": "10.2337/dc09-1848",
       "url": null,
       "year": 2010,
-      "line": 2133
+      "line": 2149
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10566,7 +10566,7 @@
       "doi": "10.1056/NEJMoa0707943",
       "url": null,
       "year": 2008,
-      "line": 2140
+      "line": 2156
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10578,7 +10578,7 @@
       "doi": "10.1161/CIR.0000000000000902",
       "url": null,
       "year": 2020,
-      "line": 2238
+      "line": 2254
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10590,31 +10590,31 @@
       "doi": null,
       "url": null,
       "year": 2023,
-      "line": 2346
+      "line": 2362
     },
     {
       "file": "wave6-em-peds.ts",
       "calcId": "direct-bili",
       "calcName": "Conjugated (Direct) Hyperbilirubinemia Red Flags",
-      "title": "Evaluating the infant with cholestasis",
+      "title": "Guideline for the Evaluation of Cholestatic Jaundice in Infants: Joint Recommendations of the North American Society for Pediatric Gastroenterology, Hepatology, and Nutrition and the European Society for Pediatric Gastroenterology, Hepatology, and Nutrition",
       "citation": "Fawaz R et al. NASPGHAN/ESPGHAN guideline. J Pediatr Gastroenterol Nutr. 2017",
       "pmid": "27429428",
       "doi": "10.1097/MPG.0000000000001334",
       "url": null,
       "year": 2017,
-      "line": 2455
+      "line": 2471
     },
     {
       "file": "wave6-em-peds.ts",
       "calcId": "g6pd",
       "calcName": "G6PD Deficiency Risk Checklist",
-      "title": "G6PD deficiency",
+      "title": "Glucose-6-phosphate dehydrogenase deficiency",
       "citation": "Cappellini MD, Fiorelli G. Lancet. 2008",
       "pmid": "18177777",
       "doi": "10.1016/S0140-6736(08)60073-2",
       "url": null,
       "year": 2008,
-      "line": 2545
+      "line": 2561
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10626,7 +10626,7 @@
       "doi": "10.1016/s0022-3476(87)80285-8",
       "url": null,
       "year": 1987,
-      "line": 2651
+      "line": 2667
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10638,7 +10638,7 @@
       "doi": "10.1136/ard.2009.116657",
       "url": null,
       "year": 2010,
-      "line": 2741
+      "line": 2757
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10800,7 +10800,7 @@
       "file": "wave6-formulas-misc.ts",
       "calcId": "glucose-rate-mgkgmin",
       "calcName": "Glucose Infusion Rate (GIR)",
-      "title": "Neonatal hypoglycemia and glucose infusion rate teaching",
+      "title": "Postnatal glucose homeostasis in late-preterm and term infants",
       "citation": "AAP / neonatology textbooks on GIR targeting",
       "pmid": "21357346",
       "doi": "10.1542/peds.2010-3851",
@@ -11160,7 +11160,7 @@
       "file": "wave6-heme-onc.ts",
       "calcId": "hypercalcemia-of-malignancy",
       "calcName": "Hypercalcemia of Malignancy Helper",
-      "title": "Hypercalcemia of malignancy: an update on pathogenesis and management",
+      "title": "Hypercalcemia and cancer: Differential diagnosis and treatment",
       "citation": "Zagzag J et al. / classic HCM management reviews; ASCO educational materials",
       "pmid": "30240520",
       "doi": "10.3322/caac.21489",
@@ -11592,7 +11592,7 @@
       "file": "wave6-scores-residual.ts",
       "calcId": "quickdash",
       "calcName": "QuickDASH",
-      "title": "Development of the QuickDASH",
+      "title": "Development of the QuickDASH: comparison of three item-reduction approaches",
       "citation": "Beaton DE et al. J Bone Joint Surg Am. 2005",
       "pmid": "15866967",
       "doi": "10.2106/JBJS.D.02060",

@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 // Ensure shared helper imports stay type-checked even when unused in this wave.
 const _sharedHelpers = { bool, yesNo };
@@ -848,7 +848,8 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       const una = num(values.una, 40);
       const uk = num(values.uk, 20);
       const uurea = num(values.uurea, 200);
-      const uglu = num(values.uglu, 0);
+      const ugluMissing = isMissingValue(values.uglu, true);
+      const uglu = ugluMissing ? 0 : num(values.uglu, 0);
       const calc = round(2 * (una + uk) + uurea / 2.8 + uglu / 18, 1);
       const gap = round(uosm - calc, 1);
       let label = 'Indeterminate UOG';
@@ -863,6 +864,10 @@ export const wave2GeneralLabCalcs: Calculator[] = [
         interpretation = 'Low UOG suggests reduced renal NH₄⁺ excretion (RTA, hypoaldosteronism, advanced CKD). Confirm clinically.';
         riskLevel = 'moderate';
       }
+      if (ugluMissing) {
+        interpretation +=
+          ' Urine glucose was not entered and was excluded from the calculated Uosm — with significant glucosuria the gap is overestimated until glucose osmoles are accounted for.';
+      }
       return {
         score: gap,
         unit: 'mOsm/kg',
@@ -870,7 +875,10 @@ export const wave2GeneralLabCalcs: Calculator[] = [
         interpretation,
         riskLevel,
         details: [
-          { label: 'Calculated Uosm', value: `${calc} mOsm/kg` },
+          {
+            label: 'Calculated Uosm',
+            value: ugluMissing ? `${calc} mOsm/kg — urine glucose not entered, excluded from calculated Uosm` : `${calc} mOsm/kg`,
+          },
           { label: 'Measured Uosm', value: `${uosm} mOsm/kg` },
         ],
       };

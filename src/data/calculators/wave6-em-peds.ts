@@ -1033,7 +1033,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
       validation: 'Common NICU starting formulas; individual anatomy varies — imaging confirmation required.',
       references: [
         {
-          title: 'Determination of umbilical catheter placement',
+          title: 'Rapid estimation of insertional length of umbilical catheters in newborns',
           citation: 'Shukla H, Ferrara A. Am J Dis Child. 1986',
           year: 1986,
           pmid: '3728405',
@@ -1987,6 +1987,12 @@ export const wave6EmPedsCalcs: Calculator[] = [
       const load = num(values.load, 6);
       let maint = num(values.maintenance, 2);
       if (bool(values.renalImpair)) maint = Math.min(maint, 1);
+      const wtMissing = isMissingValue(values.weightKg, true);
+      const wt = wtMissing ? null : num(values.weightKg, 80);
+      const weightContext =
+        wt != null
+          ? `Load ≈${round((load * 1000) / wt, 0)} mg/kg, maintenance ≈${round((maint * 1000) / wt, 0)} mg/kg/h at ${wt} kg`
+          : 'Weight not entered, so no mg/kg context shown';
       if (regimen === 'im') {
         return {
           score: load,
@@ -1994,6 +2000,15 @@ export const wave6EmPedsCalcs: Calculator[] = [
           label: 'Pritchard-style IM overview (educational)',
           interpretation: `Classic Pritchard: 4 g IV + 10 g IM load (5 g each buttock), then 5 g IM every 4 h in alternate buttocks if reflexes present and RR adequate. Prefer IV regimens in high-resource settings. Indication: ${ind}. Monitor for toxicity (loss of reflexes, respiratory depression); calcium gluconate at bedside.`,
           riskLevel: ind === 'eclampsia' ? 'critical' : 'high',
+          details: [
+            {
+              label: 'Weight-based context',
+              value:
+                wt != null
+                  ? `Total 14 g load ≈${round(14000 / wt, 0)} mg/kg; 5 g IM q4h ≈${round(1250 / wt, 0)} mg/kg/h at ${wt} kg`
+                  : 'Weight not entered, so no mg/kg context shown',
+            },
+          ],
           recommendations: [
             'Airway protection during seizure',
             'BP control with agents safe in pregnancy',
@@ -2013,6 +2028,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
           { label: 'Load', value: `${load} g IV` },
           { label: 'Maintenance', value: `${maint} g/h` },
           { label: 'Renal adjustment', value: bool(values.renalImpair) ? 'Yes' : 'No' },
+          { label: 'Weight-based context', value: weightContext },
         ],
         recommendations: [
           'Seizure: protect airway, left lateral, Mag as first-line',
@@ -2453,7 +2469,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
       validation: 'Aligned with AAP jaundice and NASPGHAN cholestasis guidance principles; educational checklist.',
       references: [
         {
-          title: 'Evaluating the infant with cholestasis',
+          title: 'Guideline for the Evaluation of Cholestatic Jaundice in Infants: Joint Recommendations of the North American Society for Pediatric Gastroenterology, Hepatology, and Nutrition and the European Society for Pediatric Gastroenterology, Hepatology, and Nutrition',
           citation: 'Fawaz R et al. NASPGHAN/ESPGHAN guideline. J Pediatr Gastroenterol Nutr. 2017',
           year: 2017,
           pmid: '27429428',
@@ -2543,7 +2559,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
       validation: 'WHO classification and pediatric hematology practice; not a substitute for laboratory diagnosis.',
       references: [
         {
-          title: 'G6PD deficiency',
+          title: 'Glucose-6-phosphate dehydrogenase deficiency',
           citation: 'Cappellini MD, Fiorelli G. Lancet. 2008',
           year: 2008,
           pmid: '18177777',

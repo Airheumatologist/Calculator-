@@ -156,7 +156,7 @@ export const extraCalcs: Calculator[] = [
     evidence: {
       summary: 'FeverPAIN used in UK primary care trials for sore throat antibiotic use.',
       validation: 'NICE-referenced scoring system.',
-      references: [{ title: 'PRISM trial / FeverPAIN', citation: 'Little P et al. BMJ. 2013', year: 2013, pmid: '24114306',
+      references: [{ title: 'Clinical score and rapid antigen detection test to guide antibiotic use for sore throats: randomised controlled trial of PRISM (primary care streptococcal management)', citation: 'Little P et al. BMJ. 2013', year: 2013, pmid: '24114306',
           doi: '10.1136/bmj.f5806', }],
     },
     nextSteps: [

@@ -104,7 +104,7 @@ describe('oracle table integrity', () => {
  * THIS CONSTANT MUST ONLY EVER BE RAISED. Never lower it to make a red build
  * green: removing oracle coverage is the regression the gate is here to catch.
  */
-const ORACLE_COVERAGE_FLOOR = 79;
+const ORACLE_COVERAGE_FLOOR = 80;
 
 describe('oracle coverage', () => {
   it('reports oracle coverage honestly and does not regress', () => {

@@ -1497,8 +1497,8 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Stage by max of fold-change, absolute rise, RRT, pediatric eGFR criterion',
       validation: 'KDIGO 2012 criteria used in pediatric nephrology; UOP criteria are parallel (not fully entered here).',
       references: [
-        { title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury', citation: 'Kidney Int Suppl. 2012 (KDIGO AKI)', year: 2012, pmid: '23732715',
-          doi: '10.7326/0003-4819-158-11-201306040-00007', url: 'https://kdigo.org/guidelines/acute-kidney-injury/' },
+        { title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury', citation: 'Kidney Int Suppl. 2012 (KDIGO AKI)', year: 2012,
+          url: 'https://kdigo.org/guidelines/acute-kidney-injury/' },
       ],
     },
     nextSteps: [
@@ -1586,8 +1586,8 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'UOP (mL/kg/h) = volume ÷ weight ÷ hours',
       validation: 'Standard pediatric critical care / KDIGO urine criteria.',
       references: [
-        { title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury', citation: 'Kidney Int Suppl. 2012 (KDIGO AKI)', year: 2012, pmid: '23732715',
-          doi: '10.7326/0003-4819-158-11-201306040-00007', url: 'https://kdigo.org/guidelines/acute-kidney-injury/' },
+        { title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury', citation: 'Kidney Int Suppl. 2012 (KDIGO AKI)', year: 2012,
+          url: 'https://kdigo.org/guidelines/acute-kidney-injury/' },
       ],
     },
     nextSteps: [
@@ -1763,7 +1763,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Educational sum of WOB+RR+feeding+O₂+behavior; apnea or high O₂ → severe',
       validation: 'Aligned with common clinical pathways; not a single validated numeric score.',
       references: [
-        { title: 'AAP Clinical Practice Guideline: Bronchiolitis', citation: 'Ralston SL et al. Pediatrics. 2014', year: 2014, pmid: '25349312',
+        { title: 'Clinical practice guideline: the diagnosis, management, and prevention of bronchiolitis', citation: 'Ralston SL et al. Pediatrics. 2014', year: 2014, pmid: '25349312',
           doi: '10.1542/peds.2014-2742', },
       ],
     },

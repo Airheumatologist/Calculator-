@@ -189,7 +189,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       validation: 'Rough conversion from osmole contribution; inaccurate if other alcohols, ketoacids, or lab error present.',
       references: [
         {
-          title: 'Toxic alcohol calculations',
+          title: 'Toxic Alcohols',
           citation: 'Kraut JA, Mullins ME. N Engl J Med. 2018',
           year: 2018,
           pmid: '29342392',

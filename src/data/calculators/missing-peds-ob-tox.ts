@@ -55,7 +55,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
       formula: 'SI = HR ÷ SBP; compare to age-specific threshold',
       validation: 'Validated in pediatric trauma registries; improves identification of severely injured children vs adult SI >0.9 alone.',
       references: [
-        { title: 'Shock index pediatric adjusted (SIPA) in blunt trauma', citation: 'Acker SN et al. J Pediatr Surg. 2015', year: 2015, pmid: '25638631',
+        { title: 'Pediatric specific shock index accurately identifies severely injured children', citation: 'Acker SN et al. J Pediatr Surg. 2015', year: 2015, pmid: '25638631',
           doi: '10.1016/j.jpedsurg.2014.08.009', },
       ],
     },
@@ -314,7 +314,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
       formula: 'P = 1/(1+e^(−x)); x ≈ f(age, BMI, ethnicity, prior VD/VBAC, recurring indication, induction)',
       validation: 'Original nomogram widely validated; use institutional / NICHD tools for formal counseling when available.',
       references: [
-        { title: 'Development of a nomogram for prediction of VBAC', citation: 'Grobman WA et al. Obstet Gynecol. 2007', year: 2007, pmid: '17400840',
+        { title: 'Development of a nomogram for prediction of vaginal birth after cesarean delivery', citation: 'Grobman WA et al. Obstet Gynecol. 2007', year: 2007, pmid: '17400840',
           doi: '10.1097/01.AOG.0000259312.36053.02', },
       ],
     },
@@ -508,7 +508,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
       summary: 'Tennessee criteria often use LDH ≥600, AST ≥70 (or ≥2× ULN), platelets ≤100k. Mississippi classifies by platelet nadir.',
       validation: 'Clinical diagnosis; smear, haptoglobin, and trends aid hemolysis confirmation.',
       references: [
-        { title: 'HELLP syndrome', citation: 'Sibai BM. Obstet Gynecol. / Tennessee & Mississippi classifications', year: 2004, pmid: '15519429',
+        { title: 'Diagnosis and management of hemolysis, elevated liver enzymes, and low platelets syndrome', citation: 'Sibai BM. Obstet Gynecol. / Tennessee & Mississippi classifications', year: 2004, pmid: '15519429',
           doi: '10.1016/j.clp.2004.06.008', },
       ],
     },

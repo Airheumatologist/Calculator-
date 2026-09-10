@@ -196,11 +196,11 @@ export const wave3GiHepCalcs: Calculator[] = [
       validation: 'Developed for UK liver allocation; predicts waitlist mortality. Policy thresholds can change — educational use.',
       references: [
         {
-          title: 'Development of the UKELD score',
-          citation: 'Barber K et al. / UK transplant selection literature; Neuberger J et al. Gut related guidance',
-          year: 2008,
-          pmid: '34085606',
-          doi: '10.6002/ect.2020.0513',
+          title: 'Elective liver transplant list mortality: development of a United Kingdom end-stage liver disease score',
+          citation: 'Barber K et al. Transplantation. 2011',
+          year: 2011,
+          pmid: '21775931',
+          doi: '10.1097/TP.0b013e318225db4d',
         },
       ],
     },
@@ -276,7 +276,7 @@ export const wave3GiHepCalcs: Calculator[] = [
       validation: 'CANONIC study / EASL-CLIF consortium; predicts 28-day mortality in ACLF better than MELD in many cohorts.',
       references: [
         {
-          title: 'Development and validation of a prognostic score to predict mortality in patients with ACLF',
+          title: 'Development and validation of a prognostic score to predict mortality in patients with acute-on-chronic liver failure',
           citation: 'Jalan R et al. J Hepatol. 2014',
           year: 2014,
           pmid: '24950482',
@@ -514,9 +514,9 @@ export const wave3GiHepCalcs: Calculator[] = [
       validation: 'Pattern recognition aid with limited specificity; always integrate full clinical picture.',
       references: [
         {
-          title: 'De Ritis ratio (AST/ALT) historical and modern ALD context',
-          citation: 'De Ritis F et al. Clin Chim Acta (historical); modern ALD reviews',
-          year: 1957, pmid: '13814987' },
+          title: 'Anicteric virus hepatitis in a closed environment as shown by serum transaminase activity',
+          citation: 'De Ritis F, Coltorti M, Giusti G. Bull World Health Organ. 1959',
+          year: 1959, pmid: '13814987' },
       ],
     },
     nextSteps: [
@@ -835,11 +835,11 @@ export const wave3GiHepCalcs: Calculator[] = [
       validation: 'Italian multicenter derivation/validation; useful complement to Rockall/AIMS65. Point weights here are educational.',
       references: [
         {
-          title: 'Predictive factors of mortality from nonvariceal upper gastrointestinal hemorrhage: PNED study',
+          title: 'Predicting mortality in non-variceal upper gastrointestinal bleeders: validation of the Italian PNED Score and Prospective Comparison with the Rockall Score',
           citation: 'Marmo R et al. Am J Gastroenterol. 2010',
           year: 2010,
-          pmid: '19497799',
-          doi: '10.1016/j.dld.2009.04.019',
+          pmid: '20051943',
+          doi: '10.1038/ajg.2009.687',
         },
       ],
     },

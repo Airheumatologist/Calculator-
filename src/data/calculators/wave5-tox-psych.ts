@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave5ToxPsychCalcs: Calculator[] = [
   // ─── 1. Acetaminophen acute toxic dose ─────────────────────────────────────
@@ -596,7 +596,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       validation: 'Educational; free levels rarely used; ER formulations delay peak.',
       references: [
         {
-          title: 'Carbamazepine poisoning',
+          title: 'Management of carbamazepine overdose',
           citation: 'Spiller HA. Toxicol Rev. / standard toxicology references',
           year: 2001,
           pmid: '11753195',
@@ -702,7 +702,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       validation: 'Narrow therapeutic index drug; interactions (CYP1A2) common.',
       references: [
         {
-          title: 'Theophylline toxicity',
+          title: 'Life-threatening events after theophylline overdose: a 10-year prospective analysis',
           citation: 'Shannon M. / EXTRIP theophylline recommendations',
           year: 1999,
           pmid: '10326941',
@@ -1787,7 +1787,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       validation: 'Educational synthesis of USPHS occupational PEP guidance.',
       references: [
         {
-          title: 'Updated USPHS guidelines for occupational HIV PEP',
+          title: 'Updated US Public Health Service guidelines for the management of occupational exposures to human immunodeficiency virus and recommendations for postexposure prophylaxis',
           citation: 'Kuhar DT et al. Infect Control Hosp Epidemiol. 2013',
           year: 2013,
           pmid: '23917901',
@@ -2319,8 +2319,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
           { label: 'Social', value: `${social}/10` },
           { label: 'Family', value: `${family}/10` },
           { label: 'Domains ≥5 (often “marked”)', value: markedDomains.length ? markedDomains.join(', ') : 'None' },
-          { label: 'Days lost', value: String(num(values.days_lost, 0)) },
-          { label: 'Days underproductive', value: String(num(values.days_unprod, 0)) },
+          { label: 'Days lost', value: isMissingValue(values.days_lost, true) ? 'Not entered' : String(num(values.days_lost, 0)) },
+          { label: 'Days underproductive', value: isMissingValue(values.days_unprod, true) ? 'Not entered' : String(num(values.days_unprod, 0)) },
         ],
       };
     },
@@ -2571,8 +2571,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         unit: '/40',
         ...r,
         details: [
-          { label: 'Obsession subtotal', value: String(num(values.obsessions, 0)) },
-          { label: 'Compulsion subtotal', value: String(num(values.compulsions, 0)) },
+          { label: 'Obsession subtotal', value: isMissingValue(values.obsessions, true) ? 'Not entered' : String(num(values.obsessions, 0)) },
+          { label: 'Compulsion subtotal', value: isMissingValue(values.compulsions, true) ? 'Not entered' : String(num(values.compulsions, 0)) },
           { label: 'Common bands', value: '0–7 subclinical; 8–15 mild; 16–23 mod; 24–31 severe; 32–40 extreme' },
           { label: 'Response (trials)', value: 'Often ≥35% reduction; remission often ≤12–14' },
         ],

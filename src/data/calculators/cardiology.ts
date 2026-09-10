@@ -215,7 +215,7 @@ export const cardiologyCalcs: Calculator[] = [
       references: [
         { title: 'Chest pain in the emergency room: value of the HEART score', citation: 'Six AJ et al. Neth Heart J. 2008', year: 2008, pmid: '18665203',
           doi: '10.1007/BF03086144', },
-        { title: 'A prospective validation of the HEART score', citation: 'Backus BE et al. Int J Cardiol. 2013', year: 2013, pmid: '23465250',
+        { title: 'A prospective validation of the HEART score for chest pain patients at the emergency department', citation: 'Backus BE et al. Int J Cardiol. 2013', year: 2013, pmid: '23465250',
           doi: '10.1016/j.ijcard.2013.01.255', },
       ],
     },
@@ -314,7 +314,7 @@ export const cardiologyCalcs: Calculator[] = [
       summary: 'TIMI STEMI score from InTIME II trial predicts 30-day mortality using clinical variables available at presentation.',
       formula: 'Age + DM/HTN/angina + SBP + HR + Killip + weight + anterior/LBBB + time-to-tx',
       validation: 'Validated externally in multiple STEMI registries.',
-      references: [{ title: 'TIMI risk score for STEMI', citation: 'Morrow DA et al. Circulation. 2000', year: 2000, pmid: '11044416',
+      references: [{ title: 'TIMI risk score for ST-elevation myocardial infarction: A convenient, bedside, clinical score for risk assessment at presentation: An intravenous nPA for treatment of infarcting myocardium early II trial substudy', citation: 'Morrow DA et al. Circulation. 2000', year: 2000, pmid: '11044416',
           doi: '10.1161/01.cir.102.17.2031', }],
     },
     nextSteps: [
@@ -631,7 +631,7 @@ export const cardiologyCalcs: Calculator[] = [
       summary: 'PERC (Pulmonary Embolism Rule-out Criteria) identifies patients in whom PE is so unlikely that testing is not warranted.',
       formula: '8 criteria; ALL must be negative to rule out PE in low-risk patients',
       validation: 'Validated in large multicenter ED cohorts (Kline et al.).',
-      references: [{ title: 'Prospective multicenter evaluation of the PERC rule', citation: 'Kline JA et al. J Thromb Haemost. 2008', year: 2008, pmid: '18318689',
+      references: [{ title: 'Prospective multicenter evaluation of the pulmonary embolism rule-out criteria', citation: 'Kline JA et al. J Thromb Haemost. 2008', year: 2008, pmid: '18318689',
           doi: '10.1111/j.1538-7836.2008.02944.x', }],
     },
     nextSteps: [
@@ -682,7 +682,7 @@ export const cardiologyCalcs: Calculator[] = [
     evidence: {
       summary: 'Revised Geneva score provides objective PE pretest probability without clinician gestalt item.',
       validation: 'Validated prospectively against Wells criteria.',
-      references: [{ title: 'Prediction of PE in the emergency department: the revised Geneva score', citation: 'Le Gal G et al. Ann Intern Med. 2006', year: 2006, pmid: '16461960',
+      references: [{ title: 'Prediction of pulmonary embolism in the emergency department: the revised Geneva score', citation: 'Le Gal G et al. Ann Intern Med. 2006', year: 2006, pmid: '16461960',
           doi: '10.7326/0003-4819-144-3-200602070-00004', }],
     },
     nextSteps: [
@@ -809,7 +809,7 @@ export const cardiologyCalcs: Calculator[] = [
     evidence: {
       summary: 'sPESI dichotomizes PE patients into low (0) vs high (≥1) risk using 6 variables.',
       validation: 'Validated against full PESI with similar prognostic accuracy.',
-      references: [{ title: 'Simplified PESI', citation: 'Jiménez D et al. Arch Intern Med. 2010', year: 2010, pmid: '20696966',
+      references: [{ title: 'Simplification of the pulmonary embolism severity index for prognostication in patients with acute symptomatic pulmonary embolism', citation: 'Jiménez D et al. Arch Intern Med. 2010', year: 2010, pmid: '20696966',
           doi: '10.1001/archinternmed.2010.199', }],
     },
     nextSteps: [

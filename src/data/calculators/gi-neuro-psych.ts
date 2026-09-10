@@ -366,7 +366,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
     evidence: {
       summary: 'BISAP: BUN, mental status, SIRS, age, pleural effusion.',
       validation: 'Validated for mortality prediction comparable to more complex scores.',
-      references: [{ title: 'A prospective evaluation of BISAP', citation: 'Wu BU et al. Gut. 2008', year: 2008, pmid: '18519429',
+      references: [{ title: 'The early prediction of mortality in acute pancreatitis: a large population-based study', citation: 'Wu BU et al. Gut. 2008', year: 2008, pmid: '18519429',
           doi: '10.1136/gut.2008.152702', }],
     },
     nextSteps: [{ condition: 'BISAP ≥3', actions: ['Monitor organ failure', 'ICU consideration', 'Supportive care optimization'] }],

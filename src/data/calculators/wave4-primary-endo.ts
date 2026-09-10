@@ -1004,7 +1004,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       validation: 'Qualitative clinical helper; potency conversions approximate.',
       references: [
         {
-          title: 'Management of Hyperglycemia in Hospitalized Patients / steroid hyperglycemia reviews',
+          title: 'Management of hyperglycaemia and steroid (glucocorticoid) therapy: a guideline from the Joint British Diabetes Societies (JBDS) for Inpatient Care group',
           citation: 'Roberts A et al. / ADA hospital glycemic guidance',
           year: 2018,
           pmid: '30152586',
@@ -1480,6 +1480,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
     ],
     calculate(values) {
       const age = num(values.age, 65);
+      const bmiMissing = isMissingValue(values.bmi, true);
       let score = 0;
       const factors: string[] = [];
       if (age >= 65) {
@@ -1494,7 +1495,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         score += 1;
         factors.push('Female sex');
       }
-      if (num(values.bmi, 24) < 20) {
+      if (!bmiMissing && num(values.bmi, 24) < 20) {
         score += 1;
         factors.push('BMI <20');
       }
@@ -1535,11 +1536,19 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
           interpretation: `Educational factor count ${score}. Substantial clinical risk burden — prioritize DXA, fall assessment, and treatment evaluation. Use official FRAX website/tool for 10-year probabilities.`,
         },
       ]);
+      const interpretation = bmiMissing
+        ? `${r.interpretation} BMI was not entered — the low-BMI (<20 kg/m²) risk flag was not assessed.`
+        : r.interpretation;
       return {
         score,
         unit: 'factors',
-        ...r,
-        details: [{ label: 'Factors flagged', value: factors.length ? factors.join('; ') : 'None' }],
+        label: r.label,
+        interpretation,
+        riskLevel: r.riskLevel,
+        details: [
+          { label: 'Factors flagged', value: factors.length ? factors.join('; ') : 'None' },
+          ...(bmiMissing ? [{ label: 'BMI <20 flag', value: 'Not assessed — BMI not entered' }] : []),
+        ],
         recommendations: [
           'Use official FRAX at sheffield.ac.uk/FRAX for probabilities',
           'DXA when indicated by age/guidelines/risks',

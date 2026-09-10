@@ -163,6 +163,79 @@ export const pulmonaryInfectiousOracles: OracleCase[] = [
     source: 'Ortiz RM et al. J Pediatr 1987;111(3):384-389 — oxygenation index definition.',
   },
 
+  // ---------------------------------------------------------------- Shunt estimate
+  {
+    calcId: 'shunt-estimate',
+    description:
+      'Healthy ABG, content method. Hand arithmetic: PAO₂ = 0.21×(760−47) − 40/0.8 = 149.73 − 50 = 99.73. ' +
+      'Severinghaus sat(P) = 1/(23400/(P³+150P)+1): sat(95) = 1/(23400/871625+1) = 0.97385; ' +
+      'sat(99.73) = 1/(23400/1006881+1) = 0.97729; sat(50) = 1/(23400/132500+1) = 0.84990. ' +
+      'Hb 15 → capacity 20.1 mL O₂/dL. CaO₂ = 20.1×0.97385 + 0.003×95 = 19.574 + 0.285 = 19.859; ' +
+      'CcO₂ = 20.1×0.97729 + 0.003×99.73 = 19.644 + 0.299 = 19.943; ' +
+      'CvO₂ = 20.1×0.84990 + 0.003×50 = 17.083 + 0.150 = 17.233. ' +
+      'Qs/Qt = (19.943 − 19.859)/(19.943 − 17.233) = 0.083/2.710 = 3.1% — normal physiologic shunt range (~2–5%).',
+    inputs: { pao2: 95, fio2: 0.21, paco2: 40, hb: 15, pvO2: 50, mode: 'content' },
+    expect: { score: 3.1, tolerance: 0.1, riskLevel: 'low' },
+    source:
+      'Severinghaus JW. J Appl Physiol 1979;46(3):599-602 — O₂ dissociation equation SaO₂ = 1/(23400/(PO₂³+150·PO₂)+1); ' +
+      'shunt equation Qs/Qt = (CcO₂−CaO₂)/(CcO₂−CvO₂) (West JB, Respiratory Physiology); alveolar gas equation PAO₂ = FiO₂(P_atm−47) − PaCO₂/0.8.',
+  },
+  {
+    calcId: 'shunt-estimate',
+    description:
+      'Moderate ARDS (P/F 200), content method. Hand arithmetic: PAO₂ = 0.6×713 − 40/0.8 = 427.8 − 50 = 377.8. ' +
+      'Severinghaus: sat(120) = 1/(23400/1746000+1) = 0.98677; sat(377.8) = 1/(23400/53981137+1) = 0.99957; ' +
+      'sat(40) = 1/(23400/70000+1) = 0.74946. Hb 12 → capacity 16.08. ' +
+      'CaO₂ = 16.08×0.98677 + 0.36 = 15.867 + 0.360 = 16.227; ' +
+      'CcO₂ = 16.08×0.99957 + 0.003×377.8 = 16.073 + 1.133 = 17.206; ' +
+      'CvO₂ = 16.08×0.74946 + 0.12 = 12.051 + 0.120 = 12.171. ' +
+      'Qs/Qt = (17.206 − 16.227)/(17.206 − 12.171) = 0.979/5.035 = 19.4%.',
+    inputs: { pao2: 120, fio2: 0.6, paco2: 40, hb: 12, pvO2: 40, mode: 'content' },
+    expect: { score: 19.4, tolerance: 0.1, riskLevel: 'moderate' },
+    source:
+      'Severinghaus JW. J Appl Physiol 1979;46(3):599-602 (saturation equation); shunt equation per West JB; ' +
+      'Berlin ARDS definition (P/F ≤300 with bilateral infiltrates — ARDS Definition Task Force, JAMA 2012;307(23):2526-2533) frames the clinical scenario.',
+  },
+  {
+    calcId: 'shunt-estimate',
+    description:
+      'Severe shunt, content method. Hand arithmetic: PAO₂ = 1.0×713 − 40/0.8 = 663. ' +
+      'Severinghaus: sat(60) = 1/(23400/225000+1) = 1/1.104 = 0.90580; sat(663) = 1/(23400/291533697+1) = 0.99992; ' +
+      'sat(50) = 0.84990. Hb 12 → capacity 16.08. ' +
+      'CaO₂ = 16.08×0.90580 + 0.18 = 14.565 + 0.180 = 14.745; ' +
+      'CcO₂ = 16.08×0.99992 + 0.003×663 = 16.079 + 1.989 = 18.068; ' +
+      'CvO₂ = 16.08×0.84990 + 0.15 = 13.666 + 0.150 = 13.816. ' +
+      'Qs/Qt = (18.068 − 14.745)/(18.068 − 13.816) = 3.322/4.251 = 78.2% — very high shunt physiology.',
+    inputs: { pao2: 60, fio2: 1.0, paco2: 40, hb: 12, pvO2: 50, mode: 'content' },
+    expect: { score: 78.2, tolerance: 0.1, riskLevel: 'critical' },
+    source:
+      'Severinghaus JW. J Appl Physiol 1979;46(3):599-602 (saturation equation); shunt equation per West JB, Respiratory Physiology.',
+  },
+  {
+    calcId: 'shunt-estimate',
+    description:
+      'P/F iso-shunt method with PvO₂ blank (must not refuse). Hand arithmetic: P/F = PaO₂/FiO₂ = 120/0.6 = 200, ' +
+      'which lands in the 200–299 teaching band → 15% (lookup: ≥400→5, ≥300→10, ≥200→15, ≥150→20, ≥100→25, else 35). ' +
+      '15 ≤ 20 → moderate band.',
+    inputs: { pao2: 120, fio2: 0.6, paco2: 40, hb: 12, pvO2: null, mode: 'pf' },
+    expect: { score: 15, riskLevel: 'moderate' },
+    source:
+      'Classic iso-shunt teaching bands (Pontoppidan H et al. N Engl J Med 1972;287(15):740-745, respiratory care in acute respiratory failure) ' +
+      'as implemented in the calculator’s P/F lookup; arithmetic shown in description.',
+  },
+  {
+    calcId: 'shunt-estimate',
+    description:
+      'Content method with mixed venous PO₂ blank must refuse rather than assume: at these defaults Qs/Qt spans ~31–78% ' +
+      'as PvO₂ ranges 25–50 mmHg, so an assumed value is not an honest estimate. Expect the house refusal (score “—”, info) ' +
+      'naming the missing input and pointing at the P/F method.',
+    inputs: { pao2: 60, fio2: 1, paco2: 40, hb: 12, pvO2: null, mode: 'content' },
+    expect: { score: '—', riskLevel: 'info', labelMatches: /P\/F|PaO₂\/FiO₂/ },
+    source:
+      'Audit Task 2a house rule for mode-gated refusals (same pattern as new-ballard, wave3-peds-ob.ts): refuse and name the missing input ' +
+      'instead of substituting a plausible default; sensitivity argument per shunt equation (West JB).',
+  },
+
   // ---------------------------------------------------------------- Light's criteria
   {
     calcId: 'lights-criteria',

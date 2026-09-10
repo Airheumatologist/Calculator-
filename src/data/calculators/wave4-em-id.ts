@@ -2024,7 +2024,7 @@ export const wave4EmIdCalcs: Calculator[] = [
           doi: '10.1161/CIR.0000000000000617',
         },
         {
-          title: 'ESC guidelines for NSTE-ACS / hs-cTn algorithms',
+          title: '2020 ESC Guidelines for the management of acute coronary syndromes in patients presenting without persistent ST-segment elevation',
           citation: 'Collet JP et al. Eur Heart J. 2021',
           year: 2021,
           pmid: '32860058',
@@ -2217,7 +2217,7 @@ export const wave4EmIdCalcs: Calculator[] = [
           doi: '10.1161/CIR.0000000000000617',
         },
         {
-          title: 'de Winter ECG pattern',
+          title: 'A new ECG sign of proximal LAD occlusion',
           citation: 'de Winter RJ et al. N Engl J Med. 2008',
           year: 2008,
           pmid: '18987380',

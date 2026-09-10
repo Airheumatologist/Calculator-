@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 const hit6Opts = [
   { label: 'Never (6)', value: 6 },
@@ -183,8 +183,8 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         ...r,
         details: [
           { label: 'Grade bands', value: 'I 0–5 · II 6–10 · III 11–20 · IV ≥21' },
-          { label: 'Headache days (A)', value: String(num(values.freq)) },
-          { label: 'Avg pain (B)', value: String(num(values.pain)) },
+          { label: 'Headache days (A)', value: isMissingValue(values.freq, true) ? 'Not entered' : String(num(values.freq)) },
+          { label: 'Avg pain (B)', value: isMissingValue(values.pain, true) ? 'Not entered' : String(num(values.pain)) },
         ],
       };
     },
@@ -1686,6 +1686,9 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
     ],
     calculate(values) {
       const score = num(values.total, 75);
+      // A blank optional subscale is not a 0 score; mark it unentered.
+      const subscaleOrDash = (raw: number | string | boolean | null | undefined) =>
+        isMissingValue(raw, true) ? '—' : String(num(raw));
       const r = riskFromThresholds(score, [
         {
           max: 58,
@@ -1716,7 +1719,10 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         score,
         ...r,
         details: [
-          { label: 'Positive / Negative / General', value: `${num(values.positive)} / ${num(values.negative)} / ${num(values.general)}` },
+          {
+            label: 'Positive / Negative / General',
+            value: `${subscaleOrDash(values.positive)} / ${subscaleOrDash(values.negative)} / ${subscaleOrDash(values.general)}`,
+          },
           {
             label: 'Note',
             value: 'Bands approximate published CGI-linked PANSS anchors (e.g., Leucht et al.); not rigid cutoffs.',
@@ -2005,7 +2011,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       validation: 'Adapted CAGE for combined alcohol/drug screening in ambulatory settings.',
       references: [
         {
-          title: 'The CAGE questionnaire adapted to include drugs (CAGE-AID)',
+          title: 'Conjoint screening questionnaires for alcohol and other drug abuse: criterion validity in a primary care practice',
           citation: 'Brown RL, Rounds LA. Wisconsin Med J. 1995; Ewing JA CAGE 1984',
           year: 1995, pmid: '7778330' },
       ],
@@ -2114,10 +2120,9 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       validation: 'Developed with WHO; validated for adult ADHD screening in community and clinical samples.',
       references: [
         {
-          title: 'World Health Organization clinical / growth standards resources',
-          citation: 'World Health Organization',
-          year: 2006, pmid: '16416313',
-          doi: '10.1007/s00109-005-0002-8', url: 'https://www.who.int/' },
+          title: 'The World Health Organization Adult ADHD Self-Report Scale (ASRS): a short screening scale for use in the general population',
+          citation: 'Kessler RC et al. Psychol Med. 2005',
+          year: 2005, pmid: '15841682' },
       ],
     },
     nextSteps: [

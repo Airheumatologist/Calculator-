@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave3CardioVascCalcs: Calculator[] = [
   {
@@ -1147,7 +1147,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
       validation: 'Checklist educational tool; individual signs have limited standalone sensitivity/specificity.',
       references: [
         {
-          title: 'ESC guidelines for diagnosis and management of acute PE',
+          title: 'Management of acute pulmonary embolism 2019: what is new in the updated European guidelines?',
           citation: 'Konstantinides SV et al. Eur Heart J. 2020',
           year: 2020,
           pmid: '32458205',
@@ -1564,6 +1564,8 @@ export const wave3CardioVascCalcs: Calculator[] = [
       const hdl = Math.max(num(values.hdl, 50), 1);
       const hscrp = num(values.hscrp, 2);
       const male = String(values.sex) === 'male';
+      const dm = bool(values.dm);
+      const a1cMissing = isMissingValue(values.hba1c, true);
 
       let pts = (age - 45) * (male ? 0.7 : 0.6);
       pts += (sbp - 120) * 0.1;
@@ -1572,7 +1574,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
       pts += Math.log(Math.max(hscrp, 0.1)) * 3;
       pts += bool(values.smoker) ? 5 : 0;
       pts += bool(values.parentMi) ? 4 : 0;
-      if (bool(values.dm)) {
+      if (dm) {
         pts += 4 + Math.max(0, num(values.hba1c, 7) - 7) * 1.5;
       }
       pts += male ? 2 : 0;
@@ -1606,14 +1608,29 @@ export const wave3CardioVascCalcs: Calculator[] = [
         },
       ]);
 
+      const interpretation =
+        dm && a1cMissing
+          ? `${r.interpretation} HbA1c was not entered — 7% was assumed for the diabetes points.`
+          : r.interpretation;
+
       return {
         score: est,
         unit: '% (educational)',
-        ...r,
+        label: r.label,
+        interpretation,
+        riskLevel: r.riskLevel,
         details: [
           { label: 'Note', value: 'Educational simplification — not official Reynolds equation output' },
           { label: 'hsCRP', value: `${hscrp} mg/L` },
           { label: 'Parental MI <60', value: bool(values.parentMi) ? 'Yes' : 'No' },
+          ...(dm
+            ? [
+                {
+                  label: 'HbA1c',
+                  value: a1cMissing ? '7% (assumed — not entered)' : `${num(values.hba1c, 7)}% (entered)`,
+                },
+              ]
+            : []),
         ],
         recommendations:
           est >= 10

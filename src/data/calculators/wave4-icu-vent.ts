@@ -582,7 +582,7 @@ export const wave4IcuVentCalcs: Calculator[] = [
       validation: 'Guideline-endorsed lung-protective ventilation cornerstone.',
       references: [
         {
-          title: 'ARDS Network low tidal volume trial',
+          title: 'Ventilation with lower tidal volumes as compared with traditional tidal volumes for acute lung injury and the acute respiratory distress syndrome',
           citation: 'ARDS Network. N Engl J Med. 2000',
           year: 2000,
           pmid: '10793162',

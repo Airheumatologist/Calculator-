@@ -701,7 +701,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
       formula: 'CI (L/min/m²) = CO (L/min) / BSA (m²)',
       validation: 'Standard hemodynamic definition used in shock and HF literature.',
       references: [
-        { title: 'Hemodynamic patterns in MI (Forrester)', citation: 'Forrester JS et al. N Engl J Med. 1976', year: 1976, pmid: '790194',
+        { title: 'Medical therapy of acute myocardial infarction by application of hemodynamic subsets (second of two parts)', citation: 'Forrester JS et al. N Engl J Med. 1976', year: 1976, pmid: '790194',
           doi: '10.1056/NEJM197612162952505', },
       ],
     },
