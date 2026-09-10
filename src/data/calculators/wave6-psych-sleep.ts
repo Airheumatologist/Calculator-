@@ -1669,153 +1669,198 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 17. SAPS III simplified educational ───────────────────────────────────
   {
     id: 'saps-iii-simp',
-    name: 'SAPS III Simplified (Educational)',
-    shortName: 'SAPS III simp',
+    name: 'SAPS 3',
+    shortName: 'SAPS 3',
     description:
-      'Educational simplified SAPS III-style severity framing from admission circumstances and early physiology — not the full official score.',
+      'SAPS 3 admission score (Moreno/Metnitz 2005) expanded toward official boxes: patient characteristics, admission circumstances, and first-hour physiology, plus the 16-point offset. Predicted hospital mortality uses the published global equation.',
     category: 'critical-care',
-    tags: ['saps-iii', 'icu', 'severity', 'mortality', 'critical care'],
-    whenToUse: 'Teaching ICU severity concepts when full SAPS III data elements are unavailable.',
-    whyUse: 'Highlights patient characteristics, infection, and physiology domains used in SAPS III thinking.',
+    tags: ['saps-iii', 'saps 3', 'icu', 'severity', 'mortality', 'critical care'],
+    whenToUse: 'ICU admission severity using data from 1 hour before to 1 hour after admission.',
+    whyUse: 'Admission-window physiology (unlike APACHE worst-in-24h). Global logistic equation estimates hospital mortality.',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 16, max: 120, defaultValue: 70 }),
       selectInput('los_before', 'Hospital LOS before ICU', [
         { label: '<14 days', value: 0 },
         { label: '14–27 days', value: 6 },
-        { label: '≥28 days', value: 8 },
+        { label: '≥28 days', value: 7 },
       ]),
+      selectInput('location', 'Location before ICU', [
+        { label: 'Operating room', value: 0 },
+        { label: 'Emergency room', value: 5 },
+        { label: 'Other ICU', value: 7 },
+        { label: 'Ward / other', value: 8 },
+      ]),
+      yesNo('vasoactive', 'Vasoactive drugs before ICU', null),
       selectInput('admission', 'ICU admission type', [
         { label: 'Planned / elective', value: 0 },
-        { label: 'Unplanned / emergency', value: 5 },
+        { label: 'Unplanned / emergency', value: 3 },
       ]),
-      yesNo('infection', 'Infection at ICU admission', 5),
-      yesNo('cancer_meta', 'Metastatic cancer', 8),
-      yesNo('heme_cancer', 'Hematologic cancer', 6),
-      yesNo('cirrhosis', 'Cirrhosis', 6),
-      yesNo('heart_fail', 'Chronic heart failure NYHA IV / severe CHF flag', 4),
-      numberInput('gcs', 'GCS', { min: 3, max: 15, defaultValue: 13 }),
+      selectInput('surgical', 'Surgical status', [
+        { label: 'Scheduled surgery', value: 0 },
+        { label: 'No surgery', value: 5 },
+        { label: 'Emergency surgery', value: 6 },
+      ]),
+      selectInput('reason', 'Primary reason for admission', [
+        { label: 'Other', value: 0 },
+        { label: 'Rhythm disturbance (−5)', value: -5 },
+        { label: 'Seizures (−4)', value: -4 },
+        { label: 'Hypovolemic shock (+3)', value: 3 },
+        { label: 'Coma / delirium (+4)', value: 4 },
+        { label: 'Septic/mixed shock (+5)', value: 5 },
+        { label: 'Liver failure (+6)', value: 6 },
+        { label: 'Focal deficit (+7)', value: 7 },
+        { label: 'Severe pancreatitis (+9)', value: 9 },
+        { label: 'Intracranial mass effect (+10)', value: 10 },
+      ]),
+      selectInput('infection', 'Infection at ICU admission', [
+        { label: 'None', value: 0 },
+        { label: 'Nosocomial', value: 4 },
+        { label: 'Respiratory', value: 5 },
+        { label: 'Nosocomial respiratory', value: 9 },
+      ]),
+      yesNo('cancer_meta', 'Metastatic cancer', null),
+      yesNo('heme_cancer', 'Hematologic cancer', null),
+      yesNo('cirrhosis', 'Cirrhosis', null),
+      yesNo('heart_fail', 'Chronic heart failure NYHA IV', null),
+      yesNo('aids', 'AIDS', null),
+      numberInput('gcs', 'Lowest GCS (admission hour)', { min: 3, max: 15, defaultValue: 13 }),
       numberInput('sbp', 'Lowest systolic BP', { unit: 'mmHg', min: 40, max: 250, defaultValue: 100 }),
       numberInput('hr', 'Highest heart rate', { unit: '/min', min: 30, max: 250, defaultValue: 100 }),
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0, max: 40, step: 0.1, defaultValue: 1 }),
-      numberInput('cr', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.2 }),
-      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0, max: 100, step: 0.1, defaultValue: 12 }),
+      numberInput('bili', 'Highest total bilirubin', { unit: 'mg/dL', min: 0, max: 40, step: 0.1, defaultValue: 1 }),
+      numberInput('cr', 'Highest creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.2 }),
+      numberInput('wbc', 'Leukocytes', { unit: '×10³/µL', min: 0, max: 100, step: 0.1, defaultValue: 12 }),
       numberInput('ph', 'Lowest pH', { min: 6.5, max: 7.8, step: 0.01, defaultValue: 7.35 }),
-      yesNo('vent', 'Mechanical ventilation', 5),
+      numberInput('temp', 'Highest temperature', { unit: '°C', min: 30, max: 43, step: 0.1, defaultValue: 37 }),
+      numberInput('plt', 'Lowest platelets', { unit: '×10³/µL', min: 5, max: 800, defaultValue: 200 }),
+      selectInput('ox', 'Oxygenation', [
+        { label: 'PaO₂ ≥60, not ventilated', value: 0 },
+        { label: 'PaO₂ <60, not ventilated', value: 5 },
+        { label: 'Ventilated, PaO₂/FiO₂ ≥100', value: 7 },
+        { label: 'Ventilated, PaO₂/FiO₂ <100', value: 11 },
+      ]),
+      yesNo('vent', 'Mechanical ventilation (informational if oxygenation set)', null),
     ],
     calculate(values) {
-      let pts = num(values.los_before) + num(values.admission);
       const age = num(values.age, 70);
-      if (age >= 80) pts += 15;
-      else if (age >= 75) pts += 13;
-      else if (age >= 70) pts += 11;
-      else if (age >= 60) pts += 8;
-      else if (age >= 40) pts += 5;
+      let agePts = 0;
+      if (age >= 80) agePts = 18;
+      else if (age >= 75) agePts = 15;
+      else if (age >= 70) agePts = 13;
+      else if (age >= 60) agePts = 9;
+      else if (age >= 40) agePts = 5;
 
-      if (bool(values.infection)) pts += 5;
-      if (bool(values.cancer_meta)) pts += 8;
-      if (bool(values.heme_cancer)) pts += 6;
-      if (bool(values.cirrhosis)) pts += 6;
-      if (bool(values.heart_fail)) pts += 4;
+      const comorbid = Math.max(
+        bool(values.cancer_meta) ? 11 : 0,
+        bool(values.heme_cancer) ? 6 : 0,
+        bool(values.heart_fail) ? 6 : 0,
+        bool(values.cirrhosis) ? 8 : 0,
+        bool(values.aids) ? 8 : 0,
+      );
+      const losPts = num(values.los_before, 0);
+      const locPts = num(values.location, 0);
+      const vasoPts = bool(values.vasoactive) ? 3 : 0;
+      const box1 = agePts + comorbid + losPts + locPts + vasoPts;
+
+      const admPts = num(values.admission, 0);
+      const surgPts = num(values.surgical, 0);
+      const reasonPts = num(values.reason, 0);
+      const infPts = num(values.infection, 0);
+      const box2 = admPts + surgPts + reasonPts + infPts;
 
       const gcs = num(values.gcs, 13);
-      if (gcs < 5) pts += 15;
-      else if (gcs < 7) pts += 10;
-      else if (gcs < 11) pts += 7;
-      else if (gcs < 14) pts += 3;
-
+      const gcsPts = gcs <= 4 ? 15 : gcs === 5 ? 10 : gcs === 6 ? 7 : gcs < 13 ? 2 : 0;
       const sbp = num(values.sbp, 100);
-      if (sbp < 40) pts += 11;
-      else if (sbp < 70) pts += 8;
-      else if (sbp < 120) pts += 3;
-
+      const sbpPts = sbp < 40 ? 11 : sbp < 70 ? 8 : sbp < 120 ? 3 : 0;
       const hr = num(values.hr, 100);
-      if (hr >= 160) pts += 5;
-      else if (hr >= 120) pts += 3;
-
+      const hrPts = hr >= 160 ? 7 : hr >= 120 ? 5 : 0;
       const bili = num(values.bili, 1);
-      if (bili >= 6) pts += 5;
-      else if (bili >= 2) pts += 3;
-
+      const biliPts = bili >= 6 ? 5 : bili >= 2 ? 4 : 0;
       const cr = num(values.cr, 1.2);
-      if (cr >= 3.5) pts += 7;
-      else if (cr >= 2) pts += 5;
-      else if (cr >= 1.2) pts += 2;
+      const crPts = cr >= 3.5 ? 8 : cr >= 2 ? 7 : cr >= 1.2 ? 2 : 0;
+      const wbcPts = num(values.wbc, 12) >= 15 ? 2 : 0;
+      const phPts = num(values.ph, 7.35) <= 7.25 ? 3 : 0;
+      const tempPts = num(values.temp, 37) < 35 ? 7 : 0;
+      const plt = num(values.plt, 200);
+      const pltPts = plt < 20 ? 13 : plt < 50 ? 8 : plt < 100 ? 5 : 0;
+      let oxPts = num(values.ox, 0);
+      // Mechanical ventilation flag also shifts oxygenation when the dedicated select is at room-air default
+      if (bool(values.vent) && oxPts === 0) oxPts = 7;
+      const box3 = gcsPts + sbpPts + hrPts + biliPts + crPts + wbcPts + phPts + tempPts + pltPts + oxPts;
 
-      const wbc = num(values.wbc, 12);
-      if (wbc >= 20 || wbc < 1) pts += 3;
-
-      const ph = num(values.ph, 7.35);
-      if (ph < 7.2) pts += 5;
-      else if (ph < 7.25) pts += 3;
-
-      if (bool(values.vent)) pts += 5;
-
-      const r = riskFromThresholds(pts, [
+      const score = 16 + box1 + box2 + box3;
+      const logit = -32.6659 + Math.log(Math.max(0.1, score + 20.5958)) * 7.3068;
+      const mort = round((Math.exp(logit) / (1 + Math.exp(logit))) * 100, 1);
+      const r = riskFromThresholds(mort, [
         {
-          max: 30,
+          max: 10,
           level: 'low',
-          label: 'Lower educational SAPS-III-style band',
-          interpretation: `Simplified SAPS III-style points ≈${pts}. Lower educational band only — not a calibrated hospital mortality probability.`,
+          label: 'Lower predicted hospital mortality',
+          interpretation: `SAPS 3 points ${score}; global-equation mortality ≈ ${mort}%. Educational estimate — official software/custom equations for benchmarking.`,
+        },
+        {
+          max: 25,
+          level: 'moderate',
+          label: 'Moderate predicted mortality',
+          interpretation: `SAPS 3 points ${score}; predicted mortality ≈ ${mort}%.`,
         },
         {
           max: 50,
-          level: 'moderate',
-          label: 'Moderate educational severity',
-          interpretation: `Simplified points ≈${pts}. Moderate severity teaching band — full organ support planning as clinically indicated.`,
-        },
-        {
-          max: 70,
           level: 'high',
-          label: 'High educational severity',
-          interpretation: `Simplified points ≈${pts}. High severity educational estimate — use official SAPS III software/tables for reported mortality.`,
+          label: 'High predicted mortality',
+          interpretation: `SAPS 3 points ${score}; predicted mortality ≈ ${mort}%. High illness burden at ICU admission.`,
         },
         {
-          max: 300,
+          max: 100,
           level: 'critical',
-          label: 'Very high educational severity',
-          interpretation: `Simplified points ≈${pts}. Very high teaching band. Do not equate to official SAPS III predicted mortality % without the published equation.`,
+          label: 'Very high predicted mortality',
+          interpretation: `SAPS 3 points ${score}; predicted mortality ≈ ${mort}%. Do not equate to futility without the clinical context and custom SAPS 3 equations.`,
         },
       ]);
       return {
-        score: pts,
-        unit: 'approx points',
+        score: mort,
+        unit: '% hospital mortality',
         ...r,
         details: [
-          { label: 'Age points component', value: `Age ${age}` },
-          { label: 'Infection / cancer flags', value: `Inf ${bool(values.infection) ? 'Y' : 'N'}; meta ${bool(values.cancer_meta) ? 'Y' : 'N'}` },
+          { label: 'SAPS 3 points', value: `${score} (16 + I ${box1} + II ${box2} + III ${box3})` },
+          { label: 'Age / comorbidity', value: `${agePts} / ${comorbid}` },
           { label: 'GCS / SBP', value: `${gcs} / ${sbp}` },
-          { label: 'Disclaimer', value: 'NOT full official SAPS III' },
         ],
       };
     },
     evidence: {
       summary:
-        'SAPS III estimates hospital mortality from admission data within the first hour of ICU care across patient characteristics, circumstances, and physiology. This calculator is a simplified educational proxy, not the complete SAPS III custom equation.',
-      formula: 'Educational weighted points from SAPS III-like domains',
-      validation: 'Original SAPS III developed on multinational ICU cohort (Metnitz/Moreno); use official calculators operationally.',
+        'SAPS 3 estimates hospital mortality from admission data within the first hour of ICU care. Score = 16 + Box I + Box II + Box III. Global logit = −32.6659 + ln(score+20.5958)×7.3068. This implementation expands the prior educational stub toward official Moreno/Metnitz boxes.',
+      formula: 'Mortality = exp(logit)/(1+exp(logit)); logit = −32.6659 + ln(SAPS3+20.5958)×7.3068',
+      validation: 'Original SAPS 3 developed on a multinational ICU cohort (Metnitz/Moreno 2005). Use official calculators and custom equations operationally.',
       references: [
         {
-          title: 'SAPS 3—From evaluation of the patient to evaluation of the intensive care unit',
+          title: 'SAPS 3—From evaluation of the patient to evaluation of the intensive care unit. Part 2',
           citation: 'Moreno RP et al. Intensive Care Med. 2005;31:1345-1355',
           year: 2005,
           pmid: '16132893',
+          doi: '10.1007/s00134-005-2763-5',
+        },
+        {
+          title: 'SAPS 3—Part 1: Evaluation of the patient',
+          citation: 'Metnitz PG et al. Intensive Care Med. 2005',
+          year: 2005,
+          pmid: '16132892',
           doi: '10.1007/s00134-005-2762-6',
         },
       ],
     },
     nextSteps: [
       {
-        condition: 'Elevated educational score',
-        actions: ['Comprehensive ICU assessment', 'Avoid futility decisions from simplified tools alone', 'Document severity with approved systems if benchmarking'],
+        condition: 'Elevated predicted mortality',
+        actions: ['Comprehensive ICU assessment', 'Avoid futility decisions from a single score', 'Document severity with approved systems if benchmarking'],
       },
     ],
     pearls: [
-      'SAPS III performance depends on case-mix and custom equations.',
-      'Early physiology window differs from APACHE worst-in-24h approach.',
+      'SAPS 3 performance depends on case-mix and custom equations.',
+      'Early physiology window differs from APACHE worst-in-24h and from SAPS II.',
+      'Comorbidities use the single highest-weighted condition (metastatic cancer 11, cirrhosis/AIDS 8, heme cancer/NYHA IV 6).',
     ],
   },
-
-  // ─── 18. NRS-2002 ──────────────────────────────────────────────────────────
   {
     id: 'nrs-2002',
     name: 'NRS-2002 Nutrition Risk Screening',

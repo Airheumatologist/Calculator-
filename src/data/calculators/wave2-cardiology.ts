@@ -1607,109 +1607,149 @@ export const wave2CardiologyCalcs: Calculator[] = [
   },
   {
     id: 'euroscore-ii-simp',
-    name: 'EuroSCORE II (Simplified Educational)',
-    shortName: 'EuroSCORE II≈',
+    name: 'EuroSCORE II',
+    shortName: 'EuroSCORE II',
     description:
-      'SIMPLIFIED educational checklist of major EuroSCORE II risk domains — NOT the official logistic EuroSCORE II model.',
+      'Logistic EuroSCORE II (Nashef 2012) predicted in-hospital mortality after major cardiac surgery. Uses published β coefficients and intercept. Post-infarct VSD uses the original EuroSCORE logistic term (insufficient cases in the II derivation).',
     category: 'cardiology',
-    tags: ['cardiac surgery', 'euroscore', 'perioperative', 'simplified'],
-    whenToUse: 'Teaching major EuroSCORE II risk factors only. Do not use for formal operative risk reporting.',
-    whyUse: 'Highlights key clinical domains that drive cardiac surgical risk while clearly labeled as incomplete.',
+    tags: ['cardiac surgery', 'euroscore', 'perioperative', 'mortality', 'logistic'],
+    whenToUse: 'Adults undergoing major cardiac surgery for in-hospital mortality estimate and consent discussion (alongside STS).',
+    whyUse: 'EuroSCORE II recalibrated the original additive/logistic EuroSCORE on 2010 data. Official reporting should still confirm with euroscore.org / STS.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 70 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 70, helpText: 'Xi = 1 if age ≤60, then +1 per year above 60' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'm' },
         { label: 'Female', value: 'f' },
       ]),
-      selectInput('renal', 'Renal impairment', [
-        { label: 'Normal (CC >85)', value: 0 },
-        { label: 'Moderate (CC 50–85)', value: 1 },
-        { label: 'Severe (CC <50)', value: 2 },
-        { label: 'Dialysis', value: 3 },
-      ]),
-      yesNo('extracardiac', 'Extracardiac arteriopathy', 2),
-      yesNo('poorMobility', 'Poor mobility', 2),
-      yesNo('prevCardiacSx', 'Previous cardiac surgery', 3),
-      yesNo('copd', 'Chronic lung disease', 2),
-      yesNo('endocarditis', 'Active endocarditis', 3),
-      yesNo('critical', 'Critical preoperative state', 4),
-      yesNo('dmInsulin', 'Diabetes on insulin', 2),
+      numberInput('renal', 'Creatinine clearance (Cockcroft–Gault)', {
+        unit: 'mL/min',
+        min: 5,
+        max: 200,
+        defaultValue: 90,
+        helpText: '>85 normal; 51–85 moderate; ≤50 severe (ignored if on dialysis)',
+      }),
+      yesNo('dialysis', 'On dialysis', null),
+      yesNo('extracardiac', 'Extracardiac arteriopathy', null),
+      yesNo('poorMobility', 'Poor mobility (neurologic or musculoskeletal)', null),
+      yesNo('prevCardiacSx', 'Previous cardiac surgery', null),
+      yesNo('copd', 'Chronic lung disease', null),
+      yesNo('endocarditis', 'Active endocarditis', null),
+      yesNo('critical', 'Critical preoperative state', null),
+      yesNo('dmInsulin', 'Diabetes on insulin', null),
       selectInput('nyha', 'NYHA class', [
         { label: 'I', value: 1 },
         { label: 'II', value: 2 },
         { label: 'III', value: 3 },
         { label: 'IV', value: 4 },
       ]),
+      yesNo('ccs4', 'CCS class 4 angina', null),
       selectInput('lvef', 'LV function', [
-        { label: 'Good (EF >50%)', value: 0 },
+        { label: 'Good (EF ≥51%)', value: 0 },
         { label: 'Moderate (EF 31–50%)', value: 1 },
         { label: 'Poor (EF 21–30%)', value: 2 },
         { label: 'Very poor (EF ≤20%)', value: 3 },
       ]),
-      yesNo('recentMi', 'Recent MI (≤90 days)', 2),
+      yesNo('recentMi', 'Recent MI (≤90 days)', null),
+      selectInput('pasp', 'PA systolic pressure', [
+        { label: '<31 mmHg', value: 'n' },
+        { label: '31–54 mmHg', value: 'm' },
+        { label: '≥55 mmHg', value: 's' },
+      ]),
       selectInput('urgency', 'Urgency', [
         { label: 'Elective', value: 0 },
         { label: 'Urgent', value: 1 },
         { label: 'Emergency', value: 2 },
         { label: 'Salvage', value: 3 },
       ]),
-      selectInput('procedure', 'Weight of procedure (simplified)', [
+      selectInput('procedure', 'Weight of procedure', [
         { label: 'Isolated CABG', value: 0 },
         { label: 'Single non-CABG', value: 1 },
         { label: '2 procedures', value: 2 },
-        { label: '3 procedures', value: 3 },
+        { label: '3+ procedures', value: 3 },
       ]),
+      yesNo('thoracicAorta', 'Thoracic aorta surgery', null),
+      yesNo('vsd', 'Post-infarct VSD (original EuroSCORE factor)', null, 'Insufficient cases in EuroSCORE II derivation; original logistic coefficient applied and labelled'),
     ],
     calculate(values) {
       const age = num(values.age, 70);
-      // Crude educational points — NOT official EuroSCORE II coefficients
-      let pts = Math.max(0, age - 60) * 0.5;
-      if (String(values.sex) === 'f') pts += 2;
-      pts += num(values.renal) * 2;
-      pts += bool(values.extracardiac) ? 2 : 0;
-      pts += bool(values.poorMobility) ? 2 : 0;
-      pts += bool(values.prevCardiacSx) ? 3 : 0;
-      pts += bool(values.copd) ? 2 : 0;
-      pts += bool(values.endocarditis) ? 3 : 0;
-      pts += bool(values.critical) ? 4 : 0;
-      pts += bool(values.dmInsulin) ? 2 : 0;
-      pts += Math.max(0, num(values.nyha) - 1);
-      pts += num(values.lvef) * 2;
-      pts += bool(values.recentMi) ? 2 : 0;
-      pts += num(values.urgency) * 2;
-      pts += num(values.procedure) * 2;
-      pts = round(pts, 1);
-
-      const r = riskFromThresholds(pts, [
+      const ageXi = Math.max(1, age - 59); // ≤60 → 1; 61 → 2; …
+      const crcl = num(values.renal, 90);
+      const onDialysis = bool(values.dialysis);
+      let y = -5.324537;
+      y += 0.0285181 * ageXi;
+      if (String(values.sex) === 'f') y += 0.2196434;
+      if (onDialysis) y += 0.6421508;
+      else if (crcl <= 50) y += 0.8592256;
+      else if (crcl <= 85) y += 0.303553;
+      if (bool(values.extracardiac)) y += 0.5360268;
+      if (bool(values.poorMobility)) y += 0.2407181;
+      if (bool(values.prevCardiacSx)) y += 1.118599;
+      if (bool(values.copd)) y += 0.1886564;
+      if (bool(values.endocarditis)) y += 0.6194522;
+      if (bool(values.critical)) y += 1.086517;
+      if (bool(values.dmInsulin)) y += 0.3542749;
+      const nyha = num(values.nyha, 1);
+      if (nyha === 2) y += 0.1070545;
+      else if (nyha === 3) y += 0.2958358;
+      else if (nyha === 4) y += 0.5597929;
+      if (bool(values.ccs4)) y += 0.2226147;
+      const lv = num(values.lvef, 0);
+      if (lv === 1) y += 0.3150652;
+      else if (lv === 2) y += 0.8084096;
+      else if (lv === 3) y += 0.9346919;
+      if (bool(values.recentMi)) y += 0.1528943;
+      const pasp = String(values.pasp ?? 'n');
+      if (pasp === 'm') y += 0.1788899;
+      else if (pasp === 's') y += 0.3491475;
+      const urg = num(values.urgency, 0);
+      if (urg === 1) y += 0.3174673;
+      else if (urg === 2) y += 0.7039121;
+      else if (urg === 3) y += 1.362947;
+      const proc = num(values.procedure, 0);
+      if (proc === 1) y += 0.0062118;
+      else if (proc === 2) y += 0.5521478;
+      else if (proc === 3) y += 0.9724533;
+      if (bool(values.thoracicAorta)) y += 0.6527205;
+      if (bool(values.vsd)) y += 1.462009; // original logistic EuroSCORE VSD term
+      const mort = round((Math.exp(y) / (1 + Math.exp(y))) * 100, 2);
+      const r = riskFromThresholds(mort, [
+        {
+          max: 2,
+          level: 'low',
+          label: 'Lower predicted mortality',
+          interpretation: `EuroSCORE II predicted in-hospital mortality ≈ ${mort}%. Lower-risk band for isolated elective surgery — still document STS when reporting.`,
+        },
         {
           max: 5,
-          level: 'low',
-          label: 'Fewer major adverse factors (educational)',
-          interpretation: `Educational points ${pts}: fewer high-impact EuroSCORE domains flagged. Official EuroSCORE II required for % mortality.`,
-        },
-        {
-          max: 12,
           level: 'moderate',
-          label: 'Several risk domains (educational)',
-          interpretation: `Educational points ${pts}: multiple EuroSCORE II domains present. Expect intermediate official risk — compute full model.`,
+          label: 'Intermediate predicted mortality',
+          interpretation: `EuroSCORE II ≈ ${mort}%. Intermediate operative risk — heart-team discussion as indicated.`,
         },
         {
-          max: 50,
+          max: 10,
           level: 'high',
-          label: 'Many high-impact domains (educational)',
-          interpretation: `Educational points ${pts}: many major risk factors (critical state, redo, poor LV, emergency, renal failure, etc.). Use official EuroSCORE II/STS.`,
+          label: 'High predicted mortality',
+          interpretation: `EuroSCORE II ≈ ${mort}%. High predicted mortality — optimize comorbidities, consider less-invasive alternatives, and use STS in parallel.`,
+        },
+        {
+          max: 100,
+          level: 'critical',
+          label: 'Very high predicted mortality',
+          interpretation: `EuroSCORE II ≈ ${mort}%. Very high predicted mortality (critical state, salvage, combined procedures, dialysis). Confirm with official EuroSCORE II/STS tools.`,
         },
       ]);
-
       return {
-        score: pts,
+        score: mort,
+        unit: '%',
         ...r,
         details: [
-          { label: 'WARNING', value: 'NOT official EuroSCORE II — no calibrated mortality %' },
-          { label: 'Purpose', value: 'Teaching major risk domains only' },
+          { label: 'Linear predictor y', value: String(round(y, 4)) },
+          { label: 'Age Xi', value: String(ageXi) },
+          { label: 'Renal coding', value: onDialysis ? 'Dialysis' : crcl <= 50 ? 'CrCl ≤50' : crcl <= 85 ? 'CrCl 51–85' : 'CrCl >85' },
+          { label: 'VSD term', value: bool(values.vsd) ? 'Original EuroSCORE logistic β 1.462 applied' : 'Not applied' },
         ],
         recommendations: [
-          'Calculate official EuroSCORE II at official tools for consent/risk reporting',
+          'Confirm with official EuroSCORE II at euroscore.org for consent/risk reporting',
           'Also compute STS score where applicable',
           'Heart team discussion for elevated risk',
         ],
@@ -1717,9 +1757,9 @@ export const wave2CardiologyCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'EuroSCORE II is a logistic model with many categorical and continuous predictors. This app provides only a simplified educational factor tally without official coefficients.',
-      formula: 'Educational weighted count of major domains (not logistic EuroSCORE II)',
-      validation: 'Official EuroSCORE II validated in European cardiac surgery; this simplification is not validated for mortality prediction.',
+        'EuroSCORE II logistic model: predicted mortality = exp(y)/(1+exp(y)), y = −5.324537 + Σ βi Xi. Age Xi = 1 if ≤60, then +1 per year. Coefficients from Nashef et al. Table 6 (NYHA, CCS4, IDDM, female, arteriopathy, COPD, poor mobility, redo, dialysis / CrCl bands, endocarditis, critical state, LV function, recent MI, PA pressure, urgency, procedure weight, thoracic aorta). Post-infarct VSD uses the original logistic EuroSCORE coefficient (insufficient II cases).',
+      formula: 'p = e^y / (1+e^y); y = −5.324537 + Σ published βi Xi',
+      validation: 'Derived on 16 828 and validated on 5553 patients (2010 cohort). Discrimination AUC ≈0.81. Recalibration may be needed in contemporary series.',
       references: [
         {
           title: 'EuroSCORE II',
@@ -1731,11 +1771,13 @@ export const wave2CardiologyCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Any operative planning', actions: ['Use official EuroSCORE II calculator', 'Document STS risk', 'Heart team as needed'] },
+      { condition: 'Any operative planning', actions: ['Confirm official EuroSCORE II', 'Document STS risk', 'Heart team as needed'] },
+      { condition: 'Predicted mortality ≥5–8%', actions: ['Optimize treatable risks', 'Consider PCI/TAVI/hybrid alternatives where appropriate'] },
     ],
     pearls: [
-      'This is intentionally NOT the full EuroSCORE II model.',
-      'Critical preoperative state, salvage urgency, and combined procedures dominate risk.',
+      'yesNo flags have no point badges — this is a logistic % model, not an additive points score.',
+      'Age coding is Xi = 1 at age ≤60, not zero.',
+      'Post-infarct VSD was dropped from EuroSCORE II for rarity; the original logistic coefficient is shown only if selected.',
     ],
   },
   {

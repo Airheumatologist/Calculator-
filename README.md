@@ -1,6 +1,6 @@
 # MedCalc Live
 
-MDCalc-style clinical calculator web application with **900+ medical calculators**, **live scores** as you interact with inputs, plus **evidence** and **next steps** for every tool.
+MDCalc-style clinical calculator web application with **1000+ medical calculators**, **live scores** as you interact with inputs, plus **evidence** and **next steps** for every tool.
 
 ```
   __  __          _  ____      _         _     _
@@ -18,7 +18,7 @@ MDCalc-style clinical calculator web application with **900+ medical calculators
 
 | Feature | Description |
 |--------|-------------|
-| **900+ calculators** | Cardiology, critical care, pulmonary, nephrology, GI, neurology, psychiatry, EM, pediatrics, OB, hematology, ID, toxicology, endocrinology, oncology, rheumatology, dermatology, surgery, urology, ENT, ophthalmology, geriatrics, general |
+| **1000+ calculators** | Cardiology, critical care, pulmonary, nephrology, GI, neurology, psychiatry, EM, pediatrics, OB, hematology, ID, toxicology, endocrinology, oncology, rheumatology, dermatology, surgery, urology, ENT, ophthalmology, geriatrics, general |
 | **Live scoring** | Results update immediately as you click selectors or change numbers — no submit button |
 | **Evidence panel** | Summary, formula, validation notes, and literature references with **PMID / DOI / URL** links |
 | **Next steps** | Condition-based clinical actions (MDCalc-style guidance) |
@@ -231,10 +231,10 @@ Calculator
      └───────────┴─────────┴────────┴──────────┴─────────┘
      + missing-emergency | cardio-pulm | gi-liver
      + missing-neuro-psych | heme-id-nephro | peds-ob-tox
-     + wave2-* … wave6-* (30 modules)
+     + wave2-* … wave7-* (36 modules)
                          │
                          ▼
-              calculators: Calculator[]   (918 tools)
+              calculators: Calculator[]   (1003 tools)
                          │
          ┌───────────────┼────────────────┐
          ▼               ▼                ▼

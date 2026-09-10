@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
+import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave3CardioVascCalcs: Calculator[] = [
   {
@@ -1406,109 +1406,160 @@ export const wave3CardioVascCalcs: Calculator[] = [
   },
   {
     id: 'score2-europe',
-    name: 'SCORE2 (Simplified Educational)',
+    name: 'SCORE2 (European 10-year CVD risk)',
     shortName: 'SCORE2',
     description:
-      'Simplified educational SCORE2-style 10-year fatal + nonfatal CVD risk bands using age, sex, smoking, SBP, and non-HDL cholesterol.',
+      'Official ESC SCORE2 10-year fatal + nonfatal CVD risk for adults 40–69 without diabetes or established CVD, with sex-specific coefficients and recalibration to four European risk regions.',
     category: 'cardiology',
-    tags: ['score2', 'prevention', 'europe', 'ascvd', 'risk'],
-    whenToUse: 'Adults 40–69 without prior ASCVD for educational European primary-prevention risk discussion.',
-    whyUse: 'Mirrors SCORE2 inputs; full chart/algorithm needed for precise regional percentages.',
+    tags: ['score2', 'prevention', 'europe', 'ascvd', 'cvd risk'],
+    whenToUse:
+      'Apparently healthy adults aged 40–69 years without diabetes, established ASCVD, or severe CKD, for 10-year fatal and nonfatal CVD risk (ESC 2021 prevention).',
+    whyUse:
+      'SCORE2 replaced SCORE with nonfatal events, HDL, competing risk, and region-specific calibration used in ESC prevention guidelines.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 40, max: 69, defaultValue: 55 }),
+      numberInput('age', 'Age', { unit: 'years', min: 40, max: 69, defaultValue: 50 }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
       ]),
-      yesNo('smoker', 'Current smoker', 0),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 220, defaultValue: 140 }),
-      numberInput('nonhdl', 'Non-HDL cholesterol', {
+      yesNo('smoker', 'Current smoker', null),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, defaultValue: 140 }),
+      numberInput('totalChol', 'Total cholesterol', {
         unit: 'mmol/L',
-        min: 1,
-        max: 10,
+        min: 2,
+        max: 12,
         step: 0.1,
-        defaultValue: 4,
-        helpText: 'Total cholesterol − HDL; if in mg/dL divide by ~38.7',
+        defaultValue: 5.5,
+        helpText: 'If in mg/dL, divide by 38.67.',
       }),
-      selectInput('region', 'European risk region (SCORE2 charts)', [
-        { label: 'Low risk region', value: 'low' },
-        { label: 'Moderate risk region', value: 'mod' },
-        { label: 'High risk region', value: 'high' },
-        { label: 'Very high risk region', value: 'vhigh' },
+      numberInput('hdl', 'HDL cholesterol', {
+        unit: 'mmol/L',
+        min: 0.5,
+        max: 3.5,
+        step: 0.1,
+        defaultValue: 1.3,
+        helpText: 'If in mg/dL, divide by 38.67.',
+      }),
+      selectInput('region', 'European risk region', [
+        { label: 'Low-risk region (e.g. France, Spain, UK, NL)', value: 'low' },
+        { label: 'Moderate-risk region (e.g. Germany, Italy)', value: 'mod' },
+        { label: 'High-risk region (e.g. Poland, Hungary)', value: 'high' },
+        { label: 'Very high-risk region (e.g. Russia, Ukraine)', value: 'vhigh' },
       ]),
     ],
     calculate(values) {
-      const age = num(values.age, 55);
+      const age = num(values.age, 50);
+      const male = str(values.sex) === 'male';
+      const smoker = bool(values.smoker) ? 1 : 0;
       const sbp = num(values.sbp, 140);
-      const nonhdl = num(values.nonhdl, 4);
-      const male = String(values.sex) === 'male';
-      const smoker = bool(values.smoker);
-      const region = String(values.region || 'mod');
-
-      // Educational logit-like score (not official SCORE2 coefficients)
-      let pts = (age - 40) * (male ? 0.55 : 0.5);
-      pts += (sbp - 120) * 0.08;
-      pts += (nonhdl - 3) * 2.2;
-      pts += smoker ? (male ? 6 : 5) : 0;
-      pts += male ? 3 : 0;
-      const regionBoost = region === 'low' ? 0 : region === 'mod' ? 2 : region === 'high' ? 5 : 8;
-      pts += regionBoost;
-      pts = round(Math.max(0, pts), 1);
-
-      // Map to educational % bands (very approximate)
-      let est = Math.min(40, Math.max(1, round(pts * 0.55, 0)));
-      if (region === 'vhigh') est = Math.min(45, est + 4);
-
-      const r = riskFromThresholds(est, [
-        {
-          max: 2,
-          level: 'low',
-          label: 'Lower risk band (<2.5% educational)',
-          interpretation: `Educational 10-year CVD estimate ~${est}%. Generally lower risk band for age — lifestyle focus; confirm with official SCORE2 charts for region.`,
-        },
-        {
-          max: 7,
-          level: 'moderate',
-          label: 'Intermediate risk band',
-          interpretation: `Educational estimate ~${est}% 10-year CVD. Intermediate — risk factor treatment per guidelines; official SCORE2 recommended.`,
-        },
-        {
-          max: 14,
-          level: 'high',
-          label: 'High risk band',
-          interpretation: `Educational estimate ~${est}%. High-risk territory — intensive lifestyle + likely lipid/BP therapy; use official SCORE2.`,
-        },
-        {
-          max: 100,
-          level: 'critical',
-          label: 'Very high risk band',
-          interpretation: `Educational estimate ~${est}%. Very high predicted risk — aggressive multifactorial prevention; official SCORE2/SCORE2-OP if age outside range.`,
-        },
-      ]);
-
+      const tchol = num(values.totalChol, 5.5);
+      const hdl = num(values.hdl, 1.3);
+      const regionRaw = str(values.region, 'low');
+      const region = regionRaw === 'mod' || regionRaw === 'high' || regionRaw === 'vhigh' ? regionRaw : 'low';
+      const cage = (age - 60) / 5;
+      const csbp = (sbp - 120) / 20;
+      const ctchol = tchol - 6;
+      const chdl = (hdl - 1.3) / 0.5;
+      const lp = male
+        ? 0.3742 * cage +
+          0.6012 * smoker +
+          0.2777 * csbp +
+          0.1458 * ctchol +
+          -0.2698 * chdl +
+          -0.0755 * smoker * cage +
+          -0.0255 * csbp * cage +
+          -0.0281 * ctchol * cage +
+          0.0426 * chdl * cage
+        : 0.4648 * cage +
+          0.7744 * smoker +
+          0.3131 * csbp +
+          0.1002 * ctchol +
+          -0.2606 * chdl +
+          -0.1088 * smoker * cage +
+          -0.0277 * csbp * cage +
+          -0.0226 * ctchol * cage +
+          0.0613 * chdl * cage;
+      const s0 = male ? 0.9605 : 0.9776;
+      const uncal = 1 - Math.pow(s0, Math.exp(Math.min(20, Math.max(-20, lp))));
+      const scales: Record<string, { m1: number; m2: number; f1: number; f2: number }> = {
+        low: { m1: -0.5699, m2: 0.7476, f1: -0.738, f2: 0.7019 },
+        mod: { m1: -0.1565, m2: 0.8009, f1: -0.3143, f2: 0.7701 },
+        high: { m1: 0.3207, m2: 0.936, f1: 0.571, f2: 0.9369 },
+        vhigh: { m1: 0.5836, m2: 0.8294, f1: 0.9412, f2: 0.8329 },
+      };
+      const sc = scales[region] ?? scales.low;
+      const u = Math.min(0.9999, Math.max(1e-8, uncal));
+      const inner = Math.log(-Math.log(1 - u));
+      const x = Math.min(20, Math.max(-20, (male ? sc.m1 : sc.f1) + (male ? sc.m2 : sc.f2) * inner));
+      const cal = 1 - Math.exp(-Math.exp(x));
+      const pct = round(100 * Math.min(0.95, Math.max(0, cal)), 1);
+      const young = age < 50;
+      const r = young
+        ? riskFromThresholds(pct, [
+            {
+              max: 2.49,
+              level: 'low',
+              label: 'Lower risk (<2.5% at age <50)',
+              interpretation: `SCORE2 10-year fatal+nonfatal CVD risk ${pct}% (age <50 band). Lifestyle focus; confirm with official ESC HeartScore/SCORE2.`,
+            },
+            {
+              max: 7.49,
+              level: 'high',
+              label: 'High risk (2.5–<7.5% at age <50)',
+              interpretation: `SCORE2 ${pct}%. High-risk band for age <50. Discuss BP, lipids, and smoking; confirm on official SCORE2.`,
+            },
+            {
+              max: 100,
+              level: 'critical',
+              label: 'Very high risk (≥7.5% at age <50)',
+              interpretation: `SCORE2 ${pct}%. Very high predicted risk for age <50. Intensive prevention after official SCORE2 confirmation.`,
+            },
+          ])
+        : riskFromThresholds(pct, [
+            {
+              max: 4.99,
+              level: 'low',
+              label: 'Lower risk (<5% at age 50–69)',
+              interpretation: `SCORE2 10-year fatal+nonfatal CVD risk ${pct}%. Lower-risk band for age 50–69. Lifestyle; confirm with official SCORE2.`,
+            },
+            {
+              max: 9.99,
+              level: 'high',
+              label: 'High risk (5–<10% at age 50–69)',
+              interpretation: `SCORE2 ${pct}%. High-risk band for age 50–69. Statin/BP discussion after official SCORE2 confirmation.`,
+            },
+            {
+              max: 100,
+              level: 'critical',
+              label: 'Very high risk (≥10% at age 50–69)',
+              interpretation: `SCORE2 ${pct}%. Very high predicted 10-year CVD risk. Aggressive multifactorial prevention; official SCORE2 for decisions.`,
+            },
+          ]);
       return {
-        score: est,
-        unit: '% (educational)',
+        score: pct,
+        unit: '% / 10y',
         ...r,
         details: [
-          { label: 'Note', value: 'Not the official ESC SCORE2 calculator' },
-          { label: 'Region selected', value: region },
-          { label: 'Internal points', value: String(pts) },
+          { label: 'Region', value: region },
+          { label: 'Uncalibrated (derivation) risk', value: `${round(100 * uncal, 1)}%` },
+          { label: 'Calibrated 10-year CVD', value: `${pct}%` },
         ],
         recommendations:
-          est >= 7.5
-            ? ['Official SCORE2 chart confirmation', 'Statin discussion', 'BP and smoking intervention', 'Diabetes screening']
-            : ['Lifestyle optimization', 'Recalculate with official SCORE2', 'Reassess when risk factors change'],
+          pct >= (young ? 2.5 : 5)
+            ? ['Confirm with official ESC SCORE2 / HeartScore', 'Statin and BP-target discussion', 'Smoking cessation if current']
+            : ['Lifestyle optimization', 'Reassess when risk factors change', 'Official SCORE2 for documentation'],
       };
     },
     evidence: {
       summary:
-        'SCORE2 estimates 10-year risk of fatal and nonfatal CVD in European populations aged 40–69 without prior CVD, calibrated by risk region.',
-      formula: 'Educational combination of age, sex, smoking, SBP, non-HDL, region (not official coefficients)',
-      validation: 'Official SCORE2 published by ESC; this version is teaching-only.',
+        'SCORE2 estimates 10-year fatal and nonfatal CVD (MI, stroke, CV death) in European populations aged 40–69 without prior CVD or diabetes, using sex-specific competing-risk models recalibrated to four risk regions.',
+      formula:
+        'cage=(age−60)/5, csbp=(SBP−120)/20, ctchol=(TC−6), chdl=(HDL−1.3)/0.5. Men logHR: age 0.3742, smoking 0.6012, SBP 0.2777, TC 0.1458, HDL −0.2698, smoke×age −0.0755, SBP×age −0.0255, TC×age −0.0281, HDL×age 0.0426. Women: 0.4648, 0.7744, 0.3131, 0.1002, −0.2606, −0.1088, −0.0277, −0.0226, 0.0613. Uncalibrated = 1 − S0^exp(LP) with S0 0.9605 (men) / 0.9776 (women). Calibrated = 1 − exp(−exp(scale1 + scale2 · ln(−ln(1−uncal)))).',
+      validation:
+        'Derived in 45 cohorts (677 684 people); recalibrated to WHO-region CVD mortality. Paper example: 50-year-old male smoker, SBP 140, TC 5.5, HDL 1.3 → ~5.9% low-risk region and ~14.0% very-high-risk region. Confirm with HeartScore for care decisions.',
       references: [
         {
-          title: 'SCORE2 risk prediction algorithms',
+          title: 'SCORE2 risk prediction algorithms: new models to estimate 10-year risk of cardiovascular disease in Europe',
           citation: 'SCORE2 working group and ESC Cardiovascular Risk Collaboration. Eur Heart J. 2021',
           year: 2021,
           pmid: '34120177',
@@ -1517,11 +1568,13 @@ export const wave3CardioVascCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Intermediate or higher', actions: ['Use official SCORE2 tool', 'Shared decision on statins', 'Treat BP to target'] },
+      { condition: 'High or very high band', actions: ['Official SCORE2 confirmation', 'Shared decision on statin', 'Treat BP to target', 'Smoking cessation'] },
+      { condition: 'Lower band', actions: ['Lifestyle', 'Repeat SCORE2 when risk factors change'] },
     ],
     pearls: [
-      'Diabetes, CKD, and familial hypercholesterolemia need separate high-risk pathways.',
-      'Use SCORE2-OP for older persons (70+).',
+      'SCORE2 is a risk estimate, not a diagnosis. Confirm with the official ESC HeartScore/SCORE2 tool before treatment decisions.',
+      'Not for diabetes (use SCORE2-Diabetes), age ≥70 (use SCORE2-OP), or established ASCVD (use SMART2).',
+      'ESC 2021 bands: age <50 <2.5 / 2.5–<7.5 / ≥7.5%; age 50–69 <5 / 5–<10 / ≥10%.',
     ],
   },
   {

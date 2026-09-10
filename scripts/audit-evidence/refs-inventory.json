@@ -1,7 +1,7 @@
 {
   "schema": "medcalc-refs-inventory/1",
   "generatedBy": "scripts/audit-evidence.mjs",
-  "generatedAt": "2026-09-10T13:56:05.979Z",
+  "generatedAt": "2026-09-10T23:54:37.184Z",
   "sourceDir": "src/data/calculators",
   "sourceFiles": [
     "cardiology.ts",
@@ -45,25 +45,31 @@
     "wave6-formulas-misc.ts",
     "wave6-heme-onc.ts",
     "wave6-psych-sleep.ts",
-    "wave6-scores-residual.ts"
+    "wave6-scores-residual.ts",
+    "wave7-bedside.ts",
+    "wave7-fillins.ts",
+    "wave7-highuse.ts",
+    "wave7-prevention.ts",
+    "wave7-rheum-activity.ts",
+    "wave7-rheum-class.ts"
   ],
-  "sourceHash": "a33cb8b7f1a886d6df619593d2c851a716edb82565d32669e01c8694787f9421",
+  "sourceHash": "c4f0585a02e4f255d171e35c7fa530649e1591f90a8b7d905a14c0b7b94aa979",
   "summary": {
-    "files": 42,
-    "calculatorsWithRefs": 918,
-    "refs": 982,
-    "withPmid": 838,
-    "uniquePmids": 725,
-    "withDoi": 762,
-    "uniqueDois": 662,
-    "withUrl": 153,
-    "anyLink": 982,
+    "files": 48,
+    "calculatorsWithRefs": 1003,
+    "refs": 1091,
+    "withPmid": 947,
+    "uniquePmids": 822,
+    "withDoi": 865,
+    "uniqueDois": 754,
+    "withUrl": 154,
+    "anyLink": 1091,
     "noLink": 0,
-    "pmidNoDoi": 79,
+    "pmidNoDoi": 85,
     "urlOnly": 141,
     "noPmid": 144,
-    "pctPmid": 85.3,
-    "pctDoi": 77.6,
+    "pctPmid": 86.8,
+    "pctDoi": 79.3,
     "pctAnyLink": 100,
     "noLinkSample": []
   },
@@ -1259,26 +1265,26 @@
     {
       "file": "missing-cardio-pulm.ts",
       "calcId": "prevent-cvd",
-      "calcName": "Framingham-Style 10-Year Hard CHD Risk (Educational)",
-      "title": "Prediction of coronary heart disease using risk factor categories (Framingham)",
-      "citation": "Wilson PW et al. Circulation. 1998",
-      "pmid": "9603539",
-      "doi": "10.1161/01.cir.97.18.1837",
+      "calcName": "AHA PREVENT (10-year and 30-year CVD / ASCVD / HF)",
+      "title": "Development and Validation of the American Heart Association PREVENT Equations",
+      "citation": "Khan SS et al. Circulation. 2024",
+      "pmid": "37947085",
+      "doi": "10.1161/CIRCULATIONAHA.123.067626",
       "url": null,
-      "year": 1998,
-      "line": 1316
+      "year": 2024,
+      "line": 1413
     },
     {
       "file": "missing-cardio-pulm.ts",
       "calcId": "prevent-cvd",
-      "calcName": "Framingham-Style 10-Year Hard CHD Risk (Educational)",
-      "title": "Novel Prediction Equations for Absolute Risk Assessment of Total Cardiovascular Disease Incorporating Cardiovascular-Kidney-Metabolic Health: A Scientific Statement From the American Heart Association",
+      "calcName": "AHA PREVENT (10-year and 30-year CVD / ASCVD / HF)",
+      "title": "Novel Prediction Equations for Absolute Risk Assessment of Total CVD Incorporating CKM Health: AHA Scientific Statement",
       "citation": "Khan SS et al. Circulation. 2023",
       "pmid": "37947094",
       "doi": "10.1161/CIR.0000000000001191",
       "url": null,
       "year": 2023,
-      "line": 1318
+      "line": 1420
     },
     {
       "file": "missing-emergency.ts",
@@ -1776,13 +1782,13 @@
       "file": "missing-heme-id-nephro.ts",
       "calcId": "improve-bleed",
       "calcName": "IMPROVE Bleeding Risk Score",
-      "title": "Factors at admission associated with bleeding risk in medical patients",
+      "title": "Factors at admission associated with bleeding risk in medical patients: findings from the IMPROVE investigators",
       "citation": "Decousus H et al. Chest. 2011",
-      "pmid": "20453069",
+      "pmid": "21239736",
       "doi": "10.1378/chest.09-3081",
       "url": null,
       "year": 2011,
-      "line": 665
+      "line": 673
     },
     {
       "file": "missing-heme-id-nephro.ts",
@@ -1794,7 +1800,7 @@
       "doi": "10.1016/s0196-0644(05)82292-9",
       "url": null,
       "year": 1990,
-      "line": 744
+      "line": 764
     },
     {
       "file": "missing-heme-id-nephro.ts",
@@ -1806,7 +1812,7 @@
       "doi": "10.1056/NEJM200005253422107",
       "url": null,
       "year": 2000,
-      "line": 816
+      "line": 836
     },
     {
       "file": "missing-heme-id-nephro.ts",
@@ -1818,7 +1824,7 @@
       "doi": null,
       "url": null,
       "year": 1986,
-      "line": 905
+      "line": 925
     },
     {
       "file": "missing-heme-id-nephro.ts",
@@ -1830,7 +1836,7 @@
       "doi": "10.1097/MNH.0b013e328349b8f9",
       "url": null,
       "year": 2011,
-      "line": 906
+      "line": 926
     },
     {
       "file": "missing-heme-id-nephro.ts",
@@ -1842,7 +1848,7 @@
       "doi": "10.1681/ASN.V1071616",
       "url": null,
       "year": 1999,
-      "line": 973
+      "line": 993
     },
     {
       "file": "missing-heme-id-nephro.ts",
@@ -1854,7 +1860,7 @@
       "doi": "10.1001/jama.2016.0287",
       "url": null,
       "year": 2016,
-      "line": 1048
+      "line": 1068
     },
     {
       "file": "missing-heme-id-nephro.ts",
@@ -1866,7 +1872,7 @@
       "doi": "10.1590/1518-8345.1733.2912",
       "url": null,
       "year": 2005,
-      "line": 1125
+      "line": 1145
     },
     {
       "file": "missing-heme-id-nephro.ts",
@@ -1878,7 +1884,7 @@
       "doi": "10.1016/j.ahj.2005.04.017",
       "url": null,
       "year": 2006,
-      "line": 1201
+      "line": 1221
     },
     {
       "file": "missing-heme-id-nephro.ts",
@@ -1890,7 +1896,7 @@
       "doi": "10.1093/eurheartj/ehv476",
       "url": null,
       "year": 2015,
-      "line": 1267
+      "line": 1287
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -2879,14 +2885,14 @@
     {
       "file": "wave2-cardiology.ts",
       "calcId": "euroscore-ii-simp",
-      "calcName": "EuroSCORE II (Simplified Educational)",
+      "calcName": "EuroSCORE II",
       "title": "EuroSCORE II",
       "citation": "Nashef SA et al. Eur J Cardiothorac Surg. 2012",
       "pmid": "22378855",
       "doi": "10.1093/ejcts/ezs043",
       "url": null,
       "year": 2012,
-      "line": 1724
+      "line": 1764
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2898,7 +2904,7 @@
       "doi": "10.1016/j.jacc.2004.06.068",
       "url": null,
       "year": 2004,
-      "line": 1827
+      "line": 1869
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2910,7 +2916,7 @@
       "doi": "10.1056/NEJM197612162952505",
       "url": null,
       "year": 1976,
-      "line": 1912
+      "line": 1954
     },
     {
       "file": "wave2-general-lab.ts",
@@ -4139,14 +4145,14 @@
     {
       "file": "wave2-pulm-id.ts",
       "calcId": "saps-ii-simp",
-      "calcName": "SAPS II (Simplified Educational)",
+      "calcName": "SAPS II",
       "title": "A new Simplified Acute Physiology Score (SAPS II) based on a European/North American multicenter study",
       "citation": "Le Gall JR et al. JAMA. 1993",
       "pmid": "8254858",
       "doi": "10.1001/jama.270.24.2957",
       "url": null,
       "year": 1993,
-      "line": 1206
+      "line": 1173
     },
     {
       "file": "wave2-pulm-id.ts",
@@ -4158,7 +4164,7 @@
       "doi": "10.1001/jama.276.10.802",
       "url": null,
       "year": 1996,
-      "line": 1315
+      "line": 1286
     },
     {
       "file": "wave2-pulm-id.ts",
@@ -4170,7 +4176,7 @@
       "doi": "10.1097/00003246-199510000-00007",
       "url": null,
       "year": 1995,
-      "line": 1424
+      "line": 1395
     },
     {
       "file": "wave2-pulm-id.ts",
@@ -4182,7 +4188,7 @@
       "doi": "10.1093/cid/cix1085",
       "url": null,
       "year": 2018,
-      "line": 1510
+      "line": 1481
     },
     {
       "file": "wave2-pulm-id.ts",
@@ -4194,7 +4200,7 @@
       "doi": "10.1001/jama.2016.0287",
       "url": null,
       "year": 2016,
-      "line": 1619
+      "line": 1590
     },
     {
       "file": "wave2-pulm-id.ts",
@@ -4206,7 +4212,7 @@
       "doi": "10.1001/jama.2009.1297",
       "url": null,
       "year": 2009,
-      "line": 1737
+      "line": 1708
     },
     {
       "file": "wave2-pulm-id.ts",
@@ -4218,7 +4224,7 @@
       "doi": null,
       "url": "https://www.cdc.gov/tb/topic/testing/default.htm",
       "year": 2000,
-      "line": 1817
+      "line": 1788
     },
     {
       "file": "wave2-pulm-id.ts",
@@ -4230,7 +4236,7 @@
       "doi": "10.1128/AAC.03071-15",
       "url": null,
       "year": 2016,
-      "line": 1891
+      "line": 1862
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4415,14 +4421,14 @@
     {
       "file": "wave3-cardio-vasc.ts",
       "calcId": "score2-europe",
-      "calcName": "SCORE2 (Simplified Educational)",
-      "title": "SCORE2 risk prediction algorithms",
+      "calcName": "SCORE2 (European 10-year CVD risk)",
+      "title": "SCORE2 risk prediction algorithms: new models to estimate 10-year risk of cardiovascular disease in Europe",
       "citation": "SCORE2 working group and ESC Cardiovascular Risk Collaboration. Eur Heart J. 2021",
       "pmid": "34120177",
       "doi": "10.1093/eurheartj/ehab309",
       "url": null,
       "year": 2021,
-      "line": 1510
+      "line": 1561
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4434,7 +4440,7 @@
       "doi": "10.1001/jama.297.6.611",
       "url": null,
       "year": 2007,
-      "line": 1647
+      "line": 1700
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4446,7 +4452,7 @@
       "doi": "10.1093/ajcn/88.3.645",
       "url": null,
       "year": 2008,
-      "line": 1756
+      "line": 1809
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4458,7 +4464,7 @@
       "doi": "10.1016/0735-1097(90)90282-t",
       "url": null,
       "year": 1990,
-      "line": 1843
+      "line": 1896
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4470,7 +4476,7 @@
       "doi": "10.1161/CIR.0b013e318276fbcb",
       "url": null,
       "year": 2012,
-      "line": 1924
+      "line": 1977
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4482,7 +4488,7 @@
       "doi": "10.1160/TH07-08-0485",
       "url": null,
       "year": 2008,
-      "line": 2014
+      "line": 2067
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4494,7 +4500,7 @@
       "doi": "10.1161/CIRCULATIONAHA.111.051920",
       "url": null,
       "year": 2012,
-      "line": 2096
+      "line": 2149
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4506,7 +4512,7 @@
       "doi": "10.1136/bmj.j1065",
       "url": null,
       "year": 2017,
-      "line": 2177
+      "line": 2230
     },
     {
       "file": "wave3-em-surgery.ts",
@@ -7326,7 +7332,7 @@
       "doi": "10.1161/STROKEAHA.113.003071",
       "url": null,
       "year": 2014,
-      "line": 100
+      "line": 127
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7338,7 +7344,7 @@
       "doi": "10.1161/STROKEAHA.107.508127",
       "url": null,
       "year": 2008,
-      "line": 178
+      "line": 205
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7350,7 +7356,7 @@
       "doi": "10.1161/STROKEAHA.115.008804",
       "url": null,
       "year": 2015,
-      "line": 240
+      "line": 267
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7362,7 +7368,7 @@
       "doi": "10.1161/STROKEAHA.116.015296",
       "url": null,
       "year": 2016,
-      "line": 321
+      "line": 348
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7374,7 +7380,7 @@
       "doi": "10.1161/STROKEAHA.107.512202",
       "url": null,
       "year": 2008,
-      "line": 422
+      "line": 449
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7386,7 +7392,7 @@
       "doi": "10.1016/S1474-4422(12)70038-8",
       "url": null,
       "year": 2012,
-      "line": 530
+      "line": 557
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7398,7 +7404,7 @@
       "doi": "10.1136/jnnp.51.11.1457",
       "url": null,
       "year": 1988,
-      "line": 627
+      "line": 654
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7410,7 +7416,7 @@
       "doi": "10.1227/01.neu.0000243277.86222.6c",
       "url": null,
       "year": 2006,
-      "line": 739
+      "line": 766
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7422,7 +7428,7 @@
       "doi": "10.1016/s0140-6736(74)91639-0",
       "url": null,
       "year": 1974,
-      "line": 839
+      "line": 866
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7434,7 +7440,7 @@
       "doi": "10.1136/bjsports-2016-097403",
       "url": null,
       "year": 2017,
-      "line": 928
+      "line": 955
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7446,7 +7452,7 @@
       "doi": "10.1136/bjsports-2017-097699",
       "url": null,
       "year": 2017,
-      "line": 1035
+      "line": 1062
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7458,7 +7464,7 @@
       "doi": "10.1093/ageing/afu021",
       "url": null,
       "year": 2014,
-      "line": 1120
+      "line": 1147
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7470,7 +7476,7 @@
       "doi": "10.1016/j.annemergmed.2013.05.003",
       "url": null,
       "year": 2013,
-      "line": 1216
+      "line": 1243
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7482,7 +7488,7 @@
       "doi": "10.1159/000351671",
       "url": null,
       "year": 2013,
-      "line": 1307
+      "line": 1334
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7494,7 +7500,7 @@
       "doi": "10.1017/s1041610204000390",
       "url": null,
       "year": 2004,
-      "line": 1397
+      "line": 1424
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7506,19 +7512,31 @@
       "doi": "10.1212/01.wnl.0000172958.95282.2a",
       "url": null,
       "year": 2005,
-      "line": 1467
+      "line": 1494
     },
     {
       "file": "wave4-neuro-psych.ts",
       "calcId": "gds-15",
-      "calcName": "Geriatric Depression Scale (GDS-15)",
-      "title": "Development and validation of a geriatric depression screening scale",
-      "citation": "Yesavage JA et al. J Psychiatr Res. 1982–83; GDS-15 short form literature",
-      "pmid": "7183759",
-      "doi": "10.1016/0022-3956(82)90033-4",
+      "calcName": "Geriatric Depression Scale-15 (GDS-15)",
+      "title": "Geriatric Depression Scale (GDS): recent evidence and development of a shorter version",
+      "citation": "Sheikh JI, Yesavage JA. Clin Gerontol. 1986",
+      "pmid": "3335884",
+      "doi": null,
       "url": null,
-      "year": 1982,
-      "line": 1546
+      "year": 1986,
+      "line": 1599
+    },
+    {
+      "file": "wave4-neuro-psych.ts",
+      "calcId": "gds-15",
+      "calcName": "Geriatric Depression Scale-15 (GDS-15)",
+      "title": "Criterion-based validity and reliability of the Geriatric Depression Screening Scale (GDS-15)",
+      "citation": "Almeida OP, Almeida SA. Int J Geriatr Psychiatry / related validations",
+      "pmid": "18914586",
+      "doi": "10.1002/gps.2181",
+      "url": null,
+      "year": 2009,
+      "line": 1605
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7530,7 +7548,7 @@
       "doi": "10.1016/0006-3223(88)90038-8",
       "url": null,
       "year": 1988,
-      "line": 1625
+      "line": 1682
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7542,7 +7560,7 @@
       "doi": "10.1093/geront/20.6.649",
       "url": null,
       "year": 1980,
-      "line": 1748
+      "line": 1805
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7554,7 +7572,7 @@
       "doi": "10.1016/0165-1781(89)90047-4",
       "url": null,
       "year": 1989,
-      "line": 1829
+      "line": 1886
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7566,7 +7584,7 @@
       "doi": "10.1016/s1389-9457(03)00006-6",
       "url": null,
       "year": 2003,
-      "line": 1913
+      "line": 1970
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7578,7 +7596,7 @@
       "doi": "10.1007/s11606-016-3703-5",
       "url": null,
       "year": 2016,
-      "line": 2002
+      "line": 2059
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7590,7 +7608,7 @@
       "doi": null,
       "url": null,
       "year": 1989,
-      "line": 2103
+      "line": 2160
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7602,7 +7620,7 @@
       "doi": "10.1111/j.1526-4637.2005.00072.x",
       "url": null,
       "year": 2005,
-      "line": 2213
+      "line": 2270
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7811,12 +7829,12 @@
     {
       "file": "wave4-primary-endo.ts",
       "calcId": "frax-simp",
-      "calcName": "FRAX-Style Major Risk Factor Checklist (Educational)",
+      "calcName": "FRAX Clinical Risk Factor Checklist (use official FRAX for probabilities)",
       "title": "FRAX and the assessment of fracture probability in men and women from the UK",
       "citation": "Kanis JA et al. Osteoporos Int. 2008",
       "pmid": "18292978",
       "doi": "10.1007/s00198-007-0543-5",
-      "url": null,
+      "url": "https://frax.shef.ac.uk/FRAX/",
       "year": 2008,
       "line": 1565
     },
@@ -7830,7 +7848,7 @@
       "doi": null,
       "url": null,
       "year": 1994,
-      "line": 1655
+      "line": 1657
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7842,7 +7860,7 @@
       "doi": null,
       "url": null,
       "year": 2000,
-      "line": 1746
+      "line": 1748
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7854,7 +7872,7 @@
       "doi": "10.1542/peds.2007-2329C",
       "url": null,
       "year": 2007,
-      "line": 1836
+      "line": 1838
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7866,7 +7884,7 @@
       "doi": "10.1186/1471-230X-6-33",
       "url": null,
       "year": 2006,
-      "line": 1920
+      "line": 1922
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7878,7 +7896,7 @@
       "doi": "10.1016/j.dld.2009.08.002",
       "url": null,
       "year": 2010,
-      "line": 2003
+      "line": 2005
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7890,7 +7908,7 @@
       "doi": null,
       "url": "https://nida.nih.gov/nidamed-medical-health-professionals/screening-tools-resources/resource-guide-clinicians",
       "year": 2012,
-      "line": 2107
+      "line": 2109
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7902,7 +7920,7 @@
       "doi": null,
       "url": null,
       "year": 2008,
-      "line": 2195
+      "line": 2197
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7914,7 +7932,7 @@
       "doi": "10.1037//0003-066x.47.9.1102",
       "url": null,
       "year": 1992,
-      "line": 2201
+      "line": 2203
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7926,7 +7944,7 @@
       "doi": "10.1161/HYP.0000000000000065",
       "url": null,
       "year": 2018,
-      "line": 2309
+      "line": 2311
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7938,7 +7956,7 @@
       "doi": null,
       "url": null,
       "year": 1999,
-      "line": 2401
+      "line": 2403
     },
     {
       "file": "wave5-cardio.ts",
@@ -9995,7 +10013,7 @@
     {
       "file": "wave6-clinical-residual.ts",
       "calcId": "meld-3-edu",
-      "calcName": "MELD 3.0 (Educational)",
+      "calcName": "MELD 3.0 (UNOS/OPTN)",
       "title": "MELD 3.0: The Model for End-Stage Liver Disease Updated for the Modern Era",
       "citation": "Kim WR et al. Gastroenterology. 2021",
       "pmid": "34481845",
@@ -10014,7 +10032,7 @@
       "doi": "10.7326/0003-4819-130-6-199903160-00002",
       "url": null,
       "year": 1999,
-      "line": 645
+      "line": 646
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10026,7 +10044,7 @@
       "doi": "10.1053/j.ajkd.2021.08.003",
       "url": null,
       "year": 2021,
-      "line": 652
+      "line": 653
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10038,7 +10056,7 @@
       "doi": "10.1016/S0140-6736(11)61454-2",
       "url": "https://kdigo.org/guidelines/acute-kidney-injury/",
       "year": 2012,
-      "line": 734
+      "line": 735
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10050,7 +10068,7 @@
       "doi": "10.1016/j.xkme.2020.01.001",
       "url": null,
       "year": 2020,
-      "line": 840
+      "line": 841
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10062,7 +10080,7 @@
       "doi": "10.7326/0003-4819-73-5-721",
       "url": null,
       "year": 1970,
-      "line": 947
+      "line": 948
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10074,7 +10092,7 @@
       "doi": "10.1056/NEJMc1811694",
       "url": null,
       "year": 2018,
-      "line": 954
+      "line": 955
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10086,7 +10104,7 @@
       "doi": "10.1111/cen.13866",
       "url": null,
       "year": 2019,
-      "line": 1046
+      "line": 1047
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10098,7 +10116,7 @@
       "doi": "10.1530/EJE-13-1020",
       "url": null,
       "year": 2014,
-      "line": 1137
+      "line": 1138
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10110,7 +10128,7 @@
       "doi": "10.1016/S0140-6736(19)31255-3",
       "url": null,
       "year": 2019,
-      "line": 1237
+      "line": 1238
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10122,7 +10140,7 @@
       "doi": "10.1046/j.1365-2265.1997.2331047.x",
       "url": null,
       "year": 1997,
-      "line": 1311
+      "line": 1312
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10134,7 +10152,7 @@
       "doi": "10.1530/EJE-21-0479",
       "url": null,
       "year": 2021,
-      "line": 1318
+      "line": 1319
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10146,7 +10164,7 @@
       "doi": "10.1089/thy.2015.0020",
       "url": null,
       "year": 2016,
-      "line": 1427
+      "line": 1428
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10158,7 +10176,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK279114/",
       "year": 2011,
-      "line": 1511
+      "line": 1512
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10170,7 +10188,7 @@
       "doi": "10.2337/dc09-9032",
       "url": null,
       "year": 2009,
-      "line": 1600
+      "line": 1601
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10182,7 +10200,7 @@
       "doi": "10.2337/dc09-9032",
       "url": null,
       "year": 2009,
-      "line": 1703
+      "line": 1704
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10194,7 +10212,7 @@
       "doi": "10.1056/NEJMra1003327",
       "url": null,
       "year": 2014,
-      "line": 1849
+      "line": 1850
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10206,7 +10224,7 @@
       "doi": "10.1056/NEJMra1003327",
       "url": null,
       "year": 2014,
-      "line": 1994
+      "line": 1995
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10218,7 +10236,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK482316/",
       "year": 2012,
-      "line": 2126
+      "line": 2127
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10230,7 +10248,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK482268/",
       "year": 2012,
-      "line": 2227
+      "line": 2228
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10242,7 +10260,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK539701/",
       "year": 2012,
-      "line": 2320
+      "line": 2321
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10254,7 +10272,7 @@
       "doi": "10.21037/med-21-7",
       "url": null,
       "year": 2017,
-      "line": 2401
+      "line": 2402
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10266,7 +10284,7 @@
       "doi": "10.1056/NEJMcp0808891",
       "url": null,
       "year": 2009,
-      "line": 2494
+      "line": 2495
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10278,7 +10296,7 @@
       "doi": "10.1111/bcp.12763",
       "url": null,
       "year": 2016,
-      "line": 2590
+      "line": 2591
     },
     {
       "file": "wave6-em-peds.ts",
@@ -11447,14 +11465,26 @@
     {
       "file": "wave6-psych-sleep.ts",
       "calcId": "saps-iii-simp",
-      "calcName": "SAPS III Simplified (Educational)",
-      "title": "SAPS 3—From evaluation of the patient to evaluation of the intensive care unit",
+      "calcName": "SAPS 3",
+      "title": "SAPS 3—From evaluation of the patient to evaluation of the intensive care unit. Part 2",
       "citation": "Moreno RP et al. Intensive Care Med. 2005;31:1345-1355",
       "pmid": "16132893",
+      "doi": "10.1007/s00134-005-2763-5",
+      "url": null,
+      "year": 2005,
+      "line": 1836
+    },
+    {
+      "file": "wave6-psych-sleep.ts",
+      "calcId": "saps-iii-simp",
+      "calcName": "SAPS 3",
+      "title": "SAPS 3—Part 1: Evaluation of the patient",
+      "citation": "Metnitz PG et al. Intensive Care Med. 2005",
+      "pmid": "16132892",
       "doi": "10.1007/s00134-005-2762-6",
       "url": null,
       "year": 2005,
-      "line": 1797
+      "line": 1843
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11466,7 +11496,7 @@
       "doi": "10.1016/s0261-5614(02)00214-5",
       "url": null,
       "year": 2003,
-      "line": 1886
+      "line": 1931
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11478,7 +11508,7 @@
       "doi": "10.1002/jhbp.519",
       "url": null,
       "year": 2018,
-      "line": 1981
+      "line": 2026
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11490,7 +11520,7 @@
       "doi": "10.1097/00000658-195908000-00013",
       "url": null,
       "year": 1959,
-      "line": 2076
+      "line": 2121
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11502,7 +11532,7 @@
       "doi": "10.1007/s11255-020-02618-4",
       "url": null,
       "year": 2013,
-      "line": 2162
+      "line": 2207
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11514,7 +11544,7 @@
       "doi": "10.1016/j.ajem.2017.06.023",
       "url": null,
       "year": 2017,
-      "line": 2253
+      "line": 2298
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11526,7 +11556,7 @@
       "doi": "10.1177/019459988509300202",
       "url": null,
       "year": 1985,
-      "line": 2394
+      "line": 2439
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11538,7 +11568,7 @@
       "doi": "10.1111/j.1749-4486.2009.01995.x",
       "url": null,
       "year": 2009,
-      "line": 2483
+      "line": 2528
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11550,7 +11580,7 @@
       "doi": "10.1016/j.otohns.2003.09.016",
       "url": null,
       "year": 2004,
-      "line": 2573
+      "line": 2618
     },
     {
       "file": "wave6-scores-residual.ts",
@@ -11851,6 +11881,1290 @@
       "url": null,
       "year": 2001,
       "line": 2244
+    },
+    {
+      "file": "wave7-bedside.ts",
+      "calcId": "ckid-u25",
+      "calcName": "CKiD U25 eGFR",
+      "title": "Age- and sex-dependent clinical equations to estimate GFR in children and young adults with CKD",
+      "citation": "Pierce CB, Muñoz A, Ng DK, Warady BA, Furth SL, Schwartz GJ. Kidney Int. 2021",
+      "pmid": "33188714",
+      "doi": "10.1016/j.kint.2020.10.047",
+      "url": null,
+      "year": 2021,
+      "line": 173
+    },
+    {
+      "file": "wave7-bedside.ts",
+      "calcId": "body-roundness-index",
+      "calcName": "Body Roundness Index (BRI)",
+      "title": "Relationships between body roundness with body fat and visceral adipose tissue emerging from a new geometrical model",
+      "citation": "Thomas DM et al. Obesity (Silver Spring). 2013",
+      "pmid": "23519954",
+      "doi": "10.1002/oby.20461",
+      "url": null,
+      "year": 2013,
+      "line": 269
+    },
+    {
+      "file": "wave7-bedside.ts",
+      "calcId": "body-roundness-index",
+      "calcName": "Body Roundness Index (BRI)",
+      "title": "Body Roundness Index and All-Cause Mortality Among US Adults",
+      "citation": "Zhang X et al. JAMA Netw Open. 2024",
+      "pmid": "38497988",
+      "doi": "10.1001/jamanetworkopen.2024.6505",
+      "url": null,
+      "year": 2024,
+      "line": 276
+    },
+    {
+      "file": "wave7-bedside.ts",
+      "calcId": "rox-index",
+      "calcName": "ROX Index (HFNC failure)",
+      "title": "Predicting success of high-flow nasal cannula in pneumonia patients with hypoxemic respiratory failure: the ROX index",
+      "citation": "Roca O et al. J Crit Care. 2016",
+      "pmid": "27481760",
+      "doi": "10.1016/j.jcrc.2016.05.022",
+      "url": null,
+      "year": 2016,
+      "line": 398
+    },
+    {
+      "file": "wave7-bedside.ts",
+      "calcId": "hacor",
+      "calcName": "HACOR NIV Failure Score",
+      "title": "Early prediction of noninvasive ventilation failure in COPD patients: derivation and validation of HACOR",
+      "citation": "Duan J et al. Intensive Care Med. 2017 / Crit Care 2019 related reports",
+      "pmid": "28497231",
+      "doi": "10.1007/s00134-017-4777-1",
+      "url": null,
+      "year": 2017,
+      "line": 486
+    },
+    {
+      "file": "wave7-bedside.ts",
+      "calcId": "duke-iscvid-2023",
+      "calcName": "2023 Duke-ISCVID Infective Endocarditis Criteria",
+      "title": "The 2023 Duke-ISCVID Criteria for Infective Endocarditis: Updating the Modified Duke Criteria",
+      "citation": "Fowler VG et al. Clin Infect Dis. 2023",
+      "pmid": "37138445",
+      "doi": "10.1093/cid/ciad271",
+      "url": null,
+      "year": 2023,
+      "line": 604
+    },
+    {
+      "file": "wave7-bedside.ts",
+      "calcId": "h2fpef",
+      "calcName": "H2FPEF Score",
+      "title": "A Simple, Evidence-Based Approach to Help Guide Diagnosis of HFpEF (H2FPEF)",
+      "citation": "Reddy YNV, Carter RE, Obokata M, Redfield MM, Borlaug BA. Circulation. 2018",
+      "pmid": "29724363",
+      "doi": "10.1161/CIRCULATIONAHA.118.034646",
+      "url": null,
+      "year": 2018,
+      "line": 704
+    },
+    {
+      "file": "wave7-bedside.ts",
+      "calcId": "hfa-peff",
+      "calcName": "HFA-PEFF Diagnostic Score",
+      "title": "How to diagnose heart failure with preserved ejection fraction: the HFA-PEFF diagnostic algorithm",
+      "citation": "Pieske B et al. Eur Heart J. 2019",
+      "pmid": "31504452",
+      "doi": "10.1093/eurheartj/ehz641",
+      "url": null,
+      "year": 2019,
+      "line": 810
+    },
+    {
+      "file": "wave7-bedside.ts",
+      "calcId": "pecarn-csi",
+      "calcName": "PECARN Cervical Spine Injury Rule",
+      "title": "PECARN prediction rule for cervical spine imaging of children with blunt trauma",
+      "citation": "Leonard JC et al. Lancet Child Adolesc Health. 2024",
+      "pmid": "38843852",
+      "doi": "10.1016/S2352-4642(24)00104-4",
+      "url": null,
+      "year": 2024,
+      "line": 907
+    },
+    {
+      "file": "wave7-bedside.ts",
+      "calcId": "helps2b",
+      "calcName": "2HELPS2B Seizure Risk (cEEG)",
+      "title": "Association of an EEG-based risk score with seizure probability in hospitalized patients",
+      "citation": "Struck AF et al. JAMA Neurol. 2017",
+      "pmid": "28738117",
+      "doi": "10.1001/jamaneurol.2017.2564",
+      "url": null,
+      "year": 2017,
+      "line": 1016
+    },
+    {
+      "file": "wave7-bedside.ts",
+      "calcId": "nutric",
+      "calcName": "NUTRIC Score (ICU nutrition risk)",
+      "title": "Identifying critically ill patients who benefit most from nutrition therapy: the NUTRIC score",
+      "citation": "Heyland DK, Dhaliwal R, Jiang X, Day AG. Crit Care. 2011",
+      "pmid": "22088915",
+      "doi": "10.1186/cc10546",
+      "url": null,
+      "year": 2011,
+      "line": 1123
+    },
+    {
+      "file": "wave7-bedside.ts",
+      "calcId": "fast-score",
+      "calcName": "FAST Score (FibroScan-AST)",
+      "title": "FibroScan-AST (FAST) score for non-invasive identification of NASH with significant activity and fibrosis",
+      "citation": "Newsome PN et al. Lancet Gastroenterol Hepatol. 2020",
+      "pmid": "31975426",
+      "doi": "10.1016/S2468-1253(19)30383-8",
+      "url": null,
+      "year": 2020,
+      "line": 1201
+    },
+    {
+      "file": "wave7-bedside.ts",
+      "calcId": "agile-3",
+      "calcName": "Agile 3+ (advanced fibrosis in MASLD)",
+      "title": "Enhanced diagnosis of advanced fibrosis and cirrhosis in NAFLD using FibroScan-based Agile scores",
+      "citation": "Sanyal AJ, Foucquier J, Kennedy WP, et al. J Hepatol. 2023",
+      "pmid": "35176765",
+      "doi": "10.1016/j.jhep.2022.10.034",
+      "url": null,
+      "year": 2022,
+      "line": 1303
+    },
+    {
+      "file": "wave7-bedside.ts",
+      "calcId": "agile-4",
+      "calcName": "Agile 4 (cirrhosis in MASLD)",
+      "title": "Enhanced diagnosis of advanced fibrosis and cirrhosis in NAFLD using FibroScan-based Agile scores",
+      "citation": "Sanyal AJ et al. J Hepatol. 2023",
+      "pmid": "35176765",
+      "doi": "10.1016/j.jhep.2022.10.034",
+      "url": null,
+      "year": 2022,
+      "line": 1394
+    },
+    {
+      "file": "wave7-bedside.ts",
+      "calcId": "masld-criteria",
+      "calcName": "MASLD / MetALD Diagnostic Helper",
+      "title": "A multi-society Delphi consensus statement on new fatty liver disease nomenclature (MASLD)",
+      "citation": "Rinella ME et al. Hepatology. 2023",
+      "pmid": "37363821",
+      "doi": "10.1097/HEP.0000000000000520",
+      "url": null,
+      "year": 2023,
+      "line": 1526
+    },
+    {
+      "file": "wave7-bedside.ts",
+      "calcId": "age-adjusted-ddimer",
+      "calcName": "Age-Adjusted D-dimer Threshold",
+      "title": "Diagnostic accuracy of conventional or age-adjusted D-dimer cut-off values in older patients with suspected VTE",
+      "citation": "Schouten HJ et al. BMJ. 2013",
+      "pmid": "24716616",
+      "doi": "10.1136/bmj.f2492",
+      "url": null,
+      "year": 2013,
+      "line": 1613
+    },
+    {
+      "file": "wave7-bedside.ts",
+      "calcId": "age-adjusted-ddimer",
+      "calcName": "Age-Adjusted D-dimer Threshold",
+      "title": "Age-adjusted D-dimer cutoff levels to rule out pulmonary embolism: the ADJUST-PE study",
+      "citation": "Righini M et al. JAMA. 2014",
+      "pmid": "24668459",
+      "doi": "10.1001/jama.2014.2135",
+      "url": null,
+      "year": 2014,
+      "line": 1620
+    },
+    {
+      "file": "wave7-fillins.ts",
+      "calcId": "kfre-8",
+      "calcName": "Kidney Failure Risk Equation (KFRE 8-Variable)",
+      "title": "A predictive model for progression of chronic kidney disease to kidney failure",
+      "citation": "Tangri N et al. JAMA. 2011",
+      "pmid": "21482743",
+      "doi": "10.1001/jama.2011.451",
+      "url": null,
+      "year": 2011,
+      "line": 126
+    },
+    {
+      "file": "wave7-fillins.ts",
+      "calcId": "kfre-8",
+      "calcName": "Kidney Failure Risk Equation (KFRE 8-Variable)",
+      "title": "Multinational assessment of accuracy of equations for predicting risk of kidney failure",
+      "citation": "Tangri N et al. JAMA. 2016",
+      "pmid": "26757465",
+      "doi": "10.1001/jama.2015.18202",
+      "url": null,
+      "year": 2016,
+      "line": 133
+    },
+    {
+      "file": "wave7-fillins.ts",
+      "calcId": "peps-4",
+      "calcName": "4-Level Pulmonary Embolism Probability Score (4PEPS)",
+      "title": "Derivation and Validation of a 4-Level Clinical Pretest Probability Score for Suspected Pulmonary Embolism to Safely Decrease Imaging Testing",
+      "citation": "Roy PM et al. JAMA Cardiol. 2021",
+      "pmid": "33656522",
+      "doi": "10.1001/jamacardio.2021.0064",
+      "url": null,
+      "year": 2021,
+      "line": 240
+    },
+    {
+      "file": "wave7-fillins.ts",
+      "calcId": "ain-risk",
+      "calcName": "Acute Interstitial Nephritis Clinical Likelihood (Educational)",
+      "title": "Development and external validation of a diagnostic model for biopsy-proven acute interstitial nephritis using electronic health record data",
+      "citation": "Moledina DG et al. Nephrol Dial Transplant. 2021",
+      "pmid": "34089711",
+      "doi": "10.1093/ndt/gfab220",
+      "url": null,
+      "year": 2021,
+      "line": 346
+    },
+    {
+      "file": "wave7-fillins.ts",
+      "calcId": "ain-risk",
+      "calcName": "Acute Interstitial Nephritis Clinical Likelihood (Educational)",
+      "title": "Drug-induced acute interstitial nephritis",
+      "citation": "Moledina DG, Perazella MA. Clin J Am Soc Nephrol. 2017",
+      "pmid": "28877926",
+      "doi": "10.2215/CJN.07630717",
+      "url": null,
+      "year": 2017,
+      "line": 353
+    },
+    {
+      "file": "wave7-fillins.ts",
+      "calcId": "maps-mayo",
+      "calcName": "HCM Prognostic Risk (Educational MAPS-style)",
+      "title": "A novel clinical risk prediction model for sudden cardiac death in hypertrophic cardiomyopathy (HCM Risk-SCD)",
+      "citation": "O'Mahony C et al. Eur Heart J. 2014",
+      "pmid": "24126876",
+      "doi": "10.1093/eurheartj/eht439",
+      "url": null,
+      "year": 2014,
+      "line": 468
+    },
+    {
+      "file": "wave7-fillins.ts",
+      "calcId": "maps-mayo",
+      "calcName": "HCM Prognostic Risk (Educational MAPS-style)",
+      "title": "2024 AHA/ACC/AMSSM/HRS/PACES/SCMR Guideline for the Management of Hypertrophic Cardiomyopathy",
+      "citation": "Ommen SR et al. Circulation. 2024",
+      "pmid": "38718139",
+      "doi": "10.1161/CIR.0000000000001250",
+      "url": null,
+      "year": 2024,
+      "line": 475
+    },
+    {
+      "file": "wave7-fillins.ts",
+      "calcId": "improve-dd",
+      "calcName": "IMPROVE-DD VTE Risk Score",
+      "title": "The IMPROVEDD VTE Risk Score: Incorporation of D-Dimer into the IMPROVE Score to Improve Venous Thromboembolism Risk Stratification",
+      "citation": "Gibson CM et al. TH Open. 2017 / related IMPROVEDD reports",
+      "pmid": "31249943",
+      "doi": "10.1055/s-0037-1603929",
+      "url": null,
+      "year": 2017,
+      "line": 563
+    },
+    {
+      "file": "wave7-fillins.ts",
+      "calcId": "improve-dd",
+      "calcName": "IMPROVE-DD VTE Risk Score",
+      "title": "Predictive and associative models to identify hospitalized medical patients at risk for VTE",
+      "citation": "Spyropoulos AC et al. Chest. 2011",
+      "pmid": "21436241",
+      "doi": "10.1378/chest.10-2067",
+      "url": null,
+      "year": 2011,
+      "line": 570
+    },
+    {
+      "file": "wave7-fillins.ts",
+      "calcId": "rbaux",
+      "calcName": "Revised Baux Score (rBaux)",
+      "title": "Simplified estimates of the probability of death after burn injuries: extending and updating the Baux score",
+      "citation": "Osler T, Glance LG, Hosmer DW. J Trauma. 2010",
+      "pmid": "20381254",
+      "doi": "10.1097/TA.0b013e3181c453b3",
+      "url": null,
+      "year": 2010,
+      "line": 651
+    },
+    {
+      "file": "wave7-fillins.ts",
+      "calcId": "ranson-pancreatitis",
+      "calcName": "Ranson Criteria (Admission + 48-Hour)",
+      "title": "Prognostic signs and the role of operative management in acute pancreatitis",
+      "citation": "Ranson JH et al. Surg Gynecol Obstet. 1974",
+      "pmid": "4834279",
+      "doi": null,
+      "url": null,
+      "year": 1974,
+      "line": 741
+    },
+    {
+      "file": "wave7-fillins.ts",
+      "calcId": "ranson-pancreatitis",
+      "calcName": "Ranson Criteria (Admission + 48-Hour)",
+      "title": "Etiological and prognostic factors in human acute pancreatitis: a review",
+      "citation": "Ranson JH. Am J Gastroenterol. 1982 / related Ranson criteria reports",
+      "pmid": "4275641",
+      "doi": null,
+      "url": null,
+      "year": 1974,
+      "line": 747
+    },
+    {
+      "file": "wave7-fillins.ts",
+      "calcId": "saps-3",
+      "calcName": "SAPS 3 (Admission Score)",
+      "title": "SAPS 3—From evaluation of the patient to evaluation of the intensive care unit. Part 1",
+      "citation": "Metnitz PG et al. Intensive Care Med. 2005",
+      "pmid": "16132892",
+      "doi": "10.1007/s00134-005-2762-6",
+      "url": null,
+      "year": 2005,
+      "line": 952
+    },
+    {
+      "file": "wave7-fillins.ts",
+      "calcId": "saps-3",
+      "calcName": "SAPS 3 (Admission Score)",
+      "title": "SAPS 3—From evaluation of the patient to evaluation of the intensive care unit. Part 2: Development of a prognostic model",
+      "citation": "Moreno RP et al. Intensive Care Med. 2005",
+      "pmid": "16132893",
+      "doi": "10.1007/s00134-005-2763-5",
+      "url": null,
+      "year": 2005,
+      "line": 959
+    },
+    {
+      "file": "wave7-highuse.ts",
+      "calcId": "seattle-hf",
+      "calcName": "Seattle Heart Failure Model (Educational)",
+      "title": "The Seattle Heart Failure Model: prediction of survival in heart failure",
+      "citation": "Levy WC et al. Circulation. 2006",
+      "pmid": "16585412",
+      "doi": "10.1161/CIRCULATIONAHA.105.584102",
+      "url": null,
+      "year": 2006,
+      "line": 364
+    },
+    {
+      "file": "wave7-highuse.ts",
+      "calcId": "maggic-hf",
+      "calcName": "MAGGIC Heart Failure Risk Score",
+      "title": "Predicting survival in heart failure: a risk score based on 39 372 patients from 30 studies",
+      "citation": "Pocock SJ et al. Eur Heart J. 2013",
+      "pmid": "23095984",
+      "doi": "10.1093/eurheartj/ehs337",
+      "url": null,
+      "year": 2013,
+      "line": 506
+    },
+    {
+      "file": "wave7-highuse.ts",
+      "calcId": "tmacs",
+      "calcName": "T-MACS (Troponin-only Manchester ACS)",
+      "title": "Troponin-only Manchester Acute Coronary Syndromes (T-MACS) decision aid",
+      "citation": "Body R et al. Emerg Med J. 2017",
+      "pmid": "27164947",
+      "doi": "10.1136/emermed-2016-205983",
+      "url": null,
+      "year": 2017,
+      "line": 641
+    },
+    {
+      "file": "wave7-highuse.ts",
+      "calcId": "glim-malnutrition",
+      "calcName": "GLIM Malnutrition Criteria",
+      "title": "GLIM criteria for the diagnosis of malnutrition — a consensus report from the global clinical nutrition community",
+      "citation": "Cederholm T et al. Clin Nutr. 2019",
+      "pmid": "30172669",
+      "doi": "10.1016/j.clnu.2018.08.002",
+      "url": null,
+      "year": 2019,
+      "line": 747
+    },
+    {
+      "file": "wave7-highuse.ts",
+      "calcId": "prism-iii",
+      "calcName": "PRISM III (Pediatric Risk of Mortality)",
+      "title": "PRISM III: an updated Pediatric Risk of Mortality score",
+      "citation": "Pollack MM, Patel KM, Ruttimann UE. Crit Care Med. 1996",
+      "pmid": "8708904",
+      "doi": "10.1097/00003246-199605000-00004",
+      "url": null,
+      "year": 1996,
+      "line": 899
+    },
+    {
+      "file": "wave7-highuse.ts",
+      "calcId": "prism-iv",
+      "calcName": "PRISM IV (Educational PICU Mortality)",
+      "title": "The Pediatric Risk of Mortality Score: update 2015 (PRISM IV)",
+      "citation": "Pollack MM et al. Pediatr Crit Care Med. 2016",
+      "pmid": "26492059",
+      "doi": "10.1097/PCC.0000000000000553",
+      "url": null,
+      "year": 2016,
+      "line": 1046
+    },
+    {
+      "file": "wave7-highuse.ts",
+      "calcId": "pram",
+      "calcName": "Pediatric Respiratory Assessment Measure",
+      "title": "The Pediatric Respiratory Assessment Measure: a valid severity-of-asthma index at emergency department presentation",
+      "citation": "Ducharme FM et al. J Pediatr. 2008",
+      "pmid": "19047225",
+      "doi": "10.1016/j.jpeds.2007.12.037",
+      "url": null,
+      "year": 2008,
+      "line": 1158
+    },
+    {
+      "file": "wave7-highuse.ts",
+      "calcId": "wifi-diabetic-foot",
+      "calcName": "SVS WIfI Threatened Limb Classification",
+      "title": "The Society for Vascular Surgery Lower Extremity Threatened Limb Classification System (WIfI)",
+      "citation": "Mills JL Sr et al. J Vasc Surg. 2014",
+      "pmid": "24126108",
+      "doi": "10.1016/j.jvs.2013.08.003",
+      "url": null,
+      "year": 2014,
+      "line": 1264
+    },
+    {
+      "file": "wave7-highuse.ts",
+      "calcId": "hits-ipv",
+      "calcName": "HITS Intimate Partner Violence Screen",
+      "title": "HITS: a short domestic violence screening tool for use in a family practice setting",
+      "citation": "Sherin KM et al. Fam Med. 1998",
+      "pmid": "9704230",
+      "doi": null,
+      "url": null,
+      "year": 1998,
+      "line": 1365
+    },
+    {
+      "file": "wave7-highuse.ts",
+      "calcId": "carg-chemo",
+      "calcName": "CARG Chemotherapy Toxicity Score",
+      "title": "Predicting chemotherapy toxicity in older adults with cancer: a prospective multicenter study",
+      "citation": "Hurria A et al. J Clin Oncol. 2011",
+      "pmid": "21860000",
+      "doi": "10.1200/JCO.2011.34.7625",
+      "url": null,
+      "year": 2011,
+      "line": 1470
+    },
+    {
+      "file": "wave7-highuse.ts",
+      "calcId": "predict-breast",
+      "calcName": "NHS PREDICT Breast Survival (Educational)",
+      "title": "PREDICT: a new UK prognostic model that predicts survival following surgery for invasive breast cancer",
+      "citation": "Wishart GC et al. Breast Cancer Res. 2010",
+      "pmid": "20920132",
+      "doi": "10.1186/bcr2464",
+      "url": null,
+      "year": 2010,
+      "line": 1604
+    },
+    {
+      "file": "wave7-highuse.ts",
+      "calcId": "leibovich-2018",
+      "calcName": "Leibovich 2018 ccRCC Progression Score",
+      "title": "Predicting oncologic outcomes in renal cell carcinoma after surgery",
+      "citation": "Leibovich BC et al. Eur Urol. 2018",
+      "pmid": "29429895",
+      "doi": "10.1016/j.eururo.2018.01.005",
+      "url": null,
+      "year": 2018,
+      "line": 1717
+    },
+    {
+      "file": "wave7-highuse.ts",
+      "calcId": "acef-ii",
+      "calcName": "ACEF II Cardiac Surgery Score",
+      "title": "The ACEF II Risk Score for cardiac surgery: updated but still parsimonious",
+      "citation": "Ranucci M et al. Eur Heart J. 2018",
+      "pmid": "28498904",
+      "doi": "10.1093/eurheartj/ehx588",
+      "url": null,
+      "year": 2018,
+      "line": 1812
+    },
+    {
+      "file": "wave7-highuse.ts",
+      "calcId": "syntax-ii",
+      "calcName": "SYNTAX Score II (Educational 4-year Mortality)",
+      "title": "Anatomical and clinical characteristics to guide decision making between CABG and PCI: SYNTAX score II",
+      "citation": "Farooq V et al. Lancet. 2013",
+      "pmid": "23439103",
+      "doi": "10.1016/S0140-6736(13)60108-7",
+      "url": null,
+      "year": 2013,
+      "line": 1937
+    },
+    {
+      "file": "wave7-highuse.ts",
+      "calcId": "syntax-score",
+      "calcName": "Anatomical SYNTAX Helper (Simplified)",
+      "title": "The SYNTAX Score: an angiographic tool grading the complexity of coronary artery disease",
+      "citation": "Sianos G et al. EuroIntervention. 2005",
+      "pmid": "19758907",
+      "doi": "10.4244/EIJV1I2A23",
+      "url": null,
+      "year": 2005,
+      "line": 2047
+    },
+    {
+      "file": "wave7-highuse.ts",
+      "calcId": "isth-ssc-bat",
+      "calcName": "ISTH-SSC Bleeding Assessment Tool (14 domains)",
+      "title": "ISTH/SSC bleeding assessment tool: a standardized questionnaire and a proposal for a new bleeding score for inherited bleeding disorders",
+      "citation": "Rodeghiero F et al. J Thromb Haemost. 2010",
+      "pmid": "20626619",
+      "doi": "10.1111/j.1538-7836.2010.03975.x",
+      "url": null,
+      "year": 2010,
+      "line": 2249
+    },
+    {
+      "file": "wave7-highuse.ts",
+      "calcId": "isth-ssc-bat",
+      "calcName": "ISTH-SSC Bleeding Assessment Tool (14 domains)",
+      "title": "Normal range of bleeding scores for the ISTH-BAT: adult and pediatric data",
+      "citation": "Elbatarny M et al. Haemophilia. 2014",
+      "pmid": "25196510",
+      "doi": "10.1111/hae.12503",
+      "url": null,
+      "year": 2014,
+      "line": 2256
+    },
+    {
+      "file": "wave7-prevention.ts",
+      "calcId": "cha2ds2-va",
+      "calcName": "CHA₂DS₂-VA Score (ESC 2024, sexless)",
+      "title": "2024 ESC Guidelines for the management of atrial fibrillation",
+      "citation": "Van Gelder IC et al. Eur Heart J. 2024",
+      "pmid": "39210723",
+      "doi": "10.1093/eurheartj/ehae176",
+      "url": null,
+      "year": 2024,
+      "line": 171
+    },
+    {
+      "file": "wave7-prevention.ts",
+      "calcId": "cha2ds2-va",
+      "calcName": "CHA₂DS₂-VA Score (ESC 2024, sexless)",
+      "title": "Refining clinical risk stratification for predicting stroke and thromboembolism in AF (CHA₂DS₂-VASc)",
+      "citation": "Lip GYH et al. Chest. 2010",
+      "pmid": "19762550",
+      "doi": "10.1378/chest.09-1584",
+      "url": null,
+      "year": 2010,
+      "line": 178
+    },
+    {
+      "file": "wave7-prevention.ts",
+      "calcId": "score2-op",
+      "calcName": "SCORE2-OP (Older Persons, age ≥70)",
+      "title": "SCORE2-OP risk prediction algorithms",
+      "citation": "SCORE2-OP working group and ESC CRC. Eur Heart J. 2021",
+      "pmid": "34120185",
+      "doi": "10.1093/eurheartj/ehab312",
+      "url": null,
+      "year": 2021,
+      "line": 318
+    },
+    {
+      "file": "wave7-prevention.ts",
+      "calcId": "score2-diabetes",
+      "calcName": "SCORE2-Diabetes (10-year CVD risk in T2DM)",
+      "title": "SCORE2-Diabetes: 10-year cardiovascular risk estimation in type 2 diabetes in Europe",
+      "citation": "SCORE2-Diabetes Working Group and ESC CRC. Eur Heart J. 2023",
+      "pmid": "37247330",
+      "doi": "10.1093/eurheartj/ehad260",
+      "url": null,
+      "year": 2023,
+      "line": 471
+    },
+    {
+      "file": "wave7-prevention.ts",
+      "calcId": "score2-hf",
+      "calcName": "SCORE2-HF (incident heart-failure risk, educational)",
+      "title": "Prediction of incident heart failure in individuals without prior cardiovascular disease: the SCORE2-HF risk model",
+      "citation": "SCORE2-HF working group. Eur Heart J. 2025",
+      "pmid": "41810943",
+      "doi": null,
+      "url": null,
+      "year": 2025,
+      "line": 601
+    },
+    {
+      "file": "wave7-prevention.ts",
+      "calcId": "score2-ckd-addon",
+      "calcName": "SCORE2 + CKD Add-On (eGFR / albuminuria)",
+      "title": "Including measures of chronic kidney disease to improve cardiovascular risk prediction by SCORE2 and SCORE2-OP",
+      "citation": "Matsushita K et al. Eur J Prev Cardiol. 2023",
+      "pmid": "35972749",
+      "doi": "10.1093/eurjpc/zwac176",
+      "url": null,
+      "year": 2023,
+      "line": 706
+    },
+    {
+      "file": "wave7-prevention.ts",
+      "calcId": "score2-ckd-addon",
+      "calcName": "SCORE2 + CKD Add-On (eGFR / albuminuria)",
+      "title": "KDIGO 2012 CKD evaluation and management (heatmap)",
+      "citation": "KDIGO. Kidney Int Suppl. 2013",
+      "pmid": "27043745",
+      "doi": null,
+      "url": null,
+      "year": 2013,
+      "line": 713
+    },
+    {
+      "file": "wave7-prevention.ts",
+      "calcId": "score2-ckd-addon",
+      "calcName": "SCORE2 + CKD Add-On (eGFR / albuminuria)",
+      "title": "SCORE2 risk prediction algorithms",
+      "citation": "SCORE2 working group. Eur Heart J. 2021",
+      "pmid": "34120177",
+      "doi": "10.1093/eurheartj/ehab309",
+      "url": null,
+      "year": 2021,
+      "line": 719
+    },
+    {
+      "file": "wave7-prevention.ts",
+      "calcId": "smart2",
+      "calcName": "SMART2 (recurrent vascular risk after ASCVD)",
+      "title": "Estimation of recurrent atherosclerotic cardiovascular event risk: the updated SMART2 algorithm",
+      "citation": "Hageman SHJ et al. Eur Heart J. 2022",
+      "pmid": "35165703",
+      "doi": "10.1093/eurheartj/ehac056",
+      "url": null,
+      "year": 2022,
+      "line": 856
+    },
+    {
+      "file": "wave7-prevention.ts",
+      "calcId": "smart2",
+      "calcName": "SMART2 (recurrent vascular risk after ASCVD)",
+      "title": "Development and validation of a prediction rule for recurrent vascular events (SMART)",
+      "citation": "Dorresteijn JAN et al. Heart. 2013",
+      "pmid": "23574971",
+      "doi": "10.1136/heartjnl-2013-303640",
+      "url": null,
+      "year": 2013,
+      "line": 863
+    },
+    {
+      "file": "wave7-prevention.ts",
+      "calcId": "qrisk3",
+      "calcName": "QRISK3-style 10-year CVD risk (educational)",
+      "title": "Development and validation of QRISK3 risk prediction algorithms",
+      "citation": "Hippisley-Cox J, Coupland C, Brindle P. BMJ. 2017",
+      "pmid": "28536104",
+      "doi": "10.1136/bmj.j2099",
+      "url": null,
+      "year": 2017,
+      "line": 1069
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "boolean-remission-ra",
+      "calcName": "ACR/EULAR Boolean Remission (RA)",
+      "title": "American College of Rheumatology/EULAR remission criteria for rheumatoid arthritis: 2022 revision",
+      "citation": "Studenic P, Aletaha D, de Wit M, et al. Ann Rheum Dis. 2023;82:74-80",
+      "pmid": "35487678",
+      "doi": "10.1136/ard-2022-223413",
+      "url": null,
+      "year": 2023,
+      "line": 263
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "boolean-remission-ra",
+      "calcName": "ACR/EULAR Boolean Remission (RA)",
+      "title": "American College of Rheumatology/European League Against Rheumatism provisional definition of remission in rheumatoid arthritis for clinical trials",
+      "citation": "Felson DT, Smolen JS, Wells G, et al. Arthritis Rheum. 2011;63:573-586",
+      "pmid": "21261701",
+      "doi": "10.1002/art.30129",
+      "url": null,
+      "year": 2011,
+      "line": 270
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "rapid3",
+      "calcName": "RAPID3 (MDHAQ)",
+      "title": "RAPID3 (Routine Assessment of Patient Index Data 3), a rheumatoid arthritis index without formal joint counts",
+      "citation": "Pincus T, Swearingen CJ, Bergman MJ, Yazici Y. J Rheumatol. 2008;35:2136-2147",
+      "pmid": "19208659",
+      "doi": "10.3899/jrheum.080402",
+      "url": null,
+      "year": 2008,
+      "line": 361
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "slicc-sdi",
+      "calcName": "SLICC/ACR Damage Index (SDI)",
+      "title": "The development and initial validation of the Systemic Lupus International Collaborating Clinics/American College of Rheumatology damage index for systemic lupus erythematosus",
+      "citation": "Gladman D, Ginzler E, Goldsmith C, et al. Arthritis Rheum. 1996;39:363-369",
+      "pmid": "8768226",
+      "doi": "10.1002/art.1780390303",
+      "url": null,
+      "year": 1996,
+      "line": 466
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "bilag-2004-index",
+      "calcName": "BILAG-2004 (Domain Grades)",
+      "title": "BILAG 2004. Development and initial validation of an updated version of the British Isles Lupus Assessment Group disease activity index",
+      "citation": "Isenberg DA, Rahman A, Allen E, et al. Rheumatology (Oxford). 2005;44:902-906",
+      "pmid": "15814577",
+      "doi": "10.1093/rheumatology/keh624",
+      "url": null,
+      "year": 2005,
+      "line": 552
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "bilag-2004-index",
+      "calcName": "BILAG-2004 (Domain Grades)",
+      "title": "Numerical scoring for the BILAG-2004 index",
+      "citation": "Yee CS, Cresswell L, Farewell V, et al. Rheumatology (Oxford). 2010;49:1665-1669",
+      "pmid": "20181671",
+      "doi": "10.1093/rheumatology/keq026",
+      "url": null,
+      "year": 2010,
+      "line": 559
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "sle-das",
+      "calcName": "SLE-DAS (Jesus 2019)",
+      "title": "Derivation and validation of the SLE Disease Activity Score (SLE-DAS)",
+      "citation": "Jesus D, Matos A, Henriques C, et al. Ann Rheum Dis. 2019;78:365-371",
+      "pmid": "30626657",
+      "doi": "10.1136/annrheumdis-2018-214502",
+      "url": null,
+      "year": 2019,
+      "line": 733
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "sle-das",
+      "calcName": "SLE-DAS (Jesus 2019)",
+      "title": "SLE-DAS enables accurate and user-friendly definitions of clinical remission and categories of disease activity",
+      "citation": "Jesus D, Larosa M, Henriques C, et al. Ann Rheum Dis. 2021;80:1568-1574",
+      "pmid": "34407927",
+      "doi": "10.1136/annrheumdis-2021-220363",
+      "url": null,
+      "year": 2021,
+      "line": 740
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "lldas",
+      "calcName": "Lupus Low Disease Activity State (LLDAS)",
+      "title": "Definition and initial validation of a Lupus Low Disease Activity State (LLDAS)",
+      "citation": "Franklyn K, Lau CS, Navarra SV, et al. Ann Rheum Dis. 2016;75:1615-1621",
+      "pmid": "26713506",
+      "doi": "10.1136/annrheumdis-2015-207726",
+      "url": null,
+      "year": 2016,
+      "line": 829
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "doris-remission",
+      "calcName": "DORIS SLE Remission",
+      "title": "2021 DORIS definition of remission in SLE: final recommendations from an international task force",
+      "citation": "van Vollenhoven RF, Bertsias G, Doria A, et al. Lupus Sci Med. 2021;8:e000538",
+      "pmid": "34341150",
+      "doi": "10.1136/lupus-2021-000538",
+      "url": null,
+      "year": 2021,
+      "line": 921
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "doris-remission",
+      "calcName": "DORIS SLE Remission",
+      "title": "DORIS definition of remission in SLE: recommendations from an international task force (supporting literature)",
+      "citation": "van Vollenhoven R, Voskuyl A, Bertsias G, et al. related DORIS consensus reports",
+      "pmid": "32669331",
+      "doi": "10.1136/annrheumdis-2020-217566",
+      "url": null,
+      "year": 2020,
+      "line": 928
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "bvas-v3",
+      "calcName": "BVAS v3 (Organ Point Totals)",
+      "title": "Modification and validation of the Birmingham Vasculitis Activity Score (version 3)",
+      "citation": "Mukhtyar C, Lee R, Brown D, et al. Ann Rheum Dis. 2009;68:1827-1832",
+      "pmid": "19116983",
+      "doi": "10.1136/ard.2008.097279",
+      "url": null,
+      "year": 2009,
+      "line": 1028
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "vdi-vasculitis",
+      "calcName": "Vasculitis Damage Index (VDI)",
+      "title": "Development and initial validation of the Vasculitis Damage Index for ANCA-associated vasculitis",
+      "citation": "Exley AR, Bacon PA, Luqmani RA, et al. Arthritis Rheum. 1997;40:371-380",
+      "pmid": "11196547",
+      "doi": "10.1002/art.1780400222",
+      "url": null,
+      "year": 1997,
+      "line": 1127
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "ffs-2011",
+      "calcName": "Five-Factor Score (revised 2011)",
+      "title": "The Five-Factor Score revisited: assessment of prognoses of systemic necrotizing vasculitides based on the FVSG cohort",
+      "citation": "Guillevin L, Pagnoux C, Seror R, et al. Medicine (Baltimore). 2011;90:19-27",
+      "pmid": "21538347",
+      "doi": "10.1097/MD.0b013e318205a4c6",
+      "url": null,
+      "year": 2011,
+      "line": 1221
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "essdai",
+      "calcName": "ESSDAI (Sjögren Activity)",
+      "title": "EULAR Sjögren’s syndrome disease activity index: development of a consensus systemic disease activity index for primary Sjögren’s syndrome",
+      "citation": "Seror R, Ravaud P, Bowman SJ, et al. Ann Rheum Dis. 2010;69:1103-1109",
+      "pmid": "19561383",
+      "doi": "10.1136/ard.2009.110767",
+      "url": null,
+      "year": 2010,
+      "line": 1297
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "esspri",
+      "calcName": "ESSPRI (Sjögren Patient Index)",
+      "title": "EULAR Sjögren’s Syndrome Patient Reported Index (ESSPRI): development of a consensus patient index for primary Sjögren’s syndrome",
+      "citation": "Seror R, Ravaud P, Mariette X, et al. Ann Rheum Dis. 2011;70:968-972",
+      "pmid": "21187296",
+      "doi": "10.1136/ard.2010.143743",
+      "url": null,
+      "year": 2011,
+      "line": 1367
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "mrss",
+      "calcName": "Modified Rodnan Skin Score (mRSS)",
+      "title": "Skin thickness score in systemic sclerosis: an assessment of interobserver variability in 3 independent studies",
+      "citation": "Clements P, Lachenbruch P, Siebold J, et al. J Rheumatol. 1993;20:1892-1896",
+      "pmid": "1390794",
+      "doi": "10.3899/jrheum.931892",
+      "url": null,
+      "year": 1993,
+      "line": 1435
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "mrss",
+      "calcName": "Modified Rodnan Skin Score (mRSS)",
+      "title": "Skin thickness score as a predictor and correlate of outcome in systemic sclerosis",
+      "citation": "Clements PJ, Hurwitz EL, Wong WK, et al. Arthritis Rheum. 2000;43:2445-2454",
+      "pmid": "12528108",
+      "doi": "10.1002/1529-0131(200011)43:11<2445::AID-ANR11>3.0.CO;2-P",
+      "url": null,
+      "year": 2000,
+      "line": 1442
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "ild-gap",
+      "calcName": "ILD-GAP Index (includes CTD-ILD)",
+      "title": "Predicting survival across chronic interstitial lung disease: the ILD-GAP model",
+      "citation": "Ley B, Ryerson CJ, Vittinghoff E, et al. Chest. 2012;142:990-996",
+      "pmid": "22842728",
+      "doi": "10.1378/chest.11-3223",
+      "url": null,
+      "year": 2012,
+      "line": 1572
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "ild-gap",
+      "calcName": "ILD-GAP Index (includes CTD-ILD)",
+      "title": "A multidimensional index and staging system for idiopathic pulmonary fibrosis",
+      "citation": "Ley B, Ryerson CJ, Vittinghoff E, et al. Ann Intern Med. 2012;156:684-691",
+      "pmid": "22586007",
+      "doi": "10.7326/0003-4819-156-10-201205150-00004",
+      "url": null,
+      "year": 2012,
+      "line": 1579
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "pasdas",
+      "calcName": "PASDAS (PsA Disease Activity Score)",
+      "title": "The development of candidate composite disease activity and responder indices for psoriatic arthritis (GRACE project)",
+      "citation": "Helliwell PS, FitzGerald O, Fransen J, et al. Ann Rheum Dis. 2013;72:986-991",
+      "pmid": "22798567",
+      "doi": "10.1136/annrheumdis-2012-201341",
+      "url": null,
+      "year": 2013,
+      "line": 1694
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "pasdas",
+      "calcName": "PASDAS (PsA Disease Activity Score)",
+      "title": "Disease activity in psoriatic arthritis: comparing minimal disease activity and PASDAS cutoffs",
+      "citation": "Helliwell PS, FitzGerald O, Fransen J. J Rheumatol. 2014;41:1212-1217",
+      "pmid": "24729430",
+      "doi": "10.3899/jrheum.131172",
+      "url": null,
+      "year": 2014,
+      "line": 1701
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "mda-psa",
+      "calcName": "PsA MDA / VLDA",
+      "title": "Defining minimal disease activity in psoriatic arthritis: a proposed objective target for treatment",
+      "citation": "Coates LC, Fransen J, Helliwell PS. Ann Rheum Dis. 2010;69:48-53",
+      "pmid": "19541753",
+      "doi": "10.1136/ard.2008.102473",
+      "url": null,
+      "year": 2010,
+      "line": 1799
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "mda-psa",
+      "calcName": "PsA MDA / VLDA",
+      "title": "Can we identify patients with psoriatic arthritis who are in very low disease activity / remission?",
+      "citation": "van Mens LJJ, van de Sande MGH, Coates LC, et al. related VLDA validation (PMID 30327493)",
+      "pmid": "30327493",
+      "doi": "10.1093/rheumatology/key344",
+      "url": null,
+      "year": 2018,
+      "line": 1806
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "basfi-10",
+      "calcName": "BASFI (10-item)",
+      "title": "A new approach to defining functional ability in ankylosing spondylitis: the development of the Bath Ankylosing Spondylitis Functional Index",
+      "citation": "Calin A, Garrett S, Whitelock H, et al. J Rheumatol. 1994;21:2281-2285",
+      "pmid": "7979485",
+      "doi": "10.3899/jrheum.942281",
+      "url": null,
+      "year": 1994,
+      "line": 1873
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "basmi",
+      "calcName": "BASMI (2-step)",
+      "title": "Defining spinal mobility in ankylosing spondylitis (AS). The Bath AS Metrology Index",
+      "citation": "Jenkinson TR, Mallorie PA, Whitelock HC, Kennedy LG, Garrett SL, Calin A. J Rheumatol. 1994;21:1694-1698",
+      "pmid": "7735333",
+      "doi": "10.3899/jrheum.9401694",
+      "url": null,
+      "year": 1994,
+      "line": 1995
+    },
+    {
+      "file": "wave7-rheum-activity.ts",
+      "calcId": "sparcc-enthesitis",
+      "calcName": "SPARCC Enthesitis Index",
+      "title": "Development and validation of a Spondyloarthritis Research Consortium of Canada (SPARCC) enthesitis index",
+      "citation": "Maksymowych WP, Mallon C, Morrow S, et al. Ann Rheum Dis. 2009;68:948-953",
+      "pmid": "18381780",
+      "doi": "10.1136/ard.2007.087395",
+      "url": null,
+      "year": 2009,
+      "line": 2066
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "acr-eular-ra-2010",
+      "calcName": "2010 ACR/EULAR Rheumatoid Arthritis Classification",
+      "title": "2010 Rheumatoid arthritis classification criteria: an ACR/EULAR collaborative initiative",
+      "citation": "Aletaha D et al. Ann Rheum Dis / Arthritis Rheum. 2010",
+      "pmid": "21285115",
+      "doi": "10.1136/ard.2010.138461",
+      "url": null,
+      "year": 2010,
+      "line": 296
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "eular-acr-sle-2019",
+      "calcName": "2019 EULAR/ACR SLE Classification",
+      "title": "2019 EULAR/ACR classification criteria for systemic lupus erythematosus",
+      "citation": "Aringer M et al. Ann Rheum Dis. 2019",
+      "pmid": "30936257",
+      "doi": "10.1136/annrheumdis-2018-214819",
+      "url": null,
+      "year": 2019,
+      "line": 380
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "eular-acr-sle-2019",
+      "calcName": "2019 EULAR/ACR SLE Classification",
+      "title": "2019 EULAR/ACR classification criteria for SLE (Arthritis Rheumatol)",
+      "citation": "Aringer M et al. Arthritis Rheumatol. 2019",
+      "pmid": "30936253",
+      "doi": "10.1002/art.40930",
+      "url": null,
+      "year": 2019,
+      "line": 387
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "acr-eular-sjogren-2016",
+      "calcName": "2016 ACR/EULAR Primary Sjögren Classification",
+      "title": "2016 ACR/EULAR classification criteria for primary Sjögren’s syndrome",
+      "citation": "Shiboski CH et al. Ann Rheum Dis. 2016",
+      "pmid": "26989107",
+      "doi": "10.1136/annrheumdis-2015-208560",
+      "url": null,
+      "year": 2016,
+      "line": 457
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "acr-eular-ssc-2013",
+      "calcName": "2013 ACR/EULAR Systemic Sclerosis Classification",
+      "title": "2013 classification criteria for systemic sclerosis (ACR/EULAR)",
+      "citation": "van den Hoogen F et al. Ann Rheum Dis. 2013",
+      "pmid": "24122180",
+      "doi": "10.1136/annrheumdis-2013-204424",
+      "url": null,
+      "year": 2013,
+      "line": 527
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "acr-eular-pmr-2012",
+      "calcName": "2012 ACR/EULAR Polymyalgia Rheumatica Classification",
+      "title": "2012 provisional classification criteria for polymyalgia rheumatica (EULAR/ACR)",
+      "citation": "Dasgupta B et al. Arthritis Rheum. 2012",
+      "pmid": "22302501",
+      "doi": "10.1002/art.34356",
+      "url": null,
+      "year": 2012,
+      "line": 599
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "acr-eular-gpa-2022",
+      "calcName": "2022 ACR/EULAR Granulomatosis with Polyangiitis Classification",
+      "title": "2022 ACR/EULAR classification criteria for granulomatosis with polyangiitis",
+      "citation": "Robson JC et al. Ann Rheum Dis. 2022",
+      "pmid": "35110333",
+      "doi": "10.1136/annrheumdis-2021-221795",
+      "url": null,
+      "year": 2022,
+      "line": 681
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "acr-eular-mpa-2022",
+      "calcName": "2022 ACR/EULAR Microscopic Polyangiitis Classification",
+      "title": "2022 ACR/EULAR classification criteria for microscopic polyangiitis",
+      "citation": "Suppiah R et al. Ann Rheum Dis. 2022",
+      "pmid": "35110332",
+      "doi": "10.1136/annrheumdis-2021-221796",
+      "url": null,
+      "year": 2022,
+      "line": 751
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "acr-eular-egpa-2022",
+      "calcName": "2022 ACR/EULAR Eosinophilic Granulomatosis with Polyangiitis Classification",
+      "title": "2022 ACR/EULAR classification criteria for eosinophilic granulomatosis with polyangiitis",
+      "citation": "Grayson PC et al. Ann Rheum Dis. 2022",
+      "pmid": "35110331",
+      "doi": "10.1136/annrheumdis-2021-221794",
+      "url": null,
+      "year": 2022,
+      "line": 819
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "acr-eular-gca-2022",
+      "calcName": "2022 ACR/EULAR Giant Cell Arteritis Classification",
+      "title": "2022 ACR/EULAR classification criteria for giant cell arteritis",
+      "citation": "Ponte C et al. Arthritis Rheumatol. 2022",
+      "pmid": "36350123",
+      "doi": "10.1002/art.42314",
+      "url": null,
+      "year": 2022,
+      "line": 902
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "acr-eular-tak-2022",
+      "calcName": "2022 ACR/EULAR Takayasu Arteritis Classification",
+      "title": "2022 ACR/EULAR classification criteria for Takayasu arteritis",
+      "citation": "Grayson PC et al. Ann Rheum Dis. 2022",
+      "pmid": "36350125",
+      "doi": "10.1136/ard-2022-223482",
+      "url": null,
+      "year": 2022,
+      "line": 989
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "caspar-psa",
+      "calcName": "CASPAR Psoriatic Arthritis Classification (2006)",
+      "title": "Classification criteria for psoriatic arthritis: development of new criteria from a large international study (CASPAR)",
+      "citation": "Taylor W et al. Arthritis Rheum. 2006",
+      "pmid": "16583464",
+      "doi": "10.1002/art.21972",
+      "url": null,
+      "year": 2006,
+      "line": 1056
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "asas-axspa",
+      "calcName": "ASAS Axial Spondyloarthritis Classification (2009)",
+      "title": "The development of Assessment of SpondyloArthritis international Society classification criteria for axial spondyloarthritis (part II)",
+      "citation": "Rudwaleit M et al. Ann Rheum Dis. 2009",
+      "pmid": "19734190",
+      "doi": "10.1136/ard.2009.108233",
+      "url": null,
+      "year": 2009,
+      "line": 1164
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "asas-perispa",
+      "calcName": "ASAS Peripheral Spondyloarthritis Classification (2011)",
+      "title": "The Assessment of SpondyloArthritis international Society classification criteria for peripheral spondyloarthritis and for spondyloarthritis in general",
+      "citation": "Rudwaleit M et al. Ann Rheum Dis. 2011",
+      "pmid": "21177297",
+      "doi": "10.1136/ard.2010.133645",
+      "url": null,
+      "year": 2011,
+      "line": 1267
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "yamaguchi-aosd",
+      "calcName": "Yamaguchi Adult-Onset Still’s Disease Classification",
+      "title": "Preliminary criteria for classification of adult Still’s disease",
+      "citation": "Yamaguchi M et al. J Rheumatol. 1992;19:424–30",
+      "pmid": "1306111",
+      "doi": "10.3899/jrheum.1992.19.424",
+      "url": null,
+      "year": 1992,
+      "line": 1354
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "fautrel-aosd",
+      "calcName": "Fautrel Adult-Onset Still’s Disease Classification",
+      "title": "Diagnostic value of ferritin and glycosylated ferritin in adult onset Still’s disease",
+      "citation": "Fautrel B et al. J Rheumatol. 2001",
+      "pmid": "11838846",
+      "doi": "10.3899/jrheum.2001.28.322",
+      "url": null,
+      "year": 2001,
+      "line": 1434
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "eular-acr-myositis-2017",
+      "calcName": "2017 EULAR/ACR Idiopathic Inflammatory Myopathy Classification",
+      "title": "2017 EULAR/ACR classification criteria for adult and juvenile idiopathic inflammatory myopathies and their major subgroups",
+      "citation": "Lundberg IE et al. Ann Rheum Dis. 2017",
+      "pmid": "29135554",
+      "doi": "10.1136/annrheumdis-2017-211468",
+      "url": null,
+      "year": 2017,
+      "line": 1535
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "acr-eular-aps-2023",
+      "calcName": "2023 ACR/EULAR Antiphospholipid Syndrome Classification",
+      "title": "The 2023 ACR/EULAR antiphospholipid syndrome classification criteria",
+      "citation": "Barbhaiya M et al. Arthritis Rheumatol. 2023",
+      "pmid": "37609646",
+      "doi": "10.1002/art.42624",
+      "url": null,
+      "year": 2023,
+      "line": 1621
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "sapporo-sydney-aps",
+      "calcName": "Sydney (2006) APS Classification",
+      "title": "International consensus statement on an update of the classification criteria for definite antiphospholipid syndrome (Sydney revision)",
+      "citation": "Miyakis S et al. J Thromb Haemost. 2006",
+      "pmid": "16905515",
+      "doi": "10.1111/j.1538-7836.2006.01753.x",
+      "url": null,
+      "year": 2006,
+      "line": 1698
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "icbd-behcet",
+      "calcName": "ICBD 2013 Behçet Disease Classification",
+      "title": "The International Criteria for Behçet’s Disease (ICBD): a collaborative study of 27 countries",
+      "citation": "International Team for the Revision of the International Criteria for Behçet’s Disease. J Eur Acad Dermatol Venereol. 2014",
+      "pmid": "23913606",
+      "doi": "10.1111/jdv.12107",
+      "url": null,
+      "year": 2014,
+      "line": 1766
+    },
+    {
+      "file": "wave7-rheum-class.ts",
+      "calcId": "isg-behcet",
+      "calcName": "ISG 1990 Behçet Disease Classification",
+      "title": "Criteria for diagnosis of Behçet’s disease",
+      "citation": "International Study Group for Behçet’s Disease. Lancet. 1990;335:1078–80",
+      "pmid": "1970380",
+      "doi": "10.1016/0140-6736(90)92643-V",
+      "url": null,
+      "year": 1990,
+      "line": 1836
     }
   ]
 }

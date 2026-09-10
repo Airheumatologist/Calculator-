@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
+import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const missingHemeIdNephroCalcs: Calculator[] = [
   {
@@ -605,72 +605,92 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
   {
     id: 'improve-bleed',
     name: 'IMPROVE Bleeding Risk Score',
-    shortName: 'IMPROVE Bleed',
-    description: 'Estimates bleeding risk in hospitalized medical patients considered for VTE prophylaxis.',
+    shortName: 'IMPROVE bleed',
+    description:
+      'Bleeding risk in acutely ill medical inpatients (Hostler/Decousus). Score ≥7 indicates increased major-bleed risk when considering pharmacologic VTE prophylaxis. Uses published fractional points.',
     category: 'hematology',
-    tags: ['bleeding', 'vte', 'prophylaxis', 'improve'],
-    whenToUse: 'Medical inpatients when balancing pharmacologic VTE prophylaxis against bleed risk.',
-    whyUse: 'Identifies higher bleeding risk (≥7 often used) to favor mechanical prophylaxis or closer monitoring.',
+    tags: ['bleeding', 'improve', 'prophylaxis', 'vte', 'inpatient'],
+    whenToUse: 'Medical inpatients being considered for pharmacologic VTE prophylaxis, typically alongside IMPROVE/IMPROVE-DD or Padua.',
+    whyUse: 'Identifies patients in whom the harm of anticoagulants may outweigh VTE benefit. Active gastroduodenal ulcer and recent bleeding dominate the score.',
     inputs: [
-      yesNo('ulcer', 'Active gastroduodenal ulcer (4.5)', 4.5),
-      yesNo('bleed3mo', 'Bleeding in 3 months before admission (4)', 4),
-      yesNo('plt', 'Admission platelets < 50 × 10⁹/L (4)', 4),
-      yesNo('age85', 'Age ≥ 85 years (3.5)', 3.5),
-      yesNo('hepatic', 'Hepatic failure (INR > 1.5) (2.5)', 2.5),
-      yesNo('renal', 'Severe renal failure GFR < 30 mL/min/m² (2.5)', 2.5),
-      yesNo('icu', 'ICU / CCU stay (2.5)', 2.5),
-      yesNo('cvc', 'Central venous catheter (2)', 2),
-      yesNo('rheum', 'Rheumatic disease (2)', 2),
-      yesNo('cancer', 'Current cancer (2)', 2),
-      yesNo('age40', 'Age 40–84 years (1.5) — skip if ≥85 already counted', 1.5),
-      yesNo('male', 'Male sex (1)', 1),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 70, helpText: '<40: 0; 40–84: 1.5; ≥85: 3.5' }),
+      selectInput('sex', 'Sex', [
+        { label: 'Female', value: 'F', points: 0 },
+        { label: 'Male', value: 'M', points: 1 },
+      ]),
+      numberInput('gfr', 'GFR', { unit: 'mL/min/1.73 m²', min: 5, max: 120, defaultValue: 70, helpText: '≥60: 0; 30–59: 1; <30: 2.5' }),
+      yesNo('cancer', 'Active cancer (within 6 months)', 2),
+      yesNo('rheumatic', 'Rheumatic disease', 2),
+      yesNo('cvc', 'Central venous catheter', 2),
+      yesNo('icu', 'ICU/CCU admission', 2.5),
+      yesNo('liver', 'Hepatic failure (INR >1.5)', 2.5),
+      numberInput('plt', 'Platelet count', { unit: '×10⁹/L', min: 5, max: 800, defaultValue: 200, helpText: '<50: +4' }),
+      yesNo('recentBleed', 'Bleeding in the 3 months before admission', 4),
+      yesNo('ulcer', 'Active gastroduodenal ulcer', 4.5),
     ],
     calculate(values) {
-      let score = 0;
-      if (bool(values.ulcer)) score += 4.5;
-      if (bool(values.bleed3mo)) score += 4;
-      if (bool(values.plt)) score += 4;
-      if (bool(values.age85)) score += 3.5;
-      else if (bool(values.age40)) score += 1.5;
-      if (bool(values.hepatic)) score += 2.5;
-      if (bool(values.renal)) score += 2.5;
-      if (bool(values.icu)) score += 2.5;
-      if (bool(values.cvc)) score += 2;
-      if (bool(values.rheum)) score += 2;
-      if (bool(values.cancer)) score += 2;
-      if (bool(values.male)) score += 1;
-      score = round(score, 1);
-      if (score >= 7) {
-        return {
-          score,
-          label: 'High bleeding risk (≥7)',
-          interpretation: 'Elevated IMPROVE bleed risk. Prefer mechanical prophylaxis or carefully individualized pharmacologic prophylaxis with close monitoring.',
-          riskLevel: 'high',
-          details: [{ label: 'Common threshold', value: '≥7 high risk' }],
-        };
-      }
+      const age = num(values.age, 70);
+      const agePts = age >= 85 ? 3.5 : age >= 40 ? 1.5 : 0;
+      const gfr = num(values.gfr, 70);
+      const gfrPts = gfr < 30 ? 2.5 : gfr < 60 ? 1 : 0;
+      const pltPts = num(values.plt, 200) < 50 ? 4 : 0;
+      const score =
+        agePts +
+        (str(values.sex, 'F') === 'M' ? 1 : 0) +
+        gfrPts +
+        (bool(values.cancer) ? 2 : 0) +
+        (bool(values.rheumatic) ? 2 : 0) +
+        (bool(values.cvc) ? 2 : 0) +
+        (bool(values.icu) ? 2.5 : 0) +
+        (bool(values.liver) ? 2.5 : 0) +
+        pltPts +
+        (bool(values.recentBleed) ? 4 : 0) +
+        (bool(values.ulcer) ? 4.5 : 0);
+      const rounded = round(score, 1);
+      const high = rounded >= 7;
       return {
-        score,
-        label: 'Lower bleeding risk (<7)',
-        interpretation: 'Lower IMPROVE bleeding risk. Pharmacologic VTE prophylaxis generally acceptable if VTE risk warrants and no other contraindications.',
-        riskLevel: 'low',
-        details: [{ label: 'Common threshold', value: '≥7 high risk' }],
+        score: rounded,
+        unit: 'points',
+        label: high ? 'Increased bleed risk (≥7)' : 'Not increased bleed risk (<7)',
+        interpretation: high
+          ? `IMPROVE bleed ${rounded} (≥7): increased risk of major in-hospital bleeding. Avoid pharmacologic VTE prophylaxis when possible; use mechanical methods; correct reversible risks (ulcer, thrombocytopenia, uncontrolled INR).`
+          : `IMPROVE bleed ${rounded} (<7): not in the increased-bleeding band. If VTE risk warrants it (e.g., IMPROVE-DD ≥2), pharmacologic prophylaxis is generally acceptable with routine monitoring.`,
+        riskLevel: rounded >= 11 ? 'critical' : high ? 'high' : rounded >= 4 ? 'moderate' : 'low',
+        details: [
+          { label: 'Age points', value: String(agePts) },
+          { label: 'GFR points', value: String(gfrPts) },
+          { label: 'Platelet <50', value: pltPts ? '+4' : '0' },
+          { label: 'Threshold', value: '≥7 increased bleed risk' },
+        ],
       };
     },
     evidence: {
-      summary: 'IMPROVE bleeding RAM assigns weighted points for ulcer, recent bleed, thrombocytopenia, age, organ failure, ICU, CVC, rheum disease, cancer, and sex.',
-      formula: 'Weighted sum (ulcer 4.5 … male 1); ≥7 often high risk',
-      validation: 'Derived from IMPROVE cohort of medical inpatients.',
+      summary:
+        'IMPROVE bleed (Decousus et al. Chest 2011): age ≥85 = 3.5, age 40–84 = 1.5, male = 1, GFR 30–59 = 1, GFR <30 = 2.5, liver failure = 2.5, platelets <50 = 4, ICU/CCU = 2.5, CVC = 2, active GU ulcer = 4.5, bleeding in prior 3 months = 4, rheumatic disease = 2, active cancer = 2. Range 0–30.5. ≥7 increased bleed risk.',
+      formula: 'Sum of weighted factors (fractional points as published)',
+      validation: 'Derived in the IMPROVE registry of medical inpatients; used with VTE risk scores to individualize prophylaxis (ASH 2018/2024 medical-patient guidance).',
       references: [
-        { title: 'Factors at admission associated with bleeding risk in medical patients', citation: 'Decousus H et al. Chest. 2011', year: 2011, pmid: '20453069',
-          doi: '10.1378/chest.09-3081', },
+        {
+          title: 'Factors at admission associated with bleeding risk in medical patients: findings from the IMPROVE investigators',
+          citation: 'Decousus H et al. Chest. 2011',
+          year: 2011,
+          pmid: '21239736',
+          doi: '10.1378/chest.09-3081',
+        },
       ],
     },
     nextSteps: [
-      { condition: 'Score ≥7', actions: ['Reassess need for pharmacologic prophylaxis', 'Mechanical methods', 'Correct reversible bleed risks'] },
-      { condition: 'Score <7 with high VTE risk', actions: ['Pharmacologic prophylaxis unless other contraindication'] },
+      { condition: 'Score <7 and elevated VTE risk', actions: ['Pharmacologic prophylaxis', 'Monitor hemoglobin and signs of bleed'] },
+      { condition: 'Score ≥7', actions: ['Prefer mechanical prophylaxis', 'Treat reversible bleed risks', 'If anticoagulation is still required, use the lowest effective intensity and close monitoring'] },
+    ],
+    pearls: [
+      'Fractional points are intentional — do not round the score before applying the ≥7 threshold.',
+      'Active ulcer (4.5) or recent bleed (4) plus almost any other factor crosses 7.',
+      'Pair with IMPROVE-DD: high VTE + high bleed requires individualized judgment, not automatic anticoagulation.',
     ],
   },
+
+  // ─── 8. Revised Baux ───────────────────────────────────────────────────────
   {
     id: 'gap-gap',
     name: 'Delta Gap / Excess Anion Gap',
