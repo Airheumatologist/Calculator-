@@ -98,7 +98,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
           doi: '10.1016/j.jhep.2015.05.022',
         },
         {
-          title: 'Expanded Baveno VI criteria',
+          title: 'Expanding the Baveno VI criteria for the screening of varices in patients with compensated advanced chronic liver disease',
           citation: 'Augustin S et al. Hepatology. 2017 / subsequent validations',
           year: 2017,
           pmid: '28696510',
@@ -1809,10 +1809,15 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       if (bool(values.checkGap)) {
         const na = num(values.na, 140);
         const cl = num(values.cl, 104);
+        const albProvided = !isMissingValue(values.albumin, true);
         const alb = num(values.albumin, 4);
         ag = round(na - (cl + hco3), 1);
         const agCorr = round(ag + 2.5 * (4 - alb), 1);
-        steps.push(`Step 4: Anion gap ${ag} (albumin-corrected ≈ ${agCorr})`);
+        steps.push(
+          albProvided
+            ? `Step 4: Anion gap ${ag} (albumin-corrected ≈ ${agCorr})`
+            : `Step 4: Anion gap ${ag} (albumin not entered — gap is uncorrected; enter albumin to correct ≈2.5 mEq/L per 1 g/dL below 4)`,
+        );
         if (agCorr > 12) steps.push('→ Elevated gap — consider MUDPILES/GOLDMARK; check delta-delta for mixed met. disorders');
         else steps.push('→ Gap not elevated on entered electrolytes');
       } else {
@@ -2020,7 +2025,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       numberInput('fio2', 'FiO₂', { unit: 'fraction', min: 0.21, max: 1, step: 0.01, defaultValue: 1.0 }),
       numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 100, defaultValue: 40 }),
       numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 5, max: 20, step: 0.1, defaultValue: 12 }),
-      numberInput('pvO2', 'Mixed venous PO₂ (assume if unknown)', { unit: 'mmHg', min: 20, max: 50, defaultValue: 40, required: false }),
+      numberInput('pvO2', 'Mixed venous PO₂ (required for content method)', { unit: 'mmHg', min: 20, max: 50, defaultValue: 40, required: false }),
       selectInput('mode', 'Method', [
         { label: 'Simplified content shunt (educational)', value: 'content' },
         { label: 'Rough iso-shunt from P/F only', value: 'pf' },
@@ -2036,11 +2041,28 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       const mode = str(values.mode, 'content');
       // Ideal alveolar PO2
       const pao2A = fio2 * (760 - 47) - paco2 / 0.8;
-      const cao2 = (hb * 1.34 * (pao2 / (pao2 + 27)) + 0.003 * pao2); // crude sat approx
-      // End-pulmonary capillary: assume sat ~1.0 if PAO2 high
+      if (mode !== 'pf' && !pvProvided) {
+        return {
+          score: '—',
+          label: 'Mixed venous PO₂ not entered',
+          interpretation:
+            'The content-based shunt equation needs a mixed venous PO₂ to compute CvO₂, and the result is highly sensitive to it (at this calculator’s defaults, Qs/Qt spans roughly 31%–78% as PvO₂ ranges 25–50 mmHg), so an assumed value would not be an honest estimate. Enter a mixed venous PO₂ (e.g. from a pulmonary-artery sample), or switch Method to “Rough iso-shunt from P/F only”, which estimates shunt from PaO₂/FiO₂ alone and needs no PvO₂.',
+          riskLevel: 'info',
+          details: [
+            { label: 'Method', value: 'Simplified content' },
+            { label: 'PAO₂ (ideal alveolar)', value: `${round(pao2A, 0)} mmHg` },
+            { label: 'Mixed venous PO₂', value: 'Not entered — required for the content method' },
+          ],
+          recommendations: ['Requires accurate mixed venous sampling for true Qs/Qt', 'Educational estimate only'],
+        };
+      }
+      // Severinghaus O₂ dissociation approximation: SaO₂(P) = 1/(23400/(P³+150P)+1)
+      const sat = (p: number): number => 1 / (23400 / (p * p * p + 150 * p) + 1);
+      const cao2 = hb * 1.34 * sat(pao2) + 0.003 * pao2;
+      // End-pulmonary capillary: alveolar or arterial PO2, whichever is higher
       const pcO2 = Math.max(pao2A, pao2);
-      const ccO2 = hb * 1.34 * Math.min(1, pcO2 / (pcO2 + 27) + 0.001) + 0.003 * pcO2;
-      const cvO2 = hb * 1.34 * (pvo2 / (pvo2 + 27)) + 0.003 * pvo2;
+      const ccO2 = hb * 1.34 * sat(pcO2) + 0.003 * pcO2;
+      const cvO2 = hb * 1.34 * sat(pvo2) + 0.003 * pvo2;
       let qs = 0;
       if (mode === 'pf') {
         // Very rough: classic teaching iso-shunt estimates — not precise
@@ -2087,13 +2109,6 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         score: qsR,
         unit: '%',
         ...r,
-        interpretation:
-          r.interpretation +
-          (mode === 'pf'
-            ? ''
-            : pvProvided
-              ? ''
-              : ' Mixed venous PO₂ was not entered — a default of 40 mmHg was assumed for this content-based estimate, so the shunt fraction is not based on a measured mixed venous sample.'),
         details: [
           { label: 'PAO₂ (ideal alveolar)', value: `${round(pao2A, 0)} mmHg` },
           { label: 'Method', value: mode === 'pf' ? 'Rough P/F iso-shunt' : 'Simplified content' },
@@ -2104,8 +2119,8 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Classic shunt equation: Qs/Qt = (CcO₂ − CaO₂)/(CcO₂ − CvO₂). This tool uses simplified saturations from PO₂ and assumed PvO₂ — not a substitute for formal calculated shunt with measured gases/contents.',
-      formula: 'Qs/Qt = (CcO₂ − CaO₂)/(CcO₂ − CvO₂)',
+        'Classic shunt equation: Qs/Qt = (CcO₂ − CaO₂)/(CcO₂ − CvO₂). Saturations are computed with the Severinghaus O₂ dissociation equation; the content method requires an entered mixed venous PO₂ (blank refuses rather than assumes). Educational estimate — not a substitute for formal calculated shunt with measured gases/contents.',
+      formula: 'Qs/Qt = (CcO₂ − CaO₂)/(CcO₂ − CvO₂); SaO₂(P) = 1/(23400/(P³ + 150·P) + 1) (Severinghaus)',
       validation: 'Educational physiology aid; iso-shunt charts historically related PaO₂/FiO₂ to shunt under assumptions.',
       references: [
         {

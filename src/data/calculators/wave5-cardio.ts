@@ -617,11 +617,11 @@ export const wave5CardioCalcs: Calculator[] = [
       validation: 'Proposed as HR-robust alternative; compare with Fridericia/Bazett in the same patient.',
       references: [
         {
-          title: 'A simple method for QT correction (Rautaharju et al. formulations in ECG literature)',
-          citation: 'Rautaharju PM et al. various ECG methodology papers; common form QT×(120+HR)/180',
-          year: 2004,
-          pmid: '15081446',
-          doi: '10.1016/j.amjcard.2003.12.055',
+          title: 'New age- and sex-specific criteria for QT prolongation based on rate correction formulas that minimize bias at the upper normal limits',
+          citation: 'Rautaharju PM, Mason JW, Akiyama T. Int J Cardiol. 2014',
+          year: 2014,
+          pmid: '24825030',
+          doi: '10.1016/j.ijcard.2014.04.133',
         },
       ],
     },
@@ -724,9 +724,9 @@ export const wave5CardioCalcs: Calculator[] = [
       validation: 'Supported in ECG literature for BBB/paced rhythms; institutional cutoffs vary.',
       references: [
         {
-          title: 'The JT interval as a depolarization-independent measure of repolarization',
-          citation: 'Zhou SH / Rautaharju et al. related ECG methodology; clinical reviews on JTc in wide QRS',
-          year: 1992,
+          title: 'Assessment of prolonged QT and JT intervals in ventricular conduction defects',
+          citation: 'Rautaharju PM et al. Am J Cardiol. 2004',
+          year: 2004,
           pmid: '15081446',
           doi: '10.1016/j.amjcard.2003.12.055',
         },

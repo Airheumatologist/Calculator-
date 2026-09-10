@@ -1404,12 +1404,12 @@ export const missingNeuroPsychCalcs: Calculator[] = [
       validation: 'Improves prediction of early stroke after TIA vs ABCD² in multicenter cohorts.',
       references: [
         {
-          title: 'ABCD3 and ABCD3-I scores to detect stroke risk after TIA',
+          title: 'Addition of brain and carotid imaging to the ABCD² score to identify patients at early risk of stroke after transient ischaemic attack: a multicentre observational study',
           citation: 'Merwick Á et al. Lancet Neurol. 2010',
           year: 2010, pmid: '20934388',
           doi: '10.1016/S1474-4422(10)70240-4', },
         {
-          title: 'ABCD² validation',
+          title: 'Validation and refinement of scores to predict very early stroke risk after transient ischaemic attack',
           citation: 'Johnston SC et al. Lancet. 2007',
           year: 2007, pmid: '17258668',
           doi: '10.1016/S0140-6736(07)60150-0', },

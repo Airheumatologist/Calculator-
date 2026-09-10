@@ -93,7 +93,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         'Consensus diagnostic criteria (Rome Foundation); not a severity score — clinical judgment and selective testing remain essential.',
       references: [
         {
-          title: 'Rome IV diagnostic criteria for irritable bowel syndrome',
+          title: 'Bowel Disorders',
           citation: 'Lacy BE et al. Gastroenterology. 2016;150:1393-1407',
           year: 2016,
           pmid: '27144627',

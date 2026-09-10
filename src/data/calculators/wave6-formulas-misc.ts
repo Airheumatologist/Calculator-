@@ -1194,7 +1194,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Standard neonatal intensive care calculation; endogenous glucose production in term newborns ~4–6 mg/kg/min.',
       references: [
         {
-          title: 'Neonatal hypoglycemia and glucose infusion rate teaching',
+          title: 'Postnatal glucose homeostasis in late-preterm and term infants',
           citation: 'AAP / neonatology textbooks on GIR targeting',
           year: 2011,
           pmid: '21357346',

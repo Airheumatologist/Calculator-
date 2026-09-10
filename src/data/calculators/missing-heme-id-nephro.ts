@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const missingHemeIdNephroCalcs: Calculator[] = [
   {
@@ -467,7 +467,7 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       validation: 'Validated in family practice; used in stewardship guidelines.',
       references: [
         { title: 'The validity of a sore throat score in family practice', citation: 'McIsaac WJ et al. CMAJ. 2000', year: 2000, pmid: '11033707' },
-        { title: 'Centor criteria original derivation', citation: 'Centor RM et al. Med Decis Making. 1981', year: 1981, pmid: '6763125',
+        { title: 'The diagnosis of strep throat in adults in the emergency room', citation: 'Centor RM et al. Med Decis Making. 1981', year: 1981, pmid: '6763125',
           doi: '10.1177/0272989X8100100304', },
       ],
     },
@@ -691,7 +691,8 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       const na = num(values.na, 140);
       const cl = num(values.cl, 100);
       const hco3 = num(values.hco3, 12);
-      const alb = num(values.albumin, 4);
+      const albMissing = isMissingValue(values.albumin, true);
+      const alb = albMissing ? 4 : num(values.albumin, 4);
       const normalAg = num(values.normalAg, 12);
       const ag = round(na - (cl + hco3), 1);
       const agCorr = round(ag + 2.5 * (4 - alb), 1);
@@ -703,7 +704,9 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       let riskLevel: 'info' | 'moderate' | 'high' = 'info';
       if (excessAg <= 0) {
         label = 'No excess anion gap';
-        interpretation = 'Corrected AG not above assumed normal — excess gap analysis for mixed HAGMA not applicable. If low HCO₃, consider NAGMA.';
+        interpretation = albMissing
+          ? 'AG not above assumed normal — excess gap analysis for mixed HAGMA not applicable. If low HCO₃, consider NAGMA.'
+          : 'Corrected AG not above assumed normal — excess gap analysis for mixed HAGMA not applicable. If low HCO₃, consider NAGMA.';
         riskLevel = 'info';
       } else if (deltaDelta < 18) {
         label = 'Suggests concurrent NAGMA';
@@ -714,6 +717,9 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
         interpretation = `Δ/Δ ${deltaDelta} is high: HCO₃ higher than expected for the excess AG — concurrent metabolic alkalosis (or pre-existing elevated HCO₃) likely.`;
         riskLevel = 'moderate';
       }
+      if (albMissing) {
+        interpretation += ' Albumin was not entered — the anion gap used here is uncorrected (albumin correction ≈2.5 mEq/L per 1 g/dL below 4 was not applied).';
+      }
       return {
         score: deltaDelta,
         unit: 'mEq/L',
@@ -722,7 +728,9 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
         riskLevel,
         details: [
           { label: 'Anion gap', value: `${ag} mEq/L` },
-          { label: 'Albumin-corrected AG', value: `${agCorr} mEq/L` },
+          albMissing
+            ? { label: 'AG (uncorrected — albumin not entered)', value: `${agCorr} mEq/L` }
+            : { label: 'Albumin-corrected AG', value: `${agCorr} mEq/L` },
           { label: 'Excess AG (Δ gap)', value: `${excessAg} mEq/L` },
           { label: 'Δ/Δ (excess AG + HCO₃)', value: `${deltaDelta}` },
         ],
@@ -894,10 +902,9 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       formula: 'TTKG = (U_K ÷ (U_osm/P_osm)) ÷ P_K',
       validation: 'Classic physiologic construct; modern nephrology often discourages clinical reliance.',
       references: [
-        { title: 'The transtubular potassium concentration in patients with hypokalemia and hyperkalemia', citation: 'West ML et al. Am J Kidney Dis. 1986', year: 1986, pmid: '3762510',
-          doi: '10.1093/oxfordjournals.aje.a114366', },
-        { title: 'TTKG limitations (urea effect)', citation: 'Kamel KS, Halperin ML. various reviews', year: 2011, pmid: '3762510',
-          doi: '10.1093/oxfordjournals.aje.a114366', },
+        { title: 'New clinical approach to evaluate disorders of potassium excretion', citation: 'West ML et al. Miner Electrolyte Metab. 1986', year: 1986, pmid: '3762510' },
+        { title: 'Intrarenal urea recycling leads to a higher rate of renal excretion of potassium: an hypothesis with clinical implications', citation: 'Kamel KS, Halperin ML. Curr Opin Nephrol Hypertens. 2011', year: 2011, pmid: '21788894',
+          doi: '10.1097/MNH.0b013e328349b8f9' },
       ],
     },
     nextSteps: [
@@ -994,12 +1001,13 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       yesNo('infection', 'Suspected or documented infection', 0),
     ],
     calculate(values) {
+      const baselineMissing = isMissingValue(values.baseline, true);
       const baseline = num(values.baseline, 0);
       const current = num(values.current, 2);
       const delta = round(current - baseline, 0);
       const infection = bool(values.infection);
       const details = [
-        { label: 'Baseline SOFA', value: String(baseline) },
+        { label: 'Baseline SOFA', value: baselineMissing ? '0 (assumed)' : String(baseline) },
         { label: 'Current SOFA', value: String(current) },
         { label: 'ΔSOFA', value: String(delta) },
         { label: 'Suspected or documented infection', value: infection ? 'Yes' : 'No' },

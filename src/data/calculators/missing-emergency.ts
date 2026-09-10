@@ -1306,7 +1306,7 @@ export const missingEmergencyCalcs: Calculator[] = [
       validation: 'Taught in ATLS/airway courses; predictive performance modest — preparation is the main benefit.',
       references: [
         {
-          title: 'LEMON airway assessment (ATLS / emergency airway literature)',
+          title: 'Can an airway assessment score predict difficulty at intubation in the emergency department?',
           citation: 'Reed MJ et al. Emerg Med J. 2005;22:99-102; ATLS difficult airway teaching',
           year: 2005, pmid: '15662057',
           doi: '10.1136/emj.2003.008771', },

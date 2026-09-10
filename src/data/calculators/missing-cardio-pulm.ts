@@ -1315,7 +1315,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
       references: [
         { title: 'Prediction of coronary heart disease using risk factor categories (Framingham)', citation: 'Wilson PW et al. Circulation. 1998', year: 1998, pmid: '9603539',
           doi: '10.1161/01.cir.97.18.1837', },
-        { title: 'AHA PREVENT equations for CV risk', citation: 'Khan SS et al. Circulation. 2023', year: 2023, pmid: '37947094',
+        { title: 'Novel Prediction Equations for Absolute Risk Assessment of Total Cardiovascular Disease Incorporating Cardiovascular-Kidney-Metabolic Health: A Scientific Statement From the American Heart Association', citation: 'Khan SS et al. Circulation. 2023', year: 2023, pmid: '37947094',
           doi: '10.1161/CIR.0000000000001191', },
       ],
     },

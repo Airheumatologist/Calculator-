@@ -317,7 +317,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
       validation: 'Beaton et al.; widely adopted short form of DASH.',
       references: [
         {
-          title: 'Development of the QuickDASH',
+          title: 'Development of the QuickDASH: comparison of three item-reduction approaches',
           citation: 'Beaton DE et al. J Bone Joint Surg Am. 2005',
           year: 2005,
           pmid: '15866967',

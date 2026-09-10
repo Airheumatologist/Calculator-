@@ -472,7 +472,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     evidence: {
       summary: 'EDD = LMP + 280 days (Naegele: +1 year −3 months +7 days).',
       validation: 'Standard obstetric dating; first-trimester US more accurate if LMP uncertain.',
-      references: [{ title: 'Naegele\'s rule for estimated date of delivery', citation: 'Lawson GW. Aust N Z J Obstet Gynaecol. 2021 (review of Naegele\'s rule)', year: 2021, pmid: '33079400',
+      references: [{ title: 'Naegele\'s rule and the length of pregnancy - A review', citation: 'Lawson GW. Aust N Z J Obstet Gynaecol. 2021 (review of Naegele\'s rule)', year: 2021, pmid: '33079400',
           doi: '10.1111/ajo.13253', }],
     },
     nextSteps: [{ condition: 'Dating', actions: ['Offer dating ultrasound if uncertain LMP', 'Prenatal care schedule'] }],
@@ -707,7 +707,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     evidence: {
       summary: '4Ts: Thrombocytopenia, Timing, Thrombosis, oTher causes (0–2 each).',
       validation: 'High NPV for low scores; intermediate/high need laboratory evaluation.',
-      references: [{ title: 'Evaluation of pretest clinical score (4 T\'s) for HIT', citation: 'Lo GK et al. J Thromb Haemost. 2006', year: 2006, pmid: '16634744',
+      references: [{ title: 'Evaluation of pretest clinical score (4 T\'s) for the diagnosis of heparin-induced thrombocytopenia in two clinical settings', citation: 'Lo GK et al. J Thromb Haemost. 2006', year: 2006, pmid: '16634744',
           doi: '10.1111/j.1538-7836.2006.01787.x', }],
     },
     nextSteps: [
@@ -1112,7 +1112,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     evidence: {
       summary: 'Sheiner-Tozer: Corrected = Total / [(0.2 × albumin) + 0.1]; use 0.1 × albumin in ESRD/CrCl <20. Free levels preferred.',
       validation: 'Common clinical approximation with known limitations.',
-      references: [{ title: 'Phenytoin dosing and levels', citation: 'Sheiner-Tozer equation clinical pharmacy references', year: 1977, pmid: '599408',
+      references: [{ title: 'The clinical pharmacokinetics of phenytoin', citation: 'Sheiner-Tozer equation clinical pharmacy references', year: 1977, pmid: '599408',
           doi: '10.1007/BF01059685', }],
     },
     nextSteps: [

@@ -1767,7 +1767,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
       validation: 'Standard teaching correction; ionized calcium preferred when available.',
       references: [
         {
-          title: 'Hypercalcemia of malignancy: an update on pathogenesis and management',
+          title: 'Hypercalcemia and cancer: Differential diagnosis and treatment',
           citation: 'Zagzag J et al. / classic HCM management reviews; ASCO educational materials',
           year: 2018,
           pmid: '30240520',

@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, round, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, round, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const nephrologyEndoCalcs: Calculator[] = [
   {
@@ -259,20 +259,26 @@ export const nephrologyEndoCalcs: Calculator[] = [
       const na = num(values.na, 140);
       const cl = num(values.cl, 104);
       const hco3 = num(values.hco3, 24);
-      const alb = num(values.albumin, 4);
+      const albMissing = isMissingValue(values.albumin, true);
+      const alb = albMissing ? 4 : num(values.albumin, 4);
       const ag = round(na - (cl + hco3), 1);
       const agCorr = round(ag + 2.5 * (4 - alb), 1);
       const elevated = agCorr > 12;
+      const interpretation = elevated
+        ? 'High AG: consider MUDPILES/GOLDMARK (methanol, uremia, DKA, paraldehyde/phenformin, iron/INH, lactic, ethylene glycol, salicylates).'
+        : 'Normal AG metabolic acidosis if low HCO₃: diarrhea, RTA, saline, etc.';
       return {
         score: ag,
         unit: 'mEq/L',
         label: elevated ? 'Elevated anion gap' : 'Normal anion gap',
-        interpretation: elevated
-          ? 'High AG: consider MUDPILES/GOLDMARK (methanol, uremia, DKA, paraldehyde/phenformin, iron/INH, lactic, ethylene glycol, salicylates).'
-          : 'Normal AG metabolic acidosis if low HCO₃: diarrhea, RTA, saline, etc.',
+        interpretation: albMissing
+          ? `${interpretation} Albumin was not entered — the gap shown is uncorrected (albumin correction ≈2.5 mEq/L per 1 g/dL below 4 was not applied).`
+          : interpretation,
         riskLevel: elevated ? 'moderate' : 'normal',
         details: [
-          { label: 'Albumin-corrected AG', value: `${agCorr} mEq/L` },
+          albMissing
+            ? { label: 'AG (uncorrected — albumin not entered)', value: `${ag} mEq/L` }
+            : { label: 'Albumin-corrected AG', value: `${agCorr} mEq/L` },
           { label: 'Typical normal', value: '8–12 (lab-dependent)' },
         ],
       };
@@ -313,7 +319,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     evidence: {
       summary: 'Corrected Ca = measured Ca + 0.8×(4 − albumin). Imperfect vs ionized Ca.',
       validation: 'Common clinical approximation; less accurate in critically ill.',
-      references: [{ title: 'Calcium correction formulas', citation: 'Payne RB et al. Br Med J. 1973', year: 1973, pmid: '4758544',
+      references: [{ title: 'Interpretation of serum calcium in patients with abnormal serum proteins', citation: 'Payne RB et al. Br Med J. 1973', year: 1973, pmid: '4758544',
           doi: '10.1136/bmj.4.5893.643', }],
     },
     nextSteps: [{ condition: 'Abnormal', actions: ['Prefer ionized calcium', 'ECG if severe', 'Treat underlying cause'] }],
@@ -465,7 +471,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     evidence: {
       summary: 'Calculated osm and gap help detect unmeasured osmoles in toxic alcohol ingestion.',
       validation: 'Standard toxicology and electrolyte practice.',
-      references: [{ title: 'Serum osmolality and the osmolar gap', citation: 'Purssell RA et al. various reviews', year: 2001, pmid: '18442409',
+      references: [{ title: 'An evaluation of the osmole gap as a screening test for toxic alcohol poisoning', citation: 'Purssell RA et al. various reviews', year: 2001, pmid: '18442409',
           doi: '10.1186/1471-227X-8-5', }],
     },
     nextSteps: [
@@ -787,7 +793,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     evidence: {
       summary: 'HOMA-IR = (fasting glucose × fasting insulin) / 405 (glucose in mg/dL).',
       validation: 'Correlates moderately with clamp-derived insulin sensitivity.',
-      references: [{ title: 'Homeostasis model assessment', citation: 'Matthews DR et al. Diabetologia. 1985', year: 1985, pmid: '3899825',
+      references: [{ title: 'Homeostasis model assessment: insulin resistance and beta-cell function from fasting plasma glucose and insulin concentrations in man', citation: 'Matthews DR et al. Diabetologia. 1985', year: 1985, pmid: '3899825',
           doi: '10.1007/BF00280883', }],
     },
     nextSteps: [{ condition: 'Elevated', actions: ['Lifestyle intervention', 'Screen for metabolic syndrome / T2DM'] }],

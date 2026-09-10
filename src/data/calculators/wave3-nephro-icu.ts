@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave3NephroIcuCalcs: Calculator[] = [
   // 1. CKD-EPI 2021 creatinine (race-free)
@@ -1627,7 +1627,8 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     calculate(values) {
       const map = num(values.map, 80);
       const icp = num(values.icp, 15);
-      const cvp = num(values.cvp, 0);
+      const cvpMissing = isMissingValue(values.cvp, true);
+      const cvp = cvpMissing ? 0 : num(values.cvp, 0);
       const downstream = Math.max(icp, cvp);
       const cpp = round(map - downstream, 0);
       const r = riskFromThresholds(cpp, [
@@ -1656,14 +1657,24 @@ export const wave3NephroIcuCalcs: Calculator[] = [
           interpretation: `CPP ${cpp} mmHg: high — ensure ICP reading valid; avoid over-vasopressors if not needed.`,
         },
       ]);
+      const interpretation = cvpMissing
+        ? `${r.interpretation} CVP was not entered — CPP computed from ICP alone.`
+        : r.interpretation;
       return {
         score: cpp,
         unit: 'mmHg',
-        ...r,
+        label: r.label,
+        interpretation,
+        riskLevel: r.riskLevel,
         details: [
           { label: 'MAP', value: `${map} mmHg` },
-          { label: 'Downstream pressure', value: `${downstream} mmHg (max of ICP ${icp}, CVP ${cvp})` },
-          { label: 'Formula', value: 'CPP = MAP − max(ICP, CVP)' },
+          {
+            label: 'Downstream pressure',
+            value: cvpMissing
+              ? `${downstream} mmHg (ICP ${icp} — CVP not entered)`
+              : `${downstream} mmHg (max of ICP ${icp}, CVP ${cvp})`,
+          },
+          { label: 'Formula', value: cvpMissing ? 'CPP = MAP − ICP (CVP not entered)' : 'CPP = MAP − max(ICP, CVP)' },
         ],
       };
     },
