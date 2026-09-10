@@ -125,27 +125,6 @@ function readField(s, mask, from, to, key) {
   return undefined;
 }
 
-/** Last occurrence of a top-level-ish `key: 'value'` before index `start`. */
-function readFieldBefore(s, mask, start, key, window) {
-  const from = Math.max(0, start - window);
-  let last;
-  let idx = from;
-  const needle = key + ':';
-  while (idx < start) {
-    const hit = s.indexOf(needle, idx);
-    if (hit < 0 || hit >= start) break;
-    const prev = s[hit - 1];
-    if (mask[hit] && !/[A-Za-z0-9_$]/.test(prev ?? ' ')) {
-      let j = hit + needle.length;
-      while (j < start && /\s/.test(s[j])) j++;
-      const str = readString(s, j);
-      if (str) last = str.value;
-    }
-    idx = hit + needle.length;
-  }
-  return last;
-}
-
 function matchBracket(s, mask, from, open, close) {
   let depth = 0;
   for (let i = from; i < s.length; i++) {
@@ -159,9 +138,83 @@ function matchBracket(s, mask, from, open, close) {
   return -1;
 }
 
+/**
+ * Every object literal in the file, as { open, close, depth }, innermost last
+ * for a given position. One pass, so callers can look up an owning object
+ * instead of guessing with a bounded backward scan.
+ */
+function parseObjects(s, mask) {
+  const objects = [];
+  const stack = [];
+  for (let i = 0; i < s.length; i++) {
+    if (!mask[i]) continue;
+    if (s[i] === '{') {
+      stack.push(i);
+    } else if (s[i] === '}' && stack.length) {
+      const open = stack.pop();
+      objects.push({ open, close: i, depth: stack.length });
+    }
+  }
+  return objects.sort((a, b) => a.open - b.open);
+}
+
+/**
+ * Read `key: 'value'` only when it is a direct key of the object spanning
+ * (open, close) — nested objects, arrays and function bodies are skipped, so a
+ * `name` inside calculate() cannot be mistaken for the calculator's name.
+ */
+function readDirectField(s, mask, open, close, key) {
+  const needle = key + ':';
+  let depth = 0;
+  for (let i = open + 1; i < close; i++) {
+    if (!mask[i]) continue;
+    const c = s[i];
+    if (c === '{' || c === '[' || c === '(') {
+      depth++;
+      continue;
+    }
+    if (c === '}' || c === ']' || c === ')') {
+      depth--;
+      continue;
+    }
+    if (depth !== 0) continue;
+    if (c !== key[0] || !s.startsWith(needle, i)) continue;
+    const prev = s[i - 1];
+    if (/[A-Za-z0-9_$]/.test(prev ?? ' ')) continue;
+    let j = i + needle.length;
+    while (j < close && /\s/.test(s[j])) j++;
+    const str = readString(s, j);
+    if (str) return str.value;
+    const num = /^-?\d+(\.\d+)?/.exec(s.slice(j, Math.min(close, j + 32)));
+    if (num) return num[0];
+    return undefined;
+  }
+  return undefined;
+}
+
+/**
+ * The calculator object that owns the reference block at `pos`: the innermost
+ * enclosing object literal that declares its own `id`. References sit inside
+ * `evidence: {...}` inside the calculator, so the owner is an ancestor, never
+ * the innermost object.
+ */
+function findOwningCalculator(s, mask, objects, pos) {
+  const ancestors = objects
+    .filter((o) => o.open < pos && o.close > pos)
+    .sort((a, b) => b.depth - a.depth);
+  for (const o of ancestors) {
+    const id = readDirectField(s, mask, o.open, o.close, 'id');
+    if (id) {
+      return { calcId: id, calcName: readDirectField(s, mask, o.open, o.close, 'name') ?? '?' };
+    }
+  }
+  return { calcId: '?', calcName: '?' };
+}
+
 /** Extract every reference object from one calculator source file. */
 export function extractRefsFromSource(source, file) {
   const mask = scanMask(source);
+  const objects = parseObjects(source, mask);
   const out = [];
   let idx = 0;
   while (true) {
@@ -171,8 +224,7 @@ export function extractRefsFromSource(source, file) {
       idx = start + 11;
       continue;
     }
-    const calcId = readFieldBefore(source, mask, start, 'id', 3500) ?? '?';
-    const calcName = readFieldBefore(source, mask, start, 'name', 3500) ?? '?';
+    const { calcId, calcName } = findOwningCalculator(source, mask, objects, start);
 
     let bracket = start + 'references:'.length;
     while (bracket < source.length && /\s/.test(source[bracket])) bracket++;

@@ -2,7 +2,7 @@
 
 <!-- GENERATED FILE. Do not edit by hand. Regenerate with: npm run audit:evidence -->
 
-Generated: 2026-09-10T12:06:20.631Z
+Generated: 2026-09-10T12:14:35.433Z
 Source: `src/data/calculators/*.ts` (42 files, sha256 `290878e8bb9662a8…`)
 
 This file and `refs-inventory.json` are the only authoritative evidence-audit
@@ -15,7 +15,7 @@ outputs in this repository. Both come from the same parser
 | Metric | Count |
 |--------|------:|
 | Calculator source files | 42 |
-| Calculators with references | 593 |
+| Calculators with references | 918 |
 | Total references | 982 |
 | With PMID | 840 (85.5%) |
 | Unique PMIDs | 724 |
