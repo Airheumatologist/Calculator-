@@ -16,26 +16,27 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whyUse:
       'Highlights key antecedents of early-onset GBS/E. coli sepsis. This tool does not reproduce the full Kaiser Permanente online algorithm or absolute incidence estimates.',
     inputs: [
-      numberInput('gaWeeks', 'Gestational age', { unit: 'weeks', min: 34, max: 43, step: 0.1, defaultValue: 39 }),
-      numberInput('romHours', 'Duration of ROM', { unit: 'hours', min: 0, max: 120, step: 0.5, defaultValue: 6 }),
+      numberInput('gaWeeks', 'Gestational age', { unit: 'weeks', min: 34, max: 43, step: 0.1, defaultValue: 39, helpText: 'Official KP EOS calculator is for ≥34 weeks. This educational helper adds points if GA <38.' }),
+      numberInput('romHours', 'Duration of ROM', { unit: 'hours', min: 0, max: 120, step: 0.5, defaultValue: 6, helpText: 'Hours of ruptured membranes before birth. Educational helper: ≥12 h and ≥18 h add points (PROM ≥18 h is a classic EOS risk factor).' }),
       numberInput('maxTemp', 'Highest maternal intrapartum temperature', {
         unit: '°C',
         min: 36,
         max: 42,
         step: 0.1,
         defaultValue: 37.2,
+        helpText: 'Highest maternal temperature during labor. Educational: ≥37.5 / ≥38.0 / ≥39.0 °C add increasing points. Convert °F: (°F − 32) × 5/9.',
       }),
       selectInput('gbs', 'Maternal GBS status', [
-        { label: 'Negative', value: 'neg' },
-        { label: 'Positive', value: 'pos' },
-        { label: 'Unknown', value: 'unk' },
-      ]),
+        { label: 'Negative', value: 'neg', description: 'GBS screen negative this pregnancy (or not indicated)' },
+        { label: 'Positive', value: 'pos', description: 'GBS colonized this pregnancy' },
+        { label: 'Unknown', value: 'unk', description: 'GBS status unknown at delivery' },
+      ], 'neg', 'Most recent pregnancy GBS screen (CDC/ACOG). Unknown is treated as intermediate risk here.'),
       selectInput('abx', 'Intrapartum antibiotics', [
-        { label: 'Broad-spectrum ≥4 h before birth (GBS/EOS adequate)', value: 'adequate' },
-        { label: 'GBS prophylaxis only ≥2–4 h (partial)', value: 'partial' },
-        { label: 'None or <2 h before birth', value: 'none' },
-      ]),
-      yesNo('clinicalIllness', 'Newborn clinical illness (resp distress, hemodynamic instability, encephalopathy)', 4),
+        { label: 'Broad-spectrum ≥4 h before birth (GBS/EOS adequate)', value: 'adequate', description: 'Ampicillin/penicillin (or equivalent EOS-adequate regimen) ≥4 h before birth' },
+        { label: 'GBS prophylaxis only ≥2–4 h (partial)', value: 'partial', description: 'GBS prophylaxis given, but <4 h before birth (partial coverage)' },
+        { label: 'None or <2 h before birth', value: 'none', description: 'No IAP, or first dose <2 h before birth' },
+      ], 'adequate', 'Adequate IAP for GBS is typically penicillin/ampicillin ≥4 h before birth. This educational helper subtracts points for adequate IAP.'),
+      yesNo('clinicalIllness', 'Newborn clinical illness (resp distress, hemodynamic instability, encephalopathy)', 4, 'Any of: persistent respiratory distress, hemodynamic instability, or neonatal encephalopathy. Ill newborns are treated for possible EOS — do not wait for a score.'),
     ],
     calculate(values) {
       const ga = num(values.gaWeeks, 39);
@@ -151,16 +152,16 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whenToUse: 'Infants >72 hours of life with nonspecific signs that may represent LOS (apnea, feeding intolerance, temperature instability, etc.).',
     whyUse: 'LOS presentations are subtle; a checklist supports systematic assessment of clinical and risk domains before cultures/antibiotics.',
     inputs: [
-      yesNo('tempInstab', 'Temperature instability (hypo/hyperthermia)', 1),
-      yesNo('apneaBrady', 'New/increased apnea, bradycardia, or desaturations', 2),
-      yesNo('resp', 'Respiratory distress or increased support need', 1),
-      yesNo('feedIntol', 'Feeding intolerance, ileus, or abdominal concerns', 1),
-      yesNo('perfusion', 'Poor perfusion, mottling, prolonged CRT, or hypotension', 2),
-      yesNo('neuro', 'Lethargy, irritability, or abnormal tone/seizures', 2),
-      yesNo('glucose', 'New glucose instability', 1),
-      yesNo('clabsiRisk', 'Central line / recent invasive procedure / prolonged parenteral nutrition', 1),
-      yesNo('prematurity', 'Very/extremely preterm or very low birth weight', 1),
-      yesNo('priorAbx', 'Recent broad antibiotics / known colonization with resistant organisms', 1),
+      yesNo('tempInstab', 'Temperature instability (hypo/hyperthermia)', 1, 'Core temperature <36.5°C or ≥38.0°C, or repeated need to adjust the incubator/environment to keep the infant euthermic.'),
+      yesNo('apneaBrady', 'New/increased apnea, bradycardia, or desaturations', 2, 'New or increased apnea, bradycardia, or desaturation clusters vs this infant’s baseline (often a higher-weight LOS flag).'),
+      yesNo('resp', 'Respiratory distress or increased support need', 1, 'New or increased work of breathing, oxygen, or ventilator/CPAP support.'),
+      yesNo('feedIntol', 'Feeding intolerance, ileus, or abdominal concerns', 1, 'New residuals, emesis, abdominal distension, or bloody stool — overlap with NEC.'),
+      yesNo('perfusion', 'Poor perfusion, mottling, prolonged CRT, or hypotension', 2, 'Capillary refill >3 s, mottling, cool extremities, or hypotension vs GA mean-BP tables (often MAP < gestational age in weeks as a teaching floor).'),
+      yesNo('neuro', 'Lethargy, irritability, or abnormal tone/seizures', 2, 'Change in tone, unexplained irritability, lethargy, or seizures vs this infant’s baseline.'),
+      yesNo('glucose', 'New glucose instability', 1, 'New hypoglycemia or hyperglycemia requiring treatment (many NICUs treat glucose <45–50 mg/dL; hyperglycemia often >150–180 mg/dL).'),
+      yesNo('clabsiRisk', 'Central line / recent invasive procedure / prolonged parenteral nutrition', 1, 'Any central venous catheter (UVC/PICC/Broviac), surgery or other invasive procedure, or prolonged TPN this admission — classic LOS risk factors.'),
+      yesNo('prematurity', 'Very/extremely preterm or very low birth weight', 1, 'Very preterm <32 weeks, extremely preterm <28 weeks, VLBW <1500 g, or ELBW <1000 g.'),
+      yesNo('priorAbx', 'Recent broad antibiotics / known colonization with resistant organisms', 1, 'Systemic broad-spectrum antibiotics in the past 7–14 days, or known colonization with resistant organisms (e.g., MRSA, ESBL, Candida).'),
     ],
     calculate(values) {
       const keys = [
@@ -274,22 +275,22 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whyUse: 'Standard communication framework for NEC severity guiding medical vs surgical pathways.',
     inputs: [
       selectInput('systemic', 'Systemic signs', [
-        { label: 'None / mild temp or apnea instability only', value: 1 },
-        { label: 'Moderate systemic illness (lethargy, apnea, bradycardia)', value: 2 },
-        { label: 'Severe (shock, DIC, marked metabolic acidosis)', value: 3 },
-      ]),
+        { label: 'None / mild temp or apnea instability only', value: 1, description: 'Bell I: temperature instability, mild apnea/bradycardia, or lethargy only — infant still reasonably stable' },
+        { label: 'Moderate systemic illness (lethargy, apnea, bradycardia)', value: 2, description: 'Bell II: as I plus more prominent lethargy, recurrent apnea/bradycardia, mild metabolic acidosis, and/or thrombocytopenia' },
+        { label: 'Severe (shock, DIC, marked metabolic acidosis)', value: 3, description: 'Bell III: hypotension/shock, severe apnea, mixed respiratory + metabolic acidosis, DIC, neutropenia, or anuria' },
+      ], 1, 'Modified Bell (Walsh/Kliegman): pick the worst systemic band. I = temp instability/mild apnea; II = plus acidosis/thrombocytopenia; III = shock, DIC, marked acidosis.'),
       selectInput('abdominal', 'Intestinal / abdominal signs', [
-        { label: 'Gastric residuals, mild distension, or occult blood', value: 1 },
-        { label: 'Marked distension, absent bowel sounds, gross blood', value: 2 },
-        { label: 'Peritonitis, tenderness, mass, or discoloration of wall', value: 3 },
-      ]),
+        { label: 'Gastric residuals, mild distension, or occult blood', value: 1, description: 'Bell I: increased residuals, mild distension, emesis, or occult blood in stool' },
+        { label: 'Marked distension, absent bowel sounds, gross blood', value: 2, description: 'Bell II: marked distension, absent bowel sounds, abdominal tenderness, and/or grossly bloody stool' },
+        { label: 'Peritonitis, tenderness, mass, or discoloration of wall', value: 3, description: 'Bell III: peritonitis, marked tenderness and distension, abdominal-wall erythema/discoloration, or a palpable mass (often RLQ)' },
+      ], 1, 'Examine the abdomen and stool. Occult blood/mild distension = I; marked distension, silent belly, or gross blood = II; peritonitis/wall discoloration/mass = III.'),
       selectInput('imaging', 'Radiographic / imaging findings', [
-        { label: 'Normal or mild ileus / intestinal dilation', value: 1 },
-        { label: 'Pneumatosis intestinalis and/or portal venous gas', value: 2 },
-        { label: 'Pneumoperitoneum (free air)', value: 3 },
-      ]),
-      yesNo('definitePneumatosis', 'Definite pneumatosis or portal gas documented', 1),
-      yesNo('freeAir', 'Free intraperitoneal air', 1),
+        { label: 'Normal or mild ileus / intestinal dilation', value: 1, description: 'Bell I: normal film or mild ileus/dilation without pneumatosis' },
+        { label: 'Pneumatosis intestinalis and/or portal venous gas', value: 2, description: 'Bell II: intramural gas (pneumatosis) and/or portal venous gas — definite NEC radiographically' },
+        { label: 'Pneumoperitoneum (free air)', value: 3, description: 'Bell IIIB: free intraperitoneal air (perforation). Sentinel loop or ascites without free air can still be IIIA clinically' },
+      ], 1, 'Use the worst radiographic finding. Pneumatosis or portal gas defines definite (stage II) NEC for most practical purposes. Free air = IIIB.'),
+      yesNo('definitePneumatosis', 'Definite pneumatosis or portal gas documented', 1, 'Radiologist- or clinician-documented intramural gas or portal venous gas — defines definite (stage II) NEC even if systemic signs look mild.'),
+      yesNo('freeAir', 'Free intraperitoneal air', 1, 'Pneumoperitoneum on film or cross-sectional imaging — Bell IIIB (perforation) regardless of other domains.'),
     ],
     calculate(values) {
       const sys = num(values.systemic, 1);
@@ -397,11 +398,11 @@ export const wave6EmPedsCalcs: Calculator[] = [
         { label: 'Toddler 1–5 years', value: 'toddler' },
         { label: 'School age 6–12 years', value: 'school' },
         { label: 'Adolescent 13–18 years', value: 'teen' },
-      ]),
-      numberInput('temp', 'Core temperature', { unit: '°C', min: 30, max: 43, step: 0.1, defaultValue: 38.5 }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 40, max: 280, defaultValue: 140 }),
-      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 5, max: 120, defaultValue: 30 }),
-      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 100, step: 0.1, defaultValue: 14 }),
+      ], undefined, 'Goldstein 2005 tachycardia / tachypnea / WBC floors used here: 0–7 d HR >180, RR >50, WBC <5 or >34; 8–30 d HR >180, RR >40, WBC <5 or >19.5; 1–12 mo HR >180, RR >34, WBC <5 or >17.5; 1–5 y HR >140, RR >22, WBC <6 or >15.5; 6–12 y HR >130, RR >18, WBC <4.5 or >13.5; 13–18 y HR >110, RR >14, WBC <4.5 or >11. Neonatal bradycardia <100 also counts.'),
+      numberInput('temp', 'Core temperature', { unit: '°C', min: 30, max: 43, step: 0.1, defaultValue: 38.5, helpText: 'Abnormal if >38.5°C or <36.0°C (Goldstein). Pediatric SIRS usually requires temperature or WBC abnormality among the ≥2 criteria.' }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 40, max: 280, defaultValue: 140, helpText: 'Tachycardia if above the age-band cutoff in the age-band helpText. Bradycardia <100 bpm counts in the first 30 days of life.' }),
+      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 5, max: 120, defaultValue: 30, helpText: 'Tachypnea if above the age-band cutoff. Mechanical ventilation for an acute process also fulfills the respiratory criterion.' }),
+      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 100, step: 0.1, defaultValue: 14, helpText: 'Leukocyte criterion: WBC above or below the age-band range, or bands >10%.' }),
       yesNo('bands', 'Immature neutrophils (bands) >10%', 0),
       yesNo('mechVent', 'Mechanical ventilation for acute process (counts as respiratory criterion)', 1),
     ],
@@ -513,48 +514,48 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whenToUse: 'PICU-style assessment of multi-organ dysfunction severity for teaching or structured documentation.',
     whyUse: 'pSOFA adapts SOFA to pediatric cutoffs; higher totals associate with mortality. This version uses coarse domain bins for education.',
     inputs: [
-      selectInput('resp', 'Respiratory (PaO₂/FiO₂ or SpO₂/FiO₂ severity)', [
-        { label: 'Normal / mild (0)', value: 0 },
-        { label: 'Mild impairment (1)', value: 1 },
-        { label: 'Moderate (2)', value: 2 },
-        { label: 'Severe on support (3)', value: 3 },
-        { label: 'Very severe / high support (4)', value: 4 },
+      selectInput('resp', 'Respiratory (PaO₂/FiO₂ or SpO₂/FiO₂)', [
+        { label: 'PF ≥400 or SF ≥292 (0)', value: 0, description: 'PaO₂/FiO₂ ≥400 or SpO₂/FiO₂ ≥292' },
+        { label: 'PF 300–399 or SF 264–291 (1)', value: 1, description: 'PaO₂/FiO₂ 300–399 or SpO₂/FiO₂ 264–291' },
+        { label: 'PF 200–299 or SF 221–263 (2)', value: 2, description: 'PaO₂/FiO₂ 200–299 or SpO₂/FiO₂ 221–263' },
+        { label: 'PF 100–199 or SF 148–220 + support (3)', value: 3, description: 'PaO₂/FiO₂ 100–199 or SpO₂/FiO₂ 148–220 AND respiratory support' },
+        { label: 'PF <100 or SF <148 + support (4)', value: 4, description: 'PaO₂/FiO₂ <100 or SpO₂/FiO₂ <148 AND respiratory support' },
+      ], undefined, 'Matics pSOFA. Use SpO₂/FiO₂ only if SpO₂ ≤97%. Scores 3–4 require respiratory support (IMV, NIV, or securely fitted O₂ mask).'),
+      selectInput('coag', 'Coagulation (platelets ×10³/µL)', [
+        { label: '≥150 (0)', value: 0, description: 'Platelets ≥150 ×10³/µL' },
+        { label: '100–149 (1)', value: 1, description: 'Platelets 100–149 ×10³/µL' },
+        { label: '50–99 (2)', value: 2, description: 'Platelets 50–99 ×10³/µL' },
+        { label: '20–49 (3)', value: 3, description: 'Platelets 20–49 ×10³/µL' },
+        { label: '<20 (4)', value: 4, description: 'Platelets <20 ×10³/µL' },
       ]),
-      selectInput('coag', 'Coagulation (platelets)', [
-        { label: '≥150 (0)', value: 0 },
-        { label: '100–149 (1)', value: 1 },
-        { label: '50–99 (2)', value: 2 },
-        { label: '20–49 (3)', value: 3 },
-        { label: '<20 (4)', value: 4 },
+      selectInput('liver', 'Liver (bilirubin mg/dL)', [
+        { label: '<1.2 mg/dL (0)', value: 0, description: 'Total bilirubin <1.2 mg/dL (<20 µmol/L)' },
+        { label: '1.2–1.9 (1)', value: 1, description: 'Total bilirubin 1.2–1.9 mg/dL' },
+        { label: '2.0–5.9 (2)', value: 2, description: 'Total bilirubin 2.0–5.9 mg/dL' },
+        { label: '6.0–11.9 (3)', value: 3, description: 'Total bilirubin 6.0–11.9 mg/dL' },
+        { label: '≥12.0 (4)', value: 4, description: 'Total bilirubin ≥12.0 mg/dL' },
       ]),
-      selectInput('liver', 'Liver (bilirubin)', [
-        { label: '<1.2 mg/dL (0)', value: 0 },
-        { label: '1.2–1.9 (1)', value: 1 },
-        { label: '2.0–5.9 (2)', value: 2 },
-        { label: '6.0–11.9 (3)', value: 3 },
-        { label: '≥12.0 (4)', value: 4 },
-      ]),
-      selectInput('cv', 'Cardiovascular (BP / vasoactives)', [
-        { label: 'Normotensive for age, no pressors (0)', value: 0 },
-        { label: 'Mild hypotension or fluid-responsive (1)', value: 1 },
-        { label: 'Low-dose single vasoactive (2)', value: 2 },
-        { label: 'Moderate vasoactive support (3)', value: 3 },
-        { label: 'High-dose / multi-agent shock (4)', value: 4 },
-      ]),
-      selectInput('cns', 'CNS (age-adjusted GCS-style)', [
-        { label: 'Normal mentation (0)', value: 0 },
-        { label: 'Mildly altered (1)', value: 1 },
-        { label: 'Moderately altered (2)', value: 2 },
-        { label: 'Severely altered (3)', value: 3 },
-        { label: 'Unresponsive / deep coma (4)', value: 4 },
-      ]),
-      selectInput('renal', 'Renal (creatinine / UOP severity)', [
-        { label: 'Normal for age (0)', value: 0 },
-        { label: 'Mild elevation / oliguria (1)', value: 1 },
-        { label: 'Moderate (2)', value: 2 },
-        { label: 'Severe (3)', value: 3 },
-        { label: 'Failure / dialysis (4)', value: 4 },
-      ]),
+      selectInput('cv', 'Cardiovascular (MAP / vasoactives)', [
+        { label: 'MAP at/above age floor, no pressors (0)', value: 0, description: 'MAP ≥ age-specific floor and no vasoactive infusion' },
+        { label: 'MAP below age floor, no pressors (1)', value: 1, description: 'Hypotension by age MAP without vasoactives' },
+        { label: 'Dopamine ≤5 or dobutamine any (2)', value: 2, description: 'Dopamine ≤5 µg/kg/min or dobutamine (any dose)' },
+        { label: 'Dopamine >5 or epi/norepi ≤0.1 (3)', value: 3, description: 'Dopamine >5 µg/kg/min, or epinephrine or norepinephrine ≤0.1 µg/kg/min' },
+        { label: 'Dopamine >15 or epi/norepi >0.1 (4)', value: 4, description: 'Dopamine >15 µg/kg/min, or epinephrine or norepinephrine >0.1 µg/kg/min' },
+      ], undefined, 'Matics MAP floors for score 0 (mmHg): <1 mo ≥46; 1–11 mo ≥55; 12–23 mo ≥60; 24–59 mo ≥62; 60–143 mo ≥65; 12–18 y ≥67; adult ≥70. Vasoactive doses in µg/kg/min.'),
+      selectInput('cns', 'CNS (age-adjusted GCS)', [
+        { label: 'GCS 15 (0)', value: 0, description: 'Age-adjusted GCS 15' },
+        { label: 'GCS 13–14 (1)', value: 1, description: 'Age-adjusted GCS 13–14' },
+        { label: 'GCS 10–12 (2)', value: 2, description: 'Age-adjusted GCS 10–12' },
+        { label: 'GCS 6–9 (3)', value: 3, description: 'Age-adjusted GCS 6–9' },
+        { label: 'GCS <6 (4)', value: 4, description: 'Age-adjusted GCS <6' },
+      ], undefined, 'Use pediatric/age-adjusted GCS. Score the worst GCS in the assessment window.'),
+      selectInput('renal', 'Renal (creatinine / UOP)', [
+        { label: 'Cr/UOP normal for age (0)', value: 0, description: 'Creatinine below age score-1 floor and UOP ≥1 mL/kg/h' },
+        { label: 'Mild Cr rise or UOP <1 mL/kg/h (1)', value: 1, description: 'See age-creatinine table; or UOP <1 mL/kg/h' },
+        { label: 'Moderate Cr rise or UOP <0.5 mL/kg/h (2)', value: 2, description: 'See age-creatinine table; or UOP <0.5 mL/kg/h' },
+        { label: 'Severe Cr rise or UOP <0.3 mL/kg/h (3)', value: 3, description: 'See age-creatinine table; or UOP <0.3 mL/kg/h' },
+        { label: 'Failure / dialysis (4)', value: 4, description: 'Highest age-band creatinine, UOP <0.3 mL/kg/h for 24 h, or RRT/dialysis' },
+      ], undefined, 'Matics creatinine mg/dL (score 0/1/2/3/4): <1 mo <0.8/0.8–0.9/1.0–1.1/1.2–1.5/≥1.6; 1–11 mo <0.3/0.3–0.4/0.5–0.7/0.8–1.1/≥1.2; 12–23 mo <0.4/0.4–0.5/0.6–1.0/1.1–1.4/≥1.5; 24–59 mo <0.6/0.6–0.8/0.9–1.5/1.6–2.2/≥2.3; 60–143 mo <0.7/0.7–1.0/1.1–1.7/1.8–2.5/≥2.6; 12–18 y <1.0/1.0–1.6/1.7–2.8/2.9–4.1/≥4.2; adult <1.2/1.2–1.9/2.0–3.4/3.5–4.9/≥5.0. Use the worse of Cr vs UOP.'),
     ],
     calculate(values) {
       const score =
@@ -646,27 +647,27 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whenToUse: 'Children with suspected infection when applying modern organ-dysfunction-based sepsis definitions (teaching aid).',
     whyUse: 'Phoenix (2024) redefined pediatric sepsis around organ dysfunction rather than SIRS; this checklist surfaces the major domains.',
     inputs: [
-      yesNo('infection', 'Suspected or confirmed infection', 0),
+      yesNo('infection', 'Suspected or confirmed infection', 0, 'Infection (or high clinical suspicion) is required for Phoenix sepsis; organ points alone are not sepsis.'),
       selectInput('resp', 'Respiratory dysfunction', [
-        { label: 'None (0)', value: 0 },
-        { label: 'Mild–moderate (high-flow / mild hypoxia) (1)', value: 1 },
-        { label: 'Severe (invasive vent / severe gas exchange failure) (2)', value: 2 },
-      ]),
+        { label: 'None (0)', value: 0, description: 'PF ≥400 or SF ≥292' },
+        { label: 'Mild–moderate (high-flow / mild hypoxia) (1)', value: 1, description: 'PF <400 or SF <292 on any oxygen or respiratory support' },
+        { label: 'Severe (invasive vent / severe gas exchange failure) (2)', value: 2, description: 'Invasive mechanical ventilation AND (PF ≤200 or SF ≤220)' },
+      ], undefined, 'Educational 0–2 bins (official Phoenix respiratory is 0–3). PF = PaO₂/FiO₂; SF = SpO₂/FiO₂ (use SF only if SpO₂ ≤97%).'),
       selectInput('cv', 'Cardiovascular dysfunction', [
-        { label: 'None (0)', value: 0 },
-        { label: 'Vasoactive need or significant lactate/hypotension (1)', value: 1 },
-        { label: 'Severe shock (high-dose / multi-agent / profound lactate) (2)', value: 2 },
-      ]),
+        { label: 'None (0)', value: 0, description: 'No vasoactive, lactate <5 mmol/L, and MAP above age floor' },
+        { label: 'Vasoactive need or significant lactate/hypotension (1)', value: 1, description: '1 vasoactive agent, or lactate 5–10.9 mmol/L, or age-based hypotension' },
+        { label: 'Severe shock (high-dose / multi-agent / profound lactate) (2)', value: 2, description: '≥2 vasoactives or lactate ≥11 mmol/L' },
+      ], undefined, 'MAP 0-point floors (mmHg): <1 mo >30; 1–11 mo >38; 1–<2 y >43; 2–<5 y >44; 5–<12 y >48; 12–17 y >51. Educational 0–2 (official CV 0–6). Lactate in mmol/L.'),
       selectInput('coag', 'Coagulation dysfunction', [
-        { label: 'None (0)', value: 0 },
-        { label: 'Thrombocytopenia / coagulopathy meeting Phoenix-style thresholds (1)', value: 1 },
-        { label: 'Severe consumptive coagulopathy (2)', value: 2 },
+        { label: 'None (0)', value: 0, description: 'Platelets ≥100 ×10³/µL, INR ≤1.3, D-dimer ≤2 mg/L FEU, and fibrinogen ≥100 mg/dL' },
+        { label: 'Thrombocytopenia / coagulopathy meeting Phoenix-style thresholds (1)', value: 1, description: 'Any one abnormal: platelets <100 ×10³/µL, INR >1.3, D-dimer >2 mg/L FEU, or fibrinogen <100 mg/dL' },
+        { label: 'Severe consumptive coagulopathy (2)', value: 2, description: '≥2 of: platelets <100 ×10³/µL, INR >1.3, D-dimer >2 mg/L FEU, fibrinogen <100 mg/dL' },
       ]),
       selectInput('neuro', 'Neurologic dysfunction', [
-        { label: 'None (0)', value: 0 },
-        { label: 'Altered mentation / GCS reduction (1)', value: 1 },
-        { label: 'Severe encephalopathy / coma (2)', value: 2 },
-      ]),
+        { label: 'None (0)', value: 0, description: 'GCS >10 and both pupils reactive' },
+        { label: 'Altered mentation / GCS reduction (1)', value: 1, description: 'GCS ≤10 (age-adjusted) with reactive pupils' },
+        { label: 'Severe encephalopathy / coma (2)', value: 2, description: 'Bilateral fixed pupils' },
+      ], undefined, 'Use age-adjusted GCS. Score 2 only for bilateral fixed pupils (not sedation-related if reversible).'),
     ],
     calculate(values) {
       const organ =
@@ -1133,7 +1134,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whenToUse: 'Third-trimester fluid assessment or anytime AFI is reported on ultrasound.',
     whyUse: 'AFI categories guide surveillance for fetal well-being, membrane rupture, and maternal conditions (diabetes, etc.).',
     inputs: [
-      numberInput('afi', 'Amniotic fluid index', { unit: 'cm', min: 0, max: 50, step: 0.1, defaultValue: 12 }),
+      numberInput('afi', 'Amniotic fluid index', { unit: 'cm', min: 0, max: 50, step: 0.1, defaultValue: 12, helpText: 'Sum of four-quadrant deepest vertical pockets. Common cutoffs: oligohydramnios AFI <5 cm; borderline 5–8 cm; normal ~5–24 cm; polyhydramnios ≥24 cm (some use ≥25).' }),
       yesNo('useMvp', 'Also have maximum vertical pocket (MVP)?', 0),
       numberInput('mvp', 'Maximum vertical pocket (if known)', {
         unit: 'cm',
@@ -1142,6 +1143,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         step: 0.1,
         defaultValue: 4,
         required: false,
+        helpText: 'Cord-free vertical pocket. MVP <2 cm supports oligohydramnios; MVP ≥8 cm supports polyhydramnios. Many guidelines prefer MVP over AFI for oligohydramnios.',
       }),
     ],
     calculate(values) {
@@ -1338,26 +1340,26 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whyUse: 'Combines acute (breathing, movement, tone, NST) and chronic (AFV) markers of fetal status.',
     inputs: [
       selectInput('nst', 'Nonstress test (NST)', [
-        { label: 'Reactive (2)', value: 2 },
-        { label: 'Nonreactive (0)', value: 0 },
-        { label: 'Not performed / ultrasound-only modified BPP context', value: -1 },
-      ]),
+        { label: 'Reactive (2)', value: 2, description: '≥2 accelerations in 20 min: ≥15 bpm × ≥15 s if GA ≥32 wks, or ≥10 bpm × ≥10 s if GA <32 wks' },
+        { label: 'Nonreactive (0)', value: 0, description: 'Fewer than 2 qualifying accelerations after extending the tracing to 40 min' },
+        { label: 'Not performed / ultrasound-only modified BPP context', value: -1, description: 'Skip NST; remaining ultrasound components scored /8' },
+      ], undefined, 'ACOG/Manning: count accelerations from baseline. Extend to 40 min before calling nonreactive (fetal sleep). Reactive = ≥2 accels in 20 min (15×15 if ≥32 wks; 10×10 if <32 wks).'),
       selectInput('breathing', 'Fetal breathing movements', [
-        { label: '≥1 episode ≥30 s in 30 min (2)', value: 2 },
-        { label: 'Absent/insufficient (0)', value: 0 },
+        { label: '≥1 episode ≥30 s in 30 min (2)', value: 2, description: '≥1 episode of fetal breathing lasting ≥30 s during a 30-min observation' },
+        { label: 'Absent/insufficient (0)', value: 0, description: 'No breathing episode ≥30 s in 30 min' },
       ]),
       selectInput('movement', 'Gross body movements', [
-        { label: '≥3 discrete body/limb movements (2)', value: 2 },
-        { label: '≤2 movements (0)', value: 0 },
-      ]),
+        { label: '≥3 discrete body/limb movements (2)', value: 2, description: '≥3 discrete body or limb movements in 30 min (continuous movement counts as one)' },
+        { label: '≤2 movements (0)', value: 0, description: '≤2 discrete body/limb movements in 30 min' },
+      ], undefined, 'Observe for 30 min. ≥3 discrete trunk/limb movements scores 2; hiccups do not count as breathing or movement.'),
       selectInput('tone', 'Fetal tone', [
-        { label: '≥1 episode active extension→flexion (2)', value: 2 },
-        { label: 'Slow/absent tone (0)', value: 0 },
-      ]),
+        { label: '≥1 episode active extension→flexion (2)', value: 2, description: '≥1 episode of active extension then flexion of a limb or spine, or hand opening then closing, in 30 min' },
+        { label: 'Slow/absent tone (0)', value: 0, description: 'Slow extension with partial flexion, or absent movement / flaccid hand' },
+      ], undefined, 'Tone = extension→flexion of limb/spine or hand open→close within 30 min.'),
       selectInput('afv', 'Amniotic fluid volume', [
-        { label: 'MVP >2 cm (or adequate AFI) (2)', value: 2 },
-        { label: 'Inadequate fluid (0)', value: 0 },
-      ]),
+        { label: 'MVP >2 cm (or adequate AFI) (2)', value: 2, description: 'Single deepest vertical pocket (MVP) >2 cm, or AFI >5 cm' },
+        { label: 'Inadequate fluid (0)', value: 0, description: 'MVP ≤2 cm or AFI ≤5 cm (oligohydramnios component)' },
+      ], undefined, 'Measure a cord-free vertical pocket. Score 2 if MVP >2 cm or AFI >5 cm; score 0 if MVP ≤2 cm or AFI ≤5 cm.'),
     ],
     calculate(values) {
       const nstRaw = num(values.nst, 2);
@@ -1495,43 +1497,43 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whyUse: 'Higher scores predict higher induction success; may inform cervical ripening need. Modified versions use % effacement or length options.',
     inputs: [
       selectInput('dilation', 'Dilation', [
-        { label: 'Closed (0)', value: 0 },
-        { label: '1–2 cm (1)', value: 1 },
-        { label: '3–4 cm (2)', value: 2 },
-        { label: '≥5 cm (3)', value: 3 },
-      ]),
+        { label: 'Closed (0)', value: 0, description: 'Internal os closed on digital exam' },
+        { label: '1–2 cm (1)', value: 1, description: 'Cervical dilation 1–2 cm' },
+        { label: '3–4 cm (2)', value: 2, description: 'Cervical dilation 3–4 cm' },
+        { label: '≥5 cm (3)', value: 3, description: 'Cervical dilation ≥5 cm' },
+      ], 0, 'Sterile digital exam: how many centimeters of internal os dilation. Closed = 0.'),
       selectInput('effaceMode', 'Effacement input', [
         { label: 'Percent effacement', value: 'pct' },
         { label: 'Cervical length (modified)', value: 'len' },
-      ]),
+      ], 'pct', 'Use percent effacement from digital exam, or cervical length if your modified Bishop uses length instead. Only one of those two point fields is summed.'),
       selectInput('effacement', 'Effacement %', [
-        { label: '0–30% (0)', value: 0 },
-        { label: '40–50% (1)', value: 1 },
-        { label: '60–70% (2)', value: 2 },
-        { label: '≥80% (3)', value: 3 },
-      ]),
+        { label: '0–30% (0)', value: 0, description: 'Cervix 0–30% effaced (thick)' },
+        { label: '40–50% (1)', value: 1, description: 'Cervix 40–50% shortened' },
+        { label: '60–70% (2)', value: 2, description: 'Cervix 60–70% effaced' },
+        { label: '≥80% (3)', value: 3, description: 'Cervix ≥80% effaced (paper-thin)' },
+      ], 0, 'Digital exam: % shortening of cervical length vs a ~3–4 cm uneffaced cervix. Used when mode = percent.'),
       selectInput('cervLength', 'Cervical length (if length mode)', [
-        { label: '>3 cm (0)', value: 0 },
-        { label: '2–3 cm (1)', value: 1 },
-        { label: '1–2 cm (2)', value: 2 },
-        { label: '<1 cm (3)', value: 3 },
-      ]),
+        { label: '>3 cm (0)', value: 0, description: 'Cervical length >3 cm' },
+        { label: '2–3 cm (1)', value: 1, description: 'Cervical length 2–3 cm' },
+        { label: '1–2 cm (2)', value: 2, description: 'Cervical length 1–2 cm' },
+        { label: '<1 cm (3)', value: 3, description: 'Cervical length <1 cm' },
+      ], 0, 'Used when mode = cervical length. Digital or TVUS length in cm.'),
       selectInput('station', 'Station', [
-        { label: '−3 (0)', value: 0 },
-        { label: '−2 (1)', value: 1 },
-        { label: '−1 / 0 (2)', value: 2 },
-        { label: '+1 / +2 (3)', value: 3 },
-      ]),
+        { label: '−3 (0)', value: 0, description: 'Presenting part 3 cm above the ischial spines' },
+        { label: '−2 (1)', value: 1, description: '2 cm above the ischial spines' },
+        { label: '−1 / 0 (2)', value: 2, description: '1 cm above or at the ischial spines' },
+        { label: '+1 / +2 (3)', value: 3, description: '1–2 cm below the ischial spines' },
+      ], undefined, 'Station is centimeters of the presenting part above (−) or below (+) the ischial spines (−3 to +3).'),
       selectInput('consistency', 'Consistency', [
-        { label: 'Firm (0)', value: 0 },
-        { label: 'Medium (1)', value: 1 },
-        { label: 'Soft (2)', value: 2 },
-      ]),
+        { label: 'Firm (0)', value: 0, description: 'Firm like a forehead — unripe' },
+        { label: 'Medium (1)', value: 1, description: 'Medium like the tip of the nose' },
+        { label: 'Soft (2)', value: 2, description: 'Soft like the lips — ripe' },
+      ], undefined, 'Teaching similes vary; commonly firm ≈ forehead, medium ≈ nose, soft ≈ lips. Palpate the cervix on digital exam.'),
       selectInput('position', 'Position', [
-        { label: 'Posterior (0)', value: 0 },
-        { label: 'Mid (1)', value: 1 },
-        { label: 'Anterior (2)', value: 2 },
-      ]),
+        { label: 'Posterior (0)', value: 0, description: 'Cervical os directed toward the sacrum (posterior)' },
+        { label: 'Mid (1)', value: 1, description: 'Os in mid-position relative to the vaginal axis' },
+        { label: 'Anterior (2)', value: 2, description: 'Os directed toward the pubic symphysis (anterior)' },
+      ], undefined, 'Position of the cervical os relative to the vaginal axis (posterior / mid / anterior).'),
     ],
     calculate(values) {
       const effaceMode = String(values.effaceMode ?? 'pct');
@@ -1635,8 +1637,9 @@ export const wave6EmPedsCalcs: Calculator[] = [
         max: 10,
         step: 0.5,
         defaultValue: 6,
+        helpText: 'Contemporary ACOG active-phase arrest rules start at ≥6 cm. Below 6 cm is treated as latent labor (not arrest).',
       }),
-      yesNo('ruptured', 'Membranes ruptured', 0),
+      yesNo('ruptured', 'Membranes ruptured', 0, 'Active-phase arrest requires ruptured membranes plus the time minima below.'),
       yesNo('adequateUv', 'Adequate uterine activity (≥200 MVU / clinical adequacy)', 0),
       numberInput('hoursNoChange', 'Hours without cervical change (first) or hours in second stage', {
         unit: 'hours',
@@ -1644,8 +1647,8 @@ export const wave6EmPedsCalcs: Calculator[] = [
         max: 12,
         step: 0.5,
         defaultValue: 4,
-      }),
-      yesNo('malpresentation', 'Known malposition/CPD concern or nonreassuring fetal status', 0),
+        helpText: 'First stage: arrest if ≥6 cm + ROM and ≥4 h with adequate UCs (≥200 MVU) or ≥6 h if inadequate. Second stage common limits: nullipara 3 h (4 h with epidural); multipara 2 h (3 h with epidural).',
+      }),      yesNo('malpresentation', 'Known malposition/CPD concern or nonreassuring fetal status', 0),
     ],
     calculate(values) {
       const stage = String(values.stage ?? 'first');
@@ -1772,13 +1775,14 @@ export const wave6EmPedsCalcs: Calculator[] = [
         max: 5000,
         step: 50,
         defaultValue: 600,
+        helpText: 'Prefer quantitative blood loss. ACOG PPH: cumulative ≥1000 mL OR signs of hypovolemia within 24 h of birth (any route). Traditional teaching used ≥500 mL vaginal / ≥1000 mL cesarean.',
       }),
       selectInput('delivery', 'Delivery type', [
         { label: 'Vaginal', value: 'vaginal' },
         { label: 'Cesarean', value: 'cesarean' },
       ]),
-      yesNo('tachycardia', 'Tachycardia', 0),
-      yesNo('hypotension', 'Hypotension / narrow pulse pressure', 0),
+      yesNo('tachycardia', 'Tachycardia', 0, 'e.g. HR ≥110–120 bpm or a marked rise from the patient’s baseline. Local hemorrhage-bundle vital triggers supersede.'),
+      yesNo('hypotension', 'Hypotension / narrow pulse pressure', 0, 'e.g. SBP <90 mmHg, >40 mmHg drop from baseline, or pulse pressure <30 mmHg. Local obstetric hemorrhage protocol supersedes.'),
       yesNo('altered', 'Altered mentation / marked distress', 0),
       yesNo('ongoing', 'Ongoing uncontrolled bleeding', 0),
     ],
@@ -1796,8 +1800,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
       if (ebl >= 1500 || (bool(values.hypotension) && bool(values.ongoing)) || bool(values.altered)) {
         stage = 3;
         label = 'Severe PPH / Stage 3-style hemorrhage';
-        riskLevel = 'critical';
-      } else if (ebl >= 1000 || (pphTraditional && (bool(values.tachycardia) || bool(values.hypotension)))) {
+        riskLevel = 'critical';      } else if (ebl >= 1000 || (pphTraditional && (bool(values.tachycardia) || bool(values.hypotension)))) {
         stage = 2;
         label = 'PPH with significant volume / Stage 2-style';
         riskLevel = 'high';
@@ -1863,12 +1866,11 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whenToUse: 'Suspected obstetric hemorrhage or hypovolemia when early recognition of shock is needed.',
     whyUse: 'Pregnancy alters baseline HR/BP; shock index can rise before frank hypotension.',
     inputs: [
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, defaultValue: 110 }),
-      numberInput('sbp', 'Systolic blood pressure', { unit: 'mmHg', min: 50, max: 220, defaultValue: 100 }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, defaultValue: 110, helpText: 'Shock index = HR ÷ SBP. Obstetric bands used here: <0.9 lower concern; 0.9–1.1 concerning; 1.1–1.7 high; ≥1.7 critical.' }),
+      numberInput('sbp', 'Systolic blood pressure', { unit: 'mmHg', min: 50, max: 220, defaultValue: 100, helpText: 'Use the current systolic BP (mmHg). Do not wait for frank hypotension — SI can rise first.' }),
       selectInput('context', 'Context', [
         { label: 'Postpartum / hemorrhage concern', value: 'pph' },
-        { label: 'Antepartum', value: 'ante' },
-      ]),
+        { label: 'Antepartum', value: 'ante' },      ]),
     ],
     calculate(values) {
       const hr = num(values.hr, 110);
@@ -1963,22 +1965,22 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whyUse: 'Standardized loading/maintenance reduces dosing errors; renal function adjusts maintenance.',
     inputs: [
       selectInput('indication', 'Indication', [
-        { label: 'Eclampsia (active/recent seizure)', value: 'eclampsia' },
-        { label: 'Severe preeclampsia / prophylaxis', value: 'prophylaxis' },
-      ]),
+        { label: 'Eclampsia (active/recent seizure)', value: 'eclampsia', description: 'Generalized tonic-clonic seizure in pregnancy or postpartum with preeclampsia, not attributable to epilepsy, stroke, or metabolic mimics' },
+        { label: 'Severe preeclampsia / prophylaxis', value: 'prophylaxis', description: 'ACOG severe features: BP ≥160/110, platelets <100k, LFTs ≥2× ULN, Cr >1.1 or doubling, pulmonary edema, or new cerebral/visual symptoms — Magpie/ACOG prophylaxis indication' },
+      ], undefined, 'Eclampsia = seizure with preeclampsia. Prophylaxis = preeclampsia with severe features (not isolated gestational HTN without severe features). Delivery is definitive therapy after stabilization.'),
       selectInput('regimen', 'Regimen style', [
-        { label: 'IV Zuspan-style (4–6 g load + 1–2 g/h)', value: 'iv' },
-        { label: 'IM Pritchard-style (educational overview)', value: 'im' },
+        { label: 'IV Zuspan-style (4–6 g load + 1–2 g/h)', value: 'iv', description: 'Preferred in high-resource settings: IV load then continuous infusion' },
+        { label: 'IM Pritchard-style (educational overview)', value: 'im', description: 'Classic 4 g IV + 10 g IM load, then 5 g IM q4h if reflexes and RR adequate' },
       ]),
       selectInput('load', 'IV loading dose choice', [
-        { label: '4 g IV over 15–20 min', value: 4 },
-        { label: '6 g IV over 15–20 min', value: 6 },
+        { label: '4 g IV over 15–20 min', value: 4, description: 'Common load; infuse over 15–20 minutes (not a push)' },
+        { label: '6 g IV over 15–20 min', value: 6, description: 'Alternate US load used in some protocols' },
       ]),
       selectInput('maintenance', 'IV maintenance', [
-        { label: '1 g/h', value: 1 },
-        { label: '2 g/h', value: 2 },
+        { label: '1 g/h', value: 1, description: 'Lower maintenance; typical if renal impairment/oliguria' },
+        { label: '2 g/h', value: 2, description: 'Common US maintenance when urine output and reflexes are adequate' },
       ]),
-      yesNo('renalImpair', 'Significant renal impairment / oliguria', 0),
+      yesNo('renalImpair', 'Significant renal impairment / oliguria', 0, 'Oliguria <30 mL/h for >2 h, or significant AKI/elevated creatinine — reduce maintenance (this tool caps at 1 g/h).'),
       numberInput('weightKg', 'Weight (optional, for context)', { unit: 'kg', min: 40, max: 200, defaultValue: 80, required: false }),
     ],
     calculate(values) {
@@ -2086,10 +2088,11 @@ export const wave6EmPedsCalcs: Calculator[] = [
         max: 300,
         step: 1,
         defaultValue: 90,
+        helpText: 'IADPSG GDM if fasting ≥92 mg/dL (5.1 mmol/L). Overt DM flag if ≥126 mg/dL when that box is on.',
       }),
-      numberInput('h1', '1-hour glucose', { unit: 'mg/dL', min: 40, max: 400, step: 1, defaultValue: 175 }),
-      numberInput('h2', '2-hour glucose', { unit: 'mg/dL', min: 40, max: 400, step: 1, defaultValue: 140 }),
-      yesNo('overtCheck', 'Also flag possible overt diabetes in pregnancy thresholds', 0),
+      numberInput('h1', '1-hour glucose', { unit: 'mg/dL', min: 40, max: 400, step: 1, defaultValue: 175, helpText: 'IADPSG GDM if 1-hour ≥180 mg/dL (10.0 mmol/L) on 75-g OGTT.' }),
+      numberInput('h2', '2-hour glucose', { unit: 'mg/dL', min: 40, max: 400, step: 1, defaultValue: 140, helpText: 'IADPSG GDM if 2-hour ≥153 mg/dL (8.5 mmol/L). Overt DM flag if ≥200 mg/dL when that box is on.' }),
+      yesNo('overtCheck', 'Also flag possible overt diabetes in pregnancy thresholds', 0, 'When Yes, also flags fasting ≥126 mg/dL or 2-hour ≥200 mg/dL (WHO/IADPSG overt-diabetes discussion thresholds).'),
     ],
     calculate(values) {
       const f = num(values.fasting, 90);
@@ -2184,14 +2187,14 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whyUse: 'Healthy newborns rise gradually to adult SpO₂; over-oxygenation and hypoxia both carry risk.',
     inputs: [
       selectInput('minute', 'Minute of life', [
-        { label: '1 minute', value: 1 },
-        { label: '2 minutes', value: 2 },
-        { label: '3 minutes', value: 3 },
-        { label: '4 minutes', value: 4 },
-        { label: '5 minutes', value: 5 },
-        { label: '10 minutes', value: 10 },
-      ]),
-      numberInput('spo2', 'Measured preductal SpO₂', { unit: '%', min: 10, max: 100, defaultValue: 70 }),
+        { label: '1 minute', value: 1, description: 'Target preductal SpO₂ ≈ 60–65%' },
+        { label: '2 minutes', value: 2, description: 'Target ≈ 65–70%' },
+        { label: '3 minutes', value: 3, description: 'Target ≈ 70–75%' },
+        { label: '4 minutes', value: 4, description: 'Target ≈ 75–80%' },
+        { label: '5 minutes', value: 5, description: 'Target ≈ 80–85%' },
+        { label: '10 minutes', value: 10, description: 'Target ≈ 85–95%' },
+      ], 1, 'NRP preductal (right-hand) SpO₂ targets after birth: 1 min 60–65%; 2 min 65–70%; 3 min 70–75%; 4 min 75–80%; 5 min 80–85%; 10 min 85–95%. Titrate blended O₂; HR drives the algorithm.'),
+      numberInput('spo2', 'Measured preductal SpO₂', { unit: '%', min: 10, max: 100, defaultValue: 70, helpText: 'Probe on the right hand/wrist (preductal). Compare to the minute-of-life target window.' }),
       selectInput('startFiO2', 'Initial FiO₂ strategy (term vs preterm context)', [
         { label: '≥35 weeks — start air (21%)', value: 'term' },
         { label: '<35 weeks — often 21–30% per NRP', value: 'preterm' },
@@ -2287,14 +2290,14 @@ export const wave6EmPedsCalcs: Calculator[] = [
         { label: 'Immediate / first minutes–hours', value: 'early' },
         { label: 'After a period of relative wellness', value: 'delayed' },
       ]),
-      yesNo('csection', 'Cesarean without labor', 2),
-      yesNo('grunting', 'Prominent grunting / marked retractions', 0),
-      yesNo('cyanosisO2', 'Cyanosis or significant O₂ need', 0),
-      yesNo('fluidCXR', 'CXR: fluid in fissures / perihilar streaking (TTN-like)', 3),
-      yesNo('reticCXR', 'CXR: diffuse reticulogranular / air bronchograms (RDS-like)', -3),
-      yesNo('improving6_12', 'Clear improvement by 6–12–24 h', 3),
-      yesNo('worsening', 'Progressive worsening over first day', -2),
-      yesNo('prematurityRisk', 'No/late antenatal steroids if preterm', -2),
+      yesNo('csection', 'Cesarean without labor', 2, 'Cesarean delivery without labor is a classic TTN risk (retained fetal lung fluid).'),
+      yesNo('grunting', 'Prominent grunting / marked retractions', 0, 'Prominent expiratory grunt and/or marked retractions (more RDS-like if both with hypoxia).'),
+      yesNo('cyanosisO2', 'Cyanosis or significant O₂ need', 0, 'Central cyanosis or need for significant supplemental oxygen.'),
+      yesNo('fluidCXR', 'CXR: fluid in fissures / perihilar streaking (TTN-like)', 3, 'Classic TTN film: fluid in the fissures and/or prominent perihilar streaking without diffuse granular RDS pattern.'),
+      yesNo('reticCXR', 'CXR: diffuse reticulogranular / air bronchograms (RDS-like)', -3, 'Diffuse reticulogranular (“ground-glass”) pattern with air bronchograms — RDS pattern.'),
+      yesNo('improving6_12', 'Clear improvement by 6–12–24 h', 3, 'Clear clinical improvement by 6–12 hours, or definitely by 24 h (TTN-like course).'),
+      yesNo('worsening', 'Progressive worsening over first day', -2, 'Progressive distress over the first 24 h (RDS-like).'),
+      yesNo('prematurityRisk', 'No/late antenatal steroids if preterm', -2, 'If preterm: no antenatal corticosteroids, or last dose <24 h before birth. Scores toward RDS mainly if GA <35 weeks (tool applies this).'),
     ],
     calculate(values) {
       let ttn = 0;
@@ -2396,14 +2399,15 @@ export const wave6EmPedsCalcs: Calculator[] = [
         max: 30,
         step: 0.1,
         defaultValue: 1.5,
+        helpText: 'Pathologic if direct/conjugated ≥1.0 mg/dL, or ≥20% of total when total ≥5 mg/dL (common teaching thresholds). Always work up conjugated hyperbilirubinemia.',
       }),
       numberInput('total', 'Total bilirubin', { unit: 'mg/dL', min: 0, max: 50, step: 0.1, defaultValue: 8 }),
       numberInput('ageDays', 'Age', { unit: 'days', min: 0, max: 180, defaultValue: 21 }),
-      yesNo('acholic', 'Acholic (pale) stools', 2),
-      yesNo('darkUrine', 'Dark urine staining', 1),
-      yesNo('hepatomegaly', 'Hepatomegaly or splenomegaly', 1),
-      yesNo('failureThrive', 'Failure to thrive / poor feeding', 1),
-      yesNo('sick', 'Ill-appearing, coagulopathy, or hypoglycemia', 3),
+      yesNo('acholic', 'Acholic (pale) stools', 2, 'Pale, clay-colored stools (stool color card) — classic biliary atresia clue; photograph stools if unsure.'),
+      yesNo('darkUrine', 'Dark urine staining', 1, 'Urine that stains the diaper yellow-brown (conjugated bilirubin in urine).'),
+      yesNo('hepatomegaly', 'Hepatomegaly or splenomegaly', 1, 'Palpable liver or spleen enlargement on exam.'),
+      yesNo('failureThrive', 'Failure to thrive / poor feeding', 1, 'Poor weight gain or feeding compared with this infant’s growth curve.'),
+      yesNo('sick', 'Ill-appearing, coagulopathy, or hypoglycemia', 3, 'Toxic appearance, coagulopathy (high INR/PT), or hypoglycemia — treat as possible liver failure/sepsis, not isolated jaundice.'),
     ],
     calculate(values) {
       const direct = num(values.direct, 1.5);
@@ -2503,8 +2507,8 @@ export const wave6EmPedsCalcs: Calculator[] = [
       yesNo('ancestry', 'Ancestry with higher prevalence (African, Mediterranean, Middle Eastern, Asian, etc.)', 1),
       yesNo('fhx', 'Family history of G6PD, favism, or unexplained severe neonatal jaundice', 2),
       yesNo('severeJaundice', 'Severe/early neonatal hyperbilirubinemia or need for exchange concern', 2),
-      yesNo('acuteHeme', 'Acute hemolysis (dark urine, ↑indirect bili, ↑LDH, ↓haptoglobin, bite/blister cells)', 2),
-      yesNo('trigger', 'Recent oxidant drug, infection, or fava beans', 2),
+      yesNo('acuteHeme', 'Acute hemolysis (dark urine, ↑indirect bili, ↑LDH, ↓haptoglobin, bite/blister cells)', 2, 'Dark urine, rising indirect bilirubin, high LDH, low haptoglobin, and/or bite or blister cells on smear — oxidative hemolysis pattern.'),
+      yesNo('trigger', 'Recent oxidant drug, infection, or fava beans', 2, 'Primaquine, rasburicase, nitrofurantoin, some sulfa agents, naphthalene, fava beans, or a recent infection — classic G6PD hemolysis triggers (list not exhaustive).'),
       yesNo('knownG6pd', 'Known G6PD deficiency diagnosis', 3),
       yesNo('testingPending', 'Enzyme assay/genetics pending or not yet sent', 0),
     ],
@@ -2589,21 +2593,21 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whenToUse: 'Children with regularly recurring sterile fever episodes when PFAPA is considered.',
     whyUse: 'Structured criteria separate PFAPA from cyclic neutropenia, monogenic autoinflammatory disease, and recurrent infection.',
     inputs: [
-      yesNo('recurrentFever', 'Recurrent regularly timed fever episodes', 2),
-      numberInput('episodeDays', 'Typical episode duration', { unit: 'days', min: 1, max: 21, defaultValue: 4 }),
+      yesNo('recurrentFever', 'Recurrent regularly timed fever episodes', 2, 'Clockwork recurrences: typical PFAPA is 3–7 days of fever every 3–6 (up to 8) weeks, completely well between episodes. Educational Marshall-style wording — not a copyrighted criteria card.'),
+      numberInput('episodeDays', 'Typical episode duration', { unit: 'days', min: 1, max: 21, defaultValue: 4, helpText: 'Helper awards 1 point for ~2–7 day episodes (educational). Typical PFAPA fevers last 3–7 days.' }),
       numberInput('intervalWeeks', 'Typical interval between episodes', {
         unit: 'weeks',
         min: 1,
         max: 16,
         defaultValue: 4,
-      }),
-      yesNo('aphthous', 'Aphthous stomatitis during episodes', 1),
-      yesNo('pharyngitis', 'Pharyngitis / exudative tonsillitis (cultures negative)', 1),
-      yesNo('adenitis', 'Cervical adenitis', 1),
-      yesNo('wellBetween', 'Completely well between episodes with normal growth', 2),
-      yesNo('onsetEarly', 'Onset before age 5 years', 1),
-      yesNo('steroidAbort', 'Single-dose corticosteroid aborts episodes dramatically', 2),
-      yesNo('excludeOther', 'Alternative causes reasonably excluded (cyclic neutropenia, FMF, infection, malignancy)', 2),
+        helpText: 'Helper awards 1 point for ~2–8 week intervals (educational). Typical PFAPA is every 3–6 (up to 8) weeks.',
+      }),      yesNo('aphthous', 'Aphthous stomatitis during episodes', 1, 'One or more oral ulcers during the fever episode (not herpetic vesicles).'),
+      yesNo('pharyngitis', 'Pharyngitis / exudative tonsillitis (cultures negative)', 1, 'Pharyngeal erythema or exudate with negative strep/culture during the stereotyped episode.'),
+      yesNo('adenitis', 'Cervical adenitis', 1, 'Tender cervical lymphadenopathy during the episode (Marshall cardinal feature).'),
+      yesNo('wellBetween', 'Completely well between episodes with normal growth', 2, 'Completely asymptomatic and growing normally in the interval — required for classic PFAPA.'),
+      yesNo('onsetEarly', 'Onset before age 5 years', 1, 'Classic Marshall: onset before age 5 years.'),
+      yesNo('steroidAbort', 'Single-dose corticosteroid aborts episodes dramatically', 2, 'A single dose of prednisone/prednisolone (often 1–2 mg/kg) aborts the episode within hours — supportive, not required.'),
+      yesNo('excludeOther', 'Alternative causes reasonably excluded (cyclic neutropenia, FMF, infection, malignancy)', 2, 'Cyclic neutropenia, familial Mediterranean fever and other monogenic fevers, occult infection, and malignancy reasonably excluded.'),
     ],
     calculate(values) {
       let score = 0;
@@ -2695,13 +2699,13 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whenToUse: 'Children with purpura when classifying IgA vasculitis / HSP versus other vasculitides or purpuric illness.',
     whyUse: 'Standard criteria require purpura (often lower limb) plus at least one additional domain (abdominal, joint, renal, histology).',
     inputs: [
-      yesNo('purpura', 'Purpura or petechiae (commonly lower limb predominant) with neither thrombocytopenia nor coagulopathy', 3),
-      yesNo('abdominal', 'Acute abdominal pain (diffuse colicky) or GI bleeding / intussusception concern', 1),
-      yesNo('arthritis', 'Arthritis or arthralgia', 1),
-      yesNo('renal', 'Renal involvement (proteinuria, hematuria, or renal insufficiency)', 1),
-      yesNo('histology', 'Histology: leukocytoclastic vasculitis or proliferative GN with predominant IgA', 1),
-      yesNo('scrotal', 'Scrotal edema/orchitis-like involvement (supportive)', 1),
-      yesNo('alternate', 'More likely alternate diagnosis (ITP, meningococcemia, other vasculitis)', 0),
+      yesNo('purpura', 'Purpura or petechiae (predominantly lower limb) with neither thrombocytopenia nor coagulopathy', 3, 'EULAR/PRINTO/PRES mandatory item: palpable purpura or petechiae, predominantly on the lower limbs, with normal platelets and coagulation.'),
+      yesNo('abdominal', 'Acute abdominal pain (diffuse colicky) or GI bleeding / intussusception concern', 1, 'EULAR/PRINTO/PRES: diffuse acute abdominal pain, or GI bleeding, or intussusception. Colicky pain is typical.'),
+      yesNo('arthritis', 'Arthritis or arthralgia', 1, 'Acute arthritis (swelling/pain of a joint) or arthralgia (pain without documented swelling).'),
+      yesNo('renal', 'Renal involvement (proteinuria, hematuria, or renal insufficiency)', 1, 'Ankara/EULAR: proteinuria >0.3 g/24 h or morning ACR ≥30 mg/mmol (≥30 mmol/mg) or ≥2+ dipstick; and/or hematuria >5 RBC/HPF or RBC casts; and/or renal insufficiency.'),
+      yesNo('histology', 'Histology: leukocytoclastic vasculitis or proliferative GN with predominant IgA', 1, 'Skin or kidney biopsy showing leukocytoclastic vasculitis or proliferative glomerulonephritis with predominant IgA deposits.'),
+      yesNo('scrotal', 'Scrotal edema/orchitis-like involvement (supportive)', 1, 'Acute scrotal swelling or orchitis-like pain — supportive of IgAV but not one of the four Ankara extra criteria.'),
+      yesNo('alternate', 'More likely alternate diagnosis (ITP, meningococcemia, other vasculitis)', 0, 'If ITP (low platelets), meningococcemia, or another vasculitis is more likely, do not classify as IgAV — this helper subtracts and blocks classification.'),
     ],
     calculate(values) {
       const purpura = bool(values.purpura);
@@ -2709,8 +2713,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         (bool(values.abdominal) ? 1 : 0) +
         (bool(values.arthritis) ? 1 : 0) +
         (bool(values.renal) ? 1 : 0) +
-        (bool(values.histology) ? 1 : 0);
-      // EULAR/PRINTO/PRES: purpura mandatory + ≥1 of abdominal, arthritis/arthralgia, renal, IgA histology
+        (bool(values.histology) ? 1 : 0);      // EULAR/PRINTO/PRES: purpura mandatory + ≥1 of abdominal, arthritis/arthralgia, renal, IgA histology
       const meets = purpura && extra >= 1 && !bool(values.alternate);
       let score = (purpura ? 3 : 0) + extra + (bool(values.scrotal) ? 1 : 0);
       if (bool(values.alternate)) score = Math.max(0, score - 3);

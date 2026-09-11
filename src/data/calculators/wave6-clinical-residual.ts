@@ -22,7 +22,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         max: 75,
         step: 0.1,
         defaultValue: 18,
-        helpText: 'Valid FibroScan/TE reading',
+        helpText: 'Valid FibroScan/TE (typically ≥10 shots, IQR/median ≤30%). Expanded Baveno VI sparing requires LSM <25 kPa (classic Baveno VI is LSM <20 kPa). Invalid TE (obesity, ascites, operator limits) voids the rule.',
       }),
       numberInput('plt', 'Platelet count', {
         unit: '×10⁹/L',
@@ -30,8 +30,9 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         max: 800,
         step: 1,
         defaultValue: 130,
+        helpText: 'Same as ×10³/µL. Expanded Baveno VI: platelets >110×10⁹/L; classic Baveno VI: >150×10⁹/L. Both LSM and platelets must meet the pair.',
       }),
-      yesNo('compensated', 'Compensated (no prior decompensation: ascites, variceal bleed, HE)', 1),
+      yesNo('compensated', 'Compensated (no prior decompensation: ascites, variceal bleed, HE)', 1, 'Any prior clinically evident ascites, variceal hemorrhage, or overt hepatic encephalopathy = decompensated. Baveno sparing rules apply only to compensated advanced chronic liver disease.'),
     ],
     calculate(values) {
       const lsm = num(values.lsm, 18);
@@ -133,25 +134,34 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Document ascites severity and guide intensity of diuretic / paracentesis strategy in cirrhosis.',
     whyUse: 'Standard grades link description to treatment pathways (observation vs diuretics vs LVP).',
     inputs: [
-      selectInput('grade', 'Clinical ascites grade', [
-        {
-          label: 'Grade 1 — Mild (only detectable by ultrasound)',
-          value: 1,
-          description: 'No clinical distension',
-        },
-        {
-          label: 'Grade 2 — Moderate (symmetrical abdominal distension)',
-          value: 2,
-          description: 'Clinically evident',
-        },
-        {
-          label: 'Grade 3 — Large / tense (marked distension)',
-          value: 3,
-          description: 'Gross ascites',
-        },
-      ]),
-      yesNo('refractory', 'Refractory to maximal diuretics / early recurrence after LVP', 0),
-      yesNo('infected', 'Suspected or confirmed SBP / infected ascites', 0),
+      selectInput(
+        'grade',
+        'Clinical ascites grade (IAC)',
+        [
+          {
+            label: 'Grade 1 — Mild (only detectable by ultrasound)',
+            value: 1,
+            description:
+              'No abdominal distension on inspection. Flanks not full; shifting dullness and fluid wave absent. Free fluid seen only on ultrasound (typically perihepatic, perisplenic, or pelvic). Not clinically detectable.',
+          },
+          {
+            label: 'Grade 2 — Moderate (symmetrical abdominal distension)',
+            value: 2,
+            description:
+              'Moderate symmetrical distension. Flank dullness and shifting dullness present (~≥1.5 L). Fluid wave usually absent; abdomen is not tense. Patient can usually still eat and breathe comfortably.',
+          },
+          {
+            label: 'Grade 3 — Large / tense (marked distension)',
+            value: 3,
+            description:
+              'Marked abdominal distension visible from the foot of the bed. Tense/taut wall; fluid wave (thrill) often present. May cause early satiety, umbilical hernia, or respiratory limitation. Gross ascites — large-volume paracentesis typically indicated.',
+          },
+        ],
+        undefined,
+        'International Ascites Club / EASL quantity grade by inspection + percussion, then ultrasound if exam is negative. Grade 1 = US only; Grade 2 = shifting dullness, not tense; Grade 3 = tense/gross. Diuretic response is a separate “refractory” item — do not collapse this into Child-Pugh mild vs tense.',
+      ),
+      yesNo('refractory', 'Refractory to maximal diuretics / early recurrence after LVP', 0, 'IAC/EASL: no response to salt restriction + spironolactone 400 mg/day and furosemide 160 mg/day, or diuretics stopped for complications (diuretic-intractable), or tense ascites recurring within 4 weeks of LVP.'),
+      yesNo('infected', 'Suspected or confirmed SBP / infected ascites', 0, 'Suspect if fever, abdominal pain, HE, AKI, or GI bleed in a patient with ascites. Diagnostic tap: ascitic PMN ≥250/µL (or positive culture) = SBP. Infection does not change the IAC grade — score quantity and infection separately.'),
     ],
     calculate(values) {
       const grade = num(values.grade, 1);
@@ -222,6 +232,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     pearls: [
       'Always exclude SBP with cell count when hospitalized or symptomatic.',
       'SAAG ≥1.1 suggests portal hypertension–related ascites.',
+      'IAC grade is quantity on exam/US (1 US-only, 2 shifting dullness, 3 tense). Child-Pugh ascites instead uses diuretic control (none / slight-or-controlled / poorly controlled or tense).',
     ],
   },
 
@@ -237,24 +248,49 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Cirrhosis with known/suspected varices or recent variceal bleed for risk framing and care intensity.',
     whyUse: 'Child–Pugh class strongly stratifies short-term mortality after variceal bleeding; red signs and size add primary-prevention context.',
     inputs: [
-      selectInput('child', 'Child–Pugh class', [
-        { label: 'Class A', value: 'A' },
-        { label: 'Class B', value: 'B' },
-        { label: 'Class C', value: 'C' },
-      ]),
-      selectInput('context', 'Clinical context', [
-        { label: 'Primary prevention (never bled)', value: 'primary' },
-        { label: 'Active / recent variceal bleed', value: 'active' },
-        { label: 'Secondary prevention (prior bleed, not active)', value: 'secondary' },
-      ]),
+      selectInput(
+        'child',
+        'Child–Pugh class',
+        [
+          {
+            label: 'Class A',
+            value: 'A',
+            description:
+              '5–6 points: well-compensated. Typical pattern: bilirubin <2 mg/dL, albumin >3.5 g/dL, INR <1.7, and no ascites or HE (or only medically controlled).',
+          },
+          {
+            label: 'Class B',
+            value: 'B',
+            description:
+              '7–9 points: significant functional compromise / early decompensation (intermediate labs, or slight/diuretic-controlled ascites, or West Haven 1–2 HE).',
+          },
+          {
+            label: 'Class C',
+            value: 'C',
+            description:
+              '10–15 points: decompensated (tense/poorly controlled ascites, West Haven 3–4 HE, or markedly abnormal bilirubin/albumin/INR). Highest short-term mortality after variceal bleed.',
+          },
+        ],
+        undefined,
+        'Use the Child-Pugh calculator if class is unknown. A = 5–6, B = 7–9, C = 10–15. Class strongly stratifies mortality after variceal hemorrhage.',
+      ),
+      selectInput(
+        'context',
+        'Clinical context',
+        [
+          { label: 'Primary prevention (never bled)', value: 'primary', description: 'Known or suspected varices; no prior variceal hemorrhage.' },
+          { label: 'Active / recent variceal bleed', value: 'active', description: 'Index hospitalization for variceal hemorrhage, or still in the acute-bleed window.' },
+          { label: 'Secondary prevention (prior bleed, not active)', value: 'secondary', description: 'Prior variceal bleed, now stable — NSBB + banding until eradication.' },
+        ],
+      ),
       selectInput('varices', 'Largest varices (if known)', [
         { label: 'None / eradicated', value: 'none' },
-        { label: 'Small', value: 'small' },
-        { label: 'Medium / large', value: 'large' },
+        { label: 'Small (<5 mm)', value: 'small' },
+        { label: 'Medium or large (≥5 mm, or occupying >1/3 of lumen)', value: 'large' },
         { label: 'Unknown', value: 'unknown' },
-      ]),
-      yesNo('redWale', 'Red wale marks / high-risk stigmata', 1),
-      yesNo('activeBleed', 'Hematemesis / ongoing hemodynamic instability from bleed', 1),
+      ], undefined, 'Score the largest column (Baveno/AASLD: small <5 mm vs medium/large ≥5 mm). Red wale marks are independently high-risk even if varices are small.'),
+      yesNo('redWale', 'Red wale marks / high-risk stigmata', 1, 'Endoscopic red wale marks, cherry-red spots, or nipple signs on varices. Independently high-risk for bleed even when columns are small.'),
+      yesNo('activeBleed', 'Hematemesis / ongoing hemodynamic instability from bleed', 1, 'Witnessed hematemesis, coffee-ground emesis with instability, or ongoing variceal bleeding (SBP <90, HR >100, or pressors). Also score “Active / recent” context above.'),
     ],
     calculate(values) {
       const child = str(values.child, 'A');
@@ -359,20 +395,19 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Acute pancreatitis when full Ranson data (admission and 48-hour labs/fluids) are available.',
     whyUse: 'Classic full score; ≥3 criteria associated with higher mortality. BISAP/APACHE often more practical early.',
     inputs: [
-      // Admission (gallstone vs non-gallstone thresholds simplified to common non-biliary teaching cutoffs;
-      // tool notes dual thresholds in help)
-      yesNo('age', 'Age >55 years (non-biliary; >70 biliary)', 1),
-      yesNo('wbc', 'WBC >16,000/µL (admission; >18k biliary)', 1),
-      yesNo('glu', 'Glucose >200 mg/dL (admission; >220 biliary)', 1),
-      yesNo('ldh', 'LDH >350 U/L (admission; >400 biliary)', 1),
-      yesNo('ast', 'AST >250 U/L (admission)', 1),
+      // Admission (gallstone vs non-gallstone thresholds; dual cutoffs in helpText)
+      yesNo('age', 'Age >55 years (non-biliary; >70 biliary)', 1, 'If gallstone/biliary pancreatitis use age >70 years; otherwise use >55 (original non-biliary Ranson 1974).'),
+      yesNo('wbc', 'WBC >16,000/µL (admission; >18k biliary)', 1, 'If gallstone/biliary use WBC >18,000/µL; otherwise >16,000 (admission).'),
+      yesNo('glu', 'Glucose >200 mg/dL (admission; >220 biliary)', 1, 'If gallstone/biliary use glucose >220 mg/dL; otherwise >200 (admission).'),
+      yesNo('ldh', 'LDH >350 U/L (admission; >400 biliary)', 1, 'If gallstone/biliary use LDH >400 U/L; otherwise >350 (admission).'),
+      yesNo('ast', 'AST >250 U/L (admission)', 1, 'AST cutoff is the same for biliary and non-biliary Ranson (admission).'),
       // 48 h
-      yesNo('hct', 'Hct fall >10% (48 h)', 1),
-      yesNo('bun', 'BUN rise >5 mg/dL (48 h)', 1),
-      yesNo('ca', 'Serum Ca <8 mg/dL (48 h)', 1),
-      yesNo('pao2', 'PaO₂ <60 mmHg (48 h)', 1),
-      yesNo('bd', 'Base deficit >4 mEq/L (48 h)', 1),
-      yesNo('fluid', 'Fluid sequestration >6 L (48 h)', 1),
+      yesNo('hct', 'Hct fall >10% (48 h)', 1, 'Fall in hematocrit from admission to 48 hours >10 percentage points (same cutoff biliary and non-biliary).'),
+      yesNo('bun', 'BUN rise >5 mg/dL (48 h; >2 biliary)', 1, 'Rise from admission to 48 h. If gallstone/biliary use BUN rise >2 mg/dL; otherwise >5 mg/dL.'),
+      yesNo('ca', 'Serum Ca <8 mg/dL (48 h)', 1, 'Lowest calcium in the first 48 hours; same cutoff biliary and non-biliary.'),
+      yesNo('pao2', 'PaO₂ <60 mmHg (48 h)', 1, 'Same cutoff biliary and non-biliary.'),
+      yesNo('bd', 'Base deficit >4 mEq/L (48 h; >5 biliary)', 1, 'If gallstone/biliary use base deficit >5 mEq/L; otherwise >4.'),
+      yesNo('fluid', 'Fluid sequestration >6 L (48 h; >4 L biliary)', 1, 'Net fluid balance over 48 h (total intake − total output), not gestalt third-spacing. If gallstone/biliary use >4 L; otherwise >6 L.'),
     ],
     calculate(values) {
       const admKeys = ['age', 'wbc', 'glu', 'ldh', 'ast'] as const;
@@ -459,11 +494,11 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Adult chronic liver disease prognosis and transplant-risk discussion when labs for MELD 3.0 components are available.',
     whyUse: 'MELD 3.0 improves mortality prediction vs MELD-Na and addresses sex disparity with a female coefficient and albumin.',
     inputs: [
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 2.0 }),
-      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, defaultValue: 1.5 }),
-      numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0 }),
-      numberInput('na', 'Serum sodium', { unit: 'mmol/L', min: 110, max: 160, step: 1, defaultValue: 135 }),
-      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, defaultValue: 3.0 }),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 2.0, helpText: 'Floored at 1.0 mg/dL in the equation' }),
+      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, defaultValue: 1.5, helpText: 'Floored at 1.0 in the equation' }),
+      numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0, helpText: 'Floored at 1.0 and capped at 3.0; dialysis sets Cr to 3.0 (MELD 3.0, not the older MELD cap of 4.0)' }),
+      numberInput('na', 'Serum sodium', { unit: 'mmol/L', min: 110, max: 160, step: 1, defaultValue: 135, helpText: 'Bounded 125–137 in the equation' }),
+      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, defaultValue: 3.0, helpText: 'Bounded 1.5–3.5 g/dL in the equation' }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
@@ -682,16 +717,16 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     inputs: [
       yesNo('hypovol', 'Clear hypovolemia / low effective arterial blood volume history', 1),
       yesNo('response', 'Creatinine improving after fluids or improved perfusion', 1),
-      yesNo('dryMucosa', 'Dry mucosa / orthostasis / low JVP (volume down)', 1),
+      yesNo('dryMucosa', 'Dry mucosa / orthostasis / low JVP (volume down)', 1, 'Orthostasis typically SBP fall ≥20 mmHg or HR rise ≥20 on standing, or low JVP / dry mucosa supporting hypovolemia.'),
       yesNo('fenaLow', 'FENa <1% (or FeUrea <35% if on diuretics)', 1),
       yesNo('unaLow', 'Urine Na <20 mEq/L', 1),
-      yesNo('highSpGrav', 'High urine specific gravity / osmolality (concentrated)', 1),
-      yesNo('blandSed', 'Bland urine sediment', 1),
+      yesNo('highSpGrav', 'High urine specific gravity / osmolality (concentrated)', 1, 'Pre-renal pattern: urine SG typically ≥1.020 or Uosm ≥500 mOsm/kg (kidneys concentrating). ATN urine is often isosthenuric (~1.010 / ~300 mOsm/kg).'),
+      yesNo('blandSed', 'Bland urine sediment', 1, 'Few or no cells or casts on microscopy. Muddy-brown / RTE casts argue ATN; RBC casts / dysmorphic RBCs argue glomerulonephritis — do not call those bland.'),
       yesNo('shockIschemia', 'Prolonged shock, sepsis, or nephrotoxin exposure', 0),
       yesNo('fenaHigh', 'FENa >2% (not on diuretics)', 0),
       yesNo('muddy', 'Muddy brown casts / renal tubular epithelial cells', 0),
       yesNo('noFluidResponse', 'No improvement after adequate volume/perfusion rescue', 0),
-      yesNo('ckRise', 'CK markedly elevated / pigment nephropathy context', 0),
+      yesNo('ckRise', 'CK markedly elevated / pigment nephropathy context', 0, 'Rhabdomyolysis-range CK typically >5,000 IU/L (often much higher) or overt myoglobinuria / crush / prolonged down time.'),
     ],
     calculate(values) {
       const preKeys = ['hypovol', 'response', 'dryMucosa', 'fenaLow', 'unaLow', 'highSpGrav', 'blandSed'] as const;
@@ -764,8 +799,8 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'AKI or rising creatinine after iodinated contrast when FENa is considered.',
     whyUse: 'Contrast-associated AKI can show low FENa early; timing and alternatives matter more than a single cut-off.',
     inputs: [
-      numberInput('hours', 'Hours since contrast exposure', { unit: 'h', min: 0, max: 168, defaultValue: 24 }),
-      numberInput('fena', 'Measured FENa (if available)', { unit: '%', min: 0, max: 20, step: 0.1, defaultValue: 0.8, required: false }),
+      numberInput('hours', 'Hours since contrast exposure', { unit: 'h', min: 0, max: 168, defaultValue: 24, helpText: 'CA-AKI creatinine typically rises 24–48 h and peaks 48–72 h after intravascular iodinated contrast. Ongoing rise after 72 h suggests another insult.' }),
+      numberInput('fena', 'Measured FENa (if available)', { unit: '%', min: 0, max: 20, step: 0.1, defaultValue: 0.8, required: false, helpText: 'FENa = (UNa/PNa) ÷ (UCr/PCr) × 100. <1% = avid Na retention (pre-renal or contrast-associated); ≥2% suggests ATN. Unreliable on diuretics — use FeUrea (<35% pre-renal).' }),
       yesNo('fenaKnown', 'FENa value entered / available', 0),
       yesNo('creatinineUp', 'Creatinine rise ≥0.3 mg/dL or ≥1.5× baseline after contrast', 0),
       yesNo('otherCause', 'Strong alternate AKI cause (hypotension, sepsis, obstruction, meds)', 0),
@@ -874,18 +909,20 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         min: 50,
         max: 1200,
         defaultValue: 200,
+        helpText: 'Last Uosm before desmopressin. Classic DI pattern is Uosm still <300 after an adequate stimulus.',
       }),
       numberInput('uosm_post', 'Urine osmolality after desmopressin', {
         unit: 'mOsm/kg',
         min: 50,
         max: 1200,
         defaultValue: 400,
+        helpText: 'Peak Uosm after DDAVP (typically 1–2 h). Classic teaching: ≥50% rise from pre-DDAVP favors central DI; <50% favors nephrogenic.',
       }),
       selectInput('depriveOutcome', 'End-of-deprivation pattern (before DDAVP)', [
-        { label: 'Uosm remained low (<300) — DI pattern', value: 'di' },
-        { label: 'Uosm concentrated (>600) — primary polydipsia / normal', value: 'pp' },
-        { label: 'Partial / intermediate (300–600)', value: 'partial' },
-      ]),
+        { label: 'Uosm remained low (<300) — DI pattern', value: 'di', description: 'Failed to concentrate despite rising plasma osmolality — complete DI (central or nephrogenic) until DDAVP subtypes it.' },
+        { label: 'Uosm concentrated (>600) — primary polydipsia / normal', value: 'pp', description: 'Kidneys concentrated without DDAVP — concentrating ability intact (primary polydipsia or normal).' },
+        { label: 'Partial / intermediate (300–600)', value: 'partial', description: 'Overlap of partial DI and primary polydipsia; DDAVP % rise and copeptin help separate them.' },
+      ], undefined, 'Score the deprivation result first. Then interpret the % rise: 100 × (Uosm_post − Uosm_pre) / Uosm_pre. ≥50% → central DI; little rise → nephrogenic.'),
     ],
     calculate(values) {
       const pre = num(values.uosm_pre, 200);
@@ -982,13 +1019,13 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Structured polyuria workup when interpreting supervised water deprivation results.',
     whyUse: 'Maps end-test plasma/urine osmolality patterns to primary polydipsia vs DI before desmopressin step.',
     inputs: [
-      numberInput('posm', 'Plasma osmolality at end of test', { unit: 'mOsm/kg', min: 250, max: 350, defaultValue: 300 }),
-      numberInput('uosm', 'Urine osmolality at end of test', { unit: 'mOsm/kg', min: 50, max: 1200, defaultValue: 250 }),
-      numberInput('vol', '24-h urine volume (context)', { unit: 'L/day', min: 1, max: 20, step: 0.1, defaultValue: 5 }),
+      numberInput('posm', 'Plasma osmolality at end of test', { unit: 'mOsm/kg', min: 250, max: 350, defaultValue: 300, helpText: 'Adequate osmotic stimulus for a DI call is typically Posm ≥295 mOsm/kg (or Na clearly high-normal/high). Lower Posm = under-stimulated test.' }),
+      numberInput('uosm', 'Urine osmolality at end of test', { unit: 'mOsm/kg', min: 50, max: 1200, defaultValue: 250, helpText: '>600 = concentrated (primary polydipsia/normal); <300 despite Posm ≥295 = DI; 300–600 = partial/indeterminate.' }),
+      numberInput('vol', '24-h urine volume (context)', { unit: 'L/day', min: 1, max: 20, step: 0.1, defaultValue: 5, helpText: 'Pathologic polyuria is commonly >3–3.5 L/day (or >40–50 mL/kg/day). Confirm with a measured 24-h collection when possible.' }),
       selectInput('stoppedFor', 'Test endpoint', [
-        { label: 'Completed protocol / weight loss limit', value: 'complete' },
-        { label: 'Stopped for hypernatremia / hemodynamic concern', value: 'safety' },
-        { label: 'Early stop — incomplete', value: 'incomplete' },
+        { label: 'Completed protocol / weight loss limit', value: 'complete', description: 'Ran to protocol end (often 3–5% body-weight loss or a preset time) with supervised no-water conditions.' },
+        { label: 'Stopped for hypernatremia / hemodynamic concern', value: 'safety', description: 'Aborted for Na/Posm rising into a danger zone or instability — still interpretable if Posm was high enough.' },
+        { label: 'Early stop — incomplete', value: 'incomplete', description: 'Stopped before an adequate stimulus; do not diagnose from this run.' },
       ]),
     ],
     calculate(values) {
@@ -1077,7 +1114,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       yesNo('hypoNa', 'Hyponatremia (typically Na <135 mmol/L)', 1),
       yesNo('lowPosm', 'Low plasma osmolality (<275 mOsm/kg)', 1),
       yesNo('inapUosm', 'Inappropriately high urine osmolality (>100 mOsm/kg) with low Posm', 1),
-      yesNo('euvolemia', 'Clinical euvolemia', 1),
+      yesNo('euvolemia', 'Clinical euvolemia', 1, 'No edema, no elevated JVP, and no orthostasis or dry mucosa. Not hypovolemic (GI loss, diuretics, third-space) and not hypervolemic (HF, cirrhosis, nephrosis).'),
       yesNo('highUna', 'Urine Na >30–40 mmol/L on normal salt intake', 1),
       yesNo('normalAdrenalThyroid', 'Normal thyroid and adrenal (glucocorticoid) function', 1),
       yesNo('noDiuretics', 'Not on recent diuretics (or interpreted cautiously)', 1),
@@ -1165,10 +1202,10 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Polyuria–polydipsia syndrome initial differentiation before or alongside formal testing.',
     whyUse: 'Baseline Na, plasma osmolality, and urine concentration provide quick Bayesian framing.',
     inputs: [
-      numberInput('na', 'Serum sodium', { unit: 'mmol/L', min: 120, max: 170, defaultValue: 142 }),
-      numberInput('posm', 'Plasma osmolality (measured or calculated)', { unit: 'mOsm/kg', min: 250, max: 360, defaultValue: 295 }),
-      numberInput('uosm', 'Spot urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1200, defaultValue: 150 }),
-      numberInput('uvol', 'Approximate urine output', { unit: 'L/day', min: 1, max: 20, step: 0.5, defaultValue: 6 }),
+      numberInput('na', 'Serum sodium', { unit: 'mmol/L', min: 120, max: 170, defaultValue: 142, helpText: 'DI tends toward high-normal/high Na (≥143 supports DI; ≤137 supports primary polydipsia).' }),
+      numberInput('posm', 'Plasma osmolality (measured or calculated)', { unit: 'mOsm/kg', min: 250, max: 360, defaultValue: 295, helpText: 'Measured preferred. ≥295 supports DI; <280 supports primary polydipsia.' }),
+      numberInput('uosm', 'Spot urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1200, defaultValue: 150, helpText: 'Inappropriately dilute (<200) with polyuria supports DI; >400 argues some concentrating ability.' }),
+      numberInput('uvol', 'Approximate urine output', { unit: 'L/day', min: 1, max: 20, step: 0.5, defaultValue: 6, helpText: 'Pathologic polyuria commonly >3–3.5 L/day. This helper will not score DI vs polydipsia if volume is not clearly in that range.' }),
       yesNo('prefersCold', 'Prefers ice-cold water (classic DI anecdote)', 1),
       yesNo('nocturia', 'Prominent nocturia / night water drinking', 1),
       yesNo('lithium', 'Lithium or known nephrogenic risk drugs', 1),
@@ -1265,13 +1302,13 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Graves disease with suspected active thyroid eye disease to decide anti-inflammatory therapy need.',
     whyUse: 'CAS ≥3/7 indicates active orbitopathy in the basic 7-item score and supports immunosuppressive consideration.',
     inputs: [
-      yesNo('spontPain', 'Spontaneous orbital pain', 1),
-      yesNo('gazePain', 'Pain with attempted upward/side gaze', 1),
-      yesNo('redLid', 'Redness of eyelids', 1),
-      yesNo('redConj', 'Redness of conjunctiva', 1),
-      yesNo('swellLid', 'Swelling of eyelids', 1),
-      yesNo('caruncle', 'Swelling of caruncle / plica', 1),
-      yesNo('chemosis', 'Chemosis (conjunctival edema)', 1),
+      yesNo('spontPain', 'Spontaneous retrobulbar pain (last 4 weeks)', 1, 'Pain behind the globe at rest over the last 4 weeks, attributed to Graves orbitopathy (not sinus or migraine).'),
+      yesNo('gazePain', 'Pain on attempted up, side, or down gaze (last 4 weeks)', 1, 'Pain provoked by attempted upward, lateral, or downward gaze in the last 4 weeks (not only “up/side”).'),
+      yesNo('redLid', 'Redness of eyelids', 1, 'Eyelid erythema due to active GO; do not score allergic, dermatologic, or isolated blepharitis redness.'),
+      yesNo('redConj', 'Redness of conjunctiva', 1, 'Diffuse conjunctival redness involving ≥1 quadrant, scored at 1 m (not slit-lamp only). Do not score equivocal redness or redness from corneal ulcer/staining.'),
+      yesNo('swellLid', 'Swelling of eyelids', 1, 'Eyelid swelling due to active GO. Exclude fat herniation and dermatochalasis.'),
+      yesNo('caruncle', 'Swelling of caruncle and/or plica', 1, 'Inflammatory swelling of the caruncle and/or plica semilunaris (EUGOGO 7-item CAS).'),
+      yesNo('chemosis', 'Chemosis (conjunctival edema)', 1, 'Conjunctiva separated from sclera over >1/3 of palpebral height, or prolapsing anterior to the grey line. Do not score conjunctivochalasis.'),
     ],
     calculate(values) {
       const keys = ['spontPain', 'gazePain', 'redLid', 'redConj', 'swellLid', 'caruncle', 'chemosis'] as const;
@@ -1347,13 +1384,33 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whyUse: 'Pattern-based approach (benign → high suspicion) drives FNA thresholds complementary to TIRADS systems.',
     inputs: [
       selectInput('pattern', 'ATA sonographic pattern', [
-        { label: 'Benign (pure cyst, spongiform)', value: 'benign' },
-        { label: 'Very low suspicion', value: 'very_low' },
-        { label: 'Low suspicion', value: 'low' },
-        { label: 'Intermediate suspicion', value: 'intermediate' },
-        { label: 'High suspicion', value: 'high' },
-      ]),
-      numberInput('size', 'Largest nodule diameter', { unit: 'cm', min: 0.1, max: 10, step: 0.1, defaultValue: 1.5 }),
+        {
+          label: 'Benign — purely cystic (no solid component)',
+          value: 'benign',
+          description: 'Pure cyst: no solid component. Do not put spongiform nodules here (those are very low suspicion). Estimated malignancy <1%; FNA not routine.',
+        },
+        {
+          label: 'Very low suspicion',
+          value: 'very_low',
+          description: 'Spongiform (≥50% small cystic spaces) or partially cystic without suspicious features of the low/intermediate/high patterns. Est. malignancy <3%; FNA typically ≥2 cm or observation.',
+        },
+        {
+          label: 'Low suspicion',
+          value: 'low',
+          description: 'Isoechoic or hyperechoic solid nodule, or partially cystic with eccentric solid areas, WITHOUT microcalcifications, irregular margins, extrathyroidal extension (ETE), or taller-than-wide shape. Est. malignancy 5–10%; FNA typically ≥1.5 cm.',
+        },
+        {
+          label: 'Intermediate suspicion',
+          value: 'intermediate',
+          description: 'Solid hypoechoic nodule with smooth margins, WITHOUT microcalcifications, ETE, or taller-than-wide shape. Est. malignancy 10–20%; FNA typically ≥1 cm.',
+        },
+        {
+          label: 'High suspicion',
+          value: 'high',
+          description: 'Solid hypoechoic nodule or mixed cystic-solid with a hypoechoic solid component PLUS ≥1 of: irregular/infiltrative/microlobulated margins, microcalcifications, taller-than-wide (transverse), rim calcifications with extrusive soft tissue, or ETE. Est. malignancy >70–90%; FNA typically ≥1 cm.',
+        },
+      ], undefined, 'Assign from ATA 2015 Table 6 features, not gestalt. Taller-than-wide is measured in the transverse plane. Survey cervical nodes independently.'),
+      numberInput('size', 'Largest nodule diameter', { unit: 'cm', min: 0.1, max: 10, step: 0.1, defaultValue: 1.5, helpText: 'Longest diameter. ATA FNA size cutoffs: high/intermediate ≥1 cm; low ≥1.5 cm; very low ≥2 cm; purely cystic — not routine.' }),
     ],
     calculate(values) {
       const pattern = str(values.pattern, 'low');
@@ -1456,10 +1513,10 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whyUse: '3 a.m. glucose (or CGM) distinguishes nocturnal hypoglycemia with rebound from dawn-related rise without hypo.',
     inputs: [
       numberInput('glu_bed', 'Bedtime glucose', { unit: 'mg/dL', min: 40, max: 500, defaultValue: 140 }),
-      numberInput('glu_3am', 'Glucose ~3 a.m. (or overnight nadir)', { unit: 'mg/dL', min: 40, max: 500, defaultValue: 110 }),
+      numberInput('glu_3am', 'Glucose ~3 a.m. (or overnight nadir)', { unit: 'mg/dL', min: 40, max: 500, defaultValue: 110, helpText: 'Check ~3 a.m. or the CGM overnight nadir. <70 mg/dL (or documented CGM hypo) favors nocturnal hypoglycemia, not dawn phenomenon.' }),
       numberInput('glu_am', 'Pre-breakfast / fasting glucose', { unit: 'mg/dL', min: 40, max: 500, defaultValue: 200 }),
-      yesNo('nightSweats', 'Night sweats / nightmares / symptoms of nocturnal hypo', 0),
-      yesNo('cgmHypo', 'CGM confirms nocturnal hypoglycemia', 0),
+      yesNo('nightSweats', 'Night sweats / nightmares / symptoms of nocturnal hypo', 0, 'Sweats, nightmares, morning headache, or a partner witnessing overnight symptoms. Supportive of nocturnal hypo but not required if the 3 a.m. glucose is <70.'),
+      yesNo('cgmHypo', 'CGM confirms nocturnal hypoglycemia', 0, 'CGM or sensor glucose <70 mg/dL (Level 1) or <54 (Level 2) overnight. Treat documented nocturnal hypo regardless of the Somogyi eponym.'),
     ],
     calculate(values) {
       const bed = num(values.glu_bed, 140);
@@ -1538,12 +1595,12 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'During DKA treatment to decide when ketoacidosis resolution criteria are met for transition to SQ insulin.',
     whyUse: 'Prevents premature stop of insulin infusion before ketoacidosis clears; glucose normalizes before ketosis often.',
     inputs: [
-      numberInput('glu', 'Glucose', { unit: 'mg/dL', min: 40, max: 1000, defaultValue: 180 }),
-      numberInput('bicarb', 'Serum bicarbonate', { unit: 'mEq/L', min: 1, max: 40, step: 0.1, defaultValue: 16 }),
-      numberInput('ph', 'Venous or arterial pH', { min: 6.6, max: 7.6, step: 0.01, defaultValue: 7.32 }),
-      numberInput('ag', 'Anion gap', { unit: 'mEq/L', min: 4, max: 40, step: 0.1, defaultValue: 11 }),
+      numberInput('glu', 'Glucose', { unit: 'mg/dL', min: 40, max: 1000, defaultValue: 180, helpText: 'ADA-style resolution: glucose <200 mg/dL (then continue insulin with dextrose until ketoacidosis clears)' }),
+      numberInput('bicarb', 'Serum bicarbonate', { unit: 'mEq/L', min: 1, max: 40, step: 0.1, defaultValue: 16, helpText: 'Resolution component: HCO₃ ≥15 mEq/L (need ≥2 of HCO₃, pH, AG)' }),
+      numberInput('ph', 'Venous or arterial pH', { min: 6.6, max: 7.6, step: 0.01, defaultValue: 7.32, helpText: 'Resolution component: pH >7.3' }),
+      numberInput('ag', 'Anion gap', { unit: 'mEq/L', min: 4, max: 40, step: 0.1, defaultValue: 11, helpText: 'Resolution component: AG ≤12 mEq/L' }),
       yesNo('ableEat', 'Able to eat / transition plan ready', 1),
-      yesNo('sqOverlap', 'SQ basal insulin overlapped ≥1–2 h before stopping IV', 1),
+      yesNo('sqOverlap', 'SQ basal insulin overlapped ≥1–2 h before stopping IV', 1, 'Do not stop IV insulin until basal SQ has been given with ≥1–2 h overlap.'),
     ],
     calculate(values) {
       const glu = num(values.glu, 180);
@@ -1628,21 +1685,31 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Severe hyperglycemia with mental status change when distinguishing HHS from DKA or mixed presentations.',
     whyUse: 'HHS uses extreme glucose/osmolality with minimal ketoacidosis; fluid deficits are massive.',
     inputs: [
-      numberInput('glu', 'Glucose', { unit: 'mg/dL', min: 100, max: 2000, defaultValue: 700 }),
+      numberInput('glu', 'Glucose', { unit: 'mg/dL', min: 100, max: 2000, defaultValue: 700, helpText: 'HHS typically glucose ≥600 mg/dL' }),
       numberInput('osm', 'Effective / calculated serum osmolality', {
         unit: 'mOsm/kg',
         min: 250,
         max: 450,
         defaultValue: 330,
-        helpText: 'Often 2Na + glucose/18 (+ BUN/2.8 if total osm)',
+        helpText: 'HHS typically effective osm ≥320. Often 2Na + glucose/18 (+ BUN/2.8 if total osm)',
       }),
-      numberInput('ph', 'pH', { min: 6.6, max: 7.6, step: 0.01, defaultValue: 7.35 }),
-      numberInput('bicarb', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 40, defaultValue: 20 }),
+      numberInput('ph', 'pH', { min: 6.6, max: 7.6, step: 0.01, defaultValue: 7.35, helpText: 'HHS: pH typically >7.3 (unlike DKA)' }),
+      numberInput('bicarb', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 40, defaultValue: 20, helpText: 'HHS: bicarbonate typically ≥15–18 mEq/L (stricter defs use ≥18)' }),
       selectInput('ketones', 'Ketones', [
-        { label: 'None / small / trace', value: 'small' },
-        { label: 'Moderate–large (mixed DKA possible)', value: 'large' },
-      ]),
-      yesNo('ams', 'Altered mental status / stupor / coma', 0),
+        {
+          label: 'None / small / trace',
+          value: 'small',
+          description:
+            'Urine dipstick negative, trace, or small (≤1+); or serum β-hydroxybutyrate typically <3 mmol/L (often <1.5). ADA HHS: absent or minimal ketonemia/ketonuria.',
+        },
+        {
+          label: 'Moderate–large (mixed DKA possible)',
+          value: 'large',
+          description:
+            'Urine dipstick moderate (2+) or large (3+), or serum β-hydroxybutyrate typically ≥3 mmol/L. With glucose ≥600 and osm ≥320 this is mixed HHS–DKA, not pure HHS.',
+        },
+      ], undefined, 'Prefer serum β-hydroxybutyrate. HHS requires absent/minimal ketones; moderate–large ketones push the case into mixed hyperglycemic crisis even if pH/bicarb are near-normal.'),
+      yesNo('ams', 'Altered mental status / stupor / coma', 0, 'Common in HHS from extreme hyperosmolality; not required to meet lab criteria.'),
     ],
     calculate(values) {
       const glu = num(values.glu, 700);
@@ -1730,9 +1797,9 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Structured first-pass arterial (or venous) blood gas interpretation in acute care.',
     whyUse: 'Encodes a repeatable sequence: pH → primary process → compensation → anion gap → hidden disorders.',
     inputs: [
-      numberInput('ph', 'pH', { min: 6.5, max: 7.8, step: 0.01, defaultValue: 7.28 }),
-      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 120, defaultValue: 40 }),
-      numberInput('hco3', 'HCO₃⁻', { unit: 'mEq/L', min: 2, max: 60, step: 0.1, defaultValue: 18 }),
+      numberInput('ph', 'pH', { min: 6.5, max: 7.8, step: 0.01, defaultValue: 7.28, helpText: 'Normal 7.35–7.45. Acidemia <7.35; alkalemia >7.45. A “normal” pH can still hide mixed disorders.' }),
+      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 120, defaultValue: 40, helpText: 'Normal ~35–45 mmHg. High CO₂ = respiratory acidosis; low = respiratory alkalosis.' }),
+      numberInput('hco3', 'HCO₃⁻', { unit: 'mEq/L', min: 2, max: 60, step: 0.1, defaultValue: 18, helpText: 'Normal ~22–26 mEq/L. Low = metabolic acidosis; high = metabolic alkalosis.' }),
       numberInput('na', 'Na (for AG)', { unit: 'mEq/L', min: 110, max: 170, defaultValue: 140 }),
       numberInput('cl', 'Cl (for AG)', { unit: 'mEq/L', min: 70, max: 140, defaultValue: 104 }),
       numberInput('albumin', 'Albumin (optional AG adjust)', { unit: 'g/dL', min: 1, max: 5.5, step: 0.1, defaultValue: 4, required: false }),
@@ -1878,13 +1945,13 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whyUse: 'Inappropriate compensation implies a second primary process requiring separate treatment.',
     inputs: [
       selectInput('primary', 'Assumed primary disorder', [
-        { label: 'Metabolic acidosis', value: 'met_acid' },
-        { label: 'Metabolic alkalosis', value: 'met_alk' },
-        { label: 'Respiratory acidosis (acute)', value: 'resp_acid_acute' },
-        { label: 'Respiratory acidosis (chronic)', value: 'resp_acid_chronic' },
-        { label: 'Respiratory alkalosis (acute)', value: 'resp_alk_acute' },
-        { label: 'Respiratory alkalosis (chronic)', value: 'resp_alk_chronic' },
-      ]),
+        { label: 'Metabolic acidosis', value: 'met_acid', description: 'Low HCO₃ is the primary process. Checks Winter’s expected PaCO₂ = 1.5×HCO₃+8 ±2.' },
+        { label: 'Metabolic alkalosis', value: 'met_alk', description: 'High HCO₃ is the primary process. Expected PaCO₂ ≈ 40 + 0.7×ΔHCO₃ (±5).' },
+        { label: 'Respiratory acidosis (acute)', value: 'resp_acid_acute', description: 'High PaCO₂ of hours. Expected ΔHCO₃ ≈ +1 per +10 mmHg PaCO₂.' },
+        { label: 'Respiratory acidosis (chronic)', value: 'resp_acid_chronic', description: 'High PaCO₂ of days (COPD). Expected ΔHCO₃ ≈ +4 per +10 mmHg PaCO₂.' },
+        { label: 'Respiratory alkalosis (acute)', value: 'resp_alk_acute', description: 'Low PaCO₂ of minutes–hours. Expected ΔHCO₃ ≈ −2 per −10 mmHg PaCO₂.' },
+        { label: 'Respiratory alkalosis (chronic)', value: 'resp_alk_chronic', description: 'Low PaCO₂ of days. Expected ΔHCO₃ ≈ −5 per −10 mmHg PaCO₂.' },
+      ], undefined, 'Pick the disorder you believe is primary; the tool flags a second process if the compensating value is outside the expected band.'),
       numberInput('hco3', 'Measured HCO₃⁻', { unit: 'mEq/L', min: 2, max: 60, step: 0.1, defaultValue: 12 }),
       numberInput('paco2', 'Measured PaCO₂', { unit: 'mmHg', min: 10, max: 120, defaultValue: 28 }),
       numberInput('ph', 'pH (context)', { min: 6.5, max: 7.8, step: 0.01, defaultValue: 7.28 }),
@@ -2353,8 +2420,8 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       yesNo('hoarse', 'Hoarseness / stridor / voice change', 1),
       yesNo('wheeze', 'Wheeze / dyspnea / hypoxia', 1),
       yesNo('ams', 'Altered mental status', 1),
-      yesNo('highCo', 'Known elevated COHb or cyanide concern (industrial/plastic fire)', 1),
-      yesNo('largeTbsa', 'Large TBSA burns', 1),
+      yesNo('highCo', 'COHb >10% (or above smoker baseline) or cyanide concern', 1, 'Elevated COHb is not a smoker 5–10% baseline; many pathways flag COHb >10%. Cyanide concern: industrial/plastic fire, unexplained high lactate, soot with shock.'),
+      yesNo('largeTbsa', 'Large TBSA burns (≥20% adults; ≥10% children) or burns plus inhalation', 1, 'ABA-style large cutaneous burn, or any significant burn plus inhalation injury.'),
     ],
     calculate(values) {
       const keys = ['closedSpace', 'facialBurns', 'singed', 'hoarse', 'wheeze', 'ams', 'highCo', 'largeTbsa'] as const;
@@ -2521,11 +2588,11 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Suspected or known beta-blocker overdose with cardiovascular toxicity.',
     whyUse: 'Structures red-flag features and first-line antidotal considerations (glucagon, vasopressors, HIET).',
     inputs: [
-      yesNo('bradycardia', 'Symptomatic bradycardia', 1),
-      yesNo('hypotension', 'Hypotension / shock', 1),
+      yesNo('bradycardia', 'Symptomatic bradycardia', 1, 'Hypoperfusion attributed to bradycardia, usually HR <50–60. Atropine-refractory bradycardia is the separate “refractory” item.'),
+      yesNo('hypotension', 'Hypotension / shock', 1, 'SBP <90 mmHg, MAP <65, or clinical shock/hypoperfusion.'),
       yesNo('ams', 'Altered mental status / seizure (esp. propranolol)', 1),
-      yesNo('hypoglycemia', 'Hypoglycemia', 1),
-      yesNo('qrsWide', 'QRS widening (membrane-stabilizing agents, e.g. propranolol)', 1),
+      yesNo('hypoglycemia', 'Hypoglycemia (glucose <70 mg/dL or symptomatic)', 1),
+      yesNo('qrsWide', 'QRS ≥120 ms (membrane-stabilizing agents, e.g. propranolol)', 1),
       yesNo('bronchospasm', 'Bronchospasm', 1),
       yesNo('refractory', 'Refractory to fluids + atropine + standard pressors', 1),
       selectInput('agent', 'Agent class (if known)', [

@@ -12,9 +12,9 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'Adults undergoing noncardiac surgery for preoperative cardiac risk stratification.',
     whyUse: 'Simple, validated 6-factor index used widely in perioperative medicine and guidelines.',
     inputs: [
-      yesNo('highRiskSx', 'High-risk surgery (intraperitoneal, intrathoracic, or suprainguinal vascular)', 1),
+      yesNo('highRiskSx', 'High-risk surgery (intraperitoneal, intrathoracic, or suprainguinal vascular)', 1, 'Lee RCRI high-risk = intraperitoneal, intrathoracic, or suprainguinal vascular. Do not score laparoscopic cholecystectomy, breast, endoscopic, or cataract surgery.'),
       yesNo('ihd', 'History of ischemic heart disease', 1, 'MI, positive stress test, current angina, nitrate use, or Q waves'),
-      yesNo('hf', 'History of heart failure', 1),
+      yesNo('hf', 'History of heart failure', 1, 'History of HF, pulmonary edema, or PND; bilateral rales or S3 on exam; or CXR with pulmonary vascular redistribution (Lee 1999).'),
       yesNo('cvd', 'History of cerebrovascular disease (stroke or TIA)', 1),
       yesNo('dmInsulin', 'Diabetes mellitus treated with insulin', 1),
       yesNo('cr', 'Preoperative creatinine > 2.0 mg/dL (177 µmol/L)', 1),
@@ -159,10 +159,10 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'After diagnostic thoracentesis when distinguishing exudative from transudative effusion.',
     whyUse: 'Gold-standard first step; highly sensitive for exudates.',
     inputs: [
-      numberInput('pleuralProtein', 'Pleural fluid protein', { unit: 'g/dL', min: 0, max: 15, step: 0.1, defaultValue: 3.0 }),
-      numberInput('serumProtein', 'Serum protein', { unit: 'g/dL', min: 0, max: 15, step: 0.1, defaultValue: 7.0 }),
-      numberInput('pleuralLdh', 'Pleural fluid LDH', { unit: 'U/L', min: 0, max: 5000, step: 1, defaultValue: 200 }),
-      numberInput('serumLdh', 'Serum LDH', { unit: 'U/L', min: 0, max: 5000, step: 1, defaultValue: 200 }),
+      numberInput('pleuralProtein', 'Pleural fluid protein', { unit: 'g/dL', min: 0, max: 15, step: 0.1, defaultValue: 3.0, helpText: 'Same-day paired serum and pleural labs' }),
+      numberInput('serumProtein', 'Serum protein', { unit: 'g/dL', min: 0, max: 15, step: 0.1, defaultValue: 7.0, helpText: 'Draw serum the same day as thoracentesis' }),
+      numberInput('pleuralLdh', 'Pleural fluid LDH', { unit: 'U/L', min: 0, max: 5000, step: 1, defaultValue: 200, helpText: 'Same-day paired serum LDH' }),
+      numberInput('serumLdh', 'Serum LDH', { unit: 'U/L', min: 0, max: 5000, step: 1, defaultValue: 200, helpText: 'Draw serum the same day as thoracentesis' }),
       numberInput('ldhUln', 'Serum LDH upper limit of normal', {
         unit: 'U/L',
         min: 100,
@@ -229,11 +229,11 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whyUse: 'Better identifies ICU need than CURB-65 alone in some cohorts.',
     inputs: [
       yesNo('sbp', 'Systolic BP < 90 mmHg', 2),
-      yesNo('multilobar', 'Multilobar chest radiograph involvement', 1),
+      yesNo('multilobar', 'Multilobar chest radiograph involvement', 1, 'Infiltrate involving more than one lobe on CXR (or equivalent CT).'),
       yesNo('albumin', 'Albumin < 3.5 g/dL (35 g/L)', 1),
       yesNo('rr', 'Respiratory rate elevated (age-adjusted)', 1, 'Age ≤50: RR ≥25; age >50: RR ≥30'),
       yesNo('hr', 'Heart rate ≥ 125 bpm', 1),
-      yesNo('confusion', 'New onset confusion', 1),
+      yesNo('confusion', 'New onset confusion', 1, 'New disorientation to person, place, or time (or abbreviated mental test ≤8). Do not score chronic baseline dementia without acute change.'),
       yesNo('oxygen', 'Low oxygenation (age-adjusted)', 2, 'Age ≤50: PaO₂ <70, SpO₂ ≤93%, or PaO₂/FiO₂ <333; age >50: PaO₂ <60, SpO₂ ≤90%, or PaO₂/FiO₂ <250'),
       yesNo('ph', 'Arterial pH < 7.35', 2),
     ],
@@ -315,12 +315,12 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whyUse: 'Simple patient-reported grade used in GOLD ABE assessment and symptom burden.',
     inputs: [
       selectInput('grade', 'mMRC grade', [
-        { label: '0 — Dyspnea only with strenuous exercise', value: 0 },
-        { label: '1 — Dyspnea when hurrying or walking up a slight hill', value: 1 },
-        { label: '2 — Walks slower than people of same age because of dyspnea, or stops for breath when walking at own pace on level', value: 2 },
-        { label: '3 — Stops for breath after walking ~100 m or after a few minutes on level ground', value: 3 },
-        { label: '4 — Too dyspneic to leave house, or dyspnea when dressing/undressing', value: 4 },
-      ]),
+        { label: '0 — Dyspnea only with strenuous exercise', value: 0, description: 'Breathless only with strenuous exercise (running, heavy lifting, sports) — not with ordinary walking' },
+        { label: '1 — Dyspnea when hurrying or walking up a slight hill', value: 1, description: 'Short of breath when hurrying on the level or walking up a slight hill; comfortable at own pace on the level' },
+        { label: '2 — Walks slower than people of same age because of dyspnea, or stops for breath when walking at own pace on level', value: 2, description: 'Walks slower than people of the same age on the level because of breathlessness, OR has to stop for breath when walking at own pace on the level' },
+        { label: '3 — Stops for breath after walking ~100 m or after a few minutes on level ground', value: 3, description: 'Stops for breath after walking about 100 yards/meters, or after a few minutes, on the level' },
+        { label: '4 — Too dyspneic to leave house, or dyspnea when dressing/undressing', value: 4, description: 'Too breathless to leave the house, or breathless when dressing or undressing' },
+      ], 0, 'Ask the patient which statement best describes their usual breathlessness (not an acute exacerbation). GOLD treats mMRC ≥2 as more symptomatic. Grade the worst typical limitation.'),
     ],
     calculate(values) {
       const score = num(values.grade);
@@ -386,7 +386,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whyUse: 'S/F correlates with P/F; useful triage and ARDS screening without ABG.',
     inputs: [
       numberInput('spo2', 'SpO₂', { unit: '%', min: 50, max: 100, step: 1, defaultValue: 94, helpText: 'Prefer SpO₂ ≤97% for better correlation with PaO₂' }),
-      numberInput('fio2', 'FiO₂', { unit: 'fraction', min: 0.21, max: 1, step: 0.01, defaultValue: 0.4 }),
+      numberInput('fio2', 'FiO₂', { unit: 'fraction', min: 0.21, max: 1, step: 0.01, defaultValue: 0.4, helpText: 'Fraction (0.21 = room air, 1.0 = 100%). Estimate from device tables if only L/min is known.' }),
     ],
     calculate(values) {
       const spo2 = num(values.spo2, 94);
@@ -464,13 +464,13 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'ED patients with possible cardiac chest pain in accelerated diagnostic protocols.',
     whyUse: 'Identifies low-risk patients (with negative ECG/troponins) safe for early discharge.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 55 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 55, helpText: 'Mapped automatically: 18–45 → 2 points, then +2 per 5 years to ≥86 → 20' }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 0 },
         { label: 'Male (+6)', value: 6 },
       ]),
-      yesNo('riskCad', 'Known CAD or ≥3 risk factors', 4, 'Risk factors: family history, dyslipidemia, diabetes, hypertension, current smoker'),
-      yesNo('diaphoresis', 'Diaphoresis', 3),
+      yesNo('riskCad', 'Known CAD or ≥3 risk factors', 4, 'Yes if known CAD (prior MI, coronary revascularization, or documented stenosis) OR ≥3 of: family history of CAD, dyslipidemia, diabetes, hypertension, current smoker.'),
+      yesNo('diaphoresis', 'Diaphoresis', 3, 'Sweating associated with this pain episode'),
       yesNo('radiates', 'Pain radiates to arm or shoulder', 5),
       yesNo('pleuritic', 'Pain occurred or worsened with inspiration', -4),
       yesNo('reproduced', 'Pain reproduced by palpation', -6),
@@ -626,7 +626,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
       yesNo('female', 'Sex: female', 1),
       yesNo('age60', 'Age < 60 years', 1),
       yesNo('medHx', 'Medical history: ≥2 of HTN, DM, CAD/MI, PAD, CHF, prior stroke, pulmonary disease, hepatic or renal disease', 1),
-      yesNo('treatment', 'Treatment: interacting drugs (e.g., amiodarone)', 1),
+      yesNo('treatment', 'Treatment: interacting drugs (e.g., amiodarone)', 1, 'Interacting drugs in SAMe-TT2R2 typically means amiodarone (the derivation example). Score other strong CYP2C9/VKORC1 warfarin interactors per local protocol.'),
       yesNo('tobacco', 'Tobacco use within past 2 years', 2),
       yesNo('race', 'Race: non-white', 2),
     ],
@@ -682,10 +682,10 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'Suspected ACS with LBBB (or ventricular paced rhythm in adapted use) when STEMI diagnosis is uncertain.',
     whyUse: 'Highly specific criteria for occlusion MI when concordant changes are present.',
     inputs: [
-      yesNo('concordantSte', 'Concordant ST elevation ≥1 mm in any lead with positive QRS', 5),
-      yesNo('concordantStd', 'Concordant ST depression ≥1 mm in V1–V3', 3),
-      yesNo('discordantSte5', 'Excessively discordant ST elevation ≥5 mm (original criterion)', 2),
-      yesNo('smithModified', 'Modified Smith criterion positive (ST/S ratio ≤ −0.25) if ≥5 mm not used', 0, 'Optional: replaces 5 mm rule with proportional discordance; does not add original points automatically'),
+      yesNo('concordantSte', 'Concordant ST elevation ≥1 mm in any lead with positive QRS', 5, 'STE ≥1 mm at the J-point in a lead whose major QRS is positive (same direction as QRS).'),
+      yesNo('concordantStd', 'Concordant ST depression ≥1 mm in V1–V3', 3, 'STD ≥1 mm at the J-point in V1, V2, or V3.'),
+      yesNo('discordantSte5', 'Excessively discordant ST elevation ≥5 mm (original criterion)', 2, 'STE ≥5 mm at the J-point in a lead whose major QRS is negative (QS or rS). Original rule — insensitive.'),
+      yesNo('smithModified', 'Modified Smith criterion positive (ST/S ratio ≤ −0.25) if ≥5 mm not used', 0, 'In a lead with discordant STE: (STE mm at J-point)/(S-wave depth mm) ≤ −0.25, i.e. STE ≥25% of S-wave. Optional; does not add original points.'),
     ],
     calculate(values) {
       const score =
@@ -775,13 +775,13 @@ export const missingCardioPulmCalcs: Calculator[] = [
         max: 10,
         step: 0.1,
         defaultValue: 1,
-        helpText: 'Largest ST depression/elevation during or after exercise (absolute mm)',
+        helpText: 'Largest net ST-segment deviation from the resting baseline, any lead, during or immediately after exercise, in mm (enter absolute value). Measure 60–80 ms after the J-point. Do not score if ST is uninterpretable (LBBB, ventricular paced, digoxin, ≥1 mm resting ST-T changes).',
       }),
       selectInput('angina', 'Exercise angina index', [
-        { label: '0 — No angina', value: 0 },
-        { label: '1 — Non-limiting angina', value: 1 },
-        { label: '2 — Limiting angina (reason for stopping)', value: 2 },
-      ]),
+        { label: '0 — No angina', value: 0, description: 'No chest pain or angina-equivalent during the test' },
+        { label: '1 — Non-limiting angina', value: 1, description: 'Exercise-induced angina (or equivalent) occurred but was not the reason for stopping' },
+        { label: '2 — Limiting angina (reason for stopping)', value: 2, description: 'Angina (or equivalent) was the reason the test was stopped' },
+      ], 0, 'Duke angina index: 0 = none; 1 = angina during exercise that did not stop the test; 2 = angina was the stopping reason. Do not score non-anginal musculoskeletal pain as 1 or 2.'),
     ],
     calculate(values) {
       const time = num(values.exerciseTime, 8);
@@ -848,12 +848,12 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'Acute hypoxemic respiratory failure evaluation for ARDS diagnosis and severity.',
     whyUse: 'Standard international definition guiding lung-protective strategies and trial eligibility.',
     inputs: [
-      yesNo('timing', 'Timing: within 1 week of known clinical insult or new/worsening respiratory symptoms', 0),
-      yesNo('imaging', 'Imaging: bilateral opacities not fully explained by effusions, lobar/lung collapse, or nodules', 0),
+      yesNo('timing', 'Timing: within 1 week of known clinical insult or new/worsening respiratory symptoms', 0, 'Must begin within 1 week of a known insult (e.g., pneumonia, sepsis, aspiration, trauma) or new/worsening respiratory symptoms.'),
+      yesNo('imaging', 'Imaging: bilateral opacities not fully explained by effusions, lobar/lung collapse, or nodules', 0, 'CXR or CT: bilateral opacities consistent with pulmonary edema, not fully explained by effusion, collapse, or nodules.'),
       yesNo('origin', 'Origin: respiratory failure not fully explained by cardiac failure or fluid overload', 0, 'Need objective assessment (e.g., echo) if no risk factor present'),
-      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, defaultValue: 80 }),
-      numberInput('fio2', 'FiO₂', { unit: 'fraction', min: 0.21, max: 1, step: 0.01, defaultValue: 0.5 }),
-      yesNo('peep', 'PEEP or CPAP ≥ 5 cmH₂O', 0),
+      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, defaultValue: 80, helpText: 'Arterial PaO2 on the same ABG as the FiO2 below' }),
+      numberInput('fio2', 'FiO₂', { unit: 'fraction', min: 0.21, max: 1, step: 0.01, defaultValue: 0.5, helpText: 'Fraction (0.21 = room air, 1.0 = 100%). Berlin: mild P/F 201–300, moderate 101–200, severe ≤100 (all with PEEP/CPAP ≥5).' }),
+      yesNo('peep', 'PEEP or CPAP ≥ 5 cmH₂O', 0, 'Invasive PEEP or noninvasive CPAP/PEEP ≥5 cm H2O is required for the Berlin definition.'),
     ],
     calculate(values) {
       const timing = bool(values.timing);
@@ -938,9 +938,9 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'When serum protein/LDH simultaneous values are unavailable, or as a simplified adjunct to Light’s.',
     whyUse: 'Uses pleural fluid values alone; practical when paired serum labs are missing.',
     inputs: [
-      numberInput('pleuralProtein', 'Pleural fluid protein', { unit: 'g/dL', min: 0, max: 15, step: 0.1, defaultValue: 3.0 }),
-      numberInput('pleuralChol', 'Pleural fluid cholesterol', { unit: 'mg/dL', min: 0, max: 300, step: 1, defaultValue: 50 }),
-      numberInput('pleuralLdh', 'Pleural fluid LDH', { unit: 'U/L', min: 0, max: 5000, step: 1, defaultValue: 200 }),
+      numberInput('pleuralProtein', 'Pleural fluid protein', { unit: 'g/dL', min: 0, max: 15, step: 0.1, defaultValue: 3.0, helpText: 'Heffner exudate if pleural protein >2.9 g/dL' }),
+      numberInput('pleuralChol', 'Pleural fluid cholesterol', { unit: 'mg/dL', min: 0, max: 300, step: 1, defaultValue: 50, helpText: 'Heffner exudate if pleural cholesterol >45 mg/dL' }),
+      numberInput('pleuralLdh', 'Pleural fluid LDH', { unit: 'U/L', min: 0, max: 5000, step: 1, defaultValue: 200, helpText: 'Heffner exudate if pleural LDH > 0.45 × lab serum LDH ULN' }),
       numberInput('ldhUln', 'Serum LDH upper limit of normal', {
         unit: 'U/L',
         min: 100,
@@ -1000,7 +1000,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'Cardiogenic shock or advanced HF with measured/estimated CO and MAP available.',
     whyUse: 'Strong hemodynamic correlate of prognosis in cardiogenic shock (e.g., SHOCK trial analyses).',
     inputs: [
-      numberInput('map', 'Mean arterial pressure (MAP)', { unit: 'mmHg', min: 20, max: 200, defaultValue: 70 }),
+      numberInput('map', 'Mean arterial pressure (MAP)', { unit: 'mmHg', min: 20, max: 200, defaultValue: 70, helpText: 'If MAP not measured: DBP + (SBP − DBP)/3' }),
       numberInput('co', 'Cardiac output (CO)', { unit: 'L/min', min: 0.5, max: 15, step: 0.1, defaultValue: 4.0 }),
     ],
     calculate(values) {

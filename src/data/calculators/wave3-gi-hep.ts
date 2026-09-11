@@ -14,7 +14,7 @@ export const wave3GiHepCalcs: Calculator[] = [
     inputs: [
       numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 2.0 }),
       numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0 }),
-      yesNo('dialysis', 'Dialysis ≥2 times in past week (or continuous RRT)', 17),
+      yesNo('dialysis', 'Dialysis ≥2 times in past week (or continuous RRT)', 17, 'Sets creatinine to 4.0 mg/dL (does not add a fixed point total). Same dialysis rule as OPTN MELD.'),
     ],
     calculate(values) {
       let bili = Math.max(num(values.bili, 2), 1);
@@ -77,7 +77,7 @@ export const wave3GiHepCalcs: Calculator[] = [
       numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, defaultValue: 1.5 }),
       numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, defaultValue: 3.0 }),
       yesNo('ageUnder1', 'Age < 1 year', 4),
-      yesNo('growthFailure', 'Growth failure (<2 SD height or weight for age)', 7),
+      yesNo('growthFailure', 'Growth failure (<2 SD height or weight for age)', 7, 'Yes if height or weight is more than 2 standard deviations below the age- and sex-specific mean (CDC/WHO charts).'),
     ],
     calculate(values) {
       // OPTN-style floors: bilirubin, INR, and albumin values <1.0 are set to 1.0
@@ -304,35 +304,35 @@ export const wave3GiHepCalcs: Calculator[] = [
     whyUse: 'Organ-failure count and severity define ACLF grades and feed CLIF-C ACLF.',
     inputs: [
       selectInput('liver', 'Liver (bilirubin)', [
-        { label: 'Bili <6 mg/dL (1)', value: 1 },
-        { label: 'Bili 6–12 mg/dL (2)', value: 2 },
-        { label: 'Bili >12 mg/dL (3)', value: 3 },
-      ]),
+        { label: 'Bili <6 mg/dL (1)', value: 1, description: '<6 mg/dL (≈ <102 µmol/L)' },
+        { label: 'Bili 6–12 mg/dL (2)', value: 2, description: '6–12 mg/dL (≈ 102–204 µmol/L)' },
+        { label: 'Bili >12 mg/dL (3)', value: 3, description: '>12 mg/dL (≈ >204 µmol/L) — liver failure-level in this simplified CLIF-OF' },
+      ], 1, '6 mg/dL ≈ 102 µmol/L; 12 mg/dL ≈ 204 µmol/L. Use same-day total bilirubin.'),
       selectInput('kidney', 'Kidney (creatinine / RRT)', [
-        { label: 'Cr <2 mg/dL (1)', value: 1 },
-        { label: 'Cr 2–3.5 mg/dL (2)', value: 2 },
-        { label: 'Cr >3.5 or RRT (3)', value: 3 },
-      ]),
+        { label: 'Cr <2 mg/dL (1)', value: 1, description: '<2 mg/dL (≈ <177 µmol/L), not on RRT' },
+        { label: 'Cr 2–3.5 mg/dL (2)', value: 2, description: '2–3.5 mg/dL (≈ 177–309 µmol/L)' },
+        { label: 'Cr >3.5 or RRT (3)', value: 3, description: '>3.5 mg/dL (≈ >309 µmol/L) or any renal replacement therapy' },
+      ], 1, '2 mg/dL ≈ 177 µmol/L; 3.5 mg/dL ≈ 309 µmol/L. Any RRT scores 3 even if Cr is lower.'),
       selectInput('brain', 'Brain (HE grade, West Haven)', [
-        { label: 'HE 0 (1)', value: 1 },
-        { label: 'HE I–II (2)', value: 2 },
-        { label: 'HE III–IV (3)', value: 3 },
-      ]),
+        { label: 'HE 0 (1)', value: 1, description: 'West Haven 0: no encephalopathy — normal consciousness, orientation, and behavior' },
+        { label: 'HE I–II (2)', value: 2, description: 'I: trivial unawareness, euphoria/anxiety, shortened attention, impaired addition. II: lethargy/apathy, time disorientation, personality change, inappropriate behavior, asterixis' },
+        { label: 'HE III–IV (3)', value: 3, description: 'III: somnolence/semistupor, responsive to voice, confusion, gross disorientation. IV: coma (unresponsive to verbal or noxious stimuli)' },
+      ], 1, 'Grade with West Haven: 0 none; I trivial unawareness/euphoria/short attention/impaired addition; II lethargy, time disorientation, personality change, asterixis; III somnolence/semistupor, responsive to voice, gross disorientation; IV coma.'),
       selectInput('coag', 'Coagulation (INR)', [
-        { label: 'INR <2.0 (1)', value: 1 },
-        { label: 'INR 2.0–2.5 (2)', value: 2 },
-        { label: 'INR >2.5 (3)', value: 3 },
-      ]),
+        { label: 'INR <2.0 (1)', value: 1, description: 'INR <2.0' },
+        { label: 'INR 2.0–2.5 (2)', value: 2, description: 'INR 2.0–2.5' },
+        { label: 'INR >2.5 (3)', value: 3, description: 'INR >2.5 — coagulation failure-level in this simplified CLIF-OF' },
+      ], 1, 'Use the same-day INR (not PT seconds).'),
       selectInput('circ', 'Circulation (MAP / vasopressors)', [
-        { label: 'MAP ≥70, no pressors (1)', value: 1 },
-        { label: 'MAP <70 (2)', value: 2 },
-        { label: 'Vasopressors (3)', value: 3 },
-      ]),
+        { label: 'MAP ≥70, no pressors (1)', value: 1, description: 'MAP ≥70 mmHg without vasopressors or terlipressin' },
+        { label: 'MAP <70 (2)', value: 2, description: 'MAP <70 mmHg, not yet on vasopressors' },
+        { label: 'Vasopressors (3)', value: 3, description: 'Any vasopressor including norepinephrine, vasopressin, or terlipressin — circulatory failure-level' },
+      ], 1, 'MAP = DBP + (SBP−DBP)/3 if not displayed. Any vasopressor (including terlipressin) scores 3 even if MAP is ≥70.'),
       selectInput('resp', 'Respiration (PaO₂/FiO₂ or SpO₂/FiO₂)', [
-        { label: 'PaO₂/FiO₂ >300 (1)', value: 1 },
-        { label: 'PaO₂/FiO₂ 200–300 (2)', value: 2 },
-        { label: 'PaO₂/FiO₂ <200 or ventilated (3)', value: 3 },
-      ]),
+        { label: 'PaO₂/FiO₂ >300 (1)', value: 1, description: 'Or SpO₂/FiO₂ >357 when no ABG' },
+        { label: 'PaO₂/FiO₂ 200–300 (2)', value: 2, description: 'Or SpO₂/FiO₂ 215–357 when no ABG' },
+        { label: 'PaO₂/FiO₂ <200 or ventilated (3)', value: 3, description: 'Or SpO₂/FiO₂ ≤214 when no ABG; mechanical ventilation scores 3' },
+      ], 1, 'If no ABG, use SpO₂/FiO₂: >357 (1), 215–357 (2), ≤214 (3). Mechanical ventilation scores 3.'),
     ],
     calculate(values) {
       const organs = ['liver', 'kidney', 'brain', 'coag', 'circ', 'resp'] as const;
@@ -539,7 +539,7 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'After diagnostic paracentesis when serum and ascites albumin are available.',
     whyUse: 'SAAG ≥1.1 g/dL indicates portal hypertension with high accuracy; guides differential and therapy.',
     inputs: [
-      numberInput('serumAlb', 'Serum albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, defaultValue: 2.8 }),
+      numberInput('serumAlb', 'Serum albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, defaultValue: 2.8, helpText: 'Draw the same day as paracentesis' }),
       numberInput('ascitesAlb', 'Ascites albumin', { unit: 'g/dL', min: 0.1, max: 6, step: 0.1, defaultValue: 1.0 }),
       numberInput('ascitesProtein', 'Ascites total protein (optional)', {
         unit: 'g/dL',
@@ -625,11 +625,11 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Ascitic infection when distinguishing SBP from secondary peritonitis needing source control.',
     whyUse: '≥2 chemical criteria raise concern for secondary peritonitis and prompt imaging/surgery.',
     inputs: [
-      yesNo('protein', 'Ascites total protein > 1.0 g/dL', 1),
-      yesNo('glucose', 'Ascites glucose < 50 mg/dL', 1),
-      yesNo('ldh', 'Ascites LDH > upper limit of normal for serum', 1),
-      yesNo('polyMicro', 'Polymicrobial Gram stain or culture (optional clue)', 0),
-      yesNo('noResponse', 'No clinical improvement on antibiotics (optional)', 0),
+      yesNo('protein', 'Ascites total protein > 1.0 g/dL', 1, 'Chemical criterion 1 of 3. SBP fluid is often <1 g/dL; higher protein favors secondary peritonitis.'),
+      yesNo('glucose', 'Ascites glucose < 50 mg/dL', 1, 'Chemical criterion 2 of 3. Very low glucose suggests consumption by a secondary (surgical) source.'),
+      yesNo('ldh', 'Ascites LDH > upper limit of normal for serum', 1, 'Chemical criterion 3 of 3. Compare ascitic LDH to the lab’s serum LDH ULN (not the patient’s serum LDH alone).'),
+      yesNo('polyMicro', 'Polymicrobial Gram stain or culture (optional clue)', 0, 'Not one of the 3 chemical criteria. Polymicrobial stain/culture raises secondary-peritonitis suspicion and is counted as an extra red flag here.'),
+      yesNo('noResponse', 'No clinical improvement on antibiotics (optional)', 0, 'Not one of the 3 chemical criteria. Failure to improve on appropriate SBP antibiotics is an extra red flag for a secondary source — image early.'),
     ],
     calculate(values) {
       const chemical =
@@ -705,7 +705,7 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Early evaluation of acute pancreatitis to identify patients suitable for ward care.',
     whyUse: 'Absence of peritonitis signs, hemoconcentration, and renal failure predicts mild course with high NPV.',
     inputs: [
-      yesNo('peritonitis', 'Rebound tenderness or guarding (peritonitis signs)'),
+      yesNo('peritonitis', 'Rebound tenderness or guarding (peritonitis signs)', 1, 'Involuntary guarding or rebound tenderness on abdominal exam (not voluntary tightness)'),
       yesNo('hemoconcentration', 'Abnormal hematocrit (male ≥43% or female ≥39.6%)', 1, 'Hemoconcentration threshold from original HAPS'),
       yesNo('renal', 'Creatinine ≥ 2 mg/dL (177 µmol/L)'),
     ],
@@ -769,19 +769,19 @@ export const wave3GiHepCalcs: Calculator[] = [
     whyUse: 'Includes clinical and post-endoscopy factors (rebleed, failed endoscopic therapy) beyond pure admission scores.',
     inputs: [
       selectInput('asa', 'ASA physical status', [
-        { label: 'ASA 1–2 (0)', value: 0 },
-        { label: 'ASA 3 (+1)', value: 1 },
-        { label: 'ASA 4 (+3)', value: 3 },
-      ]),
+        { label: 'ASA 1–2 (0) — I healthy or II mild systemic disease', value: 0, description: 'ASA I: healthy patient. ASA II: mild systemic disease without substantive functional limitation' },
+        { label: 'ASA 3 (+1) — severe systemic disease', value: 1, description: 'ASA III: severe systemic disease with functional limitation' },
+        { label: 'ASA 4 (+3) — constant threat to life', value: 3, description: 'ASA IV: severe systemic disease that is a constant threat to life' },
+      ], 0, 'Use pre-bleed ASA class. ASA V (moribund) is not a separate choice here — if ASA V, the ASA 4 row is the closest available (under-scores vs some PNED tables).'),
       yesNo('time8', 'Time from symptoms to admission < 8 hours', 1),
       yesNo('hb7', 'Hemoglobin ≤ 7 g/dL', 1),
-      yesNo('instability', 'Hemodynamic instability at admission', 2),
-      yesNo('renal', 'Renal failure (Cr >1.5 mg/dL or known CKD severe)', 1),
-      yesNo('mental', 'Altered mental status', 2),
+      yesNo('instability', 'Hemodynamic instability at admission', 2, 'SBP <90 mmHg, MAP <65 mmHg, and/or vasopressors (educational operationalization of Marmo instability)'),
+      yesNo('renal', 'Renal failure (Cr >1.5 mg/dL or known CKD severe)', 1, 'Keep Cr >1.5 mg/dL. Also score dialysis or eGFR <30 mL/min in place of poorly specified “CKD severe”'),
+      yesNo('mental', 'Altered mental status', 2, 'Not oriented to person/place/time, or GCS <14'),
       yesNo('cirrhosis', 'Liver cirrhosis', 2),
       yesNo('cancer', 'Active cancer / malignancy', 2),
-      yesNo('failedEndo', 'Failure of endoscopic treatment', 3),
-      yesNo('rebleed', 'Rebleeding', 3),
+      yesNo('failedEndo', 'Failure of endoscopic treatment', 3, 'Persistent bleeding despite index endoscopic therapy'),
+      yesNo('rebleed', 'Rebleeding', 3, 'Recurrent hematemesis or melena after hemostasis and ≥24 h of stability, with shock or Hb drop ≥2 g/dL (Marmo)'),
     ],
     calculate(values) {
       const score =
@@ -863,12 +863,12 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Children with suspected appendicitis to structure probability and imaging decisions.',
     whyUse: 'Pediatric-specific alternative/complement to Alvarado; includes hop tenderness and neutrophilia.',
     inputs: [
-      yesNo('migration', 'Migration of pain', 1),
-      yesNo('anorexia', 'Anorexia', 1),
+      yesNo('migration', 'Migration of pain to RLQ (starts periumbilical/epigastric, then moves to RLQ)', 1),
+      yesNo('anorexia', 'Anorexia', 1, 'In children: refuses favorite foods / not eating'),
       yesNo('nausea', 'Nausea / vomiting', 1),
       yesNo('fever', 'Fever ≥ 38.0°C (100.4°F)', 1),
-      yesNo('coughHop', 'Cough / percussion / hopping tenderness in RLQ', 2),
-      yesNo('rlq', 'Tenderness over right lower quadrant', 2),
+      yesNo('coughHop', 'Cough / percussion / hopping tenderness in RLQ', 2, 'Pain in RLQ on cough, hop on the right foot, or percussion of the abdomen'),
+      yesNo('rlq', 'Tenderness over right lower quadrant', 2, 'Maximal tenderness at McBurney’s point / RLQ'),
       yesNo('wbc', 'Leukocytosis > 10,000/µL', 1),
       yesNo('neut', 'Neutrophilia > 75% neutrophils', 1),
     ],
@@ -935,17 +935,17 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Confirmed or suspected acute cholangitis after diagnosis criteria met (systemic inflammation + cholestasis + imaging).',
     whyUse: 'Grade guides urgency of biliary drainage and intensity of care.',
     inputs: [
-      yesNo('dysfnCv', 'Cardiovascular dysfunction (hypotension requiring dopamine ≥5 or any norepinephrine)'),
-      yesNo('dysfnNeuro', 'Neurologic dysfunction (disturbance of consciousness)'),
+      yesNo('dysfnCv', 'Cardiovascular dysfunction (hypotension requiring dopamine ≥5 or any norepinephrine)', 1, 'Dopamine ≥5 µg/kg/min, or any dose of norepinephrine (TG18 organ dysfunction).'),
+      yesNo('dysfnNeuro', 'Neurologic dysfunction (disturbance of consciousness)', 1, 'New disturbance of consciousness: somnolence, disorientation, or unresponsiveness'),
       yesNo('dysfnResp', 'Respiratory dysfunction (PaO₂/FiO₂ <300)'),
-      yesNo('dysfnRenal', 'Renal dysfunction (oliguria or Cr >2.0 mg/dL)'),
+      yesNo('dysfnRenal', 'Renal dysfunction (oliguria or Cr >2.0 mg/dL)', 1, 'Oliguria ≈ <0.5 mL/kg/h, or creatinine >2.0 mg/dL'),
       yesNo('dysfnHepatic', 'Hepatic dysfunction (INR >1.5)'),
       yesNo('dysfnHeme', 'Hematologic dysfunction (platelet <100,000/µL)'),
       yesNo('wbcAbn', 'WBC >12,000 or <4,000 /µL'),
       yesNo('feverHigh', 'Fever ≥39°C (102.2°F)'),
       yesNo('age75', 'Age ≥ 75 years'),
       yesNo('bili5', 'Total bilirubin ≥ 5 mg/dL'),
-      yesNo('albuminLow', 'Hypoalbuminemia (<0.7 × lower limit of normal)'),
+      yesNo('albuminLow', 'Hypoalbuminemia (<0.7 × lower limit of normal)', 1, 'Example: if LLN is 3.5 g/dL, albumin <2.45 g/dL meets the criterion'),
     ],
     calculate(values) {
       const organKeys = ['dysfnCv', 'dysfnNeuro', 'dysfnResp', 'dysfnRenal', 'dysfnHepatic', 'dysfnHeme'] as const;
@@ -1023,16 +1023,16 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Acute cholecystitis once diagnostic criteria are met, to grade severity and plan intervention.',
     whyUse: 'Grade III organ dysfunction and Grade II local/inflammatory markers change operative risk and need for drainage.',
     inputs: [
-      yesNo('dysfnCv', 'Cardiovascular dysfunction (hypotension requiring pressors)'),
-      yesNo('dysfnNeuro', 'Neurologic dysfunction (altered consciousness)'),
+      yesNo('dysfnCv', 'Cardiovascular dysfunction (hypotension requiring dopamine ≥5 µg/kg/min or any norepinephrine)'),
+      yesNo('dysfnNeuro', 'Neurologic dysfunction (altered consciousness)', 1, 'New disturbance of consciousness: somnolence, disorientation, or unresponsiveness'),
       yesNo('dysfnResp', 'Respiratory dysfunction (PaO₂/FiO₂ <300)'),
-      yesNo('dysfnRenal', 'Renal dysfunction (oliguria or Cr >2.0 mg/dL)'),
+      yesNo('dysfnRenal', 'Renal dysfunction (oliguria or Cr >2.0 mg/dL)', 1, 'Oliguria ≈ <0.5 mL/kg/h, or creatinine >2.0 mg/dL'),
       yesNo('dysfnHepatic', 'Hepatic dysfunction (INR >1.5)'),
       yesNo('dysfnHeme', 'Hematologic dysfunction (platelets <100,000/µL)'),
       yesNo('wbc18', 'WBC > 18,000/µL'),
       yesNo('palpable', 'Palpable tender RUQ mass'),
       yesNo('duration72', 'Duration of symptoms > 72 hours'),
-      yesNo('markedLocal', 'Marked local inflammation (gangrene, abscess, biliary peritonitis, emphysematous GB)'),
+      yesNo('markedLocal', 'Marked local inflammation (gangrene, abscess, biliary peritonitis, emphysematous GB)', 1, 'Imaging or operative findings: gangrenous cholecystitis, pericholecystic abscess, biliary peritonitis, or emphysematous gallbladder.'),
     ],
     calculate(values) {
       const organKeys = ['dysfnCv', 'dysfnNeuro', 'dysfnResp', 'dysfnRenal', 'dysfnHepatic', 'dysfnHeme'] as const;
@@ -1110,15 +1110,15 @@ export const wave3GiHepCalcs: Calculator[] = [
     whyUse: 'Separates sterile vs infected necrosis and transient vs persistent organ failure for prognosis and management intensity.',
     inputs: [
       selectInput('necrosis', '(Peri)pancreatic necrosis', [
-        { label: 'No necrosis', value: 'none' },
-        { label: 'Sterile necrosis', value: 'sterile' },
-        { label: 'Infected necrosis', value: 'infected' },
-      ]),
+        { label: 'No necrosis', value: 'none', description: 'Interstitial edematous pancreatitis; no pancreatic or peripancreatic necrosis on contrast CT' },
+        { label: 'Sterile necrosis', value: 'sterile', description: 'Necrosis on imaging without gas or positive culture' },
+        { label: 'Infected necrosis', value: 'infected', description: 'Gas in necrosis on CT/MRI, or positive Gram stain/culture from FNA or drain' },
+      ], 'none', 'Infected if gas in necrosis on CT/MRI or positive Gram stain/culture from FNA or drain.'),
       selectInput('organFailure', 'Organ failure (modified Marshall ≥2 in resp/CV/renal)', [
-        { label: 'No organ failure', value: 'none' },
-        { label: 'Transient (<48 hours)', value: 'transient' },
-        { label: 'Persistent (>48 hours)', value: 'persistent' },
-      ]),
+        { label: 'No organ failure', value: 'none', description: 'All modified Marshall organ scores <2' },
+        { label: 'Transient (<48 hours)', value: 'transient', description: 'Marshall ≥2 that resolves within 48 h' },
+        { label: 'Persistent (>48 hours)', value: 'persistent', description: 'Marshall ≥2 lasting >48 h' },
+      ], 'none', 'Failure = modified Marshall ≥2: resp PaO₂/FiO₂ ≤300; renal Cr ≥1.9 mg/dL (≥170 µmol/L); CV SBP <90 not fluid-responsive. Transient resolves within 48 h; persistent lasts >48 h.'),
     ],
     calculate(values) {
       const nec = String(values.necrosis ?? 'none');
@@ -1212,10 +1212,10 @@ export const wave3GiHepCalcs: Calculator[] = [
       numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, defaultValue: 3.5 }),
       numberInput('pt', 'Prothrombin time', { unit: 'sec', min: 8, max: 60, step: 0.1, defaultValue: 12 }),
       selectInput('edema', 'Edema', [
-        { label: 'No edema (0)', value: 0 },
-        { label: 'Edema present, no diuretics (0.5)', value: 0.5 },
-        { label: 'Edema despite diuretics (1)', value: 1 },
-      ]),
+        { label: 'No edema (0)', value: 0, description: 'No ankle, pretibial, or sacral edema and no diuretic therapy for edema' },
+        { label: 'Edema present, no diuretics (0.5)', value: 0.5, description: 'Edema present without diuretics. Original Mayo also codes 0.5 if edema is controlled on diuretics' },
+        { label: 'Edema despite diuretics (1)', value: 1, description: 'Edema that persists despite diuretic therapy' },
+      ], 0, 'Mayo PBC edema factor (Dickson): none and no diuretics = 0; untreated edema OR edema controlled on diuretics = 0.5; edema despite diuretics = 1. Grade ankle/pretibial/sacral edema on exam.'),
     ],
     calculate(values) {
       const age = num(values.age, 55);
@@ -1379,21 +1379,24 @@ export const wave3GiHepCalcs: Calculator[] = [
         {
           label: 'A — ≥1 mucosal break ≤5 mm, none bridging folds',
           value: 'A',
-          description: 'Mild',
+          description: 'One or more mucosal breaks, each ≤5 mm, none extending between the tops of two mucosal folds',
         },
         {
           label: 'B — ≥1 mucosal break >5 mm, none bridging folds',
           value: 'B',
+          description: 'At least one mucosal break >5 mm long, still not continuous between the tops of two folds',
         },
         {
           label: 'C — ≥1 mucosal break continuous between ≥2 folds, <75% circumference',
           value: 'C',
+          description: 'At least one mucosal break continuous between the tops of two or more folds, but involving <75% of the esophageal circumference',
         },
         {
           label: 'D — ≥1 mucosal break involving ≥75% esophageal circumference',
           value: 'D',
+          description: 'One or more mucosal breaks involving ≥75% of the esophageal circumference',
         },
-      ]),
+      ], undefined, 'A mucosal break is a well-demarcated area of slough or erythema with a sharp line from adjacent mucosa. Erythema without a break is not erosive esophagitis. Grade the worst lesion. Measure break length along the long axis.'),
     ],
     calculate(values) {
       const g = String(values.grade ?? 'A');
@@ -1647,7 +1650,7 @@ export const wave3GiHepCalcs: Calculator[] = [
         helpText: 'If traumatic tap, correct PMN −1 per 250 RBC',
         required: false,
       }),
-      yesNo('symptoms', 'Symptoms/signs of infection or unexplained decompensation', 0),
+      yesNo('symptoms', 'Symptoms/signs of infection or unexplained decompensation', 0, 'Fever, abdominal pain/tenderness, unexplained encephalopathy, AKI, or GI bleed'),
     ],
     calculate(values) {
       const pmnRaw = num(values.pmn, 100);
@@ -2019,37 +2022,37 @@ export const wave3GiHepCalcs: Calculator[] = [
         { label: '1 day (1)', value: 1 },
         { label: '2–3 days (2)', value: 2 },
         { label: '4–7 days (3)', value: 3 },
-      ]),
+      ], 0, 'Ask official GerdQ 7-day items (Jones 2009); this screen is score entry. Operational: burning behind the breastbone.'),
       selectInput('regurg', 'Regurgitation frequency (past 7 days)', [
         { label: '0 days (0)', value: 0 },
         { label: '1 day (1)', value: 1 },
         { label: '2–3 days (2)', value: 2 },
         { label: '4–7 days (3)', value: 3 },
-      ]),
+      ], 0, 'Stomach contents moving upwards to the throat or mouth.'),
       selectInput('epigastric', 'Epigastric pain frequency (past 7 days)', [
         { label: '0 days (3)', value: 3 },
         { label: '1 day (2)', value: 2 },
         { label: '2–3 days (1)', value: 1 },
         { label: '4–7 days (0)', value: 0 },
-      ], 3, 'Reverse scored — more pain lowers GERD likelihood points'),
+      ], 3, 'Pain in the centre of the upper stomach (not heartburn). Reverse scored — more pain lowers GERD-likelihood points.'),
       selectInput('nausea', 'Nausea frequency (past 7 days)', [
         { label: '0 days (3)', value: 3 },
         { label: '1 day (2)', value: 2 },
         { label: '2–3 days (1)', value: 1 },
         { label: '4–7 days (0)', value: 0 },
-      ], 3, 'Reverse scored'),
+      ], 3, 'Feeling sick to the stomach. Reverse scored — more nausea lowers GERD-likelihood points.'),
       selectInput('sleep', 'Sleep disturbance from heartburn/regurg (past 7 days)', [
         { label: '0 days (0)', value: 0 },
         { label: '1 day (1)', value: 1 },
         { label: '2–3 days (2)', value: 2 },
         { label: '4–7 days (3)', value: 3 },
-      ]),
+      ], 0, 'Difficulty getting a good night’s sleep because of heartburn and/or regurgitation.'),
       selectInput('otc', 'OTC meds for heartburn/regurg (past 7 days)', [
         { label: '0 days (0)', value: 0 },
         { label: '1 day (1)', value: 1 },
         { label: '2–3 days (2)', value: 2 },
         { label: '4–7 days (3)', value: 3 },
-      ]),
+      ], 0, 'Additional medication for heartburn/regurgitation other than physician-prescribed therapy (e.g. antacids/OTC, not prescribed PPI).'),
     ],
     calculate(values) {
       const score =

@@ -12,19 +12,31 @@ export const wave2OncologyCalcs: Calculator[] = [
     whenToUse: 'Fever or suspected CRS after CAR-T, bispecifics, or other T-cell engagers to assign ASTCT CRS grade.',
     whyUse: 'Standardizes severity for tocilizumab/steroids decisions and trial reporting; grade drives escalation of care.',
     inputs: [
-      yesNo('fever', 'Fever ≥ 38.0 °C attributed to CRS', 1, 'Required for CRS diagnosis in ASTCT criteria'),
-      selectInput('hypotension', 'Hypotension / cardiovascular', [
-        { label: 'None (no hypotension)', value: 0 },
-        { label: 'Hypotension, no vasopressors', value: 2 },
-        { label: 'One vasopressor (± vasopressin)', value: 3 },
-        { label: 'Multiple vasopressors (excluding vasopressin alone as second agent)', value: 4 },
-      ]),
-      selectInput('hypoxia', 'Hypoxia / oxygen need', [
-        { label: 'None (no hypoxia)', value: 0 },
-        { label: 'Low-flow nasal cannula (≤6 L/min)', value: 2 },
-        { label: 'High-flow NC, facemask, nonrebreather, or Venturi', value: 3 },
-        { label: 'Positive pressure (CPAP, BiPAP, mechanical ventilation)', value: 4 },
-      ]),
+      yesNo('fever', 'Fever ≥ 38.0 °C attributed to CRS', 1, 'Onset fever ≥38.0 °C not solely infection. After antipyretics, tocilizumab, or steroids, fever is no longer required to grade subsequent CRS — grade remaining hypotension/hypoxia. This tool still gates on fever, so ignore “no fever = no CRS” in that treated setting.'),
+      selectInput(
+        'hypotension',
+        'Hypotension / cardiovascular',
+        [
+          { label: 'None (no hypotension)', value: 0, description: 'No hypotension attributed to CRS; no fluids or vasopressors for blood pressure' },
+          { label: 'Hypotension, no vasopressors', value: 2, description: 'IV-fluid–responsive; no vasopressors (ASTCT has no SBP cutoff)' },
+          { label: 'One vasopressor (± vasopressin)', value: 3, description: 'One vasopressor; adding vasopressin to that single agent still counts as one (not multiple)' },
+          { label: 'Multiple vasopressors (excluding vasopressin alone as second agent)', value: 4, description: '≥2 vasopressors besides vasopressin used only as a second agent with one pressor' },
+        ],
+        0,
+        'Grade by vasopressor requirement, not an SBP cutoff. Vasopressin with a single pressor = one vasopressor (grade 3). Multiple = ≥2 pressors excluding vasopressin-as-second-agent.',
+      ),
+      selectInput(
+        'hypoxia',
+        'Hypoxia / oxygen need',
+        [
+          { label: 'None (no hypoxia)', value: 0, description: 'Room air; no supplemental oxygen for CRS-related hypoxia' },
+          { label: 'Low-flow nasal cannula (≤6 L/min) or blow-by', value: 2, description: 'Low-flow NC ≤6 L/min or blow-by oxygen only (ASTCT grade 2 hypoxia)' },
+          { label: 'High-flow NC, facemask, nonrebreather, or Venturi', value: 3, description: 'High-flow nasal cannula, simple facemask, nonrebreather, or Venturi mask (ASTCT grade 3)' },
+          { label: 'Positive pressure (CPAP, BiPAP, mechanical ventilation)', value: 4, description: 'CPAP, BiPAP, or invasive mechanical ventilation (ASTCT grade 4)' },
+        ],
+        0,
+        'Grade by the oxygen device required for CRS-related hypoxia. Low-flow NC ≤6 L/min or blow-by = grade 2; HFNC/facemask/NRB/Venturi = grade 3; positive pressure = grade 4.',
+      ),
     ],
     calculate(values) {
       const fever = bool(values.fever);
@@ -125,29 +137,41 @@ export const wave2OncologyCalcs: Calculator[] = [
         max: 10,
         step: 1,
         defaultValue: 10,
-        helpText: 'Orientation 4 + naming 3 + following commands 1 + writing 1 + attention 1',
+        helpText:
+          'Orientation 4 (year, month, city, hospital — 1 each) + name 3 objects e.g. clock, pen, button (3) + command e.g. “Show me 2 fingers” or “Close your eyes and stick out your tongue” (1) + write a standard sentence e.g. “Our national bird is the bald eagle” (1) + count backwards from 100 by 10 (1). If unarousable and unable to perform ICE: enter 0 and set consciousness to unarousable (grade 4 — do not treat as arousable ICE 0–2 = grade 3).',
       }),
-      selectInput('consciousness', 'Depressed level of consciousness', [
-        { label: 'Awakens spontaneously', value: 0 },
-        { label: 'Awakens to voice', value: 2 },
-        { label: 'Awakens only to tactile stimulus', value: 3 },
-        { label: 'Unarousable or requires vigorous/repetitive stimuli; stupor/coma', value: 4 },
-      ]),
-      selectInput('seizure', 'Seizures', [
-        { label: 'None', value: 0 },
-        { label: 'Any clinical seizure, rapid resolution; or non-convulsive seizure on EEG resolving with intervention', value: 3 },
-        { label: 'Life-threatening prolonged seizure (>5 min) or repetitive clinical/electrical seizures without return to baseline', value: 4 },
-      ]),
+      selectInput(
+        'consciousness',
+        'Depressed level of consciousness',
+        [
+          { label: 'Awakens spontaneously', value: 0, description: 'Opens eyes / awakens without stimulation (ASTCT 0 for this domain; ICE still grades ICANS 1–3 if impaired)' },
+          { label: 'Awakens to voice', value: 2, description: 'Requires voice to awaken (ASTCT ICANS grade 2 from consciousness)' },
+          { label: 'Awakens only to tactile stimulus', value: 3, description: 'Requires touch to awaken (ASTCT ICANS grade 3 from consciousness)' },
+          { label: 'Unarousable or requires vigorous/repetitive stimuli; stupor/coma', value: 4, description: 'Stupor/coma — unarousable or only vigorous/repetitive stimuli. Enter ICE 0; this domain alone is ICANS grade 4' },
+        ],
+        0,
+        'ASTCT consciousness domain. If unarousable, enter ICE 0 and select this grade-4 option — do not leave ICE 0–2 mapped as grade 3.',
+      ),
+      selectInput(
+        'seizure',
+        'Seizures',
+        [
+          { label: 'None', value: 0, description: 'No clinical or electrographic seizure' },
+          { label: 'Any clinical seizure, rapid resolution; or non-convulsive seizure on EEG resolving with intervention', value: 3, description: 'Any clinical seizure that resolves rapidly, or NCSE/electrographic seizure that stops with intervention (ASTCT grade 3)' },
+          { label: 'Life-threatening prolonged seizure (>5 min) or repetitive clinical/electrical seizures without return to baseline', value: 4, description: 'Seizure >5 min or repeated seizures without recovery to baseline (ASTCT grade 4)' },
+        ],
+      ),
       selectInput('motor', 'Motor findings', [
-        { label: 'None', value: 0 },
-        { label: 'Deep focal motor weakness (e.g., hemiparesis, paraparesis)', value: 4 },
+        { label: 'None', value: 0, description: 'No deep focal motor weakness' },
+        { label: 'Deep focal motor weakness (e.g., hemiparesis, paraparesis)', value: 4, description: 'Deep focal weakness only — not mild weakness or isolated cranial-nerve palsy' },
       ]),
       selectInput('raisedIcp', 'Elevated ICP / cerebral edema', [
-        { label: 'None', value: 0 },
-        { label: 'Focal/local edema on neuroimaging', value: 3 },
+        { label: 'None', value: 0, description: 'No imaging or clinical signs of cerebral edema / raised ICP' },
+        { label: 'Focal/local edema on neuroimaging', value: 3, description: 'Focal or local edema on CT/MRI without diffuse edema or herniation signs (ASTCT grade 3)' },
         {
           label: 'Diffuse cerebral edema, decerebrate/decorticate posturing, cranial nerve VI palsy, papilledema, or Cushing triad',
           value: 4,
+          description: 'Diffuse edema or clinical raised-ICP signs (posturing, CN VI, papilledema, Cushing triad) — ASTCT grade 4',
         },
       ]),
     ],
@@ -230,7 +254,8 @@ export const wave2OncologyCalcs: Calculator[] = [
       { condition: 'Grade ≥3', actions: ['ICU', 'Corticosteroids per protocol', 'Seizure precautions / AEDs as indicated'] },
     ],
     pearls: [
-      'ICE: Orientation (4), Naming (3), Following commands (1), Writing (1), Attention (1).',
+      'ICE: Orientation year/month/city/hospital (4), name 3 objects (3), follow a command (1), write a standard sentence (1), count backwards from 100 by 10 (1).',
+      'If unarousable and ICE cannot be performed, ICE is 0 and ICANS is grade 4 (set consciousness to unarousable) — not the arousable ICE 0–2 = grade 3 band.',
       'CRS grade does not determine ICANS grade — score separately.',
     ],
   },
@@ -568,7 +593,7 @@ export const wave2OncologyCalcs: Calculator[] = [
     whyUse: 'Simple four-factor stage that combines anatomy and function; largely superseded by BCLC but still referenced.',
     inputs: [
       yesNo('tumorHalf', 'Tumor involving >50% of liver', 1),
-      yesNo('ascites', 'Ascites present', 1),
+      yesNo('ascites', 'Ascites present', 1, 'Clinically detectable ascites (including diuretic-controlled). Imaging-only trace fluid without clinical ascites is generally not counted.'),
       yesNo('albumin', 'Albumin ≤ 3 g/dL (≤30 g/L)', 1),
       yesNo('bili', 'Total bilirubin ≥ 3 mg/dL (≥51 µmol/L)', 1),
     ],
@@ -633,22 +658,28 @@ export const wave2OncologyCalcs: Calculator[] = [
     whyUse: 'Links tumor burden, liver function, and PS to recommended therapy classes (ablation → transplant/resection → TACE → systemic → BSC).',
     inputs: [
       selectInput('ps', 'ECOG performance status', [
-        { label: '0', value: 0 },
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '≥3', value: 3 },
+        { label: '0 — Fully active, no restriction', value: 0, description: 'Able to carry on all pre-disease performance without restriction' },
+        { label: '1 — Restricted in strenuous activity; ambulatory, light/sedentary work OK', value: 1, description: 'Restricted in physically strenuous activity but ambulatory and able to do light or sedentary work' },
+        { label: '2 — Ambulatory, all self-care; unable to work; up >50% of waking hours', value: 2, description: 'Capable of all self-care but unable to carry out any work activities; up and about more than 50% of waking hours' },
+        { label: '≥3 — Limited self-care or worse; bed/chair >50% of waking hours', value: 3, description: 'Capable of only limited self-care, confined to bed or chair more than 50% of waking hours, or completely disabled' },
       ]),
       selectInput('liver', 'Liver function', [
-        { label: 'Child-Pugh A (well compensated)', value: 'A' },
-        { label: 'Child-Pugh B', value: 'B' },
-        { label: 'Child-Pugh C', value: 'C' },
-      ]),
-      selectInput('tumor', 'Tumor burden / extent', [
-        { label: 'Single nodule <2 cm, no invasion/extrahepatic', value: 'very_early' },
-        { label: 'Single nodule or ≤3 nodules ≤3 cm (early), no invasion/EHD', value: 'early' },
-        { label: 'Multinodular, unresectable, no invasion/EHD (intermediate)', value: 'intermediate' },
-        { label: 'Portal invasion, N1, and/or M1 (advanced tumor)', value: 'advanced' },
-      ]),
+        { label: 'Child-Pugh A (well compensated)', value: 'A', description: 'Child-Pugh 5–6 points' },
+        { label: 'Child-Pugh B', value: 'B', description: 'Child-Pugh 7–9 points' },
+        { label: 'Child-Pugh C', value: 'C', description: 'Child-Pugh 10–15 points' },
+      ], undefined, 'Child-Pugh A 5–6 / B 7–9 / C 10–15 from bilirubin, albumin, INR, ascites, and encephalopathy (use the Child-Pugh calculator).'),
+      selectInput(
+        'tumor',
+        'Tumor burden / extent',
+        [
+          { label: 'Single nodule <2 cm, no invasion/extrahepatic', value: 'very_early', description: 'BCLC 0 candidate: one HCC <2 cm, no vascular invasion, no extrahepatic disease' },
+          { label: 'Single nodule or ≤3 nodules ≤3 cm (early), no invasion/EHD', value: 'early', description: 'BCLC A: single HCC (any size if resectable/transplantable context) or ≤3 nodules each ≤3 cm; no invasion or extrahepatic disease' },
+          { label: 'Multinodular, unresectable, no invasion/EHD (intermediate)', value: 'intermediate', description: 'BCLC B: multinodular beyond early criteria, still no vascular invasion or extrahepatic spread' },
+          { label: 'Portal invasion, N1, and/or M1 (advanced tumor)', value: 'advanced', description: 'BCLC C tumor: portal (or hepatic) vein invasion, nodal disease, and/or distant metastases' },
+        ],
+        undefined,
+        'Use quality multiphase imaging. Extrahepatic disease (EHD) = nodes or distant mets. Invasion = macrovascular (portal/hepatic vein).',
+      ),
     ],
     calculate(values) {
       const ps = num(values.ps);
@@ -752,20 +783,26 @@ export const wave2OncologyCalcs: Calculator[] = [
     whyUse: 'Simple 0–6 score with survival gradients; complementary to BCLC/Okuda.',
     inputs: [
       selectInput('child', 'Child-Pugh class', [
-        { label: 'A (0 points)', value: 0 },
-        { label: 'B (1 point)', value: 1 },
-        { label: 'C (2 points)', value: 2 },
-      ]),
-      selectInput('morphology', 'Tumor morphology', [
-        { label: 'Uninodular and extension ≤50% (0)', value: 0 },
-        { label: 'Multinodular and extension ≤50% (1)', value: 1 },
-        { label: 'Massive or extension >50% (2)', value: 2 },
-      ]),
+        { label: 'A (0 points)', value: 0, description: 'Child-Pugh 5–6' },
+        { label: 'B (1 point)', value: 1, description: 'Child-Pugh 7–9' },
+        { label: 'C (2 points)', value: 2, description: 'Child-Pugh 10–15' },
+      ], undefined, 'Child-Pugh A 5–6 / B 7–9 / C 10–15 from bilirubin, albumin, INR, ascites, and encephalopathy (use the Child-Pugh calculator).'),
+      selectInput(
+        'morphology',
+        'Tumor morphology',
+        [
+          { label: 'Uninodular and extension ≤50% (0)', value: 0, description: 'Single nodule occupying ≤50% of the liver' },
+          { label: 'Multinodular and extension ≤50% (1)', value: 1, description: 'More than one nodule, combined extent still ≤50% of the liver' },
+          { label: 'Massive or extension >50% (2)', value: 2, description: 'Massive tumor or any pattern occupying >50% of the liver' },
+        ],
+        undefined,
+        'CLIP morphology from imaging: uninodular ≤50% vs multinodular ≤50% vs massive/>50% involvement.',
+      ),
       selectInput('afp', 'AFP (ng/mL)', [
-        { label: '< 400 (0)', value: 0 },
-        { label: '≥ 400 (1)', value: 1 },
+        { label: '< 400 (0)', value: 0, description: 'AFP <400 ng/mL' },
+        { label: '≥ 400 (1)', value: 1, description: 'AFP ≥400 ng/mL (CLIP point)' },
       ]),
-      yesNo('pvt', 'Portal vein thrombosis', 1),
+      yesNo('pvt', 'Portal vein thrombosis', 1, 'Macroscopic portal vein tumor thrombosis (or bland PVT counted as in original CLIP if recorded as PVT).'),
     ],
     calculate(values) {
       const score = num(values.child) + num(values.morphology) + num(values.afp) + (bool(values.pvt) ? 1 : 0);
@@ -1067,14 +1104,20 @@ export const wave2OncologyCalcs: Calculator[] = [
     whenToUse: 'Baseline and serial functional assessment for treatment eligibility, trials, and prognosis.',
     whyUse: 'Universal oncology language for fitness; many regimens require PS 0–1 or 0–2.',
     inputs: [
-      selectInput('ps', 'ECOG performance status', [
-        { label: '0 — Fully active, no restriction', value: 0 },
-        { label: '1 — Restricted in strenuous activity; ambulatory, light work OK', value: 1 },
-        { label: '2 — Ambulatory, all self-care; no work; up >50% of waking hours', value: 2 },
-        { label: '3 — Limited self-care; confined to bed/chair >50% of waking hours', value: 3 },
-        { label: '4 — Completely disabled; no self-care; totally confined to bed/chair', value: 4 },
-        { label: '5 — Dead', value: 5 },
-      ]),
+      selectInput(
+        'ps',
+        'ECOG performance status',
+        [
+          { label: '0 — Fully active, no restriction', value: 0, description: 'Able to carry on all pre-disease performance without restriction' },
+          { label: '1 — Restricted in strenuous activity; ambulatory, light work OK', value: 1, description: 'Restricted in physically strenuous activity but ambulatory and able to do light or sedentary work' },
+          { label: '2 — Ambulatory, all self-care; no work; up >50% of waking hours', value: 2, description: 'Capable of all self-care but unable to carry out any work activities; up and about more than 50% of waking hours' },
+          { label: '3 — Limited self-care; confined to bed/chair >50% of waking hours', value: 3, description: 'Capable of only limited self-care; confined to bed or chair more than 50% of waking hours' },
+          { label: '4 — Completely disabled; no self-care; totally confined to bed/chair', value: 4, description: 'Completely disabled; cannot carry on any self-care; totally confined to bed or chair' },
+          { label: '5 — Dead', value: 5, description: 'Dead' },
+        ],
+        0,
+        'Oken/ECOG scale. Grade current function (not a best-ever). PS 2 vs 3 hinge is whether the patient is up more than half of waking hours and can do all self-care.',
+      ),
     ],
     calculate(values) {
       const ps = num(values.ps);
@@ -1229,28 +1272,40 @@ export const wave2OncologyCalcs: Calculator[] = [
     inputs: [
       numberInput('age', 'Current age', { unit: 'years', min: 20, max: 90, step: 1, defaultValue: 45 }),
       selectInput('menarche', 'Age at menarche', [
-        { label: '≥14 years (lower risk)', value: 0 },
-        { label: '12–13 years', value: 1 },
-        { label: '<12 years (higher risk)', value: 2 },
+        { label: '≥14 years (lower risk)', value: 0, description: 'Menarche at age 14 or later (Gail lower-risk band)' },
+        { label: '12–13 years', value: 1, description: 'Menarche at age 12 or 13' },
+        { label: '<12 years (higher risk)', value: 2, description: 'Menarche before age 12 (Gail higher-risk band)' },
       ]),
       selectInput('firstBirth', 'Age at first live birth', [
-        { label: 'Nulliparous', value: 2 },
-        { label: '<20 years', value: 0 },
-        { label: '20–24 years', value: 1 },
-        { label: '25–29 years', value: 2 },
-        { label: '≥30 years', value: 3 },
+        { label: 'Nulliparous', value: 2, description: 'Never had a live birth' },
+        { label: '<20 years', value: 0, description: 'First live birth before age 20 (lowest band)' },
+        { label: '20–24 years', value: 1, description: 'First live birth at age 20–24' },
+        { label: '25–29 years', value: 2, description: 'First live birth at age 25–29 (same educational weight as nulliparous in this tally)' },
+        { label: '≥30 years', value: 3, description: 'First live birth at age 30 or later' },
       ]),
-      selectInput('biopsies', 'Prior breast biopsies', [
-        { label: 'None', value: 0 },
-        { label: '1', value: 1 },
-        { label: '≥2', value: 2 },
-      ]),
-      yesNo('atypia', 'Atypical hyperplasia on biopsy', 2),
-      selectInput('relatives', 'First-degree relatives with breast cancer', [
-        { label: '0', value: 0 },
-        { label: '1', value: 1 },
-        { label: '≥2', value: 2 },
-      ]),
+      selectInput(
+        'biopsies',
+        'Prior breast biopsies',
+        [
+          { label: 'None', value: 0, description: 'No prior breast biopsies' },
+          { label: '1', value: 1, description: 'One prior core or surgical breast biopsy' },
+          { label: '≥2', value: 2, description: 'Two or more prior core or surgical breast biopsies' },
+        ],
+        undefined,
+        'Count prior breast biopsies (typically core or excisional). Atypia is a separate item below — do not double-count it here.',
+      ),
+      yesNo('atypia', 'Atypical hyperplasia on biopsy', 2, 'Atypical ductal or lobular hyperplasia on a prior biopsy (separate from biopsy count).'),
+      selectInput(
+        'relatives',
+        'First-degree relatives with breast cancer',
+        [
+          { label: '0', value: 0, description: 'No mother, sister, or daughter with breast cancer' },
+          { label: '1', value: 1, description: 'Exactly one first-degree female relative (mother, sister, or daughter) with breast cancer' },
+          { label: '≥2', value: 2, description: 'Two or more first-degree female relatives with breast cancer' },
+        ],
+        undefined,
+        'Female first-degree only (mother, sisters, daughters). Do not count father or second-degree relatives (grandmothers/aunts). Strong hereditary pattern → genetic counseling / Tyrer-Cuzick, not this educational tally.',
+      ),
       selectInput('race', 'Race/ethnicity (educational strata)', [
         { label: 'White / other (reference educational weight)', value: 'white' },
         { label: 'Black / African American', value: 'black' },
@@ -1366,7 +1421,7 @@ export const wave2OncologyCalcs: Calculator[] = [
         max: 10,
         step: 1,
         defaultValue: 3,
-        helpText: '0 = no distress, 10 = extreme distress',
+        helpText: 'Patient self-report of distress in the past week, including today (0 = none, 10 = extreme). NCCN commonly uses ≥4 as referral cut-off. Do not reprint the official NCCN problem list — complete it on paper/EHR if screening positive.',
       }),
       yesNo('practical', 'Practical problems (housing, bills, transport, work)', 0),
       yesNo('family', 'Family problems', 0),
@@ -1424,6 +1479,10 @@ export const wave2OncologyCalcs: Calculator[] = [
       { condition: '≥4', actions: ['Problem-list review', 'Supportive care referral', 'Follow-up screen'] },
       { condition: '≥7 or suicidal ideation', actions: ['Urgent mental health assessment', 'Safety planning'] },
     ],
+    pearls: [
+      'Thermometer stem is distress in the past week including today; ≥4 commonly triggers further evaluation.',
+      'The five domain flags are high-level pointers only — complete the official NCCN problem list on paper/EHR if screening positive (do not reprint the copyrighted list here).',
+    ],
   },
 
   {
@@ -1437,7 +1496,7 @@ export const wave2OncologyCalcs: Calculator[] = [
     whyUse: 'Guides prognosis and historically regimen intensity (favorable vs intermediate vs poor).',
     inputs: [
       yesNo('timeToSys', 'Time from diagnosis to systemic therapy < 1 year', 1),
-      yesNo('kps', 'Karnofsky performance status < 80', 1),
+      yesNo('kps', 'Karnofsky performance status < 80', 1, 'KPS <80 = unable to carry on normal activity or work (KPS ≤70). KPS 80 = normal activity with effort; some signs/symptoms.'),
       yesNo('hb', 'Hemoglobin < lower limit of normal', 1),
       yesNo('calcium', 'Corrected calcium > upper limit of normal', 1),
       yesNo('neutrophils', 'Neutrophils > upper limit of normal', 1),
@@ -1513,7 +1572,7 @@ export const wave2OncologyCalcs: Calculator[] = [
     whyUse: 'Five-factor model still cited; compare with IMDC (which adds neutrophils/platelets, drops LDH).',
     inputs: [
       yesNo('timeToSys', 'Time from diagnosis to systemic therapy < 1 year', 1),
-      yesNo('kps', 'Karnofsky performance status < 80', 1),
+      yesNo('kps', 'Karnofsky performance status < 80', 1, 'KPS <80 = unable to carry on normal activity or work (KPS ≤70). KPS 80 = normal activity with effort; some signs/symptoms.'),
       yesNo('hb', 'Hemoglobin < lower limit of normal', 1),
       yesNo('ldh', 'LDH > 1.5 × upper limit of normal', 1),
       yesNo('calcium', 'Corrected calcium > upper limit of normal', 1),
@@ -1661,7 +1720,7 @@ export const wave2OncologyCalcs: Calculator[] = [
       yesNo('age', 'Age > 60 years', 1),
       yesNo('stage', 'Ann Arbor stage III–IV', 1),
       yesNo('hb', 'Hemoglobin < 12 g/dL', 1),
-      yesNo('nodal', 'More than 4 nodal areas', 1),
+      yesNo('nodal', 'More than 4 nodal areas', 1, 'FLIPI areas = cervical, axillary, inguino-crural (count left and right separately), para-aortic/iliac, celiac/mesenteric, other ancillary. Positive if >4 involved areas (≥5). Spleen is extranodal, not a nodal area.'),
       yesNo('ldh', 'LDH > upper limit of normal', 1),
     ],
     calculate(values) {
@@ -1729,9 +1788,9 @@ export const wave2OncologyCalcs: Calculator[] = [
     inputs: [
       yesNo('age', 'Age > 60 years', 1),
       yesNo('ldh', 'Serum LDH > upper limit of normal', 1),
-      yesNo('ecog', 'ECOG performance status ≥ 2', 1),
+      yesNo('ecog', 'ECOG performance status ≥ 2', 1, 'ECOG ≥2 = all self-care, unable to work, up >50% of waking hours, or worse (bed/chair >50% or disabled). PS 1 (light/sedentary work OK) does not score this point.'),
       yesNo('stage', 'Ann Arbor stage III or IV', 1),
-      yesNo('extranodal', 'More than one extranodal site', 1),
+      yesNo('extranodal', 'More than one extranodal site', 1, '>1 distinct extranodal organ/site (BM, GI, liver, lung, bone, CNS, skin). Spleen counts as extranodal in classic IPI. Contiguous extension from a nodal mass is not extra sites.'),
     ],
     calculate(values) {
       const score =

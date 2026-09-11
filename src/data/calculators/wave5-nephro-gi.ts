@@ -1296,13 +1296,13 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Known or suspected hyperkalemia — triage membrane-stabilization urgency from ECG features.',
     whyUse: 'ECG changes mark increased risk of arrhythmia; guide calcium, shift, and removal therapies.',
     inputs: [
-      numberInput('k', 'Serum K⁺ (if known)', { unit: 'mEq/L', min: 2, max: 12, step: 0.1, defaultValue: 6.2, required: false }),
-      yesNo('peakedT', 'Peaked T waves'),
-      yesNo('prProlong', 'PR prolongation / flattened P', 2),
-      yesNo('lossP', 'Loss of P waves', 3),
-      yesNo('wideQrs', 'QRS widening', 4),
-      yesNo('sine', 'Sine-wave pattern', 5),
-      yesNo('bradyVf', 'Severe bradyarrhythmia / VT/VF / arrest', 6),
+      numberInput('k', 'Serum K⁺ (if known)', { unit: 'mEq/L', min: 2, max: 12, step: 0.1, defaultValue: 6.2, required: false, helpText: 'Optional. ECG can be normal at dangerous K⁺ — treat the number and trajectory even if no ECG flags.' }),
+      yesNo('peakedT', 'Peaked T waves', 1, 'Tall, peaked, narrow T waves (often precordial). Early change; not required for treatment if K is high.'),
+      yesNo('prProlong', 'PR prolongation / flattened P', 2, 'Lengthening PR and/or P waves that flatten or widen as atrial conduction slows.'),
+      yesNo('lossP', 'Loss of P waves', 3, 'P waves absent (sinoventricular rhythm); QRS often still narrow at this stage.'),
+      yesNo('wideQrs', 'QRS widening', 4, 'QRS wider than the patient’s baseline (treat as high-risk even if not a bundle-branch block pattern).'),
+      yesNo('sine', 'Sine-wave pattern', 5, 'Sine-wave: merging QRS and T into a wide, undulating tracing — pre-arrest. Immediate IV calcium.'),
+      yesNo('bradyVf', 'Severe bradyarrhythmia / VT/VF / arrest', 6, 'Slow wide complex, VT/VF, or cardiac arrest attributed to hyperkalemia.'),
     ],
     calculate(values) {
       const kProvided = !isMissingValue(values.k, true);
@@ -1583,12 +1583,34 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Colonoscopy/sigmoidoscopy grading of UC inflammatory activity.',
     whyUse: 'Standard endoscopic endpoint in trials and treat-to-target strategies (0–1 often “endoscopic improvement”).',
     inputs: [
-      selectInput('endo', 'Endoscopic findings', [
-        { label: '0 — Normal or inactive disease', value: 0 },
-        { label: '1 — Mild (erythema, decreased vascular pattern, mild friability)', value: 1 },
-        { label: '2 — Moderate (marked erythema, absent vascular pattern, friability, erosions)', value: 2 },
-        { label: '3 — Severe (spontaneous bleeding, ulceration)', value: 3 },
-      ]),
+      selectInput(
+        'endo',
+        'Endoscopic findings (Mayo endoscopic subscore)',
+        [
+          {
+            label: '0 — Normal or inactive disease',
+            value: 0,
+            description: 'Normal mucosa or inactive disease: intact vascular pattern, no erythema, no friability, no erosions or ulcers',
+          },
+          {
+            label: '1 — Mild (erythema, decreased vascular pattern, mild friability)',
+            value: 1,
+            description: 'Mild: erythema, decreased vascular pattern, and/or mild friability (bleeds only with light touch). No erosions or spontaneous bleeding',
+          },
+          {
+            label: '2 — Moderate (marked erythema, absent vascular pattern, friability, erosions)',
+            value: 2,
+            description: 'Moderate: marked erythema, absent vascular pattern, friability, and/or erosions. No ulcers or spontaneous bleeding',
+          },
+          {
+            label: '3 — Severe (spontaneous bleeding, ulceration)',
+            value: 3,
+            description: 'Severe: spontaneous bleeding and/or ulceration (mucosal defects with excavated base)',
+          },
+        ],
+        0,
+        'Score the most severely involved colorectal segment on the current exam (Schroeder 1987 Mayo endoscopic subscore). Original Mayo 1 includes mild friability; some trial “modified Mayo” scales move any friability to ≥2 — this tool uses original descriptors.',
+      ),
     ],
     calculate(values) {
       const score = num(values.endo, 0);
@@ -1648,24 +1670,42 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Clinic follow-up of UC activity without endoscopy.',
     whyUse: 'Correlates with full Mayo and guides response assessment between scopes.',
     inputs: [
-      selectInput('stool', 'Stool frequency', [
-        { label: '0 — Normal number of stools', value: 0 },
-        { label: '1 — 1–2 stools more than normal', value: 1 },
-        { label: '2 — 3–4 stools more than normal', value: 2 },
-        { label: '3 — ≥5 stools more than normal', value: 3 },
-      ]),
-      selectInput('bleed', 'Rectal bleeding', [
-        { label: '0 — None', value: 0 },
-        { label: '1 — Streaks of blood with stool less than half the time', value: 1 },
-        { label: '2 — Obvious blood with stool most of the time', value: 2 },
-        { label: '3 — Blood alone passes', value: 3 },
-      ]),
-      selectInput('pga', 'Physician global assessment', [
-        { label: '0 — Normal', value: 0 },
-        { label: '1 — Mild disease', value: 1 },
-        { label: '2 — Moderate disease', value: 2 },
-        { label: '3 — Severe disease', value: 3 },
-      ]),
+      selectInput(
+        'stool',
+        'Stool frequency',
+        [
+          { label: '0 — Normal number of stools', value: 0, description: 'Same number of stools per day as this patient’s usual (pre-colitis / when well)' },
+          { label: '1 — 1–2 stools more than normal', value: 1, description: '1–2 stools/day above the patient’s usual when well' },
+          { label: '2 — 3–4 stools more than normal', value: 2, description: '3–4 stools/day above the patient’s usual when well' },
+          { label: '3 — ≥5 stools more than normal', value: 3, description: '≥5 stools/day above the patient’s usual when well' },
+        ],
+        undefined,
+        'Relative to this patient’s usual stool frequency when well (pre-colitis pattern), not a fixed daily count.',
+      ),
+      selectInput(
+        'bleed',
+        'Rectal bleeding',
+        [
+          { label: '0 — None', value: 0, description: 'No blood seen' },
+          { label: '1 — Streaks of blood with stool less than half the time', value: 1, description: 'Streaks of blood with stool in less than half of stools' },
+          { label: '2 — Obvious blood with stool most of the time', value: 2, description: 'Obvious blood with stool in most stools' },
+          { label: '3 — Blood alone passes', value: 3, description: 'Passage of blood alone (without stool)' },
+        ],
+        undefined,
+        'Schroeder Mayo rectal-bleeding subscore for the current assessment period (typically the last 1–3 days).',
+      ),
+      selectInput(
+        'pga',
+        'Physician global assessment',
+        [
+          { label: '0 — Normal', value: 0, description: 'Overall impression of no disease activity' },
+          { label: '1 — Mild disease', value: 1, description: 'Mild overall activity after integrating all clinical data' },
+          { label: '2 — Moderate disease', value: 2, description: 'Moderate overall activity after integrating all clinical data' },
+          { label: '3 — Severe disease', value: 3, description: 'Severe overall activity after integrating all clinical data' },
+        ],
+        undefined,
+        'Physician overall assessment incorporating stool frequency, rectal bleeding, abdominal discomfort and well-being, physical findings, and performance status — not symptoms alone. Do not use unpublished numeric PGA cutoffs.',
+      ),
     ],
     calculate(values) {
       const score = num(values.stool, 0) + num(values.bleed, 0) + num(values.pga, 0);
@@ -1738,37 +1778,72 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Quantify UC clinical activity in clinic without endoscopy.',
     whyUse: 'Simple, validated symptom score; remission often SCCAI <3.',
     inputs: [
-      selectInput('dayFreq', 'Bowel frequency (day)', [
-        { label: '0 — 0–3', value: 0 },
-        { label: '1 — 4–6', value: 1 },
-        { label: '2 — 7–9', value: 2 },
-        { label: '3 — >9', value: 3 },
-      ]),
-      selectInput('nightFreq', 'Bowel frequency (night)', [
-        { label: '0 — 0', value: 0 },
-        { label: '1 — 1–3', value: 1 },
-        { label: '2 — ≥4', value: 2 },
-      ]),
-      selectInput('urgency', 'Urgency of defecation', [
-        { label: '0 — None', value: 0 },
-        { label: '1 — Hurry', value: 1 },
-        { label: '2 — Immediately', value: 2 },
-        { label: '3 — Incontinence', value: 3 },
-      ]),
-      selectInput('blood', 'Blood in stool', [
-        { label: '0 — None', value: 0 },
-        { label: '1 — Trace', value: 1 },
-        { label: '2 — Occasionally frank', value: 2 },
-        { label: '3 — Usually frank', value: 3 },
-      ]),
-      selectInput('wellbeing', 'General well-being', [
-        { label: '0 — Very well', value: 0 },
-        { label: '1 — Slightly below par', value: 1 },
-        { label: '2 — Poor', value: 2 },
-        { label: '3 — Very poor', value: 3 },
-        { label: '4 — Terrible', value: 4 },
-      ]),
-      yesNo('exColitis', 'Extracolonic features present (arthritis, uveitis, erythema nodosum, pyoderma, etc.)', 1),
+      selectInput(
+        'dayFreq',
+        'Bowel frequency (day)',
+        [
+          { label: '0 — 0–3', value: 0, description: '0–3 stools during waking hours' },
+          { label: '1 — 4–6', value: 1, description: '4–6 stools during waking hours' },
+          { label: '2 — 7–9', value: 2, description: '7–9 stools during waking hours' },
+          { label: '3 — >9', value: 3, description: 'More than 9 stools during waking hours' },
+        ],
+        undefined,
+        'Count stools during waking hours for the current day / typical 24-hour recall (Walmsley).',
+      ),
+      selectInput(
+        'nightFreq',
+        'Bowel frequency (night)',
+        [
+          { label: '0 — 0', value: 0, description: 'No nocturnal stools' },
+          { label: '1 — 1–3', value: 1, description: '1–3 stools after going to bed or that wake the patient' },
+          { label: '2 — ≥4', value: 2, description: '4 or more nocturnal stools' },
+        ],
+        undefined,
+        'Stools after going to bed / that wake the patient. Not daytime frequency.',
+      ),
+      selectInput(
+        'urgency',
+        'Urgency of defecation',
+        [
+          { label: '0 — None', value: 0, description: 'Can defer indefinitely; no urgency' },
+          { label: '1 — Hurry', value: 1, description: 'Need the toilet soon but can wait briefly' },
+          { label: '2 — Immediately', value: 2, description: 'Must go now; cannot wait' },
+          { label: '3 — Incontinence', value: 3, description: 'Cannot retain stool; incontinent' },
+        ],
+        undefined,
+        'Walmsley: none / hurry / immediately / incontinence. Score the worst typical urgency.',
+      ),
+      selectInput(
+        'blood',
+        'Blood in stool',
+        [
+          { label: '0 — None', value: 0, description: 'No visible blood' },
+          { label: '1 — Trace', value: 1, description: 'Smear or streak of blood on stool or tissue only' },
+          { label: '2 — Occasionally frank', value: 2, description: 'Obvious (frank) blood with some stools, not most' },
+          { label: '3 — Usually frank', value: 3, description: 'Obvious blood with most stools' },
+        ],
+        undefined,
+        'Visible blood only (not occult). Trace = smear/streak; frank = obviously bloody stool.',
+      ),
+      selectInput(
+        'wellbeing',
+        'General well-being',
+        [
+          { label: '0 — Very well', value: 0, description: 'Normal energy and function' },
+          { label: '1 — Slightly below par', value: 1, description: 'Mild reduction in energy or function; still largely normal activities' },
+          { label: '2 — Poor', value: 2, description: 'Clearly limited daily activities' },
+          { label: '3 — Very poor', value: 3, description: 'Mostly restricted; little usual activity' },
+          { label: '4 — Terrible', value: 4, description: 'Bedbound or equivalent; worst well-being' },
+        ],
+        undefined,
+        'Walmsley general well-being (0–4). Patient global, current symptoms.',
+      ),
+      yesNo(
+        'exColitis',
+        'Extracolonic features present (arthritis, uveitis, erythema nodosum, pyoderma, etc.)',
+        1,
+        'Walmsley: 1 point if any of arthritis, uveitis, erythema nodosum, or pyoderma gangrenosum is present (binary, not counted per site).',
+      ),
     ],
     calculate(values) {
       const score =
@@ -1838,34 +1913,57 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Clinic assessment of Crohn disease symptom activity.',
     whyUse: 'Faster alternative to full CDAI; remission often HBI ≤4.',
     inputs: [
-      selectInput('wellbeing', 'General well-being (yesterday)', [
-        { label: '0 — Very well', value: 0 },
-        { label: '1 — Slightly below par', value: 1 },
-        { label: '2 — Poor', value: 2 },
-        { label: '3 — Very poor', value: 3 },
-        { label: '4 — Terrible', value: 4 },
-      ]),
-      selectInput('pain', 'Abdominal pain (yesterday)', [
-        { label: '0 — None', value: 0 },
-        { label: '1 — Mild', value: 1 },
-        { label: '2 — Moderate', value: 2 },
-        { label: '3 — Severe', value: 3 },
-      ]),
-      numberInput('liquidStools', 'Number of liquid stools (yesterday)', { min: 0, max: 30, defaultValue: 1 }),
-      selectInput('mass', 'Abdominal mass', [
-        { label: '0 — None', value: 0 },
-        { label: '1 — Dubious', value: 1 },
-        { label: '2 — Definite', value: 2 },
-        { label: '3 — Definite and tender', value: 3 },
-      ]),
-      yesNo('arthralgia', 'Arthralgia', 1),
-      yesNo('uveitis', 'Uveitis', 1),
-      yesNo('erythemaNodosum', 'Erythema nodosum', 1),
-      yesNo('aphthous', 'Aphthous ulcers', 1),
-      yesNo('pyoderma', 'Pyoderma gangrenosum', 1),
-      yesNo('analFissure', 'Anal fissure', 1),
-      yesNo('newFistula', 'New fistula', 1),
-      yesNo('abscess', 'Abscess', 1),
+      selectInput(
+        'wellbeing',
+        'General well-being (yesterday)',
+        [
+          { label: '0 — Very well', value: 0, description: 'Normal energy and function yesterday' },
+          { label: '1 — Slightly below par', value: 1, description: 'Mild reduction in energy or function; still largely normal activities' },
+          { label: '2 — Poor', value: 2, description: 'Clearly limited daily activities yesterday' },
+          { label: '3 — Very poor', value: 3, description: 'Mostly restricted; little usual activity' },
+          { label: '4 — Terrible', value: 4, description: 'Bedbound or equivalent; worst well-being' },
+        ],
+        undefined,
+        'Harvey–Bradshaw: score yesterday only (not today). Official 0–4 descriptors are very well / slightly below par / poor / very poor / terrible.',
+      ),
+      selectInput(
+        'pain',
+        'Abdominal pain (yesterday)',
+        [
+          { label: '0 — None', value: 0, description: 'No abdominal pain yesterday' },
+          { label: '1 — Mild', value: 1, description: 'Aware of pain; does not limit activity' },
+          { label: '2 — Moderate', value: 2, description: 'Pain interferes with some activities' },
+          { label: '3 — Severe', value: 3, description: 'Incapacitating pain or pain that prevents usual activity / wakes from sleep' },
+        ],
+        undefined,
+        'Patient-reported abdominal pain intensity yesterday. Original HBI has no further anchors (none / mild / moderate / severe); do not map unpublished VAS cutoffs. Operational findings above are bedside paraphrases of those four words.',
+      ),
+      numberInput('liquidStools', 'Number of liquid stools (yesterday)', {
+        min: 0,
+        max: 30,
+        defaultValue: 1,
+        helpText: 'Count liquid or very soft stools yesterday only. Each stool = 1 point. Do not count formed stools.',
+      }),
+      selectInput(
+        'mass',
+        'Abdominal mass',
+        [
+          { label: '0 — None', value: 0, description: 'No mass on abdominal exam' },
+          { label: '1 — Dubious', value: 1, description: 'Questionable fullness; not clearly a discrete mass' },
+          { label: '2 — Definite', value: 2, description: 'Clearly palpable mass, not tender' },
+          { label: '3 — Definite and tender', value: 3, description: 'Clearly palpable mass that is tender' },
+        ],
+        undefined,
+        'Palpate for an inflammatory mass (often right lower quadrant). Dubious = uncertain fullness; definite = discrete mass.',
+      ),
+      yesNo('arthralgia', 'Arthralgia', 1, 'Joint pain attributed to Crohn disease (current). 1 point if present.'),
+      yesNo('uveitis', 'Uveitis', 1, 'Inflammatory eye disease (uveitis/iritis) attributed to Crohn. 1 point if present.'),
+      yesNo('erythemaNodosum', 'Erythema nodosum', 1, 'Tender pretibial erythematous nodules. 1 point if present.'),
+      yesNo('aphthous', 'Aphthous ulcers', 1, 'Oral aphthous ulcers. 1 point if present.'),
+      yesNo('pyoderma', 'Pyoderma gangrenosum', 1, 'Ulcerating neutrophilic dermatosis. 1 point if present.'),
+      yesNo('analFissure', 'Anal fissure', 1, 'Anal fissure on exam or recent diagnosis. 1 point if present.'),
+      yesNo('newFistula', 'New fistula', 1, 'New enterocutaneous, perianal, or other fistula (not a longstanding inactive tract). 1 point if present.'),
+      yesNo('abscess', 'Abscess', 1, 'Intra-abdominal or perianal abscess. 1 point if present.'),
     ],
     calculate(values) {
       const complications =
@@ -1955,7 +2053,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
         min: 0,
         max: 56,
         defaultValue: 8,
-        helpText: 'Sum across ileum + 4 colon segments: ulcers, surface ulcerated, surface affected, stenosis (each 0–3)',
+        helpText:
+          'Sum 5 segments (ileum, right colon, transverse, left colon, rectum) × 4 items (each 0–3). Ulcers: 0 none; 1 aphthous 0.1–0.5 cm; 2 large 0.5–2 cm; 3 very large >2 cm. Ulcerated surface: 0 none; 1 <10%; 2 10–30%; 3 >30%. Affected surface: 0 none; 1 <50%; 2 50–75%; 3 >75%. Stenosis: 0 none; 1 single passable; 2 multiple passable; 3 cannot pass. Enter the precomputed total (max 56).',
       }),
     ],
     calculate(values) {
@@ -2015,7 +2114,10 @@ export const wave5NephroGiCalcs: Calculator[] = [
       { condition: 'SES-CD ≥7', actions: ['Therapy escalation discussion', 'Rule out stricture complications', 'Nutrition assessment'] },
       { condition: 'SES-CD ≤2', actions: ['Maintain regimen', 'Surveillance per risk'] },
     ],
-    pearls: ['This tool interprets a precomputed total — it does not score individual segments.'],
+    pearls: [
+      'This tool interprets a precomputed total — it does not score individual segments.',
+      'Official items (Daperno 2004): ulcers by size, % ulcerated surface, % affected surface, and stenosis passability — scored in ileum, right, transverse, left colon, and rectum.',
+    ],
   },
 
   // 24. IBS-SSS
@@ -2029,16 +2131,31 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Quantify IBS symptom burden for baseline and treatment response.',
     whyUse: 'Standardized 0–500 scale used in trials and clinics; 50-point change often clinically meaningful.',
     inputs: [
-      numberInput('painSev', 'Abdominal pain severity (0–100 VAS)', { min: 0, max: 100, defaultValue: 40 }),
-      numberInput('painDays', 'Number of days with pain in last 10 days', { min: 0, max: 10, defaultValue: 4, helpText: 'Score contribution = days × 10' }),
-      numberInput('distension', 'Abdominal distension severity (0–100)', { min: 0, max: 100, defaultValue: 30 }),
+      numberInput('painSev', 'Abdominal pain severity (0–100 VAS)', {
+        min: 0,
+        max: 100,
+        defaultValue: 40,
+        helpText: 'Last 10 days. 0 = no pain, 100 = very severe pain.',
+      }),
+      numberInput('painDays', 'Number of days with pain in last 10 days', { min: 0, max: 10, defaultValue: 4, helpText: 'Score contribution = days × 10. Recall window is the last 10 days.' }),
+      numberInput('distension', 'Abdominal distension severity (0–100)', {
+        min: 0,
+        max: 100,
+        defaultValue: 30,
+        helpText: 'Last 10 days. 0 = none, 100 = very severe tightness/bloating.',
+      }),
       numberInput('bowelSat', 'Satisfaction with bowel habits (0–100; 100 = very unhappy)', {
         min: 0,
         max: 100,
         defaultValue: 50,
-        helpText: 'Higher = more dissatisfaction',
+        helpText: 'Last 10 days. 0 = very happy with bowel habit, 100 = very unhappy. Higher = more dissatisfaction.',
       }),
-      numberInput('interfere', 'Interference with life in general (0–100)', { min: 0, max: 100, defaultValue: 40 }),
+      numberInput('interfere', 'Interference with life in general (0–100)', {
+        min: 0,
+        max: 100,
+        defaultValue: 40,
+        helpText: 'Last 10 days. 0 = not at all, 100 = completely interferes with life.',
+      }),
     ],
     calculate(values) {
       const painSev = num(values.painSev, 40);
@@ -2119,29 +2236,48 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Grade mental status changes in patients with known or suspected cirrhosis/portosystemic shunting.',
     whyUse: 'Universal clinical grading for HE severity, triage, and response to therapy.',
     inputs: [
-      selectInput('grade', 'West Haven grade (select best fit)', [
-        {
-          label: '0 — No abnormality detected',
-          value: 0,
-        },
-        {
-          label: '1 — Trivial lack of awareness; euphoria/anxiety; shortened attention; impaired addition',
-          value: 1,
-        },
-        {
-          label: '2 — Lethargy/apathy; disorientation for time; personality change; inappropriate behavior; asterixis',
-          value: 2,
-        },
-        {
-          label: '3 — Somnolence to semi-stupor; responsive to stimuli; confusion; gross disorientation',
-          value: 3,
-        },
-        {
-          label: '4 — Coma (unresponsive to verbal or noxious stimuli)',
-          value: 4,
-        },
-      ]),
-      yesNo('precipitant', 'Precipitant identified (infection, bleed, electrolytes, drugs, constipation)', 0),
+      selectInput(
+        'grade',
+        'West Haven grade (select best fit)',
+        [
+          {
+            label: '0 — No abnormality detected',
+            value: 0,
+            description: 'West Haven 0: no change in personality or behavior; no asterixis',
+          },
+          {
+            label: '1 — Trivial lack of awareness; euphoria/anxiety; shortened attention; impaired addition',
+            value: 1,
+            description:
+              'WH 1: trivial lack of awareness, euphoria or anxiety, shortened attention span, sleep–wake reversal, impaired addition/subtraction. Typically no asterixis.',
+          },
+          {
+            label: '2 — Lethargy/apathy; disorientation for time; personality change; inappropriate behavior; asterixis',
+            value: 2,
+            description:
+              'WH 2: lethargy or apathy, disorientation to time, obvious personality change, inappropriate behavior, asterixis. Still arousable.',
+          },
+          {
+            label: '3 — Somnolence to semi-stupor; responsive to stimuli; confusion; gross disorientation',
+            value: 3,
+            description:
+              'WH 3: somnolence to semistupor, responsive to verbal stimuli, confusion, gross disorientation. Not fully arousable to a normal conversation.',
+          },
+          {
+            label: '4 — Coma (unresponsive to verbal or noxious stimuli)',
+            value: 4,
+            description: 'WH 4: coma — unresponsive to verbal or noxious stimuli.',
+          },
+        ],
+        0,
+        'Use AASLD/EASL West Haven hepatic encephalopathy grades (Ferenci). Score the worst grade on the current exam, including HE controlled on lactulose/rifaximin if signs persist. Asterixis is typical of grade 2. Grade 3–4 are not fully arousable. Ask orientation (time/place), serial 7s or add/subtract, and look for asterixis (arms out, wrists dorsiflexed).',
+      ),
+      yesNo(
+        'precipitant',
+        'Precipitant identified (infection, bleed, electrolytes, drugs, constipation)',
+        0,
+        'Common precipitants: infection (including SBP), GI bleed, hyponatremia/azotemia, benzodiazepines/opioids, constipation, TIPS. Does not change the grade.',
+      ),
     ],
     calculate(values) {
       const grade = num(values.grade, 0);

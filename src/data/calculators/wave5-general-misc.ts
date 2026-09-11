@@ -1238,14 +1238,21 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
     whenToUse: 'axSpA / AS disease activity monitoring with patient domains and CRP.',
     whyUse: 'ASAS-endorsed composite; preferred over BASDAI alone when CRP is available.',
     inputs: [
-      numberInput('backPain', 'Back pain (BASDAI Q2)', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 5 }),
+      numberInput('backPain', 'Back pain (BASDAI Q2)', {
+        unit: '0–10',
+        min: 0,
+        max: 10,
+        step: 0.1,
+        defaultValue: 5,
+        helpText: 'BASDAI Q2, past week: overall AS neck, back or hip pain. 0=none, 10=very severe.',
+      }),
       numberInput('morningStiff', 'Duration of morning stiffness (BASDAI Q6)', {
         unit: '0–10',
         min: 0,
         max: 10,
         step: 0.1,
         defaultValue: 4,
-        helpText: '0–10 scale (not raw hours)',
+        helpText: 'BASDAI Q6, past week: morning stiffness duration from waking. 0=0 h, 10=2 h or more (VAS, not raw hours).',
       }),
       numberInput('ptGlobal', 'Patient global assessment of disease activity', {
         unit: '0–10',
@@ -1253,6 +1260,7 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
         max: 10,
         step: 0.1,
         defaultValue: 5,
+        helpText: 'Past week: how active was your spondyloarthritis? 0=not active, 10=very active.',
       }),
       numberInput('peripheral', 'Peripheral pain/swelling (BASDAI Q3)', {
         unit: '0–10',
@@ -1260,8 +1268,16 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
         max: 10,
         step: 0.1,
         defaultValue: 2,
+        helpText: 'BASDAI Q3, past week: pain/swelling in joints other than neck, back or hips. 0=none, 10=very severe.',
       }),
-      numberInput('crp', 'CRP', { unit: 'mg/L', min: 0, max: 200, step: 0.1, defaultValue: 8 }),
+      numberInput('crp', 'CRP', {
+        unit: 'mg/L',
+        min: 0,
+        max: 200,
+        step: 0.1,
+        defaultValue: 8,
+        helpText: 'mg/L (not mg/dL). If the lab reports mg/dL, multiply by 10. ASDAS uses ln(CRP+1).',
+      }),
     ],
     calculate(values) {
       const b = num(values.backPain, 5);
@@ -1346,10 +1362,35 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
     whenToUse: 'PsA peripheral disease activity assessment and treat-to-target monitoring.',
     whyUse: 'Simple continuous composite validated for PsA; skin disease scored separately (e.g., PASI).',
     inputs: [
-      numberInput('tjc', 'Tender joint count (68)', { min: 0, max: 68, defaultValue: 6 }),
-      numberInput('sjc', 'Swollen joint count (66)', { min: 0, max: 66, defaultValue: 3 }),
-      numberInput('pain', 'Patient pain VAS', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 4 }),
-      numberInput('ptGlobal', 'Patient global VAS', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 4 }),
+      numberInput('tjc', 'Tender joint count (68)', {
+        min: 0,
+        max: 68,
+        defaultValue: 6,
+        helpText:
+          '68 joints: DIP, PIP, MCP, wrists, elbows, shoulders, AC, SC, TMJ, hips, knees, ankles, midtarsals, MTPs, toe IPs (bilateral). Tender = pain on firm pressure.',
+      }),
+      numberInput('sjc', 'Swollen joint count (66)', {
+        min: 0,
+        max: 66,
+        defaultValue: 3,
+        helpText: 'Same set except hips not scored for swelling (66).',
+      }),
+      numberInput('pain', 'Patient pain VAS', {
+        unit: '0–10',
+        min: 0,
+        max: 10,
+        step: 0.1,
+        defaultValue: 4,
+        helpText: 'Patient pain due to PsA (typically past week). 0=none, 10=worst.',
+      }),
+      numberInput('ptGlobal', 'Patient global VAS', {
+        unit: '0–10',
+        min: 0,
+        max: 10,
+        step: 0.1,
+        defaultValue: 4,
+        helpText: 'Patient global PsA activity (typically past week). 0=none, 10=worst imaginable.',
+      }),
       numberInput('crp', 'CRP', {
         unit: 'mg/dL',
         min: 0,
@@ -1439,7 +1480,8 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
         max: 3,
         step: 0.125,
         defaultValue: 1,
-        helpText: 'Mean of 8 categories (0–3); aids may adjust scoring per instrument rules',
+        helpText:
+          'Enter the total from the official HAQ-DI form (mean of 8 categories, 0–3; aids/devices may raise a category per instrument rules). Do not reconstruct items from memory.',
       }),
     ],
     calculate(values) {
@@ -1514,7 +1556,8 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
         max: 10,
         step: 0.1,
         defaultValue: 4,
-        helpText: 'Average of 10 VAS items (0–10 each)',
+        helpText:
+          'Enter the mean from the official BASFI form (10 items, 0–10 VAS each, past-week function). Do not reconstruct items from memory.',
       }),
     ],
     calculate(values) {
@@ -1580,7 +1623,8 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
         min: 0,
         max: 13,
         defaultValue: 2,
-        helpText: 'Number of tender entheses out of 13 defined sites',
+        helpText:
+          'Press each site; score 1 if tender. 13 sites: R+L 1st costochondral, R+L 7th costochondral, R+L ASIS, R+L PSIS, R+L iliac crests, L5 spinous process, R+L Achilles insertions. Do not count other entheses (SPARCC uses different sites).',
       }),
     ],
     calculate(values) {
@@ -1667,44 +1711,102 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
         { label: 'Yes — sufficient for classification', value: 'pos', points: 100 },
         { label: 'Not done / negative', value: 'no', points: 0 },
       ]),
-      selectInput('pattern', 'Pattern of joint/bursa involvement (ever)', [
-        { label: 'Ankle or midfoot (not 1st MTP)', value: 1 },
-        { label: '1st MTP involvement', value: 2 },
-        { label: 'Other joint only / none of above', value: 0 },
-      ]),
-      selectInput('charCount', 'Characteristics of episode (erythema; can\'t bear touch/pressure; great difficulty walking) — count present', [
-        { label: 'None', value: 0 },
-        { label: 'One characteristic', value: 1 },
-        { label: 'Two characteristics', value: 2 },
-        { label: 'Three characteristics', value: 3 },
-      ]),
-      selectInput('timeCourse', 'Time course: ≥2 of (time to max pain <24h; resolution ≤14d; complete resolution between) — episodes', [
-        { label: 'No typical episodes', value: 0 },
-        { label: 'One typical episode', value: 1 },
-        { label: 'Recurrent typical episodes', value: 2 },
-      ]),
-      selectInput('tophus', 'Clinical tophus (draining, chalky, or classic locations)', [
-        { label: 'Absent', value: 0 },
-        { label: 'Present', value: 4 },
-      ]),
-      selectInput('sua', 'Serum urate (ideally off urate-lowering Rx; highest value)', [
-        { label: '<4 mg/dL (<0.24 mmol/L)', value: -4 },
-        { label: '4–<6 mg/dL (0.24–<0.36)', value: 0 },
-        { label: '6–<8 mg/dL (0.36–<0.48)', value: 2 },
-        { label: '8–<10 mg/dL (0.48–<0.60)', value: 3 },
-        { label: '≥10 mg/dL (≥0.60 mmol/L)', value: 4 },
-      ]),
+      selectInput(
+        'pattern',
+        'Pattern of joint/bursa involvement (ever)',
+        [
+          {
+            label: 'Ankle or midfoot (not 1st MTP)',
+            value: 1,
+            description: 'Ankle or midfoot involved as part of a mono/oligoarticular episode; 1st MTP never involved',
+          },
+          {
+            label: '1st MTP involvement',
+            value: 2,
+            description: '1st MTP involved ever in a typical episode (use this even if ankle/midfoot also involved)',
+          },
+          {
+            label: 'Other joint only / none of above',
+            value: 0,
+            description: 'Neither 1st MTP nor ankle/midfoot in a typical episode',
+          },
+        ],
+        undefined,
+        'Ever, as part of a mono- or oligoarticular episode. If 1st MTP was involved, use the 2-point row even if ankle/midfoot also involved.',
+      ),
+      selectInput(
+        'charCount',
+        'Characteristics of episode (erythema; can\'t bear touch/pressure; great difficulty walking) — count present',
+        [
+          { label: 'None', value: 0, description: 'None of the 3 episode features' },
+          { label: 'One characteristic', value: 1, description: 'One of: erythema; can\'t bear touch/pressure; great difficulty walking/using the joint' },
+          { label: 'Two characteristics', value: 2, description: 'Two of the 3 episode features' },
+          { label: 'Three characteristics', value: 3, description: 'All 3: erythema + can\'t bear touch/pressure + great difficulty walking/using the joint' },
+        ],
+        undefined,
+        'Count how many of the 3 features are present in the most typical episode: (1) erythema over the affected joint (patient-reported or physician-observed); (2) cannot bear touch or pressure; (3) great difficulty walking or inability to use the affected joint.',
+      ),
+      selectInput(
+        'timeCourse',
+        'Time course: ≥2 of (time to max pain <24h; resolution ≤14d; complete resolution between) — episodes',
+        [
+          { label: 'No typical episodes', value: 0, description: 'No episode with ≥2 typical time-course features' },
+          { label: 'One typical episode', value: 1, description: 'A single episode with ≥2 of: time to max pain <24 h; resolution ≤14 d; complete resolution between attacks' },
+          { label: 'Recurrent typical episodes', value: 2, description: 'Two or more typical episodes' },
+        ],
+        undefined,
+        'A typical episode has ≥2 of: time to maximal pain <24 h; resolution of symptoms ≤14 days; complete resolution between symptomatic episodes.',
+      ),
+      selectInput(
+        'tophus',
+        'Clinical tophus (draining, chalky, or classic locations)',
+        [
+          { label: 'Absent', value: 0 },
+          { label: 'Present', value: 4 },
+        ],
+        undefined,
+        'Draining or chalk-like subcutaneous nodule under transparent skin, often with overlying vascularity, in typical locations: joints, ears, olecranon bursae, finger pads, tendons (e.g. Achilles).',
+      ),
+      selectInput(
+        'sua',
+        'Serum urate (ideally off urate-lowering Rx; highest value)',
+        [
+          { label: '<4 mg/dL (<0.24 mmol/L)', value: -4, description: 'Highest SUA <4 mg/dL — negative points' },
+          { label: '4–<6 mg/dL (0.24–<0.36)', value: 0, description: 'Highest SUA 4 to <6 mg/dL' },
+          { label: '6–<8 mg/dL (0.36–<0.48)', value: 2, description: 'Highest SUA 6 to <8 mg/dL' },
+          { label: '8–<10 mg/dL (0.48–<0.60)', value: 3, description: 'Highest SUA 8 to <10 mg/dL' },
+          { label: '≥10 mg/dL (≥0.60 mmol/L)', value: 4, description: 'Highest SUA ≥10 mg/dL' },
+        ],
+        undefined,
+        'Use the highest serum urate, ideally off urate-lowering therapy. Urate can be normal during a flare — do not use a flare-only low value if a higher off-treatment value exists.',
+      ),
       selectInput('synovial', 'Synovial fluid MSU microscopy by trained examiner (if performed)', [
         { label: 'Not done', value: 0 },
         { label: 'Negative', value: -2 },
         { label: 'Positive (use MSU sufficient above)', value: 0 },
       ]),
-      selectInput('imaging', 'Imaging: urate deposition (DECT/US double contour) in symptomatic region OR gouty erosion', [
-        { label: 'Neither', value: 0 },
-        { label: 'Urate deposition imaging positive', value: 4 },
-        { label: 'Gout-related erosion on X-ray', value: 4 },
-        { label: 'Both deposition + erosion', value: 8 },
-      ]),
+      selectInput(
+        'imaging',
+        'Imaging: urate deposition (DECT/US double contour) in symptomatic region OR gouty erosion',
+        [
+          { label: 'Neither', value: 0 },
+          {
+            label: 'Urate deposition imaging positive',
+            value: 4,
+            description: 'US double-contour or DECT urate in a symptomatic (ever) joint/bursa',
+          },
+          {
+            label: 'Gout-related erosion on X-ray',
+            value: 4,
+            description: 'Plain-film cortical break with sclerotic margin and overhanging edge; exclude DIP OA erosions',
+          },
+          {
+            label: 'Both deposition + erosion',
+            value: 8,
+            description: 'Both US/DECT urate deposition and typical gouty erosion (not DIP OA)',
+          },
+        ],
+      ),
     ],
     calculate(values) {
       const patternPts = num(values.pattern, 0);
@@ -1829,7 +1931,8 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
         min: 0,
         max: 100,
         defaultValue: 70,
-        helpText: 'Sum of 13 items; 100 = no symptoms/limitation',
+        helpText:
+          'Enter the total from the official 13-item Kujala form (0–100; 100 = no symptoms/limitation). Do not reconstruct items from memory.',
       }),
     ],
     calculate(values) {
@@ -1904,7 +2007,8 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
         min: 0,
         max: 100,
         defaultValue: 75,
-        helpText: 'Sum of 8 domains; 100 = no symptoms',
+        helpText:
+          'Enter the total from the official 8-domain Lysholm form (0–100; 100 = no symptoms). Do not reconstruct items from memory.',
       }),
     ],
     calculate(values) {
@@ -1975,10 +2079,15 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
     whenToUse: 'On admission (ideally day 1 and day 3) for patients with SJS/TEN spectrum disease.',
     whyUse: 'Validated mortality predictor guiding intensity of care and counseling.',
     inputs: [
-      yesNo('age', 'Age ≥40 years', 1),
-      yesNo('malignancy', 'Presence of malignancy', 1),
-      yesNo('hr', 'Heart rate ≥120 bpm', 1),
-      yesNo('bsa', 'Detached / compromised BSA >10%', 1, 'Epidermal detachment extent'),
+      yesNo('age', 'Age ≥40 years', 1, 'Age at scoring (typically day 1 of admission; re-score day 3).'),
+      yesNo('malignancy', 'Presence of malignancy', 1, 'Any current malignancy (solid or hematologic), as in original SCORTEN.'),
+      yesNo('hr', 'Heart rate ≥120 bpm', 1, 'Heart rate ≥120 bpm at the time of scoring (day 1 and day 3).'),
+      yesNo(
+        'bsa',
+        'Detached BSA >10%',
+        1,
+        'Count detached epidermis only (blisters, erosions, Nikolsky-positive skin) — not isolated erythema. Estimate %BSA with Lund-Browder or Wallace rule of nines. Recalculate day 1 and day 3.',
+      ),
       yesNo('bun', 'BUN >28 mg/dL (>10 mmol/L)', 1),
       yesNo('glucose', 'Glucose >252 mg/dL (>14 mmol/L)', 1),
       yesNo('bicarb', 'Bicarbonate <20 mEq/L', 1),

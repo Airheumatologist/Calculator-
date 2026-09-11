@@ -17,12 +17,12 @@ export const wave6HemeOncCalcs: Calculator[] = [
       selectInput('onsetType', 'HIT onset pattern suspected', [
         { label: 'Typical onset (no recent heparin / classic timing)', value: 'typical' },
         { label: 'Rapid onset (heparin within prior 100 days)', value: 'rapid' },
-      ]),
+      ], undefined, 'Typical = no heparin in the prior ~100 days (classic day 5–10 fall). Rapid = re-exposure after heparin within the prior 100 days. Fill only the matching timing dropdown.'),
       selectInput('pltFall', 'Magnitude of platelet fall (peak → nadir since heparin)', [
-        { label: '<30%', value: -1, points: -1 },
-        { label: '30–50%', value: 1, points: 1 },
-        { label: '>50%', value: 3, points: 3 },
-      ]),
+        { label: '<30%', value: -1, points: -1, description: 'Fall of less than 30% from the post-heparin peak.' },
+        { label: '30–50%', value: 1, points: 1, description: 'Fall of 30–50% from the post-heparin peak.' },
+        { label: '>50%', value: 3, points: 3, description: 'Fall of more than 50% from the post-heparin peak (classic HIT magnitude).' },
+      ], undefined, 'Compare the peak platelet count after heparin started with the nadir of the current fall.'),
       // points omitted: pathway-conditional (only one timing arm applies)
       selectInput('timingTypical', 'Timing of fall — typical-onset pathway', [
         { label: 'N/A (using rapid-onset pathway)', value: 0 },
@@ -31,31 +31,31 @@ export const wave6HemeOncCalcs: Calculator[] = [
         { label: 'Days 5–10 after heparin', value: 3 },
         { label: 'Days 11–14 after heparin', value: 2 },
         { label: '>14 days after heparin', value: -1 },
-      ], 0, 'Use when typical onset selected'),
+      ], 0, 'Use when typical onset selected (no heparin in prior ~100 days). Days counted from start of the current heparin course.'),
       selectInput('timingRapid', 'Timing of fall — rapid-onset pathway', [
         { label: 'N/A (using typical-onset pathway)', value: 0 },
         { label: 'Fall <48 h after re-exposure', value: 2 },
         { label: 'Fall ≥48 h after re-exposure', value: -1 },
-      ], 0, 'Use when rapid onset selected'),
+      ], 0, 'Use when rapid onset selected (heparin within prior 100 days). Clock starts at re-exposure.'),
       selectInput('nadir', 'Nadir platelet count', [
         { label: '≤20 ×10⁹/L', value: -2, points: -2 },
         { label: '>20 ×10⁹/L', value: 2, points: 2 },
       ], 2),
       selectInput('thrombosis', 'Thrombosis related to heparin course', [
-        { label: 'None', value: 0, points: 0 },
-        { label: 'New venous/arterial thrombosis (≥ day 4 typical context)', value: 3, points: 3 },
-        { label: 'Progression of thrombosis while on heparin', value: 2, points: 2 },
-      ]),
-      yesNo('skinNecrosis', 'Skin necrosis at SC heparin injection site(s)', 3),
-      yesNo('systemicRxn', 'Acute systemic reaction after IV heparin bolus', 2),
-      yesNo('bleeding', 'Bleeding, petechiae, or extensive bruising', -1),
-      yesNo('chronicTCP', 'Chronic thrombocytopenic disorder present', -1),
-      yesNo('newDrug', 'Newly started non-heparin drug known to cause thrombocytopenia', -1),
-      yesNo('severeInfection', 'Severe infection', -2),
+        { label: 'None', value: 0, points: 0, description: 'No new or progressive thrombosis on this heparin course.' },
+        { label: 'New venous/arterial thrombosis (≥ day 4 typical context)', value: 3, points: 3, description: 'New VTE or arterial thrombosis attributed to the heparin course (typical-onset: on/after day 4).' },
+        { label: 'Progression of thrombosis while on heparin', value: 2, points: 2, description: 'Documented extension/propagation of existing thrombus while still receiving heparin.' },
+      ], undefined, 'Score thrombosis attributed to the current heparin exposure, not remote prior VTE.'),
+      yesNo('skinNecrosis', 'Skin necrosis at SC heparin injection site(s)', 3, 'Necrotic skin lesions at subcutaneous heparin/LMWH injection sites (classic HIT skin necrosis), not simple bruising.'),
+      yesNo('systemicRxn', 'Acute systemic reaction after IV heparin bolus', 2, 'Typically within ~30 min of an IV heparin bolus — fever, chills, tachycardia, hypertension, flushing, dyspnea, chest pain, or rarely arrest (Warkentin-type). Not any mild infusion side effect.'),
+      yesNo('bleeding', 'Bleeding, petechiae, or extensive bruising', -1, 'Clinically evident bleeding, petechiae, or extensive bruising — a negative HIT feature (HIT more often thrombotic).'),
+      yesNo('chronicTCP', 'Chronic thrombocytopenic disorder present', -1, 'Known thrombocytopenia predating heparin (e.g. ITP, MDS, cirrhosis, chemo) — competing cause, not the acute HIT fall.'),
+      yesNo('newDrug', 'Newly started non-heparin drug known to cause thrombocytopenia', -1, 'Only if newly started and a plausible culprit (e.g. vancomycin, linezolid, piperacillin, GP IIb/IIIa inhibitor, chemotherapy).'),
+      yesNo('severeInfection', 'Severe infection', -2, 'Clinically severe infection as a competing cause of thrombocytopenia (e.g. septic shock), not every positive culture.'),
       yesNo('dic', 'Severe DIC (e.g., fibrinogen <100 mg/dL and D-dimer >5 µg/mL)', -2),
       yesNo('arterialDevice', 'Indwelling arterial device (IABP, VAD, ECMO)', -2),
       yesNo('cpb', 'Cardiopulmonary bypass within prior 96 hours', -1),
-      yesNo('noOtherCause', 'No other apparent cause of thrombocytopenia', 3),
+      yesNo('noOtherCause', 'No other apparent cause of thrombocytopenia', 3, 'Award only if none of the competing-cause items (chronic TCP, new drug, severe infection, DIC, arterial device, CPB) are Yes — the calculator gates this.'),
     ],
     calculate(values) {
       const onset = String(values.onsetType ?? 'typical');
@@ -172,9 +172,9 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whyUse: 'More sensitive early DIC screen in Japanese critical care cohorts; score ≥4 indicates JAAM DIC.',
     inputs: [
       selectInput('sirs', 'SIRS criteria met', [
-        { label: '0–2 criteria (0 pts)', value: 0, points: 0 },
-        { label: '≥3 criteria (1 pt)', value: 1, points: 1 },
-      ]),
+        { label: '0–2 criteria (0 pts)', value: 0, points: 0, description: 'Fewer than 3 of the 4 SIRS items below.' },
+        { label: '≥3 criteria (1 pt)', value: 1, points: 1, description: '3 or 4 of: T >38 or <36 °C; HR >90; RR >20 or PaCO2 <32 mmHg; WBC >12 or <4 ×10⁹/L or >10% bands.' },
+      ], undefined, 'Count how many of: (1) T >38 or <36 °C; (2) HR >90; (3) RR >20 or PaCO2 <32 mmHg (<4.3 kPa); (4) WBC >12 or <4 ×10⁹/L or >10% bands. ≥3 criteria → 1 pt.'),
       selectInput('platelets', 'Platelet count', [
         { label: '≥120 ×10⁹/L (0 pts)', value: 0, points: 0 },
         { label: '80–<120 ×10⁹/L or >30% fall in 24 h (1 pt)', value: 1, points: 1 },
@@ -263,10 +263,10 @@ export const wave6HemeOncCalcs: Calculator[] = [
         { label: '<100 (2 pts)', value: 2, points: 2 },
       ]),
       selectInput('sofa', 'Total SOFA (respiratory + CV + hepatic + renal only)', [
-        { label: '0 (0 pts)', value: 0, points: 0 },
-        { label: '1 (1 pt)', value: 1, points: 1 },
-        { label: '≥2 (2 pts)', value: 2, points: 2 },
-      ], 0, 'Sum of four SOFA domains only (not full 6-organ SOFA)'),
+        { label: '0 (0 pts)', value: 0, points: 0, description: 'All four allowed domains score 0.' },
+        { label: '1 (1 pt)', value: 1, points: 1, description: 'Four-domain SOFA sum = 1.' },
+        { label: '≥2 (2 pts)', value: 2, points: 2, description: 'Four-domain SOFA sum ≥2 (SIC caps this item at 2).' },
+      ], 0, 'Sum of 4 SOFA domains only (exclude CNS and coagulation). Condensed 0–4 tables: Resp PaO2/FiO2 ≥400 = 0, <400 = 1, <300 = 2, <200 + vent = 3, <100 + vent = 4. CV MAP ≥70 = 0, MAP <70 = 1, dopamine ≤5 or any dobutamine = 2, dopamine >5 or epi/norepi ≤0.1 = 3, dopamine >15 or epi/norepi >0.1 = 4 (catecholamine doses µg/kg/min). Hepatic bilirubin <1.2 / 1.2–1.9 / 2.0–5.9 / 6.0–11.9 / >12 mg/dL = 0–4. Renal creatinine <1.2 / 1.2–1.9 / 2.0–3.4 / 3.5–4.9 or UO <500 mL/d / Cr >5.0 or UO <200 mL/d = 0–4. Then map the four-domain sum to 0 / 1 / ≥2 here.'),
     ],
     calculate(values) {
       const inr = num(values.inr);
@@ -360,7 +360,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
         max: 56,
         step: 1,
         defaultValue: 2,
-        helpText: 'Sum of domain scores (each 0–4; max 56)',
+        helpText: 'Sum of domain scores from the completed official ISTH-BAT form (each domain 0–4; max 56). Do not rescore domains from this screen.',
       }),
     ],
     calculate(values) {
@@ -437,11 +437,11 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'Acute PE/VTE when estimating 3-month major bleeding risk on anticoagulation.',
     whyUse: 'Simple bedside score with low/intermediate/high major-bleed strata used alongside VTE-BLEED and clinical judgment.',
     inputs: [
-      yesNo('recentBleed', 'Recent major bleeding', 2),
+      yesNo('recentBleed', 'Recent major bleeding', 2, 'Typically a major bleed <15–30 days before index VTE (Ruíz-Giménez 2008 often <15 days; later RIETE reports use <30 days). Major ≈ ISTH: Hb drop ≥2 g/dL, ≥2 U RBC, or critical-site bleed. Remote GI bleed does not count.'),
       yesNo('creatinine', 'Creatinine >1.2 mg/dL (>106 µmol/L)', 1.5),
       yesNo('anemia', 'Anemia (Hb <13 g/dL men, <12 g/dL women)', 1.5),
-      yesNo('malignancy', 'Active cancer / malignancy history (per RIETE definition)', 1),
-      yesNo('overtPE', 'Clinically overt pulmonary embolism', 1),
+      yesNo('malignancy', 'Active cancer (RIETE)', 1, 'Typically diagnosed in the last 3 months, metastatic, or currently treated — not remote cured history.'),
+      yesNo('overtPE', 'Clinically overt pulmonary embolism', 1, 'Index event is symptomatic PE (not isolated DVT). “Overt” = clinically diagnosed PE presentation in the RIETE derivation.'),
       yesNo('age75', 'Age >75 years', 1),
     ],
     calculate(values) {
@@ -525,19 +525,20 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whyUse: 'Standardizes common indication-based cutoffs; always individualize for active bleeding and comorbidities.',
     inputs: [
       selectInput('indication', 'Clinical indication', [
-        { label: 'Prophylaxis — stable hypoproliferative thrombocytopenia', value: 'prophylaxis' },
-        { label: 'Central line placement (compressible site)', value: 'line' },
-        { label: 'Lumbar puncture', value: 'lp' },
-        { label: 'Major non-neuraxial surgery', value: 'major_sx' },
-        { label: 'Neurosurgery / intracranial procedure', value: 'neuro' },
-        { label: 'Active major bleeding', value: 'bleed' },
-        { label: 'Immune thrombocytopenia (ITP) without major bleed', value: 'itp' },
-      ]),
+        { label: 'Prophylaxis — stable hypoproliferative thrombocytopenia', value: 'prophylaxis', description: 'AABB-style prophylactic threshold typically ~10 ×10⁹/L in stable afebrile patients (some use 10–20 if fever, sepsis, or minor bleed).' },
+        { label: 'Central line placement (compressible site)', value: 'line', description: 'Often consider transfusion if <20 ×10⁹/L for CVC at a compressible site; ultrasound guidance preferred.' },
+        { label: 'Lumbar puncture', value: 'lp', description: 'Common educational target ~50 ×10⁹/L; some heme pathways accept lower in experienced hands — follow local policy.' },
+        { label: 'Major non-neuraxial surgery', value: 'major_sx', description: 'Typical pre-op target ≥50 ×10⁹/L (higher if ongoing oozing).' },
+        { label: 'Neurosurgery / intracranial procedure', value: 'neuro', description: 'Typical neuroaxial/neurosurgical target ≥100 ×10⁹/L; confirm with the proceduralist.' },
+        { label: 'Active major bleeding', value: 'bleed', description: 'Often keep ≥50 ×10⁹/L; intracranial or intraocular bleeding commonly targets 100.' },
+        { label: 'Immune thrombocytopenia (ITP) without major bleed', value: 'itp', description: 'Avoid prophylactic transfusion — platelets are consumed. Reserve for critical bleed or urgent procedures with IVIG/steroids/TPO-RA.' },
+      ], undefined, 'Pick the single best-matching indication. Thresholds are educational AABB/ASH-style adult numbers — always individualize for active bleeding and diagnosis (HIT/TTP/ITP).'),
       numberInput('plt', 'Current platelet count', {
         unit: '×10⁹/L',
         min: 0,
         max: 1000,
         defaultValue: 15,
+        helpText: 'Same as ×10³/µL. Compare with the indication-specific educational threshold.',
       }),
     ],
     calculate(values) {
@@ -646,14 +647,14 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whyUse: 'Restrictive thresholds (often Hb 7–8 g/dL) are non-inferior in many stable populations and reduce exposure.',
     inputs: [
       selectInput('context', 'Clinical context', [
-        { label: 'Stable critically ill (general ICU)', value: 'icu' },
-        { label: 'Septic shock (stable after resuscitation)', value: 'sepsis' },
-        { label: 'GI bleed (stable, no massive exsanguination)', value: 'gi' },
-        { label: 'Postoperative / orthopedic (stable CAD possible)', value: 'postop' },
-        { label: 'Acute coronary syndrome / ongoing ischemia', value: 'acs' },
-        { label: 'Symptomatic anemia (chest pain, severe dyspnea, hypotension)', value: 'symptomatic' },
-      ]),
-      numberInput('hb', 'Current hemoglobin', { unit: 'g/dL', min: 3, max: 18, step: 0.1, defaultValue: 7.5 }),
+        { label: 'Stable critically ill (general ICU)', value: 'icu', description: 'TRICC-style restrictive strategy: Hb <7 g/dL in euvolemic ICU patients without active ACS.' },
+        { label: 'Septic shock (stable after resuscitation)', value: 'sepsis', description: 'TRISS: Hb <7 g/dL after initial resuscitation — not during undifferentiated hemorrhagic/cardiogenic shock.' },
+        { label: 'GI bleed (stable, no massive exsanguination)', value: 'gi', description: 'Villanueva UGIB restrictive ~7 g/dL if hemodynamically stable. Do not delay transfusion in massive/exsanguinating bleed or shock.' },
+        { label: 'Postoperative / orthopedic (stable CAD possible)', value: 'postop', description: 'FOCUS-style: often Hb <8 g/dL in stable postop patients, including stable CAD without ACS.' },
+        { label: 'Acute coronary syndrome / ongoing ischemia', value: 'acs', description: 'ACS or active ischemia — many aim ≥8 g/dL; individualize with cardiology. Not the same as isolated anemic chest pain without ACS (use symptomatic).' },
+        { label: 'Symptomatic anemia (chest pain, severe dyspnea, hypotension)', value: 'symptomatic', description: 'Transfuse for ischemic chest pain, severe dyspnea at rest, or hypotension/tachycardia attributable to anemia — even if Hb is above another context’s number. Mild fatigue alone does not count.' },
+      ], undefined, 'Restrictive Hb strategy for stable, euvolemic adults (often 7 g/dL ICU/sepsis/selected GI; ~8 g/dL postop/CVD/symptoms). Massive hemorrhage is not a threshold scenario. Pick the single best-matching context.'),
+      numberInput('hb', 'Current hemoglobin', { unit: 'g/dL', min: 3, max: 18, step: 0.1, defaultValue: 7.5, helpText: 'g/dL (divide g/L by 10). Recheck after a single-unit transfusion when stable.' }),
     ],
     calculate(values) {
       const ctx = String(values.context ?? 'icu');
@@ -918,25 +919,25 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whyUse: 'No single test is perfect; concordant markers increase confidence in intravascular/extravascular hemolysis.',
     inputs: [
       selectInput('haptoglobin', 'Haptoglobin', [
-        { label: 'Normal / high', value: 0, points: 0 },
-        { label: 'Low / undetectable', value: 2, points: 2 },
-      ]),
+        { label: 'Normal / high', value: 0, points: 0, description: 'At or above local reference. Acute-phase reaction can raise haptoglobin and mask hemolysis.' },
+        { label: 'Low / undetectable', value: 2, points: 2, description: 'Below local reference or undetectable — supports intravascular hemolysis if not severe liver disease.' },
+      ], undefined, 'Low/undetectable is the most specific common lab for intravascular hemolysis; interpret with the rest of the panel.'),
       selectInput('ldh', 'LDH', [
-        { label: 'Normal', value: 0, points: 0 },
-        { label: 'Elevated', value: 1, points: 1 },
-      ]),
+        { label: 'Normal', value: 0, points: 0, description: 'At or below the local laboratory ULN.' },
+        { label: 'Elevated', value: 1, points: 1, description: 'Above the local laboratory ULN.' },
+      ], undefined, 'Elevated = above the local laboratory ULN.'),
       selectInput('bili', 'Indirect / total bilirubin', [
-        { label: 'Normal', value: 0, points: 0 },
-        { label: 'Elevated (unconjugated predominant)', value: 1, points: 1 },
+        { label: 'Normal', value: 0, points: 0, description: 'Bilirubin within local reference.' },
+        { label: 'Elevated (unconjugated predominant)', value: 1, points: 1, description: 'Raised bilirubin with unconjugated/indirect predominance (hemolysis pattern), not isolated conjugated/cholestatic rise.' },
       ]),
       selectInput('retic', 'Reticulocyte response', [
-        { label: 'Not increased', value: 0, points: 0 },
-        { label: 'Increased', value: 1, points: 1 },
-      ]),
-      yesNo('schistocytes', 'Schistocytes / fragments on smear', 2),
-      yesNo('spherocytes', 'Spherocytes prominent', 1),
-      yesNo('hemoglobinuria', 'Hemoglobinuria / dark urine with positive blood, few RBCs', 2),
-      yesNo('dat', 'Direct antiglobulin test (DAT) positive', 1),
+        { label: 'Not increased', value: 0, points: 0, description: 'Reticulocyte % at/below local ULN and absolute retic not elevated.' },
+        { label: 'Increased', value: 1, points: 1, description: 'Reticulocyte % above local ULN (often >2%) or elevated absolute reticulocyte count.' },
+      ], undefined, 'Increased ≈ reticulocyte % above local ULN (often >2%) or elevated absolute reticulocyte count.'),
+      yesNo('schistocytes', 'Schistocytes / fragments on smear', 2, 'Significant fragments (often ≥1% of RBCs or ≥2/HPF) as for MAHA — not an isolated schistocyte.'),
+      yesNo('spherocytes', 'Spherocytes prominent', 1, 'Numerous spherocytes on smear (AIHA/hereditary spherocytosis pattern) — not a rare spherocyte.'),
+      yesNo('hemoglobinuria', 'Hemoglobinuria / dark urine with positive blood, few RBCs', 2, 'Dipstick blood-positive urine with few or no RBCs on microscopy (hemoglobin, not hematuria).'),
+      yesNo('dat', 'Direct antiglobulin test (DAT) positive', 1, 'Direct Coombs positive (IgG and/or C3) — supports immune hemolysis.'),
     ],
     calculate(values) {
       const score =
@@ -1195,11 +1196,11 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whyUse: 'Target bands differ for UFH vs prophylactic vs therapeutic LMWH; timing of draw is critical.',
     inputs: [
       selectInput('regimen', 'Regimen / intent', [
-        { label: 'Unfractionated heparin (UFH) infusion', value: 'ufh' },
-        { label: 'LMWH — therapeutic (e.g., enoxaparin 1 mg/kg q12h)', value: 'lmwh_tx' },
-        { label: 'LMWH — once-daily therapeutic', value: 'lmwh_daily' },
-        { label: 'LMWH — prophylactic', value: 'lmwh_ppx' },
-      ]),
+        { label: 'Unfractionated heparin (UFH) infusion', value: 'ufh', description: 'Typical chromogenic anti-Xa window ~0.3–0.7 IU/mL on a steady infusion (confirm local protocol).' },
+        { label: 'LMWH — therapeutic (e.g., enoxaparin 1 mg/kg q12h)', value: 'lmwh_tx', description: 'Peak ~4 h after dose once at steady state; often ~0.6–1.0 IU/mL.' },
+        { label: 'LMWH — once-daily therapeutic', value: 'lmwh_daily', description: 'Higher peaks than q12h; often ~1.0–2.0 IU/mL. Product-specific.' },
+        { label: 'LMWH — prophylactic', value: 'lmwh_ppx', description: 'Peaks often ~0.2–0.5 IU/mL. Routine monitoring not required for most patients.' },
+      ], undefined, 'Pick the regimen that matches how the sample was drawn. Do not interpret a trough LMWH as a peak. Heparin-calibrated anti-Xa is not for DOACs.'),
       numberInput('level', 'Anti-Xa level', {
         unit: 'IU/mL',
         min: 0,
@@ -1306,20 +1307,20 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whyUse: 'Structures red-flag features that usually mandate inpatient IV antibiotics even if MASCC falls in the low-risk band (≥21).',
     inputs: [
       yesNo('fever', 'Fever ≥38.3 °C once or ≥38.0 °C sustained ≥1 h', 0),
-      numberInput('anc', 'ANC', { unit: '/µL', min: 0, max: 2000, defaultValue: 400 }),
-      yesNo('hypotension', 'Hypotension / shock / needing pressors', 3),
+      numberInput('anc', 'ANC', { unit: '/µL', min: 0, max: 2000, defaultValue: 400, helpText: 'Absolute neutrophil count. Classic FN uses ANC <500 (or <1000 with expected fall). ANC <100 adds a risk point here.' }),
+      yesNo('hypotension', 'Hypotension / shock / needing pressors', 3, 'SBP <90 mmHg, MAP <65 mmHg, or vasopressors — not a one-off orthostatic dip that resolved with fluids.'),
       yesNo('hypoxia', 'Respiratory distress or O₂ sat <90–92% on RA', 3),
-      yesNo('altered', 'Altered mental status', 2),
-      yesNo('severeMucositis', 'Severe mucositis or inability to take PO', 2),
-      yesNo('uncontrolledCancer', 'Uncontrolled / progressive cancer', 1),
-      yesNo('allogeneic', 'Allogeneic transplant or profound expected prolonged neutropenia', 3),
+      yesNo('altered', 'Altered mental status', 2, 'New confusion, lethargy, or drop in GCS attributed to the current illness — not baseline dementia or sedative effect alone.'),
+      yesNo('severeMucositis', 'Severe mucositis or inability to take PO', 2, 'WHO oral mucositis ≥3 (liquids only) or cannot swallow oral medications.'),
+      yesNo('uncontrolledCancer', 'Uncontrolled / progressive cancer', 1, 'Not in remission; progressive, refractory, or newly diagnosed uncontrolled disease (MASCC-style burden).'),
+      yesNo('allogeneic', 'Allogeneic transplant or profound expected prolonged neutropenia', 3, 'Allo-HCT, or anticipated ANC ≤100/µL for ≥7 days (IDSA/NCCN high-risk FN).'),
       yesNo('inpatientAtFever', 'Already inpatient when fever developed', 2),
-      yesNo('comorbid', 'Significant comorbidity (COPD, HF, renal/hepatic failure)', 1),
-      yesNo('highRiskChemo', 'High-risk regimen (AML induction, etc.)', 2),
+      yesNo('comorbid', 'Significant comorbidity (COPD, HF, renal/hepatic failure)', 1, 'Clinically significant COPD (e.g. O₂-dependent), decompensated HF, CrCl <30, or Child-Pugh B/C — not every comorbidity on the problem list.'),
+      yesNo('highRiskChemo', 'High-risk regimen (AML induction, etc.)', 2, 'AML/ALL induction, allo-HCT conditioning, or other regimens with expected ANC ≤100/µL for ≥7 days.'),
       selectInput('burden', 'Symptom burden / clinical stability', [
-        { label: 'Mild symptoms, stable', value: 0, points: 0 },
-        { label: 'Moderate symptoms', value: 1, points: 1 },
-        { label: 'Severe symptoms / clinical concern', value: 2, points: 2 },
+        { label: 'Mild symptoms, stable', value: 0, points: 0, description: 'Comfortable, no limitation of activity; would consider sending home if otherwise low-risk.' },
+        { label: 'Moderate symptoms', value: 1, points: 1, description: 'Some limitation; still talking/eating; not shocky but not fully well.' },
+        { label: 'Severe symptoms / clinical concern', value: 2, points: 2, description: 'Looks unwell, mostly in bed; would not send home.' },
       ]),
     ],
     calculate(values) {
@@ -1446,7 +1447,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
       yesNo('hb', 'Hemoglobin <10 g/dL or using ESA', 1),
       yesNo('wbc', 'WBC >11 ×10⁹/L', 1),
       yesNo('plt', 'Platelets ≥350 ×10⁹/L', 1),
-      yesNo('ddimer', 'D-dimer elevated (Vienna CATS–style biomarker)', 1, 'Optional; cutoffs study-specific'),
+      yesNo('ddimer', 'D-dimer elevated (Vienna CATS–style biomarker)', 1, 'Optional Vienna CATS-style enrichment. Derivation used a study-specific cutoff (Ay 2010: 75th percentile ≈ 1.44 µg/mL FEU), not generic above-local-ULN. Leave No if that cutoff is unknown.'),
       yesNo('priorVte', 'Prior VTE', 1),
     ],
     calculate(values) {
@@ -1539,10 +1540,10 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'Patients with high-burden hematologic malignancy or rapidly proliferating tumors around cytotoxic therapy.',
     whyUse: 'Defines laboratory TLS when ≥2 metabolic abnormalities occur in the same 24-hour window (day −3 to +7 of treatment).',
     inputs: [
-      yesNo('uric', 'Uric acid ≥8 mg/dL or ≥25% increase from baseline', 1),
-      yesNo('k', 'Potassium ≥6.0 mEq/L or ≥25% increase', 1),
-      yesNo('phos', 'Phosphorus ≥4.5 mg/dL (adult) or ≥25% increase', 1, 'Pediatric absolute often ≥6.5 mg/dL'),
-      yesNo('ca', 'Calcium ≤7.0 mg/dL or ≥25% decrease', 1),
+      yesNo('uric', 'Uric acid ≥8 mg/dL or ≥25% increase from baseline', 1, 'Count only if this abnormality occurred in the same 24-hour period as another TLS lab, during day −3 to +7 of cytoreductive therapy. Isolated chronic hyperuricemia does not count.'),
+      yesNo('k', 'Potassium ≥6.0 mEq/L or ≥25% increase', 1, 'Count only if this abnormality occurred in the same 24-hour period as another TLS lab, during day −3 to +7 of cytoreductive therapy. Isolated chronic values do not count.'),
+      yesNo('phos', 'Phosphorus ≥4.5 mg/dL (adult) or ≥25% increase', 1, 'Pediatric absolute often ≥6.5 mg/dL. Count only if this abnormality occurred in the same 24-hour period as another TLS lab, during day −3 to +7 of cytoreductive therapy. Isolated chronic values do not count.'),
+      yesNo('ca', 'Calcium ≤7.0 mg/dL or ≥25% decrease', 1, 'Count only if this abnormality occurred in the same 24-hour period as another TLS lab, during day −3 to +7 of cytoreductive therapy. Isolated chronic values do not count.'),
     ],
     calculate(values) {
       const n =
@@ -1619,9 +1620,9 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'When laboratory TLS is present or suspected and organ complications are being assessed.',
     whyUse: 'Clinical TLS upgrades severity and urgency—drives ICU-level monitoring and renal replacement readiness.',
     inputs: [
-      yesNo('labTls', 'Laboratory TLS criteria met (≥2 metabolic abnormalities)', 0),
-      yesNo('aki', 'Creatinine ≥1.5× ULN or AKI / oliguria attributed to TLS', 1),
-      yesNo('cardiac', 'Cardiac arrhythmia, sudden death, or symptomatic cardiac involvement', 1),
+      yesNo('labTls', 'Laboratory TLS criteria met (≥2 metabolic abnormalities)', 0, 'Cairo-Bishop laboratory TLS = ≥2 of uric acid ≥8 mg/dL, K ≥6.0 mEq/L, phosphorus ≥4.5 mg/dL (adult; peds often ≥6.5), Ca ≤7.0 mg/dL (or 25% change from baseline) in the same 24 h, day −3 to +7 of therapy.'),
+      yesNo('aki', 'Creatinine ≥1.5× ULN or AKI / oliguria attributed to TLS', 1, 'Cr ≥1.5× the laboratory ULN, KDIGO AKI, or oliguria attributed to TLS — not chronic CKD baseline.'),
+      yesNo('cardiac', 'Cardiac arrhythmia, sudden death, or symptomatic cardiac involvement', 1, 'Arrhythmia (including VT/VF), sudden death, or symptomatic cardiac involvement from TLS electrolyte shifts — not chronic AF that predates TLS.'),
       yesNo('seizure', 'Seizure, tetany, or symptomatic hypocalcemia (neuromuscular)', 1),
     ],
     calculate(values) {
@@ -1709,8 +1710,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
     inputs: [
       numberInput('calcium', 'Serum total calcium', { unit: 'mg/dL', min: 5, max: 20, step: 0.1, defaultValue: 11.5 }),
       numberInput('albumin', 'Serum albumin', { unit: 'g/dL', min: 1, max: 5.5, step: 0.1, defaultValue: 3.0 }),
-      yesNo('symptoms', 'Symptoms of hypercalcemia present', 0),
-      yesNo('neuro', 'Significant neuropsychiatric symptoms / stupor', 0),
+      yesNo('symptoms', 'Symptoms of hypercalcemia present', 0, 'Polyuria/polydipsia, constipation, nausea, anorexia, dehydration, weakness, or milder confusion (use the neuro box for stupor).'),
+      yesNo('neuro', 'Significant neuropsychiatric symptoms / stupor', 0, 'Stupor, somnolence, or marked confusion attributed to hypercalcemia. Use the milder-symptoms box for polyuria, constipation, or mild confusion.'),
     ],
     calculate(values) {
       const ca = num(values.calcium, 11.5);
@@ -1797,13 +1798,13 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whyUse: 'Delays in MRI and steroids/RT/surgery worsen permanent paralysis risk—checklist prioritizes urgency.',
     inputs: [
       yesNo('cancerHistory', 'Known cancer or strong suspicion of malignancy', 1),
-      yesNo('backPain', 'New or progressive back/neck pain', 1),
-      yesNo('nightPain', 'Nocturnal or recumbency pain', 1),
+      yesNo('backPain', 'New or progressive back/neck pain', 1, 'New, progressive, or unexplained spine pain in a cancer patient — not chronic mechanical back pain unchanged from baseline.'),
+      yesNo('nightPain', 'Nocturnal or recumbency pain', 1, 'Spine pain that wakes the patient or is worse lying down (classic MSCC pain pattern).'),
       yesNo('radicular', 'Radicular pain / band-like torso pain', 1),
-      yesNo('weakness', 'Limb weakness', 3),
-      yesNo('sensory', 'Sensory level or progressive sensory loss', 2),
-      yesNo('bowelBladder', 'Bowel/bladder dysfunction or saddle anesthesia', 3),
-      yesNo('ataxia', 'Ataxia / proprioceptive loss', 2),
+      yesNo('weakness', 'Limb weakness', 3, 'New or progressive motor deficit in arms or legs — including subtle hip-flexor weakness or foot drop. Not chronic chemo deconditioning alone.'),
+      yesNo('sensory', 'Sensory level or progressive sensory loss', 2, 'A truncal sensory level, saddle sensory change, or clearly progressive sensory loss — not chronic neuropathy.'),
+      yesNo('bowelBladder', 'Bowel/bladder dysfunction or saddle anesthesia', 3, 'New urinary retention/incontinence, fecal incontinence, or saddle anesthesia — emergency MSCC features.'),
+      yesNo('ataxia', 'Ataxia / proprioceptive loss', 2, 'New gait ataxia or proprioceptive loss suggesting cord/column involvement.'),
       yesNo('escalatingOpioids', 'Rapidly escalating analgesic needs for spine pain', 1),
     ],
     calculate(values) {
@@ -1890,10 +1891,10 @@ export const wave6HemeOncCalcs: Calculator[] = [
       yesNo('armSwelling', 'Upper extremity edema', 1),
       yesNo('collaterals', 'Visible chest wall collaterals', 1),
       yesNo('dyspnea', 'Dyspnea or orthopnea', 2),
-      yesNo('stridor', 'Stridor or critical airway compromise', 4),
+      yesNo('stridor', 'Stridor or critical airway compromise', 4, 'Audible stridor or threatened airway — oncologic emergency regardless of other points.'),
       yesNo('laryngeal', 'Hoarseness / laryngeal edema concern', 2),
-      yesNo('cerebral', 'Headache, confusion, or cerebral edema signs', 3),
-      yesNo('syncope', 'Syncope or hemodynamic instability', 3),
+      yesNo('cerebral', 'Headache, confusion, or cerebral edema signs', 3, 'Headache worse when supine, confusion, or other cerebral-edema signs from impaired SVC drainage — not chronic tension headache.'),
+      yesNo('syncope', 'Syncope or hemodynamic instability', 3, 'Syncope, near-syncope on bending, or hypotension attributed to impaired venous return.'),
       yesNo('knownMass', 'Known mediastinal mass / lung cancer / lymphoma', 1),
       yesNo('centralLine', 'Indwelling central venous catheter', 1),
     ],
@@ -1983,15 +1984,15 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'Profound neutropenia with abdominal pain, fever, or diarrhea after intensive chemotherapy.',
     whyUse: 'Highlights when to obtain CT, start broad antibiotics, and involve surgery without delaying resuscitation.',
     inputs: [
-      numberInput('anc', 'ANC', { unit: '/µL', min: 0, max: 2000, defaultValue: 100 }),
-      yesNo('fever', 'Fever', 1),
+      numberInput('anc', 'ANC', { unit: '/µL', min: 0, max: 2000, defaultValue: 100, helpText: 'Profound neutropenia (ANC <500, especially <100) is the usual setting for typhlitis.' }),
+      yesNo('fever', 'Fever (≥38.3 °C once or ≥38.0 °C sustained ≥1 h)', 1),
       yesNo('rLQPain', 'Right lower quadrant or diffuse abdominal pain', 2),
       yesNo('diarrhea', 'Diarrhea (sometimes bloody)', 1),
-      yesNo('distension', 'Abdominal distension / peritonitis signs', 3),
-      yesNo('mucositis', 'Concurrent severe mucositis', 1),
-      yesNo('hypotension', 'Sepsis / hypotension', 3),
-      yesNo('ctSuggestive', 'CT with bowel wall thickening (esp. ileocecal)', 3),
-      yesNo('cDiff', 'C. difficile testing pending/positive (alternate/coexist)', 0),
+      yesNo('distension', 'Abdominal distension / peritonitis signs', 3, 'Distension plus peritonitis: rebound, guarding, or a rigid abdomen — surgical-emergency features.'),
+      yesNo('mucositis', 'Concurrent severe mucositis', 1, 'WHO oral mucositis ≥3 (liquid diet only) or CTCAE ≥3.'),
+      yesNo('hypotension', 'Sepsis / hypotension', 3, 'SBP <90 mmHg, MAP <65 mmHg, or vasopressors in this FN/abdominal presentation.'),
+      yesNo('ctSuggestive', 'CT with bowel wall thickening (esp. ileocecal)', 3, 'CT showing bowel-wall thickening, typically ileocecal/right colon, in a neutropenic patient.'),
+      yesNo('cDiff', 'C. difficile testing pending/positive (alternate/coexist)', 0, 'Flag only — does not add points. Typhlitis and CDI can coexist; still cover both.'),
     ],
     calculate(values) {
       const anc = num(values.anc, 100);
@@ -2094,12 +2095,12 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whyUse: 'Simple functional grade guides analgesia, nutrition support, and infection precautions.',
     inputs: [
       selectInput('grade', 'Select the highest applicable description', [
-        { label: 'Grade 0 — None', value: 0 },
-        { label: 'Grade 1 — Soreness ± erythema', value: 1 },
-        { label: 'Grade 2 — Erythema, ulcers; patient can swallow solid food', value: 2 },
-        { label: 'Grade 3 — Ulcers; requires liquid diet only', value: 3 },
-        { label: 'Grade 4 — Alimentation not possible (oral intake impossible)', value: 4 },
-      ]),
+        { label: 'Grade 0 — None', value: 0, description: 'No erythema, no ulceration, no oral soreness.' },
+        { label: 'Grade 1 — Soreness ± erythema', value: 1, description: 'Oral soreness with or without erythema; mucosa intact (no ulcer). Patient still eats a normal diet.' },
+        { label: 'Grade 2 — Erythema, ulcers; patient can swallow solid food', value: 2, description: 'Ulcers and/or erythema on exam, but the patient can still swallow solid food.' },
+        { label: 'Grade 3 — Ulcers; requires liquid diet only', value: 3, description: 'Ulcers present and the patient cannot swallow solids — liquids only (WHO ≥3 is “severe” for FN pathways).' },
+        { label: 'Grade 4 — Alimentation not possible (oral intake impossible)', value: 4, description: 'Cannot take anything by mouth (needs IV fluids, NGT, or parenteral nutrition). Diet limitation outranks appearance.' },
+      ], undefined, 'WHO oral mucositis: examine the mucosa (erythema, ulcers) and ask what the patient can swallow today. Assign the highest applicable grade — inability to eat solids (grade 3) or any oral intake (grade 4) outranks milder exam findings.'),
     ],
     calculate(values) {
       const g = num(values.grade, 0);
@@ -2174,14 +2175,14 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whyUse: 'Standardizes next steps from routine screening to tissue diagnosis.',
     inputs: [
       selectInput('category', 'BI-RADS category', [
-        { label: '0 — Incomplete', value: 0 },
-        { label: '1 — Negative', value: 1 },
-        { label: '2 — Benign', value: 2 },
-        { label: '3 — Probably benign', value: 3 },
-        { label: '4 — Suspicious (4A/4B/4C optional detail)', value: 4 },
-        { label: '5 — Highly suggestive of malignancy', value: 5 },
-        { label: '6 — Known biopsy-proven malignancy', value: 6 },
-      ]),
+        { label: '0 — Incomplete', value: 0, description: 'Need additional imaging or comparison with priors before a final assessment. Do not assign cancer risk yet.' },
+        { label: '1 — Negative', value: 1, description: 'Nothing to comment on. Routine screening interval.' },
+        { label: '2 — Benign', value: 2, description: 'Benign finding (e.g. cyst, stable fibroadenoma). Routine screening follow-up.' },
+        { label: '3 — Probably benign', value: 3, description: '≤2% likelihood of malignancy. Typical short-interval (≈6-month) follow-up rather than immediate biopsy.' },
+        { label: '4 — Suspicious (4A/4B/4C optional detail)', value: 4, description: 'Suspicious (≈2–95% malignancy across 4A–4C). Tissue diagnosis usually recommended.' },
+        { label: '5 — Highly suggestive of malignancy', value: 5, description: '≥95% chance of malignancy. Biopsy required; coordinate oncology/surgery while awaiting pathology.' },
+        { label: '6 — Known biopsy-proven malignancy', value: 6, description: 'Biopsy-proven cancer imaged for staging or treatment planning — not a screening assessment.' },
+      ], undefined, 'Enter the ACR BI-RADS assessment already assigned on the mammogram/US/MRI report. This tool maps category to typical next steps; it does not replace the radiology report.'),
     ],
     calculate(values) {
       const c = num(values.category, 1);
@@ -2267,15 +2268,15 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whyUse: 'Links nodule category to recommended follow-up interval and management.',
     inputs: [
       selectInput('category', 'Lung-RADS category', [
-        { label: '0 — Incomplete', value: 0 },
-        { label: '1 — Negative', value: 1 },
-        { label: '2 — Benign appearance / behavior', value: 2 },
-        { label: '3 — Probably benign', value: 3 },
-        { label: '4A — Suspicious', value: '4A' },
-        { label: '4B — Very suspicious', value: '4B' },
-        { label: '4X — Additional findings increase suspicion', value: '4X' },
-        { label: 'S — Significant other finding', value: 'S' },
-      ]),
+        { label: '0 — Incomplete', value: 0, description: 'Prior comparison needed or part of the lungs not evaluated. Complete before assigning risk.' },
+        { label: '1 — Negative', value: 1, description: 'No nodules or definitely benign. Continue annual LDCT if still eligible. Cancer risk <1%.' },
+        { label: '2 — Benign appearance / behavior', value: 2, description: 'Nodules meeting benign size/behavior criteria. Estimated cancer risk <1%. Annual screening LDCT.' },
+        { label: '3 — Probably benign', value: 3, description: 'Probably benign (risk ~1–2%). Typically 6-month LDCT follow-up.' },
+        { label: '4A — Suspicious', value: '4A', description: 'Suspicious (risk ~5–15%). Often 3-month LDCT; PET/CT may be considered per ACR size/feature table.' },
+        { label: '4B — Very suspicious', value: '4B', description: 'Very suspicious. Chest CT ± PET and/or tissue sampling depending on size and multidisciplinary review.' },
+        { label: '4X — Additional findings increase suspicion', value: '4X', description: 'Category 3 or 4 nodules upgraded by concerning features (e.g. spiculation). Manage as highly suspicious.' },
+        { label: 'S — Significant other finding', value: 'S', description: 'Modifier for a significant non-lung-cancer finding (e.g. large AAA). Address that finding while continuing the nodule plan.' },
+      ], undefined, 'Enter the ACR Lung-RADS category from the LDCT screening report (not Fleischner incidental-nodule guidelines).'),
     ],
     calculate(values) {
       const c = String(values.category ?? '1');
@@ -2375,16 +2376,16 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whyUse: 'Standardizes probability of HCC and next management steps without always needing biopsy.',
     inputs: [
       selectInput('category', 'LI-RADS category', [
-        { label: 'LR-1 — Definitely benign', value: 'LR-1' },
-        { label: 'LR-2 — Probably benign', value: 'LR-2' },
-        { label: 'LR-3 — Intermediate probability', value: 'LR-3' },
-        { label: 'LR-4 — Probably HCC', value: 'LR-4' },
-        { label: 'LR-5 — Definitely HCC', value: 'LR-5' },
-        { label: 'LR-M — Probably or definitely malignant, not specific for HCC', value: 'LR-M' },
-        { label: 'LR-TIV — Tumor in vein', value: 'LR-TIV' },
-        { label: 'LR-NC — Non-categorizable', value: 'LR-NC' },
-        { label: 'LR-TR categories (treated observation)', value: 'LR-TR' },
-      ]),
+        { label: 'LR-1 — Definitely benign', value: 'LR-1', description: 'Definitely benign observation. Continue routine HCC surveillance (often US ± AFP every 6 months).' },
+        { label: 'LR-2 — Probably benign', value: 'LR-2', description: 'Probably benign. Usually return to routine surveillance; optional short-term follow-up in selected cases.' },
+        { label: 'LR-3 — Intermediate probability', value: 'LR-3', description: 'Intermediate probability of HCC. Often short-interval multiphase follow-up rather than immediate treatment.' },
+        { label: 'LR-4 — Probably HCC', value: 'LR-4', description: 'Probably HCC. Multidisciplinary liver tumor board; treatment vs biopsy depends on size, AFP, and transplant status.' },
+        { label: 'LR-5 — Definitely HCC', value: 'LR-5', description: 'Imaging-definite HCC in an at-risk patient — biopsy often unnecessary. Stage and treat via tumor board.' },
+        { label: 'LR-M — Probably or definitely malignant, not specific for HCC', value: 'LR-M', description: 'Malignant features not specific for HCC (consider ICC, metastasis). Usually needs biopsy before HCC-directed therapy.' },
+        { label: 'LR-TIV — Tumor in vein', value: 'LR-TIV', description: 'Macrovascular invasion pattern. Advanced-disease pathway; confirm HCC vs non-HCC etiology.' },
+        { label: 'LR-NC — Non-categorizable', value: 'LR-NC', description: 'Technical limitations prevent categorization. Repeat an adequate multiphase exam.' },
+        { label: 'LR-TR categories (treated observation)', value: 'LR-TR', description: 'Use the LI-RADS Treatment Response algorithm (viable vs nonviable), not untreated LR-1–5.' },
+      ], undefined, 'Applies only to high-risk livers (cirrhosis, chronic HBV, etc.) with adequate multiphase CT/MRI. Enter the category already assigned on the report.'),
     ],
     calculate(values) {
       const c = String(values.category ?? 'LR-3');

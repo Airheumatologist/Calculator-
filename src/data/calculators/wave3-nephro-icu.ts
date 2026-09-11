@@ -252,19 +252,31 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'CKD risk stratification for monitoring frequency and referral urgency.',
     whyUse: 'Combined G and A categories predict progression and CV outcomes better than GFR alone.',
     inputs: [
-      selectInput('g', 'GFR category (G)', [
-        { label: 'G1 (≥90)', value: 'G1' },
-        { label: 'G2 (60–89)', value: 'G2' },
-        { label: 'G3a (45–59)', value: 'G3a' },
-        { label: 'G3b (30–44)', value: 'G3b' },
-        { label: 'G4 (15–29)', value: 'G4' },
-        { label: 'G5 (<15)', value: 'G5' },
-      ]),
-      selectInput('a', 'Albuminuria category (A)', [
-        { label: 'A1 — ACR <30 mg/g (normal–mildly increased)', value: 'A1' },
-        { label: 'A2 — ACR 30–300 mg/g (moderately increased)', value: 'A2' },
-        { label: 'A3 — ACR >300 mg/g (severely increased)', value: 'A3' },
-      ]),
+      selectInput(
+        'g',
+        'GFR category (G)',
+        [
+          { label: 'G1 (≥90)', value: 'G1', description: 'eGFR ≥90 mL/min/1.73 m² — normal or high' },
+          { label: 'G2 (60–89)', value: 'G2', description: 'eGFR 60–89 — mildly decreased' },
+          { label: 'G3a (45–59)', value: 'G3a', description: 'eGFR 45–59 — mildly to moderately decreased' },
+          { label: 'G3b (30–44)', value: 'G3b', description: 'eGFR 30–44 — moderately to severely decreased' },
+          { label: 'G4 (15–29)', value: 'G4', description: 'eGFR 15–29 — severely decreased' },
+          { label: 'G5 (<15)', value: 'G5', description: 'eGFR <15 — kidney failure' },
+        ],
+        undefined,
+        'eGFR in mL/min/1.73 m² (CKD-EPI or equivalent). Confirm chronicity (≥3 months) before labeling CKD.',
+      ),
+      selectInput(
+        'a',
+        'Albuminuria category (A)',
+        [
+          { label: 'A1 — ACR <30 mg/g (normal–mildly increased)', value: 'A1', description: 'ACR <30 mg/g (≈ <3 mg/mmol)' },
+          { label: 'A2 — ACR 30–300 mg/g (moderately increased)', value: 'A2', description: 'ACR 30–300 mg/g (≈ 3–30 mg/mmol)' },
+          { label: 'A3 — ACR >300 mg/g (severely increased)', value: 'A3', description: 'ACR >300 mg/g (≈ >30 mg/mmol)' },
+        ],
+        undefined,
+        'Urine albumin-to-creatinine ratio (ACR). 30 mg/g ≈ 3 mg/mmol; 300 mg/g ≈ 30 mg/mmol. Prefer first-morning or confirmed repeat if borderline.',
+      ),
     ],
     calculate(values) {
       const g = str(values.g, 'G3a');
@@ -346,20 +358,32 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Staging AKI by creatinine/GFR change and/or urine output criteria.',
     whyUse: 'Foundational consensus AKI criteria preceding AKIN and KDIGO.',
     inputs: [
-      selectInput('crCriterion', 'Creatinine / GFR criterion (worst)', [
-        { label: 'None / below Risk', value: 0 },
-        { label: 'Risk — Cr ×1.5 or GFR ↓ >25%', value: 1 },
-        { label: 'Injury — Cr ×2 or GFR ↓ >50%', value: 2 },
-        { label: 'Failure — Cr ×3 or ≥4 mg/dL with acute rise ≥0.5 or GFR ↓ >75%', value: 3 },
-        { label: 'Loss — complete loss of function >4 weeks', value: 4 },
-        { label: 'ESKD — >3 months', value: 5 },
-      ]),
-      selectInput('uoCriterion', 'Urine output criterion (worst)', [
-        { label: 'None / adequate UO', value: 0 },
-        { label: 'Risk — UO <0.5 mL/kg/h × 6 h', value: 1 },
-        { label: 'Injury — UO <0.5 mL/kg/h × 12 h', value: 2 },
-        { label: 'Failure — UO <0.3 mL/kg/h × 24 h or anuria × 12 h', value: 3 },
-      ]),
+      selectInput(
+        'crCriterion',
+        'Creatinine / GFR criterion (worst)',
+        [
+          { label: 'None / below Risk', value: 0, description: 'Creatinine/GFR change below Risk thresholds' },
+          { label: 'Risk — Cr ×1.5 or GFR ↓ >25%', value: 1, description: 'Cr increased to 1.5× baseline, or GFR decreased >25% (within 7 days)' },
+          { label: 'Injury — Cr ×2 or GFR ↓ >50%', value: 2, description: 'Cr 2× baseline, or GFR decreased >50%' },
+          { label: 'Failure — Cr ×3 or ≥4 mg/dL with acute rise ≥0.5 or GFR ↓ >75%', value: 3, description: 'Cr 3× baseline, or Cr ≥4.0 mg/dL with acute rise ≥0.5 mg/dL, or GFR decreased >75%' },
+          { label: 'Loss — complete loss of function >4 weeks', value: 4, description: 'Complete loss of kidney function persisting >4 weeks' },
+          { label: 'ESKD — >3 months', value: 5, description: 'End-stage kidney disease — complete loss >3 months' },
+        ],
+        undefined,
+        'RIFLE allows up to 7 days for the Cr/GFR change (unlike AKIN 48 h). Failure Cr ≥4.0 mg/dL requires an acute rise ≥0.5 mg/dL. Use the worse of Cr vs UO.',
+      ),
+      selectInput(
+        'uoCriterion',
+        'Urine output criterion (worst)',
+        [
+          { label: 'None / adequate UO', value: 0, description: 'Urine output above Risk thresholds' },
+          { label: 'Risk — UO <0.5 mL/kg/h × 6 h', value: 1, description: '<0.5 mL/kg/h for 6 consecutive hours' },
+          { label: 'Injury — UO <0.5 mL/kg/h × 12 h', value: 2, description: '<0.5 mL/kg/h for 12 consecutive hours' },
+          { label: 'Failure — UO <0.3 mL/kg/h × 24 h or anuria × 12 h', value: 3, description: '<0.3 mL/kg/h for 24 h, or anuria for 12 h' },
+        ],
+        undefined,
+        'Consecutive hours, preferably Foley; mL/kg/h using current weight.',
+      ),
     ],
     calculate(values) {
       const cr = num(values.crCriterion, 0);
@@ -424,19 +448,31 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Staging AKI with AKIN criteria (Cr rise within 48 h and/or urine output).',
     whyUse: 'Refined RIFLE; bridge to current KDIGO staging.',
     inputs: [
-      selectInput('crStage', 'Creatinine criterion', [
-        { label: 'None', value: 0 },
-        { label: 'Stage 1 — ↑≥0.3 mg/dL or ×1.5–1.9 from baseline', value: 1 },
-        { label: 'Stage 2 — Cr ×2.0–2.9', value: 2 },
-        { label: 'Stage 3 — Cr ×≥3 or ≥4.0 mg/dL with acute ↑≥0.5 or RRT', value: 3 },
-      ]),
-      selectInput('uoStage', 'Urine output criterion', [
-        { label: 'None / adequate', value: 0 },
-        { label: 'Stage 1 — UO <0.5 mL/kg/h × 6 h', value: 1 },
-        { label: 'Stage 2 — UO <0.5 mL/kg/h × 12 h', value: 2 },
-        { label: 'Stage 3 — UO <0.3 mL/kg/h × 24 h or anuria × 12 h', value: 3 },
-      ]),
-      yesNo('rrt', 'Receiving RRT for AKI', 3),
+      selectInput(
+        'crStage',
+        'Creatinine criterion',
+        [
+          { label: 'None', value: 0, description: 'No AKIN creatinine change within 48 h' },
+          { label: 'Stage 1 — ↑≥0.3 mg/dL or ×1.5–1.9 from baseline', value: 1, description: 'Absolute ↑ ≥0.3 mg/dL or 1.5–1.9× baseline within 48 h (lowest recent Cr)' },
+          { label: 'Stage 2 — Cr ×2.0–2.9', value: 2, description: 'Creatinine 2.0–2.9× baseline within 48 h' },
+          { label: 'Stage 3 — Cr ×≥3 or ≥4.0 mg/dL with acute ↑≥0.5 or RRT', value: 3, description: '×≥3 baseline, or Cr ≥4.0 mg/dL with acute rise ≥0.5 mg/dL, or RRT' },
+        ],
+        undefined,
+        'AKIN requires the creatinine increase within 48 h (optimize volume; exclude obstruction). Stage 1 = absolute ↑ ≥0.3 mg/dL or ×1.5–1.9 vs baseline (lowest recent Cr). Stage 3 = ×≥3, or Cr ≥4.0 mg/dL with acute rise ≥0.5 mg/dL, or RRT.',
+      ),
+      selectInput(
+        'uoStage',
+        'Urine output criterion',
+        [
+          { label: 'None / adequate', value: 0, description: 'Urine output above Stage 1 thresholds' },
+          { label: 'Stage 1 — UO <0.5 mL/kg/h × 6 h', value: 1, description: '<0.5 mL/kg/h for 6 consecutive hours' },
+          { label: 'Stage 2 — UO <0.5 mL/kg/h × 12 h', value: 2, description: '<0.5 mL/kg/h for 12 consecutive hours' },
+          { label: 'Stage 3 — UO <0.3 mL/kg/h × 24 h or anuria × 12 h', value: 3, description: '<0.3 mL/kg/h for 24 h, or anuria for 12 h' },
+        ],
+        undefined,
+        'Consecutive hours, preferably Foley; mL/kg/h using current weight.',
+      ),
+      yesNo('rrt', 'Receiving RRT for AKI', 3, 'Any RRT initiated for this AKI episode forces AKIN stage 3.'),
     ],
     calculate(values) {
       let stage = Math.max(num(values.crStage, 0), num(values.uoStage, 0));
@@ -509,17 +545,58 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Early risk stratification for AKI in at-risk hospitalized/ICU patients (educational adult adaptation).',
     whyUse: 'Concept of “renal angina” combines predisposition risk with early signs of injury (Cr change, fluid overload).',
     inputs: [
-      selectInput('risk', 'Risk tier (predisposition)', [
-        { label: '1 — Moderate (e.g., ICU admission / general risk)', value: 1 },
-        { label: '3 — High (e.g., solid-organ transplant / diabetes + sepsis context)', value: 3 },
-        { label: '5 — Very high (ventilation + vasoactives / septic shock)', value: 5 },
-      ]),
-      selectInput('injury', 'Injury tier (early change)', [
-        { label: '1 — No Cr change; FO <5%', value: 1 },
-        { label: '2 — Cr increase <50% or FO 5–10%', value: 2 },
-        { label: '4 — Cr ×1.5–1.99 or FO 10–15%', value: 4 },
-        { label: '8 — Cr ×≥2 or FO ≥15%', value: 8 },
-      ]),
+      selectInput(
+        'risk',
+        'Risk tier (predisposition)',
+        [
+          {
+            label: '1 — Moderate (e.g., ICU admission / general risk)',
+            value: 1,
+            description: 'ICU admission without transplant or vent+vasoactives (Basu risk = 1)',
+          },
+          {
+            label: '3 — High (e.g., solid-organ transplant / diabetes + sepsis context)',
+            value: 3,
+            description:
+              'Solid-organ or stem-cell transplant, or adult analog of multiple comorbidities (e.g. diabetes + sepsis)',
+          },
+          {
+            label: '5 — Very high (ventilation + vasoactives / septic shock)',
+            value: 5,
+            description: 'Mechanical ventilation AND inotrope/vasopressor, or septic shock (Basu risk = 5)',
+          },
+        ],
+        undefined,
+        'Original pediatric RAI (Basu): 1=ICU admission; 3=solid-organ or stem-cell transplant; 5=mechanical ventilation AND inotrope/vasopressor. This adult educational map: 5 if vent+vasoactives/septic shock; 3 if transplant or multiple comorbidities (e.g. DM+sepsis); 1=ICU/general risk. Score at ~8–12 h of ICU admission.',
+      ),
+      selectInput(
+        'injury',
+        'Injury tier (early change)',
+        [
+          {
+            label: '1 — No Cr change; FO <5%',
+            value: 1,
+            description: 'Creatinine unchanged from baseline AND fluid overload <5%',
+          },
+          {
+            label: '2 — Cr increase <50% or FO 5–10%',
+            value: 2,
+            description: 'Creatinine up but <1.5× baseline, OR FO 5–10% (use the worse of Cr vs FO)',
+          },
+          {
+            label: '4 — Cr ×1.5–1.99 or FO 10–15%',
+            value: 4,
+            description: 'Creatinine 1.5–1.99× baseline, OR FO 10–15%',
+          },
+          {
+            label: '8 — Cr ×≥2 or FO ≥15%',
+            value: 8,
+            description: 'Creatinine ≥2× baseline, OR FO ≥15%',
+          },
+        ],
+        undefined,
+        'Use the worse of Cr change vs FO. FO% = [(fluid in L − fluid out L) / ICU admission weight kg] × 100. Cr bins vs baseline already on labels.',
+      ),
     ],
     calculate(values) {
       const risk = num(values.risk, 1);
@@ -572,13 +649,32 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Oliguric early AKI to assess tubular responsiveness and risk of progression (after euvolemia ensured).',
     whyUse: 'UO response after 1–1.5 mg/kg IV furosemide predicts progression and need for RRT better than many static markers.',
     inputs: [
-      numberInput('dose', 'Furosemide IV dose given', { unit: 'mg', min: 10, max: 400, defaultValue: 80 }),
+      numberInput('dose', 'Furosemide IV dose given', {
+        unit: 'mg',
+        min: 10,
+        max: 400,
+        defaultValue: 80,
+        helpText: 'Under-dosing invalidates a non-responder call. Naïve ~1.0 mg/kg IV bolus; exposed ~1.5 mg/kg; single bolus not infusion.',
+      }),
       numberInput('weight', 'Weight', { unit: 'kg', min: 30, max: 200, defaultValue: 70 }),
-      numberInput('uop2h', 'Urine output in 2 hours after dose', { unit: 'mL', min: 0, max: 3000, defaultValue: 250 }),
-      selectInput('priorLoop', 'Prior loop diuretic exposure', [
-        { label: 'Naïve (use ~1 mg/kg)', value: 'naive' },
-        { label: 'Exposed (use ~1.5 mg/kg)', value: 'exposed' },
-      ]),
+      numberInput('uop2h', 'Urine output in 2 hours after dose', {
+        unit: 'mL',
+        min: 0,
+        max: 3000,
+        defaultValue: 250,
+        helpText:
+          'Empty bladder/Foley at time 0; collect all urine for 2 h from the bolus; responder ≥200 mL; do not run if hypovolemic; replace UOP mL-for-mL ~6 h if not intentionally diuresing.',
+      }),
+      selectInput(
+        'priorLoop',
+        'Prior loop diuretic exposure',
+        [
+          { label: 'Naïve (use ~1 mg/kg)', value: 'naive', description: 'No loop within previous 7 days → 1.0 mg/kg IV bolus' },
+          { label: 'Exposed (use ~1.5 mg/kg)', value: 'exposed', description: 'Loop within previous 7 days (Chawla) → 1.5 mg/kg IV bolus' },
+        ],
+        undefined,
+        'Exposed = loop within previous 7 days (Chawla) → 1.5 mg/kg IV; naïve → 1.0 mg/kg; single bolus not infusion.',
+      ),
     ],
     calculate(values) {
       const dose = num(values.dose, 80);
@@ -644,7 +740,12 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', min: 1, max: 500, defaultValue: 100 }),
       numberInput('purea', 'Plasma urea (BUN)', { unit: 'mg/dL', min: 1, max: 200, defaultValue: 40 }),
       numberInput('uurea', 'Urine urea nitrogen', { unit: 'mg/dL', min: 1, max: 2000, defaultValue: 200 }),
-      yesNo('onDiuretic', 'Recent loop/thiazide diuretic', 9.9),
+      yesNo(
+        'onDiuretic',
+        'Recent loop/thiazide diuretic',
+        9.9,
+        'Yes if loop or thiazide during this AKI episode — typically within ~6–24 h for loops (natriuresis still active), not a remote home dose from days ago. When yes, interpret FeUrea primarily (prerenal <35%, ATN >50%).',
+      ),
     ],
     calculate(values) {
       const pna = num(values.pna, 140);
@@ -1018,11 +1119,24 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whyUse: 'Rapid IV K risks arrhythmia; institutions set max rates and concentrations.',
     inputs: [
       numberInput('meq', 'KCl amount to infuse', { unit: 'mEq', min: 1, max: 80, defaultValue: 10 }),
-      numberInput('hours', 'Infusion duration', { unit: 'hours', min: 0.25, max: 24, step: 0.25, defaultValue: 1 }),
-      selectInput('access', 'Access', [
-        { label: 'Peripheral IV', value: 'peripheral' },
-        { label: 'Central line', value: 'central' },
-      ]),
+      numberInput('hours', 'Infusion duration', {
+        unit: 'hours',
+        min: 0.25,
+        max: 24,
+        step: 0.25,
+        defaultValue: 1,
+        helpText: 'Rate = mEq / hours. Peripheral usually ≥1 h per 10 mEq.',
+      }),
+      selectInput(
+        'access',
+        'Access',
+        [
+          { label: 'Peripheral IV', value: 'peripheral', description: 'Typical ceiling ≤10 mEq/h; never IV push' },
+          { label: 'Central line', value: 'central', description: 'Typical ceiling ≤20 mEq/h (up to ~40 mEq/h only with continuous monitoring in emergencies)' },
+        ],
+        undefined,
+        'Typical educational ceilings: peripheral ≤10 mEq/h; central ≤20 mEq/h (up to ~40 mEq/h only with continuous monitoring in emergencies). Never IV push.',
+      ),
       yesNo('monitor', 'Continuous cardiac monitoring', 0),
       yesNo('icu', 'ICU / high-acuity setting', 0),
     ],
@@ -1109,8 +1223,22 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'When iCa is measured at a non-physiologic pH and you want an approximate 7.40-normalized value.',
     whyUse: 'Acidemia increases iCa; alkalemia decreases iCa — correction aids interpretation.',
     inputs: [
-      numberInput('ica', 'Measured ionized Ca', { unit: 'mmol/L', min: 0.4, max: 2.5, step: 0.01, defaultValue: 1.05 }),
-      numberInput('ph', 'pH at measurement', { unit: '', min: 6.8, max: 7.8, step: 0.01, defaultValue: 7.25 }),
+      numberInput('ica', 'Measured ionized Ca', {
+        unit: 'mmol/L',
+        min: 0.4,
+        max: 2.5,
+        step: 0.01,
+        defaultValue: 1.05,
+        helpText: 'Usual iCa ~1.1–1.3 mmol/L. This tool approximates +0.05 mmol/L iCa per 0.1 pH below the reference (inverse if alkalemic).',
+      }),
+      numberInput('ph', 'pH at measurement', {
+        unit: '',
+        min: 6.8,
+        max: 7.8,
+        step: 0.01,
+        defaultValue: 7.25,
+        helpText: 'pH of the sample when iCa was measured (ABG/VBG).',
+      }),
       numberInput('targetPh', 'Reference pH', { unit: '', min: 7.3, max: 7.5, step: 0.01, defaultValue: 7.4 }),
     ],
     calculate(values) {
@@ -1180,11 +1308,18 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Planning repletion for hypophosphatemia (weight-based mmol estimates).',
     whyUse: 'Severity-stratified mmol/kg guidance commonly used in ICU protocols.',
     inputs: [
-      numberInput('phos', 'Serum phosphate', { unit: 'mg/dL', min: 0.3, max: 5, step: 0.1, defaultValue: 1.5 }),
+      numberInput('phos', 'Serum phosphate', {
+        unit: 'mg/dL',
+        min: 0.3,
+        max: 5,
+        step: 0.1,
+        defaultValue: 1.5,
+        helpText: 'Enter the lab value in the unit selected below. 1 mmol/L ≈ 3.1 mg/dL. Repletion typically considered below ~2.5 mg/dL.',
+      }),
       numberInput('weight', 'Body weight', { unit: 'kg', min: 30, max: 200, defaultValue: 70 }),
       selectInput('units', 'Phosphate unit entered', [
-        { label: 'mg/dL', value: 'mg' },
-        { label: 'mmol/L (will treat as mmol/L)', value: 'mmol' },
+        { label: 'mg/dL', value: 'mg', description: 'Conventional US units (tool default)' },
+        { label: 'mmol/L (will treat as mmol/L)', value: 'mmol', description: 'SI units; converted ×3.1 to mg/dL for severity bands' },
       ]),
     ],
     calculate(values) {
@@ -1269,25 +1404,81 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Bedside assessment of systemic venous congestion (heart failure, AKI, fluid intolerance).',
     whyUse: 'Integrates IVC size with hepatic, portal, and intrarenal venous Doppler into a congestion grade.',
     inputs: [
-      selectInput('ivc', 'IVC (qualifying)', [
-        { label: 'IVC <2 cm diameter (VExUS 0 pathway)', value: 0 },
-        { label: 'IVC ≥2 cm (proceed to vein grades)', value: 1 },
-      ]),
-      selectInput('hepatic', 'Hepatic vein Doppler', [
-        { label: '0 — Normal (S > D)', value: 0 },
-        { label: '1 — S < D but still antegrade S', value: 1 },
-        { label: '2 — S reversal (systolic flow reversal)', value: 2 },
-      ]),
-      selectInput('portal', 'Portal vein Doppler', [
-        { label: '0 — Continuous / pulsatility <30%', value: 0 },
-        { label: '1 — Pulsatility 30–49%', value: 1 },
-        { label: '2 — Pulsatility ≥50%', value: 2 },
-      ]),
-      selectInput('intrarenal', 'Intrarenal venous Doppler', [
-        { label: '0 — Continuous', value: 0 },
-        { label: '1 — Discontinuous biphasic', value: 1 },
-        { label: '2 — Discontinuous monophasic', value: 2 },
-      ]),
+      selectInput(
+        'ivc',
+        'IVC (qualifying)',
+        [
+          {
+            label: 'IVC <2 cm diameter (VExUS 0 pathway)',
+            value: 0,
+            description: 'Largest AP diameter <2 cm; VExUS 0 — do not use organ Doppler to upgrade',
+          },
+          {
+            label: 'IVC ≥2 cm (proceed to vein grades)',
+            value: 1,
+            description: 'Gateway for VExUS 1–3; grade organ veins next',
+          },
+        ],
+        undefined,
+        'Max AP diameter ~1–2 cm from RA–IVC junction (or just distal to HV inflow), long + short axis, largest quiet-breathing diameter (typically end-expiration). <2 cm = VExUS 0 without organ Doppler.',
+      ),
+      selectInput(
+        'hepatic',
+        'Hepatic vein Doppler',
+        [
+          { label: '0 — Normal (S > D)', value: 0, description: 'Systolic (S) antegrade > diastolic (D) antegrade' },
+          {
+            label: '1 — S < D but still antegrade S',
+            value: 1,
+            description: 'Mild: S still toward the heart but smaller than D',
+          },
+          {
+            label: '2 — S reversal (systolic flow reversal)',
+            value: 2,
+            description: 'Severe: S wave reversed (retrograde in systole)',
+          },
+        ],
+        undefined,
+        'Pulsed-wave Doppler of the middle hepatic vein. S = systolic antegrade (toward heart), D = diastolic antegrade. 0 = S>D; 1 = S<D still antegrade; 2 = S reversal.',
+      ),
+      selectInput(
+        'portal',
+        'Portal vein Doppler',
+        [
+          {
+            label: '0 — Continuous / pulsatility <30%',
+            value: 0,
+            description: 'PF = (Vmax−Vmin)/Vmax × 100 <30%',
+          },
+          { label: '1 — Pulsatility 30–49%', value: 1, description: 'Mild: pulsatility fraction 30–49%' },
+          { label: '2 — Pulsatility ≥50%', value: 2, description: 'Severe: PF ≥50% (often to-and-fro)' },
+        ],
+        undefined,
+        'Right portal vein, mid-axillary window. Pulsatility fraction PF = (Vmax − Vmin)/Vmax × 100.',
+      ),
+      selectInput(
+        'intrarenal',
+        'Intrarenal venous Doppler',
+        [
+          {
+            label: '0 — Continuous',
+            value: 0,
+            description: 'Continuous venous flow at interlobar corticomedullary junction',
+          },
+          {
+            label: '1 — Discontinuous biphasic',
+            value: 1,
+            description: 'Mild: separate S and D waves (interrupted but both present)',
+          },
+          {
+            label: '2 — Discontinuous monophasic',
+            value: 2,
+            description: 'Severe: monophasic D-only (S absent)',
+          },
+        ],
+        undefined,
+        'Interlobar vein at corticomedullary junction. 0 = continuous; 1 = discontinuous biphasic (separate S and D); 2 = monophasic D-only.',
+      ),
     ],
     calculate(values) {
       const ivc = num(values.ivc, 1);
@@ -1354,6 +1545,9 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     nextSteps: [
       { condition: 'VExUS 2–3 + overload', actions: ['Diuresis or ultrafiltration as appropriate', 'Reassess organ perfusion', 'Treat right heart / TR causes'] },
     ],
+    pearls: [
+      'Grade 1 = only mild organ patterns; 2 = one severe (grade-2) pattern; 3 = ≥2 severe patterns — all require dilated IVC ≥2 cm.',
+    ],
   },
 
   // 18. IVC collapsibility
@@ -1367,12 +1561,43 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Bedside ultrasound volume assessment (spontaneous breathing or controlled ventilation).',
     whyUse: 'CI% estimates RAP / fluid responsiveness when used with correct respiratory context.',
     inputs: [
-      numberInput('dmax', 'IVC Dmax (diameter max)', { unit: 'cm', min: 0.5, max: 4, step: 0.1, defaultValue: 2.0 }),
-      numberInput('dmin', 'IVC Dmin (diameter min)', { unit: 'cm', min: 0.3, max: 4, step: 0.1, defaultValue: 1.2 }),
-      selectInput('vent', 'Breathing context', [
-        { label: 'Spontaneous breathing (collapsibility)', value: 'sb' },
-        { label: 'Controlled positive-pressure ventilation (distensibility)', value: 'ppv' },
-      ]),
+      numberInput('dmax', 'IVC Dmax (diameter max)', {
+        unit: 'cm',
+        min: 0.5,
+        max: 4,
+        step: 0.1,
+        defaultValue: 2.0,
+        helpText:
+          'AP diameter ~1–2 cm caudal to RA–IVC junction (or just distal to HV inflow), subcostal long-axis, M-mode over several quiet breaths — not a sniff. Dmax = largest diameter.',
+      }),
+      numberInput('dmin', 'IVC Dmin (diameter min)', {
+        unit: 'cm',
+        min: 0.3,
+        max: 4,
+        step: 0.1,
+        defaultValue: 1.2,
+        helpText: 'Smallest AP diameter in the same clip/window as Dmax. Spontaneous: Dmin usually inspiration; controlled PPV: Dmax usually inspiration.',
+      }),
+      selectInput(
+        'vent',
+        'Breathing context',
+        [
+          {
+            label: 'Spontaneous breathing (collapsibility)',
+            value: 'sb',
+            description:
+              'Patient breathing spontaneously or triggering; Dmax typically end-expiration, Dmin inspiration. CI ≥50% suggests low RAP if hypoperfused.',
+          },
+          {
+            label: 'Controlled positive-pressure ventilation (distensibility)',
+            value: 'ppv',
+            description:
+              'Fully passive (no triggering), TV ≥8 mL/kg predicted body weight; Dmax typically on inspiration. Gray zone ~12–18%. Invalid if spontaneous efforts, low TV, IAH, or RV failure.',
+          },
+        ],
+        undefined,
+        'Spontaneous: Dmax usually end-expiration, Dmin inspiration; CI ≥50% suggests low RAP if hypoperfused. Controlled PPV: Dmax usually inspiration; meaningful only if fully passive, TV ≥8 mL/kg PBW, no triggering. This tool always uses (Dmax−Dmin)/Dmax × 100.',
+      ),
     ],
     calculate(values) {
       const dmax = num(values.dmax, 2);
@@ -1475,12 +1700,28 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Predict fluid responsiveness without committing to a fluid bolus.',
     whyUse: 'PLR reversibly mobilizes ~300 mL venous blood; SV/CO increase ≥10–15% predicts responders.',
     inputs: [
-      numberInput('svBase', 'Baseline SV or CO (or VTI)', { unit: 'any unit', min: 0.1, max: 300, step: 0.1, defaultValue: 50 }),
-      numberInput('svPlr', 'SV/CO/VTI during PLR', { unit: 'same unit', min: 0.1, max: 300, step: 0.1, defaultValue: 58 }),
+      numberInput('svBase', 'Baseline SV or CO (or VTI)', {
+        unit: 'any unit',
+        min: 0.1,
+        max: 300,
+        step: 0.1,
+        defaultValue: 50,
+        helpText:
+          'Measure at semi-recumbent 30–45° (start position) using SV, CO, or LVOT VTI — not cuff BP. Then, using the bed, drop the trunk to horizontal and raise the legs to 45° (do not lift the feet off the mattress). Invalid if severe IAH, bilateral amputation, pain, or IABP.',
+      }),
+      numberInput('svPlr', 'SV/CO/VTI during PLR', {
+        unit: 'same unit',
+        min: 0.1,
+        max: 300,
+        step: 0.1,
+        defaultValue: 58,
+        helpText:
+          'Peak effect 30–90 s after the PLR maneuver; then return to semi-recumbent to confirm the value falls. Responder if Δ ≥10% (some protocols use ≥15%).',
+      }),
       selectInput('metric', 'Metric used', [
-        { label: 'Stroke volume', value: 'sv' },
-        { label: 'Cardiac output / index', value: 'co' },
-        { label: 'LVOT VTI', value: 'vti' },
+        { label: 'Stroke volume', value: 'sv', description: 'Stroke volume from arterial waveform, echo, or calibrated monitor' },
+        { label: 'Cardiac output / index', value: 'co', description: 'CO or CI; percent change is equivalent to SV if HR is stable' },
+        { label: 'LVOT VTI', value: 'vti', description: 'LVOT velocity-time integral (echo); a surrogate for SV' },
       ]),
     ],
     calculate(values) {
@@ -1546,9 +1787,27 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Fully adapted patients on controlled ventilation to predict fluid responsiveness.',
     whyUse: 'Dynamic arterial waveform index; PPV >12–13% often predicts responders under valid conditions.',
     inputs: [
-      numberInput('ppmax', 'PPmax (or SPmax−DPmax)', { unit: 'mmHg', min: 1, max: 150, defaultValue: 50 }),
-      numberInput('ppmin', 'PPmin', { unit: 'mmHg', min: 1, max: 150, defaultValue: 40 }),
-      yesNo('valid', 'Validity conditions met (controlled MV, TV≥8 mL/kg, no efforts, sinus, closed chest)', 0),
+      numberInput('ppmax', 'PPmax — largest pulse pressure this mechanical breath', {
+        unit: 'mmHg',
+        min: 1,
+        max: 150,
+        defaultValue: 50,
+        helpText:
+          'From the arterial line over one mechanical breath: PPmax = largest (SBP−DBP) in the cycle — not SPmax minus a different beat\'s DP.',
+      }),
+      numberInput('ppmin', 'PPmin — smallest pulse pressure this mechanical breath', {
+        unit: 'mmHg',
+        min: 1,
+        max: 150,
+        defaultValue: 40,
+        helpText: 'PPmin = smallest (SBP−DBP) in the same mechanical breath as PPmax.',
+      }),
+      yesNo(
+        'valid',
+        'Validity conditions met (controlled MV, TV≥8 mL/kg, no efforts, sinus, closed chest)',
+        0,
+        'TV ≥8 mL/kg predicted body weight, fully adapted (no triggering), sinus, closed chest; unreliable in RV failure, very low compliance, high PEEP, arrhythmia, or spontaneous breathing.',
+      ),
     ],
     calculate(values) {
       const ppmax = num(values.ppmax, 50);
@@ -1620,9 +1879,28 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Neurocritical care when ICP (or surrogate) and MAP are available.',
     whyUse: 'Estimates net pressure driving cerebral blood flow; common targets 60–70 mmHg.',
     inputs: [
-      numberInput('map', 'MAP', { unit: 'mmHg', min: 30, max: 200, defaultValue: 80 }),
-      numberInput('icp', 'ICP', { unit: 'mmHg', min: 0, max: 80, defaultValue: 15 }),
-      numberInput('cvp', 'CVP (optional; used if > ICP)', { unit: 'mmHg', min: 0, max: 40, defaultValue: 0, required: false }),
+      numberInput('map', 'MAP', {
+        unit: 'mmHg',
+        min: 30,
+        max: 200,
+        defaultValue: 80,
+        helpText: 'Mean arterial pressure (not SBP). Level the arterial transducer at the same reference as ICP.',
+      }),
+      numberInput('icp', 'ICP', {
+        unit: 'mmHg',
+        min: 0,
+        max: 80,
+        defaultValue: 15,
+        helpText: 'Intracranial pressure from EVD or bolt. Common CPP target ≥60 mmHg (individualize).',
+      }),
+      numberInput('cvp', 'CVP (optional; used if > ICP)', {
+        unit: 'mmHg',
+        min: 0,
+        max: 40,
+        defaultValue: 0,
+        required: false,
+        helpText: 'If entered and higher than ICP, used as the downstream pressure (CPP = MAP − max(ICP, CVP)). Leave blank if unknown.',
+      }),
     ],
     calculate(values) {
       const map = num(values.map, 80);

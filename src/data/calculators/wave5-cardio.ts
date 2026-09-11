@@ -15,12 +15,12 @@ export const wave5CardioCalcs: Calculator[] = [
     whyUse: 'Standardized language for AF symptom severity used in ESC AF guidelines and trials.',
     inputs: [
       selectInput('class', 'EHRA class (best clinical fit)', [
-        { label: 'I — None (asymptomatic)', value: 1 },
-        { label: 'IIa — Mild (normal daily activity not affected)', value: 2 },
-        { label: 'IIb — Moderate (normal daily activity affected)', value: 3 },
-        { label: 'III — Severe (normal daily activity discontinued)', value: 4 },
-        { label: 'IV — Disabling (normal daily activity discontinued; symptoms present with ADLs)', value: 5 },
-      ]),
+        { label: 'I — None', value: 1, description: 'No AF-related symptoms' },
+        { label: 'IIa — Mild (normal daily activity not affected)', value: 2, description: 'Symptoms present but do not affect normal daily activity' },
+        { label: 'IIb — Moderate (normal daily activity not affected, but patient troubled)', value: 3, description: 'Normal daily activity still not affected, yet the patient is troubled by symptoms' },
+        { label: 'III — Severe (normal daily activity affected)', value: 4, description: 'Normal daily activity affected by AF-related symptoms' },
+        { label: 'IV — Disabling (normal daily activity discontinued)', value: 5, description: 'Normal daily activity discontinued because of AF-related symptoms' },
+      ], undefined, 'Score AF-related symptoms only (palpitations, dyspnea, fatigue, chest discomfort, dizziness) — not stroke risk. This is ESC modified EHRA (mEHRA).'),
     ],
     calculate(values) {
       const c = num(values.class, 1);
@@ -94,7 +94,7 @@ export const wave5CardioCalcs: Calculator[] = [
     ],
     pearls: [
       'EHRA is about symptoms, not stroke risk — still calculate CHA₂DS₂-VASc separately.',
-      'IIa vs IIb was introduced to refine “mild–moderate” symptom intensity.',
+      'IIa vs IIb (ESC mEHRA): both leave daily activity unaffected; IIb means the patient is troubled by symptoms. Daily activity affected = III; discontinued = IV.',
     ],
   },
 
@@ -130,7 +130,7 @@ export const wave5CardioCalcs: Calculator[] = [
           value: 4,
           description: 'Angina may be present at rest',
         },
-      ]),
+      ], undefined, 'Grade by the ordinary activity that typically provokes angina. “Blocks” ≈ city blocks at a normal pace; one flight ≈ 10–12 steps. Progressive or rest angina may be ACS even if labeled class IV.'),
     ],
     calculate(values) {
       const c = num(values.class, 1);
@@ -216,10 +216,10 @@ export const wave5CardioCalcs: Calculator[] = [
       ]),
       selectInput('nyhaHint', 'Current NYHA (optional context for stage C/D)', [
         { label: 'Not applicable / unknown', value: 0 },
-        { label: 'NYHA I', value: 1 },
-        { label: 'NYHA II', value: 2 },
-        { label: 'NYHA III', value: 3 },
-        { label: 'NYHA IV', value: 4 },
+        { label: 'NYHA I', value: 1, description: 'No limitation of ordinary physical activity' },
+        { label: 'NYHA II', value: 2, description: 'Slight limitation; ordinary activity causes HF symptoms (fatigue, palpitation, dyspnea)' },
+        { label: 'NYHA III', value: 3, description: 'Marked limitation; less than ordinary activity causes symptoms' },
+        { label: 'NYHA IV', value: 4, description: 'Symptoms at rest; any physical activity increases discomfort' },
       ]),
     ],
     calculate(values) {
@@ -304,7 +304,7 @@ export const wave5CardioCalcs: Calculator[] = [
       yesNo('sglt2', 'SGLT2 inhibitor (dapagliflozin / empagliflozin, etc.)', 1),
       yesNo('arniPreferred', 'Using ARNI (sacubitril/valsartan) rather than ACEI/ARB alone', 0, 'Preferred RAS inhibitor when eligible'),
       yesNo('loop', 'Loop diuretic as needed for congestion', 0),
-      yesNo('ivabradine', 'Ivabradine (if eligible: sinus rhythm, HR elevated on max BB)', 0),
+      yesNo('ivabradine', 'Ivabradine (if eligible: sinus rhythm, resting HR ≥70 on max BB)', 0),
       yesNo('hydralNitrates', 'Hydralazine + nitrate (selected self-identified Black patients / ACEI-intolerant)', 0),
       yesNo('deviceEligible', 'ICD and/or CRT indicated and addressed (implanted or declined after counseling)', 0),
     ],
@@ -406,8 +406,8 @@ export const wave5CardioCalcs: Calculator[] = [
     whyUse: 'Classic, simple voltage criterion; limited sensitivity but good specificity when met.',
     inputs: [
       numberInput('sV1', 'S-wave amplitude in V1', { unit: 'mm', min: 0, max: 50, step: 0.5, defaultValue: 15, helpText: '1 mm = 0.1 mV standard calibration' }),
-      numberInput('rV5V6', 'Tallest R in V5 or V6', { unit: 'mm', min: 0, max: 50, step: 0.5, defaultValue: 15 }),
-      numberInput('rAvl', 'R-wave in aVL (optional limb criterion)', { unit: 'mm', min: 0, max: 30, step: 0.5, defaultValue: 5, required: false }),
+      numberInput('rV5V6', 'Tallest R in V5 or V6', { unit: 'mm', min: 0, max: 50, step: 0.5, defaultValue: 15, helpText: 'Precordial criterion positive if S V1 + this R ≥35 mm' }),
+      numberInput('rAvl', 'R-wave in aVL (optional limb criterion)', { unit: 'mm', min: 0, max: 30, step: 0.5, defaultValue: 5, required: false, helpText: 'Limb criterion positive if R aVL ≥11 mm' }),
     ],
     calculate(values) {
       const sV1 = num(values.sV1, 15);
@@ -473,9 +473,9 @@ export const wave5CardioCalcs: Calculator[] = [
     whyUse: 'Sex-specific thresholds improve performance; Cornell product adds QRS duration.',
     inputs: [
       selectInput('sex', 'Sex', [
-        { label: 'Male', value: 'M' },
-        { label: 'Female', value: 'F' },
-      ]),
+        { label: 'Male', value: 'M', description: 'Cornell voltage positive if R aVL + S V3 ≥28 mm' },
+        { label: 'Female', value: 'F', description: 'Cornell voltage positive if R aVL + S V3 ≥20 mm' },
+      ], undefined, 'Sex-specific Cornell voltage: ≥28 mm in men, ≥20 mm in women.'),
       numberInput('rAvl', 'R-wave in aVL', { unit: 'mm', min: 0, max: 30, step: 0.5, defaultValue: 8 }),
       numberInput('sV3', 'S-wave in V3', { unit: 'mm', min: 0, max: 50, step: 0.5, defaultValue: 12 }),
       numberInput('qrsMs', 'QRS duration (optional, for Cornell product)', {
@@ -560,7 +560,7 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'QT correction when an alternative linear/rate formula to Bazett is desired.',
     whyUse: 'Rautaharju correction is less biased than Bazett at higher heart rates in many comparisons.',
     inputs: [
-      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, defaultValue: 400 }),
+      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, defaultValue: 400, helpText: 'Onset of QRS to end of T in the lead with the clearest T-wave end' }),
       numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, defaultValue: 70 }),
     ],
     calculate(values) {
@@ -646,7 +646,7 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'Wide QRS (bundle branch block, pacing, ventricular conduction delay) when assessing repolarization.',
     whyUse: 'QTc includes QRS duration; JT/JTc isolates repolarization and may better reflect TdP risk with wide QRS.',
     inputs: [
-      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, defaultValue: 440 }),
+      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, defaultValue: 440, helpText: 'Onset of QRS to end of T; JT = QT − QRS' }),
       numberInput('qrs', 'QRS duration', { unit: 'ms', min: 60, max: 250, defaultValue: 120 }),
       numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, defaultValue: 70 }),
       selectInput('method', 'Rate correction method', [
@@ -756,8 +756,8 @@ export const wave5CardioCalcs: Calculator[] = [
         { label: 'Nonvalvular AF / flutter', value: 'af' },
         { label: 'VTE (DVT/PE) treatment or secondary prevention', value: 'vte' },
         { label: 'Bioprosthetic valve (early post-op period if anticoagulated)', value: 'bio' },
-        { label: 'Mechanical aortic valve, bileaflet/current-gen, no TE risk factors', value: 'avr_low' },
-        { label: 'Mechanical aortic valve + TE risk factors', value: 'avr_high' },
+        { label: 'Mechanical aortic valve, bileaflet/current-gen, no TE risk factors', value: 'avr_low', description: 'Bileaflet or current-generation mechanical AVR without AF, prior thromboembolism, hypercoagulable state, LV dysfunction, or older-generation (caged-ball/tilting-disc) valve' },
+        { label: 'Mechanical aortic valve + TE risk factors', value: 'avr_high', description: 'TE risk factors = AF, prior thromboembolism, hypercoagulable state, LV dysfunction, or older-generation (caged-ball/tilting-disc) valve' },
         { label: 'Mechanical mitral valve', value: 'mvr' },
         { label: 'Mechanical valve + prior TE despite therapeutic INR', value: 'valve_te' },
         { label: 'On-X aortic valve (after agreed lower-INR protocol period)', value: 'onx' },
@@ -912,14 +912,15 @@ export const wave5CardioCalcs: Calculator[] = [
         defaultValue: 60,
         helpText: 'Use actual body weight rules per local protocol / label',
       }),
-      numberInput('age', 'Age (for apixaban dose-reduction criteria)', { unit: 'years', min: 18, max: 110, defaultValue: 70 }),
-      numberInput('weight', 'Weight (for apixaban dose-reduction criteria)', { unit: 'kg', min: 30, max: 250, defaultValue: 80 }),
+      numberInput('age', 'Age (for apixaban dose-reduction criteria)', { unit: 'years', min: 18, max: 110, defaultValue: 70, helpText: 'Apixaban AF ABC: Age ≥80 is one of three dose-reduction criteria (need ≥2 of age ≥80, weight ≤60 kg, creatinine ≥1.5 mg/dL for 2.5 mg BID).' }),
+      numberInput('weight', 'Weight (for apixaban dose-reduction criteria)', { unit: 'kg', min: 30, max: 250, defaultValue: 80, helpText: 'Apixaban AF ABC: body weight ≤60 kg is one of three dose-reduction criteria.' }),
       numberInput('creatinine', 'Serum creatinine (for apixaban dose-reduction criteria)', {
         unit: 'mg/dL',
         min: 0.3,
         max: 15,
         step: 0.1,
         defaultValue: 1.0,
+        helpText: 'Apixaban AF ABC: creatinine ≥1.5 mg/dL is one of three dose-reduction criteria. Used with age and weight — not a substitute for CrCl.',
       }),
     ],
     calculate(values) {
@@ -1102,7 +1103,7 @@ export const wave5CardioCalcs: Calculator[] = [
         { label: 'NSTE-ACS / conservative (1 mg/kg q12h style)', value: 'acs' },
       ]),
       numberInput('weight', 'Actual body weight', { unit: 'kg', min: 30, max: 250, step: 0.1, defaultValue: 80 }),
-      numberInput('crcl', 'Creatinine clearance', { unit: 'mL/min', min: 5, max: 150, defaultValue: 80 }),
+      numberInput('crcl', 'Creatinine clearance', { unit: 'mL/min', min: 5, max: 150, defaultValue: 80, helpText: 'CrCl <30 mL/min triggers renal-adjusted dosing (prophylaxis 30 mg daily; treatment typically 1 mg/kg daily).' }),
     ],
     calculate(values) {
       const intent = String(values.intent ?? 'ppx');
@@ -1693,8 +1694,8 @@ export const wave5CardioCalcs: Calculator[] = [
       yesNo('age76', 'Age >76 years', 1),
       yesNo('cr', 'Serum creatinine >190 µmol/L (~>2.1 mg/dL)', 1),
       yesNo('hb', 'Hemoglobin <9 g/dL', 1),
-      yesNo('ischemia', 'Ischemic ECG changes', 1),
-      yesNo('loc', 'History of loss of consciousness after presentation', 1),
+      yesNo('ischemia', 'Ischemic ECG changes', 1, 'Typically new ST-segment depression or T-wave inversion consistent with ischemia, not isolated nonspecific ST–T changes.'),
+      yesNo('loc', 'History of loss of consciousness after presentation', 1, 'This form scores LOC after presentation. Original Hardman listed loss of consciousness (collapse) without that restriction.'),
     ],
     calculate(values) {
       const score =
@@ -1781,7 +1782,7 @@ export const wave5CardioCalcs: Calculator[] = [
     whyUse: 'Simple score correlating with perioperative mortality after aneurysm repair.',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 75 }),
-      yesNo('shock', 'Shock (hypotension / hemodynamic instability)', 17),
+      yesNo('shock', 'Shock (SBP <90 mmHg)', 17, 'Original Samy GAS: shock = SBP <90 mmHg. Vasopressor need to keep SBP ≥90 may be counted as shock present.'),
       yesNo('myocardial', 'Myocardial disease (MI, angina, heart failure)', 7),
       yesNo('cerebrovascular', 'Cerebrovascular disease (stroke / TIA)', 10),
       yesNo('renal', 'Renal disease (Cr >150 µmol/L or on dialysis — original definition)', 14),
@@ -1955,16 +1956,16 @@ export const wave5CardioCalcs: Calculator[] = [
     whyUse: 'METs frame preoperative and rehab conversations when formal testing is unavailable.',
     inputs: [
       selectInput('activity', 'Highest activity comfortably achievable', [
-        { label: 'Bedbound / very limited ADLs (~1–2 METs)', value: 1.5 },
-        { label: 'Self-care, walk indoors (~2–3 METs)', value: 2.5 },
-        { label: 'Walk 1–2 blocks on level ground (~3 METs)', value: 3 },
-        { label: 'Light housework, easy yard work (~3–4 METs)', value: 3.5 },
-        { label: 'Climb one flight of stairs / walk uphill (~4–5 METs)', value: 4.5 },
-        { label: 'Walk briskly on level ground (~5–6 METs)', value: 5.5 },
-        { label: 'Moderate sports, doubles tennis, dancing (~6–7 METs)', value: 6.5 },
-        { label: 'Jogging, singles tennis, hiking (~7–9 METs)', value: 8 },
-        { label: 'Running, competitive sports, heavy labor (~≥10 METs)', value: 10 },
-      ]),
+        { label: 'Bedbound / very limited ADLs (~1–2 METs)', value: 1.5, description: 'Bed rest, eating, or being dressed with help; sitting at the edge of the bed' },
+        { label: 'Self-care, walk indoors (~2–3 METs)', value: 2.5, description: 'Bathe, dress, and walk around the house at a slow pace' },
+        { label: 'Walk 1–2 blocks on level ground (~3 METs)', value: 3, description: 'Level walking ~2–3 mph for 1–2 city blocks without stopping' },
+        { label: 'Light housework, easy yard work (~3–4 METs)', value: 3.5, description: 'Dusting, dishes, cooking, light sweeping; easy gardening' },
+        { label: 'Climb one flight of stairs / walk uphill (~4–5 METs)', value: 4.5, description: 'One flight (~10–12 steps) or a modest incline without stopping — common ≥4 MET preoperative cutoff' },
+        { label: 'Walk briskly on level ground (~5–6 METs)', value: 5.5, description: 'Brisk walk ~3.5–4 mph on the level' },
+        { label: 'Moderate sports, doubles tennis, dancing (~6–7 METs)', value: 6.5, description: 'Doubles tennis, recreational dancing, golf walking (no cart), leisure cycling on the level' },
+        { label: 'Jogging, singles tennis, hiking (~7–9 METs)', value: 8, description: 'Slow jog, singles tennis, hiking with a pack, vigorous calisthenics' },
+        { label: 'Running, competitive sports, heavy labor (~≥10 METs)', value: 10, description: 'Running, swimming laps, competitive sports, heavy manual labor, or ski/soccer-level effort' },
+      ], undefined, 'Pick the highest activity the patient can perform comfortably without stopping for chest pain, dyspnea, or fatigue. 1 MET ≈ rest (3.5 mL O₂/kg/min). ACC/AHA perioperative: ≥4 METs (stairs) is a common capacity cutoff.'),
       yesNo('limitedByChest', 'Limited by chest pain, dyspnea, or syncope', 0),
     ],
     calculate(values) {
@@ -2039,7 +2040,7 @@ export const wave5CardioCalcs: Calculator[] = [
         { label: 'BNP', value: 'bnp' },
         { label: 'NT-proBNP', value: 'nt' },
       ]),
-      numberInput('level', 'Level', { min: 0, max: 50000, step: 1, defaultValue: 150, helpText: 'pg/mL (ng/L)' }),
+      numberInput('level', 'Level', { min: 0, max: 50000, step: 1, defaultValue: 150, helpText: 'pg/mL (ng/L). Common perioperative elevation cutoffs used here: BNP ≥92 pg/mL or NT-proBNP ≥300 pg/mL.' }),
       selectInput('ageBand', 'Age band (NT-proBNP context)', [
         { label: '<50 years', value: 'lt50' },
         { label: '50–75 years', value: '50_75' },
@@ -2150,36 +2151,128 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'Structuring suspicion for ARVC/ACM when multiple domain findings exist.',
     whyUse: 'Diagnosis requires combining imaging, ECG, arrhythmia, histology, and family history criteria.',
     inputs: [
-      selectInput('imaging', 'Global/regional RV dysfunction & structural (imaging)', [
-        { label: 'None', value: 0 },
-        { label: 'Minor criterion present', value: 1 },
-        { label: 'Major criterion present', value: 2 },
-      ]),
-      selectInput('tissue', 'Tissue characterization (biopsy)', [
-        { label: 'None / not done', value: 0 },
-        { label: 'Minor', value: 1 },
-        { label: 'Major', value: 2 },
-      ]),
-      selectInput('repolarization', 'Repolarization abnormalities (ECG)', [
-        { label: 'None', value: 0 },
-        { label: 'Minor', value: 1 },
-        { label: 'Major', value: 2 },
-      ]),
-      selectInput('depolarization', 'Depolarization / conduction abnormalities', [
-        { label: 'None', value: 0 },
-        { label: 'Minor', value: 1 },
-        { label: 'Major', value: 2 },
-      ]),
-      selectInput('arrhythmia', 'Arrhythmias', [
-        { label: 'None', value: 0 },
-        { label: 'Minor', value: 1 },
-        { label: 'Major', value: 2 },
-      ]),
-      selectInput('family', 'Family history / genetics', [
-        { label: 'None', value: 0 },
-        { label: 'Minor', value: 1 },
-        { label: 'Major', value: 2 },
-      ]),
+      selectInput(
+        'imaging',
+        'Global/regional RV dysfunction & structural (imaging)',
+        [
+          { label: 'None', value: 0, description: 'No qualifying RV wall-motion abnormality with size/function criteria' },
+          {
+            label: 'Minor criterion present',
+            value: 1,
+            description:
+              'RV akinesia, dyskinesia, or aneurysm PLUS milder size/function: echo PLAX RVOT ≥29 mm (≥16 mm/m²) or PSAX ≥32 mm (≥18 mm/m²) or FAC ≤40%; OR CMR RVEDV ≥100 mL/m² (male) / ≥90 (female) or RVEF ≤45%',
+          },
+          {
+            label: 'Major criterion present',
+            value: 2,
+            description:
+              'RV akinesia, dyskinesia, or aneurysm PLUS echo PLAX RVOT ≥32 mm (≥19 mm/m²) or PSAX ≥36 mm (≥21 mm/m²) or FAC ≤33%; OR CMR RVEDV ≥110 mL/m² (male) / ≥100 (female) or RVEF ≤40%',
+          },
+        ],
+        undefined,
+        '2010 revised TFC. Count one major OR one minor per category — do not double-count related findings in the same domain.',
+      ),
+      selectInput(
+        'tissue',
+        'Tissue characterization (biopsy)',
+        [
+          { label: 'None / not done', value: 0, description: 'No biopsy, or residual myocytes >75% without fibrous replacement' },
+          {
+            label: 'Minor',
+            value: 1,
+            description: 'Residual myocytes 60–75% by morphometry (or 50–65% if estimated) with fibrous replacement of RV free wall, ± fatty replacement',
+          },
+          {
+            label: 'Major',
+            value: 2,
+            description: 'Residual myocytes <60% by morphometry (or <50% if estimated) with fibrous replacement of RV free wall in ≥1 sample, ± fatty replacement',
+          },
+        ],
+        undefined,
+        'Endomyocardial biopsy of RV free wall. One major OR minor in this category.',
+      ),
+      selectInput(
+        'repolarization',
+        'Repolarization abnormalities (ECG)',
+        [
+          { label: 'None', value: 0, description: 'No qualifying T-wave inversion in right precordial leads' },
+          {
+            label: 'Minor',
+            value: 1,
+            description:
+              'Inverted T in V1–V2, age >14, no complete RBBB; OR inverted T in V4–V6; OR inverted T in V1–V4 with complete RBBB, age >14',
+          },
+          {
+            label: 'Major',
+            value: 2,
+            description: 'Inverted T waves in V1–V3 or beyond, age >14 years, in the absence of complete RBBB (QRS ≥120 ms)',
+          },
+        ],
+        undefined,
+        'Correct for complete RBBB. Age ≤14: T inversion in V1–V3 can be normal — do not score major on that alone.',
+      ),
+      selectInput(
+        'depolarization',
+        'Depolarization / conduction abnormalities',
+        [
+          { label: 'None', value: 0, description: 'No epsilon wave, no SAECG late potentials, TAD <55 ms' },
+          {
+            label: 'Minor',
+            value: 1,
+            description:
+              'SAECG late potentials in ≥1 of 3 parameters (if QRS <110 ms); OR terminal activation duration (TAD) ≥55 ms from S-wave nadir to QRS end including R′ in V1–V3',
+          },
+          {
+            label: 'Major',
+            value: 2,
+            description: 'Epsilon wave: reproducible low-amplitude signal between end of QRS and onset of T in V1–V3',
+          },
+        ],
+        undefined,
+        'Epsilon (major) vs SAECG late potentials or TAD ≥55 ms (minor). Do not count both as two criteria.',
+      ),
+      selectInput(
+        'arrhythmia',
+        'Arrhythmias',
+        [
+          { label: 'None', value: 0, description: 'No qualifying VT and ≤500 PVCs/24 h' },
+          {
+            label: 'Minor',
+            value: 1,
+            description:
+              'NSVT or sustained VT of RVOT configuration (LBBB morphology, inferior axis: positive in II/III/aVF, negative in aVL), unknown-axis VT, OR >500 PVCs per 24 h on Holter',
+          },
+          {
+            label: 'Major',
+            value: 2,
+            description:
+              'NSVT or sustained VT of LBBB morphology with superior axis (negative or indeterminate QRS in II, III, aVF and positive in aVL)',
+          },
+        ],
+        undefined,
+        'Superior-axis LBBB VT is major; RVOT (inferior-axis) VT or >500 PVCs/24 h is minor.',
+      ),
+      selectInput(
+        'family',
+        'Family history / genetics',
+        [
+          { label: 'None', value: 0, description: 'No qualifying relative or pathogenic variant' },
+          {
+            label: 'Minor',
+            value: 1,
+            description:
+              'Unconfirmed ARVC in a first-degree relative; OR premature SCD (<35 y) suspected ARVC in a first-degree relative; OR ARVC confirmed in a second-degree relative',
+          },
+          {
+            label: 'Major',
+            value: 2,
+            description:
+              'First-degree relative meeting current TFC; OR ARVC confirmed at autopsy/surgery in a first-degree relative; OR pathogenic mutation categorized as associated with ARVC',
+          },
+        ],
+        undefined,
+        'Pathogenic ARVC variant is a major family-history criterion. Do not double-count the same relative as both major and minor.',
+      ),
     ],
     calculate(values) {
       const cats = ['imaging', 'tissue', 'repolarization', 'depolarization', 'arrhythmia', 'family'] as const;
@@ -2260,26 +2353,26 @@ export const wave5CardioCalcs: Calculator[] = [
     whyUse: 'Stratifies low / intermediate / high probability of LQTS before or alongside genetic testing.',
     inputs: [
       selectInput('qtc', 'QTc (Bazett) on ECG', [
-        { label: '<450 ms (0)', value: 0 },
-        { label: '450–459 ms (+1)', value: 1 },
-        { label: '460–479 ms (+2)', value: 2 },
-        { label: '≥480 ms (+3)', value: 3 },
-      ]),
-      yesNo('torsades', 'Torsades de pointes (+2)', 2),
-      yesNo('tAlternans', 'T-wave alternans (+1)', 1),
-      yesNo('notchedT', 'Notched T wave in 3 leads (+1)', 1),
-      yesNo('lowHr', 'Low heart rate for age (+0.5)', 0.5),
+        { label: '<450 ms (0)', value: 0, description: 'Resting Bazett QTc <450 ms — not prolonged by the Schwartz ECG criterion' },
+        { label: '450–459 ms (+1)', value: 1, description: 'Borderline QTc prolongation' },
+        { label: '460–479 ms (+2)', value: 2, description: 'Moderate QTc prolongation' },
+        { label: '≥480 ms (+3)', value: 3, description: 'Marked QTc prolongation (highest ECG weight)' },
+      ], undefined, 'Resting 12-lead, Bazett. Measure QT from QRS onset to T-wave end in the lead with the clearest T end; QTc = QT/√RR. Do not use a tracing during sinus tachycardia or on QT-prolonging drugs for congenital scoring.'),
+      yesNo('torsades', 'Torsades de pointes (+2)', 2, 'Polymorphic VT twisting around the isoelectric line in the setting of a long QT. If TdP is present, syncope points are not added (original mutual-exclusion rule).'),
+      yesNo('tAlternans', 'T-wave alternans (+1)', 1, 'Beat-to-beat alternation of T-wave amplitude or polarity on the ECG — not respiratory T-wave variation.'),
+      yesNo('notchedT', 'Notched T wave in 3 leads (+1)', 1, 'Bifid (notched) T wave in at least three ECG leads.'),
+      yesNo('lowHr', 'Resting heart rate below the 2nd percentile for age (+0.5)', 0.5, 'Schwartz 2011 criterion. In adults roughly <50–60 bpm depending on age tables; use a pediatric percentile chart for children.'),
       selectInput('syncope', 'Syncope', [
-        { label: 'None (0)', value: 0 },
-        { label: 'Syncope not stress-related (+1)', value: 1 },
-        { label: 'Syncope with stress (+2)', value: 2 },
-      ]),
-      yesNo('congenitalDeafness', 'Congenital deafness (+0.5)', 0.5),
+        { label: 'None (0)', value: 0, description: 'No syncope' },
+        { label: 'Syncope not stress-related (+1)', value: 1, description: 'Syncope at rest or without exercise, emotion, or sudden startle' },
+        { label: 'Syncope with stress (+2)', value: 2, description: 'Syncope during exercise, intense emotion, or sudden auditory/startle trigger (adrenergic)' },
+      ], undefined, 'If torsades is also ticked, this item is not added (TdP takes the +2). Stress-related syncope outranks non-stress if both occurred — pick the higher band.'),
+      yesNo('congenitalDeafness', 'Congenital deafness (+0.5)', 0.5, 'Sensorineural hearing loss present from birth (Jervell and Lange-Nielsen when combined with LQTS). Acquired hearing loss does not count.'),
       selectInput('family', 'Family history', [
-        { label: 'None (0)', value: 0 },
-        { label: 'Family member with definite LQTS (+1)', value: 1 },
-        { label: 'Unexplained SCD at age <30 among immediate family (+0.5)', value: 0.5 },
-      ]),
+        { label: 'None (0)', value: 0, description: 'No qualifying family history of LQTS or unexplained young SCD' },
+        { label: 'Family member with definite LQTS (+1)', value: 1, description: 'Typically a first-degree relative with clinical (Schwartz ≥3.5) or genetically confirmed LQTS' },
+        { label: 'Unexplained SCD at age <30 among immediate family (+0.5)', value: 0.5, description: 'Unexplained sudden death at age <30 in immediate family. Do not add this if the same relative already scored as definite LQTS.' },
+      ], undefined, 'Pick the highest-weight applicable item. This form is a single select and cannot add both +1 and +0.5. Immediate family = first-degree relatives.'),
     ],
     calculate(values) {
       // Note: torsades and syncope are mutually exclusive in original (count max) — apply that rule

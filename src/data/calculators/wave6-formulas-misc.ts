@@ -17,7 +17,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     whenToUse: 'Pharmacy-style IBW for selected drug dosing and nutrition estimates in adults.',
     whyUse: 'Makes the inch-over-5-ft Devine arithmetic explicit for teaching and double-checks.',
     inputs: [
-      numberInput('height', 'Height', { unit: 'cm', min: 140, max: 230, defaultValue: 170 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 140, max: 230, defaultValue: 170, helpText: 'Enter cm; converted internally to inches over 5 ft (60 in).' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
@@ -176,7 +176,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
         max: 200,
         step: 0.5,
         defaultValue: 90,
-        helpText: 'Midpoint between lower rib and iliac crest (WHO) or protocol-consistent site',
+        helpText: 'Midpoint between lower rib and iliac crest (WHO), at end-expiration, standing — or a protocol-consistent site',
       }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
@@ -278,7 +278,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     whenToUse: 'Screening central adiposity and cardiometabolic risk across BMI categories.',
     whyUse: '“Keep your waist to less than half your height” teaching rule; often adds risk info beyond BMI alone.',
     inputs: [
-      numberInput('waist', 'Waist circumference', { unit: 'cm', min: 40, max: 200, step: 0.5, defaultValue: 90 }),
+      numberInput('waist', 'Waist circumference', { unit: 'cm', min: 40, max: 200, step: 0.5, defaultValue: 90, helpText: 'Midpoint between lower rib and iliac crest (WHO), at end-expiration, standing — or a protocol-consistent site' }),
       numberInput('height', 'Height', { unit: 'cm', min: 100, max: 230, defaultValue: 170 }),
     ],
     calculate(values) {
@@ -360,7 +360,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     whenToUse: 'When waist-based risk independent of BMI bulk is of interest.',
     whyUse: 'Higher ABSI (more central shape for a given BMI) associates with mortality risk in population studies.',
     inputs: [
-      numberInput('waist', 'Waist circumference', { unit: 'cm', min: 40, max: 200, step: 0.5, defaultValue: 90 }),
+      numberInput('waist', 'Waist circumference', { unit: 'cm', min: 40, max: 200, step: 0.5, defaultValue: 90, helpText: 'Midpoint between lower rib and iliac crest (WHO), at end-expiration, standing — or a protocol-consistent site' }),
       numberInput('weight', 'Weight', { unit: 'kg', min: 30, max: 400, step: 0.1, defaultValue: 80 }),
       numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, defaultValue: 170 }),
     ],
@@ -446,7 +446,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     whenToUse: 'Research/education on central fat distribution using a theoretically bounded shape index.',
     whyUse: 'Approaches 1.73 for a perfect double cone; higher values imply greater central concentration of mass.',
     inputs: [
-      numberInput('waist', 'Waist circumference', { unit: 'cm', min: 40, max: 200, step: 0.5, defaultValue: 90 }),
+      numberInput('waist', 'Waist circumference', { unit: 'cm', min: 40, max: 200, step: 0.5, defaultValue: 90, helpText: 'Midpoint between lower rib and iliac crest (WHO), at end-expiration, standing — or a protocol-consistent site' }),
       numberInput('weight', 'Weight', { unit: 'kg', min: 30, max: 400, step: 0.1, defaultValue: 80 }),
       numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, defaultValue: 170 }),
     ],
@@ -539,14 +539,18 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
         defaultValue: 55,
         helpText: 'Fat-free / lean mass in kg',
       }),
-      selectInput('activity', 'Optional activity multiplier (TDEE)', [
-        { label: 'BMR only (×1.0)', value: 1 },
-        { label: 'Sedentary (×1.2)', value: 1.2 },
-        { label: 'Light (×1.375)', value: 1.375 },
-        { label: 'Moderate (×1.55)', value: 1.55 },
-        { label: 'Very active (×1.725)', value: 1.725 },
-        { label: 'Extra active (×1.9)', value: 1.9 },
-      ]),
+      selectInput(
+        'activity',
+        'Optional activity multiplier (TDEE)',
+        [
+          { label: 'BMR only (×1.0)', value: 1, description: 'No activity factor — report BMR only' },
+          { label: 'Sedentary (×1.2)', value: 1.2, description: 'Little or no exercise; desk/sitting job' },
+          { label: 'Light (×1.375)', value: 1.375, description: 'Light exercise/sports 1–3 days/week' },
+          { label: 'Moderate (×1.55)', value: 1.55, description: 'Moderate exercise/sports 3–5 days/week' },
+          { label: 'Very active (×1.725)', value: 1.725, description: 'Hard exercise/sports 6–7 days/week' },
+          { label: 'Extra active (×1.9)', value: 1.9, description: 'Very hard exercise daily, physical job, or twice-daily training' },
+        ],
+      ),
     ],
     calculate(values) {
       const lbm = num(values.lbm, 55);
@@ -612,13 +616,19 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
       ]),
-      selectInput('activity', 'Activity / lifestyle factor', [
-        { label: 'Sedentary (×1.2)', value: 1.2 },
-        { label: 'Light activity (×1.375)', value: 1.375 },
-        { label: 'Moderate (×1.55)', value: 1.55 },
-        { label: 'Very active (×1.725)', value: 1.725 },
-        { label: 'Extra active (×1.9)', value: 1.9 },
-      ]),
+      selectInput(
+        'activity',
+        'Activity / lifestyle factor',
+        [
+          { label: 'Sedentary (×1.2)', value: 1.2, description: 'Little or no exercise; desk/sitting job' },
+          { label: 'Light activity (×1.375)', value: 1.375, description: 'Light exercise/sports 1–3 days/week' },
+          { label: 'Moderate (×1.55)', value: 1.55, description: 'Moderate exercise/sports 3–5 days/week' },
+          { label: 'Very active (×1.725)', value: 1.725, description: 'Hard exercise/sports 6–7 days/week' },
+          { label: 'Extra active (×1.9)', value: 1.9, description: 'Very hard exercise daily, physical job, or twice-daily training' },
+        ],
+        1.2,
+        'Pick the PAL band that matches occupation plus weekly training — not a single gym session.',
+      ),
     ],
     calculate(values) {
       const w = num(values.weight, 70);
@@ -688,7 +698,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
         max: 20,
         step: 0.5,
         defaultValue: 5,
-        helpText: 'Mild ~3–5%, moderate ~6–9%, severe ≥10% (clinical estimate)',
+        helpText: 'Clinical % weight loss. WHO-style: some dehydration ~5% (restless, thirsty, sunken eyes, slow skin pinch); severe ≥10% (lethargic, unable to drink, very sunken eyes, very slow pinch). Pre-illness weight if known is gold standard.',
       }),
       selectInput('replaceHours', 'Optional replacement period (for rate)', [
         { label: 'Show volume only', value: 0 },
@@ -785,16 +795,16 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     inputs: [
       numberInput('weight', 'Weight', { unit: 'kg', min: 1, max: 150, step: 0.1, defaultValue: 20 }),
       selectInput('naRate', 'Na target', [
-        { label: '2 mEq/kg/day', value: 2 },
-        { label: '3 mEq/kg/day', value: 3 },
-        { label: '4 mEq/kg/day (higher)', value: 4 },
-      ]),
+        { label: '2 mEq/kg/day', value: 2, description: 'Low-end pediatric teaching maintenance' },
+        { label: '3 mEq/kg/day', value: 3, description: 'Common pediatric teaching target' },
+        { label: '4 mEq/kg/day (higher)', value: 4, description: 'Higher — e.g. ongoing GI or third-space Na losses' },
+      ], 2, 'Classic pediatric teaching ~2–3 mEq/kg/day Na; increase for ongoing losses. Not a prescription.'),
       selectInput('kRate', 'K target', [
-        { label: '1 mEq/kg/day', value: 1 },
-        { label: '2 mEq/kg/day', value: 2 },
-        { label: '3 mEq/kg/day (higher)', value: 3 },
-      ]),
-      yesNo('anuria', 'Anuria / severe oliguria (hold K teaching flag)', 0),
+        { label: '1 mEq/kg/day', value: 1, description: 'Low-end teaching maintenance' },
+        { label: '2 mEq/kg/day', value: 2, description: 'Common pediatric teaching target' },
+        { label: '3 mEq/kg/day (higher)', value: 3, description: 'Higher — e.g. ongoing GI K losses if voiding and K not high' },
+      ], 1, 'Classic pediatric teaching ~1–2 mEq/kg/day K. Hold if anuria or hyperkalemia.'),
+      yesNo('anuria', 'Anuria / severe oliguria (hold K teaching flag)', 0, 'No urine or severe oliguria (e.g. <0.5 mL/kg/h) — do not add potassium until urine output and K allow.'),
     ],
     calculate(values) {
       const w = num(values.weight, 20);
@@ -860,9 +870,9 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     whenToUse: 'Before infusing KCl via peripheral line to screen concentration and mEq/h.',
     whyUse: 'Peripheral max concentration commonly ~10 mEq/100 mL (100 mEq/L) and rate ~10 mEq/h — institution-specific.',
     inputs: [
-      numberInput('meq', 'KCl amount', { unit: 'mEq', min: 1, max: 40, step: 1, defaultValue: 10 }),
-      numberInput('volume', 'Diluent volume', { unit: 'mL', min: 50, max: 1000, step: 10, defaultValue: 100 }),
-      numberInput('hours', 'Infusion duration', { unit: 'hours', min: 0.5, max: 12, step: 0.25, defaultValue: 1 }),
+      numberInput('meq', 'KCl amount', { unit: 'mEq', min: 1, max: 40, step: 1, defaultValue: 10, helpText: 'mEq of KCl in the bag or syringe.' }),
+      numberInput('volume', 'Diluent volume', { unit: 'mL', min: 50, max: 1000, step: 10, defaultValue: 100, helpText: 'Typical peripheral ceiling ~10 mEq/100 mL (100 mEq/L).' }),
+      numberInput('hours', 'Infusion duration', { unit: 'hours', min: 0.5, max: 12, step: 0.25, defaultValue: 1, helpText: 'Typical peripheral rate ceiling ~10 mEq/h. Never IV push K.' }),
     ],
     calculate(values) {
       const meq = num(values.meq, 10);
@@ -1018,7 +1028,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     whenToUse: 'Estimating theoretical osmolarity of compounded or mixed IV fluids (peripheral vs central comfort).',
     whyUse: 'Peripheral veins generally tolerate lower osmolarity better; teaching threshold often ~900 mOsm/L.',
     inputs: [
-      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 0, max: 1000, defaultValue: 154 }),
+      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 0, max: 1000, defaultValue: 154, helpText: 'mEq/L in the bag. Calculated osmolarity ≈ Na + K + Cl + glucose osmoles + other. Peripheral teaching ceiling often ~900 mOsm/L.' }),
       numberInput('k', 'Potassium', { unit: 'mEq/L', min: 0, max: 200, defaultValue: 0 }),
       numberInput('cl', 'Chloride', {
         unit: 'mEq/L',
@@ -1135,7 +1145,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
         max: 30,
         step: 0.5,
         defaultValue: 10,
-        helpText: 'e.g., D10 = 10%',
+        helpText: 'e.g., D10 = 10%. Typical neonatal start ~4–6 mg/kg/min. D12.5+ usually needs central access.',
       }),
       numberInput('rate', 'Infusion rate', { unit: 'mL/hr', min: 0.1, max: 200, step: 0.1, defaultValue: 12 }),
     ],
@@ -1229,7 +1239,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     whenToUse: 'DKA/HHS or ICU insulin infusions when verifying units/hr delivery.',
     whyUse: 'Prevents unit errors when bags are mixed at different concentrations (e.g., 1 U/mL).',
     inputs: [
-      numberInput('unitsInBag', 'Insulin in bag', { unit: 'units', min: 1, max: 500, defaultValue: 100 }),
+      numberInput('unitsInBag', 'Insulin in bag', { unit: 'units', min: 1, max: 500, defaultValue: 100, helpText: 'Common mix: 100 units in 100 mL = 1 U/mL so mL/hr = U/hr.' }),
       numberInput('bagVolume', 'Bag volume', { unit: 'mL', min: 10, max: 500, defaultValue: 100 }),
       numberInput('rate', 'Pump rate', { unit: 'mL/hr', min: 0.1, max: 50, step: 0.1, defaultValue: 5 }),
     ],
@@ -1602,8 +1612,8 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     whenToUse: 'When ABG reports pH and HCO₃ but BE is missing, or to understand metabolic component educationally.',
     whyUse: 'Approximate BE from pH and bicarbonate; blood-gas analyzers use more complete hemoglobin models.',
     inputs: [
-      numberInput('ph', 'pH', { min: 6.5, max: 7.8, step: 0.01, defaultValue: 7.3 }),
-      numberInput('hco3', 'HCO₃⁻', { unit: 'mEq/L', min: 1, max: 60, step: 0.1, defaultValue: 18 }),
+      numberInput('ph', 'pH', { min: 6.5, max: 7.8, step: 0.01, defaultValue: 7.3, helpText: 'Arterial (or carefully interpreted venous) pH from the same sample as HCO₃.' }),
+      numberInput('hco3', 'HCO₃⁻', { unit: 'mEq/L', min: 1, max: 60, step: 0.1, defaultValue: 18, helpText: 'mEq/L = mmol/L. Same-sample bicarbonate (not total CO₂ from a metabolic panel unless that is all you have).' }),
     ],
     calculate(values) {
       const ph = num(values.ph, 7.3);
@@ -1691,8 +1701,8 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     whenToUse: 'Teaching acid-base consistency checks or estimating pH from metabolic/respiratory pair.',
     whyUse: 'Shows how the HCO₃:dissolved-CO₂ ratio sets pH.',
     inputs: [
-      numberInput('hco3', 'HCO₃⁻', { unit: 'mEq/L', min: 1, max: 60, step: 0.1, defaultValue: 24 }),
-      numberInput('pco2', 'PCO₂', { unit: 'mmHg', min: 5, max: 120, step: 0.1, defaultValue: 40 }),
+      numberInput('hco3', 'HCO₃⁻', { unit: 'mEq/L', min: 1, max: 60, step: 0.1, defaultValue: 24, helpText: 'mEq/L = mmol/L.' }),
+      numberInput('pco2', 'PCO₂', { unit: 'mmHg', min: 5, max: 120, step: 0.1, defaultValue: 40, helpText: 'Arterial PCO₂ in mmHg (same sample as HCO₃). 1 mmHg ≈ 0.133 kPa.' }),
     ],
     calculate(values) {
       const hco3 = num(values.hco3, 24);
@@ -1947,12 +1957,34 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     whenToUse: 'Setting pulse-ox targets when prescribing oxygen in COPD or general acute care.',
     whyUse: 'BTS-style guidance: many COPD patients target 88–92%; most others 94–98% (context-dependent).',
     inputs: [
-      selectInput('population', 'Patient group', [
-        { label: 'COPD / risk of hypercapnic respiratory failure', value: 'copd' },
-        { label: 'General acutely ill (no hypercapnia risk)', value: 'general' },
-        { label: 'Known prior hypercapnia on O₂', value: 'hypercapnia' },
-        { label: 'Pregnancy (educational)', value: 'pregnancy' },
-      ]),
+      selectInput(
+        'population',
+        'Patient group',
+        [
+          {
+            label: 'COPD / risk of hypercapnic respiratory failure',
+            value: 'copd',
+            description: 'Target SpO₂ 88–92% unless an individualized ABG-based ceiling exists',
+          },
+          {
+            label: 'General acutely ill (no hypercapnia risk)',
+            value: 'general',
+            description: 'Target SpO₂ 94–98%',
+          },
+          {
+            label: 'Known prior hypercapnia on O₂',
+            value: 'hypercapnia',
+            description: 'Target SpO₂ 88–92%; individualize from prior ABGs',
+          },
+          {
+            label: 'Pregnancy (educational)',
+            value: 'pregnancy',
+            description: 'Target SpO₂ 94–98%; avoid hypoxia',
+          },
+        ],
+        'copd',
+        'Hypercapnia-risk is not only COPD — also obesity hypoventilation, neuromuscular disease, severe chest-wall deformity, cystic fibrosis, and prior CO₂ retention on oxygen. Target 88–92% unless an individualized ABG-based ceiling exists. Never withhold O₂ in a crashing airway/hypoxemic emergency.',
+      ),
       numberInput('currentSpo2', 'Current SpO₂ (optional)', {
         unit: '%',
         min: 50,
@@ -2063,9 +2095,9 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     whenToUse: 'Triage and shock assessment when HR and BP (for MAP) are available.',
     whyUse: 'Incorporates diastolic pressure via MAP; may outperform classic SI (HR/SBP) in some cohorts.',
     inputs: [
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 20, max: 300, defaultValue: 110 }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 20, max: 300, defaultValue: 110, helpText: 'Pulse in beats/min. MSI = HR / MAP; concern often rises above ~1.3.' }),
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 40, max: 300, defaultValue: 100 }),
-      numberInput('dbp', 'Diastolic BP', { unit: 'mmHg', min: 20, max: 200, defaultValue: 60 }),
+      numberInput('dbp', 'Diastolic BP', { unit: 'mmHg', min: 20, max: 200, defaultValue: 60, helpText: 'MAP ≈ DBP + (SBP − DBP)/3.' }),
     ],
     calculate(values) {
       const hr = num(values.hr, 110);

@@ -20,7 +20,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         min: 0,
         max: 28,
         defaultValue: 10,
-        helpText: '7 items scored 0–4 (none → extreme)',
+        helpText: 'Enter the official PDSS total (7 items × 0–4, none → extreme). Do not reprint copyrighted stems here.',
       }),
     ],
     calculate(values) {
@@ -127,7 +127,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         min: 0,
         max: 144,
         defaultValue: 55,
-        helpText: '24 situations × (fear 0–3 + avoidance 0–3)',
+        helpText: 'Enter the official LSAS total: 24 situations × (fear 0–3 + avoidance 0–3). Do not reprint copyrighted stems here.',
       }),
     ],
     calculate(values) {
@@ -228,9 +228,14 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         min: 0,
         max: 78,
         defaultValue: 18,
-        helpText: '26 items; standard scored 0–3 after reverse coding of designated items',
+        helpText: 'Enter the official 26-item attitude total (0–78) from the copyrighted form; do not reprint stems here. Standard scoring 0–3 after reverse coding of designated items.',
       }),
-      yesNo('behaviors', 'Behavioral flags present (binge, purge, laxatives, extreme exercise, weight loss >20 lb / high concern)', 0),
+      yesNo(
+        'behaviors',
+        'Behavioral flags present (official EAT-26 behavioral items)',
+        0,
+        'Yes if any official behavioral item is positive — evaluate even if total <20. Official five (past 6 months unless noted): binge with loss of control; vomiting to control weight/shape; laxatives/diet pills/diuretics to control weight/shape; exercise >60 min/day to control weight; lost 20 lb (9 kg) in past 6 months.',
+      ),
       numberInput('bmi', 'BMI (optional context)', {
         min: 10,
         max: 60,
@@ -340,7 +345,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         min: 0,
         max: 20,
         defaultValue: 3,
-        helpText: 'Count items scored at risk (failed); reverse-scored items already applied',
+        helpText: 'Enter the official M-CHAT-R failed-item count (0–20) from the copyrighted form for ages ~16–30 months. Reverse-scored items already applied. Do not reprint stems here.',
       }),
     ],
     calculate(values) {
@@ -434,19 +439,19 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         min: 0,
         max: 9,
         defaultValue: 6,
-        helpText: 'Parent items 1–9 or teacher equivalent',
+        helpText: 'Parent items 1–9 or teacher equivalent. Count items marked Often or Very often (not Never/Occasionally). Point to the NICHQ Vanderbilt form rather than reprinting 18 stems.',
       }),
       numberInput('hyper', 'Hyperactivity/impulsivity items “Often/Very often” (of 9)', {
         min: 0,
         max: 9,
         defaultValue: 4,
-        helpText: 'Parent items 10–18 or teacher equivalent',
+        helpText: 'Parent items 10–18 or teacher equivalent. Count Often or Very often only (symptom anchors: Never / Occasionally / Often / Very often).',
       }),
       numberInput('perf', 'Performance items rated 4 or 5 (problematic)', {
         min: 0,
         max: 8,
         defaultValue: 1,
-        helpText: 'Academic/behavioral performance section; ≥1 often required for positive screen',
+        helpText: 'Academic/behavioral performance section (1 Excellent … 4 Somewhat of a problem / 5 Problematic). Count items scored 4 or 5; ≥1 often required for a positive screen.',
       }),
       selectInput('informant', 'Informant', [
         { label: 'Parent', value: 'parent' },
@@ -557,7 +562,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         min: 0,
         max: 32,
         defaultValue: 10,
-        helpText: '8 items scored 0–4',
+        helpText: 'Enter the official CUDIT-R total (8 items, mixed 0–4 scoring) from the copyrighted form. Do not reprint stems here.',
       }),
     ],
     calculate(values) {
@@ -652,6 +657,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         max: 200,
         step: 0.25,
         defaultValue: 2,
+        helpText: 'Total daily oral dose (scheduled + 24 h PRN) of the selected benzodiazepine, in mg.',
       }),
     ],
     calculate(values) {
@@ -767,6 +773,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         max: 5000,
         step: 0.5,
         defaultValue: 10,
+        helpText: 'Total 24-hour morphine dose in the selected current route (IV/SC or oral), not a single dose.',
       }),
       selectInput('ratio', 'IV:PO ratio used', [
         { label: '1:3 (common teaching)', value: 3 },
@@ -875,7 +882,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         min: 0,
         max: 48,
         defaultValue: 10,
-        helpText: 'Sum of 11 COWS items',
+        helpText: 'Enter the official 11-item COWS total (0–48) from the Wesson/Ling form (pulse, GI upset, sweating, restlessness, pupil size, bone/joint aches, runny nose/tearing, yawning, tremor, anxiety/irritability, gooseflesh). Traditional transmucosal induction often waits for COWS ≥8–12 plus adequate time off full agonist.',
       }),
       selectInput('last_opioid', 'Last full agonist timing / type context', [
         { label: 'Short-acting (e.g., heroin, IR oxycodone) — typical wait ≥12 h', value: 'short' },
@@ -1001,7 +1008,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         min: -9,
         max: 38,
         defaultValue: 14,
-        helpText: 'Includes symptom items, radiation, and pattern scores per instrument rules',
+        helpText: 'Enter the official painDETECT total (−9 to 38) from the copyrighted form (symptom items, radiation, pain-course pattern). Do not reprint stems here.',
       }),
     ],
     calculate(values) {
@@ -1085,19 +1092,21 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         max: 10,
         step: 0.5,
         defaultValue: 6,
-        helpText: '0 = no pain; 10 = pain as bad as you can imagine',
+        helpText: 'Krebs PEG: “What number best describes your pain on average in the past week?” 0 = no pain; 10 = pain as bad as you can imagine.',
       }),
       numberInput('enjoyment', 'Pain interference with enjoyment of life (0–10)', {
         min: 0,
         max: 10,
         step: 0.5,
         defaultValue: 5,
+        helpText: '“What number best describes how, during the past week, pain has interfered with your enjoyment of life?” 0 = does not interfere; 10 = completely interferes.',
       }),
       numberInput('activity', 'Pain interference with general activity (0–10)', {
         min: 0,
         max: 10,
         step: 0.5,
         defaultValue: 5,
+        helpText: '“What number best describes how, during the past week, pain has interfered with your general activity?” 0 = does not interfere; 10 = completely interferes.',
       }),
     ],
     calculate(values) {
@@ -1185,7 +1194,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         max: 10,
         step: 0.1,
         defaultValue: 4.5,
-        helpText: 'Mean of: general activity, mood, walking, work, relations, sleep, enjoyment',
+        helpText: 'Enter the mean of the official BPI interference items (0 = does not interfere, 10 = completely interferes): general activity, mood, walking ability, normal work, relations with other people, sleep, enjoyment of life. Do not reprint the full copyrighted form.',
       }),
       numberInput('worst', 'Worst pain in last 24 h (optional)', {
         min: 0,
@@ -1193,6 +1202,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         step: 0.5,
         defaultValue: 6,
         required: false,
+        helpText: 'Optional BPI “worst pain in the last 24 hours” (0 = no pain, 10 = pain as bad as you can imagine). Context only.',
       }),
     ],
     calculate(values) {
@@ -1278,9 +1288,9 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     whenToUse: 'Primary-care screening when migraine is in the differential for recurrent headache.',
     whyUse: 'Brief validated screen with good sensitivity for migraine diagnosis needing clinical confirmation.',
     inputs: [
-      yesNo('disability', 'Disability: headache limited activities for a day or more in the last 3 months'),
-      yesNo('nausea', 'Nausea: felt nauseated or sick to stomach with headaches'),
-      yesNo('photophobia', 'Photophobia: light bothered you when you had a headache'),
+      yesNo('disability', 'Disability: headache limited activities for a day or more in the last 3 months', 1, 'Lipton ID-Migraine: ask the patient. Yes = headaches limited activities for ≥1 day in the last 3 months.'),
+      yesNo('nausea', 'Nausea: felt nauseated or sick to stomach with headaches', 1, 'With headaches (not unrelated GI illness).'),
+      yesNo('photophobia', 'Photophobia: light bothered you when you had a headache', 1, 'Light sensitivity during headache (not chronic photophobia between attacks).'),
     ],
     calculate(values) {
       const d = bool(values.disability);
@@ -1352,7 +1362,8 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         max: 100,
         step: 5,
         defaultValue: 60,
-        helpText: 'Sum of 10 ADL items (feeding, bathing, grooming, dressing, bowels, bladder, toilet, transfer, mobility, stairs)',
+        helpText:
+          'Mahoney/Collin 0–100 (5-point steps). Score each of 10 ADLs then sum: Feeding 0 unable / 5 needs help cutting / 10 independent. Bathing 0 dependent / 5 independent. Grooming 0 needs help / 5 independent (face/hair/teeth/shaving). Dressing 0 dependent / 5 needs help (~half unaided) / 10 independent (buttons, zips, laces). Bowels 0 incontinent or needs enemas / 5 occasional accident / 10 continent. Bladder 0 incontinent or catheterized and unable to manage / 5 occasional accident / 10 continent. Toilet 0 dependent / 5 needs some help / 10 independent (on/off, dressing, wiping). Transfers (bed–chair) 0 unable, no sitting balance / 5 major help (1–2 people) / 10 minor help (verbal or physical) / 15 independent. Mobility 0 immobile or <50 yd / 5 wheelchair independent including corners >50 yd / 10 walks with help of one person >50 yd / 15 independent (may use aid) >50 yd. Stairs 0 unable / 5 needs help / 10 independent. Record what the patient actually does, not what they could do.',
       }),
     ],
     calculate(values) {
@@ -1429,6 +1440,8 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     pearls: [
       'Does not capture cognition, communication, or IADLs well — pair with other scales.',
       '5-point increments are typical on the 0–100 version.',
+      'Administration (Mahoney/Collin): score observed performance over the past 24–48 h (or as specified locally). Use the lower score if performance fluctuates. Do not add new item inputs here — enter the official 0–100 total.',
+      'Transfers and mobility are the only 0/5/10/15 items; bathing and grooming are 0/5 only.',
     ],
   },
 
@@ -1538,16 +1551,16 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     whenToUse: 'Educational severity framing with first-day ICU physiologic derangement (not for formal benchmarking).',
     whyUse: 'OASIS uses a limited variable set vs APACHE; this tool approximates risk bands for teaching.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 16, max: 120, defaultValue: 65 }),
-      numberInput('gcs', 'Worst GCS (1–15)', { min: 3, max: 15, defaultValue: 14, helpText: 'Use lowest appropriate GCS' }),
-      numberInput('hr', 'Heart rate (highest)', { unit: '/min', min: 20, max: 300, defaultValue: 110 }),
-      numberInput('map', 'Mean arterial pressure (lowest)', { unit: 'mmHg', min: 20, max: 200, defaultValue: 70 }),
-      numberInput('rr', 'Respiratory rate (highest)', { unit: '/min', min: 4, max: 80, defaultValue: 24 }),
-      numberInput('temp', 'Temperature (most abnormal, °C)', { unit: '°C', min: 30, max: 43, step: 0.1, defaultValue: 37.5 }),
-      numberInput('uop', 'Urine output (24 h)', { unit: 'mL', min: 0, max: 10000, defaultValue: 1200 }),
-      yesNo('vent', 'Mechanical ventilation (day 1)', 9),
-      yesNo('elective', 'Elective surgery admission', -2),
-      yesNo('cancer', 'Pre-ICU hospital length of stay prolonged / cancer context (educational flag)', 2),
+      numberInput('age', 'Age', { unit: 'years', min: 16, max: 120, defaultValue: 65, helpText: 'Educational map: <40 = 0; 40–49 = 2; 50–59 = 3; 60–69 = 5; 70–79 = 7; ≥80 = 9.' }),
+      numberInput('gcs', 'Worst GCS (3–15)', { min: 3, max: 15, defaultValue: 14, helpText: 'Lowest first-day GCS 3–15. If intubated, estimate verbal — do not enter 1 for a T-tube unless there is no verbal response. Educational map: 15 = 0; 14 = 1; 11–13 = 4; 8–10 = 7; ≤7 = 10.' }),
+      numberInput('hr', 'Heart rate (most abnormal, high or low)', { unit: '/min', min: 20, max: 300, defaultValue: 110, helpText: 'Worst first-day HR (tachycardia or bradycardia). Educational map: ≥150 = 6; 120–149 = 4; 110–119 = 2; also HR <40 = 4.' }),
+      numberInput('map', 'Mean arterial pressure (lowest)', { unit: 'mmHg', min: 20, max: 200, defaultValue: 70, helpText: 'Lowest first-day MAP. Educational map: ≥70 = 0; 60–69 = 2; 40–59 = 4; <40 = 6.' }),
+      numberInput('rr', 'Respiratory rate (most abnormal, high or low)', { unit: '/min', min: 4, max: 80, defaultValue: 24, helpText: 'Worst first-day RR (tachypnea or bradypnea). Educational map: ≥40 = 6; 30–39 = 4; 22–29 = 2; also RR ≤6 = 6.' }),
+      numberInput('temp', 'Temperature (most abnormal, °C)', { unit: '°C', min: 30, max: 43, step: 0.1, defaultValue: 37.5, helpText: 'Most abnormal first-day temperature. Educational map: 35–38.9 = 0; 33–34.9 or 39–39.9 = 2; <33 or ≥40 = 4.' }),
+      numberInput('uop', 'Urine output (24 h)', { unit: 'mL', min: 0, max: 10000, defaultValue: 1200, helpText: '24-hour urine output. Educational map: ≥1000 mL = 0; 500–999 = 2; 100–499 = 5; <100 = 8.' }),
+      yesNo('vent', 'Mechanical ventilation (day 1)', 9, 'Day-1 invasive mechanical ventilation (intubated or tracheostomy on a ventilator).'),
+      yesNo('elective', 'Elective surgery admission', -2, 'Scheduled (elective) surgical ICU admission. Emergency/non-elective admissions do not get this credit (the educational map adds burden if No).'),
+      yesNo('cancer', 'Pre-ICU hospital length of stay prolonged / cancer context (educational flag)', 2, 'Educational flag — not official OASIS. Official OASIS uses continuous pre-ICU length of stay (hours/days) and does not have a cancer item.'),
     ],
     calculate(values) {
       // Educational simplified point approximation inspired by OASIS domains (not official table)
@@ -1678,7 +1691,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     whenToUse: 'ICU admission severity using data from 1 hour before to 1 hour after admission.',
     whyUse: 'Admission-window physiology (unlike APACHE worst-in-24h). Global logistic equation estimates hospital mortality.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 16, max: 120, defaultValue: 70 }),
+      numberInput('age', 'Age', { unit: 'years', min: 16, max: 120, defaultValue: 70, helpText: 'SAPS 3 age points: <40 = 0; 40–59 = 5; 60–69 = 9; 70–74 = 13; 75–79 = 15; ≥80 = 18.' }),
       selectInput('los_before', 'Hospital LOS before ICU', [
         { label: '<14 days', value: 0 },
         { label: '14–27 days', value: 6 },
@@ -1690,7 +1703,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         { label: 'Other ICU', value: 7 },
         { label: 'Ward / other', value: 8 },
       ]),
-      yesNo('vasoactive', 'Vasoactive drugs before ICU', null),
+      yesNo('vasoactive', 'Vasoactive drugs before ICU', null, 'Vasopressors or inotropes before ICU admission (Box I).'),
       selectInput('admission', 'ICU admission type', [
         { label: 'Planned / elective', value: 0 },
         { label: 'Unplanned / emergency', value: 3 },
@@ -1701,44 +1714,44 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         { label: 'Emergency surgery', value: 6 },
       ]),
       selectInput('reason', 'Primary reason for admission', [
-        { label: 'Other', value: 0 },
-        { label: 'Rhythm disturbance (−5)', value: -5 },
-        { label: 'Seizures (−4)', value: -4 },
-        { label: 'Hypovolemic shock (+3)', value: 3 },
-        { label: 'Coma / delirium (+4)', value: 4 },
-        { label: 'Septic/mixed shock (+5)', value: 5 },
-        { label: 'Liver failure (+6)', value: 6 },
-        { label: 'Focal deficit (+7)', value: 7 },
-        { label: 'Severe pancreatitis (+9)', value: 9 },
-        { label: 'Intracranial mass effect (+10)', value: 10 },
-      ]),
+        { label: 'Other', value: 0, description: 'No listed Box II neurologic, shock, liver, or pancreatitis reason.' },
+        { label: 'Rhythm disturbance (−5)', value: -5, description: 'Primary admission for a cardiac rhythm disturbance.' },
+        { label: 'Seizures (−4)', value: -4, description: 'Primary admission for seizures.' },
+        { label: 'Hypovolemic shock (+3)', value: 3, description: 'Hypovolemic (hemorrhagic or non-hemorrhagic) shock as the primary reason.' },
+        { label: 'Coma / delirium (+4)', value: 4, description: 'Coma, stupor, obtunded, vigilance disturbance, confusion, agitation, or delirium.' },
+        { label: 'Septic/mixed shock (+5)', value: 5, description: 'Septic, distributive, or mixed shock.' },
+        { label: 'Liver failure (+6)', value: 6, description: 'Acute liver failure as the primary reason.' },
+        { label: 'Focal deficit (+7)', value: 7, description: 'Focal neurologic deficit as the primary reason.' },
+        { label: 'Severe pancreatitis (+9)', value: 9, description: 'Severe acute pancreatitis as the primary reason.' },
+        { label: 'Intracranial mass effect (+10)', value: 10, description: 'Intracranial mass effect (shift/herniation physiology) as the primary reason — data-dictionary Box II item.' },
+      ], undefined, 'Most severe listed Box II reason. This helper does not add missing SAPS 3 reasons or surgery-site items.'),
       selectInput('infection', 'Infection at ICU admission', [
-        { label: 'None', value: 0 },
-        { label: 'Nosocomial', value: 4 },
-        { label: 'Respiratory', value: 5 },
-        { label: 'Nosocomial respiratory', value: 9 },
-      ]),
-      yesNo('cancer_meta', 'Metastatic cancer', null),
-      yesNo('heme_cancer', 'Hematologic cancer', null),
-      yesNo('cirrhosis', 'Cirrhosis', null),
-      yesNo('heart_fail', 'Chronic heart failure NYHA IV', null),
-      yesNo('aids', 'AIDS', null),
-      numberInput('gcs', 'Lowest GCS (admission hour)', { min: 3, max: 15, defaultValue: 13 }),
-      numberInput('sbp', 'Lowest systolic BP', { unit: 'mmHg', min: 40, max: 250, defaultValue: 100 }),
-      numberInput('hr', 'Highest heart rate', { unit: '/min', min: 30, max: 250, defaultValue: 100 }),
-      numberInput('bili', 'Highest total bilirubin', { unit: 'mg/dL', min: 0, max: 40, step: 0.1, defaultValue: 1 }),
-      numberInput('cr', 'Highest creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.2 }),
-      numberInput('wbc', 'Leukocytes', { unit: '×10³/µL', min: 0, max: 100, step: 0.1, defaultValue: 12 }),
-      numberInput('ph', 'Lowest pH', { min: 6.5, max: 7.8, step: 0.01, defaultValue: 7.35 }),
-      numberInput('temp', 'Highest temperature', { unit: '°C', min: 30, max: 43, step: 0.1, defaultValue: 37 }),
-      numberInput('plt', 'Lowest platelets', { unit: '×10³/µL', min: 5, max: 800, defaultValue: 200 }),
+        { label: 'None', value: 0, description: 'No infection at ICU admission.' },
+        { label: 'Nosocomial', value: 4, description: 'Nosocomial infection (not respiratory).' },
+        { label: 'Respiratory', value: 5, description: 'Community-acquired respiratory infection.' },
+        { label: 'Nosocomial respiratory', value: 9, description: 'Nosocomial AND respiratory — points are additive (4+5=9).' },
+      ], undefined, 'Nosocomial and respiratory are additive: select “Nosocomial respiratory” if both are present (9 points).'),
+      yesNo('cancer_meta', 'Metastatic cancer', null, 'Distant solid-tumor metastases (not a localized primary alone). Highest comorbidity wins if several are present.'),
+      yesNo('heme_cancer', 'Hematologic cancer', null, 'Leukemia, lymphoma, or multiple myeloma. Highest comorbidity wins.'),
+      yesNo('cirrhosis', 'Cirrhosis', null, 'Documented cirrhosis (imaging, biopsy, or decompensation) — not isolated steatosis/MASLD. Highest comorbidity wins.'),
+      yesNo('heart_fail', 'Chronic heart failure NYHA IV', null, 'NYHA IV: symptoms of HF at rest; unable to carry on any physical activity without discomfort. Highest comorbidity wins.'),
+      yesNo('aids', 'AIDS', null, 'CDC/WHO AIDS (opportunistic infection or AIDS-defining illness) — not asymptomatic HIV. Highest comorbidity wins.'),
+      numberInput('gcs', 'Lowest GCS (admission hour)', { min: 3, max: 15, defaultValue: 13, helpText: 'Lowest estimated GCS in the admission hour (±1 h). Estimate the verbal score if intubated or sedated; do not record VT as 1 unless truly no verbal response. Points: ≥13 = 0; 7–12 = 2; 6 = 7; 5 = 10; ≤4 = 15.' }),
+      numberInput('sbp', 'Lowest systolic BP', { unit: 'mmHg', min: 40, max: 250, defaultValue: 100, helpText: 'Lowest SBP in the admission hour. ≥120 = 0; 70–119 = 3; 40–69 = 8; <40 = 11.' }),
+      numberInput('hr', 'Highest heart rate', { unit: '/min', min: 30, max: 250, defaultValue: 100, helpText: 'Highest HR in the admission hour. <120 = 0; 120–159 = 5; ≥160 = 7.' }),
+      numberInput('bili', 'Highest total bilirubin', { unit: 'mg/dL', min: 0, max: 40, step: 0.1, defaultValue: 1, helpText: 'Highest total bilirubin (mg/dL) in the admission hour. <2 = 0; 2–5.9 = 4; ≥6 = 5.' }),
+      numberInput('cr', 'Highest creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.2, helpText: 'Highest creatinine (mg/dL) in the admission hour. <1.2 = 0; 1.2–1.9 = 2; 2–3.4 = 7; ≥3.5 = 8.' }),
+      numberInput('wbc', 'Leukocytes (lowest)', { unit: '×10³/µL', min: 0, max: 100, step: 0.1, defaultValue: 12, helpText: 'Official sheet uses the lowest leukocyte count in the admission hour. ≥15 ×10³/µL = 2 points.' }),
+      numberInput('ph', 'Lowest pH', { min: 6.5, max: 7.8, step: 0.01, defaultValue: 7.35, helpText: 'Lowest arterial pH in the admission hour. ≤7.25 = 3 points; otherwise 0.' }),
+      numberInput('temp', 'Highest temperature', { unit: '°C', min: 30, max: 43, step: 0.1, defaultValue: 37, helpText: 'Highest temperature in the admission hour. <35 °C = 7 points; otherwise 0.' }),
+      numberInput('plt', 'Lowest platelets', { unit: '×10³/µL', min: 5, max: 800, defaultValue: 200, helpText: 'Lowest platelets in the admission hour. ≥100 = 0; 50–99 = 5; 20–49 = 8; <20 = 13.' }),
       selectInput('ox', 'Oxygenation', [
-        { label: 'PaO₂ ≥60, not ventilated', value: 0 },
-        { label: 'PaO₂ <60, not ventilated', value: 5 },
-        { label: 'Ventilated, PaO₂/FiO₂ ≥100', value: 7 },
-        { label: 'Ventilated, PaO₂/FiO₂ <100', value: 11 },
-      ]),
-      yesNo('vent', 'Mechanical ventilation (informational if oxygenation set)', null),
+        { label: 'PaO₂ ≥60, not ventilated', value: 0, description: 'PaO₂ ≥60 mmHg on the admission-hour gas, not mechanically ventilated (0 points).' },
+        { label: 'PaO₂ <60, not ventilated', value: 5, description: 'PaO₂ <60 mmHg, not ventilated (5 points).' },
+        { label: 'Ventilated, PaO₂/FiO₂ ≥100', value: 7, description: 'Invasive ventilation with PaO₂/FiO₂ ≥100 (7 points).' },
+        { label: 'Ventilated, PaO₂/FiO₂ <100', value: 11, description: 'Invasive ventilation with PaO₂/FiO₂ <100 (11 points).' },
+      ], undefined, 'Use the admission-hour PaO₂ (mmHg) and ventilation status. Prefer this select over the vent flag when both are known.'),
+      yesNo('vent', 'Mechanical ventilation (informational if oxygenation set)', null, 'If Yes and oxygenation is left at the room-air default, the calculator assigns ventilated PaO₂/FiO₂ ≥100 points (7). Prefer setting Oxygenation explicitly when ventilated.'),
     ],
     calculate(values) {
       const age = num(values.age, 70);
@@ -1872,28 +1885,69 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     whenToUse: 'Hospital admission nutrition screening to identify patients needing nutrition care plans.',
     whyUse: 'ESPEN-endorsed screen; total ≥3 indicates nutritionally at risk.',
     inputs: [
-      selectInput('nutrition', 'Impaired nutritional status score', [
-        { label: '0 — Normal nutritional status', value: 0 },
-        {
-          label: '1 — Mild: wt loss >5% in 3 mo OR food intake 50–75% of normal in preceding week',
-          value: 1,
-        },
-        {
-          label: '2 — Moderate: wt loss >5% in 2 mo OR BMI 18.5–20.5 + impaired condition OR intake 25–50%',
-          value: 2,
-        },
-        {
-          label: '3 — Severe: wt loss >5% in 1 mo (>15% in 3 mo) OR BMI <18.5 + impaired condition OR intake 0–25%',
-          value: 3,
-        },
-      ]),
-      selectInput('severity', 'Severity of disease score', [
-        { label: '0 — Normal nutritional requirements', value: 0 },
-        { label: '1 — Mild: e.g., hip fracture, chronic disease (cirrhosis, COPD, dialysis, diabetes, cancer)', value: 1 },
-        { label: '2 — Moderate: e.g., major abdominal surgery, stroke, severe pneumonia, hematologic malignancy', value: 2 },
-        { label: '3 — Severe: e.g., head injury, bone marrow transplant, intensive care patients (APACHE >10)', value: 3 },
-      ]),
-      yesNo('age70', 'Age ≥70 years (+1)', 1),
+      selectInput(
+        'nutrition',
+        'Impaired nutritional status score',
+        [
+          {
+            label: '0 — Normal nutritional status',
+            value: 0,
+            description: 'No recent weight loss, BMI not low, and food intake at or near usual requirement.',
+          },
+          {
+            label: '1 — Mild: wt loss >5% in 3 mo OR food intake 50–75% of normal in preceding week',
+            value: 1,
+            description:
+              'Kondrup: weight loss >5% in 3 months, OR oral intake 50–75% of estimated requirement in the preceding week. Use the highest applicable finding.',
+          },
+          {
+            label: '2 — Moderate: wt loss >5% in 2 mo OR BMI 18.5–20.5 + impaired condition OR intake 25–50%',
+            value: 2,
+            description:
+              'Weight loss >5% in 2 months, OR BMI 18.5–20.5 kg/m² plus impaired general condition (reduced mobility / not fully independent), OR intake 25–50% of requirement in the preceding week.',
+          },
+          {
+            label: '3 — Severe: wt loss >5% in 1 mo (>15% in 3 mo) OR BMI <18.5 + impaired condition OR intake 0–25%',
+            value: 3,
+            description:
+              'Weight loss >5% in 1 month (or >15% in 3 months), OR BMI <18.5 kg/m² plus impaired general condition, OR intake 0–25% of requirement in the preceding week.',
+          },
+        ],
+        undefined,
+        'Pick the highest Kondrup column that applies (weight-loss % / time, BMI + general condition, or last-week intake). “Impaired general condition” = reduced mobility or not fully independent. Use dry weight if fluid-overloaded.',
+      ),
+      selectInput(
+        'severity',
+        'Severity of disease score',
+        [
+          {
+            label: '0 — Normal nutritional requirements',
+            value: 0,
+            description: 'No increase in protein/calorie requirements from acute illness (ambulatory, not a listed disease category).',
+          },
+          {
+            label: '1 — Mild: e.g., hip fracture, chronic disease (cirrhosis, COPD, dialysis, diabetes, cancer)',
+            value: 1,
+            description:
+              'Chronically ill with an acute complication but still out of bed: hip fracture; cirrhosis, COPD, hemodialysis, diabetes, or oncology with hospital complications. Protein need is increased but usually coverable by oral diet.',
+          },
+          {
+            label: '2 — Moderate: e.g., major abdominal surgery, stroke, severe pneumonia, hematologic malignancy',
+            value: 2,
+            description:
+              'Confined to bed by illness with substantially increased requirements: major abdominal surgery, stroke, severe pneumonia, or hematologic malignancy. Artificial nutrition often needed.',
+          },
+          {
+            label: '3 — Severe: e.g., head injury, bone marrow transplant, intensive care patients (APACHE >10)',
+            value: 3,
+            description:
+              'ICU-level catabolism: head injury, bone marrow transplant, or intensive-care patient (APACHE II >10). Markedly increased protein requirement; artificial nutrition indicated.',
+          },
+        ],
+        undefined,
+        'Kondrup “increase in nutritional requirements.” Pick the highest matching example / functional state (out of bed vs bedbound vs ICU), not a free-text mild/moderate/severe guess.',
+      ),
+      yesNo('age70', 'Age ≥70 years (+1)', 1, 'Add 1 point if age ≥70 (frailty correction). Total ≥3 = nutritionally at risk.'),
     ],
     calculate(values) {
       const nut = num(values.nutrition);
@@ -1965,11 +2019,11 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     whenToUse: 'Suspected acute ascending cholangitis to structure classic clinical features (with Tokyo criteria preferred for formal diagnosis).',
     whyUse: 'Classic teaching triad/pentad; sensitivity is limited — absence does not exclude cholangitis.',
     inputs: [
-      yesNo('ruq', 'Right upper quadrant / biliary pain'),
-      yesNo('jaundice', 'Jaundice (clinical or bilirubin elevated)'),
-      yesNo('fever', 'Fever / chills'),
-      yesNo('hypotension', 'Hypotension / shock (Reynolds)'),
-      yesNo('ams', 'Altered mental status (Reynolds)'),
+      yesNo('ruq', 'Right upper quadrant / biliary pain', 1, 'Biliary-type RUQ or epigastric pain, or RUQ tenderness to palpation (Charcot). Isolated vague abdominal pain without a biliary character does not count.'),
+      yesNo('jaundice', 'Jaundice (clinical or bilirubin elevated)', 1, 'Scleral/cutaneous icterus, or total bilirubin above the local upper limit of normal.'),
+      yesNo('fever', 'Fever / chills', 1, 'Temperature ≥38.0 °C or documented chills/rigors (Tokyo systemic-inflammation cue). Elderly patients may lack fever.'),
+      yesNo('hypotension', 'Hypotension / shock (Reynolds)', 1, 'SBP <90 mmHg, MAP <65 mmHg, vasopressors, or other shock physiology — Reynolds severity feature, not required for Charcot triad.'),
+      yesNo('ams', 'Altered mental status (Reynolds)', 1, 'New confusion, disorientation, lethargy, or coma (not isolated fatigue or known chronic cognitive baseline). Reynolds extra; analog of West Haven–type change.'),
     ],
     calculate(values) {
       const ruq = bool(values.ruq);
@@ -2060,11 +2114,11 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     whenToUse: 'When severe cholangitis / septic biliary obstruction is suspected.',
     whyUse: 'Flags the classic severe phenotype requiring emergent decompression — rare but high acuity.',
     inputs: [
-      yesNo('ruq', 'RUQ / biliary pain'),
-      yesNo('jaundice', 'Jaundice'),
-      yesNo('fever', 'Fever / rigors'),
-      yesNo('hypotension', 'Hypotension or shock'),
-      yesNo('ams', 'Altered mental status'),
+      yesNo('ruq', 'RUQ / biliary pain', 1, 'Biliary-type RUQ or epigastric pain, or RUQ tenderness. Do not wait for all five features before treating suspected cholangitis.'),
+      yesNo('jaundice', 'Jaundice', 1, 'Scleral/cutaneous icterus, or total bilirubin above the local ULN.'),
+      yesNo('fever', 'Fever / rigors', 1, 'Temperature ≥38.0 °C or documented rigors/chills.'),
+      yesNo('hypotension', 'Hypotension or shock', 1, 'SBP <90 mmHg, MAP <65 mmHg, vasopressors, or other shock physiology.'),
+      yesNo('ams', 'Altered mental status', 1, 'New confusion, disorientation, lethargy, or coma — not isolated fatigue. In elderly patients this may be the dominant clue.'),
     ],
     calculate(values) {
       const items = [
@@ -2151,11 +2205,11 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     whenToUse: 'Acute scrotal pain when testicular torsion is in the differential (often boys/adolescents).',
     whyUse: 'Stratifies low vs intermediate vs high risk to guide ultrasound vs immediate urology exploration pathways.',
     inputs: [
-      yesNo('swelling', 'Testicular swelling (2 points)', 2),
-      yesNo('hard', 'Hard testis (2 points)', 2),
-      yesNo('cremaster', 'Absent cremasteric reflex (1 point)', 1),
+      yesNo('swelling', 'Testicular swelling (2 points)', 2, 'Affected (painful) testis enlarged vs the contralateral side.'),
+      yesNo('hard', 'Hard testis (2 points)', 2, 'Firm vs the contralateral rubbery consistency — painful side.'),
+      yesNo('cremaster', 'Absent cremasteric reflex (1 point)', 1, 'Stroke the inner thigh from pubis down; present = ipsilateral testis elevation. Score Yes if absent on the painful side (confirm contralateral if possible). Warm room; compare sides.'),
       yesNo('nv', 'Nausea or vomiting (1 point)', 1),
-      yesNo('high', 'High-riding testis (1 point)', 1),
+      yesNo('high', 'High-riding testis (1 point)', 1, 'Affected testis higher in the scrotum than the contralateral side.'),
     ],
     calculate(values) {
       const score =
@@ -2246,8 +2300,8 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     whyUse: 'May help risk-stratify need for imaging intensity alongside STONE score concepts.',
     inputs: [
       yesNo('nv', 'Nausea or vomiting (1)', 1),
-      yesNo('hydro', 'Hydronephrosis on ultrasound (4)', 4),
-      yesNo('hematuria', 'Hematuria (3)', 3),
+      yesNo('hydro', 'Hydronephrosis on ultrasound (4)', 4, 'Any hydronephrosis on point-of-care or radiology US of the symptomatic kidney (Fukuhara).'),
+      yesNo('hematuria', 'Hematuria / occult blood on UA (3)', 3, 'Fukuhara occult blood: dipstick ≥trace or microscopy. Gross hematuria also counts. Absence does not exclude stone.'),
       yesNo('history', 'History of urolithiasis (1)', 1),
       yesNo('male', 'Male sex (1)', 1),
       yesNo('crp', 'CRP ≤0.5 mg/dL (2)', 2),
@@ -2336,34 +2390,34 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         {
           label: 'I — Normal facial function',
           value: 1,
-          description: 'Normal symmetry and tone at rest and motion',
+          description: 'Normal symmetry and tone at rest and with motion in all areas (forehead, eye, mouth).',
         },
         {
           label: 'II — Mild dysfunction',
           value: 2,
-          description: 'Slight weakness; complete eye closure with minimal effort; slight synkinesis possible',
+          description: 'Slight weakness noticeable on close inspection; complete eye closure with minimal effort; slight synkinesis possible. Forehead moderate–good function. Rest: normal symmetry and tone.',
         },
         {
           label: 'III — Moderate dysfunction',
           value: 3,
-          description: 'Obvious but not disfiguring difference; complete eye closure with effort; noticeable synkinesis',
+          description: 'Obvious but not disfiguring difference; complete eye closure with effort; noticeable synkinesis. Forehead slight–moderate movement; mouth slightly weak with maximum effort. Rest: normal.',
         },
         {
           label: 'IV — Moderately severe dysfunction',
           value: 4,
-          description: 'Disfiguring asymmetry; incomplete eye closure; normal tone at rest',
+          description: 'Disfiguring asymmetry; incomplete eye closure; no forehead motion; mouth asymmetric with maximum effort. Rest tone still normal.',
         },
         {
           label: 'V — Severe dysfunction',
           value: 5,
-          description: 'Barely perceptible motion; asymmetric at rest; incomplete eye closure',
+          description: 'Barely perceptible motion; asymmetric at rest. No forehead motion; incomplete eye closure; mouth slight movement only.',
         },
         {
           label: 'VI — Total paralysis',
           value: 6,
-          description: 'No movement',
+          description: 'No movement at rest or with effort in any facial area.',
         },
-      ]),
+      ], undefined, 'Inspect rest, then forehead / eye / mouth. III vs IV is mainly complete vs incomplete eye closure; absent forehead motion is the other IV discriminator (House 1985).'),
     ],
     calculate(values) {
       const g = num(values.grade, 3);
@@ -2477,7 +2531,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         min: 0,
         max: 110,
         defaultValue: 40,
-        helpText: '22 items scored 0–5 (no problem → problem as bad as can be)',
+        helpText: 'Enter the official SNOT-22 total (0–110) from the copyrighted form; do not reprint stems. 22 items × 0–5 (no problem → as bad as it can be), typically over the past 2 weeks.',
       }),
     ],
     calculate(values) {
@@ -2566,7 +2620,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         min: 0,
         max: 20,
         defaultValue: 12,
-        helpText: 'Each item 0–4: congestion, blockage, breathing trouble, trouble sleeping, air through nose during exercise. Scaled score = raw × 5.',
+        helpText: 'Stewart NOSE, past 1 month. Five items (0 = not a problem, 1 = very mild, 2 = moderate, 3 = fairly bad, 4 = severe): (1) nasal congestion/stuffiness; (2) nasal blockage/obstruction; (3) trouble breathing through my nose; (4) trouble sleeping; (5) unable to get enough air through my nose during exercise. Enter the 0–20 raw sum; scaled score = raw × 5 (0–100).',
       }),
     ],
     calculate(values) {

@@ -12,20 +12,20 @@ export const cardiologyCalcs: Calculator[] = [
     whenToUse: 'Patients with non-valvular atrial fibrillation to assess annual stroke risk and need for anticoagulation.',
     whyUse: 'Widely validated; AHA/ACC guideline-recommended for stroke risk stratification in nonvalvular AF (ESC 2024 prefers CHA₂DS₂-VA).',
     inputs: [
-      yesNo('chf', 'Congestive heart failure / LV dysfunction', 1),
-      yesNo('htn', 'Hypertension', 1),
+      yesNo('chf', 'Congestive heart failure / LV dysfunction', 1, 'History of HF or documented moderate–severe LV systolic dysfunction (typically LVEF ≤40%).'),
+      yesNo('htn', 'Hypertension', 1, 'Diagnosed or treated hypertension (history or current therapy), not a single elevated reading.'),
       selectInput('age', 'Age', [
         { label: '< 65 years', value: 0, points: 0 },
         { label: '65–74 years', value: 1, points: 1 },
         { label: '≥ 75 years', value: 2, points: 2 },
       ]),
-      yesNo('dm', 'Diabetes mellitus', 1),
-      yesNo('stroke', 'Prior stroke / TIA / thromboembolism', 2),
-      yesNo('vascular', 'Vascular disease (prior MI, PAD, aortic plaque)', 1),
+      yesNo('dm', 'Diabetes mellitus', 1, 'Type 1 or 2, including diet-controlled; diagnosed DM counts (not an isolated stress-hyperglycemia reading).'),
+      yesNo('stroke', 'Prior stroke / TIA / thromboembolism', 2, 'Ischemic stroke, TIA, or systemic arterial embolism (not hemorrhagic stroke as the sole indication).'),
+      yesNo('vascular', 'Vascular disease (prior MI, PAD, aortic plaque)', 1, 'Prior MI, peripheral artery disease, or complex aortic plaque.'),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 0, points: 0 },
         { label: 'Female', value: 1, points: 1 },
-      ]),
+      ], undefined, 'Female sex = 1 point (a risk modifier). Female sex alone does not usually mandate anticoagulation.'),
     ],
     calculate(values) {
       const score =
@@ -117,7 +117,7 @@ export const cardiologyCalcs: Calculator[] = [
       yesNo('renal', 'Abnormal renal function (dialysis, transplant, Cr ≥2.26 mg/dL / ≥200 µmol/L)', 1),
       yesNo('liver', 'Abnormal liver function (cirrhosis or bili >2× + AST/ALT >3×)', 1),
       yesNo('stroke', 'Prior stroke', 1),
-      yesNo('bleed', 'Bleeding history or predisposition', 1),
+      yesNo('bleed', 'Bleeding history or predisposition', 1, 'Prior major bleeding (ICH, bleed requiring hospitalization, ≥2 g/dL Hb drop, or transfusion) or a predisposition such as anemia or a known bleeding diathesis — not trivial resolved epistaxis.'),
       yesNo('labile', 'Labile INR (if on warfarin; TTR <60%)', 1),
       yesNo('elderly', 'Elderly (age >65)', 1),
       yesNo('drugs', 'Drugs (concomitant antiplatelet or NSAID)', 1),
@@ -174,30 +174,30 @@ export const cardiologyCalcs: Calculator[] = [
     whyUse: 'Simple bedside score that identifies low-risk patients who may be candidates for early discharge.',
     inputs: [
       selectInput('history', 'History', [
-        { label: 'Slightly suspicious', value: 0, points: 0 },
-        { label: 'Moderately suspicious', value: 1, points: 1 },
-        { label: 'Highly suspicious', value: 2, points: 2 },
-      ]),
+        { label: 'Slightly suspicious', value: 0, points: 0, description: 'Nonspecific features predominate (pleuritic, positional, well-localized sharp, reproducible)' },
+        { label: 'Moderately suspicious', value: 1, points: 1, description: 'Mix of typical and nonspecific features' },
+        { label: 'Highly suspicious', value: 2, points: 2, description: 'Mostly typical ACS (retrosternal pressure, exertion, radiation to arm/jaw, diaphoresis, nausea, NTG relief)' },
+      ], undefined, 'Score suspicion from the history alone (not the ECG or troponin). Typical = retrosternal pressure/tightness, exertional, radiation to arm/jaw, diaphoresis, nausea, or nitroglycerin relief. Nonspecific = pleuritic, positional, well-localized sharp, or fully reproducible.'),
       selectInput('ecg', 'ECG', [
-        { label: 'Normal', value: 0, points: 0 },
-        { label: 'Non-specific repolarization disturbance', value: 1, points: 1 },
-        { label: 'Significant ST deviation', value: 2, points: 2 },
-      ]),
+        { label: 'Normal', value: 0, points: 0, description: 'No ST-T abnormality' },
+        { label: 'Non-specific repolarization disturbance', value: 1, points: 1, description: 'LBBB, RV paced rhythm, LVH with strain, digoxin effect, or nonspecific ST-T without significant ST deviation' },
+        { label: 'Significant ST deviation', value: 2, points: 2, description: 'Significant ST depression or elevation (typically ≥1 mm) in the absence of LBBB/paced-only changes scored as 1' },
+      ], undefined, 'Compare with a prior ECG if available. ST deviation is typically ≥1 mm (0.1 mV) in ≥1 contiguous lead. Isolated T-wave inversion without ST shift is usually 1, not 2.'),
       selectInput('age', 'Age', [
         { label: '< 45 years', value: 0, points: 0 },
         { label: '45–64 years', value: 1, points: 1 },
         { label: '≥ 65 years', value: 2, points: 2 },
       ]),
       selectInput('risk', 'Risk factors', [
-        { label: 'No known risk factors', value: 0, points: 0 },
-        { label: '1–2 risk factors', value: 1, points: 1 },
-        { label: '≥3 risk factors or history of atherosclerotic disease', value: 2, points: 2 },
-      ], undefined, 'HTN, HLD, DM, obesity, smoking, positive family history'),
+        { label: 'No known risk factors', value: 0, points: 0, description: 'None of: HTN, HLD, DM, obesity (BMI >30), smoking, FHx of CVD before 65' },
+        { label: '1–2 risk factors', value: 1, points: 1, description: 'One or two of those risk factors; no known atherosclerotic disease' },
+        { label: '≥3 risk factors or history of atherosclerotic disease', value: 2, points: 2, description: '≥3 risk factors, OR known CAD / prior MI / PCI-CABG / CVA / PAD (scores 2 even with <3 factors)' },
+      ], undefined, 'HTN; hypercholesterolemia; DM; obesity (BMI >30); current or recent smoking; FHx = parent or sibling with CVD before age 65. Known CAD / prior MI / PCI-CABG / CVA / PAD = 2 points even if <3 risk factors.'),
       selectInput('troponin', 'Troponin', [
-        { label: '≤ normal limit', value: 0, points: 0 },
-        { label: '1–3× normal limit', value: 1, points: 1 },
-        { label: '> 3× normal limit', value: 2, points: 2 },
-      ]),
+        { label: '≤ normal limit', value: 0, points: 0, description: 'At or below the local assay 99th-percentile URL' },
+        { label: '1–3× normal limit', value: 1, points: 1, description: 'Above URL but ≤3× the local upper reference limit' },
+        { label: '> 3× normal limit', value: 2, points: 2, description: 'More than 3× the local assay URL' },
+      ], undefined, 'Use the local assay 99th-percentile upper reference limit (not a “detectable” hs-Tn cutoff unless that is your URL). Score the troponin available at the HEART decision (typically the first).'),
     ],
     calculate(values) {
       const score = num(values.history) + num(values.ecg) + num(values.age) + num(values.risk) + num(values.troponin);
@@ -236,12 +236,12 @@ export const cardiologyCalcs: Calculator[] = [
     whyUse: 'Guides intensity of therapy and early invasive vs conservative strategies.',
     inputs: [
       yesNo('age65', 'Age ≥ 65 years', 1),
-      yesNo('risk3', '≥3 CAD risk factors (FHx, HTN, HLD, DM, smoking)', 1),
+      yesNo('risk3', '≥3 CAD risk factors (FHx, HTN, HLD, DM, smoking)', 1, 'Count: family history of CAD, hypertension, hypercholesterolemia, diabetes, current smoker. Need ≥3 of these five.'),
       yesNo('knownCad', 'Known CAD (stenosis ≥50%)', 1),
       yesNo('asa', 'Aspirin use in past 7 days', 1),
-      yesNo('severe', 'Severe angina (≥2 episodes in 24h)', 1),
-      yesNo('st', 'ST deviation ≥0.5 mm', 1),
-      yesNo('marker', 'Positive cardiac marker', 1),
+      yesNo('severe', 'Severe angina (≥2 episodes in 24h)', 1, '≥2 distinct rest or crescendo angina episodes in the past 24 hours.'),
+      yesNo('st', 'ST deviation ≥0.5 mm', 1, 'ST depression or transient elevation ≥0.5 mm (0.05 mV) in ≥2 contiguous leads.'),
+      yesNo('marker', 'Positive cardiac marker', 1, 'Any cardiac troponin or CK-MB above the local upper reference limit.'),
     ],
     calculate(values) {
       const keys = ['age65', 'risk3', 'knownCad', 'asa', 'severe', 'st', 'marker'];
@@ -277,15 +277,15 @@ export const cardiologyCalcs: Calculator[] = [
     whenToUse: 'Patients with ST-elevation myocardial infarction.',
     whyUse: 'Simple bedside mortality risk estimate for counseling and resource planning.',
     inputs: [
-      yesNo('age65', 'Age 65–74 years', 2),
+      yesNo('age65', 'Age 65–74 years', 2, 'Score this if age is 65–74. If ≥75, use the next item instead (calculate() will not double-count).'),
       yesNo('age75', 'Age ≥ 75 years', 3, 'Use instead of 65–74 if applicable'),
-      yesNo('dmHtnAngina', 'DM, HTN, or angina', 1),
+      yesNo('dmHtnAngina', 'DM, HTN, or angina', 1, 'Yes if history of diabetes, hypertension, or angina (any one of the three).'),
       yesNo('sbp100', 'SBP < 100 mmHg', 3),
       yesNo('hr100', 'Heart rate > 100 bpm', 2),
-      yesNo('killip2', 'Killip II–IV', 2),
+      yesNo('killip2', 'Killip II–IV', 2, 'II = S3, rales <½ lung fields, or JVD; III = frank pulmonary edema; IV = cardiogenic shock (typically SBP <90 with hypoperfusion). Any of II–IV = Yes.'),
       yesNo('weight67', 'Weight < 67 kg', 1),
       yesNo('anterior', 'Anterior STEMI or LBBB', 1),
-      yesNo('time4', 'Time to treatment > 4 hours', 1),
+      yesNo('time4', 'Time to treatment > 4 hours', 1, 'From symptom onset to reperfusion (fibrinolysis or balloon inflation) >4 hours — not door-to-needle or last medical contact.'),
     ],
     calculate(values) {
       let score = 0;
@@ -336,14 +336,14 @@ export const cardiologyCalcs: Calculator[] = [
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, defaultValue: 130 }),
       numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.0 }),
       selectInput('killip', 'Killip class', [
-        { label: 'I — No HF (0)', value: 0, points: 0 },
-        { label: 'II — Rales / JVD (20)', value: 20, points: 20 },
-        { label: 'III — Pulmonary edema (39)', value: 39, points: 39 },
-        { label: 'IV — Cardiogenic shock (59)', value: 59, points: 59 },
-      ]),
+        { label: 'I — No HF (0)', value: 0, points: 0, description: 'No rales, no S3, no JVD' },
+        { label: 'II — Rales / JVD (20)', value: 20, points: 20, description: 'S3 and/or rales occupying less than half the lung fields and/or JVD' },
+        { label: 'III — Pulmonary edema (39)', value: 39, points: 39, description: 'Frank pulmonary edema (rales throughout)' },
+        { label: 'IV — Cardiogenic shock (59)', value: 59, points: 59, description: 'Typically SBP <90 mmHg with signs of hypoperfusion (oliguria, cyanosis, sweating, cool extremities)' },
+      ], undefined, 'Auscultate both lungs (how far rales extend), listen at the apex for S3, inspect JVD. Pick the highest class that fits.'),
       yesNo('arrest', 'Cardiac arrest at admission', 39),
-      yesNo('st', 'ST-segment deviation', 28),
-      yesNo('enzyme', 'Elevated cardiac enzymes/markers', 14),
+      yesNo('st', 'ST-segment deviation', 28, 'Any ST depression or elevation versus the isoelectric line (not isolated T-wave inversion).'),
+      yesNo('enzyme', 'Elevated cardiac enzymes/markers', 14, 'Any cardiac troponin (or CK-MB) above the local upper reference limit.'),
     ],
     calculate(values) {
       // GRACE in-hospital mortality point tables (Fox et al. / standard bedside chart)
@@ -439,11 +439,11 @@ export const cardiologyCalcs: Calculator[] = [
     whyUse: 'Classic bedside prognostic tool; still used in GRACE and clinical practice.',
     inputs: [
       selectInput('class', 'Killip class findings', [
-        { label: 'Class I — No clinical HF', value: 1 },
-        { label: 'Class II — Mild HF (S3, rales <½ lung fields, JVD)', value: 2 },
-        { label: 'Class III — Acute pulmonary edema', value: 3 },
-        { label: 'Class IV — Cardiogenic shock', value: 4 },
-      ]),
+        { label: 'Class I — No clinical HF', value: 1, description: 'No rales, no S3, no JVD' },
+        { label: 'Class II — Mild HF (S3, rales <½ lung fields, JVD)', value: 2, description: 'S3 and/or rales occupying less than half the lung fields and/or JVD' },
+        { label: 'Class III — Acute pulmonary edema', value: 3, description: 'Frank pulmonary edema (rales throughout)' },
+        { label: 'Class IV — Cardiogenic shock', value: 4, description: 'Typically SBP <90 mmHg with signs of hypoperfusion (oliguria, cyanosis, sweating, cool extremities)' },
+      ], undefined, 'Auscultate both lungs (how far rales extend), listen at the apex for S3, inspect JVD. Pick the highest class that fits — do not combine scores.'),
     ],
     calculate(values) {
       const c = num(values.class, 1);
@@ -477,10 +477,10 @@ export const cardiologyCalcs: Calculator[] = [
     whenToUse: 'Patients with suspected pulmonary embolism.',
     whyUse: 'Guides D-dimer vs imaging pathway.',
     inputs: [
-      yesNo('dvt', 'Clinical signs/symptoms of DVT', 3),
+      yesNo('dvt', 'Clinical signs/symptoms of DVT', 3, 'Yes only if clinical DVT signs: leg swelling AND pain on palpation of the deep veins (not isolated cramp or chronic edema).'),
       yesNo('alt', 'PE is #1 diagnosis or equally likely', 3),
       yesNo('hr', 'Heart rate > 100', 1.5),
-      yesNo('immob', 'Immobilization ≥3 days or surgery in past 4 weeks', 1.5),
+      yesNo('immob', 'Immobilization ≥3 days or surgery in past 4 weeks', 1.5, 'Bed rest ≥3 days, or surgery under general anesthesia in the past 4 weeks.'),
       yesNo('prev', 'Previous DVT/PE', 1.5),
       yesNo('hemoptysis', 'Hemoptysis', 1),
       yesNo('malignancy', 'Malignancy (on treatment, treated in 6 mo, or palliative)', 1),
@@ -540,12 +540,12 @@ export const cardiologyCalcs: Calculator[] = [
     whenToUse: 'Suspected lower extremity DVT.',
     whyUse: 'Combined with D-dimer to safely rule out DVT.',
     inputs: [
-      yesNo('cancer', 'Active cancer', 1),
+      yesNo('cancer', 'Active cancer', 1, 'Treatment ongoing, treated in the past 6 months, or palliative.'),
       yesNo('paralysis', 'Paralysis, paresis, or recent cast immobilization of leg', 1),
-      yesNo('bedridden', 'Recently bedridden ≥3 days or major surgery within 12 weeks', 1),
-      yesNo('tenderness', 'Localized tenderness along deep venous system', 1),
+      yesNo('bedridden', 'Recently bedridden ≥3 days or major surgery within 12 weeks', 1, 'Bedridden ≥3 days, or major surgery within 12 weeks requiring general or regional anesthesia.'),
+      yesNo('tenderness', 'Localized tenderness along deep venous system', 1, 'Palpate along the deep veins (femoral canal groin-to-mid-thigh, popliteal fossa, posterior calf) — not superficial or varicose-vein pain.'),
       yesNo('swelling', 'Entire leg swollen', 1),
-      yesNo('calf', 'Calf swelling ≥3 cm vs asymptomatic leg', 1),
+      yesNo('calf', 'Calf swelling ≥3 cm vs asymptomatic leg', 1, 'Measure both calves 10 cm below the tibial tuberosity; Yes if the symptomatic side is ≥3 cm larger. If both legs are symptomatic, use the more symptomatic side.'),
       yesNo('pitting', 'Pitting edema confined to symptomatic leg', 1),
       yesNo('collat', 'Collateral superficial veins (non-varicose)', 1),
       yesNo('prior', 'Previously documented DVT', 1),
@@ -601,12 +601,12 @@ export const cardiologyCalcs: Calculator[] = [
     inputs: [
       yesNo('age50', 'Age ≥ 50 years'),
       yesNo('hr100', 'HR ≥ 100'),
-      yesNo('o2', 'O₂ sat on room air < 95%'),
+      yesNo('o2', 'O₂ sat on room air < 95%', 1, 'Pulse oximetry on room air; do not score Yes for a value obtained on supplemental oxygen unless room-air sat is also <95%.'),
       yesNo('leg', 'Unilateral leg swelling'),
       yesNo('hemoptysis', 'Hemoptysis'),
       yesNo('surgery', 'Recent surgery or trauma (≤4 weeks requiring anesthesia)'),
       yesNo('prior', 'Prior PE or DVT'),
-      yesNo('hormone', 'Hormone use (OCP, HRT, estrogen)'),
+      yesNo('hormone', 'Hormone use (OCP, HRT, estrogen)', 1, 'Estrogen-containing oral contraceptive, hormone replacement, or estrogen therapy (not progesterone-only).'),
     ],
     calculate(values) {
       const keys = ['age50', 'hr100', 'o2', 'leg', 'hemoptysis', 'surgery', 'prior', 'hormone'];
@@ -651,16 +651,16 @@ export const cardiologyCalcs: Calculator[] = [
     inputs: [
       yesNo('age65', 'Age > 65 years', 1),
       yesNo('prior', 'Previous DVT/PE', 3),
-      yesNo('surgery', 'Surgery or fracture within 1 month', 2),
-      yesNo('cancer', 'Active malignancy', 2),
-      yesNo('leg', 'Unilateral lower limb pain', 3),
+      yesNo('surgery', 'Surgery or fracture within 1 month', 2, 'Surgery under general anesthesia or fracture of the lower limbs within 1 month (not an upper-extremity fracture alone).'),
+      yesNo('cancer', 'Active malignancy', 2, 'Solid or hematologic malignancy currently active or considered cured for <1 year.'),
+      yesNo('leg', 'Unilateral lower limb pain', 3, 'Pain in one lower limb (not bilateral aching). Does not require confirmed DVT.'),
       yesNo('hemoptysis', 'Hemoptysis', 2),
       selectInput('hr', 'Heart rate', [
         { label: '< 75', value: 0, points: 0 },
         { label: '75–94', value: 3, points: 3 },
         { label: '≥ 95', value: 5, points: 5 },
       ]),
-      yesNo('painPalp', 'Pain on lower limb deep venous palpation and unilateral edema', 4),
+      yesNo('painPalp', 'Pain on lower limb deep venous palpation and unilateral edema', 4, 'Yes only if BOTH pain on deep-vein palpation AND unilateral edema.'),
     ],
     calculate(values) {
       const score =
@@ -705,15 +705,15 @@ export const cardiologyCalcs: Calculator[] = [
         { label: 'Female', value: 0 },
         { label: 'Male', value: 10 },
       ]),
-      yesNo('cancer', 'History of cancer', 30),
-      yesNo('hf', 'Heart failure', 10),
-      yesNo('clrd', 'Chronic lung disease', 10),
+      yesNo('cancer', 'History of cancer', 30, 'Any history of cancer (active or prior) — original PESI, not limited to current treatment.'),
+      yesNo('hf', 'Heart failure', 10, 'History of heart failure (systolic or diastolic), not only current rales this visit.'),
+      yesNo('clrd', 'Chronic lung disease', 10, 'COPD, interstitial lung disease, or other chronic lung disease (not an isolated acute pneumonia).'),
       yesNo('hr110', 'Heart rate ≥ 110', 20),
       yesNo('sbp100', 'SBP < 100', 30),
       yesNo('rr30', 'Respiratory rate ≥ 30', 20),
       yesNo('temp36', 'Temperature < 36°C', 20),
-      yesNo('ams', 'Altered mental status', 60),
-      yesNo('o2', 'O₂ sat < 90%', 20),
+      yesNo('ams', 'Altered mental status', 60, 'Disorientation, lethargy, stupor, or coma (not isolated anxiety or opioid drowsiness you judge unrelated).'),
+      yesNo('o2', 'O₂ sat < 90%', 20, 'SpO2 <90% on pulse oximetry, with or without supplemental oxygen.'),
     ],
     calculate(values) {
       const score =
@@ -782,11 +782,11 @@ export const cardiologyCalcs: Calculator[] = [
     whyUse: 'Easier than full PESI with similar discrimination for low-risk PE.',
     inputs: [
       yesNo('age80', 'Age > 80 years', 1),
-      yesNo('cancer', 'History of cancer', 1),
-      yesNo('cpd', 'Chronic cardiopulmonary disease', 1),
+      yesNo('cancer', 'History of cancer', 1, 'Any history of cancer (active or prior).'),
+      yesNo('cpd', 'Chronic cardiopulmonary disease', 1, 'Chronic heart failure and/or chronic lung disease (sPESI combines these into one item).'),
       yesNo('hr110', 'Heart rate ≥ 110', 1),
       yesNo('sbp100', 'SBP < 100 mmHg', 1),
-      yesNo('o2', 'O₂ sat < 90%', 1),
+      yesNo('o2', 'O₂ sat < 90%', 1, 'SpO2 <90% on pulse oximetry, with or without supplemental oxygen.'),
     ],
     calculate(values) {
       const keys = ['age80', 'cancer', 'cpd', 'hr110', 'sbp100', 'o2'];
@@ -827,8 +827,8 @@ export const cardiologyCalcs: Calculator[] = [
     whenToUse: 'Historical/educational use; prefer CHA₂DS₂-VASc in current practice.',
     whyUse: 'Still referenced in literature; simple five-factor model.',
     inputs: [
-      yesNo('chf', 'CHF', 1),
-      yesNo('htn', 'Hypertension', 1),
+      yesNo('chf', 'CHF', 1, 'History of HF or documented LV systolic dysfunction.'),
+      yesNo('htn', 'Hypertension', 1, 'Diagnosed or treated hypertension.'),
       yesNo('age75', 'Age ≥ 75', 1),
       yesNo('dm', 'Diabetes', 1),
       yesNo('stroke', 'Prior stroke/TIA', 2),
@@ -902,8 +902,8 @@ export const cardiologyCalcs: Calculator[] = [
     whenToUse: 'Drug monitoring, syncope, electrolyte disorders, congenital LQTS screening.',
     whyUse: 'Prolonged QTc increases risk of torsades de pointes.',
     inputs: [
-      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, defaultValue: 400 }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, defaultValue: 70 }),
+      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, defaultValue: 400, helpText: 'Measure in lead II or V5/V6 from QRS onset to the end of the T wave (not the U wave).' }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, defaultValue: 70, helpText: 'Bazett overcorrects at high HR and undercorrects at low HR; consider Fridericia at extremes.' }),
     ],
     calculate(values) {
       const qt = num(values.qt, 400);
@@ -1034,8 +1034,8 @@ export const cardiologyCalcs: Calculator[] = [
     inputs: [
       yesNo('fever', 'History of fever or measured temp ≥38°C', 1),
       yesNo('noCough', 'Absence of cough', 1),
-      yesNo('tender', 'Tender anterior cervical lymphadenopathy', 1),
-      yesNo('exudate', 'Tonsillar exudate or swelling', 1),
+      yesNo('tender', 'Tender anterior cervical lymphadenopathy', 1, 'Palpate the anterior cervical chain; Yes if nodes are enlarged and tender (not posterior-chain or nontender).'),
+      yesNo('exudate', 'Tonsillar exudate or swelling', 1, 'Exudate or swelling of the tonsils on oropharynx exam (not isolated pharyngeal erythema).'),
       selectInput('age', 'Age (McIsaac modification)', [
         { label: '3–14 years (+1)', value: 1 },
         { label: '15–44 years (0)', value: 0 },

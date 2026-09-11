@@ -519,7 +519,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         max: 72,
         step: 0.1,
         defaultValue: 16,
-        helpText: 'Sum of region scores: head/neck, trunk, upper limbs, lower limbs (0–72)',
+        helpText: 'Enter the total from the official EASI worksheet (0–72). Four regions (head/neck, trunk, upper limbs, lower limbs) combine area with four signs (erythema, edema/papulation, excoriation, lichenification). Do not reconstruct from memory if the form is available.',
       }),
     ],
     calculate(values) {
@@ -676,12 +676,13 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         max: 80,
         step: 0.5,
         defaultValue: 18,
+        helpText: 'Goldmann applanation is the usual reference; note device (iCare, NCT, Tono-Pen) and CCT. Measure sitting, undilated when possible. Do not diagnose glaucoma from IOP alone.',
       }),
       selectInput('context', 'Clinical context', [
-        { label: 'Screening / no known glaucoma', value: 'screen' },
-        { label: 'Known glaucoma / ocular hypertension', value: 'glaucoma' },
-        { label: 'Post-op / acute symptoms', value: 'acute' },
-      ]),
+        { label: 'Screening / no known glaucoma', value: 'screen', description: 'No established glaucoma or OHT — interpret vs population ~10–21 mmHg and optic-nerve/field exam' },
+        { label: 'Known glaucoma / ocular hypertension', value: 'glaucoma', description: 'Compare to the patient’s individualized target IOP, not a universal 21 mmHg cut' },
+        { label: 'Post-op / acute symptoms', value: 'acute', description: 'Pain, halos, nausea, mid-dilated pupil, or recent intraocular surgery — emergency pathway if IOP is high' },
+      ], undefined, 'Absolute IOP never replaces disc, RNFL, fields, and angles. Acute symptoms with high IOP = emergency ophthalmology.'),
     ],
     calculate(values) {
       const iop = round(num(values.iop, 18), 1);
@@ -981,16 +982,14 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     whenToUse: 'From air-conduction thresholds to summarize hearing level (commonly 0.5, 1, 2 kHz ± 4 kHz).',
     whyUse: 'Standard single-number summary for hearing loss degree and disability discussions.',
     inputs: [
-      selectInput(
-        'method',
-        'PTA method',
-        [
-          { label: '3-frequency (0.5, 1, 2 kHz)', value: '3' },
-          { label: '4-frequency (0.5, 1, 2, 4 kHz)', value: '4' },
+      selectInput('method', 'PTA method', [
+          { label: '3-frequency (0.5, 1, 2 kHz)', value: '3', description: 'Classic PTA: average of 500, 1000, and 2000 Hz air-conduction thresholds (speech-frequency)' },
+          { label: '4-frequency (0.5, 1, 2, 4 kHz)', value: '4', description: 'Includes 4000 Hz (high-frequency / noise-notch relevant). Used by some disability and WHO summaries' },
         ],
-        '3'
+        '3',
+        'Air-conduction dB HL from the audiogram. 3-frequency is the traditional speech PTA; 4-frequency includes 4 kHz.',
       ),
-      numberInput('f500', '500 Hz threshold', { unit: 'dB HL', min: -10, max: 120, step: 5, defaultValue: 20 }),
+      numberInput('f500', '500 Hz threshold', { unit: 'dB HL', min: -10, max: 120, step: 5, defaultValue: 20, helpText: 'Air-conduction threshold in dB HL from the audiogram (not bone conduction).' }),
       numberInput('f1000', '1000 Hz threshold', { unit: 'dB HL', min: -10, max: 120, step: 5, defaultValue: 25 }),
       numberInput('f2000', '2000 Hz threshold', { unit: 'dB HL', min: -10, max: 120, step: 5, defaultValue: 30 }),
       numberInput('f4000', '4000 Hz threshold', {
@@ -1096,7 +1095,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         { label: 'No (0)', value: 0 },
         { label: 'Yes (1)', value: 1 },
         { label: 'Do not know (0)', value: 0 },
-      ]),
+      ], undefined, 'Category 1 (snoring/apneas) is positive if ≥2 points from the next five items (snore, loudness, frequency, bothered others, quit breathing).'),
       selectInput('snoreLoud', 'Snoring loudness', [
         { label: 'N/A or slightly louder than breathing (0)', value: 0 },
         { label: 'As loud as talking (0)', value: 0 },
@@ -1128,7 +1127,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         { label: '1–2×/week (0)', value: 0 },
         { label: '3–4×/week (1)', value: 1 },
         { label: 'Nearly every day (1)', value: 1 },
-      ]),
+      ], undefined, 'Category 2 (daytime sleepiness) is positive if ≥2 points from the next three items (tired after sleep, tired during wake, fallen asleep driving).'),
       selectInput('tiredDay', 'Tired/fatigued during wake time?', [
         { label: 'Never / nearly never (0)', value: 0 },
         { label: '1–2×/month (0)', value: 0 },
@@ -1139,10 +1138,10 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
       selectInput('nodrive', 'Fallen asleep while driving?', [
         { label: 'Never (0)', value: 0 },
         { label: 'Yes, any frequency (1)', value: 1 },
-      ]),
+      ], undefined, 'Any drowsy-driving episode counts as 1 Category 2 point (not only recent or frequent events).'),
       // Category 3
-      yesNo('htn', 'High blood pressure (diagnosed/treated)', 1),
-      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 12, max: 80, step: 0.1, defaultValue: 32 }),
+      yesNo('htn', 'High blood pressure (diagnosed/treated)', 1, 'Diagnosed or treated hypertension. Category 3 is positive if HTN or BMI >30 kg/m² (either one is enough).'),
+      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 12, max: 80, step: 0.1, defaultValue: 32, helpText: 'Category 3 is positive if BMI >30 kg/m² or diagnosed/treated hypertension.' }),
     ],
     calculate(values) {
       const cat1 =
@@ -1214,7 +1213,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         max: 40,
         step: 1,
         defaultValue: 15,
-        helpText: 'Sum of 8 items scored 0–5 each',
+        helpText: 'Enter the sum from the official 8-item CAT (each 0–5). GOLD “more symptoms” is CAT ≥10 (or mMRC ≥2).',
       }),
     ],
     calculate(values) {
@@ -1287,19 +1286,20 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     whenToUse: 'COPD prognostication when 6-minute walk (for BODE) is unavailable.',
     whyUse: 'Simpler than BODE; age + mMRC + FEV1% predicts mortality without exercise test.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 40, max: 100, defaultValue: 68 }),
+      numberInput('age', 'Age', { unit: 'years', min: 40, max: 100, defaultValue: 68, helpText: 'Updated ADO age points: <50 = 0; 50–59 = 1; 60–69 = 2; 70–79 = 3; 80–89 = 4; ≥90 = 5.' }),
       selectInput('mmrc', 'mMRC dyspnea grade', [
-        { label: '0 — Dyspnea only with strenuous exercise (0 pts)', value: 0 },
-        { label: '1 — Dyspnea when hurrying / walking up slight hill (1)', value: 1 },
-        { label: '2 — Walks slower than peers / stops on level (2)', value: 2 },
-        { label: '3 — Stops after ~100 m or few minutes (3)', value: 3 },
-        { label: '4 — Too dyspneic to leave house / dress (4)', value: 4 },
-      ]),
+        { label: '0 — Dyspnea only with strenuous exercise (0 pts)', value: 0, description: '“I only get breathless with strenuous exercise.” No dyspnea walking on the level or up a slight hill.' },
+        { label: '1 — Dyspnea when hurrying / walking up slight hill (1)', value: 1, description: '“I get short of breath when hurrying on the level or walking up a slight hill.” Can keep up with peers on the level at own pace.' },
+        { label: '2 — Walks slower than peers / stops on level (2)', value: 2, description: '“I walk slower than people of the same age on the level because of breathlessness, or I have to stop for breath when walking at my own pace on the level.”' },
+        { label: '3 — Stops after ~100 m or few minutes (3)', value: 3, description: '“I stop for breath after walking about 100 metres or after a few minutes on the level.” Still leaves the house.' },
+        { label: '4 — Too dyspneic to leave house / dress (mMRC 4 → 3 ADO pts)', value: 4, description: '“I am too breathless to leave the house or I am breathless when dressing or undressing.” Updated ADO still credits only 3 dyspnea points.' },
+      ], undefined, 'Ask which published mMRC statement best fits usual breathlessness (not only today’s exacerbation). Updated ADO dyspnea points equal mMRC 0–3; mMRC 4 is capped at 3 ADO points. Use the descriptors — not titles alone — to separate 1 vs 2 vs 3 vs 4.'),
       numberInput('fev1', 'FEV1 % predicted', {
         unit: '%',
         min: 10,
         max: 120,
         defaultValue: 45,
+        helpText: 'Post-bronchodilator FEV1 % predicted. Updated ADO obstruction points: ≥81% = 0; 65–80 = 1; 50–64 = 2; 36–49 = 3; 21–35 = 4; 6–20 = 5; ≤5 = 6.',
       }),
     ],
     calculate(values) {
@@ -1405,11 +1405,12 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         max: 120,
         step: 1,
         defaultValue: 55,
+        helpText: 'GOLD spirometric grade (after FEV1/FVC <0.7 post-BD): 1 mild ≥80%; 2 moderate 50–79%; 3 severe 30–49%; 4 very severe <30%.',
       }),
       selectInput('ratioOk', 'FEV1/FVC < 0.7 (post-BD) confirmed?', [
-        { label: 'Yes — COPD obstruction present', value: 'yes' },
-        { label: 'No / unknown — interpret grade cautiously', value: 'no' },
-      ]),
+        { label: 'Yes — COPD obstruction present', value: 'yes', description: 'Post-bronchodilator FEV1/FVC <0.70 (or below LLN if that is your lab’s COPD definition) — GOLD grades apply' },
+        { label: 'No / unknown — interpret grade cautiously', value: 'no', description: 'Without confirmed airflow limitation the FEV1 % band is not a GOLD COPD grade' },
+      ], undefined, 'GOLD 1–4 grades apply only after COPD is diagnosed (persistent airflow limitation). They are not the ABE symptom/exacerbation group.'),
     ],
     calculate(values) {
       const fev1 = num(values.fev1, 55);
@@ -1486,7 +1487,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         max: 25,
         step: 1,
         defaultValue: 18,
-        helpText: 'Sum of 5 items (each 1–5); 25 = complete control',
+        helpText: 'Enter the sum from the official ACT (past 4 weeks; 5 items each 1–5). 25 = complete control; ≤19 is the usual uncontrolled cutoff. Do not reconstruct item stems from memory if the form is available.',
       }),
     ],
     calculate(values) {
@@ -1563,10 +1564,10 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         helpText: 'Mean of items (0 = totally controlled, 6 = severely uncontrolled). ACQ-5/6/7 means are interpreted similarly.',
       }),
       selectInput('version', 'Version (informational)', [
-        { label: 'ACQ-5 (symptoms only)', value: '5' },
-        { label: 'ACQ-6 (+ rescue bronchodilator)', value: '6' },
-        { label: 'ACQ-7 (+ FEV1 %)', value: '7' },
-      ]),
+        { label: 'ACQ-5 (symptoms only)', value: '5', description: '5 symptom items (night waking, morning symptoms, limitation, shortness of breath, wheeze). Mean of 5.' },
+        { label: 'ACQ-6 (+ rescue bronchodilator)', value: '6', description: 'ACQ-5 plus daily rescue short-acting bronchodilator use. Mean of 6.' },
+        { label: 'ACQ-7 (+ FEV1 %)', value: '7', description: 'ACQ-6 plus pre-bronchodilator FEV1 % predicted. Mean of 7. Requires clinic spirometry.' },
+      ], undefined, 'Enter the already-calculated mean (0–6), not the raw sum. Version is informational only and does not change the number.'),
     ],
     calculate(values) {
       const score = round(Math.min(6, Math.max(0, num(values.total, 0))), 2);
@@ -1637,10 +1638,10 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     whenToUse: 'Quick guideline-style control classification at asthma visits (with exacerbation risk assessment).',
     whyUse: 'GINA’s standard well / partly / uncontrolled framework used worldwide.',
     inputs: [
-      yesNo('daySx', 'Daytime asthma symptoms more than twice/week?', 1),
-      yesNo('night', 'Any night waking due to asthma?', 1),
-      yesNo('reliever', 'SABA reliever needed more than twice/week?', 1),
-      yesNo('activity', 'Any activity limitation due to asthma?', 1),
+      yesNo('daySx', 'In the past 4 weeks: daytime asthma symptoms more than twice/week?', 1, 'GINA box: daytime symptoms >2 days in the past week, averaged over 4 weeks. “More than twice/week” is the cutoff (twice/week exactly is well controlled).'),
+      yesNo('night', 'In the past 4 weeks: any night waking due to asthma?', 1, 'Any nocturnal awakening due to asthma in the past 4 weeks (even once).'),
+      yesNo('reliever', 'In the past 4 weeks: SABA reliever needed more than twice/week?', 1, 'Count SABA used for symptoms, not doses taken only before exercise. Do not count ICS-formoterol used as MART/AIR reliever (GINA footnote).'),
+      yesNo('activity', 'In the past 4 weeks: any activity limitation due to asthma?', 1, 'Any limitation of work, school, sport, or daily activity attributed to asthma in the past 4 weeks.'),
     ],
     calculate(values) {
       const keys = ['daySx', 'night', 'reliever', 'activity'] as const;
@@ -1710,18 +1711,18 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     whenToUse: 'Quick comorbidity burden tally when full weighted Elixhauser/van Walraven scores are not computed.',
     whyUse: 'Elixhauser categories improve mortality risk adjustment vs demographics alone; count is a simple proxy.',
     inputs: [
-      yesNo('chf', 'Congestive heart failure', 1),
-      yesNo('arrhythmia', 'Cardiac arrhythmias', 1),
+      yesNo('chf', 'Congestive heart failure', 1, 'ICD/clinical CHF (systolic or diastolic), not isolated asymptomatic reduced EF unless coded as HF.'),
+      yesNo('arrhythmia', 'Cardiac arrhythmias', 1, 'Atrial fibrillation/flutter, heart block, or other coded arrhythmia — not sinus tachycardia alone.'),
       yesNo('valve', 'Valvular disease', 1),
-      yesNo('pulmCirc', 'Pulmonary circulation disorders', 1),
+      yesNo('pulmCirc', 'Pulmonary circulation disorders', 1, 'Pulmonary embolism, pulmonary hypertension, or other pulmonary circulatory disease — not ordinary COPD.'),
       yesNo('pvd', 'Peripheral vascular disease', 1),
       yesNo('htn', 'Hypertension (uncomplicated or complicated)', 1),
-      yesNo('paralysis', 'Paralysis', 1),
-      yesNo('neuro', 'Other neurological disorders', 1),
+      yesNo('paralysis', 'Paralysis', 1, 'Hemiplegia, paraplegia, or other paralysis (not isolated facial palsy).'),
+      yesNo('neuro', 'Other neurological disorders', 1, 'Parkinson disease, MS, epilepsy, neurodegenerative disease, etc. — exclude the paralysis category above.'),
       yesNo('cpd', 'Chronic pulmonary disease', 1),
       yesNo('dm', 'Diabetes (uncomplicated or complicated)', 1),
       yesNo('hypothyroid', 'Hypothyroidism', 1),
-      yesNo('renal', 'Renal failure', 1),
+      yesNo('renal', 'Renal failure', 1, 'Chronic renal failure / CKD with renal insufficiency — not isolated mild Cr bump.'),
       yesNo('liver', 'Liver disease', 1),
       yesNo('ulcer', 'Peptic ulcer disease excluding bleeding', 1),
       yesNo('aids', 'AIDS/HIV', 1),
@@ -1729,10 +1730,10 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
       yesNo('cancerMet', 'Metastatic cancer', 1),
       yesNo('cancerSolid', 'Solid tumor without metastasis', 1),
       yesNo('rheum', 'Rheumatoid arthritis / collagen vascular', 1),
-      yesNo('coag', 'Coagulopathy', 1),
-      yesNo('obesity', 'Obesity', 1),
-      yesNo('weightLoss', 'Weight loss', 1),
-      yesNo('electrolyte', 'Fluid and electrolyte disorders', 1),
+      yesNo('coag', 'Coagulopathy', 1, 'Coagulation defect or significant thrombocytopenia as coded — not therapeutic anticoagulation alone.'),
+      yesNo('obesity', 'Obesity', 1, 'Present if clinically/ICD obese; adult BMI ≥30 kg/m² is the usual equivalent.'),
+      yesNo('weightLoss', 'Weight loss', 1, 'Coded/clinical malnutrition or abnormal weight loss, not voluntary diet.'),
+      yesNo('electrolyte', 'Fluid and electrolyte disorders', 1, 'Hyponatremia, hypernatremia, acidosis, or other coded fluid/electrolyte disorder.'),
       yesNo('anemia', 'Deficiency / blood loss anemia', 1),
       yesNo('alcohol', 'Alcohol abuse', 1),
       yesNo('drugs', 'Drug abuse', 1),
@@ -1849,16 +1850,16 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     whyUse: 'Simple pictorial/ordinal scale predicting outcomes better than age alone.',
     inputs: [
       selectInput('cfs', 'Clinical Frailty Scale', [
-        { label: '1 — Very fit', value: 1 },
-        { label: '2 — Fit / well', value: 2 },
-        { label: '3 — Managing well', value: 3 },
-        { label: '4 — Living with very mild frailty / vulnerable', value: 4 },
-        { label: '5 — Living with mild frailty', value: 5 },
-        { label: '6 — Living with moderate frailty', value: 6 },
-        { label: '7 — Living with severe frailty', value: 7 },
-        { label: '8 — Living with very severe frailty', value: 8 },
-        { label: '9 — Terminally ill', value: 9 },
-      ]),
+        { label: '1 — Very fit', value: 1, description: 'Robust; exercises regularly; energetic and active' },
+        { label: '2 — Fit / well', value: 2, description: 'Fit; no active disease symptoms; seasonal or occasional activity' },
+        { label: '3 — Managing well', value: 3, description: 'Medical problems well controlled; walks only — not regularly active beyond walking' },
+        { label: '4 — Living with very mild frailty / vulnerable', value: 4, description: 'Slowed up; symptoms limit activities but not dependent on others for daily help' },
+        { label: '5 — Living with mild frailty', value: 5, description: 'Needs help with high-order IADLs (finances, transportation, heavy housework, medications)' },
+        { label: '6 — Living with moderate frailty', value: 6, description: 'Needs help with all outside activities and housekeeping; often problems with stairs and bathing' },
+        { label: '7 — Living with severe frailty', value: 7, description: 'Completely dependent for personal care but clinically stable (not at high risk of dying within ~6 months)' },
+        { label: '8 — Living with very severe frailty', value: 8, description: 'Completely dependent, approaching end of life; typically could not recover from even a minor illness' },
+        { label: '9 — Terminally ill', value: 9, description: 'Life expectancy <6 months who are not otherwise living with severe frailty (the 2-week baseline rule does not apply)' },
+      ], undefined, 'Score usual function ~2 weeks before this acute illness. CFS 9 is the exception (terminally ill, not otherwise severely frail). Use the descriptors below, not titles alone, to separate 5 vs 6 vs 7 vs 8 vs 9.'),
     ],
     calculate(values) {
       const score = num(values.cfs, 3);
@@ -1957,10 +1958,10 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     whyUse: 'Classic biologic frailty phenotype predictive of falls, disability, hospitalization, and death.',
     inputs: [
       yesNo('weightLoss', 'Unintentional weight loss (≥10 lb / ≥4.5 kg in past year)', 1),
-      yesNo('exhaustion', 'Exhaustion (CES-D effort/get-going items positive)', 1),
-      yesNo('weakness', 'Weakness (low grip strength for sex/BMI)', 1),
-      yesNo('slowness', 'Slowness (slow walk time over 15 ft for sex/height)', 1),
-      yesNo('lowActivity', 'Low physical activity (kcal/week below sex cutoffs)', 1),
+      yesNo('exhaustion', 'Exhaustion (CES-D effort/get-going items positive)', 1, 'CES-D: “everything I did was an effort” and “I could not get going.” Positive if either is a moderate amount of the time (3–4 days) or most of the time in the last week.'),
+      yesNo('weakness', 'Weakness (low grip strength for sex/BMI)', 1, 'Jamar dynamometer, lowest 20% (Fried 2001). Men: ≤29 kg if BMI ≤24; ≤30 kg if BMI 24.1–26; ≤30 kg if BMI 26.1–28; ≤32 kg if BMI >28. Women: ≤17 kg if BMI ≤23; ≤17.3 kg if BMI 23.1–26; ≤18 kg if BMI 26.1–29; ≤21 kg if BMI >29.'),
+      yesNo('slowness', 'Slowness (slow walk time over 15 ft for sex/height)', 1, 'Timed 15-ft (4.57 m) usual-pace walk. Men ≤173 cm: ≥7 s (taller ≥6 s). Women ≤159 cm: ≥7 s (taller ≥6 s).'),
+      yesNo('lowActivity', 'Low physical activity (kcal/week below sex cutoffs)', 1, 'Minnesota LTPA: <383 kcal/week in men, <270 kcal/week in women.'),
     ],
     calculate(values) {
       const keys = ['weightLoss', 'exhaustion', 'weakness', 'slowness', 'lowActivity'] as const;
@@ -2030,31 +2031,31 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     whyUse: 'Widely implemented inpatient fall risk tool with actionable cut bands.',
     inputs: [
       selectInput('history', 'History of falling (immediate or within 3 months)', [
-        { label: 'No (0)', value: 0 },
-        { label: 'Yes (25)', value: 25 },
-      ]),
+        { label: 'No (0)', value: 0, description: 'No fall during this admission and none in the preceding 3 months' },
+        { label: 'Yes (25)', value: 25, description: 'Any fall during this hospitalization or in the last 3 months (including the fall that led to admission)' },
+      ], undefined, '“Immediate” means a fall this admission; also count any fall in the prior 3 months.'),
       selectInput('secondary', 'Secondary diagnosis (≥2 medical diagnoses)', [
-        { label: 'No (0)', value: 0 },
-        { label: 'Yes (15)', value: 15 },
+        { label: 'No (0)', value: 0, description: 'Only one medical diagnosis on the problem list' },
+        { label: 'Yes (15)', value: 15, description: 'More than one medical diagnosis (comorbidity present)' },
       ]),
       selectInput('ambulatory', 'Ambulatory aid', [
-        { label: 'None / bed rest / nurse assist (0)', value: 0 },
-        { label: 'Crutches / cane / walker (15)', value: 15 },
-        { label: 'Furniture / walls for support (30)', value: 30 },
-      ]),
+        { label: 'None / bed rest / nurse assist (0)', value: 0, description: 'Walks without a device, is on bed rest, or walks only with nurse assistance (nurse is not scored as an “aid”)' },
+        { label: 'Crutches / cane / walker (15)', value: 15, description: 'Uses crutches, a cane, or a walker as a prescribed walking aid' },
+        { label: 'Furniture / walls for support (30)', value: 30, description: 'Clutches furniture, walls, or other people for support rather than a prescribed aid — higher-risk gait' },
+      ], undefined, 'Score the aid actually used when walking. Furniture-walking is 30, not 15.'),
       selectInput('iv', 'IV / heparin lock', [
-        { label: 'No (0)', value: 0 },
-        { label: 'Yes (20)', value: 20 },
+        { label: 'No (0)', value: 0, description: 'No intravenous therapy or saline/heparin lock' },
+        { label: 'Yes (20)', value: 20, description: 'Any IV infusion or heparin/saline lock currently in place' },
       ]),
       selectInput('gait', 'Gait / transferring', [
-        { label: 'Normal / bedrest / immobile (0)', value: 0 },
-        { label: 'Weak (10)', value: 10 },
-        { label: 'Impaired (20)', value: 20 },
-      ]),
+        { label: 'Normal / bedrest / immobile (0)', value: 0, description: 'Head erect, arms swinging, stride without hesitation; or bedrest/immobile' },
+        { label: 'Weak (10)', value: 10, description: 'Stooped but lifts head without losing balance; short steps; may shuffle' },
+        { label: 'Impaired (20)', value: 20, description: 'Difficulty rising from chair (pushes/bounces); head down watching the ground; shuffles; grasps furniture/person/aid and cannot walk without support' },
+      ], undefined, 'Observe transfer and gait. Wheelchair: score the gait used when transferring.'),
       selectInput('mental', 'Mental status', [
-        { label: 'Oriented to own ability (0)', value: 0 },
-        { label: 'Overestimates / forgets limits (15)', value: 15 },
-      ]),
+        { label: 'Oriented to own ability (0)', value: 0, description: 'Patient correctly assesses ability to walk/transfer' },
+        { label: 'Overestimates / forgets limits (15)', value: 15, description: 'Claims independence but needs assistance, or forgets limitations' },
+      ], undefined, 'Ask: “Are you able to go to the bathroom alone or do you need help?” If they claim independence but need assistance, score overestimates/forgets limits. This is not person/place/time orientation.'),
     ],
     calculate(values) {
       const score =
@@ -2124,19 +2125,19 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     whenToUse: 'Inpatient fall risk screening using Hendrich II (alternative to Morse).',
     whyUse: 'Brief model including confusion, depression, elimination, dizziness, sex, antiepileptics, benzos, and get-up-and-go.',
     inputs: [
-      yesNo('confusion', 'Confusion / disorientation / impulsivity', 4),
-      yesNo('depression', 'Symptomatic depression', 2),
-      yesNo('elimination', 'Altered elimination', 1),
-      yesNo('dizziness', 'Dizziness / vertigo', 1),
+      yesNo('confusion', 'Confusion / disorientation / impulsivity', 4, 'Observed at this assessment: confusion, disorientation, or impulsivity (not remote resolved delirium).'),
+      yesNo('depression', 'Symptomatic depression', 2, 'Current symptomatic depression. Do not score if in therapeutic control.'),
+      yesNo('elimination', 'Altered elimination', 1, 'Incontinence, nocturia, frequency, urgency/stress incontinence, diarrhea or cathartics, or toileting self-care deficit. Foley counts only if those symptoms occur while in place.'),
+      yesNo('dizziness', 'Dizziness / vertigo', 1, 'Current dizziness, vertigo, or lightheadedness affecting mobility.'),
       yesNo('male', 'Male sex', 1),
-      yesNo('antiepileptic', 'Any prescribed antiepileptic', 2),
-      yesNo('benzo', 'Any prescribed benzodiazepine', 1),
+      yesNo('antiepileptic', 'Any prescribed antiepileptic', 2, 'Any scheduled antiepileptic, including non-seizure indications (e.g. gabapentin, valproate for mood/pain).'),
+      yesNo('benzo', 'Any prescribed benzodiazepine', 1, 'Any benzodiazepine on the MAR (scheduled or PRN that is being used).'),
       selectInput('getup', 'Get-up-and-go test', [
-        { label: 'Able to rise in a single movement (0)', value: 0 },
-        { label: 'Pushes up, successful in one attempt (1)', value: 1 },
-        { label: 'Multiple attempts but successful (3)', value: 3 },
-        { label: 'Unable to rise without assistance (4)', value: 4 },
-      ]),
+        { label: 'Able to rise in a single movement (0)', value: 0, description: 'Rises from the chair in one smooth movement without using arms' },
+        { label: 'Pushes up, successful in one attempt (1)', value: 1, description: 'Uses arms to push up from the chair or bed but stands on the first try' },
+        { label: 'Multiple attempts but successful (3)', value: 3, description: 'Needs more than one attempt (rocks, repositions) but eventually stands without a helper' },
+        { label: 'Unable to rise without assistance (4)', value: 4, description: 'Cannot stand without a person assisting — do not coach through a failed attempt' },
+      ], undefined, 'Not timed TUG. Sit in a chair (preferred) or on the side of the bed, palms on thighs, stand without assistance. Score how they rise.'),
     ],
     calculate(values) {
       const score =
@@ -2200,7 +2201,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         max: 14,
         step: 1,
         defaultValue: 10,
-        helpText: 'Sum of 6 items (appetite, weight loss, mobility, stress/acute disease, neuropsychological, BMI or calf circumference)',
+        helpText: 'Enter the sum from the official MNA-SF (Nestlé) form: 6 items (appetite, weight loss, mobility, stress/acute disease, neuropsychological, BMI or calf circumference). 12–14 normal; 8–11 at risk; 0–7 malnourished.',
       }),
     ],
     calculate(values) {
