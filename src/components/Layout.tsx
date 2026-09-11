@@ -1,53 +1,58 @@
-import { Link, Outlet, useNavigate, useSearchParams } from 'react-router-dom';
-import { calculators } from '../data/calculators';
+import { useEffect, useState } from 'react';
+import { Link, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 export function Layout() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [params] = useSearchParams();
-  const q = params.get('q') ?? '';
+  const urlQ = params.get('q') ?? '';
+  const [draft, setDraft] = useState(urlQ);
+
+  useEffect(() => {
+    setDraft(urlQ);
+  }, [urlQ]);
 
   return (
     <>
       <header className="app-header">
         <div className="app-header-inner">
-          <Link to="/" className="brand">
-            <div className="brand-mark">MD</div>
-            <div className="brand-text">
-              <strong>MedCalc Live</strong>
-              <span>Evidence-based clinical calculators</span>
-            </div>
+          <Link to="/" className="logo-mark" aria-label="MedCalc home">
+            <span className="logo-md">MD+</span>
+            <span className="logo-calc">CALC</span>
           </Link>
-          <form
-            className="header-search"
-            onSubmit={(e) => {
-              e.preventDefault();
-              const fd = new FormData(e.currentTarget);
-              const query = String(fd.get('q') ?? '').trim();
-              navigate(query ? `/?q=${encodeURIComponent(query)}` : '/');
-            }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="11" cy="11" r="7" />
-              <path d="M20 20l-3.5-3.5" />
-            </svg>
+          <div className="header-search">
             <input
-              name="q"
-              key={q}
-              defaultValue={q}
-              placeholder="Search calculators, scores, equations…"
-              aria-label="Search calculators"
+              type="search"
+              value={draft}
+              placeholder="Calculator, Specialty, Condition"
+              aria-label="Search calculators, specialties, conditions"
+              autoComplete="off"
+              onChange={(e) => {
+                const value = e.target.value;
+                setDraft(value);
+                const next = new URLSearchParams();
+                if (value) next.set('q', value);
+                const search = next.toString();
+                navigate({ pathname: '/', search }, { replace: true });
+              }}
             />
-          </form>
-          <div className="header-meta">{calculators.length}+ calculators</div>
+            <svg
+              className="search-icon"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.3-4.3" />
+            </svg>
+          </div>
         </div>
       </header>
-      <main className="main">
-        <Outlet />
-      </main>
-      <footer className="footer">
-        <strong>Educational use only.</strong> Not a substitute for clinical judgment. Verify formulas and local
-        protocols before patient care decisions. Inspired by MDCalc-style decision support tools.
-      </footer>
+      <Outlet key={location.pathname} />
     </>
   );
 }

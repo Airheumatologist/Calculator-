@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getCalculator } from '../data/calculators';
-import { CATEGORIES } from '../types/calculator';
 import { CalculatorForm } from '../components/CalculatorForm';
 import { LiveResult } from '../components/LiveResult';
 import { EvidencePanel } from '../components/EvidencePanel';
@@ -39,8 +38,6 @@ export function CalculatorPage() {
   const [formState, setFormState] = useState(() => ({ calcId, values: initialValues(calc) }));
   const [tab, setTab] = useState<'evidence' | 'next'>('next');
 
-  // Derive-on-render reset: an effect would leave one render (and one
-  // calculate() call) pairing the new calculator with the previous values.
   let values = formState.values;
   if (formState.calcId !== calcId) {
     values = initialValues(calc);
@@ -88,40 +85,30 @@ export function CalculatorPage() {
 
   if (!calc || !result) {
     return (
-      <div className="empty-state">
-        Calculator not found. <Link to="/">Back to home</Link>
-      </div>
+      <main className="calc-page">
+        <div className="empty-state">
+          Calculator not found. <Link to="/">Back to home</Link>
+        </div>
+      </main>
     );
   }
 
-  const cat = CATEGORIES.find((c) => c.id === calc.category);
-
   return (
-    <>
-      <div className="calc-page-header">
-        <div className="breadcrumb">
-          <Link to="/">Home</Link>
-          {' / '}
-          <Link to={`/?cat=${calc.category}`}>{cat?.name ?? calc.category}</Link>
-          {' / '}
-          <span>{calc.shortName}</span>
-        </div>
-        <h1>{calc.name}</h1>
-        <p className="lede">{calc.description}</p>
-      </div>
+    <main className="calc-page">
+      <Link to="/" className="calc-back">
+        All calculators
+      </Link>
+      <h1>{calc.name}</h1>
+      <p className="lede">{calc.description}</p>
 
       <div className="when-why">
-        <div className="panel">
-          <div className="panel-body">
-            <h3>When to use</h3>
-            <p>{calc.whenToUse}</p>
-          </div>
+        <div className="meta-block">
+          <h2>When to use</h2>
+          <p>{calc.whenToUse}</p>
         </div>
-        <div className="panel">
-          <div className="panel-body">
-            <h3>Why use</h3>
-            <p>{calc.whyUse}</p>
-          </div>
+        <div className="meta-block">
+          <h2>Why use</h2>
+          <p>{calc.whyUse}</p>
         </div>
       </div>
 
@@ -155,6 +142,6 @@ export function CalculatorPage() {
 
       {tab === 'next' && <NextStepsPanel calc={calc} />}
       {tab === 'evidence' && <EvidencePanel calc={calc} />}
-    </>
+    </main>
   );
 }
