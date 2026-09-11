@@ -765,15 +765,15 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
     whyUse: 'Universal PD stage language; complements UPDRS for functional distribution of disease.',
     inputs: [
       selectInput('stage', 'Hoehn and Yahr stage', [
-        { label: '0 — No signs of disease', value: 0 },
-        { label: '1 — Unilateral involvement only', value: 1 },
-        { label: '1.5 — Unilateral and axial involvement (modified)', value: 1.5 },
-        { label: '2 — Bilateral without balance impairment', value: 2 },
-        { label: '2.5 — Mild bilateral; recovery on pull test (modified)', value: 2.5 },
-        { label: '3 — Bilateral; postural instability; physically independent', value: 3 },
-        { label: '4 — Severe disability; still able to walk/stand unassisted', value: 4 },
-        { label: '5 — Wheelchair bound or bedridden unless aided', value: 5 },
-      ]),
+        { label: '0 — No signs of disease', value: 0, description: 'No parkinsonism' },
+        { label: '1 — Unilateral involvement only', value: 1, description: 'Signs on one side only; no axial (neck/trunk) involvement' },
+        { label: '1.5 — Unilateral and axial involvement (modified)', value: 1.5, description: 'Unilateral plus axial (neck/trunk) involvement' },
+        { label: '2 — Bilateral without balance impairment', value: 2, description: 'Bilateral signs; recovers on pull test in 0–2 steps' },
+        { label: '2.5 — Mild bilateral; recovery on pull test (modified)', value: 2.5, description: 'Bilateral; ≥3 steps on pull test but recovers unassisted' },
+        { label: '3 — Bilateral; postural instability; physically independent', value: 3, description: 'Would fall on pull test if not caught; still physically independent' },
+        { label: '4 — Severe disability; still able to walk/stand unassisted', value: 4, description: 'Severe disability but can walk or stand without assistance' },
+        { label: '5 — Wheelchair bound or bedridden unless aided', value: 5, description: 'Wheelchair or bedridden unless aided' },
+      ], 0, 'Pull test (retropulsion): patient stands, feet comfortably apart, eyes open. Warn that you will pull the shoulders backward and they may take steps. Stand behind, ready to catch. After a gentle demonstration pull, deliver one brisk pull. 0–2 steps = recovers (stage ≤2 if otherwise bilateral); ≥3 steps but recovers unassisted = modified 2.5; would fall if not caught = stage 3. Stage 1.5 = unilateral plus axial (neck/trunk) involvement.'),
     ],
     calculate(values) {
       const stage = num(values.stage, 0);
@@ -841,7 +841,10 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         actions: ['Fall risk program', 'Bone health', 'Medication timing review', 'Consider advanced therapies if motor complications'],
       },
     ],
-    pearls: ['Pull test defines postural instability for stage 3.', 'Stage does not capture non-motor burden.'],
+    pearls: [
+      'Pull test: warn, demonstration pull, then one brisk pull from behind; ready to catch. 0–2 steps recovers (≤2); ≥3 steps but unassisted = 2.5; would fall if not caught = 3.',
+      'Stage does not capture non-motor burden.',
+    ],
   },
   {
     id: 'edss-simp',
@@ -1035,7 +1038,13 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Interpret an already-administered SLUMS total for MCI vs dementia ranges.',
     whyUse: 'Free, sensitive cognitive screen with education-specific cutoffs used widely in VA/geriatrics.',
     inputs: [
-      numberInput('score', 'SLUMS total score', { min: 0, max: 30, defaultValue: 27 }),
+      numberInput('score', 'SLUMS total score', {
+        min: 0,
+        max: 30,
+        defaultValue: 27,
+        helpText:
+          'Administer the official SLU/VA SLUMS form (free for clinical use), then enter the 0–30 total. Items: (1) day of week 0–1; (2) year 0–1; (3) state 0–1; (4) $100 minus $3 five times (attention) 0–3; (5) 1-minute animal naming 0–3 (0 = 0–4 animals, 1 = 5–9, 2 = 10–14, 3 = ≥15); (6) delayed recall of five objects named at registration 0–5; (7) digits backward 0–2; (8) clock: hour markers 2, time (ten to eleven) 2; (9) triangle in square / size 0–1; (10) story: Jill/Jack paragraph questions 0–8. Do not reprint a pirated worksheet — use the official PDF.',
+      }),
       selectInput('education', 'Education', [
         { label: 'High school graduate or higher', value: 'hs' },
         { label: 'Less than high school', value: 'less' },
@@ -1115,7 +1124,12 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         ],
       },
     ],
-    pearls: ['Always adjust interpretation for education.', 'Not a substitute for neuropsychological testing.'],
+    pearls: [
+      'Always adjust interpretation for education (HS+ vs <HS).',
+      'SLUMS is free for clinical use (Saint Louis University / VA). Use the official examination PDF; this tool interprets the total.',
+      'Clock command on SLUMS is ten to eleven (not Mini-Cog 11:10). Animal naming is 1 minute.',
+      'Not a substitute for neuropsychological testing.',
+    ],
   },
   {
     id: 'clock-draw',
@@ -1128,13 +1142,13 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
     whyUse: 'Fast bedside screen sensitive to dementia and executive dysfunction; pairs with other screens.',
     inputs: [
       selectInput('score', 'Clock drawing score (0–5)', [
-        { label: '5 — Perfect clock (circle, numbers, hands correct)', value: 5 },
-        { label: '4 — Minor visuospatial errors', value: 4 },
-        { label: '3 — Inaccurate representation of time / moderate errors', value: 3 },
-        { label: '2 — Moderate visuospatial disorganization of numbers', value: 2 },
-        { label: '1 — Severe disorganization; numbers missing/wrong', value: 1 },
-        { label: '0 — No reasonable representation of a clock', value: 0 },
-      ], 5, 'Shulman-style 0–5 scoring example; other scales (0–10, Watson) exist'),
+        { label: '5 — Perfect clock (circle, numbers, hands correct)', value: 5, description: 'Circle, numbers, and hands at 11:10 with a longer minute hand' },
+        { label: '4 — Minor visuospatial errors', value: 4, description: '11:10 is correct, with only minor spacing errors' },
+        { label: '3 — Inaccurate representation of time / moderate errors', value: 3, description: 'Number layout is preserved, but 11:10 is wrong' },
+        { label: '2 — Moderate visuospatial disorganization of numbers', value: 2, description: 'Numbers crowded, missing, or reversed so that 11:10 cannot be shown' },
+        { label: '1 — Severe disorganization; numbers missing/wrong', value: 1, description: 'Numbers are not in a recognizable sequence' },
+        { label: '0 — No reasonable representation of a clock', value: 0, description: 'No reasonable clock' },
+      ], 5, 'Give a blank page (or a pre-drawn circle). Say: “Draw a clock. Put in all the numbers. Set the hands to 10 minutes past 11 (11:10).” Shulman 0–5 scoring. Other scales (0–10, Watson) exist — do not mix them.'),
     ],
     calculate(values) {
       const score = num(values.score, 5);
@@ -1189,7 +1203,10 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         actions: ['Full cognitive screening (MoCA/SLUMS)', 'Functional history', 'Reversible cause labs'],
       },
     ],
-    pearls: ['Specify time setting used (e.g., 11:10) for hand placement scoring.', 'Education and motor impairment affect performance.'],
+    pearls: [
+      'Command: “Draw a clock. Put in all the numbers. Set the hands to 10 minutes past 11 (11:10).”',
+      'Score 3 is wrong 11:10 with preserved layout — not generic “moderate errors.” Education and motor impairment affect performance.',
+    ],
   },
   {
     id: 'madrs',

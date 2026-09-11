@@ -950,16 +950,28 @@ export const missingNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Rapid cognitive screening in primary care and geriatric assessment.',
     whyUse: 'Quick, relatively education-insensitive screen for cognitive impairment.',
     inputs: [
-      selectInput('recall', '3-word recall (words recalled spontaneously)', [
-        { label: '0 words (0)', value: 0 },
-        { label: '1 word (1)', value: 1 },
-        { label: '2 words (2)', value: 2 },
-        { label: '3 words (3)', value: 3 },
-      ]),
-      selectInput('clock', 'Clock draw (CDT)', [
-        { label: 'Abnormal clock (0)', value: 0, description: 'Wrong time, missing numbers, poor spacing, etc.' },
-        { label: 'Normal clock (2)', value: 2, description: 'All numbers present in correct order/position; hands show stated time' },
-      ]),
+      selectInput(
+        'recall',
+        '3-word recall (words recalled spontaneously)',
+        [
+          { label: '0 words (0)', value: 0, description: 'None of the three words recalled after the clock' },
+          { label: '1 word (1)', value: 1, description: 'One word recalled, uncued' },
+          { label: '2 words (2)', value: 2, description: 'Two words recalled, uncued' },
+          { label: '3 words (3)', value: 3, description: 'All three words recalled, uncued' },
+        ],
+        0,
+        'Say three unrelated words (banana, sunrise, chair — or apple, watch, penny). Patient repeats them. Then do the clock. Then ask for the words again without cues. 1 point per word recalled spontaneously.',
+      ),
+      selectInput(
+        'clock',
+        'Clock draw (CDT)',
+        [
+          { label: 'Abnormal clock (0)', value: 0, description: 'Refusal, missing numbers, wrong time, or any clock that is not a Mini-Cog pass — no partial credit' },
+          { label: 'Normal clock (2)', value: 2, description: 'Numbers in correct sequence and approximately correct position (12, 3, 6, 9 in place) AND hands show 11:10. Hand-length difference is not required.' },
+        ],
+        0,
+        'After registering the three words, say: “Draw a clock. Put in all the numbers. Set the hands to 10 past 11 (11:10).” Score 2 only if both number layout and 11:10 are correct; otherwise 0.',
+      ),
     ],
     calculate(values) {
       const recall = num(values.recall, 0);
@@ -1010,8 +1022,8 @@ export const missingNeuroPsychCalcs: Calculator[] = [
       },
     ],
     pearls: [
-      'Word lists often: apple, watch, penny (or similar validated lists).',
-      'Clock: ask patient to draw clock showing a specific time (e.g., 11:10).',
+      'Sequence is register 3 words → clock (distractor) → uncued recall. Do not cue the words.',
+      'Mini-Cog clock is all-or-none (0 or 2). Poor spacing alone does not fail the clock if 12/3/6/9 are in place and hands show 11:10.',
     ],
   },
   {

@@ -1,6 +1,28 @@
 import type { Calculator } from '../../types/calculator';
 import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
 
+/** CIWA-Ar select: official Sullivan 1989 anchors on 0/1/4/7 (orientation 0–4). Unlabeled ranks stay interpolations. */
+function ciwaSelect(
+  id: string,
+  label: string,
+  helpText: string,
+  anchors: Partial<Record<number, string>>,
+  max = 7,
+) {
+  return selectInput(
+    id,
+    label,
+    Array.from({ length: max + 1 }, (_, i) => ({
+      label: anchors[i] ? `${i} — ${anchors[i]}` : String(i),
+      value: i,
+      description: anchors[i]
+        ?? 'Interpolate between the official 0 / 1 / 4 / 7 anchors (Sullivan 1989 leaves this rank unlabeled).',
+    })),
+    0,
+    helpText,
+  );
+}
+
 export const giNeuroPsychCalcs: Calculator[] = [
   {
     id: 'child-pugh',
@@ -424,51 +446,183 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Acute ischemic stroke severity and communication.',
     whyUse: 'Standard for tPA/thrombectomy trials and serial exams.',
     inputs: [
-      selectInput('loc', '1a. LOC (0–3)', [
-        { label: '0 — Alert', value: 0 }, { label: '1 — Not alert, arousable', value: 1 }, { label: '2 — Not alert, obtunded', value: 2 }, { label: '3 — Unresponsive / reflex only', value: 3 },
-      ]),
-      selectInput('locQ', '1b. LOC questions (0–2)', [
-        { label: '0 — Both correct', value: 0 }, { label: '1 — One correct', value: 1 }, { label: '2 — Neither correct', value: 2 },
-      ]),
-      selectInput('locC', '1c. LOC commands (0–2)', [
-        { label: '0 — Both correct', value: 0 }, { label: '1 — One correct', value: 1 }, { label: '2 — Neither correct', value: 2 },
-      ]),
-      selectInput('gaze', '2. Best gaze (0–2)', [
-        { label: '0 — Normal', value: 0 }, { label: '1 — Partial gaze palsy', value: 1 }, { label: '2 — Forced deviation', value: 2 },
-      ]),
-      selectInput('visual', '3. Visual (0–3)', [
-        { label: '0 — No loss', value: 0 }, { label: '1 — Partial hemianopia', value: 1 }, { label: '2 — Complete hemianopia', value: 2 }, { label: '3 — Bilateral / blind', value: 3 },
-      ]),
-      selectInput('facial', '4. Facial palsy (0–3)', [
-        { label: '0 — Normal', value: 0 }, { label: '1 — Minor', value: 1 }, { label: '2 — Partial', value: 2 }, { label: '3 — Complete', value: 3 },
-      ]),
-      selectInput('armL', '5a. Motor arm left (0–4)', [
-        { label: '0 — No drift', value: 0 }, { label: '1 — Drift', value: 1 }, { label: '2 — Some effort vs gravity', value: 2 }, { label: '3 — No effort vs gravity', value: 3 }, { label: '4 — No movement', value: 4 },
-      ]),
-      selectInput('armR', '5b. Motor arm right (0–4)', [
-        { label: '0 — No drift', value: 0 }, { label: '1 — Drift', value: 1 }, { label: '2 — Some effort vs gravity', value: 2 }, { label: '3 — No effort vs gravity', value: 3 }, { label: '4 — No movement', value: 4 },
-      ]),
-      selectInput('legL', '6a. Motor leg left (0–4)', [
-        { label: '0 — No drift', value: 0 }, { label: '1 — Drift', value: 1 }, { label: '2 — Some effort vs gravity', value: 2 }, { label: '3 — No effort vs gravity', value: 3 }, { label: '4 — No movement', value: 4 },
-      ]),
-      selectInput('legR', '6b. Motor leg right (0–4)', [
-        { label: '0 — No drift', value: 0 }, { label: '1 — Drift', value: 1 }, { label: '2 — Some effort vs gravity', value: 2 }, { label: '3 — No effort vs gravity', value: 3 }, { label: '4 — No movement', value: 4 },
-      ]),
-      selectInput('ataxia', '7. Limb ataxia (0–2)', [
-        { label: '0 — Absent', value: 0 }, { label: '1 — One limb', value: 1 }, { label: '2 — Two limbs', value: 2 },
-      ]),
-      selectInput('sensory', '8. Sensory (0–2)', [
-        { label: '0 — Normal', value: 0 }, { label: '1 — Mild–moderate loss', value: 1 }, { label: '2 — Severe / total loss', value: 2 },
-      ]),
-      selectInput('language', '9. Best language (0–3)', [
-        { label: '0 — No aphasia', value: 0 }, { label: '1 — Mild–moderate', value: 1 }, { label: '2 — Severe', value: 2 }, { label: '3 — Mute / global', value: 3 },
-      ]),
-      selectInput('dysarthria', '10. Dysarthria (0–2)', [
-        { label: '0 — Normal', value: 0 }, { label: '1 — Mild–moderate', value: 1 }, { label: '2 — Severe / anarthric', value: 2 },
-      ]),
-      selectInput('extinction', '11. Extinction / inattention (0–2)', [
-        { label: '0 — No abnormality', value: 0 }, { label: '1 — Mild (one modality)', value: 1 }, { label: '2 — Profound (more than one)', value: 2 },
-      ]),
+      selectInput(
+        'loc',
+        '1a. LOC (0–3)',
+        [
+          { label: '0 — Alert', value: 0, description: 'Keenly responsive' },
+          { label: '1 — Not alert, arousable', value: 1, description: 'Arousable by minor stimulation to obey, answer, or respond' },
+          { label: '2 — Not alert, obtunded', value: 2, description: 'Requires repeated or strong/painful stimulation for non-stereotyped movements' },
+          { label: '3 — Unresponsive / reflex only', value: 3, description: 'Reflex motor or autonomic responses only, or flaccid and areflexic' },
+        ],
+        0,
+        'Must pick a score even if ET tube, language barrier, or bandages. Score 3 only if no movement other than reflex posturing to noxious stimulation.',
+      ),
+      selectInput(
+        'locQ',
+        '1b. LOC questions (0–2)',
+        [
+          { label: '0 — Both correct', value: 0, description: 'Month and age both correct on first attempt' },
+          { label: '1 — One correct', value: 1, description: 'One correct, or intubated / severe dysarthria / language barrier' },
+          { label: '2 — Neither correct', value: 2, description: 'Neither correct, or aphasic / stuporous with no comprehension' },
+        ],
+        0,
+        'Ask: “What month is it?” and “How old are you?” Grade the first answer. Do not coach. Not date, place, or president.',
+      ),
+      selectInput(
+        'locC',
+        '1c. LOC commands (0–2)',
+        [
+          { label: '0 — Both correct', value: 0, description: 'Both one-step commands performed' },
+          { label: '1 — One correct', value: 1, description: 'One command performed (credit an unequivocal attempt limited by weakness)' },
+          { label: '2 — Neither correct', value: 2, description: 'Neither command performed' },
+        ],
+        0,
+        'Commands: (1) open and close the eyes; (2) grip and release the non-paretic hand. Substitute another one-step command if the hand is unusable. Do not coach.',
+      ),
+      selectInput(
+        'gaze',
+        '2. Best gaze (0–2)',
+        [
+          { label: '0 — Normal', value: 0, description: 'Voluntary or oculocephalic gaze intact' },
+          { label: '1 — Partial gaze palsy', value: 1, description: 'Abnormal gaze in one or both eyes, but not forced deviation or total paresis' },
+          { label: '2 — Forced deviation', value: 2, description: 'Forced deviation or total gaze paresis not overcome by oculocephalic maneuver' },
+        ],
+        0,
+        'Test voluntary or oculocephalic (doll’s-eye) gaze. Do not use calorics. Isolated cranial-nerve palsy (e.g. III, IV, VI) scores 1.',
+      ),
+      selectInput(
+        'visual',
+        '3. Visual (0–3)',
+        [
+          { label: '0 — No loss', value: 0, description: 'No visual loss by confrontation' },
+          { label: '1 — Partial hemianopia', value: 1, description: 'Partial (quadrantanopia or clear asymmetry, including extinction)' },
+          { label: '2 — Complete hemianopia', value: 2, description: 'Dense visual loss in an entire hemifield' },
+          { label: '3 — Bilateral / blind', value: 3, description: 'Bilateral hemianopia, including cortical blindness; any-cause blindness scores 3' },
+        ],
+        0,
+        'Confrontation visual fields, upper and lower quadrants. If unilaterally blind, test the remaining eye. Patients who are blind from any cause score 3.',
+      ),
+      selectInput(
+        'facial',
+        '4. Facial palsy (0–3)',
+        [
+          { label: '0 — Normal', value: 0, description: 'Symmetrical movement' },
+          { label: '1 — Minor', value: 1, description: 'Flattened nasolabial fold or asymmetrical smile' },
+          { label: '2 — Partial', value: 2, description: 'Total or near-total paralysis of the lower face' },
+          { label: '3 — Complete', value: 3, description: 'Absent movement in upper and lower face (one or both sides)' },
+        ],
+        0,
+        'Ask the patient to show teeth or raise eyebrows and close eyes. If stuporous, score grimace to noxious stimulation.',
+      ),
+      selectInput(
+        'armL',
+        '5a. Motor arm left (0–4)',
+        [
+          { label: '0 — No drift', value: 0, description: 'Holds 90° sitting or 45° supine for full 10 s' },
+          { label: '1 — Drift', value: 1, description: 'Falls before 10 s but does not hit the bed' },
+          { label: '2 — Some effort vs gravity', value: 2, description: 'Some effort against gravity; cannot get to or maintain 90°/45°; drifts to bed' },
+          { label: '3 — No effort vs gravity', value: 3, description: 'Limb falls; no effort against gravity' },
+          { label: '4 — No movement', value: 4, description: 'No movement' },
+        ],
+        0,
+        'Palms down, 90° sitting or 45° supine × 10 s; test the non-paretic arm first. Amputation or shoulder fusion = UN off-form (do not enter 0 or 4).',
+      ),
+      selectInput(
+        'armR',
+        '5b. Motor arm right (0–4)',
+        [
+          { label: '0 — No drift', value: 0, description: 'Holds 90° sitting or 45° supine for full 10 s' },
+          { label: '1 — Drift', value: 1, description: 'Falls before 10 s but does not hit the bed' },
+          { label: '2 — Some effort vs gravity', value: 2, description: 'Some effort against gravity; cannot get to or maintain 90°/45°; drifts to bed' },
+          { label: '3 — No effort vs gravity', value: 3, description: 'Limb falls; no effort against gravity' },
+          { label: '4 — No movement', value: 4, description: 'No movement' },
+        ],
+        0,
+        'Palms down, 90° sitting or 45° supine × 10 s; test the non-paretic arm first. Amputation or shoulder fusion = UN off-form (do not enter 0 or 4).',
+      ),
+      selectInput(
+        'legL',
+        '6a. Motor leg left (0–4)',
+        [
+          { label: '0 — No drift', value: 0, description: 'Holds 30° supine for full 5 s' },
+          { label: '1 — Drift', value: 1, description: 'Falls before 5 s but does not hit the bed' },
+          { label: '2 — Some effort vs gravity', value: 2, description: 'Some effort against gravity; cannot get to or maintain 30°; drifts to bed' },
+          { label: '3 — No effort vs gravity', value: 3, description: 'Limb falls; no effort against gravity' },
+          { label: '4 — No movement', value: 4, description: 'No movement' },
+        ],
+        0,
+        'Supine, raise to 30° × 5 s; test the non-paretic leg first. Hip fusion or amputation = UN off-form (do not enter 0 or 4).',
+      ),
+      selectInput(
+        'legR',
+        '6b. Motor leg right (0–4)',
+        [
+          { label: '0 — No drift', value: 0, description: 'Holds 30° supine for full 5 s' },
+          { label: '1 — Drift', value: 1, description: 'Falls before 5 s but does not hit the bed' },
+          { label: '2 — Some effort vs gravity', value: 2, description: 'Some effort against gravity; cannot get to or maintain 30°; drifts to bed' },
+          { label: '3 — No effort vs gravity', value: 3, description: 'Limb falls; no effort against gravity' },
+          { label: '4 — No movement', value: 4, description: 'No movement' },
+        ],
+        0,
+        'Supine, raise to 30° × 5 s; test the non-paretic leg first. Hip fusion or amputation = UN off-form (do not enter 0 or 4).',
+      ),
+      selectInput(
+        'ataxia',
+        '7. Limb ataxia (0–2)',
+        [
+          { label: '0 — Absent', value: 0, description: 'No ataxia, or paralyzed / does not understand (score 0, not UN)' },
+          { label: '1 — One limb', value: 1, description: 'Ataxia in one limb, out of proportion to weakness' },
+          { label: '2 — Two limbs', value: 2, description: 'Ataxia in two limbs, out of proportion to weakness' },
+        ],
+        0,
+        'Finger-nose-finger and heel-shin. Score only if out of proportion to weakness. Paralyzed or does not understand → 0. Amputation or joint fusion = UN off-form.',
+      ),
+      selectInput(
+        'sensory',
+        '8. Sensory (0–2)',
+        [
+          { label: '0 — Normal', value: 0, description: 'No sensory loss to pinprick' },
+          { label: '1 — Mild–moderate loss', value: 1, description: 'Aware of being touched, but pinprick is less sharp or dull on the affected side' },
+          { label: '2 — Severe / total loss', value: 2, description: 'Unaware of being touched on face, arm, and leg' },
+        ],
+        0,
+        'Pinprick (or noxious stimulus if consciousness is impaired). Test face, arm, and leg. Stuporous / aphasic: grimace or withdrawal counts as awareness.',
+      ),
+      selectInput(
+        'language',
+        '9. Best language (0–3)',
+        [
+          { label: '0 — No aphasia', value: 0, description: 'Normal comprehension and expression' },
+          { label: '1 — Mild–moderate', value: 1, description: 'Loss of fluency or comprehension, but examiner can still identify picture or naming-card content from the response' },
+          { label: '2 — Severe', value: 2, description: 'Fragmentary expression; listener carries the burden; cannot identify materials from the response' },
+          { label: '3 — Mute / global', value: 3, description: 'No usable speech or auditory comprehension; also score 3 if item 1a is 3' },
+        ],
+        0,
+        'Use the NIHSS cookie-theft picture, naming card, and sentence reading. If 1a LOC = 3, language scores 3. Coma / unresponsive = 3.',
+      ),
+      selectInput(
+        'dysarthria',
+        '10. Dysarthria (0–2)',
+        [
+          { label: '0 — Normal', value: 0, description: 'Clear articulation' },
+          { label: '1 — Mild–moderate', value: 1, description: 'Slurs at least some words; understood with some difficulty' },
+          { label: '2 — Severe / anarthric', value: 2, description: 'Unintelligible, mute, or anarthric (out of proportion to any aphasia)' },
+        ],
+        0,
+        'Ask the patient to read or repeat: Mama, tip-top, fifty-fifty, thanks, huckleberry, baseball player, hula hoop. Intubated or other physical barrier = UN off-form (do not enter 0 or 2).',
+      ),
+      selectInput(
+        'extinction',
+        '11. Extinction / inattention (0–2)',
+        [
+          { label: '0 — No abnormality', value: 0, description: 'No inattention; aphasia attending to both sides scores 0' },
+          { label: '1 — Mild (one modality)', value: 1, description: 'Inattention or extinction to bilateral simultaneous stimulation in one modality (visual, tactile, auditory, spatial, or personal)' },
+          { label: '2 — Profound (more than one)', value: 2, description: 'Profound hemi-inattention in more than one modality, does not recognize own hand, or orients to only one side of space' },
+        ],
+        0,
+        'Visual and tactile double simultaneous stimulation. This item is never UN. If the patient has a severe visual loss and the cutaneous stimuli are normal, score as 0.',
+      ),
     ],
     calculate(values) {
       const keys = ['loc', 'locQ', 'locC', 'gaze', 'visual', 'facial', 'armL', 'armR', 'legL', 'legR', 'ataxia', 'sensory', 'language', 'dysarthria', 'extinction'];
@@ -489,6 +643,11 @@ export const giNeuroPsychCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'Acute ischemic stroke', actions: ['Door-to-CT/needle pathways', 'Consider thrombolysis/thrombectomy eligibility', 'Stroke unit care'] },
+    ],
+    pearls: [
+      'UN (amputation, joint fusion, intubated dysarthria) is recorded off-scale — do not enter 4 or 2 as a substitute.',
+      '1b questions are month and age only — not place or president. Aphasic patients score 2; intubated/language barrier score 1.',
+      'Item 11 (extinction) is never UN. If 1a = 3, language is 3.',
     ],
   },
   {
@@ -630,16 +789,134 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Symptom-triggered benzodiazepine protocols for alcohol withdrawal.',
     whyUse: 'Standard severity score guiding benzo dosing.',
     inputs: [
-      selectInput('nausea', 'Nausea/vomiting (0–7)', Array.from({ length: 8 }, (_, i) => ({ label: String(i), value: i }))),
-      selectInput('tremor', 'Tremor (0–7)', Array.from({ length: 8 }, (_, i) => ({ label: String(i), value: i }))),
-      selectInput('sweats', 'Paroxysmal sweats (0–7)', Array.from({ length: 8 }, (_, i) => ({ label: String(i), value: i }))),
-      selectInput('anxiety', 'Anxiety (0–7)', Array.from({ length: 8 }, (_, i) => ({ label: String(i), value: i }))),
-      selectInput('agitation', 'Agitation (0–7)', Array.from({ length: 8 }, (_, i) => ({ label: String(i), value: i }))),
-      selectInput('tactile', 'Tactile disturbances (0–7)', Array.from({ length: 8 }, (_, i) => ({ label: String(i), value: i }))),
-      selectInput('auditory', 'Auditory disturbances (0–7)', Array.from({ length: 8 }, (_, i) => ({ label: String(i), value: i }))),
-      selectInput('visual', 'Visual disturbances (0–7)', Array.from({ length: 8 }, (_, i) => ({ label: String(i), value: i }))),
-      selectInput('headache', 'Headache (0–7)', Array.from({ length: 8 }, (_, i) => ({ label: String(i), value: i }))),
-      selectInput('orientation', 'Orientation/clouding (0–4)', Array.from({ length: 5 }, (_, i) => ({ label: String(i), value: i }))),
+      ciwaSelect(
+        'nausea',
+        'Nausea/vomiting (0–7)',
+        "Ask: “Do you feel sick to your stomach? Have you vomited?” Observe.",
+        {
+          0: 'No nausea and no vomiting',
+          1: 'Mild nausea with no vomiting',
+          4: 'Intermittent nausea with dry heaves',
+          7: 'Constant nausea, frequent dry heaves and vomiting',
+        },
+      ),
+      ciwaSelect(
+        'tremor',
+        'Tremor (0–7)',
+        'Arms extended, fingers spread. Observe and feel fingertip-to-fingertip.',
+        {
+          0: 'No tremor',
+          1: 'Not visible, but can be felt fingertip to fingertip',
+          4: 'Moderate, with patient’s arms extended',
+          7: 'Severe, even with arms not extended',
+        },
+      ),
+      ciwaSelect(
+        'sweats',
+        'Paroxysmal sweats (0–7)',
+        'Observe palms and forehead. Do not ask the patient to rate sweating.',
+        {
+          0: 'No sweat visible',
+          1: 'Barely perceptible sweating, palms moist',
+          4: 'Beads of sweat obvious on forehead',
+          7: 'Drenching sweats',
+        },
+      ),
+      ciwaSelect(
+        'anxiety',
+        'Anxiety (0–7)',
+        'Ask: “Do you feel nervous?” Observe.',
+        {
+          0: 'No anxiety, at ease',
+          1: 'Mildly anxious',
+          4: 'Moderately anxious, or guarded so that anxiety is inferred',
+          7: 'Equivalent to acute panic states as seen in severe delirium or acute schizophrenic reactions',
+        },
+      ),
+      ciwaSelect(
+        'agitation',
+        'Agitation (0–7)',
+        'Observe activity during the interview.',
+        {
+          0: 'Normal activity',
+          1: 'Somewhat more than normal activity',
+          4: 'Moderately fidgety and restless',
+          7: 'Paces back and forth during most of the interview, or constantly thrashes about',
+        },
+      ),
+      ciwaSelect(
+        'tactile',
+        'Tactile disturbances (0–7)',
+        'Ask: “Have you any itching, pins and needles sensations, any burning, any numbness, or do you feel bugs crawling on or under your skin?”',
+        {
+          0: 'None',
+          1: 'Very mild itching, pins and needles, burning or numbness',
+          2: 'Mild itching, pins and needles, burning or numbness',
+          3: 'Moderate itching, pins and needles, burning or numbness',
+          4: 'Moderately severe hallucinations',
+          5: 'Severe hallucinations',
+          6: 'Extremely severe hallucinations',
+          7: 'Continuous hallucinations',
+        },
+      ),
+      ciwaSelect(
+        'auditory',
+        'Auditory disturbances (0–7)',
+        'Ask: “Are you more aware of sounds around you? Are they harsh? Do they frighten you? Are you hearing anything that is disturbing to you? Are you hearing things you know are not there?”',
+        {
+          0: 'Not present',
+          1: 'Very mild harshness or ability to frighten',
+          2: 'Mild harshness or ability to frighten',
+          3: 'Moderate harshness or ability to frighten',
+          4: 'Moderately severe hallucinations',
+          5: 'Severe hallucinations',
+          6: 'Extremely severe hallucinations',
+          7: 'Continuous hallucinations',
+        },
+      ),
+      ciwaSelect(
+        'visual',
+        'Visual disturbances (0–7)',
+        'Ask: “Does the light appear to be too bright? Is its color different? Does it hurt your eyes? Are you seeing anything that is disturbing to you? Are you seeing things you know are not there?”',
+        {
+          0: 'Not present',
+          1: 'Very mild sensitivity',
+          2: 'Mild sensitivity',
+          3: 'Moderate sensitivity',
+          4: 'Moderately severe hallucinations',
+          5: 'Severe hallucinations',
+          6: 'Extremely severe hallucinations',
+          7: 'Continuous hallucinations',
+        },
+      ),
+      ciwaSelect(
+        'headache',
+        'Headache (0–7)',
+        'Ask: “Does your head feel different? Does it feel like there is a band around your head?” Do not rate dizziness or lightheadedness.',
+        {
+          0: 'Not present',
+          1: 'Very mild',
+          2: 'Mild',
+          3: 'Moderate',
+          4: 'Moderately severe',
+          5: 'Severe',
+          6: 'Very severe',
+          7: 'Extremely severe',
+        },
+      ),
+      ciwaSelect(
+        'orientation',
+        'Orientation/clouding (0–4)',
+        'Ask: “What day is this? Where are you? Who am I?”',
+        {
+          0: 'Oriented and can do serial additions',
+          1: 'Cannot do serial additions or is uncertain about date',
+          2: 'Disoriented for date by no more than 2 calendar days',
+          3: 'Disoriented for date by more than 2 calendar days',
+          4: 'Disoriented for place or person',
+        },
+        4,
+      ),
     ],
     calculate(values) {
       const keys = ['nausea', 'tremor', 'sweats', 'anxiety', 'agitation', 'tactile', 'auditory', 'visual', 'headache', 'orientation'];
@@ -659,6 +936,10 @@ export const giNeuroPsychCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'CIWA ≥8–10', actions: ['Diazepam/lorazepam per protocol', 'Thiamine, folate, multivitamin', 'Monitor for seizures/DTs'] },
+    ],
+    pearls: [
+      'Official Sullivan 1989 key labels 0, 1, 4, and 7 (and every orientation rank). Ranks 2, 3, 5, 6 are interpolations.',
+      'Do not rate dizziness on the headache item. Observe tremor and sweats rather than asking the patient to self-grade them.',
     ],
   },
   {
