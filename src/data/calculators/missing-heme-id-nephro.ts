@@ -228,19 +228,19 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
         { label: '< 50 (2)', value: 2 },
       ]),
       selectInput('fibrin', 'Elevated fibrin marker (D-dimer / FDP)', [
-        { label: 'No increase (0)', value: 0 },
-        { label: 'Moderate increase (2)', value: 2 },
-        { label: 'Strong increase (3)', value: 3 },
-      ], undefined, 'Use lab-specific cutoffs for moderate vs strong elevation'),
+        { label: 'No increase (0)', value: 0, description: 'Within reference (this laboratory’s ULN)' },
+        { label: 'Moderate increase (2)', value: 2, description: '≈ >3× ULN (or ~0.4–4 µg/mL FEU in older cohorts)' },
+        { label: 'Strong increase (3)', value: 3, description: '≈ >7× ULN (or >4 µg/mL FEU)' },
+      ], undefined, 'Bins depend on this laboratory’s D-dimer/FDP ULN (ISTH SSC 2025 ≈3× / ≈7× ULN; older FEU cutoffs ~0.4–4 vs >4 µg/mL)'),
       selectInput('pt', 'Prolonged PT', [
         { label: '< 3 seconds prolonged (0)', value: 0 },
         { label: '3–6 seconds prolonged (1)', value: 1 },
         { label: '> 6 seconds prolonged (2)', value: 2 },
-      ]),
+      ], undefined, 'Seconds above laboratory mean normal PT (not INR)'),
       selectInput('fibrinogen', 'Fibrinogen', [
         { label: '≥ 1.0 g/L (0)', value: 0 },
         { label: '< 1.0 g/L (1)', value: 1 },
-      ]),
+      ], undefined, '1.0 g/L = 100 mg/dL'),
     ],
     calculate(values) {
       const score =

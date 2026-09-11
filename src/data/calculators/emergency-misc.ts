@@ -966,12 +966,38 @@ export const emergencyMiscCalcs: Calculator[] = [
         { label: '36–49% (2)', value: 2 },
         { label: '≤35% (3)', value: 3 },
       ]),
-      selectInput('dyspnea', 'mMRC dyspnea', [
-        { label: '0–1 (0)', value: 0 },
-        { label: '2 (1)', value: 1 },
-        { label: '3 (2)', value: 2 },
-        { label: '4 (3)', value: 3 },
-      ]),
+      selectInput(
+        'dyspnea',
+        'mMRC dyspnea',
+        [
+          {
+            label: '0–1 (0)',
+            value: 0,
+            description:
+              'Grade 0: breathless only with strenuous exercise. Grade 1: short of breath hurrying on the level or walking up a slight hill. Both collapse to 0 BODE points.',
+          },
+          {
+            label: '2 (1)',
+            value: 1,
+            description:
+              'Grade 2: walks slower than same-age peers on the level because of breathlessness, or has to stop for breath when walking at own pace on the level.',
+          },
+          {
+            label: '3 (2)',
+            value: 2,
+            description:
+              'Grade 3: stops for breath after walking about 100 m or after a few minutes on the level.',
+          },
+          {
+            label: '4 (3)',
+            value: 3,
+            description:
+              'Grade 4: too breathless to leave the house, or breathless when dressing or undressing.',
+          },
+        ],
+        0,
+        'Modified MRC (mMRC). Pick the worst applicable grade (0–4), then select that grade’s BODE point bin. Grades 0 and 1 are different questions that share 0 BODE points.',
+      ),
       selectInput('exercise', '6-minute walk distance', [
         { label: '≥350 m (0)', value: 0 },
         { label: '250–349 m (1)', value: 1 },
@@ -997,6 +1023,11 @@ export const emergencyMiscCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'High BODE', actions: ['Optimize inhalers/pulm rehab', 'Consider transplant/LVRS evaluation', 'Advance care planning'] },
+    ],
+    pearls: [
+      'mMRC grade 0 = breathless only with strenuous exercise; grade 1 = SOB hurrying on the level or walking up a slight hill — both are 0 BODE points.',
+      'Grade 2 = slower than same-age peers or stops at own pace; grade 3 = stops after ~100 m or a few minutes on the level; grade 4 = too breathless to leave the house or breathless dressing/undressing.',
+      'Pick the worst applicable mMRC grade, then the BODE bin: 0–1 → 0 pts, 2 → 1, 3 → 2, 4 → 3.',
     ],
   },
   {

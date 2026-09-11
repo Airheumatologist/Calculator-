@@ -1479,16 +1479,22 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'More granular functional outcome after TBI than classic 5-point GOS.',
     whyUse: 'Standard secondary endpoint in modern TBI trials and clinics.',
     inputs: [
-      selectInput('gose', 'GOS-E category', [
-        { label: '1 — Death', value: 1 },
-        { label: '2 — Vegetative state', value: 2 },
-        { label: '3 — Lower severe disability', value: 3 },
-        { label: '4 — Upper severe disability', value: 4 },
-        { label: '5 — Lower moderate disability', value: 5 },
-        { label: '6 — Upper moderate disability', value: 6 },
-        { label: '7 — Lower good recovery', value: 7 },
-        { label: '8 — Upper good recovery', value: 8 },
-      ]),
+      selectInput(
+        'gose',
+        'GOS-E category',
+        [
+          { label: '1 — Death', value: 1, description: 'Dead' },
+          { label: '2 — Vegetative state', value: 2, description: 'Not obeying commands and not saying words' },
+          { label: '3 — Lower severe disability', value: 3, description: 'Dependent; cannot be left alone 8 h' },
+          { label: '4 — Upper severe disability', value: 4, description: 'Dependent but can be left ≥8 h; cannot shop OR travel locally without assistance' },
+          { label: '5 — Lower moderate disability', value: 5, description: 'Independent at home and can shop/travel but cannot work/study or major social/leisure restriction' },
+          { label: '6 — Upper moderate disability', value: 6, description: 'Reduced work capacity and/or social/leisure less than half as often' },
+          { label: '7 — Lower good recovery', value: 7, description: 'Residual symptoms still affecting daily life' },
+          { label: '8 — Upper good recovery', value: 8, description: 'Full return; residuals none or not affecting daily life' },
+        ],
+        undefined,
+        'Rate current vs pre-injury with the Wilson structured interview; overall = worst domain.',
+      ),
     ],
     calculate(values) {
       const g = num(values.gose, 8);

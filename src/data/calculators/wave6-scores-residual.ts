@@ -1848,17 +1848,68 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     whenToUse: 'Older adults in acute care, ICU triage context, or outpatient geriatrics for baseline fitness.',
     whyUse: 'Simple pictorial/ordinal scale predicting outcomes better than age alone.',
     inputs: [
-      selectInput('cfs', 'Clinical Frailty Scale', [
-        { label: '1 — Very fit', value: 1 },
-        { label: '2 — Fit / well', value: 2 },
-        { label: '3 — Managing well', value: 3 },
-        { label: '4 — Living with very mild frailty / vulnerable', value: 4 },
-        { label: '5 — Living with mild frailty', value: 5 },
-        { label: '6 — Living with moderate frailty', value: 6 },
-        { label: '7 — Living with severe frailty', value: 7 },
-        { label: '8 — Living with very severe frailty', value: 8 },
-        { label: '9 — Terminally ill', value: 9 },
-      ]),
+      selectInput(
+        'cfs',
+        'Clinical Frailty Scale',
+        [
+          {
+            label: '1 — Very fit',
+            value: 1,
+            description:
+              'Robust, active, energetic and motivated; commonly exercise regularly; among the fittest for their age.',
+          },
+          {
+            label: '2 — Fit / well',
+            value: 2,
+            description:
+              'No active disease symptoms but less fit than 1; exercise or very active only occasionally (e.g. seasonally).',
+          },
+          {
+            label: '3 — Managing well',
+            value: 3,
+            description:
+              'Medical problems well controlled (even if occasionally symptomatic); not regularly active beyond routine walking.',
+          },
+          {
+            label: '4 — Living with very mild frailty / vulnerable',
+            value: 4,
+            description:
+              'Not dependent for daily help, but symptoms limit activities; common complaint of being “slowed up” and/or tired during the day.',
+          },
+          {
+            label: '5 — Living with mild frailty',
+            value: 5,
+            description:
+              'More evident slowing; needs help with high-order IADLs (finances, transportation, heavy housework, medications). Typically shopping, walking outside alone, meal preparation, and housework become impaired.',
+          },
+          {
+            label: '6 — Living with moderate frailty',
+            value: 6,
+            description:
+              'Needs help with all outside activities and keeping house; often problems with stairs and bathing; may need minimal assistance (cuing, standby) with dressing.',
+          },
+          {
+            label: '7 — Living with severe frailty',
+            value: 7,
+            description:
+              'Completely dependent for personal care (physical or cognitive) but stable — not at high risk of dying within ~6 months.',
+          },
+          {
+            label: '8 — Living with very severe frailty',
+            value: 8,
+            description:
+              'Completely dependent and approaching end of life; typically could not recover even from a minor illness.',
+          },
+          {
+            label: '9 — Terminally ill',
+            value: 9,
+            description:
+              'Life expectancy <6 months and not otherwise living with severe frailty (many can still walk/exercise until close to death).',
+          },
+        ],
+        undefined,
+        'Score usual function ~2 weeks before this acute illness (CFS 9 is the exception).',
+      ),
     ],
     calculate(values) {
       const score = num(values.cfs, 3);

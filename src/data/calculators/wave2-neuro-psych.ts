@@ -1293,11 +1293,12 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Interpret clinician-administered HAM-D/HDRS total for severity monitoring.',
     whyUse: 'Classic depression severity scale in research and specialty care.',
     inputs: [
-      numberInput('score', 'HAM-D total', {
+      numberInput('score', 'HAM-D 17-item total (0–52)', {
         min: 0,
         max: 52,
         defaultValue: 12,
-        helpText: 'Usually 17-item total (range varies by version)',
+        helpText:
+          'Enter the total from a completed official 17-item HDRS/HAM-D form (copyrighted structured interviews such as SIGH-D — do not reprint item probes here). Typical 17-item max 52. Items and official maxima: (1) depressed mood 0–4; (2) feelings of guilt 0–4; (3) suicide 0–4 (clinical safety item, not just a point); (4) early insomnia 0–2; (5) middle insomnia 0–2; (6) late insomnia 0–2; (7) work and activities 0–4; (8) retardation 0–4; (9) agitation 0–4; (10) psychic anxiety 0–4; (11) somatic anxiety 0–4; (12) GI somatic symptoms 0–2; (13) general somatic symptoms 0–2; (14) genital symptoms 0–2; (15) hypochondriasis 0–4; (16) weight loss 0–2; (17) insight 0–2. These bands assume the 17-item total.',
       }),
       selectInput('version', 'Version (for context)', [
         { label: '17-item (most common)', value: '17' },
@@ -1367,7 +1368,12 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         actions: ['Diagnostic confirmation', 'Treatment initiation/escalation', 'Safety planning'],
       },
     ],
-    pearls: ['Heavy somatic item loading — interpret cautiously in medical illness.', 'Specify which HAM-D version was used.'],
+    pearls: [
+      'Copyright fallback: score from a completed official 17-item HDRS form; this tool interprets the total only.',
+      'Suicide item is a clinical assessment, not just a point — act on ideation regardless of total.',
+      'Heavy somatic item loading — interpret cautiously in medical illness.',
+      'Specify which HAM-D version was used. Bands here are 17-item (≤7 / 8–13 / 14–18 / 19–22 / ≥23).',
+    ],
   },
   {
     id: 'ham-a',
@@ -1383,7 +1389,8 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         min: 0,
         max: 56,
         defaultValue: 18,
-        helpText: '14 items scored 0–4',
+        helpText:
+          'Enter the total from a completed official HAM-A (Hamilton 1959) form; 14 items × 0–4 = 0–56. Do not score from titles alone. Each item: 0 none, 1 mild, 2 moderate, 3 severe, 4 very severe. Rate the past few days. Items: (1) anxious mood; (2) tension; (3) fears; (4) insomnia; (5) intellectual (concentration/memory); (6) depressed mood; (7) somatic muscular; (8) somatic sensory; (9) cardiovascular; (10) respiratory; (11) GI; (12) genitourinary; (13) autonomic; (14) behavior at interview (observed, not reported).',
       }),
     ],
     calculate(values) {
@@ -1441,7 +1448,13 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         actions: ['CBT / SSRI-SNRI as appropriate', 'Assess for panic, GAD, PTSD, substance use', 'Limit chronic benzo when possible'],
       },
     ],
-    pearls: ['Somatic items may elevate scores in medical disease.', 'GAD-7 is a practical patient-report alternative for screening.'],
+    pearls: [
+      'Copyright fallback: keep the official HAM-A card at the bedside; this tool interprets the 14-item total only.',
+      'Rate the past few days. Item 14 (behavior at interview) is observed, not patient-reported.',
+      'Each item 0–4: none / mild / moderate / severe / very severe.',
+      'Somatic items may elevate scores in medical disease.',
+      'GAD-7 is a practical patient-report alternative for screening.',
+    ],
   },
   {
     id: 'bai',
@@ -1600,7 +1613,8 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         min: 0,
         max: 60,
         defaultValue: 12,
-        helpText: '11 items; some double-weighted (0–8)',
+        helpText:
+          'Enter the total from a completed official YMRS (Young 1978) form; 11 items, total 0–60. Research copyright (BJP/Royal College) — do not reprint full item anchors here. Rate the past 48 hours using interview plus observation. Seven items scored 0–4: elevated mood; increased motor activity/energy; sexual interest; sleep; language–thought disorder; appearance; insight. Four double-weighted items scored 0–8: irritability; speech (rate and amount); thought content; disruptive-aggressive behavior.',
       }),
     ],
     calculate(values) {
@@ -1664,7 +1678,12 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         ],
       },
     ],
-    pearls: ['Irritability and disruptive-aggressive items are double-weighted.', 'Not a diagnostic tool for bipolar disorder alone.'],
+    pearls: [
+      'Copyright fallback: use the official Young 1978 YMRS card; this tool interprets the total only.',
+      'Four items are 0–8 (irritability, speech, thought content, disruptive-aggressive); the other seven are 0–4.',
+      'Window is the past 48 hours (interview + observation) unless the form specifies otherwise.',
+      'Not a diagnostic tool for bipolar disorder alone.',
+    ],
   },
   {
     id: 'panss-simp',
@@ -2248,7 +2267,8 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         min: 0,
         max: 80,
         defaultValue: 30,
-        helpText: '20 items scored 0–4 (Not at all → Extremely)',
+        helpText:
+          'Past month. Rate how much the person has been bothered by each problem (NCPTSD PCL-5, public domain). 20 items × 0–4, total 0–80. Response options: 0 Not at all; 1 A little bit; 2 Moderately; 3 Quite a bit; 4 Extremely. Official stems: (1) Repeated, disturbing, and unwanted memories of the stressful experience; (2) Repeated, disturbing dreams of the stressful experience; (3) Suddenly feeling or acting as if the stressful experience were actually happening again (as if you were actually back there reliving it); (4) Feeling very upset when something reminded you of the stressful experience; (5) Having strong physical reactions when something reminded you of the stressful experience (for example, heart pounding, trouble breathing, sweating); (6) Avoiding memories, thoughts, or feelings related to the stressful experience; (7) Avoiding external reminders of the stressful experience (for example, people, places, conversations, activities, objects, or situations); (8) Trouble remembering important parts of the stressful experience; (9) Having strong negative beliefs about yourself, other people, or the world (for example, having thoughts such as: I am bad, there is something seriously wrong with me, no one can be trusted, the world is completely dangerous); (10) Blaming yourself or someone else for the stressful experience or what happened after it; (11) Having strong negative feelings such as fear, horror, anger, guilt, or shame; (12) Loss of interest in activities that you used to enjoy; (13) Feeling distant or cut off from other people; (14) Trouble experiencing positive feelings (for example, being unable to feel happiness or have loving feelings for people close to you); (15) Irritable behavior, angry outbursts, or acting aggressively; (16) Taking too many risks or doing things that could cause you harm; (17) Being “superalert” or watchful or on guard; (18) Feeling jumpy or easily startled; (19) Having difficulty concentrating; (20) Trouble falling or staying asleep. Sum all 20 ratings.',
       }),
     ],
     calculate(values) {
@@ -2315,8 +2335,10 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       },
     ],
     pearls: [
+      'Time frame is the past month. Each item: Not at all (0) / A little bit (1) / Moderately (2) / Quite a bit (3) / Extremely (4).',
+      'PCL-5 is public domain (National Center for PTSD). Official 20 DSM-5 stems are in the score help text; keep the total 0–80 entry.',
+      'Clusters: B intrusion 1–5, C avoidance 6–7, D cognition/mood 8–14, E arousal 15–20. Cluster rule (≥1 B, ≥1 C, ≥2 D, ≥2 E rated ≥2) improves diagnostic approximation vs total alone.',
       'Cutoff varies by population; 31–33 common for provisional diagnosis.',
-      'Cluster-based item rules improve diagnostic approximation vs total alone.',
     ],
   },
 ];

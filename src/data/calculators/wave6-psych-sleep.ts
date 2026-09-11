@@ -1352,7 +1352,8 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         max: 100,
         step: 5,
         defaultValue: 60,
-        helpText: 'Sum of 10 ADL items (feeding, bathing, grooming, dressing, bowels, bladder, toilet, transfer, mobility, stairs)',
+        helpText:
+          'Collin 0–100 (10 items). Feeding: 0 unable / 5 needs help (cutting) / 10 independent. Bathing: 0 dependent / 5 independent (bath or shower). Grooming: 0 needs help / 5 independent face/hair/teeth/shave. Dressing: 0 dependent / 5 needs help but does about half / 10 independent including buttons/zips/laces. Bowels: 0 incontinent / 5 occasional accident / 10 continent. Bladder: 0 incontinent or catheterized and unable to manage / 5 occasional accident / 10 continent. Toilet use: 0 dependent / 5 needs some help / 10 independent. Transfers (bed–chair): 0 unable / 5 major help (1–2 people) / 10 minor help / 15 independent. Mobility: 0 immobile / 5 wheelchair independent including corners / 10 walks with help of one / 15 independent (may use aid). Stairs: 0 unable / 5 needs help / 10 independent. Sum in 5-point increments.',
       }),
     ],
     calculate(values) {
@@ -1427,8 +1428,16 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       },
     ],
     pearls: [
+      'Collin 0–100 scoring (Mahoney/Barthel operational labels). Feeding: 0 unable; 5 needs help cutting, spreading butter, etc.; 10 independent.',
+      'Bathing: 0 dependent; 5 independent (bath or shower). Grooming: 0 needs help with personal care; 5 independent face/hair/teeth/shave (implements provided).',
+      'Dressing: 0 dependent; 5 needs help but does about half unaided; 10 independent including buttons, zips, laces.',
+      'Bowels: 0 incontinent (or needs enemas); 5 occasional accident; 10 continent. Bladder: 0 incontinent or catheterized and unable to manage; 5 occasional accident; 10 continent.',
+      'Toilet use: 0 dependent; 5 needs some help; 10 independent (on and off, clothes, wiping).',
+      'Transfers (bed–chair): 0 unable, no sitting balance; 5 major help (1–2 people, physical) but can sit; 10 minor help (verbal or physical); 15 independent.',
+      'Mobility: 0 immobile; 5 wheelchair independent including corners; 10 walks with help of one person (verbal or physical); 15 independent (may use aid, e.g. stick). Score wheelchair only if not walking.',
+      'Stairs: 0 unable; 5 needs help (verbal, physical, or carrying aid); 10 independent.',
       'Does not capture cognition, communication, or IADLs well — pair with other scales.',
-      '5-point increments are typical on the 0–100 version.',
+      '5-point increments are typical on the 0–100 version (Collin 0–20 × 5).',
     ],
   },
 

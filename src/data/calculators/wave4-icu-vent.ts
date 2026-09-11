@@ -1763,31 +1763,61 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'Ward or ICU nursing screening for delirium each shift.',
     whyUse: 'Brief observational tool; score ≥2 suggests possible delirium needing further assessment.',
     inputs: [
-      selectInput('disorientation', 'Disorientation', [
-        { label: '0 — Absent', value: 0 },
-        { label: '1 — Mild', value: 1 },
-        { label: '2 — Severe', value: 2 },
-      ]),
-      selectInput('behavior', 'Inappropriate behavior', [
-        { label: '0 — Absent', value: 0 },
-        { label: '1 — Mild', value: 1 },
-        { label: '2 — Severe', value: 2 },
-      ]),
-      selectInput('communication', 'Inappropriate communication', [
-        { label: '0 — Absent', value: 0 },
-        { label: '1 — Mild', value: 1 },
-        { label: '2 — Severe', value: 2 },
-      ]),
-      selectInput('illusion', 'Illusion / hallucination', [
-        { label: '0 — Absent', value: 0 },
-        { label: '1 — Mild', value: 1 },
-        { label: '2 — Severe', value: 2 },
-      ]),
-      selectInput('psychomotor', 'Psychomotor retardation', [
-        { label: '0 — Absent', value: 0 },
-        { label: '1 — Mild', value: 1 },
-        { label: '2 — Severe', value: 2 },
-      ]),
+      selectInput(
+        'disorientation',
+        'Disorientation',
+        [
+          { label: '0 — Absent', value: 0, description: 'Absent this shift' },
+          { label: '1 — Mild', value: 1, description: 'Present, mild: verbal or behavioral lack of orientation to time or place, or misperceiving persons' },
+          { label: '2 — Pronounced', value: 2, description: 'Pronounced: verbal or behavioral lack of orientation to time or place, or misperceiving persons' },
+        ],
+        0,
+        'Score the current nursing shift. 0 = absent, 1 = present mild, 2 = pronounced. Disorientation = verbal/behavioral lack of orientation to time or place or misperceiving persons.',
+      ),
+      selectInput(
+        'behavior',
+        'Inappropriate behavior',
+        [
+          { label: '0 — Absent', value: 0, description: 'Absent this shift' },
+          { label: '1 — Mild', value: 1, description: 'Present, mild: pulling tubes/dressings or getting out of bed when contraindicated' },
+          { label: '2 — Pronounced', value: 2, description: 'Pronounced: pulling tubes/dressings or getting out of bed when contraindicated' },
+        ],
+        0,
+        'Score the current nursing shift. 0 = absent, 1 = present mild, 2 = pronounced. Behavior = pulling tubes/dressings or getting out of bed when contraindicated.',
+      ),
+      selectInput(
+        'communication',
+        'Inappropriate communication',
+        [
+          { label: '0 — Absent', value: 0, description: 'Absent this shift' },
+          { label: '1 — Mild', value: 1, description: 'Present, mild: incoherence, non-communicativeness, or nonsensical/unintelligible speech' },
+          { label: '2 — Pronounced', value: 2, description: 'Pronounced: incoherence, non-communicativeness, or nonsensical/unintelligible speech' },
+        ],
+        0,
+        'Score the current nursing shift. 0 = absent, 1 = present mild, 2 = pronounced. Communication = incoherence, non-communicativeness, nonsensical/unintelligible speech.',
+      ),
+      selectInput(
+        'illusion',
+        'Illusion / hallucination',
+        [
+          { label: '0 — Absent', value: 0, description: 'Absent this shift' },
+          { label: '1 — Mild', value: 1, description: 'Present, mild: seeing or hearing things not there, or visual distortions' },
+          { label: '2 — Pronounced', value: 2, description: 'Pronounced: seeing or hearing things not there, or visual distortions' },
+        ],
+        0,
+        'Score the current nursing shift. 0 = absent, 1 = present mild, 2 = pronounced. Illusion = seeing or hearing things not there / visual distortions.',
+      ),
+      selectInput(
+        'psychomotor',
+        'Psychomotor retardation',
+        [
+          { label: '0 — Absent', value: 0, description: 'Absent this shift' },
+          { label: '1 — Mild', value: 1, description: 'Present, mild: delayed responsiveness, few spontaneous actions/words, deferred reaction when prodded' },
+          { label: '2 — Pronounced', value: 2, description: 'Pronounced: delayed responsiveness, few spontaneous actions/words, deferred reaction when prodded, or unarousable' },
+        ],
+        0,
+        'Score the current nursing shift. 0 = absent, 1 = present mild, 2 = pronounced. Psychomotor retardation = delayed responsiveness, few spontaneous actions/words, deferred reaction when prodded or unarousable.',
+      ),
     ],
     calculate(values) {
       const score =
@@ -1837,7 +1867,12 @@ export const wave4IcuVentCalcs: Calculator[] = [
         ],
       },
     ],
-    pearls: ['Hypoactive delirium may score mainly on retardation/disorientation.', 'Screen is not a severity scale alone.'],
+    pearls: [
+      'Score the current nursing shift (Gaudreau), not a single snapshot.',
+      'Each item is 0 absent / 1 present mild / 2 pronounced.',
+      'Hypoactive delirium may score mainly on retardation/disorientation.',
+      'Screen is not a severity scale alone.',
+    ],
   },
 
   // 19. Riker SAS
@@ -2017,41 +2052,77 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'Hospitalized adults for pressure injury risk stratification and care planning.',
     whyUse: 'Most widely used validated pressure ulcer risk tool in North America.',
     inputs: [
-      selectInput('sensory', 'Sensory perception', [
-        { label: '1 — Completely limited', value: 1 },
-        { label: '2 — Very limited', value: 2 },
-        { label: '3 — Slightly limited', value: 3 },
-        { label: '4 — No impairment', value: 4 },
-      ]),
-      selectInput('moisture', 'Moisture', [
-        { label: '1 — Constantly moist', value: 1 },
-        { label: '2 — Often moist', value: 2 },
-        { label: '3 — Occasionally moist', value: 3 },
-        { label: '4 — Rarely moist', value: 4 },
-      ]),
-      selectInput('activity', 'Activity', [
-        { label: '1 — Bedfast', value: 1 },
-        { label: '2 — Chairfast', value: 2 },
-        { label: '3 — Walks occasionally', value: 3 },
-        { label: '4 — Walks frequently', value: 4 },
-      ]),
-      selectInput('mobility', 'Mobility', [
-        { label: '1 — Completely immobile', value: 1 },
-        { label: '2 — Very limited', value: 2 },
-        { label: '3 — Slightly limited', value: 3 },
-        { label: '4 — No limitation', value: 4 },
-      ]),
-      selectInput('nutrition', 'Nutrition', [
-        { label: '1 — Very poor', value: 1 },
-        { label: '2 — Probably inadequate', value: 2 },
-        { label: '3 — Adequate', value: 3 },
-        { label: '4 — Excellent', value: 4 },
-      ]),
-      selectInput('friction', 'Friction & shear', [
-        { label: '1 — Problem', value: 1 },
-        { label: '2 — Potential problem', value: 2 },
-        { label: '3 — No apparent problem', value: 3 },
-      ]),
+      selectInput(
+        'sensory',
+        'Sensory perception',
+        [
+          { label: '1 — Completely limited', value: 1 },
+          { label: '2 — Very limited', value: 2 },
+          { label: '3 — Slightly limited', value: 3 },
+          { label: '4 — No impairment', value: 4 },
+        ],
+        1,
+        'Score from the official Braden card (Prevention Plus). Titles here are not sufficient to distinguish 1 vs 2 vs 3 vs 4.',
+      ),
+      selectInput(
+        'moisture',
+        'Moisture',
+        [
+          { label: '1 — Constantly moist', value: 1 },
+          { label: '2 — Often moist', value: 2 },
+          { label: '3 — Occasionally moist', value: 3 },
+          { label: '4 — Rarely moist', value: 4 },
+        ],
+        1,
+        'Score from the official Braden card (Prevention Plus). Titles here are not sufficient to distinguish 1 vs 2 vs 3 vs 4. Non-verbatim reminder only: moisture ≈ linen-change frequency.',
+      ),
+      selectInput(
+        'activity',
+        'Activity',
+        [
+          { label: '1 — Bedfast', value: 1 },
+          { label: '2 — Chairfast', value: 2 },
+          { label: '3 — Walks occasionally', value: 3 },
+          { label: '4 — Walks frequently', value: 4 },
+        ],
+        1,
+        'Score from the official Braden card (Prevention Plus). Titles here are not sufficient to distinguish 1 vs 2 vs 3 vs 4.',
+      ),
+      selectInput(
+        'mobility',
+        'Mobility',
+        [
+          { label: '1 — Completely immobile', value: 1 },
+          { label: '2 — Very limited', value: 2 },
+          { label: '3 — Slightly limited', value: 3 },
+          { label: '4 — No limitation', value: 4 },
+        ],
+        1,
+        'Score from the official Braden card (Prevention Plus). Titles here are not sufficient to distinguish 1 vs 2 vs 3 vs 4.',
+      ),
+      selectInput(
+        'nutrition',
+        'Nutrition',
+        [
+          { label: '1 — Very poor', value: 1 },
+          { label: '2 — Probably inadequate', value: 2 },
+          { label: '3 — Adequate', value: 3 },
+          { label: '4 — Excellent', value: 4 },
+        ],
+        1,
+        'Score from the official Braden card (Prevention Plus). Titles here are not sufficient to distinguish 1 vs 2 vs 3 vs 4. Non-verbatim reminder only: NPO >5 days counts toward very poor nutrition.',
+      ),
+      selectInput(
+        'friction',
+        'Friction & shear',
+        [
+          { label: '1 — Problem', value: 1 },
+          { label: '2 — Potential problem', value: 2 },
+          { label: '3 — No apparent problem', value: 3 },
+        ],
+        1,
+        'Score from the official Braden card (Prevention Plus). Titles here are not sufficient to distinguish 1 vs 2 vs 3. Friction & shear is 1–3 (not 1–4).',
+      ),
     ],
     calculate(values) {
       const score =
@@ -2118,7 +2189,11 @@ export const wave4IcuVentCalcs: Calculator[] = [
         ],
       },
     ],
-    pearls: ['ICU patients may warrant prevention even at higher Braden scores.', 'Lower score = worse risk (opposite of many severity scores).'],
+    pearls: [
+      'Braden Scale is copyrighted (Prevention Plus). Do not score from titles alone — use the official card to distinguish 1 vs 2 vs 3 vs 4 (friction 1–3).',
+      'ICU patients may warrant prevention even at higher Braden scores.',
+      'Lower score = worse risk (opposite of many severity scores).',
+    ],
   },
 
   // 22. Waterlow scale
@@ -2132,28 +2207,46 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'Adults when Waterlow is the institutional pressure injury risk tool.',
     whyUse: 'Includes build, skin type, sex/age, continence, mobility, nutrition, and special risk factors.',
     inputs: [
-      selectInput('build', 'Build / weight for height', [
-        { label: 'Average (0)', value: 0 },
-        { label: 'Above average (1)', value: 1 },
-        { label: 'Obese (2)', value: 2 },
-        { label: 'Below average (3)', value: 3 },
-      ]),
-      selectInput('skin', 'Skin type / visual risk areas', [
-        { label: 'Healthy (0)', value: 0 },
-        { label: 'Tissue paper / dry (1)', value: 1 },
-        { label: 'Edematous / clammy (1)', value: 1 },
-        { label: 'Discolored grade 1 (2)', value: 2 },
-        { label: 'Broken spots grade 2+ (3)', value: 3 },
-      ]),
-      selectInput('sexAge', 'Sex and age', [
-        { label: 'Male (1)', value: 1 },
-        { label: 'Female (2)', value: 2 },
-        { label: '14–49 (+1 total already includes sex — use age add-on path)', value: 1 },
-        { label: '50–64 (add age 2 → enter combined sex+age points)', value: 3 },
-        { label: '65–74 (sex+age typical 3–4)', value: 4 },
-        { label: '75–80 (sex+age typical 4–5)', value: 5 },
-        { label: '81+ (sex+age typical 5–6)', value: 6 },
-      ]),
+      selectInput(
+        'build',
+        'Build / weight for height',
+        [
+          { label: 'Average — BMI 20–24.9 (0)', value: 0, description: 'Official build: BMI 20–24.9' },
+          { label: 'Above average — BMI 25–29.9 (1)', value: 1, description: 'Official build: BMI 25–29.9' },
+          { label: 'Obese — BMI ≥30 (2)', value: 2, description: 'Official build: BMI ≥30' },
+          { label: 'Below average — BMI <20 (3)', value: 3, description: 'Official build: BMI <20' },
+        ],
+        0,
+        'Official Waterlow build/weight-for-height uses BMI: 20–24.9 average (0), 25–29.9 above average (1), ≥30 obese (2), <20 below average (3).',
+      ),
+      selectInput(
+        'skin',
+        'Skin type / visual risk areas',
+        [
+          { label: 'Healthy (0)', value: 0, description: 'No visual skin-risk finding' },
+          { label: 'Tissue paper / dry (1)', value: 1, description: 'Tissue-paper or dry skin. Official card may stack several skin items; this tool is highest-one-only' },
+          { label: 'Edematous / clammy (1)', value: 1, description: 'Edematous or clammy. Official card may stack; this tool is highest-one-only' },
+          { label: 'Discolored grade 1 (2)', value: 2, description: 'Discoloured / grade 1. Highest listed finding only in this tool' },
+          { label: 'Broken spots grade 2+ (3)', value: 3, description: 'Broken spots / grade 2+. Highest listed finding only in this tool' },
+        ],
+        0,
+        'Official Waterlow skin type may add multiple visual descriptors; this tool is highest-one-only (pick the single highest listed finding).',
+      ),
+      selectInput(
+        'sexAge',
+        'Sex and age (combined)',
+        [
+          { label: 'Do not use — male sex only, age not added (1)', value: 1, description: 'Official sex Male = 1 only. Prefer an age-banded combined option when age is known' },
+          { label: 'Female, age not added / Male 14–49 combined (2)', value: 2, description: 'Official sex Female = 2, or combined Male 14–49 = 1+1 = 2' },
+          { label: 'Do not use — age 14–49 only, sex not added (1)', value: 1, description: 'Official combined Male 14–49 = 2, Female 14–49 = 3. This option’s value is 1 (not a full combined total)' },
+          { label: 'Male 50–64 or Female 14–49 (3)', value: 3, description: 'Official: Male 50–64 = 1+2 = 3; Female 14–49 = 2+1 = 3' },
+          { label: 'Male 65–74 or Female 50–64 (4)', value: 4, description: 'Official: Male 65–74 = 1+3 = 4; Female 50–64 = 2+2 = 4' },
+          { label: 'Male 75–80 or Female 65–74 (5)', value: 5, description: 'Official: Male 75–80 = 1+4 = 5; Female 65–74 = 2+3 = 5' },
+          { label: 'Male 81+ or Female 75–80 (6)', value: 6, description: 'Official: Male 81+ = 1+5 = 6; Female 75–80 = 2+4 = 6. Female 81+ official = 7 — this tool has no value 7' },
+        ],
+        1,
+        'Official Waterlow adds sex (Male 1 / Female 2) plus age (14–49: 1, 50–64: 2, 65–74: 3, 75–80: 4, 81+: 5). Combined: Male 14–49 = 2, Female 14–49 = 3, Male 50–64 = 3, Female 50–64 = 4, Male 65–74 = 4, Female 65–74 = 5, Male 75–80 = 5, Female 75–80 = 6, Male 81+ = 6, Female 81+ = 7. Pick the option whose points match sex+age. This selector is not split; there is no value 7 (Female 81+ closest is 6).',
+      ),
       selectInput('continence', 'Continence', [
         { label: 'Complete / catheterized (0)', value: 0 },
         { label: 'Occasional incontinence (1)', value: 1 },
@@ -2183,11 +2276,17 @@ export const wave4IcuVentCalcs: Calculator[] = [
         { label: 'Anemia Hb <8 (2)', value: 2 },
         { label: 'Smoking (1)', value: 1 },
       ]),
-      selectInput('neuro', 'Neurological deficit (highest)', [
-        { label: 'None (0)', value: 0 },
-        { label: 'Diabetes / MS / CVA / motor-sensory (4–6 typical) — use 5', value: 5 },
-        { label: 'Paraplegia (5–6)', value: 6 },
-      ]),
+      selectInput(
+        'neuro',
+        'Neurological deficit (highest)',
+        [
+          { label: 'None (0)', value: 0, description: 'No neurological deficit' },
+          { label: 'Diabetes / MS / CVA / motor-sensory — moderate (5)', value: 5, description: 'Official neuro is 4–6 by severity (4 mild / 5 moderate / 6 complete). This control has no 4; use 5 for typical diabetes/MS/CVA/motor-sensory' },
+          { label: 'Paraplegia — complete (6)', value: 6, description: 'Official paraplegia 5–6. This option is 6 (complete); use 5 if moderate rather than complete' },
+        ],
+        0,
+        'Official Waterlow neurological deficit is 4–6 for diabetes/MS/CVA/motor-sensory/paraplegia — pick 4 mild / 5 moderate / 6 complete. This control only offers 5 or 6.',
+      ),
       selectInput('surgery', 'Major surgery / trauma', [
         { label: 'None (0)', value: 0 },
         { label: 'Orthopedic / spinal (below waist / spinal) (5)', value: 5 },
@@ -2272,7 +2371,9 @@ export const wave4IcuVentCalcs: Calculator[] = [
     ],
     pearls: [
       'Unlike Braden, higher Waterlow = higher risk.',
-      'This implementation simplifies sex+age stacking — verify against your printed Waterlow card for audit-critical scoring.',
+      'Official sex (M 1 / F 2) plus age (14–49: 1 … 81+: 5) are combined in one selector; Female 81+ official = 7 is not offered.',
+      'Skin findings on the printed card may stack; this tool scores the single highest skin option only.',
+      'Waterlow card copyright Judy Waterlow — verify audit-critical scoring against the printed card.',
     ],
   },
 

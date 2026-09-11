@@ -7,15 +7,18 @@ function essdaiDomain(
   label: string,
   weight: number,
   maxLevel: 2 | 3,
-  helpText?: string,
+  helpText: string = 'Score current Sjögren activity, not damage or infection.',
+  descriptions?: string[],
 ) {
   const names = ['No activity', 'Low', 'Moderate', 'High'];
   const options = [];
   for (let level = 0; level <= maxLevel; level++) {
+    const description = descriptions?.[level];
     options.push({
       label: `${names[level]} (level ${level} × wt ${weight} = ${weight * level})`,
       value: level,
       points: weight * level,
+      ...(description ? { description } : {}),
     });
   }
   return selectInput(id, label, options, 0, helpText);
@@ -65,19 +68,167 @@ const MRSS_SITES: { id: string; label: string }[] = [
   { id: 'lFeet', label: 'Left feet' },
 ];
 
-const ESSDAI_DOMAINS: { id: string; label: string; weight: number; maxLevel: 2 | 3 }[] = [
-  { id: 'constitutional', label: 'Constitutional', weight: 3, maxLevel: 2 },
-  { id: 'lymphadenopathy', label: 'Lymphadenopathy / lymphoma', weight: 4, maxLevel: 3 },
-  { id: 'glandular', label: 'Glandular', weight: 2, maxLevel: 2 },
-  { id: 'articular', label: 'Articular', weight: 2, maxLevel: 3 },
-  { id: 'cutaneous', label: 'Cutaneous', weight: 3, maxLevel: 3 },
-  { id: 'pulmonary', label: 'Pulmonary', weight: 5, maxLevel: 3 },
-  { id: 'renal', label: 'Renal', weight: 5, maxLevel: 3 },
-  { id: 'muscular', label: 'Muscular', weight: 6, maxLevel: 3 },
-  { id: 'pns', label: 'Peripheral nervous system', weight: 5, maxLevel: 3 },
-  { id: 'cns', label: 'Central nervous system', weight: 5, maxLevel: 3 },
-  { id: 'haematological', label: 'Haematological', weight: 2, maxLevel: 3 },
-  { id: 'biological', label: 'Biological', weight: 1, maxLevel: 2 },
+const ESSDAI_DOMAINS: {
+  id: string;
+  label: string;
+  weight: number;
+  maxLevel: 2 | 3;
+  helpText: string;
+  descriptions: string[];
+}[] = [
+  {
+    id: 'constitutional',
+    label: 'Constitutional',
+    weight: 3,
+    maxLevel: 2,
+    helpText: 'Score current Sjögren activity, not damage or infection. Exclude infectious fever and voluntary weight loss.',
+    descriptions: [
+      'No fever, night sweats, or involuntary weight loss from Sjögren activity.',
+      'Fever 37.5–38.5 °C and/or night sweats and/or involuntary 5–10% weight loss.',
+      'Fever >38.5 °C or involuntary weight loss >10%.',
+    ],
+  },
+  {
+    id: 'lymphadenopathy',
+    label: 'Lymphadenopathy / lymphoma',
+    weight: 4,
+    maxLevel: 3,
+    helpText: 'Score current Sjögren activity, not damage or infection. Exclude infectious lymphadenopathy.',
+    descriptions: [
+      'No enlarged nodes or splenomegaly; no current B-cell malignancy.',
+      'Nodes ≥1 cm (any region) or ≥2 cm inguinal.',
+      'Nodes ≥2 cm (any region) or ≥3 cm inguinal, and/or splenomegaly (palpable or imaging).',
+      'Current malignant B-cell proliferative disorder.',
+    ],
+  },
+  {
+    id: 'glandular',
+    label: 'Glandular',
+    weight: 2,
+    maxLevel: 2,
+    helpText: 'Score current Sjögren activity, not damage or infection. Exclude stone or infection.',
+    descriptions: [
+      'No glandular swelling.',
+      'Parotid ≤3 cm, or limited submandibular or lacrimal swelling.',
+      'Parotid >3 cm, or major submandibular or lacrimal swelling.',
+    ],
+  },
+  {
+    id: 'articular',
+    label: 'Articular',
+    weight: 2,
+    maxLevel: 3,
+    helpText: 'Score current Sjögren activity, not damage or infection. 28-joint synovitis count; exclude osteoarthritis.',
+    descriptions: [
+      'No currently active articular involvement.',
+      'Arthralgia of hands/wrists/ankles/feet plus morning stiffness >30 min (no synovitis).',
+      '1–5 of 28 joints with synovitis.',
+      '≥6 of 28 joints with synovitis.',
+    ],
+  },
+  {
+    id: 'cutaneous',
+    label: 'Cutaneous',
+    weight: 3,
+    maxLevel: 3,
+    helpText: 'Score current Sjögren activity, not damage or infection. Stable long-lasting cutaneous damage scores 0.',
+    descriptions: [
+      'No currently active cutaneous involvement.',
+      'Erythema multiforme (EM).',
+      'Limited vasculitis or purpura of feet–ankles, or subacute cutaneous lupus (SCLE).',
+      'Diffuse vasculitis or purpura, or ulcers related to vasculitis.',
+    ],
+  },
+  {
+    id: 'pulmonary',
+    label: 'Pulmonary',
+    weight: 5,
+    maxLevel: 3,
+    helpText: 'Score current Sjögren activity, not damage or infection. Tobacco-related or long-stable ILD scores 0.',
+    descriptions: [
+      'No currently active pulmonary involvement.',
+      'Persistent cough or ILD without dyspnoea and with normal PFT.',
+      'NYHA II, or DLCO 40–69%, or FVC 60–79%.',
+      'NYHA III–IV, or DLCO <40%, or FVC <60%.',
+    ],
+  },
+  {
+    id: 'renal',
+    label: 'Renal',
+    weight: 5,
+    maxLevel: 3,
+    helpText: 'Score current Sjögren activity, not damage or infection. If biopsied, rate histology first; long-stable proteinuria scores 0.',
+    descriptions: [
+      'Proteinuria <0.5 g/day, no haematuria/leucocyturia/acidosis; or long-stable damage proteinuria.',
+      'Proteinuria 0.5–1 g/day without haematuria or renal failure (GFR ≥60), or RTA without renal failure.',
+      'Proteinuria 1–1.5 g/day (GFR ≥60, no haematuria), or RTA with renal failure (GFR <60), or membranous GN / heavy interstitial infiltrate.',
+      'Proteinuria >1.5 g/day, haematuria, or GFR <60; or proliferative GN, cryoglobulinaemic GN, or TMA.',
+    ],
+  },
+  {
+    id: 'muscular',
+    label: 'Muscular',
+    weight: 6,
+    maxLevel: 3,
+    helpText: 'Score current Sjögren activity, not damage or infection. Exclude corticosteroid myopathy. CK as × laboratory ULN.',
+    descriptions: [
+      'No currently active myositis.',
+      'EMG- or biopsy-proven myositis with normal strength and CK ≤2× ULN.',
+      'Weakness MRC 4, or CK >2× to ≤4× ULN (EMG/biopsy-proven).',
+      'Weakness MRC ≤3, or CK >4× ULN (EMG/biopsy-proven).',
+    ],
+  },
+  {
+    id: 'pns',
+    label: 'Peripheral nervous system',
+    weight: 5,
+    maxLevel: 3,
+    helpText: 'Score current Sjögren activity, not damage or infection. Non-evolving neuropathy >12 months or non-Sjögren neuropathy scores 0.',
+    descriptions: [
+      'No currently active PNS involvement.',
+      'Pure sensory axonal neuropathy (NCS), trigeminal neuralgia, or proven small-fibre neuropathy.',
+      'Axonal motor neuropathy without deficit (MRC 4), cranial nerve of peripheral origin (except trigeminal), ganglionopathy with mild/moderate ataxia, or mild CIDP.',
+      'Motor neuropathy with deficit (MRC ≤3), vasculitic mononeuritis multiplex, severe ataxia from ganglionopathy, or severe CIDP.',
+    ],
+  },
+  {
+    id: 'cns',
+    label: 'Central nervous system',
+    weight: 5,
+    maxLevel: 3,
+    helpText: 'Score current Sjögren activity, not damage or infection. Official table has no Low (level 1) — leave it unused. Damage or non-Sjögren CNS scores 0.',
+    descriptions: [
+      'No currently active CNS involvement.',
+      'Not used on the official ESSDAI table (no Low / level-1 CNS item). Do not select Low.',
+      'Cranial nerve involvement of central origin, optic neuritis, or MS-like syndrome (sensory or cognitive).',
+      'Cerebral vasculitis (stroke/TIA), seizure, transverse myelitis, lymphocytic meningitis, or MS-like syndrome with motor deficit.',
+    ],
+  },
+  {
+    id: 'haematological',
+    label: 'Haematological',
+    weight: 2,
+    maxLevel: 3,
+    helpText: 'Score current Sjögren activity, not damage or infection. Autoimmune cytopenia only; exclude iron/vitamin deficiency and drug-induced counts.',
+    descriptions: [
+      'No autoimmune cytopenia.',
+      'Autoimmune neutropenia 1000–1500/µL and/or Hb 10–12 g/dL and/or platelets 100–150 ×10⁹/L, or lymphocytes 500–1000/µL.',
+      'Autoimmune neutropenia 500–1000/µL and/or Hb 8–10 g/dL and/or platelets 50–100 ×10⁹/L, or lymphocytes ≤500/µL.',
+      'Autoimmune neutropenia <500/µL and/or Hb <8 g/dL and/or platelets <50 ×10⁹/L.',
+    ],
+  },
+  {
+    id: 'biological',
+    label: 'Biological',
+    weight: 1,
+    maxLevel: 2,
+    helpText: 'Score current Sjögren activity, not damage or infection. IgG in g/L.',
+    descriptions: [
+      'No clone, hypocomplement, hypergammaglobulinaemia, cryoglobulin, or recent IgG fall.',
+      'Clonal component and/or hypocomplement (low C3, C4, or CH50) and/or IgG 16–20 g/L.',
+      'Cryoglobulin and/or IgG >20 g/L and/or recent hypogammaglobulinaemia or recent IgG fall (<5 g/L).',
+    ],
+  },
 ];
 
 const BILAG_DOMAINS: { id: string; label: string }[] = [
@@ -1249,7 +1400,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     whenToUse: 'Systemic activity scoring in primary Sjögren disease for clinic, trials, and biologic eligibility.',
     whyUse: 'EULAR consensus activity index; MCII is a decrease ≥3 points. High activity ≥14.',
     inputs: ESSDAI_DOMAINS.map((d) =>
-      essdaiDomain(d.id, `${d.label} (weight ${d.weight})`, d.weight, d.maxLevel),
+      essdaiDomain(d.id, `${d.label} (weight ${d.weight})`, d.weight, d.maxLevel, d.helpText, d.descriptions),
     ),
     calculate(values) {
       const rows = ESSDAI_DOMAINS.map((d) => {
@@ -1310,6 +1461,8 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     pearls: [
       'Biological domain max is 2 (weight 1) — “high” is not available.',
       'ESSDAI is systemic activity; dryness/fatigue/pain live on ESSPRI.',
+      'Score current Sjögren activity only — long-lasting damage (≥12 months) and infection score 0.',
+      'Official CNS table has no Low (level 1); leave that option unused. Moderate = central cranial nerve, optic neuritis, or MS-like syndrome; High = cerebral vasculitis, seizure, transverse myelitis, or lymphocytic meningitis.',
     ],
   },
 

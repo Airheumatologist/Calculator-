@@ -2075,108 +2075,548 @@ export const wave7HighuseCalcs: Calculator[] = [
     whenToUse: 'When scoring a mucocutaneous/surgical bleeding history for possible mild bleeding disorder (VWD, platelet function disorder).',
     whyUse: 'Standardized ISTH-SSC BAT domains; this module sums them rather than only interpreting a pre-computed total.',
     inputs: [
-      selectInput('sex', 'Patient sex (cutoff)', [
-        { label: 'Adult male (positive ≥4)', value: 'male' },
-        { label: 'Adult female (positive ≥6)', value: 'female' },
-      ]),
-      selectInput('epistaxis', 'Epistaxis', [
-        { label: '0 — None / trivial', value: 0, points: 0 },
-        { label: '1', value: 1, points: 1 },
-        { label: '2', value: 2, points: 2 },
-        { label: '3', value: 3, points: 3 },
-        { label: '4 — Life-threatening / ICU', value: 4, points: 4 },
-      ]),
-      selectInput('cutaneous', 'Cutaneous (bruising / purpura)', [
-        { label: '0', value: 0, points: 0 },
-        { label: '1', value: 1, points: 1 },
-        { label: '2', value: 2, points: 2 },
-        { label: '3', value: 3, points: 3 },
-        { label: '4', value: 4, points: 4 },
-      ]),
-      selectInput('minorWounds', 'Bleeding from minor wounds', [
-        { label: '0', value: 0, points: 0 },
-        { label: '1', value: 1, points: 1 },
-        { label: '2', value: 2, points: 2 },
-        { label: '3', value: 3, points: 3 },
-        { label: '4', value: 4, points: 4 },
-      ]),
-      selectInput('oralCavity', 'Oral cavity bleeding', [
-        { label: '0', value: 0, points: 0 },
-        { label: '1', value: 1, points: 1 },
-        { label: '2', value: 2, points: 2 },
-        { label: '3', value: 3, points: 3 },
-        { label: '4', value: 4, points: 4 },
-      ]),
-      selectInput('gi', 'GI bleeding', [
-        { label: '0', value: 0, points: 0 },
-        { label: '1', value: 1, points: 1 },
-        { label: '2', value: 2, points: 2 },
-        { label: '3', value: 3, points: 3 },
-        { label: '4', value: 4, points: 4 },
-      ]),
-      selectInput('hematuria', 'Hematuria', [
-        { label: '0', value: 0, points: 0 },
-        { label: '1', value: 1, points: 1 },
-        { label: '2', value: 2, points: 2 },
-        { label: '3', value: 3, points: 3 },
-        { label: '4', value: 4, points: 4 },
-      ]),
-      selectInput('toothExtraction', 'Tooth extraction', [
-        { label: '0 — None / not applicable / no bleeding', value: 0, points: 0 },
-        { label: '1', value: 1, points: 1 },
-        { label: '2', value: 2, points: 2 },
-        { label: '3', value: 3, points: 3 },
-        { label: '4', value: 4, points: 4 },
-      ]),
-      selectInput('surgery', 'Surgery', [
-        { label: '0 — None / not applicable / no bleeding', value: 0, points: 0 },
-        { label: '1', value: 1, points: 1 },
-        { label: '2', value: 2, points: 2 },
-        { label: '3', value: 3, points: 3 },
-        { label: '4', value: 4, points: 4 },
-      ]),
-      selectInput('menorrhagia', 'Menorrhagia (0 if not applicable)', [
-        { label: '0', value: 0, points: 0 },
-        { label: '1', value: 1, points: 1 },
-        { label: '2', value: 2, points: 2 },
-        { label: '3', value: 3, points: 3 },
-        { label: '4', value: 4, points: 4 },
-      ]),
-      selectInput('postpartum', 'Post-partum hemorrhage (0 if not applicable)', [
-        { label: '0', value: 0, points: 0 },
-        { label: '1', value: 1, points: 1 },
-        { label: '2', value: 2, points: 2 },
-        { label: '3', value: 3, points: 3 },
-        { label: '4', value: 4, points: 4 },
-      ]),
-      selectInput('muscle', 'Muscle hematomas', [
-        { label: '0', value: 0, points: 0 },
-        { label: '1', value: 1, points: 1 },
-        { label: '2', value: 2, points: 2 },
-        { label: '3', value: 3, points: 3 },
-        { label: '4', value: 4, points: 4 },
-      ]),
-      selectInput('joint', 'Hemarthrosis', [
-        { label: '0', value: 0, points: 0 },
-        { label: '1', value: 1, points: 1 },
-        { label: '2', value: 2, points: 2 },
-        { label: '3', value: 3, points: 3 },
-        { label: '4', value: 4, points: 4 },
-      ]),
-      selectInput('cns', 'CNS bleeding', [
-        { label: '0', value: 0, points: 0 },
-        { label: '1', value: 1, points: 1 },
-        { label: '2', value: 2, points: 2 },
-        { label: '3', value: 3, points: 3 },
-        { label: '4', value: 4, points: 4 },
-      ]),
-      selectInput('other', 'Other bleeding', [
-        { label: '0', value: 0, points: 0 },
-        { label: '1', value: 1, points: 1 },
-        { label: '2', value: 2, points: 2 },
-        { label: '3', value: 3, points: 3 },
-        { label: '4', value: 4, points: 4 },
-      ]),
+      selectInput(
+        'sex',
+        'Patient sex (cutoff)',
+        [
+          { label: 'Adult male (positive ≥4)', value: 'male' },
+          { label: 'Adult female (positive ≥6)', value: 'female' },
+        ],
+        undefined,
+        'Adult men ≥4, adult women ≥6, children <18 ≥3 (cutoff info only — this control has no Child option and does not change adult male/female scoring).'
+      ),
+      selectInput(
+        'epistaxis',
+        'Epistaxis',
+        [
+          {
+            label: '0 — None / trivial',
+            value: 0,
+            points: 0,
+            description: 'No or trivial epistaxis (not >5/year and not lasting >10 min).',
+          },
+          {
+            label: '1 — >5/year or >10 min',
+            value: 1,
+            points: 1,
+            description: '>5 episodes per year or lasting more than 10 minutes.',
+          },
+          {
+            label: '2 — Consultation',
+            value: 2,
+            points: 2,
+            description: 'Consultation only (sought evaluation, specialist referral, or detailed labs).',
+          },
+          {
+            label: '3 — Packing / cautery / AF',
+            value: 3,
+            points: 3,
+            description: 'Packing or cauterization or antifibrinolytic.',
+          },
+          {
+            label: '4 — Transfusion / replacement / DDAVP',
+            value: 4,
+            points: 4,
+            description: 'Blood transfusion or replacement therapy (hemostatic blood components and rFVIIa) or desmopressin.',
+          },
+        ],
+        0,
+        'Score the worst lifetime episode before diagnosis. Score 0 if never challenged. Consultation = sought evaluation, specialist referral, or detailed laboratory investigation.'
+      ),
+      selectInput(
+        'cutaneous',
+        'Cutaneous (bruising / purpura)',
+        [
+          {
+            label: '0 — None / trivial',
+            value: 0,
+            points: 0,
+            description: 'No or trivial bruising (not ≥5 bruises >1 cm in exposed areas).',
+          },
+          {
+            label: '1 — ≥5 bruises >1 cm exposed',
+            value: 1,
+            points: 1,
+            description: 'Five or more bruises >1 cm in exposed areas.',
+          },
+          {
+            label: '2 — Consultation',
+            value: 2,
+            points: 2,
+            description: 'Consultation only (sought evaluation, specialist referral, or detailed labs).',
+          },
+          {
+            label: '3 — Extensive',
+            value: 3,
+            points: 3,
+            description: 'Extensive cutaneous bleeding.',
+          },
+          {
+            label: '4 — Spontaneous hematoma + transfusion',
+            value: 4,
+            points: 4,
+            description: 'Spontaneous hematoma requiring blood transfusion.',
+          },
+        ],
+        0,
+        'Score the worst lifetime episode before diagnosis. Score 0 if never challenged. Consultation = sought evaluation, specialist referral, or detailed laboratory investigation. Score 1 = ≥5 bruises >1 cm in exposed areas.'
+      ),
+      selectInput(
+        'minorWounds',
+        'Bleeding from minor wounds',
+        [
+          {
+            label: '0 — None / trivial',
+            value: 0,
+            points: 0,
+            description: 'No or trivial bleeding from minor wounds.',
+          },
+          {
+            label: '1 — >5/year or >10 min',
+            value: 1,
+            points: 1,
+            description: '>5 episodes per year or lasting more than 10 minutes.',
+          },
+          {
+            label: '2 — Consultation',
+            value: 2,
+            points: 2,
+            description: 'Consultation only (sought evaluation, specialist referral, or detailed labs).',
+          },
+          {
+            label: '3 — Surgical hemostasis',
+            value: 3,
+            points: 3,
+            description: 'Surgical hemostasis required.',
+          },
+          {
+            label: '4 — Transfusion / replacement / DDAVP',
+            value: 4,
+            points: 4,
+            description: 'Blood transfusion, replacement therapy, or desmopressin.',
+          },
+        ],
+        0,
+        'Score the worst lifetime episode before diagnosis. Score 0 if never challenged. Consultation = sought evaluation, specialist referral, or detailed laboratory investigation.'
+      ),
+      selectInput(
+        'oralCavity',
+        'Oral cavity bleeding',
+        [
+          {
+            label: '0 — None / trivial',
+            value: 0,
+            points: 0,
+            description: 'No or trivial oral-cavity bleeding.',
+          },
+          {
+            label: '1 — Present',
+            value: 1,
+            points: 1,
+            description: 'Oral-cavity bleeding present (does not qualify for 2 or more).',
+          },
+          {
+            label: '2 — Consultation',
+            value: 2,
+            points: 2,
+            description: 'Consultation only (sought evaluation, specialist referral, or detailed labs).',
+          },
+          {
+            label: '3 — Surgical hemostasis / AF',
+            value: 3,
+            points: 3,
+            description: 'Surgical hemostasis or antifibrinolytic.',
+          },
+          {
+            label: '4 — Transfusion / replacement / DDAVP',
+            value: 4,
+            points: 4,
+            description: 'Blood transfusion, replacement therapy, or desmopressin.',
+          },
+        ],
+        0,
+        'Score the worst lifetime episode before diagnosis. Score 0 if never challenged. Consultation = sought evaluation, specialist referral, or detailed laboratory investigation.'
+      ),
+      selectInput(
+        'gi',
+        'GI bleeding',
+        [
+          {
+            label: '0 — None / trivial',
+            value: 0,
+            points: 0,
+            description: 'No or trivial GI bleeding.',
+          },
+          {
+            label: '1 — Present (not local cause)',
+            value: 1,
+            points: 1,
+            description: 'Present, not associated with ulcer, portal hypertension, hemorrhoids, or angiodysplasia.',
+          },
+          {
+            label: '2 — Consultation',
+            value: 2,
+            points: 2,
+            description: 'Consultation only (sought evaluation, specialist referral, or detailed labs).',
+          },
+          {
+            label: '3 — Surgical hemostasis / AF',
+            value: 3,
+            points: 3,
+            description: 'Surgical hemostasis or antifibrinolytic.',
+          },
+          {
+            label: '4 — Transfusion / replacement / DDAVP',
+            value: 4,
+            points: 4,
+            description: 'Blood transfusion, replacement therapy, or desmopressin.',
+          },
+        ],
+        0,
+        'Score the worst lifetime episode before diagnosis. Score 0 if never challenged. Consultation = sought evaluation, specialist referral, or detailed laboratory investigation. Score 1 only if GI bleeding is not explained by ulcer, portal hypertension, hemorrhoids, or angiodysplasia.'
+      ),
+      selectInput(
+        'hematuria',
+        'Hematuria',
+        [
+          {
+            label: '0 — None / trivial',
+            value: 0,
+            points: 0,
+            description: 'No or trivial hematuria.',
+          },
+          {
+            label: '1 — Macroscopic',
+            value: 1,
+            points: 1,
+            description: 'Present (macroscopic).',
+          },
+          {
+            label: '2 — Consultation',
+            value: 2,
+            points: 2,
+            description: 'Consultation only (sought evaluation, specialist referral, or detailed labs).',
+          },
+          {
+            label: '3 — Surgical hemostasis / iron',
+            value: 3,
+            points: 3,
+            description: 'Surgical hemostasis or iron therapy.',
+          },
+          {
+            label: '4 — Transfusion / replacement / DDAVP',
+            value: 4,
+            points: 4,
+            description: 'Blood transfusion, replacement therapy, or desmopressin.',
+          },
+        ],
+        0,
+        'Score the worst lifetime episode before diagnosis. Score 0 if never challenged. Consultation = sought evaluation, specialist referral, or detailed laboratory investigation. Score 1 is macroscopic hematuria.'
+      ),
+      selectInput(
+        'toothExtraction',
+        'Tooth extraction',
+        [
+          {
+            label: '0 — None / not applicable / no bleeding',
+            value: 0,
+            points: 0,
+            description: 'No/trivial or none done (never challenged) or no bleeding after extraction.',
+          },
+          {
+            label: '1 — ≤25% of procedures, no intervention',
+            value: 1,
+            points: 1,
+            description: 'Reported in ≤25% of all procedures, no intervention (e.g. 4 extractions, 1 bled).',
+          },
+          {
+            label: '2 — >25% of procedures, no intervention',
+            value: 2,
+            points: 2,
+            description: 'Reported in >25% of all procedures, no intervention (e.g. 1 of 1, 1 of 2, or 1 of 3 bled).',
+          },
+          {
+            label: '3 — Resuturing or packing',
+            value: 3,
+            points: 3,
+            description: 'Resuturing or packing required.',
+          },
+          {
+            label: '4 — Transfusion / replacement / DDAVP',
+            value: 4,
+            points: 4,
+            description: 'Blood transfusion, replacement therapy, or desmopressin.',
+          },
+        ],
+        0,
+        'Score the worst lifetime episode before diagnosis. Score 0 if never challenged (no extractions) or no bleeding. Consultation = sought evaluation, specialist referral, or detailed laboratory investigation. Score 1 = ≤25% of procedures with no intervention; 2 = >25% with no intervention.'
+      ),
+      selectInput(
+        'surgery',
+        'Surgery',
+        [
+          {
+            label: '0 — None / not applicable / no bleeding',
+            value: 0,
+            points: 0,
+            description: 'No/trivial or none done (never challenged) or no bleeding after surgery.',
+          },
+          {
+            label: '1 — ≤25% of procedures, no intervention',
+            value: 1,
+            points: 1,
+            description: 'Reported in ≤25% of all procedures, no intervention (e.g. 4 surgeries, 1 bled).',
+          },
+          {
+            label: '2 — >25% of procedures, no intervention',
+            value: 2,
+            points: 2,
+            description: 'Reported in >25% of all procedures, no intervention (e.g. 1 of 1, 1 of 2, or 1 of 3 bled).',
+          },
+          {
+            label: '3 — Surgical hemostasis / AF',
+            value: 3,
+            points: 3,
+            description: 'Surgical hemostasis or antifibrinolytic.',
+          },
+          {
+            label: '4 — Transfusion / replacement / DDAVP',
+            value: 4,
+            points: 4,
+            description: 'Blood transfusion, replacement therapy, or desmopressin.',
+          },
+        ],
+        0,
+        'Score the worst lifetime episode before diagnosis. Score 0 if never challenged (no surgeries) or no bleeding. Consultation = sought evaluation, specialist referral, or detailed laboratory investigation. Score 1 = ≤25% of procedures with no intervention; 2 = >25% with no intervention.'
+      ),
+      selectInput(
+        'menorrhagia',
+        'Menorrhagia (0 if not applicable)',
+        [
+          {
+            label: '0 — None / trivial / N/A',
+            value: 0,
+            points: 0,
+            description: 'No/trivial, or not applicable (males, premenarchal).',
+          },
+          {
+            label: '1 — Pads q2h / PBAC>100 / consult',
+            value: 1,
+            points: 1,
+            description: 'Consultation only, or changing pads more frequently than every 2 hours, or clot and flooding, or PBAC score >100.',
+          },
+          {
+            label: '2 — Time off / AF or hormones or iron',
+            value: 2,
+            points: 2,
+            description: 'Time off work/school >2 per year, or requiring antifibrinolytics or hormonal or iron therapy.',
+          },
+          {
+            label: '3 — Combined hormones+AF / since menarche',
+            value: 3,
+            points: 3,
+            description: 'Requiring combined treatment with antifibrinolytics and hormonal therapy, or present since menarche and >12 months.',
+          },
+          {
+            label: '4 — Acute / transfusion / D&C / hysterectomy',
+            value: 4,
+            points: 4,
+            description: 'Acute menorrhagia requiring hospital admission and emergency treatment, or transfusion/replacement/desmopressin, or dilatation and curettage or endometrial ablation or hysterectomy.',
+          },
+        ],
+        0,
+        'Score the worst lifetime episode before diagnosis. Score 0 if never challenged or not applicable. Consultation = sought evaluation, specialist referral, or detailed laboratory investigation. Score 1 includes pads more often than every 2 hours, clot/flooding, or PBAC >100; 3 includes combined hormones + antifibrinolytic; 4 includes acute D&C, ablation, or hysterectomy.'
+      ),
+      selectInput(
+        'postpartum',
+        'Post-partum hemorrhage (0 if not applicable)',
+        [
+          {
+            label: '0 — None / trivial / no deliveries',
+            value: 0,
+            points: 0,
+            description: 'No/trivial or no deliveries (never challenged).',
+          },
+          {
+            label: '1 — Consult / syntocin / lochia >6 wk',
+            value: 1,
+            points: 1,
+            description: 'Consultation only, or use of syntocin, or lochia >6 weeks.',
+          },
+          {
+            label: '2 — Iron or antifibrinolytic',
+            value: 2,
+            points: 2,
+            description: 'Iron therapy or antifibrinolytics.',
+          },
+          {
+            label: '3 — Transfusion / EUA / uterine balloon',
+            value: 3,
+            points: 3,
+            description: 'Requiring blood transfusion, replacement therapy, or desmopressin, or examination under anaesthesia and/or uterine balloon/pack tamponade.',
+          },
+          {
+            label: '4 — Critical care or surgical intervention',
+            value: 4,
+            points: 4,
+            description: 'Any procedure requiring critical care or surgical intervention (e.g. hysterectomy, internal iliac artery ligation, uterine artery embolization, uterine brace sutures).',
+          },
+        ],
+        0,
+        'Score the worst lifetime episode before diagnosis. Score 0 if never challenged (no deliveries) or not applicable. Consultation = sought evaluation, specialist referral, or detailed laboratory investigation.'
+      ),
+      selectInput(
+        'muscle',
+        'Muscle hematomas',
+        [
+          {
+            label: '0 — Never',
+            value: 0,
+            points: 0,
+            description: 'Never had a muscle hematoma.',
+          },
+          {
+            label: '1 — Post-trauma, no therapy',
+            value: 1,
+            points: 1,
+            description: 'Post-trauma, no therapy.',
+          },
+          {
+            label: '2 — Spontaneous, no therapy',
+            value: 2,
+            points: 2,
+            description: 'Spontaneous, no therapy.',
+          },
+          {
+            label: '3 — DDAVP or replacement',
+            value: 3,
+            points: 3,
+            description: 'Spontaneous or traumatic, requiring desmopressin or replacement therapy.',
+          },
+          {
+            label: '4 — Surgery or transfusion',
+            value: 4,
+            points: 4,
+            description: 'Spontaneous or traumatic, requiring surgical intervention or blood transfusion.',
+          },
+        ],
+        0,
+        'Score the worst lifetime episode before diagnosis. Score 0 if never challenged. Consultation = sought evaluation, specialist referral, or detailed laboratory investigation.'
+      ),
+      selectInput(
+        'joint',
+        'Hemarthrosis',
+        [
+          {
+            label: '0 — Never',
+            value: 0,
+            points: 0,
+            description: 'Never had hemarthrosis.',
+          },
+          {
+            label: '1 — Post-trauma, no therapy',
+            value: 1,
+            points: 1,
+            description: 'Post-trauma, no therapy.',
+          },
+          {
+            label: '2 — Spontaneous, no therapy',
+            value: 2,
+            points: 2,
+            description: 'Spontaneous, no therapy.',
+          },
+          {
+            label: '3 — DDAVP or replacement',
+            value: 3,
+            points: 3,
+            description: 'Spontaneous or traumatic, requiring desmopressin or replacement therapy.',
+          },
+          {
+            label: '4 — Surgery or transfusion',
+            value: 4,
+            points: 4,
+            description: 'Spontaneous or traumatic, requiring surgical intervention or blood transfusion.',
+          },
+        ],
+        0,
+        'Score the worst lifetime episode before diagnosis. Score 0 if never challenged. Consultation = sought evaluation, specialist referral, or detailed laboratory investigation.'
+      ),
+      selectInput(
+        'cns',
+        'CNS bleeding',
+        [
+          {
+            label: '0 — Never',
+            value: 0,
+            points: 0,
+            description: 'Never had CNS bleeding. Official sheet uses 0 / 3 / 4 only.',
+          },
+          {
+            label: '1 — Unused (official 0/3/4)',
+            value: 1,
+            points: 1,
+            description: 'Unused on the official ISTH-SSC BAT sheet. Official CNS scores are 0 (never), 3 (subdural), or 4 (intracerebral). Do not assign 1.',
+          },
+          {
+            label: '2 — Unused (official 0/3/4)',
+            value: 2,
+            points: 2,
+            description: 'Unused on the official ISTH-SSC BAT sheet. Official CNS scores are 0 (never), 3 (subdural), or 4 (intracerebral). Do not assign 2.',
+          },
+          {
+            label: '3 — Subdural, any intervention',
+            value: 3,
+            points: 3,
+            description: 'Subdural hemorrhage, any intervention.',
+          },
+          {
+            label: '4 — Intracerebral, any intervention',
+            value: 4,
+            points: 4,
+            description: 'Intracerebral hemorrhage, any intervention.',
+          },
+        ],
+        0,
+        'Official ISTH-SSC BAT uses 0/3/4 only (3 = subdural, 4 = intracerebral). Values 1 and 2 are unused on the official sheet — do not select them. Score the worst lifetime episode before diagnosis. Score 0 if never challenged. Consultation = sought evaluation, specialist referral, or detailed laboratory investigation.'
+      ),
+      selectInput(
+        'other',
+        'Other bleeding',
+        [
+          {
+            label: '0 — None / trivial',
+            value: 0,
+            points: 0,
+            description: 'No or trivial other bleeding.',
+          },
+          {
+            label: '1 — Present',
+            value: 1,
+            points: 1,
+            description: 'Present (umbilical stump, cephalohematoma, conjunctival, venipuncture, circumcision, or sucking cheek hematoma).',
+          },
+          {
+            label: '2 — Consultation',
+            value: 2,
+            points: 2,
+            description: 'Consultation only (sought evaluation, specialist referral, or detailed labs).',
+          },
+          {
+            label: '3 — Surgical hemostasis / AF',
+            value: 3,
+            points: 3,
+            description: 'Surgical hemostasis or antifibrinolytics.',
+          },
+          {
+            label: '4 — Transfusion / replacement / DDAVP',
+            value: 4,
+            points: 4,
+            description: 'Blood transfusion or replacement therapy or desmopressin.',
+          },
+        ],
+        0,
+        'Includes umbilical stump bleeding, cephalohematoma, conjunctival hemorrhage, cheek hematoma from sucking, and excessive bleeding after circumcision or venipuncture. Score the worst lifetime episode before diagnosis. Score 0 if never challenged. Consultation = sought evaluation, specialist referral, or detailed laboratory investigation.'
+      ),
     ],
     calculate(values) {
       const sex = str(values.sex, 'male');
@@ -2268,6 +2708,10 @@ export const wave7HighuseCalcs: Calculator[] = [
     ],
     pearls: [
       'Companion calculator `isth-bat` only interprets a pre-summed total; this module scores the 14 domains.',
+      'Score the worst lifetime episode before diagnosis; score 0 if never challenged (no surgery, extraction, or delivery).',
+      'Consultation means the patient sought evaluation and was referred to a specialist or offered detailed laboratory investigation.',
+      'CNS bleeding is official 0 / 3 (subdural) / 4 (intracerebral); values 1 and 2 are unused on the ISTH sheet.',
+      'Abnormal cutoffs: adult men ≥4, adult women ≥6, children <18 ≥3 (pediatric cutoff is informational — sex control remains male/female).',
       'Menorrhagia and postpartum are scored 0 when not applicable (males, nulliparous).',
       'Four domains of 1 in a man already meet the ≥4 abnormal threshold.',
     ],

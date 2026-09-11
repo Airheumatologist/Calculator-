@@ -633,16 +633,22 @@ export const wave2OncologyCalcs: Calculator[] = [
     whyUse: 'Links tumor burden, liver function, and PS to recommended therapy classes (ablation → transplant/resection → TACE → systemic → BSC).',
     inputs: [
       selectInput('ps', 'ECOG performance status', [
-        { label: '0', value: 0 },
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '≥3', value: 3 },
+        { label: '0 — Fully active, no restriction', value: 0 },
+        { label: '1 — Restricted in strenuous activity; ambulatory, light/sedentary work OK', value: 1 },
+        { label: '2 — Ambulatory, all self-care; unable to work; up >50% of waking hours', value: 2 },
+        { label: '≥3 — Limited self-care or worse; bed/chair >50% of waking hours', value: 3 },
       ]),
-      selectInput('liver', 'Liver function', [
-        { label: 'Child-Pugh A (well compensated)', value: 'A' },
-        { label: 'Child-Pugh B', value: 'B' },
-        { label: 'Child-Pugh C', value: 'C' },
-      ]),
+      selectInput(
+        'liver',
+        'Liver function',
+        [
+          { label: 'Child-Pugh A (well compensated)', value: 'A' },
+          { label: 'Child-Pugh B', value: 'B' },
+          { label: 'Child-Pugh C', value: 'C' },
+        ],
+        undefined,
+        'Child-Pugh A 5–6 / B 7–9 / C 10–15 from bilirubin, albumin, INR, ascites, encephalopathy (use Child-Pugh calculator).'
+      ),
       selectInput('tumor', 'Tumor burden / extent', [
         { label: 'Single nodule <2 cm, no invasion/extrahepatic', value: 'very_early' },
         { label: 'Single nodule or ≤3 nodules ≤3 cm (early), no invasion/EHD', value: 'early' },
