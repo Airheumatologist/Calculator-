@@ -34,31 +34,63 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Cirrhosis severity, surgical risk, prognosis discussions.',
     whyUse: 'Classic liver disease staging; complements MELD for transplant.',
     inputs: [
-      selectInput('bili', 'Total bilirubin (mg/dL)', [
-        { label: '<2 (1)', value: 1 },
-        { label: '2–3 (2)', value: 2 },
-        { label: '>3 (3)', value: 3 },
-      ]),
+      selectInput(
+        'bili',
+        'Total bilirubin (mg/dL)',
+        [
+          { label: '<2 (1)', value: 1, description: '<2 mg/dL (≈ <34 µmol/L)' },
+          { label: '2–3 (2)', value: 2, description: '2–3 mg/dL (≈ 34–51 µmol/L)' },
+          { label: '>3 (3)', value: 3, description: '>3 mg/dL (≈ >51 µmol/L)' },
+        ],
+        1,
+        '2 mg/dL ≈ 34 µmol/L; 3 mg/dL ≈ 51 µmol/L.',
+      ),
       selectInput('albumin', 'Albumin (g/dL)', [
-        { label: '>3.5 (1)', value: 1 },
-        { label: '2.8–3.5 (2)', value: 2 },
-        { label: '<2.8 (3)', value: 3 },
-      ]),
+        { label: '>3.5 (1)', value: 1, description: '>3.5 g/dL (≈ >35 g/L)' },
+        { label: '2.8–3.5 (2)', value: 2, description: '2.8–3.5 g/dL (≈ 28–35 g/L)' },
+        { label: '<2.8 (3)', value: 3, description: '<2.8 g/dL (≈ <28 g/L)' },
+      ], 1, '3.5 g/dL ≈ 35 g/L; 2.8 g/dL ≈ 28 g/L. Use the same-day lab.'),
       selectInput('inr', 'INR', [
-        { label: '<1.7 (1)', value: 1 },
-        { label: '1.7–2.3 (2)', value: 2 },
-        { label: '>2.3 (3)', value: 3 },
-      ]),
-      selectInput('ascites', 'Ascites', [
-        { label: 'None (1)', value: 1 },
-        { label: 'Mild (2)', value: 2 },
-        { label: 'Moderate–severe (3)', value: 3 },
-      ]),
-      selectInput('enceph', 'Encephalopathy', [
-        { label: 'None (1)', value: 1 },
-        { label: 'Grade 1–2 (2)', value: 2 },
-        { label: 'Grade 3–4 (3)', value: 3 },
-      ]),
+        { label: '<1.7 (1)', value: 1, description: 'INR <1.7 (original Pugh used PT prolongation <4 s)' },
+        { label: '1.7–2.3 (2)', value: 2, description: 'INR 1.7–2.3 (PT prolongation 4–6 s)' },
+        { label: '>2.3 (3)', value: 3, description: 'INR >2.3 (PT prolongation >6 s)' },
+      ], 1, 'INR is the usual modern substitute for Pugh’s PT-prolongation cutoffs (<4 / 4–6 / >6 seconds).'),
+      selectInput(
+        'ascites',
+        'Ascites',
+        [
+          { label: 'None (1)', value: 1, description: 'No ascites' },
+          { label: 'Mild (2)', value: 2, description: 'Slight ascites, or medically controlled with diuretics' },
+          { label: 'Moderate–severe (3)', value: 3, description: 'Moderate–severe ascites; poorly controlled or tense despite diuretics' },
+        ],
+        1,
+        'Grade by exam or imaging plus diuretic response: none = 1; slight / diuretic-controlled = 2; poorly controlled or tense despite diuretics = 3.',
+      ),
+      selectInput(
+        'enceph',
+        'Encephalopathy (West Haven)',
+        [
+          {
+            label: 'None (1)',
+            value: 1,
+            description: 'West Haven 0: no change in personality or behavior; no asterixis',
+          },
+          {
+            label: 'Grade 1–2 (2)',
+            value: 2,
+            description:
+              'WH 1: trivial lack of awareness, euphoria or anxiety, shortened attention, sleep–wake reversal, impaired addition/subtraction. WH 2: lethargy or apathy, disorientation to time, obvious personality change, inappropriate behavior, asterixis. Still arousable.',
+          },
+          {
+            label: 'Grade 3–4 (3)',
+            value: 3,
+            description:
+              'WH 3: somnolence to semistupor, responsive to verbal stimuli, confusion, gross disorientation. WH 4: coma (unresponsive to verbal or noxious stimuli).',
+          },
+        ],
+        1,
+        'Use AASLD/EASL West Haven hepatic encephalopathy grades (Ferenci). Child-Pugh maps none = 1 point, grades 1–2 = 2 points, grades 3–4 = 3 points. Asterixis is typical of grade 2. Grade 3–4 are not fully arousable. Score the worst grade in the current assessment, including HE controlled on lactulose/rifaximin if signs persist.',
+      ),
     ],
     calculate(values) {
       const score = num(values.bili) + num(values.albumin) + num(values.inr) + num(values.ascites) + num(values.enceph);
@@ -85,6 +117,11 @@ export const giNeuroPsychCalcs: Calculator[] = [
     nextSteps: [
       { condition: 'Class B–C', actions: ['Manage decompensation', 'Screen HCC/varices', 'Consider transplant referral'] },
     ],
+    pearls: [
+      'Encephalopathy is West Haven (AASLD/EASL): 0 none; 1 trivial unawareness / sleep reversal / poor attention; 2 lethargy, time disorientation, asterixis; 3 somnolent but arousable to voice, gross disorientation; 4 coma. Child-Pugh collapses 1–2 and 3–4.',
+      'Ascites: none = 1; slight or diuretic-controlled = 2; poorly controlled or tense despite diuretics = 3.',
+      'Some centers use higher bilirubin cutoffs in PBC/PSC (<4 / 4–10 / >10 mg/dL). This tool uses the standard Pugh <2 / 2–3 / >3 mg/dL bands.',
+    ],
   },
   {
     id: 'meld',
@@ -96,9 +133,9 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Liver transplant prioritization and cirrhosis prognosis.',
     whyUse: 'Objective lab-based score used by transplant systems (often MELD-Na).',
     inputs: [
-      numberInput('bili', 'Bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 2.0 }),
-      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, defaultValue: 1.5 }),
-      numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0 }),
+      numberInput('bili', 'Bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 2.0, helpText: 'Total bilirubin in mg/dL. OPTN floors values <1.0 at 1.0.' }),
+      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, defaultValue: 1.5, helpText: 'OPTN floors INR <1.0 at 1.0.' }),
+      numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0, helpText: 'mg/dL. OPTN floors <1.0 at 1.0 and caps at 4.0; dialysis ≥2× in the past week (or 24 h CVVHD) sets Cr to 4.0.' }),
       yesNo('dialysis', 'Dialysis ≥2 times in past week (or 24h CVVHD)', null, 'Sets creatinine to 4.0 mg/dL per OPTN MELD rules (does not add a fixed point total)'),
     ],
     calculate(values) {
@@ -137,7 +174,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Liver allocation / prognosis with hyponatremia.',
     whyUse: 'Hyponatremia adds prognostic information beyond MELD.',
     inputs: [
-      numberInput('meld', 'MELD score', { min: 6, max: 40, defaultValue: 15 }),
+      numberInput('meld', 'MELD score', { min: 6, max: 40, defaultValue: 15, helpText: 'Enter the lab MELD (6–40). OPTN sodium adjustment applies only when MELD >11.' }),
       numberInput('na', 'Serum sodium', { unit: 'mEq/L', min: 120, max: 150, defaultValue: 135, helpText: 'OPTN bounds Na to 125–137 for the adjustment' }),
     ],
     calculate(values) {
@@ -175,30 +212,60 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Adults with suspected upper GI bleeding.',
     whyUse: 'Score 0–1 identifies very low-risk patients often safe for outpatient management.',
     inputs: [
-      selectInput('bun', 'BUN (mg/dL)', [
-        { label: '<18.2 (0)', value: 0 },
-        { label: '18.2–22.3 (2)', value: 2 },
-        { label: '22.4–28.0 (3)', value: 3 },
-        { label: '28.1–70.0 (4)', value: 4 },
-        { label: '≥70 (6)', value: 6 },
-      ]),
-      selectInput('hbMale', 'Hemoglobin (use sex-specific)', [
-        { label: 'Male ≥13 / Female ≥12 (0)', value: 0 },
-        { label: 'Male 12–12.9 / Female 10–11.9 (1)', value: 1 },
-        { label: 'Male 10–11.9 (3)', value: 3 },
-        { label: '<10 either sex (6)', value: 6 },
-      ]),
-      selectInput('sbp', 'Systolic BP', [
+      selectInput(
+        'bun',
+        'BUN (mg/dL)',
+        [
+          { label: '<18.2 (0)', value: 0, description: 'BUN <18.2 mg/dL (urea <6.5 mmol/L)' },
+          { label: '18.2–22.3 (2)', value: 2, description: 'BUN 18.2–22.3 mg/dL (urea 6.5–7.9 mmol/L)' },
+          { label: '22.4–28.0 (3)', value: 3, description: 'BUN 22.4–28.0 mg/dL (urea 8.0–9.9 mmol/L)' },
+          { label: '28.1–70.0 (4)', value: 4, description: 'BUN 28.1–70.0 mg/dL (urea 10.0–24.9 mmol/L)' },
+          { label: '≥70 (6)', value: 6, description: 'BUN ≥70 mg/dL (urea ≥25 mmol/L)' },
+        ],
+        0,
+        'Blood urea nitrogen in mg/dL. Urea mmol/L ≈ BUN ÷ 2.8 (original Blatchford used urea).',
+      ),
+      selectInput(
+        'hbMale',
+        'Hemoglobin (g/dL) — sex-specific bands',
+        [
+          { label: 'Male ≥13 or female ≥12 (0)', value: 0, description: 'At or above the sex-specific normal floor' },
+          {
+            label: 'Female 10–11.9 or male 12–12.9 (1)',
+            value: 1,
+            description: 'Women with Hb 10–11.9 belong here (1 point), not in the male-only 3-point band',
+          },
+          {
+            label: 'Male 10–11.9 only (3)',
+            value: 3,
+            description: 'Men only. Women with Hb 10–11.9 use the 1-point option unless Hb <10',
+          },
+          { label: '<10 either sex (6)', value: 6, description: 'Hb <10 g/dL in men or women' },
+        ],
+        0,
+        'Use the band that matches this patient’s sex. A woman with Hb 10–11.9 scores 1, not 3.',
+      ),
+      selectInput('sbp', 'Systolic BP (mmHg)', [
         { label: '≥110 (0)', value: 0 },
         { label: '100–109 (1)', value: 1 },
         { label: '90–99 (2)', value: 2 },
         { label: '<90 (3)', value: 3 },
-      ]),
-      yesNo('hr100', 'Heart rate ≥ 100', 1),
-      yesNo('melena', 'Melena', 1),
-      yesNo('syncope', 'Syncope', 2),
-      yesNo('liver', 'Hepatic disease', 2),
-      yesNo('heart', 'Cardiac failure', 2),
+      ], 0, 'Systolic BP in mmHg at this presentation.'),
+      yesNo('hr100', 'Heart rate ≥100 bpm', 1, 'Pulse ≥100 beats/min at this presentation.'),
+      yesNo('melena', 'Melena', 1, 'Black tarry stool attributed to the current bleed (not just dark stool from iron/bismuth).'),
+      yesNo('syncope', 'Syncope', 2, 'Transient loss of consciousness with the current bleed presentation.'),
+      yesNo(
+        'liver',
+        'Hepatic disease',
+        2,
+        'Known history or clinical/laboratory evidence of chronic or acute liver disease (Blatchford 2000).',
+      ),
+      yesNo(
+        'heart',
+        'Cardiac failure',
+        2,
+        'Known history or clinical/radiographic evidence of heart failure.',
+      ),
     ],
     calculate(values) {
       const score =
@@ -253,15 +320,30 @@ export const giNeuroPsychCalcs: Calculator[] = [
         { label: '≥80 (2)', value: 2 },
       ]),
       selectInput('shock', 'Shock', [
-        { label: 'No shock HR≤100 SBP≥100 (0)', value: 0 },
-        { label: 'Tachycardia HR>100 SBP≥100 (1)', value: 1 },
-        { label: 'Hypotension SBP<100 (2)', value: 2 },
-      ]),
-      selectInput('comorbid', 'Comorbidity', [
-        { label: 'None (0)', value: 0 },
-        { label: 'Heart failure, IHD, other major (2)', value: 2 },
-        { label: 'Renal/liver failure or metastatic cancer (3)', value: 3 },
-      ]),
+        { label: 'No shock HR≤100 SBP≥100 (0)', value: 0, description: 'HR ≤100 bpm and SBP ≥100 mmHg' },
+        { label: 'Tachycardia HR>100 SBP≥100 (1)', value: 1, description: 'HR >100 bpm with SBP still ≥100 mmHg' },
+        { label: 'Hypotension SBP<100 (2)', value: 2, description: 'SBP <100 mmHg (regardless of HR)' },
+      ], 0, 'Use presentation HR (bpm) and SBP (mmHg). Hypotension outranks tachycardia.'),
+      selectInput(
+        'comorbid',
+        'Comorbidity',
+        [
+          { label: 'None (0)', value: 0, description: 'No major comorbidity' },
+          {
+            label: 'Heart failure, IHD, other major (2)',
+            value: 2,
+            description:
+              'Cardiac failure, ischemic heart disease, or any other major comorbidity of similar severity (e.g. COPD on home O₂, CVA with residual deficit)',
+          },
+          {
+            label: 'Renal/liver failure or metastatic cancer (3)',
+            value: 3,
+            description: 'Renal failure, liver failure, or disseminated malignancy',
+          },
+        ],
+        0,
+        'Score 2 for HF, IHD, or any comparably major comorbidity. Score 3 only for renal failure, liver failure, or disseminated malignancy — not for stable chronic disease of lesser severity.',
+      ),
     ],
     calculate(values) {
       const score = num(values.age) + num(values.shock) + num(values.comorbid);
@@ -290,14 +372,14 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Suspected appendicitis to guide imaging/surgery decisions.',
     whyUse: 'Structured clinical probability; imaging still common.',
     inputs: [
-      yesNo('migration', 'Migration of pain to RLQ', 1),
-      yesNo('anorexia', 'Anorexia', 1),
-      yesNo('nausea', 'Nausea / vomiting', 1),
-      yesNo('rlq', 'RLQ tenderness', 2),
-      yesNo('rebound', 'Rebound tenderness', 1),
-      yesNo('fever', 'Temperature ≥37.3°C', 1),
-      yesNo('leukocytosis', 'Leukocytosis >10,000', 2),
-      yesNo('leftshift', 'Left shift (neutrophilia)', 1),
+      yesNo('migration', 'Migration of pain to RLQ', 1, 'Yes if pain began elsewhere (typically periumbilical or epigastric) and later moved to the right lower quadrant.'),
+      yesNo('anorexia', 'Anorexia', 1, 'Loss of appetite with this illness.'),
+      yesNo('nausea', 'Nausea / vomiting', 1, 'Either nausea or vomiting counts (Alvarado MANTRELS).'),
+      yesNo('rlq', 'RLQ tenderness', 2, 'Tenderness maximal in the right lower quadrant (typically McBurney’s point).'),
+      yesNo('rebound', 'Rebound tenderness', 1, 'Pain on sudden release of RLQ pressure (Blumberg), not only on pressing.'),
+      yesNo('fever', 'Temperature ≥37.3°C', 1, 'Alvarado fever cutoff is ≥37.3°C (99.1°F) — lower than a 38.0°C “fever” rule.'),
+      yesNo('leukocytosis', 'Leukocytosis >10,000/µL', 2, 'WBC >10,000/µL (10 × 10⁹/L).'),
+      yesNo('leftshift', 'Left shift (neutrophilia)', 1, 'Yes if neutrophil left shift / neutrophilia (Alvarado: typically PMNs ≥75%).'),
     ],
     calculate(values) {
       const score =
@@ -337,11 +419,11 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Acute pancreatitis severity (admission portion shown).',
     whyUse: 'Classic criteria; BISAP/APACHE often more practical early.',
     inputs: [
-      yesNo('age', 'Age > 55 years', 1),
-      yesNo('wbc', 'WBC > 16,000', 1),
-      yesNo('glu', 'Glucose > 200 mg/dL', 1),
-      yesNo('ldh', 'LDH > 350 U/L', 1),
-      yesNo('ast', 'AST > 250 U/L', 1),
+      yesNo('age', 'Age > 55 years', 1, 'Admission (not 48-hour) criteria. Complete Ranson also needs 48 h Hct drop, BUN rise, Ca, PaO₂, base deficit, and fluid sequestration — not in this tool.'),
+      yesNo('wbc', 'WBC > 16,000/µL', 1, 'Admission WBC >16,000/µL (16 × 10⁹/L).'),
+      yesNo('glu', 'Glucose > 200 mg/dL', 1, 'Admission glucose >200 mg/dL (≈ 11.1 mmol/L).'),
+      yesNo('ldh', 'LDH > 350 U/L', 1, 'Admission LDH >350 U/L.'),
+      yesNo('ast', 'AST > 250 U/L', 1, 'Admission AST (SGOT) >250 U/L.'),
     ],
     calculate(values) {
       const score = ['age', 'wbc', 'glu', 'ldh', 'ast'].reduce((s, k) => s + (bool(values[k]) ? 1 : 0), 0);
@@ -371,11 +453,21 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Early severity assessment in acute pancreatitis (first 24h).',
     whyUse: 'Simple, uses data available early; predicts mortality.',
     inputs: [
-      yesNo('bun', 'BUN > 25 mg/dL', 1),
-      yesNo('ams', 'Impaired mental status', 1),
-      yesNo('sirs', 'SIRS (≥2 criteria)', 1),
+      yesNo('bun', 'BUN > 25 mg/dL', 1, 'Use findings from the first 24 hours of presentation (Wu 2008). BUN >25 mg/dL (urea ≈ 8.9 mmol/L).'),
+      yesNo(
+        'ams',
+        'Impaired mental status',
+        1,
+        'Yes if GCS <15, or disorientation, lethargy, or coma (Wu 2008).',
+      ),
+      yesNo(
+        'sirs',
+        'SIRS (≥2 criteria)',
+        1,
+        'Yes if ≥2 of: temperature <36 or >38°C; HR >90; RR >20; WBC <4 or >12 ×10⁹/L or >10% bands.',
+      ),
       yesNo('age', 'Age > 60 years', 1),
-      yesNo('pleural', 'Pleural effusion', 1),
+      yesNo('pleural', 'Pleural effusion', 1, 'Yes if pleural effusion on CXR, CT, or ultrasound (any side).'),
     ],
     calculate(values) {
       const score = ['bun', 'ams', 'sirs', 'age', 'pleural'].reduce((s, k) => s + (bool(values[k]) ? 1 : 0), 0);
@@ -403,19 +495,19 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Patients with recent TIA symptoms.',
     whyUse: 'Guides urgency of workup (though urgent workup increasingly universal).',
     inputs: [
-      yesNo('age', 'Age ≥ 60', 1),
-      yesNo('bp', 'BP ≥140/90 at presentation', 1),
+      yesNo('age', 'Age ≥ 60', 1, 'Age at the TIA presentation.'),
+      yesNo('bp', 'BP ≥140/90 at presentation', 1, 'Yes if SBP ≥140 mmHg or DBP ≥90 mmHg at this presentation (either counts — both are not required).'),
       selectInput('clinical', 'Clinical features', [
-        { label: 'Other symptoms (0)', value: 0 },
-        { label: 'Speech disturbance without weakness (1)', value: 1 },
-        { label: 'Unilateral weakness (2)', value: 2 },
-      ]),
+        { label: 'Other symptoms (0)', value: 0, description: 'Sensory, visual, vertigo, or other TIA symptoms without speech disturbance or unilateral weakness' },
+        { label: 'Speech disturbance without weakness (1)', value: 1, description: 'Dysarthria or aphasia without focal motor weakness' },
+        { label: 'Unilateral weakness (2)', value: 2, description: 'Focal motor weakness of face, arm, and/or leg on one side (highest weight; do not also add the speech item)' },
+      ], 0, 'Score the single highest-weight feature of the TIA. Unilateral weakness outranks speech disturbance.'),
       selectInput('duration', 'Duration of symptoms', [
         { label: '<10 min (0)', value: 0 },
         { label: '10–59 min (1)', value: 1 },
         { label: '≥60 min (2)', value: 2 },
-      ]),
-      yesNo('dm', 'Diabetes', 1),
+      ], 0, 'Duration of the longest TIA spell being scored (minutes until symptoms fully resolved).'),
+      yesNo('dm', 'Diabetes', 1, 'Known diagnosis of diabetes mellitus (treated or documented).'),
     ],
     calculate(values) {
       const score = (bool(values.age) ? 1 : 0) + (bool(values.bp) ? 1 : 0) + num(values.clinical) + num(values.duration) + (bool(values.dm) ? 1 : 0);
@@ -660,13 +752,29 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Screening and monitoring major depression in primary care and specialty settings.',
     whyUse: 'Validated, brief, and widely integrated into workflows.',
     inputs: [
-      ...['Interest/pleasure little', 'Feeling down/hopeless', 'Sleep problems', 'Fatigue', 'Appetite change', 'Feeling bad about self', 'Concentration trouble', 'Moving slow/fidgety', 'Thoughts of self-harm'].map((label, i) =>
-        selectInput(`q${i + 1}`, `${i + 1}. ${label}`, [
-          { label: 'Not at all (0)', value: 0 },
-          { label: 'Several days (1)', value: 1 },
-          { label: 'More than half the days (2)', value: 2 },
-          { label: 'Nearly every day (3)', value: 3 },
-        ])
+      ...[
+        'Little interest or pleasure in doing things',
+        'Feeling down, depressed, or hopeless',
+        'Trouble falling or staying asleep, or sleeping too much',
+        'Feeling tired or having little energy',
+        'Poor appetite or overeating',
+        'Feeling bad about yourself — or that you are a failure or have let yourself or your family down',
+        'Trouble concentrating on things, such as reading the newspaper or watching television',
+        'Moving or speaking so slowly that other people could have noticed? Or the opposite — being so fidgety or restless that you have been moving around a lot more than usual',
+        'Thoughts that you would be better off dead, or of hurting yourself in some way',
+      ].map((label, i) =>
+        selectInput(
+          `q${i + 1}`,
+          `${i + 1}. ${label}`,
+          [
+            { label: 'Not at all (0)', value: 0 },
+            { label: 'Several days (1)', value: 1 },
+            { label: 'More than half the days (2)', value: 2 },
+            { label: 'Nearly every day (3)', value: 3 },
+          ],
+          0,
+          'Over the last 2 weeks, how often have you been bothered by any of the following problems?',
+        ),
       ),
     ],
     calculate(values) {
@@ -696,6 +804,10 @@ export const giNeuroPsychCalcs: Calculator[] = [
       { condition: 'Score ≥10', actions: ['Clinical interview for MDD', 'Offer psychotherapy and/or antidepressant', 'Follow-up'] },
       { condition: 'Item 9 >0', actions: ['Immediate suicide risk assessment'] },
     ],
+    pearls: [
+      'PHQ-9 © Pfizer; free clinical use from phqscreeners.com — retain copyright notice.',
+      'Item 9 (death/self-harm thoughts) is a safety screen regardless of total score.',
+    ],
   },
   {
     id: 'gad7',
@@ -707,13 +819,27 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Screening and severity monitoring for generalized anxiety.',
     whyUse: 'Brief, validated anxiety measure.',
     inputs: [
-      ...['Feeling nervous/anxious/on edge', 'Not able to stop/control worrying', 'Worrying too much', 'Trouble relaxing', 'Restless', 'Easily annoyed/irritable', 'Afraid something awful might happen'].map((label, i) =>
-        selectInput(`q${i + 1}`, `${i + 1}. ${label}`, [
-          { label: 'Not at all (0)', value: 0 },
-          { label: 'Several days (1)', value: 1 },
-          { label: 'More than half the days (2)', value: 2 },
-          { label: 'Nearly every day (3)', value: 3 },
-        ])
+      ...[
+        'Feeling nervous, anxious, or on edge',
+        'Not being able to stop or control worrying',
+        'Worrying too much about different things',
+        'Trouble relaxing',
+        'Being so restless that it is hard to sit still',
+        'Becoming easily annoyed or irritable',
+        'Feeling afraid as if something awful might happen',
+      ].map((label, i) =>
+        selectInput(
+          `q${i + 1}`,
+          `${i + 1}. ${label}`,
+          [
+            { label: 'Not at all (0)', value: 0 },
+            { label: 'Several days (1)', value: 1 },
+            { label: 'More than half the days (2)', value: 2 },
+            { label: 'Nearly every day (3)', value: 3 },
+          ],
+          0,
+          'Over the last 2 weeks, how often have you been bothered by the following problems?',
+        ),
       ),
     ],
     calculate(values) {
@@ -736,6 +862,9 @@ export const giNeuroPsychCalcs: Calculator[] = [
     nextSteps: [
       { condition: 'Score ≥10', actions: ['Diagnostic assessment', 'CBT / SSRI-SNRI as appropriate'] },
     ],
+    pearls: [
+      'GAD-7 © Pfizer; free clinical use from phqscreeners.com — retain copyright notice.',
+    ],
   },
   {
     id: 'cage',
@@ -747,10 +876,30 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Primary care / ED screening for problem drinking.',
     whyUse: 'Very brief four-question screen.',
     inputs: [
-      yesNo('c', 'Cut down: felt you should cut down on drinking?', 1),
-      yesNo('a', 'Annoyed: people annoyed you by criticizing drinking?', 1),
-      yesNo('g', 'Guilty: felt guilty about drinking?', 1),
-      yesNo('e', 'Eye-opener: drink first thing in the morning?', 1),
+      yesNo(
+        'c',
+        'Have you ever felt you should Cut down on your drinking?',
+        1,
+        'Lifetime (“ever”) question — not limited to the past year.',
+      ),
+      yesNo(
+        'a',
+        'Have people Annoyed you by criticizing your drinking?',
+        1,
+        'Lifetime (“ever”) question — not limited to the past year.',
+      ),
+      yesNo(
+        'g',
+        'Have you ever felt bad or Guilty about your drinking?',
+        1,
+        'Lifetime (“ever”) question — not limited to the past year.',
+      ),
+      yesNo(
+        'e',
+        'Have you ever had a drink first thing in the morning to steady your nerves or to get rid of a hangover (Eye-opener)?',
+        1,
+        'Lifetime (“ever”) question — not limited to the past year.',
+      ),
     ],
     calculate(values) {
       const score = ['c', 'a', 'g', 'e'].reduce((s, k) => s + (bool(values[k]) ? 1 : 0), 0);
@@ -951,7 +1100,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
     tags: ['dementia', 'cognition', 'mmse'],
     whenToUse: 'Cognitive screening interpretation when MMSE already administered.',
     whyUse: 'Widely known cognitive screen (copyrighted instrument — enter total only).',
-    inputs: [numberInput('score', 'MMSE total score', { min: 0, max: 30, defaultValue: 28 })],
+    inputs: [numberInput('score', 'MMSE total score', { min: 0, max: 30, defaultValue: 28, helpText: 'Enter the total from the official copyrighted MMSE form; do not administer items from this screen.' })],
     calculate(values) {
       const score = num(values.score, 28);
       const r = riskFromThresholds(score, [
@@ -982,8 +1131,13 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Interpretation of administered MoCA total.',
     whyUse: 'More sensitive than MMSE for mild cognitive impairment.',
     inputs: [
-      numberInput('score', 'MoCA total (before education adjust)', { min: 0, max: 30, defaultValue: 26 }),
-      yesNo('edu', '≤12 years education (+1 if applicable)'),
+      numberInput('score', 'MoCA total (before education adjust)', {
+        min: 0,
+        max: 30,
+        defaultValue: 26,
+        helpText: 'Enter the total from the official MoCA form (mocatest.org); do not administer items from this screen.',
+      }),
+      yesNo('edu', '≤12 years education (+1 if applicable)', 1, 'Add 1 point if ≤12 years of education, only if the raw total is <30 (cannot exceed 30).'),
     ],
     calculate(values) {
       let score = num(values.score, 26);

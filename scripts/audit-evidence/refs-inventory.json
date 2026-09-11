@@ -1,7 +1,7 @@
 {
   "schema": "medcalc-refs-inventory/1",
   "generatedBy": "scripts/audit-evidence.mjs",
-  "generatedAt": "2026-09-11T05:37:37.244Z",
+  "generatedAt": "2026-09-11T07:17:14.129Z",
   "sourceDir": "src/data/calculators",
   "sourceFiles": [
     "cardiology.ts",
@@ -53,7 +53,7 @@
     "wave7-rheum-activity.ts",
     "wave7-rheum-class.ts"
   ],
-  "sourceHash": "169f2f13af3d1e8dcfe25fc09da494993eb26698be437911021757f7c194c246",
+  "sourceHash": "53e37fcd079f1b5e7aee2e0f553fa0a4d00aee4fc749d356b89932a4722115f7",
   "summary": {
     "files": 48,
     "calculatorsWithRefs": 1003,
@@ -492,7 +492,7 @@
       "doi": "10.1001/jama.269.9.1127",
       "url": null,
       "year": 1993,
-      "line": 84
+      "line": 91
     },
     {
       "file": "emergency-misc.ts",
@@ -504,7 +504,7 @@
       "doi": null,
       "url": null,
       "year": 1997,
-      "line": 118
+      "line": 130
     },
     {
       "file": "emergency-misc.ts",
@@ -516,7 +516,7 @@
       "doi": "10.1056/NEJM200007133430203",
       "url": null,
       "year": 2000,
-      "line": 161
+      "line": 178
     },
     {
       "file": "emergency-misc.ts",
@@ -528,7 +528,7 @@
       "doi": "10.1001/jama.286.15.1841",
       "url": null,
       "year": 2001,
-      "line": 231
+      "line": 251
     },
     {
       "file": "emergency-misc.ts",
@@ -540,7 +540,7 @@
       "doi": null,
       "url": null,
       "year": 1970,
-      "line": 273
+      "line": 293
     },
     {
       "file": "emergency-misc.ts",
@@ -552,7 +552,7 @@
       "doi": "10.1016/s0140-6736(51)91975-7",
       "url": null,
       "year": 1951,
-      "line": 319
+      "line": 347
     },
     {
       "file": "emergency-misc.ts",
@@ -564,7 +564,7 @@
       "doi": null,
       "url": null,
       "year": 1953,
-      "line": 372
+      "line": 400
     },
     {
       "file": "emergency-misc.ts",
@@ -576,7 +576,7 @@
       "doi": null,
       "url": null,
       "year": 1964,
-      "line": 428
+      "line": 456
     },
     {
       "file": "emergency-misc.ts",
@@ -588,7 +588,7 @@
       "doi": "10.1111/ajo.13253",
       "url": null,
       "year": 2021,
-      "line": 475
+      "line": 503
     },
     {
       "file": "emergency-misc.ts",
@@ -600,7 +600,7 @@
       "doi": "10.1007/BF00274080",
       "url": null,
       "year": 1988,
-      "line": 542
+      "line": 570
     },
     {
       "file": "emergency-misc.ts",
@@ -612,7 +612,7 @@
       "doi": "10.1001/archpedi.1978.02120300044008",
       "url": null,
       "year": 1978,
-      "line": 600
+      "line": 628
     },
     {
       "file": "emergency-misc.ts",
@@ -624,7 +624,7 @@
       "doi": "10.1016/S0140-6736(09)61558-0",
       "url": null,
       "year": 2009,
-      "line": 681
+      "line": 714
     },
     {
       "file": "emergency-misc.ts",
@@ -636,7 +636,7 @@
       "doi": "10.1111/j.1538-7836.2006.01787.x",
       "url": null,
       "year": 2006,
-      "line": 733
+      "line": 766
     },
     {
       "file": "emergency-misc.ts",
@@ -648,7 +648,7 @@
       "doi": "10.1111/j.1538-7836.2010.04044.x",
       "url": null,
       "year": 2010,
-      "line": 793
+      "line": 834
     },
     {
       "file": "emergency-misc.ts",
@@ -660,7 +660,7 @@
       "doi": "10.1016/j.disamonth.2005.02.003",
       "url": null,
       "year": 2005,
-      "line": 852
+      "line": 898
     },
     {
       "file": "emergency-misc.ts",
@@ -672,7 +672,7 @@
       "doi": "10.1097/ALN.0b013e31816d83e4",
       "url": null,
       "year": 2008,
-      "line": 893
+      "line": 939
     },
     {
       "file": "emergency-misc.ts",
@@ -684,7 +684,7 @@
       "doi": "10.1093/sleep/14.6.540",
       "url": null,
       "year": 1991,
-      "line": 942
+      "line": 988
     },
     {
       "file": "emergency-misc.ts",
@@ -696,7 +696,7 @@
       "doi": "10.1056/NEJMoa021322",
       "url": null,
       "year": 2004,
-      "line": 995
+      "line": 1041
     },
     {
       "file": "emergency-misc.ts",
@@ -708,7 +708,7 @@
       "doi": "10.1186/1710-1492-9-30",
       "url": null,
       "year": 2013,
-      "line": 1053
+      "line": 1099
     },
     {
       "file": "emergency-misc.ts",
@@ -720,7 +720,7 @@
       "doi": "10.15585/mmwr.rr7103a1",
       "url": null,
       "year": 2022,
-      "line": 1101
+      "line": 1147
     },
     {
       "file": "emergency-misc.ts",
@@ -732,7 +732,7 @@
       "doi": "10.1007/BF01059685",
       "url": null,
       "year": 1977,
-      "line": 1138
+      "line": 1184
     },
     {
       "file": "emergency-misc.ts",
@@ -744,7 +744,7 @@
       "doi": "10.1136/gutjnl-2021-325210",
       "url": null,
       "year": 2021,
-      "line": 1173
+      "line": 1219
     },
     {
       "file": "emergency-misc.ts",
@@ -756,7 +756,7 @@
       "doi": "10.1056/NEJM200005253422107",
       "url": null,
       "year": 2000,
-      "line": 1215
+      "line": 1261
     },
     {
       "file": "extra.ts",
@@ -768,7 +768,7 @@
       "doi": "10.1086/313753",
       "url": null,
       "year": 2000,
-      "line": 57
+      "line": 87
     },
     {
       "file": "extra.ts",
@@ -780,7 +780,7 @@
       "doi": "10.1161/CIR.0000000000000205",
       "url": null,
       "year": 2015,
-      "line": 124
+      "line": 208
     },
     {
       "file": "extra.ts",
@@ -792,7 +792,7 @@
       "doi": "10.1136/bmj.f5806",
       "url": null,
       "year": 2013,
-      "line": 159
+      "line": 247
     },
     {
       "file": "extra.ts",
@@ -804,7 +804,7 @@
       "doi": "10.1056/NEJM197112232852601",
       "url": null,
       "year": 1971,
-      "line": 211
+      "line": 299
     },
     {
       "file": "extra.ts",
@@ -816,7 +816,7 @@
       "doi": null,
       "url": "https://www.heart.org/en/health-topics/heart-failure/what-is-heart-failure/classes-of-heart-failure",
       "year": 1994,
-      "line": 249
+      "line": 347
     },
     {
       "file": "extra.ts",
@@ -828,7 +828,7 @@
       "doi": "10.1097/01.CCM.0000286399.21008.64",
       "url": null,
       "year": 2007,
-      "line": 284
+      "line": 382
     },
     {
       "file": "extra.ts",
@@ -840,7 +840,7 @@
       "doi": "10.1046/j.1542-474x.2003.08413.x",
       "url": null,
       "year": 1920,
-      "line": 328
+      "line": 426
     },
     {
       "file": "extra.ts",
@@ -852,7 +852,7 @@
       "doi": "10.1097/00003246-199811000-00019",
       "url": null,
       "year": 1998,
-      "line": 361
+      "line": 459
     },
     {
       "file": "extra.ts",
@@ -864,7 +864,7 @@
       "doi": "10.1053/j.jrn.2006.01.008",
       "url": null,
       "year": 1964,
-      "line": 397
+      "line": 495
     },
     {
       "file": "extra.ts",
@@ -876,7 +876,7 @@
       "doi": "10.1136/bmj.4.5893.643",
       "url": null,
       "year": 1973,
-      "line": 429
+      "line": 527
     },
     {
       "file": "gi-neuro-psych.ts",
@@ -888,7 +888,7 @@
       "doi": "10.1002/bjs.1800600817",
       "url": null,
       "year": 1973,
-      "line": 82
+      "line": 114
     },
     {
       "file": "gi-neuro-psych.ts",
@@ -900,7 +900,7 @@
       "doi": "10.1053/jhep.2001.22172",
       "url": null,
       "year": 2001,
-      "line": 123
+      "line": 160
     },
     {
       "file": "gi-neuro-psych.ts",
@@ -912,7 +912,7 @@
       "doi": "10.1056/NEJMoa0801209",
       "url": null,
       "year": 2008,
-      "line": 163
+      "line": 200
     },
     {
       "file": "gi-neuro-psych.ts",
@@ -924,7 +924,7 @@
       "doi": "10.1016/S0140-6736(00)02816-6",
       "url": null,
       "year": 2000,
-      "line": 232
+      "line": 299
     },
     {
       "file": "gi-neuro-psych.ts",
@@ -936,7 +936,7 @@
       "doi": "10.1136/gut.38.3.316",
       "url": null,
       "year": 1996,
-      "line": 278
+      "line": 360
     },
     {
       "file": "gi-neuro-psych.ts",
@@ -948,7 +948,7 @@
       "doi": "10.1016/s0196-0644(86)80993-3",
       "url": null,
       "year": 1986,
-      "line": 322
+      "line": 404
     },
     {
       "file": "gi-neuro-psych.ts",
@@ -960,7 +960,7 @@
       "doi": null,
       "url": null,
       "year": 1974,
-      "line": 358
+      "line": 440
     },
     {
       "file": "gi-neuro-psych.ts",
@@ -972,7 +972,7 @@
       "doi": "10.1136/gut.2008.152702",
       "url": null,
       "year": 2008,
-      "line": 391
+      "line": 483
     },
     {
       "file": "gi-neuro-psych.ts",
@@ -984,7 +984,7 @@
       "doi": "10.1016/S0140-6736(07)60150-0",
       "url": null,
       "year": 2007,
-      "line": 432
+      "line": 524
     },
     {
       "file": "gi-neuro-psych.ts",
@@ -996,7 +996,7 @@
       "doi": "10.1161/01.str.20.7.864",
       "url": null,
       "year": 1989,
-      "line": 641
+      "line": 733
     },
     {
       "file": "gi-neuro-psych.ts",
@@ -1008,7 +1008,7 @@
       "doi": "10.1046/j.1525-1497.2001.016009606.x",
       "url": null,
       "year": 2001,
-      "line": 692
+      "line": 800
     },
     {
       "file": "gi-neuro-psych.ts",
@@ -1020,7 +1020,7 @@
       "doi": "10.1001/archinte.166.10.1092",
       "url": null,
       "year": 2006,
-      "line": 733
+      "line": 859
     },
     {
       "file": "gi-neuro-psych.ts",
@@ -1032,7 +1032,7 @@
       "doi": "10.1001/jama.252.14.1905",
       "url": null,
       "year": 1984,
-      "line": 775
+      "line": 924
     },
     {
       "file": "gi-neuro-psych.ts",
@@ -1044,7 +1044,7 @@
       "doi": "10.1111/j.1360-0443.1989.tb00737.x",
       "url": null,
       "year": 1989,
-      "line": 934
+      "line": 1083
     },
     {
       "file": "gi-neuro-psych.ts",
@@ -1056,7 +1056,7 @@
       "doi": "10.1016/0022-3956(75)90026-6",
       "url": null,
       "year": 1975,
-      "line": 968
+      "line": 1117
     },
     {
       "file": "gi-neuro-psych.ts",
@@ -1068,7 +1068,7 @@
       "doi": "10.1111/j.1532-5415.2005.53221.x",
       "url": null,
       "year": 2005,
-      "line": 1001
+      "line": 1155
     },
     {
       "file": "missing-cardio-pulm.ts",
@@ -1296,7 +1296,7 @@
       "doi": "10.1016/s0140-6736(00)04561-x",
       "url": null,
       "year": 2001,
-      "line": 86
+      "line": 104
     },
     {
       "file": "missing-emergency.ts",
@@ -1308,7 +1308,7 @@
       "doi": "10.1056/NEJM200007133430204",
       "url": null,
       "year": 2000,
-      "line": 151
+      "line": 169
     },
     {
       "file": "missing-emergency.ts",
@@ -1320,7 +1320,7 @@
       "doi": "10.1016/S0140-6736(17)30885-1",
       "url": null,
       "year": 2017,
-      "line": 232
+      "line": 250
     },
     {
       "file": "missing-emergency.ts",
@@ -1332,7 +1332,7 @@
       "doi": "10.1016/s0196-0644(03)00823-0",
       "url": null,
       "year": 2004,
-      "line": 293
+      "line": 311
     },
     {
       "file": "missing-emergency.ts",
@@ -1344,7 +1344,7 @@
       "doi": "10.1503/cmaj.151469",
       "url": null,
       "year": 2016,
-      "line": 394
+      "line": 412
     },
     {
       "file": "missing-emergency.ts",
@@ -1356,7 +1356,7 @@
       "doi": "10.1111/j.1538-7836.2011.04388.x",
       "url": null,
       "year": 2011,
-      "line": 482
+      "line": 500
     },
     {
       "file": "missing-emergency.ts",
@@ -1368,7 +1368,7 @@
       "doi": "10.1001/jama.269.9.1127",
       "url": null,
       "year": 1993,
-      "line": 566
+      "line": 584
     },
     {
       "file": "missing-emergency.ts",
@@ -1380,7 +1380,7 @@
       "doi": "10.1111/j.1365-2044.1987.tb04039.x",
       "url": null,
       "year": 1987,
-      "line": 644
+      "line": 668
     },
     {
       "file": "missing-emergency.ts",
@@ -1392,7 +1392,7 @@
       "doi": null,
       "url": null,
       "year": 2009,
-      "line": 732
+      "line": 756
     },
     {
       "file": "missing-emergency.ts",
@@ -1404,7 +1404,7 @@
       "doi": null,
       "url": "https://remm.hhs.gov/startadult.htm",
       "year": 1983,
-      "line": 861
+      "line": 891
     },
     {
       "file": "missing-emergency.ts",
@@ -1416,7 +1416,7 @@
       "doi": "10.1001/jamasurg.2013.2757",
       "url": null,
       "year": 2013,
-      "line": 925
+      "line": 955
     },
     {
       "file": "missing-emergency.ts",
@@ -1428,7 +1428,7 @@
       "doi": "10.1097/01.ccm.0000129486.35458.7d",
       "url": null,
       "year": 2004,
-      "line": 1036
+      "line": 1066
     },
     {
       "file": "missing-emergency.ts",
@@ -1440,7 +1440,7 @@
       "doi": "10.1097/TA.0b013e3181c453b3",
       "url": null,
       "year": 2010,
-      "line": 1120
+      "line": 1150
     },
     {
       "file": "missing-emergency.ts",
@@ -1452,7 +1452,7 @@
       "doi": "10.1016/s0196-0644(82)80096-6",
       "url": null,
       "year": 1982,
-      "line": 1232
+      "line": 1262
     },
     {
       "file": "missing-emergency.ts",
@@ -1464,7 +1464,7 @@
       "doi": "10.1136/emj.2003.008771",
       "url": null,
       "year": 2005,
-      "line": 1308
+      "line": 1338
     },
     {
       "file": "missing-gi-liver.ts",
@@ -1512,7 +1512,7 @@
       "doi": "10.1016/j.gie.2011.06.024",
       "url": null,
       "year": 2011,
-      "line": 218
+      "line": 217
     },
     {
       "file": "missing-gi-liver.ts",
@@ -1524,7 +1524,7 @@
       "doi": "10.1002/hep.21607",
       "url": null,
       "year": 2007,
-      "line": 301
+      "line": 300
     },
     {
       "file": "missing-gi-liver.ts",
@@ -1536,7 +1536,7 @@
       "doi": "10.1016/0016-5085(89)90081-4",
       "url": null,
       "year": 1989,
-      "line": 399
+      "line": 396
     },
     {
       "file": "missing-gi-liver.ts",
@@ -1548,7 +1548,7 @@
       "doi": "10.1136/gut.2004.050781",
       "url": null,
       "year": 2005,
-      "line": 471
+      "line": 468
     },
     {
       "file": "missing-gi-liver.ts",
@@ -1560,7 +1560,7 @@
       "doi": "10.1016/0895-4356(93)90101-6",
       "url": null,
       "year": 1993,
-      "line": 538
+      "line": 535
     },
     {
       "file": "missing-gi-liver.ts",
@@ -1572,7 +1572,7 @@
       "doi": "10.1016/s0140-6736(74)91770-x",
       "url": null,
       "year": 1974,
-      "line": 630
+      "line": 633
     },
     {
       "file": "missing-gi-liver.ts",
@@ -1584,7 +1584,7 @@
       "doi": "10.1136/gutjnl-2012-302779",
       "url": null,
       "year": 2013,
-      "line": 692
+      "line": 705
     },
     {
       "file": "missing-gi-liver.ts",
@@ -1596,7 +1596,7 @@
       "doi": "10.1007/s00268-008-9649-y",
       "url": null,
       "year": 2008,
-      "line": 773
+      "line": 786
     },
     {
       "file": "missing-gi-liver.ts",
@@ -1608,7 +1608,7 @@
       "doi": null,
       "url": null,
       "year": 2010,
-      "line": 869
+      "line": 882
     },
     {
       "file": "missing-gi-liver.ts",
@@ -1620,7 +1620,7 @@
       "doi": "10.1002/hep.21496",
       "url": null,
       "year": 2007,
-      "line": 939
+      "line": 951
     },
     {
       "file": "missing-gi-liver.ts",
@@ -1632,7 +1632,7 @@
       "doi": "10.4065/75.7.688",
       "url": null,
       "year": 2000,
-      "line": 1005
+      "line": 1017
     },
     {
       "file": "missing-gi-liver.ts",
@@ -1644,7 +1644,7 @@
       "doi": "10.1136/gut.25.12.1340",
       "url": null,
       "year": 1984,
-      "line": 1060
+      "line": 1072
     },
     {
       "file": "missing-gi-liver.ts",
@@ -1656,7 +1656,7 @@
       "doi": "10.1002/bjs.1800650514",
       "url": null,
       "year": 1978,
-      "line": 1062
+      "line": 1074
     },
     {
       "file": "missing-heme-id-nephro.ts",
@@ -1908,7 +1908,7 @@
       "doi": "10.3171/jns.1968.28.1.0014",
       "url": null,
       "year": 1968,
-      "line": 91
+      "line": 95
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -1920,7 +1920,7 @@
       "doi": "10.1227/01.neu.0000243277.86222.6c",
       "url": null,
       "year": 2006,
-      "line": 196
+      "line": 201
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -1932,7 +1932,7 @@
       "doi": "10.1227/00006123-198001000-00001",
       "url": null,
       "year": 1980,
-      "line": 201
+      "line": 206
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -1944,7 +1944,7 @@
       "doi": "10.1161/01.str.32.4.891",
       "url": null,
       "year": 2001,
-      "line": 314
+      "line": 321
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -1956,7 +1956,7 @@
       "doi": "10.1161/01.str.0000027437.22450.bd",
       "url": null,
       "year": 2002,
-      "line": 403
+      "line": 410
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -1968,7 +1968,7 @@
       "doi": "10.1002/ana.20611",
       "url": null,
       "year": 2005,
-      "line": 508
+      "line": 515
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -1980,7 +1980,7 @@
       "doi": "10.1097/01.MLR.0000093487.78664.3C",
       "url": null,
       "year": 2003,
-      "line": 572
+      "line": 579
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -1992,7 +1992,7 @@
       "doi": "10.1001/archinte.158.16.1789",
       "url": null,
       "year": 1998,
-      "line": 673
+      "line": 680
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -2004,7 +2004,7 @@
       "doi": "10.1080/02791072.2003.10400007",
       "url": null,
       "year": 2003,
-      "line": 824
+      "line": 831
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -2016,7 +2016,7 @@
       "doi": "10.1016/S0033-3182(83)73213-5",
       "url": null,
       "year": 1983,
-      "line": 916
+      "line": 932
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -2028,7 +2028,7 @@
       "doi": "10.1046/j.1532-5415.2003.51465.x",
       "url": null,
       "year": 2003,
-      "line": 1011
+      "line": 1027
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -2040,7 +2040,7 @@
       "doi": "10.1001/jama.286.21.2703",
       "url": null,
       "year": 2001,
-      "line": 1120
+      "line": 1138
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -2052,7 +2052,7 @@
       "doi": "10.1164/rccm.2107138",
       "url": null,
       "year": 2002,
-      "line": 1212
+      "line": 1230
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -2064,7 +2064,7 @@
       "doi": "10.1016/s0140-6736(00)02237-6",
       "url": null,
       "year": 2000,
-      "line": 1316
+      "line": 1334
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -2076,7 +2076,7 @@
       "doi": "10.1016/S1474-4422(10)70240-4",
       "url": null,
       "year": 2010,
-      "line": 1418
+      "line": 1440
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -2088,7 +2088,7 @@
       "doi": "10.1016/S0140-6736(07)60150-0",
       "url": null,
       "year": 2007,
-      "line": 1423
+      "line": 1445
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -2100,7 +2100,7 @@
       "doi": "10.1176/appi.ajp.2011.10111704",
       "url": null,
       "year": 2011,
-      "line": 1530
+      "line": 1558
     },
     {
       "file": "missing-neuro-psych.ts",
@@ -2112,7 +2112,7 @@
       "doi": "10.1176/appi.ajp.157.11.1873",
       "url": null,
       "year": 2000,
-      "line": 1652
+      "line": 1690
     },
     {
       "file": "missing-peds-ob-tox.ts",
@@ -2712,7 +2712,7 @@
       "doi": "10.1161/01.cir.84.2.960",
       "url": null,
       "year": 1991,
-      "line": 523
+      "line": 529
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2724,7 +2724,7 @@
       "doi": "10.1161/01.cir.84.2.960",
       "url": null,
       "year": 1991,
-      "line": 525
+      "line": 531
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2736,7 +2736,7 @@
       "doi": "10.1016/j.echo.2014.10.003",
       "url": null,
       "year": 2015,
-      "line": 623
+      "line": 629
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2748,7 +2748,7 @@
       "doi": "10.1056/NEJM197612162952505",
       "url": null,
       "year": 1976,
-      "line": 704
+      "line": 710
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2760,7 +2760,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK482255/",
       "year": 2010,
-      "line": 787
+      "line": 793
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2772,7 +2772,7 @@
       "doi": "10.1093/eurheartj/ehac237",
       "url": null,
       "year": 2022,
-      "line": 871
+      "line": 877
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2784,7 +2784,7 @@
       "doi": "10.1016/0002-9149(92)90562-d",
       "url": null,
       "year": 1992,
-      "line": 950
+      "line": 956
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2796,7 +2796,7 @@
       "doi": "10.1038/s41598-021-93774-9",
       "url": "https://en.wikipedia.org/wiki/QT_interval#Hodges_correction",
       "year": 1983,
-      "line": 1027
+      "line": 1033
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2808,7 +2808,7 @@
       "doi": "10.1161/CIRCOUTCOMES.113.000152",
       "url": null,
       "year": 2013,
-      "line": 1117
+      "line": 1123
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2820,7 +2820,7 @@
       "doi": "10.1001/jama.289.7.871",
       "url": null,
       "year": 2003,
-      "line": 1237
+      "line": 1243
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2832,7 +2832,7 @@
       "doi": "10.1016/j.jacc.2021.12.011",
       "url": null,
       "year": 2022,
-      "line": 1239
+      "line": 1245
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2844,7 +2844,7 @@
       "doi": "10.1161/JAHA.113.000250",
       "url": null,
       "year": 2013,
-      "line": 1346
+      "line": 1352
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2856,7 +2856,7 @@
       "doi": "10.1093/eurheartj/ehw054",
       "url": null,
       "year": 2016,
-      "line": 1428
+      "line": 1434
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2868,7 +2868,7 @@
       "doi": "10.1016/S0140-6736(16)00741-8",
       "url": null,
       "year": 2016,
-      "line": 1519
+      "line": 1525
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2880,7 +2880,7 @@
       "doi": "10.1161/CIRCULATIONAHA.108.842393",
       "url": null,
       "year": 2009,
-      "line": 1594
+      "line": 1600
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2892,7 +2892,7 @@
       "doi": "10.1093/ejcts/ezs043",
       "url": null,
       "year": 2012,
-      "line": 1764
+      "line": 1776
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2904,7 +2904,7 @@
       "doi": "10.1016/j.jacc.2004.06.068",
       "url": null,
       "year": 2004,
-      "line": 1869
+      "line": 1881
     },
     {
       "file": "wave2-cardiology.ts",
@@ -2916,7 +2916,7 @@
       "doi": "10.1056/NEJM197612162952505",
       "url": null,
       "year": 1976,
-      "line": 1954
+      "line": 1966
     },
     {
       "file": "wave2-general-lab.ts",
@@ -2964,7 +2964,7 @@
       "doi": "10.1161/CIR.0000000000000625",
       "url": null,
       "year": 2018,
-      "line": 301
+      "line": 302
     },
     {
       "file": "wave2-general-lab.ts",
@@ -2976,7 +2976,7 @@
       "doi": "10.1093/eurheartj/ehz455",
       "url": null,
       "year": 2019,
-      "line": 303
+      "line": 304
     },
     {
       "file": "wave2-general-lab.ts",
@@ -2988,7 +2988,7 @@
       "doi": "10.1089/met.2008.0034",
       "url": null,
       "year": 2008,
-      "line": 346
+      "line": 347
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3000,7 +3000,7 @@
       "doi": "10.1007/BF00280883",
       "url": null,
       "year": 1985,
-      "line": 400
+      "line": 401
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3012,7 +3012,7 @@
       "doi": "10.1210/jcem.85.7.6661",
       "url": null,
       "year": 2000,
-      "line": 440
+      "line": 441
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3024,7 +3024,7 @@
       "doi": "10.1373/clinchem.2003.024802",
       "url": null,
       "year": 2004,
-      "line": 510
+      "line": 511
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3036,7 +3036,7 @@
       "doi": null,
       "url": "https://www.nist.gov/pml/owm/metric-si/si-units",
       "year": 2000,
-      "line": 565
+      "line": 566
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3048,7 +3048,7 @@
       "doi": null,
       "url": "https://www.nist.gov/pml/owm/metric-si/si-units",
       "year": 2000,
-      "line": 618
+      "line": 619
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3060,7 +3060,7 @@
       "doi": null,
       "url": "https://www.nist.gov/pml/owm/metric-si/si-units",
       "year": 2000,
-      "line": 671
+      "line": 672
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3072,7 +3072,7 @@
       "doi": null,
       "url": "https://www.nist.gov/pml/owm/metric-si/si-units",
       "year": 2000,
-      "line": 720
+      "line": 721
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3084,7 +3084,7 @@
       "doi": "10.1016/j.kisu.2017.04.001",
       "url": null,
       "year": 2017,
-      "line": 763
+      "line": 764
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3096,7 +3096,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK482465/",
       "year": 2015,
-      "line": 822
+      "line": 823
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3108,7 +3108,7 @@
       "doi": "10.1159/000168150",
       "url": null,
       "year": 1990,
-      "line": 891
+      "line": 892
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3120,7 +3120,7 @@
       "doi": "10.1139/y83-207",
       "url": null,
       "year": 1983,
-      "line": 943
+      "line": 944
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3132,7 +3132,7 @@
       "doi": "10.1097/00003246-199811000-00019",
       "url": null,
       "year": 1998,
-      "line": 994
+      "line": 995
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3144,7 +3144,7 @@
       "doi": "10.1681/ASN.2006121408",
       "url": null,
       "year": 2005,
-      "line": 1072
+      "line": 1073
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3156,7 +3156,7 @@
       "doi": "10.1139/y83-207",
       "url": null,
       "year": 1983,
-      "line": 1127
+      "line": 1128
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3168,7 +3168,7 @@
       "doi": "10.1097/01.CCM.0000286399.21008.64",
       "url": null,
       "year": 2000,
-      "line": 1129
+      "line": 1130
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3180,7 +3180,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK482389/",
       "year": 1960,
-      "line": 1191
+      "line": 1192
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3192,7 +3192,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK482389/",
       "year": 1960,
-      "line": 1242
+      "line": 1243
     },
     {
       "file": "wave2-general-lab.ts",
@@ -3204,7 +3204,7 @@
       "doi": null,
       "url": "https://kdigo.org/guidelines/ckd-evaluation-and-management/",
       "year": 2012,
-      "line": 1297
+      "line": 1298
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3228,7 +3228,7 @@
       "doi": "10.1212/wnl.56.suppl_1.s20",
       "url": null,
       "year": 1999,
-      "line": 197
+      "line": 210
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3240,7 +3240,7 @@
       "doi": "10.1177/0333102417738202",
       "url": null,
       "year": 2018,
-      "line": 287
+      "line": 300
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3252,7 +3252,7 @@
       "doi": "10.1111/epi.13121",
       "url": null,
       "year": 2015,
-      "line": 420
+      "line": 433
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3264,7 +3264,7 @@
       "doi": "10.1111/j.1528-1167.2008.01561.x",
       "url": null,
       "year": 2008,
-      "line": 541
+      "line": 555
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3276,7 +3276,7 @@
       "doi": "10.1007/BF01059685",
       "url": null,
       "year": 1977,
-      "line": 654
+      "line": 670
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3288,7 +3288,7 @@
       "doi": "10.1002/mds.22340",
       "url": null,
       "year": 2008,
-      "line": 737
+      "line": 753
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3300,7 +3300,7 @@
       "doi": "10.1212/wnl.17.5.427",
       "url": null,
       "year": 1967,
-      "line": 831
+      "line": 847
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3312,7 +3312,7 @@
       "doi": "10.1212/wnl.33.11.1444",
       "url": null,
       "year": 1983,
-      "line": 931
+      "line": 947
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3324,7 +3324,7 @@
       "doi": "10.1016/j.pain.2004.12.010",
       "url": null,
       "year": 2005,
-      "line": 1012
+      "line": 1028
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3336,7 +3336,7 @@
       "doi": "10.1097/01.JGP.0000221510.33817.86",
       "url": null,
       "year": 2006,
-      "line": 1109
+      "line": 1125
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3348,7 +3348,7 @@
       "doi": "10.1002/1099-1166(200006)15:6<548::aid-gps242>3.0.co;2-u",
       "url": null,
       "year": 2000,
-      "line": 1193
+      "line": 1209
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3360,7 +3360,7 @@
       "doi": "10.1192/bjp.134.4.382",
       "url": null,
       "year": 1979,
-      "line": 1271
+      "line": 1287
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3372,7 +3372,7 @@
       "doi": "10.1136/jnnp.23.1.56",
       "url": null,
       "year": 1960,
-      "line": 1357
+      "line": 1374
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3384,7 +3384,7 @@
       "doi": "10.1111/j.2044-8341.1959.tb00467.x",
       "url": null,
       "year": 1959,
-      "line": 1431
+      "line": 1449
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3396,7 +3396,7 @@
       "doi": "10.1037//0022-006x.56.6.893",
       "url": null,
       "year": 1988,
-      "line": 1502
+      "line": 1520
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3408,7 +3408,7 @@
       "doi": null,
       "url": "https://www.pearsonassessments.com/store/usassessments/en/Store/Professional-Assessments/Personality-%26-Biopsychosocial/Beck-Depression-Inventory-II/p/100000159.html",
       "year": 1996,
-      "line": 1575
+      "line": 1593
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3420,7 +3420,7 @@
       "doi": "10.1192/bjp.133.5.429",
       "url": null,
       "year": 1978,
-      "line": 1649
+      "line": 1668
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3432,7 +3432,7 @@
       "doi": "10.1093/schbul/13.2.261",
       "url": null,
       "year": 1987,
-      "line": 1756
+      "line": 1778
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3444,7 +3444,7 @@
       "doi": null,
       "url": "https://www.who.int/publications/i/item/WHO-MSD-MSB-01.6a",
       "year": 2001,
-      "line": 1867
+      "line": 1889
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3456,7 +3456,7 @@
       "doi": "10.1016/0306-4603(82)90005-3",
       "url": null,
       "year": 1982,
-      "line": 1962
+      "line": 1984
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3468,7 +3468,7 @@
       "doi": null,
       "url": null,
       "year": 1995,
-      "line": 2030
+      "line": 2052
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3480,7 +3480,7 @@
       "doi": null,
       "url": null,
       "year": 2005,
-      "line": 2139
+      "line": 2161
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3492,7 +3492,7 @@
       "doi": "10.1016/s1389-9457(00)00065-4",
       "url": null,
       "year": 2001,
-      "line": 2217
+      "line": 2239
     },
     {
       "file": "wave2-neuro-psych.ts",
@@ -3504,7 +3504,7 @@
       "doi": "10.1002/jts.22059",
       "url": null,
       "year": 2015,
-      "line": 2299
+      "line": 2322
     },
     {
       "file": "wave2-oncology.ts",
@@ -3516,7 +3516,7 @@
       "doi": "10.1016/j.bbmt.2018.12.758",
       "url": null,
       "year": 2019,
-      "line": 94
+      "line": 106
     },
     {
       "file": "wave2-oncology.ts",
@@ -3528,7 +3528,7 @@
       "doi": "10.1016/j.bbmt.2018.12.758",
       "url": null,
       "year": 2019,
-      "line": 219
+      "line": 243
     },
     {
       "file": "wave2-oncology.ts",
@@ -3540,7 +3540,7 @@
       "doi": null,
       "url": "https://ctep.cancer.gov/protocoldevelopment/electronic_applications/ctc.htm",
       "year": 2017,
-      "line": 310
+      "line": 335
     },
     {
       "file": "wave2-oncology.ts",
@@ -3552,7 +3552,7 @@
       "doi": null,
       "url": "https://ctep.cancer.gov/protocoldevelopment/electronic_applications/ctc.htm",
       "year": 2017,
-      "line": 386
+      "line": 411
     },
     {
       "file": "wave2-oncology.ts",
@@ -3564,7 +3564,7 @@
       "doi": "10.1056/NEJM198710223171717",
       "url": null,
       "year": 1987,
-      "line": 474
+      "line": 499
     },
     {
       "file": "wave2-oncology.ts",
@@ -3576,7 +3576,7 @@
       "doi": "10.1200/JCO.1989.7.11.1748",
       "url": null,
       "year": 1989,
-      "line": 542
+      "line": 567
     },
     {
       "file": "wave2-oncology.ts",
@@ -3588,7 +3588,7 @@
       "doi": "10.1002/1097-0142(19850815)56:4<918::aid-cncr2820560437>3.0.co;2-e",
       "url": null,
       "year": 1985,
-      "line": 612
+      "line": 637
     },
     {
       "file": "wave2-oncology.ts",
@@ -3600,7 +3600,7 @@
       "doi": "10.1016/j.jhep.2021.11.018",
       "url": null,
       "year": 2022,
-      "line": 727
+      "line": 758
     },
     {
       "file": "wave2-oncology.ts",
@@ -3612,7 +3612,7 @@
       "doi": "10.1002/hep.510280322",
       "url": null,
       "year": 1998,
-      "line": 812
+      "line": 849
     },
     {
       "file": "wave2-oncology.ts",
@@ -3624,7 +3624,7 @@
       "doi": "10.1016/s0748-7983(96)80010-2",
       "url": null,
       "year": 1996,
-      "line": 929
+      "line": 966
     },
     {
       "file": "wave2-oncology.ts",
@@ -3636,7 +3636,7 @@
       "doi": "10.1016/j.ejca.2008.10.026",
       "url": null,
       "year": 2009,
-      "line": 1041
+      "line": 1078
     },
     {
       "file": "wave2-oncology.ts",
@@ -3648,7 +3648,7 @@
       "doi": null,
       "url": null,
       "year": 1982,
-      "line": 1121
+      "line": 1164
     },
     {
       "file": "wave2-oncology.ts",
@@ -3660,7 +3660,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK11382/",
       "year": 1949,
-      "line": 1209
+      "line": 1252
     },
     {
       "file": "wave2-oncology.ts",
@@ -3672,7 +3672,7 @@
       "doi": "10.1093/jnci/81.24.1879",
       "url": null,
       "year": 1989,
-      "line": 1338
+      "line": 1393
     },
     {
       "file": "wave2-oncology.ts",
@@ -3684,7 +3684,7 @@
       "doi": null,
       "url": "https://www.nccn.org/guidelines/guidelines-detail?category=3&id=1431",
       "year": 2024,
-      "line": 1417
+      "line": 1472
     },
     {
       "file": "wave2-oncology.ts",
@@ -3696,7 +3696,7 @@
       "doi": "10.1200/JCO.2008.21.4809",
       "url": null,
       "year": 2009,
-      "line": 1490
+      "line": 1549
     },
     {
       "file": "wave2-oncology.ts",
@@ -3708,7 +3708,7 @@
       "doi": "10.1200/JCO.2002.20.1.289",
       "url": null,
       "year": 2002,
-      "line": 1557
+      "line": 1616
     },
     {
       "file": "wave2-oncology.ts",
@@ -3720,7 +3720,7 @@
       "doi": "10.1056/NEJM199811193392104",
       "url": null,
       "year": 1998,
-      "line": 1637
+      "line": 1696
     },
     {
       "file": "wave2-oncology.ts",
@@ -3732,7 +3732,7 @@
       "doi": "10.1182/blood-2003-12-4434",
       "url": null,
       "year": 2004,
-      "line": 1706
+      "line": 1765
     },
     {
       "file": "wave2-oncology.ts",
@@ -3744,7 +3744,7 @@
       "doi": "10.1056/NEJM199309303291402",
       "url": null,
       "year": 1993,
-      "line": 1784
+      "line": 1843
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3756,7 +3756,7 @@
       "doi": "10.1016/0735-6757(94)90274-7",
       "url": null,
       "year": 1994,
-      "line": 65
+      "line": 70
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3768,7 +3768,7 @@
       "doi": null,
       "url": "https://pubmed.ncbi.nlm.nih.gov/?term=Stiell+hip+radiography+decision",
       "year": 1997,
-      "line": 142
+      "line": 157
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3780,7 +3780,7 @@
       "doi": "10.2106/00004623-199912000-00002",
       "url": null,
       "year": 1999,
-      "line": 239
+      "line": 259
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3792,7 +3792,7 @@
       "doi": "10.2106/JBJS.E.00216",
       "url": null,
       "year": 2006,
-      "line": 244
+      "line": 264
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3804,7 +3804,7 @@
       "doi": "10.3109/17453676208989608",
       "url": null,
       "year": 1962,
-      "line": 336
+      "line": 366
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3816,7 +3816,7 @@
       "doi": null,
       "url": "https://pubmed.ncbi.nlm.nih.gov/?term=Salter+Harris+epiphyseal+plate+1963",
       "year": 1963,
-      "line": 425
+      "line": 481
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3828,7 +3828,7 @@
       "doi": null,
       "url": null,
       "year": 1976,
-      "line": 512
+      "line": 594
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3840,7 +3840,7 @@
       "doi": null,
       "url": null,
       "year": 1989,
-      "line": 607
+      "line": 699
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3852,7 +3852,7 @@
       "doi": null,
       "url": "https://pubmed.ncbi.nlm.nih.gov/?term=Garden+RS+femoral+neck+1961",
       "year": 1961,
-      "line": 681
+      "line": 798
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3864,7 +3864,7 @@
       "doi": null,
       "url": null,
       "year": 1970,
-      "line": 774
+      "line": 913
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3876,7 +3876,7 @@
       "doi": null,
       "url": "https://www.orthobullets.com/trauma/1047/ankle-fractures",
       "year": 1972,
-      "line": 854
+      "line": 1023
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3888,7 +3888,7 @@
       "doi": "10.1016/j.annemergmed.2010.08.038",
       "url": null,
       "year": 2011,
-      "line": 928
+      "line": 1137
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3900,7 +3900,7 @@
       "doi": null,
       "url": null,
       "year": 1974,
-      "line": 1023
+      "line": 1268
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3912,7 +3912,7 @@
       "doi": "10.1097/00005373-199712000-00009",
       "url": null,
       "year": 1997,
-      "line": 1103
+      "line": 1366
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3924,7 +3924,7 @@
       "doi": null,
       "url": null,
       "year": 1987,
-      "line": 1182
+      "line": 1445
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3936,7 +3936,7 @@
       "doi": null,
       "url": "https://asia-spinalinjury.org/international-standards-neurological-classification-sci-isncsci-worksheet/",
       "year": 2019,
-      "line": 1296
+      "line": 1565
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3948,7 +3948,7 @@
       "doi": "10.1038/sc.1969.30",
       "url": "https://asia-spinalinjury.org/isncsci-2019/",
       "year": 1969,
-      "line": 1384
+      "line": 1679
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3960,7 +3960,7 @@
       "doi": "10.1016/s0140-6736(75)92830-5",
       "url": null,
       "year": 1975,
-      "line": 1459
+      "line": 1780
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3972,7 +3972,7 @@
       "doi": "10.1089/neu.1998.15.573",
       "url": null,
       "year": 1998,
-      "line": 1527
+      "line": 1883
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3984,7 +3984,7 @@
       "doi": "10.1056/NEJM197507312930513",
       "url": null,
       "year": 1975,
-      "line": 1598
+      "line": 1954
     },
     {
       "file": "wave2-ortho-trauma.ts",
@@ -3996,7 +3996,7 @@
       "doi": "10.1001/jama.271.9.703",
       "url": "https://pubmed.ncbi.nlm.nih.gov/?term=Jaeschke+Users+guides+diagnostic+test+1994",
       "year": 1994,
-      "line": 1670
+      "line": 2026
     },
     {
       "file": "wave2-pulm-id.ts",
@@ -4224,7 +4224,7 @@
       "doi": null,
       "url": "https://www.cdc.gov/tb/topic/testing/default.htm",
       "year": 2000,
-      "line": 1788
+      "line": 1793
     },
     {
       "file": "wave2-pulm-id.ts",
@@ -4236,7 +4236,7 @@
       "doi": "10.1128/AAC.03071-15",
       "url": null,
       "year": 2016,
-      "line": 1862
+      "line": 1867
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4332,7 +4332,7 @@
       "doi": "10.1016/j.joa.2016.07.002",
       "url": null,
       "year": 2016,
-      "line": 870
+      "line": 876
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4344,7 +4344,7 @@
       "doi": "10.1016/0002-8703(82)90480-x",
       "url": null,
       "year": 1982,
-      "line": 955
+      "line": 961
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4356,7 +4356,7 @@
       "doi": "10.1016/j.annemergmed.2012.07.119",
       "url": null,
       "year": 2012,
-      "line": 1057
+      "line": 1064
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4368,7 +4368,7 @@
       "doi": "10.1056/NEJM199602223340801",
       "url": null,
       "year": 1996,
-      "line": 1064
+      "line": 1071
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4380,7 +4380,7 @@
       "doi": "10.1007/s11739-020-02340-0",
       "url": null,
       "year": 2020,
-      "line": 1149
+      "line": 1156
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4392,7 +4392,7 @@
       "doi": "10.1183/09031936.00006114",
       "url": null,
       "year": 2014,
-      "line": 1231
+      "line": 1238
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4404,7 +4404,7 @@
       "doi": "10.1016/j.echo.2014.10.003",
       "url": null,
       "year": 2015,
-      "line": 1322
+      "line": 1329
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4416,7 +4416,7 @@
       "doi": null,
       "url": null,
       "year": 2002,
-      "line": 1390
+      "line": 1397
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4428,7 +4428,7 @@
       "doi": "10.1093/eurheartj/ehab309",
       "url": null,
       "year": 2021,
-      "line": 1561
+      "line": 1588
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4440,7 +4440,7 @@
       "doi": "10.1001/jama.297.6.611",
       "url": null,
       "year": 2007,
-      "line": 1700
+      "line": 1727
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4452,7 +4452,7 @@
       "doi": "10.1093/ajcn/88.3.645",
       "url": null,
       "year": 2008,
-      "line": 1809
+      "line": 1836
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4464,7 +4464,7 @@
       "doi": "10.1016/0735-1097(90)90282-t",
       "url": null,
       "year": 1990,
-      "line": 1896
+      "line": 1923
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4476,7 +4476,7 @@
       "doi": "10.1161/CIR.0b013e318276fbcb",
       "url": null,
       "year": 2012,
-      "line": 1977
+      "line": 2004
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4488,7 +4488,7 @@
       "doi": "10.1160/TH07-08-0485",
       "url": null,
       "year": 2008,
-      "line": 2067
+      "line": 2094
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4500,7 +4500,7 @@
       "doi": "10.1161/CIRCULATIONAHA.111.051920",
       "url": null,
       "year": 2012,
-      "line": 2149
+      "line": 2176
     },
     {
       "file": "wave3-cardio-vasc.ts",
@@ -4512,7 +4512,7 @@
       "doi": "10.1136/bmj.j1065",
       "url": null,
       "year": 2017,
-      "line": 2230
+      "line": 2257
     },
     {
       "file": "wave3-em-surgery.ts",
@@ -5004,7 +5004,7 @@
       "doi": "10.1136/gut.45.2.172",
       "url": null,
       "year": 1999,
-      "line": 1441
+      "line": 1444
     },
     {
       "file": "wave3-gi-hep.ts",
@@ -5016,7 +5016,7 @@
       "doi": "10.1016/j.jhep.2015.05.022",
       "url": null,
       "year": 2015,
-      "line": 1532
+      "line": 1535
     },
     {
       "file": "wave3-gi-hep.ts",
@@ -5028,7 +5028,7 @@
       "doi": "10.1016/j.jhep.2015.05.022",
       "url": null,
       "year": 2015,
-      "line": 1612
+      "line": 1615
     },
     {
       "file": "wave3-gi-hep.ts",
@@ -5040,7 +5040,7 @@
       "doi": "10.1002/hep.31884",
       "url": null,
       "year": 2021,
-      "line": 1717
+      "line": 1720
     },
     {
       "file": "wave3-gi-hep.ts",
@@ -5052,7 +5052,7 @@
       "doi": "10.1038/s41598-019-44814-y",
       "url": null,
       "year": 2005,
-      "line": 1790
+      "line": 1793
     },
     {
       "file": "wave3-gi-hep.ts",
@@ -5064,7 +5064,7 @@
       "doi": "10.1016/j.jhep.2021.05.025",
       "url": null,
       "year": 2021,
-      "line": 1912
+      "line": 1915
     },
     {
       "file": "wave3-gi-hep.ts",
@@ -5076,7 +5076,7 @@
       "doi": "10.1093/geront/18.3.230",
       "url": null,
       "year": 1978,
-      "line": 1988
+      "line": 1991
     },
     {
       "file": "wave3-gi-hep.ts",
@@ -5088,7 +5088,7 @@
       "doi": "10.1111/j.1365-2036.2009.04142.x",
       "url": null,
       "year": 2009,
-      "line": 2099
+      "line": 2102
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5148,7 +5148,7 @@
       "doi": null,
       "url": "https://kdigo.org/guidelines/",
       "year": 2013,
-      "line": 327
+      "line": 339
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5160,7 +5160,7 @@
       "doi": "10.1186/cc2872",
       "url": null,
       "year": 2004,
-      "line": 402
+      "line": 426
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5172,7 +5172,7 @@
       "doi": "10.1186/cc5713",
       "url": null,
       "year": 2007,
-      "line": 487
+      "line": 523
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5184,7 +5184,7 @@
       "doi": "10.1007/s00467-011-2024-5",
       "url": null,
       "year": 2012,
-      "line": 549
+      "line": 626
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5196,7 +5196,7 @@
       "doi": "10.1186/cc13015",
       "url": null,
       "year": 2013,
-      "line": 615
+      "line": 711
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5208,7 +5208,7 @@
       "doi": "10.1046/j.1523-1755.2002.00683.x",
       "url": null,
       "year": 2002,
-      "line": 703
+      "line": 804
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5220,7 +5220,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK482389/",
       "year": 1960,
-      "line": 780
+      "line": 881
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5232,7 +5232,7 @@
       "doi": "10.1056/NEJM200005183422006",
       "url": null,
       "year": 2000,
-      "line": 853
+      "line": 954
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5244,7 +5244,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK534232/",
       "year": 2015,
-      "line": 931
+      "line": 1032
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5256,7 +5256,7 @@
       "doi": "10.1681/ASN.V112369",
       "url": null,
       "year": 2000,
-      "line": 995
+      "line": 1096
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5268,7 +5268,7 @@
       "doi": null,
       "url": "https://www.ismp.org/",
       "year": 2018,
-      "line": 1090
+      "line": 1204
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5280,7 +5280,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK536919/",
       "year": 2010,
-      "line": 1160
+      "line": 1288
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5292,7 +5292,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK534232/",
       "year": 2015,
-      "line": 1250
+      "line": 1385
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5304,7 +5304,7 @@
       "doi": "10.1186/s13089-020-00163-w",
       "url": null,
       "year": 2020,
-      "line": 1345
+      "line": 1536
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5316,7 +5316,7 @@
       "doi": null,
       "url": "https://pubmed.ncbi.nlm.nih.gov/?term=critical+care+ultrasound+IVC+volume",
       "year": 2016,
-      "line": 1455
+      "line": 1680
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5328,7 +5328,7 @@
       "doi": "10.1007/s00134-014-3637-5",
       "url": null,
       "year": 2015,
-      "line": 1524
+      "line": 1765
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5340,7 +5340,7 @@
       "doi": null,
       "url": "https://pubmed.ncbi.nlm.nih.gov/?term=Michard+fluid+responsiveness",
       "year": 2015,
-      "line": 1601
+      "line": 1860
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5352,7 +5352,7 @@
       "doi": null,
       "url": "https://braintrauma.org/coma/guidelines",
       "year": 2016,
-      "line": 1686
+      "line": 1964
     },
     {
       "file": "wave3-nephro-icu.ts",
@@ -5364,7 +5364,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK482255/",
       "year": 2015,
-      "line": 1763
+      "line": 2041
     },
     {
       "file": "wave3-peds-ob.ts",
@@ -6720,7 +6720,7 @@
       "doi": "10.1093/ajcp/80.3.322",
       "url": null,
       "year": 1983,
-      "line": 1700
+      "line": 1699
     },
     {
       "file": "wave4-heme-onc.ts",
@@ -6840,7 +6840,7 @@
       "doi": "10.1002/1097-0142(197509)36:3<842::aid-cncr2820360303>3.0.co;2-u",
       "url": null,
       "year": 1975,
-      "line": 819
+      "line": 821
     },
     {
       "file": "wave4-heme-onc.ts",
@@ -6852,7 +6852,7 @@
       "doi": null,
       "url": null,
       "year": 1975,
-      "line": 887
+      "line": 889
     },
     {
       "file": "wave4-heme-onc.ts",
@@ -6864,7 +6864,7 @@
       "doi": "10.1002/1097-0142(19810701)48:1<198::aid-cncr2820480131>3.0.co;2-v",
       "url": null,
       "year": 1981,
-      "line": 966
+      "line": 968
     },
     {
       "file": "wave4-heme-onc.ts",
@@ -6876,7 +6876,7 @@
       "doi": "10.1016/S1470-2045(16)30029-8",
       "url": null,
       "year": 2016,
-      "line": 1048
+      "line": 1050
     },
     {
       "file": "wave4-heme-onc.ts",
@@ -6888,7 +6888,7 @@
       "doi": "10.1182/blood-2003-09-3080",
       "url": null,
       "year": 2004,
-      "line": 1125
+      "line": 1127
     },
     {
       "file": "wave4-heme-onc.ts",
@@ -6900,7 +6900,7 @@
       "doi": "10.1056/NEJM199309303291402",
       "url": null,
       "year": 1993,
-      "line": 1201
+      "line": 1203
     },
     {
       "file": "wave4-heme-onc.ts",
@@ -6912,7 +6912,7 @@
       "doi": "10.1182/blood-2007-10-117010",
       "url": null,
       "year": 2008,
-      "line": 1285
+      "line": 1287
     },
     {
       "file": "wave4-heme-onc.ts",
@@ -6924,7 +6924,7 @@
       "doi": "10.1056/NEJM198710223171717",
       "url": null,
       "year": 1987,
-      "line": 1345
+      "line": 1347
     },
     {
       "file": "wave4-heme-onc.ts",
@@ -6936,7 +6936,7 @@
       "doi": "10.1200/JCO.2014.57.2347",
       "url": null,
       "year": 2015,
-      "line": 1422
+      "line": 1424
     },
     {
       "file": "wave4-heme-onc.ts",
@@ -6948,7 +6948,7 @@
       "doi": "10.1002/art.1780380107",
       "url": null,
       "year": 1995,
-      "line": 1534
+      "line": 1536
     },
     {
       "file": "wave4-heme-onc.ts",
@@ -6960,7 +6960,7 @@
       "doi": null,
       "url": null,
       "year": 2005,
-      "line": 1612
+      "line": 1614
     },
     {
       "file": "wave4-heme-onc.ts",
@@ -6972,7 +6972,7 @@
       "doi": "10.1093/rheumatology/keg072",
       "url": null,
       "year": 2003,
-      "line": 1690
+      "line": 1692
     },
     {
       "file": "wave4-heme-onc.ts",
@@ -6984,7 +6984,7 @@
       "doi": null,
       "url": null,
       "year": 1994,
-      "line": 1767
+      "line": 1769
     },
     {
       "file": "wave4-heme-onc.ts",
@@ -6996,7 +6996,7 @@
       "doi": null,
       "url": null,
       "year": 2002,
-      "line": 1853
+      "line": 1855
     },
     {
       "file": "wave4-heme-onc.ts",
@@ -7008,7 +7008,7 @@
       "doi": "10.1159/000250839",
       "url": null,
       "year": 1978,
-      "line": 1933
+      "line": 1935
     },
     {
       "file": "wave4-icu-vent.ts",
@@ -7320,7 +7320,7 @@
       "doi": null,
       "url": "https://www.bapen.org.uk/screening-and-must/must",
       "year": 2003,
-      "line": 2447
+      "line": 2449
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7332,7 +7332,7 @@
       "doi": "10.1161/STROKEAHA.113.003071",
       "url": null,
       "year": 2014,
-      "line": 163
+      "line": 165
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7344,7 +7344,7 @@
       "doi": "10.1161/STROKEAHA.107.508127",
       "url": null,
       "year": 2008,
-      "line": 243
+      "line": 263
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7356,7 +7356,7 @@
       "doi": "10.1161/STROKEAHA.115.008804",
       "url": null,
       "year": 2015,
-      "line": 320
+      "line": 340
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7368,7 +7368,7 @@
       "doi": "10.1161/STROKEAHA.116.015296",
       "url": null,
       "year": 2016,
-      "line": 405
+      "line": 455
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7380,7 +7380,7 @@
       "doi": "10.1161/STROKEAHA.107.512202",
       "url": null,
       "year": 2008,
-      "line": 506
+      "line": 560
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7392,7 +7392,7 @@
       "doi": "10.1016/S1474-4422(12)70038-8",
       "url": null,
       "year": 2012,
-      "line": 614
+      "line": 683
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7404,7 +7404,7 @@
       "doi": "10.1136/jnnp.51.11.1457",
       "url": null,
       "year": 1988,
-      "line": 711
+      "line": 785
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7416,7 +7416,7 @@
       "doi": "10.1227/01.neu.0000243277.86222.6c",
       "url": null,
       "year": 2006,
-      "line": 823
+      "line": 907
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7428,7 +7428,7 @@
       "doi": "10.1016/s0140-6736(74)91639-0",
       "url": null,
       "year": 1974,
-      "line": 923
+      "line": 1012
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7440,7 +7440,7 @@
       "doi": "10.1136/bjsports-2016-097403",
       "url": null,
       "year": 2017,
-      "line": 1012
+      "line": 1101
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7452,7 +7452,7 @@
       "doi": "10.1136/bjsports-2017-097699",
       "url": null,
       "year": 2017,
-      "line": 1119
+      "line": 1236
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7464,7 +7464,7 @@
       "doi": "10.1093/ageing/afu021",
       "url": null,
       "year": 2014,
-      "line": 1204
+      "line": 1358
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7476,7 +7476,7 @@
       "doi": "10.1016/j.annemergmed.2013.05.003",
       "url": null,
       "year": 2013,
-      "line": 1320
+      "line": 1474
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7488,7 +7488,7 @@
       "doi": "10.1159/000351671",
       "url": null,
       "year": 2013,
-      "line": 1412
+      "line": 1566
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7500,7 +7500,7 @@
       "doi": "10.1017/s1041610204000390",
       "url": null,
       "year": 2004,
-      "line": 1502
+      "line": 1656
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7512,7 +7512,7 @@
       "doi": "10.1212/01.wnl.0000172958.95282.2a",
       "url": null,
       "year": 2005,
-      "line": 1572
+      "line": 1766
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7524,7 +7524,7 @@
       "doi": null,
       "url": null,
       "year": 1986,
-      "line": 1677
+      "line": 1871
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7536,7 +7536,7 @@
       "doi": "10.1002/gps.2181",
       "url": null,
       "year": 2009,
-      "line": 1683
+      "line": 1877
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7548,7 +7548,7 @@
       "doi": "10.1016/0006-3223(88)90038-8",
       "url": null,
       "year": 1988,
-      "line": 1760
+      "line": 1954
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7560,7 +7560,7 @@
       "doi": "10.1093/geront/20.6.649",
       "url": null,
       "year": 1980,
-      "line": 1883
+      "line": 2077
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7572,7 +7572,7 @@
       "doi": "10.1016/0165-1781(89)90047-4",
       "url": null,
       "year": 1989,
-      "line": 1964
+      "line": 2158
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7584,7 +7584,7 @@
       "doi": "10.1016/s1389-9457(03)00006-6",
       "url": null,
       "year": 2003,
-      "line": 2048
+      "line": 2242
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7596,7 +7596,7 @@
       "doi": "10.1007/s11606-016-3703-5",
       "url": null,
       "year": 2016,
-      "line": 2137
+      "line": 2340
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7608,7 +7608,7 @@
       "doi": null,
       "url": null,
       "year": 1989,
-      "line": 2238
+      "line": 2441
     },
     {
       "file": "wave4-neuro-psych.ts",
@@ -7620,7 +7620,7 @@
       "doi": "10.1111/j.1526-4637.2005.00072.x",
       "url": null,
       "year": 2005,
-      "line": 2348
+      "line": 2567
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7668,7 +7668,7 @@
       "doi": "10.2337/dc24-S002",
       "url": null,
       "year": 2024,
-      "line": 397
+      "line": 399
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7680,7 +7680,7 @@
       "doi": "10.2337/dc16-2215",
       "url": null,
       "year": 2017,
-      "line": 519
+      "line": 521
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7692,7 +7692,7 @@
       "doi": "10.2337/dc24-S009",
       "url": null,
       "year": 2024,
-      "line": 526
+      "line": 528
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7704,7 +7704,7 @@
       "doi": "10.4158/EP.14.9.1095",
       "url": null,
       "year": 2008,
-      "line": 600
+      "line": 602
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7716,7 +7716,7 @@
       "doi": "10.4158/EP.14.9.1095",
       "url": null,
       "year": 2012,
-      "line": 666
+      "line": 668
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7728,7 +7728,7 @@
       "doi": "10.1177/19322968261465689",
       "url": null,
       "year": 2022,
-      "line": 755
+      "line": 757
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7740,7 +7740,7 @@
       "doi": "10.2337/dc24-S009",
       "url": null,
       "year": 2024,
-      "line": 821
+      "line": 823
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7752,7 +7752,7 @@
       "doi": "10.2337/dc24-S009",
       "url": null,
       "year": 2024,
-      "line": 886
+      "line": 888
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7764,7 +7764,7 @@
       "doi": "10.1111/dme.13675",
       "url": null,
       "year": 2018,
-      "line": 1006
+      "line": 1008
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7776,7 +7776,7 @@
       "doi": "10.1089/thy.2012.0205",
       "url": null,
       "year": 2012,
-      "line": 1136
+      "line": 1138
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7788,7 +7788,7 @@
       "doi": "10.1089/thy.2016.0229",
       "url": null,
       "year": 2016,
-      "line": 1143
+      "line": 1145
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7800,7 +7800,7 @@
       "doi": "10.1089/thy.2012.0205",
       "url": null,
       "year": 2012,
-      "line": 1220
+      "line": 1222
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7812,7 +7812,7 @@
       "doi": "10.1210/jc.2014-1413",
       "url": null,
       "year": 2014,
-      "line": 1343
+      "line": 1346
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7824,7 +7824,7 @@
       "doi": "10.1210/jc.2011-0385",
       "url": null,
       "year": 2011,
-      "line": 1438
+      "line": 1441
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7836,7 +7836,7 @@
       "doi": "10.1007/s00198-007-0543-5",
       "url": "https://frax.shef.ac.uk/FRAX/",
       "year": 2008,
-      "line": 1565
+      "line": 1568
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7848,7 +7848,7 @@
       "doi": null,
       "url": null,
       "year": 1994,
-      "line": 1657
+      "line": 1660
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7860,7 +7860,7 @@
       "doi": null,
       "url": null,
       "year": 2000,
-      "line": 1748
+      "line": 1751
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7872,7 +7872,7 @@
       "doi": "10.1542/peds.2007-2329C",
       "url": null,
       "year": 2007,
-      "line": 1838
+      "line": 1842
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7884,7 +7884,7 @@
       "doi": "10.1186/1471-230X-6-33",
       "url": null,
       "year": 2006,
-      "line": 1922
+      "line": 1926
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7896,7 +7896,7 @@
       "doi": "10.1016/j.dld.2009.08.002",
       "url": null,
       "year": 2010,
-      "line": 2005
+      "line": 2009
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7908,7 +7908,7 @@
       "doi": null,
       "url": "https://nida.nih.gov/nidamed-medical-health-professionals/screening-tools-resources/resource-guide-clinicians",
       "year": 2012,
-      "line": 2109
+      "line": 2113
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7920,7 +7920,7 @@
       "doi": null,
       "url": null,
       "year": 2008,
-      "line": 2197
+      "line": 2201
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7932,7 +7932,7 @@
       "doi": "10.1037//0003-066x.47.9.1102",
       "url": null,
       "year": 1992,
-      "line": 2203
+      "line": 2207
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7944,7 +7944,7 @@
       "doi": "10.1161/HYP.0000000000000065",
       "url": null,
       "year": 2018,
-      "line": 2311
+      "line": 2315
     },
     {
       "file": "wave4-primary-endo.ts",
@@ -7956,7 +7956,7 @@
       "doi": null,
       "url": null,
       "year": 1999,
-      "line": 2403
+      "line": 2407
     },
     {
       "file": "wave5-cardio.ts",
@@ -8076,7 +8076,7 @@
       "doi": "10.1161/CIR.0000000000000665",
       "url": null,
       "year": 2019,
-      "line": 1067
+      "line": 1068
     },
     {
       "file": "wave5-cardio.ts",
@@ -8088,7 +8088,7 @@
       "doi": "10.1016/j.chest.2015.11.026",
       "url": null,
       "year": 2016,
-      "line": 1180
+      "line": 1181
     },
     {
       "file": "wave5-cardio.ts",
@@ -8100,7 +8100,7 @@
       "doi": "10.1161/CIR.0b013e3182742cf6",
       "url": null,
       "year": 2013,
-      "line": 1279
+      "line": 1280
     },
     {
       "file": "wave5-cardio.ts",
@@ -8112,7 +8112,7 @@
       "doi": "10.1161/CIR.0000000000000625",
       "url": null,
       "year": 2019,
-      "line": 1371
+      "line": 1372
     },
     {
       "file": "wave5-cardio.ts",
@@ -8124,7 +8124,7 @@
       "doi": "10.1093/eurheartj/ehz455",
       "url": null,
       "year": 2020,
-      "line": 1456
+      "line": 1457
     },
     {
       "file": "wave5-cardio.ts",
@@ -8136,7 +8136,7 @@
       "doi": "10.1161/CIR.0b013e3182160726",
       "url": null,
       "year": 2011,
-      "line": 1555
+      "line": 1556
     },
     {
       "file": "wave5-cardio.ts",
@@ -8148,7 +8148,7 @@
       "doi": "10.1002/ccd.28329",
       "url": null,
       "year": 2019,
-      "line": 1664
+      "line": 1665
     },
     {
       "file": "wave5-cardio.ts",
@@ -8160,7 +8160,7 @@
       "doi": "10.1016/s0741-5214(05)80042-4",
       "url": null,
       "year": 1996,
-      "line": 1754
+      "line": 1755
     },
     {
       "file": "wave5-cardio.ts",
@@ -8172,7 +8172,7 @@
       "doi": "10.1177/096721099400200109",
       "url": null,
       "year": 1994,
-      "line": 1840
+      "line": 1841
     },
     {
       "file": "wave5-cardio.ts",
@@ -8184,7 +8184,7 @@
       "doi": "10.1016/0002-9149(89)90496-7",
       "url": null,
       "year": 1989,
-      "line": 1928
+      "line": 1929
     },
     {
       "file": "wave5-cardio.ts",
@@ -8196,7 +8196,7 @@
       "doi": "10.1161/CIR.0000000000000106",
       "url": null,
       "year": 2014,
-      "line": 2011
+      "line": 2012
     },
     {
       "file": "wave5-cardio.ts",
@@ -8208,7 +8208,7 @@
       "doi": "10.1016/j.cjca.2016.09.008",
       "url": null,
       "year": 2017,
-      "line": 2123
+      "line": 2124
     },
     {
       "file": "wave5-cardio.ts",
@@ -8220,7 +8220,7 @@
       "doi": "10.1093/eurheartj/ehq025",
       "url": null,
       "year": 2010,
-      "line": 2233
+      "line": 2326
     },
     {
       "file": "wave5-cardio.ts",
@@ -8232,7 +8232,7 @@
       "doi": "10.1161/01.cir.88.2.782",
       "url": null,
       "year": 1993,
-      "line": 2338
+      "line": 2431
     },
     {
       "file": "wave5-cardio.ts",
@@ -8244,7 +8244,7 @@
       "doi": "10.1161/01.cir.88.2.782",
       "url": null,
       "year": 2011,
-      "line": 2345
+      "line": 2438
     },
     {
       "file": "wave5-cardio.ts",
@@ -8256,7 +8256,7 @@
       "doi": "10.1016/j.hrthm.2012.03.050",
       "url": null,
       "year": 2012,
-      "line": 2451
+      "line": 2544
     },
     {
       "file": "wave5-cardio.ts",
@@ -8268,7 +8268,7 @@
       "doi": "10.1161/CIR.0000000000000665",
       "url": null,
       "year": 2019,
-      "line": 2543
+      "line": 2636
     },
     {
       "file": "wave5-general-misc.ts",
@@ -8484,7 +8484,7 @@
       "doi": "10.1136/ard.2008.094870",
       "url": null,
       "year": 2009,
-      "line": 1315
+      "line": 1331
     },
     {
       "file": "wave5-general-misc.ts",
@@ -8496,7 +8496,7 @@
       "doi": "10.1136/ard.2010.138594",
       "url": null,
       "year": 2011,
-      "line": 1322
+      "line": 1338
     },
     {
       "file": "wave5-general-misc.ts",
@@ -8508,7 +8508,7 @@
       "doi": "10.1136/annrheumdis-2015-207507",
       "url": null,
       "year": 2016,
-      "line": 1411
+      "line": 1452
     },
     {
       "file": "wave5-general-misc.ts",
@@ -8520,7 +8520,7 @@
       "doi": "10.1002/art.1780230202",
       "url": null,
       "year": 1980,
-      "line": 1483
+      "line": 1525
     },
     {
       "file": "wave5-general-misc.ts",
@@ -8532,7 +8532,7 @@
       "doi": null,
       "url": null,
       "year": 1994,
-      "line": 1554
+      "line": 1597
     },
     {
       "file": "wave5-general-misc.ts",
@@ -8544,7 +8544,7 @@
       "doi": "10.1136/ard.62.2.140",
       "url": null,
       "year": 2003,
-      "line": 1633
+      "line": 1677
     },
     {
       "file": "wave5-general-misc.ts",
@@ -8556,7 +8556,7 @@
       "doi": "10.1136/annrheumdis-2015-208237",
       "url": null,
       "year": 2015,
-      "line": 1798
+      "line": 1900
     },
     {
       "file": "wave5-general-misc.ts",
@@ -8568,7 +8568,7 @@
       "doi": "10.1016/s0749-8063(05)80366-4",
       "url": null,
       "year": 1993,
-      "line": 1877
+      "line": 1980
     },
     {
       "file": "wave5-general-misc.ts",
@@ -8580,7 +8580,7 @@
       "doi": "10.1177/036354658201000306",
       "url": null,
       "year": 1982,
-      "line": 1952
+      "line": 2056
     },
     {
       "file": "wave5-general-misc.ts",
@@ -8592,7 +8592,7 @@
       "doi": "10.1046/j.1523-1747.2000.00061.x",
       "url": null,
       "year": 2000,
-      "line": 2055
+      "line": 2164
     },
     {
       "file": "wave5-nephro-gi.ts",
@@ -8832,7 +8832,7 @@
       "doi": "10.1056/NEJM198712243172603",
       "url": null,
       "year": 1987,
-      "line": 1624
+      "line": 1646
     },
     {
       "file": "wave5-nephro-gi.ts",
@@ -8844,7 +8844,7 @@
       "doi": "10.1056/NEJM198712243172603",
       "url": null,
       "year": 1987,
-      "line": 1714
+      "line": 1754
     },
     {
       "file": "wave5-nephro-gi.ts",
@@ -8856,7 +8856,7 @@
       "doi": "10.1136/gut.43.1.29",
       "url": null,
       "year": 1998,
-      "line": 1815
+      "line": 1890
     },
     {
       "file": "wave5-nephro-gi.ts",
@@ -8868,7 +8868,7 @@
       "doi": "10.1016/s0140-6736(80)92767-1",
       "url": null,
       "year": 1980,
-      "line": 1928
+      "line": 2026
     },
     {
       "file": "wave5-nephro-gi.ts",
@@ -8880,7 +8880,7 @@
       "doi": "10.1016/s0016-5107(04)01878-4",
       "url": null,
       "year": 2004,
-      "line": 2005
+      "line": 2104
     },
     {
       "file": "wave5-nephro-gi.ts",
@@ -8892,7 +8892,7 @@
       "doi": "10.1046/j.1365-2036.1997.142318000.x",
       "url": null,
       "year": 1997,
-      "line": 2095
+      "line": 2212
     },
     {
       "file": "wave5-nephro-gi.ts",
@@ -8904,7 +8904,7 @@
       "doi": "10.1002/hep.27210",
       "url": null,
       "year": 2014,
-      "line": 2193
+      "line": 2329
     },
     {
       "file": "wave5-peds-id.ts",
@@ -8916,7 +8916,7 @@
       "doi": "10.1111/acem.12514",
       "url": null,
       "year": 2005,
-      "line": 116
+      "line": 117
     },
     {
       "file": "wave5-peds-id.ts",
@@ -8928,7 +8928,7 @@
       "doi": "10.1001/jama.2018.0948",
       "url": null,
       "year": 2018,
-      "line": 123
+      "line": 124
     },
     {
       "file": "wave5-peds-id.ts",
@@ -8940,7 +8940,7 @@
       "doi": null,
       "url": "https://cpr.heart.org/en/cpr-courses-and-kits/healthcare-professional/pediatric",
       "year": 2020,
-      "line": 216
+      "line": 217
     },
     {
       "file": "wave5-peds-id.ts",
@@ -8952,7 +8952,7 @@
       "doi": null,
       "url": "https://cpr.heart.org/en/cpr-courses-and-kits/healthcare-professional/pediatric",
       "year": 2020,
-      "line": 299
+      "line": 300
     },
     {
       "file": "wave5-peds-id.ts",
@@ -8964,7 +8964,7 @@
       "doi": null,
       "url": "https://cpr.heart.org/en/cpr-courses-and-kits/healthcare-professional/pediatric",
       "year": 2020,
-      "line": 416
+      "line": 417
     },
     {
       "file": "wave5-peds-id.ts",
@@ -8976,7 +8976,7 @@
       "doi": null,
       "url": "https://cpr.heart.org/en/cpr-courses-and-kits/healthcare-professional/pediatric",
       "year": 2020,
-      "line": 496
+      "line": 497
     },
     {
       "file": "wave5-peds-id.ts",
@@ -8988,7 +8988,7 @@
       "doi": "10.1161/CIR.0000000000000901",
       "url": null,
       "year": 2020,
-      "line": 568
+      "line": 569
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9000,7 +9000,7 @@
       "doi": "10.1161/CIR.0000000000000901",
       "url": null,
       "year": 2020,
-      "line": 640
+      "line": 641
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9012,7 +9012,7 @@
       "doi": "10.1161/CIR.0000000000000901",
       "url": null,
       "year": 2020,
-      "line": 711
+      "line": 712
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9024,7 +9024,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK545442/",
       "year": 2005,
-      "line": 801
+      "line": 802
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9036,7 +9036,7 @@
       "doi": null,
       "url": "https://www.who.int/tools/child-growth-standards",
       "year": 2006,
-      "line": 897
+      "line": 902
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9048,7 +9048,7 @@
       "doi": "10.1542/pir.32-3-100",
       "url": null,
       "year": 2011,
-      "line": 903
+      "line": 908
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9060,7 +9060,7 @@
       "doi": "10.1542/peds.103.1.6",
       "url": null,
       "year": 1999,
-      "line": 1001
+      "line": 1006
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9072,7 +9072,7 @@
       "doi": "10.1542/peds.2022-058859",
       "url": null,
       "year": 2022,
-      "line": 1093
+      "line": 1098
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9084,7 +9084,7 @@
       "doi": "10.1542/peds.2022-058859",
       "url": null,
       "year": 2022,
-      "line": 1187
+      "line": 1192
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9096,7 +9096,7 @@
       "doi": "10.1002/14651858.CD001955.pub4",
       "url": null,
       "year": 2018,
-      "line": 1273
+      "line": 1278
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9108,7 +9108,7 @@
       "doi": "10.1056/NEJMoa033534",
       "url": null,
       "year": 2004,
-      "line": 1280
+      "line": 1285
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9120,7 +9120,7 @@
       "doi": "10.1111/j.1553-2712.2002.tb00223.x",
       "url": null,
       "year": 2002,
-      "line": 1392
+      "line": 1397
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9132,7 +9132,7 @@
       "doi": "10.1093/cid/cis847",
       "url": null,
       "year": 2012,
-      "line": 1478
+      "line": 1486
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9144,7 +9144,7 @@
       "doi": null,
       "url": "https://www.cdc.gov/mis/index.html",
       "year": 2023,
-      "line": 1573
+      "line": 1583
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9156,7 +9156,7 @@
       "doi": null,
       "url": "https://www.who.int/publications/i/item/multisystem-inflammatory-syndrome-in-children-and-adolescents-with-covid-19",
       "year": 2020,
-      "line": 1579
+      "line": 1589
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9168,7 +9168,7 @@
       "doi": "10.1542/pir.31-6-242",
       "url": null,
       "year": 2010,
-      "line": 1676
+      "line": 1690
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9180,7 +9180,7 @@
       "doi": "10.1097/00003246-199101000-00010",
       "url": null,
       "year": 1987,
-      "line": 1762
+      "line": 1779
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9192,7 +9192,7 @@
       "doi": null,
       "url": "https://www.nice.org.uk/guidance/ng143",
       "year": 2019,
-      "line": 1849
+      "line": 1870
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9204,7 +9204,7 @@
       "doi": "10.1542/peds.2011-1330",
       "url": null,
       "year": 2011,
-      "line": 1948
+      "line": 1969
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9216,7 +9216,7 @@
       "doi": null,
       "url": "https://www.nice.org.uk/guidance/ng111",
       "year": 2018,
-      "line": 1955
+      "line": 1976
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9228,7 +9228,7 @@
       "doi": "10.1093/cid/cir531",
       "url": null,
       "year": 2011,
-      "line": 2040
+      "line": 2063
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9240,7 +9240,7 @@
       "doi": "10.1136/thoraxjnl-2011-200598",
       "url": null,
       "year": 2011,
-      "line": 2047
+      "line": 2070
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9252,7 +9252,7 @@
       "doi": null,
       "url": "https://www.who.int/publications/i/item/9789241507813",
       "year": 2014,
-      "line": 2144
+      "line": 2168
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9264,7 +9264,7 @@
       "doi": null,
       "url": "https://www.who.int/publications/i/item/guidelines-for-malaria",
       "year": 2023,
-      "line": 2241
+      "line": 2273
     },
     {
       "file": "wave5-peds-id.ts",
@@ -9276,7 +9276,7 @@
       "doi": null,
       "url": "https://www.who.int/publications/i/item/9789241547871",
       "year": 2009,
-      "line": 2337
+      "line": 2377
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9288,7 +9288,7 @@
       "doi": "10.1097/01.sla.0000133083.54934.ae",
       "url": null,
       "year": 2004,
-      "line": 131
+      "line": 136
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9300,7 +9300,7 @@
       "doi": "10.1002/bjs.1800830628",
       "url": null,
       "year": 1996,
-      "line": 315
+      "line": 320
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9312,7 +9312,7 @@
       "doi": "10.1002/bjs.1800780327",
       "url": null,
       "year": 1991,
-      "line": 322
+      "line": 327
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9324,7 +9324,7 @@
       "doi": "10.1002/bjs.9638",
       "url": null,
       "year": 2014,
-      "line": 441
+      "line": 448
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9336,7 +9336,7 @@
       "doi": null,
       "url": "https://www.nela.org.uk/",
       "year": 2020,
-      "line": 565
+      "line": 575
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9348,7 +9348,7 @@
       "doi": "10.1016/j.bja.2018.06.026",
       "url": null,
       "year": 2018,
-      "line": 571
+      "line": 581
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9360,7 +9360,7 @@
       "doi": "10.1161/CIRCULATIONAHA.110.015701",
       "url": null,
       "year": 2011,
-      "line": 674
+      "line": 684
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9372,7 +9372,7 @@
       "doi": "10.1097/ALN.0b013e3181fc6e0a",
       "url": null,
       "year": 2010,
-      "line": 775
+      "line": 787
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9384,7 +9384,7 @@
       "doi": "10.1016/j.jamcollsurg.2007.02.072",
       "url": null,
       "year": 2007,
-      "line": 907
+      "line": 924
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9396,7 +9396,7 @@
       "doi": "10.1016/0196-6553(91)90157-8",
       "url": null,
       "year": 1991,
-      "line": 1000
+      "line": 1017
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9408,7 +9408,7 @@
       "doi": "10.1086/501620",
       "url": null,
       "year": 1999,
-      "line": 1105
+      "line": 1122
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9420,7 +9420,7 @@
       "doi": "10.1186/1471-230X-14-114",
       "url": null,
       "year": 2014,
-      "line": 1217
+      "line": 1234
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9432,7 +9432,7 @@
       "doi": "10.1007/s00423-005-0545-8",
       "url": null,
       "year": 2005,
-      "line": 1313
+      "line": 1334
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9444,7 +9444,7 @@
       "doi": "10.1007/s00268-005-7853-6",
       "url": null,
       "year": 2005,
-      "line": 1386
+      "line": 1410
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9456,7 +9456,7 @@
       "doi": "10.1186/s13017-015-0032-7",
       "url": null,
       "year": 2015,
-      "line": 1485
+      "line": 1519
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9468,7 +9468,7 @@
       "doi": null,
       "url": null,
       "year": 1978,
-      "line": 1574
+      "line": 1608
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9480,7 +9480,7 @@
       "doi": null,
       "url": null,
       "year": 1999,
-      "line": 1678
+      "line": 1712
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9492,7 +9492,7 @@
       "doi": "10.1111/j.1572-0241.2005.41154.x",
       "url": null,
       "year": 2005,
-      "line": 1684
+      "line": 1718
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9504,7 +9504,7 @@
       "doi": "10.1016/j.amjsurg.2017.05.017",
       "url": null,
       "year": 2018,
-      "line": 1778
+      "line": 1812
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9516,7 +9516,7 @@
       "doi": null,
       "url": null,
       "year": 1989,
-      "line": 1887
+      "line": 1922
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9528,7 +9528,7 @@
       "doi": "10.1186/s13017-019-0274-x",
       "url": null,
       "year": 2019,
-      "line": 1893
+      "line": 1928
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9540,7 +9540,7 @@
       "doi": null,
       "url": null,
       "year": 1989,
-      "line": 1989
+      "line": 2026
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9552,7 +9552,7 @@
       "doi": "10.1186/s13017-017-0151-4",
       "url": null,
       "year": 2017,
-      "line": 1995
+      "line": 2032
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9564,7 +9564,7 @@
       "doi": null,
       "url": null,
       "year": 1989,
-      "line": 2090
+      "line": 2129
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9576,7 +9576,7 @@
       "doi": "10.1186/s13017-020-00302-7",
       "url": null,
       "year": 2020,
-      "line": 2096
+      "line": 2135
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9588,7 +9588,7 @@
       "doi": "10.1016/s0022-5347(17)36966-5",
       "url": null,
       "year": 1992,
-      "line": 2240
+      "line": 2279
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9600,7 +9600,7 @@
       "doi": "10.1007/BF00185070",
       "url": null,
       "year": 1992,
-      "line": 2338
+      "line": 2378
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9612,7 +9612,7 @@
       "doi": "10.1001/jama.279.19.1542",
       "url": null,
       "year": 1998,
-      "line": 2433
+      "line": 2474
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9624,7 +9624,7 @@
       "doi": "10.1016/j.eururo.2015.06.046",
       "url": null,
       "year": 2016,
-      "line": 2539
+      "line": 2580
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9636,7 +9636,7 @@
       "doi": "10.1016/j.eururo.2005.12.031",
       "url": null,
       "year": 2006,
-      "line": 2699
+      "line": 2740
     },
     {
       "file": "wave5-surg-uro-ent.ts",
@@ -9648,7 +9648,7 @@
       "doi": "10.1136/bmj.g2191",
       "url": null,
       "year": 2014,
-      "line": 2797
+      "line": 2838
     },
     {
       "file": "wave5-tox-psych.ts",
@@ -9960,7 +9960,7 @@
       "doi": "10.1016/j.jhep.2015.05.022",
       "url": null,
       "year": 2015,
-      "line": 93
+      "line": 94
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -9972,7 +9972,7 @@
       "doi": "10.1002/hep.29363",
       "url": null,
       "year": 2017,
-      "line": 100
+      "line": 101
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -9984,7 +9984,7 @@
       "doi": "10.1016/j.jhep.2018.03.024",
       "url": null,
       "year": 2018,
-      "line": 208
+      "line": 218
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -9996,7 +9996,7 @@
       "doi": "10.1002/hep.28906",
       "url": null,
       "year": 2017,
-      "line": 326
+      "line": 362
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10008,7 +10008,7 @@
       "doi": null,
       "url": null,
       "year": 1974,
-      "line": 426
+      "line": 461
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10020,7 +10020,7 @@
       "doi": "10.1053/j.gastro.2021.08.050",
       "url": null,
       "year": 2021,
-      "line": 547
+      "line": 582
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10032,7 +10032,7 @@
       "doi": "10.7326/0003-4819-130-6-199903160-00002",
       "url": null,
       "year": 1999,
-      "line": 646
+      "line": 681
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10044,7 +10044,7 @@
       "doi": "10.1053/j.ajkd.2021.08.003",
       "url": null,
       "year": 2021,
-      "line": 653
+      "line": 688
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10056,7 +10056,7 @@
       "doi": "10.1016/S0140-6736(11)61454-2",
       "url": "https://kdigo.org/guidelines/acute-kidney-injury/",
       "year": 2012,
-      "line": 735
+      "line": 770
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10068,7 +10068,7 @@
       "doi": "10.1016/j.xkme.2020.01.001",
       "url": null,
       "year": 2020,
-      "line": 841
+      "line": 876
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10080,7 +10080,7 @@
       "doi": "10.7326/0003-4819-73-5-721",
       "url": null,
       "year": 1970,
-      "line": 948
+      "line": 985
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10092,7 +10092,7 @@
       "doi": "10.1056/NEJMc1811694",
       "url": null,
       "year": 2018,
-      "line": 955
+      "line": 992
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10104,7 +10104,7 @@
       "doi": "10.1111/cen.13866",
       "url": null,
       "year": 2019,
-      "line": 1047
+      "line": 1084
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10116,7 +10116,7 @@
       "doi": "10.1530/EJE-13-1020",
       "url": null,
       "year": 2014,
-      "line": 1138
+      "line": 1175
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10128,7 +10128,7 @@
       "doi": "10.1016/S0140-6736(19)31255-3",
       "url": null,
       "year": 2019,
-      "line": 1238
+      "line": 1275
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10140,7 +10140,7 @@
       "doi": "10.1046/j.1365-2265.1997.2331047.x",
       "url": null,
       "year": 1997,
-      "line": 1312
+      "line": 1349
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10152,7 +10152,7 @@
       "doi": "10.1530/EJE-21-0479",
       "url": null,
       "year": 2021,
-      "line": 1319
+      "line": 1356
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10164,7 +10164,7 @@
       "doi": "10.1089/thy.2015.0020",
       "url": null,
       "year": 2016,
-      "line": 1428
+      "line": 1485
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10176,7 +10176,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK279114/",
       "year": 2011,
-      "line": 1512
+      "line": 1569
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10188,7 +10188,7 @@
       "doi": "10.2337/dc09-9032",
       "url": null,
       "year": 2009,
-      "line": 1601
+      "line": 1658
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10200,7 +10200,7 @@
       "doi": "10.2337/dc09-9032",
       "url": null,
       "year": 2009,
-      "line": 1704
+      "line": 1771
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10212,7 +10212,7 @@
       "doi": "10.1056/NEJMra1003327",
       "url": null,
       "year": 2014,
-      "line": 1850
+      "line": 1917
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10224,7 +10224,7 @@
       "doi": "10.1056/NEJMra1003327",
       "url": null,
       "year": 2014,
-      "line": 1995
+      "line": 2062
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10236,7 +10236,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK482316/",
       "year": 2012,
-      "line": 2127
+      "line": 2194
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10248,7 +10248,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK482268/",
       "year": 2012,
-      "line": 2228
+      "line": 2295
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10260,7 +10260,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK539701/",
       "year": 2012,
-      "line": 2321
+      "line": 2388
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10272,7 +10272,7 @@
       "doi": "10.21037/med-21-7",
       "url": null,
       "year": 2017,
-      "line": 2402
+      "line": 2469
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10284,7 +10284,7 @@
       "doi": "10.1056/NEJMcp0808891",
       "url": null,
       "year": 2009,
-      "line": 2495
+      "line": 2562
     },
     {
       "file": "wave6-clinical-residual.ts",
@@ -10296,7 +10296,7 @@
       "doi": "10.1111/bcp.12763",
       "url": null,
       "year": 2016,
-      "line": 2591
+      "line": 2658
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10308,7 +10308,7 @@
       "doi": "10.1542/peds.2010-3464",
       "url": null,
       "year": 2011,
-      "line": 115
+      "line": 116
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10320,7 +10320,7 @@
       "doi": "10.1542/peds.2018-2896",
       "url": null,
       "year": 2018,
-      "line": 122
+      "line": 123
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10332,7 +10332,7 @@
       "doi": "10.1016/S0140-6736(17)31002-4",
       "url": null,
       "year": 2017,
-      "line": 239
+      "line": 240
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10344,7 +10344,7 @@
       "doi": "10.1542/peds.2012-0541",
       "url": null,
       "year": 2012,
-      "line": 246
+      "line": 247
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10356,7 +10356,7 @@
       "doi": "10.1097/00000658-197801000-00001",
       "url": null,
       "year": 1978,
-      "line": 354
+      "line": 355
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10368,7 +10368,7 @@
       "doi": "10.1016/s0031-3955(16)34975-6",
       "url": null,
       "year": 1986,
-      "line": 361
+      "line": 362
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10380,7 +10380,7 @@
       "doi": "10.1097/01.PCC.0000149131.72248.E6",
       "url": null,
       "year": 2005,
-      "line": 485
+      "line": 486
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10392,7 +10392,7 @@
       "doi": "10.1001/jamapediatrics.2017.2352",
       "url": null,
       "year": 2017,
-      "line": 618
+      "line": 619
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10404,7 +10404,7 @@
       "doi": "10.1001/jama.2024.0179",
       "url": null,
       "year": 2024,
-      "line": 725
+      "line": 726
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10416,7 +10416,7 @@
       "doi": "10.1161/CIR.0000000000000901",
       "url": null,
       "year": 2020,
-      "line": 831
+      "line": 832
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10428,7 +10428,7 @@
       "doi": "10.1161/CIR.0000000000000901",
       "url": null,
       "year": 2020,
-      "line": 941
+      "line": 942
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10440,7 +10440,7 @@
       "doi": "10.1001/archpedi.1986.02140220068034",
       "url": null,
       "year": 1986,
-      "line": 1035
+      "line": 1036
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10452,7 +10452,7 @@
       "doi": "10.1111/j.1471-0528.1975.tb00710.x",
       "url": null,
       "year": 1975,
-      "line": 1106
+      "line": 1107
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10464,7 +10464,7 @@
       "doi": null,
       "url": null,
       "year": 1987,
-      "line": 1206
+      "line": 1208
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10476,7 +10476,7 @@
       "doi": "10.1002/uog.12371",
       "url": null,
       "year": 2013,
-      "line": 1310
+      "line": 1312
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10488,7 +10488,7 @@
       "doi": "10.1016/0002-9378(80)90457-3",
       "url": null,
       "year": 1980,
-      "line": 1465
+      "line": 1467
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10500,7 +10500,7 @@
       "doi": null,
       "url": null,
       "year": 1964,
-      "line": 1593
+      "line": 1595
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10512,7 +10512,7 @@
       "doi": "10.1016/j.ajog.2014.01.026",
       "url": null,
       "year": 2014,
-      "line": 1739
+      "line": 1742
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10524,7 +10524,7 @@
       "doi": "10.1097/AOG.0000000000002351",
       "url": null,
       "year": 2017,
-      "line": 1836
+      "line": 1839
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10536,7 +10536,7 @@
       "doi": "10.1111/aogs.13626",
       "url": null,
       "year": 2013,
-      "line": 1934
+      "line": 1936
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10548,7 +10548,7 @@
       "doi": "10.1016/s0140-6736(02)08778-0",
       "url": null,
       "year": 2002,
-      "line": 2046
+      "line": 2048
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10560,7 +10560,7 @@
       "doi": "10.1097/AOG.0000000000003891",
       "url": null,
       "year": 2020,
-      "line": 2053
+      "line": 2055
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10572,7 +10572,7 @@
       "doi": "10.2337/dc09-1848",
       "url": null,
       "year": 2010,
-      "line": 2149
+      "line": 2152
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10584,7 +10584,7 @@
       "doi": "10.1056/NEJMoa0707943",
       "url": null,
       "year": 2008,
-      "line": 2156
+      "line": 2159
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10596,7 +10596,7 @@
       "doi": "10.1161/CIR.0000000000000902",
       "url": null,
       "year": 2020,
-      "line": 2254
+      "line": 2257
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10608,7 +10608,7 @@
       "doi": null,
       "url": null,
       "year": 2023,
-      "line": 2362
+      "line": 2365
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10620,7 +10620,7 @@
       "doi": "10.1097/MPG.0000000000001334",
       "url": null,
       "year": 2017,
-      "line": 2471
+      "line": 2475
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10632,7 +10632,7 @@
       "doi": "10.1016/S0140-6736(08)60073-2",
       "url": null,
       "year": 2008,
-      "line": 2561
+      "line": 2565
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10644,7 +10644,7 @@
       "doi": "10.1016/s0022-3476(87)80285-8",
       "url": null,
       "year": 1987,
-      "line": 2667
+      "line": 2671
     },
     {
       "file": "wave6-em-peds.ts",
@@ -10656,7 +10656,7 @@
       "doi": "10.1136/ard.2009.116657",
       "url": null,
       "year": 2010,
-      "line": 2757
+      "line": 2760
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10740,7 +10740,7 @@
       "doi": null,
       "url": "https://pubmed.ncbi.nlm.nih.gov/?term=Katch-McArdle+resting+metabolic+rate",
       "year": 2001,
-      "line": 577
+      "line": 581
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10752,7 +10752,7 @@
       "doi": "10.1093/ajcn/40.1.168",
       "url": null,
       "year": 1984,
-      "line": 652
+      "line": 662
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10764,7 +10764,7 @@
       "doi": "10.1016/j.emc.2017.12.004",
       "url": null,
       "year": 2004,
-      "line": 750
+      "line": 760
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10776,7 +10776,7 @@
       "doi": null,
       "url": null,
       "year": 1957,
-      "line": 832
+      "line": 842
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10788,7 +10788,7 @@
       "doi": null,
       "url": "https://www.ismp.org/",
       "year": 2018,
-      "line": 916
+      "line": 926
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10800,7 +10800,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK513297/",
       "year": 2018,
-      "line": 990
+      "line": 1000
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10812,7 +10812,7 @@
       "doi": "10.1177/0148607114521833",
       "url": null,
       "year": 2014,
-      "line": 1099
+      "line": 1109
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10824,7 +10824,7 @@
       "doi": "10.1542/peds.2010-3851",
       "url": null,
       "year": 2011,
-      "line": 1196
+      "line": 1206
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10836,7 +10836,7 @@
       "doi": "10.2337/dc09-9032",
       "url": null,
       "year": 2009,
-      "line": 1268
+      "line": 1278
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10848,7 +10848,7 @@
       "doi": null,
       "url": "https://www.ismp.org/",
       "year": 2015,
-      "line": 1335
+      "line": 1345
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10860,7 +10860,7 @@
       "doi": null,
       "url": "https://www.ismp.org/",
       "year": 2015,
-      "line": 1397
+      "line": 1407
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10872,7 +10872,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK594496/",
       "year": 2015,
-      "line": 1460
+      "line": 1470
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10884,7 +10884,7 @@
       "doi": null,
       "url": "https://pubmed.ncbi.nlm.nih.gov/?term=pharmaceutical+calculations+dilution+C1V1+C2V2",
       "year": 2016,
-      "line": 1577
+      "line": 1587
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10896,7 +10896,7 @@
       "doi": "10.3109/00365517709098927",
       "url": null,
       "year": 1977,
-      "line": 1658
+      "line": 1668
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10908,7 +10908,7 @@
       "doi": "10.1139/y83-207",
       "url": null,
       "year": 1983,
-      "line": 1755
+      "line": 1765
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10920,7 +10920,7 @@
       "doi": null,
       "url": "https://www.ncbi.nlm.nih.gov/books/NBK482268/",
       "year": 2012,
-      "line": 1848
+      "line": 1858
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10932,7 +10932,7 @@
       "doi": "10.1016/s0735-1097(00)01054-8",
       "url": null,
       "year": 2001,
-      "line": 1918
+      "line": 1928
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10944,7 +10944,7 @@
       "doi": "10.1136/thoraxjnl-2016-209729",
       "url": null,
       "year": 2017,
-      "line": 2034
+      "line": 2066
     },
     {
       "file": "wave6-formulas-misc.ts",
@@ -10956,7 +10956,7 @@
       "doi": "10.5847/wjem.j.issn.1920-8642.2012.02.006",
       "url": null,
       "year": 2012,
-      "line": 2130
+      "line": 2162
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11028,7 +11028,7 @@
       "doi": "10.7326/M14-1589",
       "url": null,
       "year": 2015,
-      "line": 618
+      "line": 619
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11040,7 +11040,7 @@
       "doi": "10.1001/jama.2023.12914",
       "url": null,
       "year": 2023,
-      "line": 721
+      "line": 722
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11052,7 +11052,7 @@
       "doi": "10.1182/blood-2016-03-643544",
       "url": null,
       "year": 2016,
-      "line": 800
+      "line": 801
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11064,7 +11064,7 @@
       "doi": "10.1016/j.jaci.2012.02.019",
       "url": null,
       "year": 2012,
-      "line": 889
+      "line": 890
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11076,7 +11076,7 @@
       "doi": "10.1056/NEJMc1912352",
       "url": null,
       "year": 2019,
-      "line": 998
+      "line": 999
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11088,7 +11088,7 @@
       "doi": null,
       "url": null,
       "year": 1999,
-      "line": 1088
+      "line": 1089
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11100,7 +11100,7 @@
       "doi": "10.1378/chest.11-2291",
       "url": null,
       "year": 2012,
-      "line": 1167
+      "line": 1168
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11112,7 +11112,7 @@
       "doi": "10.1378/chest.11-2291",
       "url": null,
       "year": 2012,
-      "line": 1278
+      "line": 1279
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11124,7 +11124,7 @@
       "doi": "10.1093/cid/cir073",
       "url": null,
       "year": 2011,
-      "line": 1409
+      "line": 1410
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11136,7 +11136,7 @@
       "doi": "10.1182/blood-2007-10-116327",
       "url": null,
       "year": 2008,
-      "line": 1505
+      "line": 1506
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11148,7 +11148,7 @@
       "doi": "10.1182/blood-2010-02-270116",
       "url": null,
       "year": 2010,
-      "line": 1512
+      "line": 1513
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11160,7 +11160,7 @@
       "doi": "10.1111/j.1365-2141.2004.05094.x",
       "url": null,
       "year": 2004,
-      "line": 1592
+      "line": 1593
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11172,7 +11172,7 @@
       "doi": "10.1111/j.1365-2141.2004.05094.x",
       "url": null,
       "year": 2004,
-      "line": 1681
+      "line": 1682
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11184,7 +11184,7 @@
       "doi": "10.3322/caac.21489",
       "url": null,
       "year": 2018,
-      "line": 1769
+      "line": 1770
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11196,7 +11196,7 @@
       "doi": "10.1016/j.ijrobp.2012.01.014",
       "url": null,
       "year": 2005,
-      "line": 1859
+      "line": 1860
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11208,7 +11208,7 @@
       "doi": "10.1056/NEJMcp067190",
       "url": null,
       "year": 2007,
-      "line": 1956
+      "line": 1957
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11220,7 +11220,7 @@
       "doi": "10.1093/cid/cis998",
       "url": null,
       "year": 2013,
-      "line": 2067
+      "line": 2068
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11232,7 +11232,7 @@
       "doi": null,
       "url": "https://apps.who.int/iris/handle/10665/37200",
       "year": 1979,
-      "line": 2147
+      "line": 2148
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11244,7 +11244,7 @@
       "doi": null,
       "url": "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/Bi-Rads",
       "year": 2013,
-      "line": 2239
+      "line": 2240
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11256,7 +11256,7 @@
       "doi": null,
       "url": "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/Lung-Rads",
       "year": 2022,
-      "line": 2348
+      "line": 2349
     },
     {
       "file": "wave6-heme-onc.ts",
@@ -11268,7 +11268,7 @@
       "doi": null,
       "url": "https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/LI-RADS",
       "year": 2018,
-      "line": 2454
+      "line": 2455
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11304,7 +11304,7 @@
       "doi": "10.1017/s0033291700049163",
       "url": null,
       "year": 1982,
-      "line": 302
+      "line": 307
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11316,7 +11316,7 @@
       "doi": "10.1542/peds.2013-1813",
       "url": null,
       "year": 2014,
-      "line": 390
+      "line": 395
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11328,7 +11328,7 @@
       "doi": null,
       "url": "https://www.nichq.org/resource/nichq-vanderbilt-assessment-scales",
       "year": 2002,
-      "line": 520
+      "line": 525
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11340,7 +11340,7 @@
       "doi": "10.1016/j.drugalcdep.2010.02.017",
       "url": null,
       "year": 2010,
-      "line": 602
+      "line": 607
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11352,7 +11352,7 @@
       "doi": null,
       "url": "https://www.benzo.org.uk/manual/",
       "year": 2002,
-      "line": 724
+      "line": 730
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11364,7 +11364,7 @@
       "doi": null,
       "url": "https://www.nccn.org",
       "year": 2023,
-      "line": 836
+      "line": 843
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11376,7 +11376,7 @@
       "doi": "10.1080/02791072.2003.10400007",
       "url": null,
       "year": 2003,
-      "line": 963
+      "line": 970
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11388,7 +11388,7 @@
       "doi": "10.1185/030079906X132488",
       "url": null,
       "year": 2006,
-      "line": 1046
+      "line": 1053
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11400,7 +11400,7 @@
       "doi": "10.1007/s11606-009-0981-1",
       "url": null,
       "year": 2009,
-      "line": 1146
+      "line": 1155
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11412,7 +11412,7 @@
       "doi": null,
       "url": null,
       "year": 1994,
-      "line": 1245
+      "line": 1255
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11424,7 +11424,7 @@
       "doi": "10.1212/01.wnl.0000078940.53438.83",
       "url": null,
       "year": 2003,
-      "line": 1313
+      "line": 1323
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11436,7 +11436,7 @@
       "doi": null,
       "url": null,
       "year": 1965,
-      "line": 1411
+      "line": 1422
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11448,7 +11448,7 @@
       "doi": "10.1161/STR.0000000000000211",
       "url": null,
       "year": 2019,
-      "line": 1504
+      "line": 1517
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11460,7 +11460,7 @@
       "doi": "10.1097/CCM.0b013e31828a24fe",
       "url": null,
       "year": 2013,
-      "line": 1644
+      "line": 1657
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11472,7 +11472,7 @@
       "doi": "10.1007/s00134-005-2763-5",
       "url": null,
       "year": 2005,
-      "line": 1836
+      "line": 1849
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11484,7 +11484,7 @@
       "doi": "10.1007/s00134-005-2762-6",
       "url": null,
       "year": 2005,
-      "line": 1843
+      "line": 1856
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11496,7 +11496,7 @@
       "doi": "10.1016/s0261-5614(02)00214-5",
       "url": null,
       "year": 2003,
-      "line": 1931
+      "line": 1985
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11508,7 +11508,7 @@
       "doi": "10.1002/jhbp.519",
       "url": null,
       "year": 2018,
-      "line": 2026
+      "line": 2080
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11520,7 +11520,7 @@
       "doi": "10.1097/00000658-195908000-00013",
       "url": null,
       "year": 1959,
-      "line": 2121
+      "line": 2175
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11532,7 +11532,7 @@
       "doi": "10.1007/s11255-020-02618-4",
       "url": null,
       "year": 2013,
-      "line": 2207
+      "line": 2261
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11544,7 +11544,7 @@
       "doi": "10.1016/j.ajem.2017.06.023",
       "url": null,
       "year": 2017,
-      "line": 2298
+      "line": 2352
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11556,7 +11556,7 @@
       "doi": "10.1177/019459988509300202",
       "url": null,
       "year": 1985,
-      "line": 2439
+      "line": 2493
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11568,7 +11568,7 @@
       "doi": "10.1111/j.1749-4486.2009.01995.x",
       "url": null,
       "year": 2009,
-      "line": 2528
+      "line": 2582
     },
     {
       "file": "wave6-psych-sleep.ts",
@@ -11580,7 +11580,7 @@
       "doi": "10.1016/j.otohns.2003.09.016",
       "url": null,
       "year": 2004,
-      "line": 2618
+      "line": 2672
     },
     {
       "file": "wave6-scores-residual.ts",
@@ -11688,7 +11688,7 @@
       "doi": null,
       "url": "https://www.aao.org/education/preferred-practice-pattern/primary-open-angle-glaucoma-ppp",
       "year": 2020,
-      "line": 754
+      "line": 755
     },
     {
       "file": "wave6-scores-residual.ts",
@@ -11700,7 +11700,7 @@
       "doi": "10.1097/00006324-197611000-00006",
       "url": null,
       "year": 1976,
-      "line": 876
+      "line": 877
     },
     {
       "file": "wave6-scores-residual.ts",
@@ -11712,7 +11712,7 @@
       "doi": "10.1097/00005537-200409000-00009",
       "url": null,
       "year": 2004,
-      "line": 958
+      "line": 959
     },
     {
       "file": "wave6-scores-residual.ts",
@@ -11724,7 +11724,7 @@
       "doi": null,
       "url": "https://www.who.int/news-room/fact-sheets/detail/deafness-and-hearing-loss",
       "year": 2021,
-      "line": 1066
+      "line": 1065
     },
     {
       "file": "wave6-scores-residual.ts",
@@ -11736,7 +11736,7 @@
       "doi": "10.7326/0003-4819-131-7-199910050-00002",
       "url": null,
       "year": 1999,
-      "line": 1186
+      "line": 1185
     },
     {
       "file": "wave6-scores-residual.ts",
@@ -11748,7 +11748,7 @@
       "doi": "10.1183/09031936.00102509",
       "url": null,
       "year": 2009,
-      "line": 1264
+      "line": 1263
     },
     {
       "file": "wave6-scores-residual.ts",
@@ -11772,7 +11772,7 @@
       "doi": null,
       "url": "https://goldcopd.org/",
       "year": 2024,
-      "line": 1458
+      "line": 1459
     },
     {
       "file": "wave6-scores-residual.ts",
@@ -11784,7 +11784,7 @@
       "doi": "10.1016/j.jaci.2003.09.008",
       "url": null,
       "year": 2004,
-      "line": 1532
+      "line": 1533
     },
     {
       "file": "wave6-scores-residual.ts",
@@ -11796,7 +11796,7 @@
       "doi": "10.1034/j.1399-3003.1999.14d29.x",
       "url": null,
       "year": 1999,
-      "line": 1614
+      "line": 1615
     },
     {
       "file": "wave6-scores-residual.ts",
@@ -11808,7 +11808,7 @@
       "doi": null,
       "url": "https://ginasthma.org/",
       "year": 2024,
-      "line": 1684
+      "line": 1685
     },
     {
       "file": "wave6-scores-residual.ts",
@@ -11820,7 +11820,7 @@
       "doi": "10.1097/00005650-199801000-00004",
       "url": null,
       "year": 1998,
-      "line": 1822
+      "line": 1823
     },
     {
       "file": "wave6-scores-residual.ts",
@@ -11832,7 +11832,7 @@
       "doi": "10.1503/cmaj.050051",
       "url": null,
       "year": 2005,
-      "line": 1929
+      "line": 1930
     },
     {
       "file": "wave6-scores-residual.ts",
@@ -11844,7 +11844,7 @@
       "doi": "10.1093/gerona/56.3.m146",
       "url": null,
       "year": 2001,
-      "line": 2003
+      "line": 2004
     },
     {
       "file": "wave6-scores-residual.ts",
@@ -11856,7 +11856,7 @@
       "doi": "10.1016/0277-9536(89)90309-2",
       "url": null,
       "year": 1989,
-      "line": 2100
+      "line": 2101
     },
     {
       "file": "wave6-scores-residual.ts",
@@ -11868,7 +11868,7 @@
       "doi": "10.1053/apnr.2003.YAPNR2",
       "url": null,
       "year": 2003,
-      "line": 2172
+      "line": 2173
     },
     {
       "file": "wave6-scores-residual.ts",
@@ -11880,7 +11880,7 @@
       "doi": "10.1093/gerona/56.6.m366",
       "url": null,
       "year": 2001,
-      "line": 2244
+      "line": 2245
     },
     {
       "file": "wave7-bedside.ts",
@@ -11904,7 +11904,7 @@
       "doi": "10.1002/oby.20461",
       "url": null,
       "year": 2013,
-      "line": 269
+      "line": 276
     },
     {
       "file": "wave7-bedside.ts",
@@ -11916,7 +11916,7 @@
       "doi": "10.1001/jamanetworkopen.2024.6505",
       "url": null,
       "year": 2024,
-      "line": 276
+      "line": 283
     },
     {
       "file": "wave7-bedside.ts",
@@ -11928,7 +11928,7 @@
       "doi": "10.1016/j.jcrc.2016.05.022",
       "url": null,
       "year": 2016,
-      "line": 398
+      "line": 405
     },
     {
       "file": "wave7-bedside.ts",
@@ -11940,7 +11940,7 @@
       "doi": "10.1007/s00134-017-4777-1",
       "url": null,
       "year": 2017,
-      "line": 486
+      "line": 493
     },
     {
       "file": "wave7-bedside.ts",
@@ -11952,7 +11952,7 @@
       "doi": "10.1093/cid/ciad271",
       "url": null,
       "year": 2023,
-      "line": 604
+      "line": 625
     },
     {
       "file": "wave7-bedside.ts",
@@ -11964,7 +11964,7 @@
       "doi": "10.1161/CIRCULATIONAHA.118.034646",
       "url": null,
       "year": 2018,
-      "line": 704
+      "line": 725
     },
     {
       "file": "wave7-bedside.ts",
@@ -11976,7 +11976,7 @@
       "doi": "10.1093/eurheartj/ehz641",
       "url": null,
       "year": 2019,
-      "line": 810
+      "line": 833
     },
     {
       "file": "wave7-bedside.ts",
@@ -11988,7 +11988,7 @@
       "doi": "10.1016/S2352-4642(24)00104-4",
       "url": null,
       "year": 2024,
-      "line": 907
+      "line": 930
     },
     {
       "file": "wave7-bedside.ts",
@@ -12000,7 +12000,7 @@
       "doi": "10.1001/jamaneurol.2017.2564",
       "url": null,
       "year": 2017,
-      "line": 1016
+      "line": 1039
     },
     {
       "file": "wave7-bedside.ts",
@@ -12012,7 +12012,7 @@
       "doi": "10.1186/cc10546",
       "url": null,
       "year": 2011,
-      "line": 1123
+      "line": 1146
     },
     {
       "file": "wave7-bedside.ts",
@@ -12024,7 +12024,7 @@
       "doi": "10.1016/S2468-1253(19)30383-8",
       "url": null,
       "year": 2020,
-      "line": 1201
+      "line": 1224
     },
     {
       "file": "wave7-bedside.ts",
@@ -12036,7 +12036,7 @@
       "doi": "10.1016/j.jhep.2022.10.034",
       "url": null,
       "year": 2022,
-      "line": 1303
+      "line": 1326
     },
     {
       "file": "wave7-bedside.ts",
@@ -12048,7 +12048,7 @@
       "doi": "10.1016/j.jhep.2022.10.034",
       "url": null,
       "year": 2022,
-      "line": 1394
+      "line": 1417
     },
     {
       "file": "wave7-bedside.ts",
@@ -12060,7 +12060,7 @@
       "doi": "10.1097/HEP.0000000000000520",
       "url": null,
       "year": 2023,
-      "line": 1526
+      "line": 1554
     },
     {
       "file": "wave7-bedside.ts",
@@ -12072,7 +12072,7 @@
       "doi": "10.1136/bmj.f2492",
       "url": null,
       "year": 2013,
-      "line": 1613
+      "line": 1641
     },
     {
       "file": "wave7-bedside.ts",
@@ -12084,7 +12084,7 @@
       "doi": "10.1001/jama.2014.2135",
       "url": null,
       "year": 2014,
-      "line": 1620
+      "line": 1648
     },
     {
       "file": "wave7-fillins.ts",
@@ -12240,7 +12240,7 @@
       "doi": "10.1007/s00134-005-2762-6",
       "url": null,
       "year": 2005,
-      "line": 952
+      "line": 963
     },
     {
       "file": "wave7-fillins.ts",
@@ -12252,7 +12252,7 @@
       "doi": "10.1007/s00134-005-2763-5",
       "url": null,
       "year": 2005,
-      "line": 959
+      "line": 970
     },
     {
       "file": "wave7-highuse.ts",
@@ -12588,7 +12588,7 @@
       "doi": "10.1136/bmj.j2099",
       "url": null,
       "year": 2017,
-      "line": 1069
+      "line": 1068
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12600,7 +12600,7 @@
       "doi": "10.1136/ard-2022-223413",
       "url": null,
       "year": 2023,
-      "line": 263
+      "line": 426
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12612,7 +12612,7 @@
       "doi": "10.1002/art.30129",
       "url": null,
       "year": 2011,
-      "line": 270
+      "line": 433
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12624,7 +12624,7 @@
       "doi": "10.3899/jrheum.080402",
       "url": null,
       "year": 2008,
-      "line": 361
+      "line": 536
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12636,7 +12636,7 @@
       "doi": "10.1002/art.1780390303",
       "url": null,
       "year": 1996,
-      "line": 466
+      "line": 701
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12648,7 +12648,7 @@
       "doi": "10.1093/rheumatology/keh624",
       "url": null,
       "year": 2005,
-      "line": 552
+      "line": 787
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12660,7 +12660,7 @@
       "doi": "10.1093/rheumatology/keq026",
       "url": null,
       "year": 2010,
-      "line": 559
+      "line": 794
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12672,7 +12672,7 @@
       "doi": "10.1136/annrheumdis-2018-214502",
       "url": null,
       "year": 2019,
-      "line": 733
+      "line": 973
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12684,7 +12684,7 @@
       "doi": "10.1136/annrheumdis-2021-220363",
       "url": null,
       "year": 2021,
-      "line": 740
+      "line": 980
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12696,7 +12696,7 @@
       "doi": "10.1136/annrheumdis-2015-207726",
       "url": null,
       "year": 2016,
-      "line": 829
+      "line": 1069
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12708,7 +12708,7 @@
       "doi": "10.1136/lupus-2021-000538",
       "url": null,
       "year": 2021,
-      "line": 921
+      "line": 1173
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12720,7 +12720,7 @@
       "doi": "10.1136/annrheumdis-2020-217566",
       "url": null,
       "year": 2020,
-      "line": 928
+      "line": 1180
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12732,7 +12732,7 @@
       "doi": "10.1136/ard.2008.097279",
       "url": null,
       "year": 2009,
-      "line": 1028
+      "line": 1280
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12744,7 +12744,7 @@
       "doi": "10.1002/art.1780400222",
       "url": null,
       "year": 1997,
-      "line": 1127
+      "line": 1379
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12756,7 +12756,7 @@
       "doi": "10.1097/MD.0b013e318205a4c6",
       "url": null,
       "year": 2011,
-      "line": 1221
+      "line": 1473
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12768,7 +12768,7 @@
       "doi": "10.1136/ard.2009.110767",
       "url": null,
       "year": 2010,
-      "line": 1297
+      "line": 1549
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12780,7 +12780,7 @@
       "doi": "10.1136/ard.2010.143743",
       "url": null,
       "year": 2011,
-      "line": 1367
+      "line": 1619
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12792,7 +12792,7 @@
       "doi": "10.3899/jrheum.931892",
       "url": null,
       "year": 1993,
-      "line": 1435
+      "line": 1687
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12804,7 +12804,7 @@
       "doi": "10.1002/1529-0131(200011)43:11<2445::AID-ANR11>3.0.CO;2-P",
       "url": null,
       "year": 2000,
-      "line": 1442
+      "line": 1694
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12816,7 +12816,7 @@
       "doi": "10.1378/chest.11-3223",
       "url": null,
       "year": 2012,
-      "line": 1572
+      "line": 1827
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12828,7 +12828,7 @@
       "doi": "10.7326/0003-4819-156-10-201205150-00004",
       "url": null,
       "year": 2012,
-      "line": 1579
+      "line": 1834
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12840,7 +12840,7 @@
       "doi": "10.1136/annrheumdis-2012-201341",
       "url": null,
       "year": 2013,
-      "line": 1694
+      "line": 1949
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12852,7 +12852,7 @@
       "doi": "10.3899/jrheum.131172",
       "url": null,
       "year": 2014,
-      "line": 1701
+      "line": 1956
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12864,7 +12864,7 @@
       "doi": "10.1136/ard.2008.102473",
       "url": null,
       "year": 2010,
-      "line": 1799
+      "line": 2054
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12876,7 +12876,7 @@
       "doi": "10.1093/rheumatology/key344",
       "url": null,
       "year": 2018,
-      "line": 1806
+      "line": 2061
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12888,7 +12888,7 @@
       "doi": "10.3899/jrheum.942281",
       "url": null,
       "year": 1994,
-      "line": 1873
+      "line": 2135
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12900,7 +12900,7 @@
       "doi": "10.3899/jrheum.9401694",
       "url": null,
       "year": 1994,
-      "line": 1995
+      "line": 2257
     },
     {
       "file": "wave7-rheum-activity.ts",
@@ -12912,7 +12912,7 @@
       "doi": "10.1136/ard.2007.087395",
       "url": null,
       "year": 2009,
-      "line": 2066
+      "line": 2328
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -12960,7 +12960,7 @@
       "doi": "10.1136/annrheumdis-2015-208560",
       "url": null,
       "year": 2016,
-      "line": 457
+      "line": 462
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -12972,7 +12972,7 @@
       "doi": "10.1136/annrheumdis-2013-204424",
       "url": null,
       "year": 2013,
-      "line": 527
+      "line": 534
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -12984,7 +12984,7 @@
       "doi": "10.1002/art.34356",
       "url": null,
       "year": 2012,
-      "line": 599
+      "line": 610
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -12996,7 +12996,7 @@
       "doi": "10.1136/annrheumdis-2021-221795",
       "url": null,
       "year": 2022,
-      "line": 681
+      "line": 702
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -13008,7 +13008,7 @@
       "doi": "10.1136/annrheumdis-2021-221796",
       "url": null,
       "year": 2022,
-      "line": 751
+      "line": 778
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -13020,7 +13020,7 @@
       "doi": "10.1136/annrheumdis-2021-221794",
       "url": null,
       "year": 2022,
-      "line": 819
+      "line": 852
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -13032,7 +13032,7 @@
       "doi": "10.1002/art.42314",
       "url": null,
       "year": 2022,
-      "line": 902
+      "line": 942
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -13044,7 +13044,7 @@
       "doi": "10.1136/ard-2022-223482",
       "url": null,
       "year": 2022,
-      "line": 989
+      "line": 1037
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -13056,7 +13056,7 @@
       "doi": "10.1002/art.21972",
       "url": null,
       "year": 2006,
-      "line": 1056
+      "line": 1104
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -13068,7 +13068,7 @@
       "doi": "10.1136/ard.2009.108233",
       "url": null,
       "year": 2009,
-      "line": 1164
+      "line": 1217
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -13080,7 +13080,7 @@
       "doi": "10.1136/ard.2010.133645",
       "url": null,
       "year": 2011,
-      "line": 1267
+      "line": 1327
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -13092,7 +13092,7 @@
       "doi": "10.3899/jrheum.1992.19.424",
       "url": null,
       "year": 1992,
-      "line": 1354
+      "line": 1424
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -13104,7 +13104,7 @@
       "doi": "10.3899/jrheum.2001.28.322",
       "url": null,
       "year": 2001,
-      "line": 1434
+      "line": 1512
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -13116,7 +13116,7 @@
       "doi": "10.1136/annrheumdis-2017-211468",
       "url": null,
       "year": 2017,
-      "line": 1535
+      "line": 1623
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -13128,7 +13128,7 @@
       "doi": "10.1002/art.42624",
       "url": null,
       "year": 2023,
-      "line": 1621
+      "line": 1710
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -13140,7 +13140,7 @@
       "doi": "10.1111/j.1538-7836.2006.01753.x",
       "url": null,
       "year": 2006,
-      "line": 1698
+      "line": 1789
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -13152,7 +13152,7 @@
       "doi": "10.1111/jdv.12107",
       "url": null,
       "year": 2014,
-      "line": 1766
+      "line": 1857
     },
     {
       "file": "wave7-rheum-class.ts",
@@ -13164,7 +13164,7 @@
       "doi": "10.1016/0140-6736(90)92643-V",
       "url": null,
       "year": 1990,
-      "line": 1836
+      "line": 1929
     }
   ]
 }

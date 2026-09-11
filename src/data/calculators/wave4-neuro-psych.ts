@@ -10,6 +10,7 @@ function gdsReverse(id: string, n: number, question: string) {
       { label: 'No', value: 'no', points: 1 },
     ],
     'yes',
+    'How have you felt over the past week? This item is reverse-scored: “No” = 1 point.',
   );
 }
 function gdsForward(id: string, n: number, question: string) {
@@ -21,6 +22,7 @@ function gdsForward(id: string, n: number, question: string) {
       { label: 'Yes', value: 'yes', points: 1 },
     ],
     'no',
+    'How have you felt over the past week? “Yes” = 1 point.',
   );
 }
 function gdsPoints(v: string | number | boolean | null | undefined, reverse: boolean): number {
@@ -89,7 +91,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: 'Right hemiparesis → score aphasia', value: 'right' },
         { label: 'Left hemiparesis → score agnosia', value: 'left' },
         { label: 'No clear laterality / bilateral', value: 'na' },
-      ]),
+      ], 'right', 'Only one cortical branch counts. Right hemiparesis → aphasia; left → agnosia. Bilateral/unclear uses the higher of the two.'),
       selectInput(
         'aphasia',
         'Aphasia (right hemiparesis): close eyes + “make a fist”',
@@ -197,20 +199,38 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Rapid field or triage motor assessment when large-vessel occlusion is a concern.',
     whyUse: 'Very brief motor-only LVO screen; LAMS ≥4 commonly associated with higher LVO probability.',
     inputs: [
-      selectInput('face', 'Facial droop', [
-        { label: 'Absent (0)', value: 0 },
-        { label: 'Present (1)', value: 1 },
-      ]),
-      selectInput('arm', 'Arm drift', [
-        { label: 'Absent (0)', value: 0 },
-        { label: 'Drifts down (1)', value: 1 },
-        { label: 'Falls rapidly (2)', value: 2 },
-      ]),
-      selectInput('grip', 'Grip strength', [
-        { label: 'Normal (0)', value: 0 },
-        { label: 'Weak grip (1)', value: 1 },
-        { label: 'No grip / no movement (2)', value: 2 },
-      ]),
+      selectInput(
+        'face',
+        'Facial droop',
+        [
+          { label: 'Absent (0)', value: 0, description: 'Smile / show teeth symmetrical' },
+          { label: 'Present (1)', value: 1, description: 'Partial or complete unilateral droop' },
+        ],
+        0,
+        'Ask the patient to smile and show teeth. Present = partial or complete unilateral droop.',
+      ),
+      selectInput(
+        'arm',
+        'Arm drift',
+        [
+          { label: 'Absent (0)', value: 0, description: 'No drift over 10 s' },
+          { label: 'Drifts down (1)', value: 1, description: 'Drifts down but does not hit the bed in 10 s' },
+          { label: 'Falls rapidly (2)', value: 2, description: 'Falls rapidly or cannot be lifted against gravity' },
+        ],
+        0,
+        'Eyes closed, both arms out palms up for 10 s. Score the weaker arm.',
+      ),
+      selectInput(
+        'grip',
+        'Grip strength',
+        [
+          { label: 'Normal (0)', value: 0, description: 'Equal strong handshake' },
+          { label: 'Weak grip (1)', value: 1, description: 'Weak but some grip' },
+          { label: 'No grip / no movement (2)', value: 2, description: 'No grip or no movement' },
+        ],
+        0,
+        'Handshake grip, compare sides. 0 equal strong; 1 weak but some grip; 2 no grip / no movement.',
+      ),
     ],
     calculate(values) {
       const score = num(values.face) + num(values.arm) + num(values.grip);
@@ -346,31 +366,61 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Prehospital triage when deciding transport destination for suspected large-vessel occlusion.',
     whyUse: 'Balances facial, arm, speech, eye deviation, and denial/neglect items linked to cortical LVO.',
     inputs: [
-      selectInput('face', 'Facial palsy', [
-        { label: 'Normal / absent (0)', value: 0 },
-        { label: 'Mild (1)', value: 1 },
-        { label: 'Moderate to severe (2)', value: 2 },
-      ]),
-      selectInput('arm', 'Arm weakness', [
-        { label: 'No drift (0)', value: 0 },
-        { label: 'Drift or some effort against gravity (1)', value: 1 },
-        { label: 'No effort against gravity / no movement (2)', value: 2 },
-      ]),
-      selectInput('speech', 'Speech changes', [
-        { label: 'Absent (0)', value: 0 },
-        { label: 'Mild (1)', value: 1 },
-        { label: 'Severe / mute / incomprehensible (2)', value: 2 },
-      ]),
-      selectInput('eye', 'Eye deviation', [
-        { label: 'Absent (0)', value: 0 },
-        { label: 'Partial (1)', value: 1 },
-        { label: 'Forced deviation (2)', value: 2 },
-      ]),
-      selectInput('denial', 'Denial / neglect', [
-        { label: 'Absent (0)', value: 0 },
-        { label: 'Extinction to bilateral simultaneous stimulation only (1)', value: 1 },
-        { label: 'Does not recognize own hand or orients only one side (2)', value: 2 },
-      ]),
+      selectInput(
+        'face',
+        'Facial palsy',
+        [
+          { label: 'Normal / absent (0)', value: 0, description: 'Symmetrical smile / show teeth' },
+          { label: 'Mild (1)', value: 1, description: 'Minor paralysis (flattened nasolabial fold or asymmetric smile)' },
+          { label: 'Moderate to severe (2)', value: 2, description: 'Partial or complete paralysis of lower (or upper and lower) face' },
+        ],
+        0,
+        'Ask to show teeth or smile (NIHSS face mapping).',
+      ),
+      selectInput(
+        'arm',
+        'Arm weakness',
+        [
+          { label: 'No drift (0)', value: 0, description: 'Holds 90° sitting or 45° supine for 10 s' },
+          { label: 'Drift or some effort against gravity (1)', value: 1, description: 'Drifts before 10 s, or some effort against gravity' },
+          { label: 'No effort against gravity / no movement (2)', value: 2, description: 'Limb falls with no antigravity effort, or no movement' },
+        ],
+        0,
+        'Eyes closed, arms out palms up 10 s. Score the weaker arm.',
+      ),
+      selectInput(
+        'speech',
+        'Speech changes',
+        [
+          { label: 'Absent (0)', value: 0, description: 'Normal speech' },
+          { label: 'Mild (1)', value: 1, description: 'Mild–moderate aphasia or dysarthria but some meaningful speech' },
+          { label: 'Severe / mute / incomprehensible (2)', value: 2, description: 'Mute, global aphasia, or incomprehensible speech' },
+        ],
+        0,
+        'Name 3 objects and follow a 1-step command, or repeat a sentence.',
+      ),
+      selectInput(
+        'eye',
+        'Eye deviation',
+        [
+          { label: 'Absent (0)', value: 0, description: 'Follows finger full left–right' },
+          { label: 'Partial (1)', value: 1, description: 'Gaze preference; cannot cross midline but not locked' },
+          { label: 'Forced deviation (2)', value: 2, description: 'Forced/locked deviation, cannot overcome' },
+        ],
+        0,
+        'Follow finger full left–right. Partial = cannot cross midline; forced = locked, cannot overcome.',
+      ),
+      selectInput(
+        'denial',
+        'Denial / neglect',
+        [
+          { label: 'Absent (0)', value: 0, description: 'No extinction or anosognosia' },
+          { label: 'Extinction to bilateral simultaneous stimulation only (1)', value: 1, description: 'Visual or tactile extinction on BSS only' },
+          { label: 'Does not recognize own hand or orients only one side (2)', value: 2, description: 'Does not recognize own hand or orients to only one side of space' },
+        ],
+        0,
+        'Visual or tactile bilateral simultaneous stimulation, then “Whose arm is this?”',
+      ),
     ],
     calculate(values) {
       const score =
@@ -434,23 +484,27 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '≥80 years (0)', value: 0 },
       ]),
       selectInput('gcs', 'GCS', [
-        { label: 'GCS ≥9 (2)', value: 2 },
-        { label: 'GCS ≤8 (0)', value: 0 },
-      ]),
-      selectInput('location', 'ICH location', [
-        { label: 'Lobar (2)', value: 2 },
-        { label: 'Deep (1)', value: 1 },
-        { label: 'Infratentorial (0)', value: 0 },
-      ]),
+        { label: 'GCS ≥9 (2)', value: 2, description: 'Best eye + verbal + motor total ≥9' },
+        { label: 'GCS ≤8 (0)', value: 0, description: 'Best eye + verbal + motor total ≤8' },
+      ], 2, 'Eye (1–4) + verbal (1–5) + motor (1–6). Score best responses after resuscitation.'),
+      selectInput(
+        'location',
+        'ICH location',
+        [
+          { label: 'Lobar (2)', value: 2, description: 'Cortex / lobar white matter (not deep nuclei or cerebellum/brainstem)' },
+          { label: 'Deep (1)', value: 1, description: 'Basal ganglia, thalamus, or internal capsule' },
+          { label: 'Infratentorial (0)', value: 0, description: 'Brainstem or cerebellum' },
+        ],
+      ),
       selectInput('volume', 'ICH volume', [
         { label: '<30 mL (4)', value: 4 },
         { label: '30–60 mL (2)', value: 2 },
         { label: '>60 mL (0)', value: 0 },
       ], 4, 'ABC/2 or volumetric estimate'),
       selectInput('cognition', 'Pre-ICH cognitive impairment', [
-        { label: 'No (1)', value: 1 },
-        { label: 'Yes (0)', value: 0 },
-      ]),
+        { label: 'No (1)', value: 1, description: 'No dementia or cognitive impairment before this ICH' },
+        { label: 'Yes (0)', value: 0, description: 'Documented dementia or cognitive impairment antedating this bleed (not acute confusion from the ICH)' },
+      ], 1, 'Score premorbid cognition only — not encephalopathy caused by the hemorrhage.'),
     ],
     calculate(values) {
       const score =
@@ -536,13 +590,28 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whyUse: 'Structures recognition of spot sign and companion clinical risk factors linked to growth and poor outcome.',
     inputs: [
       yesNo('ctaDone', 'CTA available for review', 0),
-      yesNo('spotSign', 'Spot sign present (≥1 focus of contrast within hematoma, discontinuous from vessels)', 2),
+      yesNo(
+        'spotSign',
+        'Spot sign present (≥1 focus of contrast within hematoma, discontinuous from vessels)',
+        2,
+        'Arterial-phase CTA: ≥1 focus of contrast pooling in the hematoma, discontinuous from vessels, attenuation ≥120 HU (or ≥2× hematoma), any size/morphology; exclude calcium on NCCT.',
+      ),
       yesNo('multipleSpots', 'Multiple spot signs or large/serpiginous spot'),
       yesNo('earlyPresentation', 'Presentation within 6 hours of onset'),
-      yesNo('anticoag', 'Anticoagulation or coagulopathy'),
-      yesNo('largeVolume', 'Baseline hematoma volume ≥30 mL'),
-      yesNo('ivh', 'Intraventricular extension'),
-      yesNo('bpUncontrolled', 'SBP still markedly elevated / hard to control'),
+      yesNo(
+        'anticoag',
+        'Anticoagulation or coagulopathy',
+        1,
+        'Warfarin / DOAC / heparin, or INR >1.4 or platelets <100 ×10⁹/L (local reversal thresholds supersede).',
+      ),
+      yesNo('largeVolume', 'Baseline hematoma volume ≥30 mL', 1, 'ABC/2 or volumetric estimate ≥30 mL.'),
+      yesNo('ivh', 'Intraventricular extension', 1, 'Any blood in the ventricular system on CT.'),
+      yesNo(
+        'bpUncontrolled',
+        'SBP still markedly elevated / hard to control',
+        1,
+        'e.g. SBP still ≥150–180 mmHg, or not at local ICH target (often SBP <140).',
+      ),
     ],
     calculate(values) {
       const cta = bool(values.ctaDone);
@@ -642,8 +711,13 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Confirmed aneurysmal SAH for standardized clinical severity grading.',
     whyUse: 'Widely used international grade linking GCS and focal motor deficit to outcome; complements Hunt-Hess and Fisher grades.',
     inputs: [
-      numberInput('gcs', 'Glasgow Coma Scale total', { min: 3, max: 15, defaultValue: 15 }),
-      yesNo('motorDeficit', 'Major focal motor deficit present (hemiparesis/hemiplegia)', 0),
+      numberInput('gcs', 'Glasgow Coma Scale total', {
+        min: 3,
+        max: 15,
+        defaultValue: 15,
+        helpText: 'Best eye + verbal + motor (3–15). Re-grade after resuscitation/EVD — hydrocephalus can lower GCS reversibly.',
+      }),
+      yesNo('motorDeficit', 'Major focal motor deficit present (hemiparesis/hemiplegia)', 0, 'Limb hemiparesis or hemiplegia. Isolated cranial-nerve palsy (e.g. III, VI, VII) does not count as a major focal motor deficit for WFNS.'),
     ],
     calculate(values) {
       const gcs = num(values.gcs, 15);
@@ -747,14 +821,24 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         defaultValue: 5,
         helpText: 'Use hospital day or days from ictus consistently',
       }),
-      selectInput('mFisher', 'Modified Fisher grade (if known)', [
-        { label: 'Unknown / not entered', value: -1 },
-        { label: 'mFisher 0', value: 0 },
-        { label: 'mFisher 1 (thin SAH, no IVH)', value: 1 },
-        { label: 'mFisher 2 (thin SAH + IVH)', value: 2 },
-        { label: 'mFisher 3 (thick SAH, no IVH)', value: 3 },
-        { label: 'mFisher 4 (thick SAH + IVH)', value: 4 },
-      ]),
+      selectInput(
+        'mFisher',
+        'Modified Fisher grade (if known)',
+        [
+          { label: 'Unknown / not entered', value: -1 },
+          { label: 'mFisher 0', value: 0, description: 'No SAH or IVH' },
+          { label: 'mFisher 1 (thin SAH, no IVH)', value: 1, description: 'Thin SAH (all blood <1 mm); no IVH' },
+          { label: 'mFisher 2 (thin SAH + IVH)', value: 2, description: 'Thin SAH + any intraventricular blood' },
+          {
+            label: 'mFisher 3 (thick SAH, no IVH)',
+            value: 3,
+            description: 'Thick SAH (cisternal blood completely filling ≥1 cistern or vertical layer ≥1 mm); no IVH',
+          },
+          { label: 'mFisher 4 (thick SAH + IVH)', value: 4, description: 'Thick SAH + any IVH' },
+        ],
+        -1,
+        'Thick = cisternal blood completely filling ≥1 cistern or vertical layer ≥1 mm; thin = all blood <1 mm. IVH = any intraventricular blood.',
+      ),
       yesNo('secured', 'Aneurysm secured (clipped/coiled)', 0),
       yesNo('nimodipine', 'Nimodipine ongoing', 0),
     ],
@@ -851,10 +935,15 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Initial TBI severity stratification after primary survey and GCS assessment.',
     whyUse: 'Universal mild (13–15) / moderate (9–12) / severe (≤8) bands drive imaging, airway, and disposition pathways.',
     inputs: [
-      numberInput('gcs', 'Glasgow Coma Scale', { min: 3, max: 15, defaultValue: 15 }),
-      yesNo('intubated', 'Intubated / chemically paralyzed (GCS limited)', 0),
-      yesNo('postTraumaticAmnesia', 'Post-traumatic amnesia present', 0),
-      yesNo('loc', 'Loss of consciousness reported', 0),
+      numberInput('gcs', 'Glasgow Coma Scale', {
+        min: 3,
+        max: 15,
+        defaultValue: 15,
+        helpText: 'Eye (1–4) + verbal (1–5) + motor (1–6). Use T/P modifiers if intubated/paralyzed; score best responses.',
+      }),
+      yesNo('intubated', 'Intubated / chemically paralyzed (GCS limited)', 0, 'Cannot score a full verbal GCS — report T/P modifiers; this tool flags GCS as confounded if still >8.'),
+      yesNo('postTraumaticAmnesia', 'Post-traumatic amnesia present', 0, 'Inability to form new memories after the injury. PTA >24 h suggests more than mild TBI.'),
+      yesNo('loc', 'Loss of consciousness reported', 0, 'Any witnessed or reported LOC after the injury. Duration >30 min suggests more than mild TBI.'),
     ],
     calculate(values) {
       const gcs = num(values.gcs, 15);
@@ -955,13 +1044,13 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         min: 0,
         max: 22,
         defaultValue: 0,
-        helpText: 'SCAT symptom evaluation lists 22 symptoms',
+        helpText: 'How they feel now (SCAT5/SCAT6 symptom evaluation). 22 symptoms. Enter the count from the official form — do not administer items here.',
       }),
       numberInput('severity', 'Symptom severity sum (0–132)', {
         min: 0,
         max: 132,
         defaultValue: 0,
-        helpText: 'Each of 22 symptoms rated 0–6',
+        helpText: 'Each of 22 symptoms rated 0–6 (none → severe). Sum 0–132 from the official SCAT form.',
       }),
     ],
     calculate(values) {
@@ -1044,16 +1133,44 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Planning and documenting stepwise return to sport after concussion once return-to-learn is underway/stable.',
     whyUse: 'Standard consensus stages reduce premature full-contact return and symptom exacerbation.',
     inputs: [
-      selectInput('stage', 'Current completed / proposed RTP stage', [
-        { label: 'Stage 1 — Symptom-limited activity', value: 1 },
-        { label: 'Stage 2 — Light aerobic exercise', value: 2 },
-        { label: 'Stage 3 — Sport-specific exercise', value: 3 },
-        { label: 'Stage 4 — Non-contact training drills', value: 4 },
-        { label: 'Stage 5 — Full-contact practice', value: 5 },
-        { label: 'Stage 6 — Return to sport / competition', value: 6 },
-      ]),
-      yesNo('symptomFreeRest', 'Asymptomatic at current stage (24 h minimum typically)', 0),
-      yesNo('returnToLearn', 'Return-to-learn successful / school tolerance adequate', 0),
+      selectInput(
+        'stage',
+        'Current completed / proposed RTP stage',
+        [
+          {
+            label: 'Stage 1 — Symptom-limited activity',
+            value: 1,
+            description: 'Daily activities that do not provoke symptoms; relative rest',
+          },
+          {
+            label: 'Stage 2 — Light aerobic exercise',
+            value: 2,
+            description: 'Walking or stationary bike; no resistance training',
+          },
+          {
+            label: 'Stage 3 — Sport-specific exercise',
+            value: 3,
+            description: 'Running/skating drills; no head-impact activities',
+          },
+          {
+            label: 'Stage 4 — Non-contact training drills',
+            value: 4,
+            description: 'Complex training ± progressive resistance; still no contact',
+          },
+          {
+            label: 'Stage 5 — Full-contact practice',
+            value: 5,
+            description: 'Normal training including contact after medical clearance',
+          },
+          {
+            label: 'Stage 6 — Return to sport / competition',
+            value: 6,
+            description: 'Competition if stage 5 was asymptomatic',
+          },
+        ],
+      ),
+      yesNo('symptomFreeRest', 'Asymptomatic at current stage (24 h minimum typically)', 0, 'No return of concussion symptoms at this stage for at least 24 h (longer in children/adolescents).'),
+      yesNo('returnToLearn', 'Return-to-learn successful / school tolerance adequate', 0, 'Usual school/work cognitive load tolerated without significant symptom provocation.'),
       yesNo('medicalClearance', 'Medical clearance documented for contact stages', 0),
     ],
     calculate(values) {
@@ -1147,24 +1264,61 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Bedside screening for delirium in ED, wards, or older adults with acute illness.',
     whyUse: 'Brief, no special training beyond the tool; ≥4 suggests possible delirium requiring full assessment.',
     inputs: [
-      selectInput('alertness', '1. Alertness', [
-        { label: 'Normal / fully alert; mild sleepiness for <10 s after waking (0)', value: 0 },
-        { label: 'Clearly abnormal (4)', value: 4 },
-      ]),
-      selectInput('amt4', '2. AMT4 (age, DOB, place, current year)', [
-        { label: 'No mistakes (0)', value: 0 },
-        { label: '1 mistake (1)', value: 1 },
-        { label: '≥2 mistakes or untestable (2)', value: 2 },
-      ]),
-      selectInput('attention', '3. Attention — months of the year backwards', [
-        { label: 'Achieves ≥7 months correctly (0)', value: 0 },
-        { label: 'Starts but scores <7 months / refuses (1)', value: 1 },
-        { label: 'Untestable — too unwell, drowsy, inattentive (2)', value: 2 },
-      ]),
-      selectInput('acute', '4. Acute change or fluctuating course', [
-        { label: 'No (0)', value: 0 },
-        { label: 'Yes (4)', value: 4 },
-      ]),
+      selectInput(
+        'alertness',
+        '1. Alertness',
+        [
+          {
+            label: 'Normal / fully alert; mild sleepiness for <10 s after waking (0)',
+            value: 0,
+            description: 'Fully alert, or sleepy <10 s after waking then normal',
+          },
+          {
+            label: 'Clearly abnormal (4)',
+            value: 4,
+            description: 'Drowsy, hypervigilant, restless, agitated, or combative — even if fluctuating',
+          },
+        ],
+        0,
+        'Observe. 0 = fully alert or sleepy <10 s after waking then normal. 4 = drowsy, hypervigilant, restless, agitated, or combative even if fluctuating.',
+      ),
+      selectInput(
+        'amt4',
+        '2. AMT4 (age, DOB, place, current year)',
+        [
+          { label: 'No mistakes (0)', value: 0 },
+          { label: '1 mistake (1)', value: 1 },
+          { label: '≥2 mistakes or untestable (2)', value: 2 },
+        ],
+        0,
+        'Ask age, date of birth, place (name of hospital or building), and current year. Count mistakes; untestable scores 2.',
+      ),
+      selectInput(
+        'attention',
+        '3. Attention — months of the year backwards',
+        [
+          { label: 'Achieves ≥7 months correctly (0)', value: 0 },
+          { label: 'Starts but scores <7 months / refuses (1)', value: 1 },
+          { label: 'Untestable — too unwell, drowsy, inattentive (2)', value: 2 },
+        ],
+        0,
+        'Say: “Please tell me the months of the year backwards, starting at December.” One prompt allowed. 0 = ≥7 months; 1 = starts but <7 or refuses; 2 = untestable.',
+      ),
+      selectInput(
+        'acute',
+        '4. Acute change or fluctuating course',
+        [
+          { label: 'No (0)', value: 0, description: 'No significant change or fluctuation' },
+          {
+            label: 'Yes (4)',
+            value: 4,
+            description:
+              'Significant change or fluctuation in alertness, cognition, or other mental function over the last 2 weeks and still evident in the last 24 h',
+          },
+        ],
+        0,
+        'Yes if significant change or fluctuation in alertness, cognition, or other mental function (e.g. paranoia, hallucinations) arising over the last 2 weeks and still evident in the last 24 h (informant/staff/notes). Without this window, chronic dementia can score 4.',
+      ),
     ],
     calculate(values) {
       const score = num(values.alertness) + num(values.amt4) + num(values.attention) + num(values.acute);
@@ -1351,13 +1505,13 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         min: 0,
         max: 100,
         defaultValue: 88,
-        helpText: 'Attention 18 + Memory 26 + Fluency 14 + Language 26 + Visuospatial 16',
+        helpText: 'Attention 18 + Memory 26 + Fluency 14 + Language 26 + Visuospatial 16. Enter the total from the official ACE-III form; do not administer items from this screen.',
       }),
-      numberInput('attention', 'Attention / Orientation (0–18, optional)', { min: 0, max: 18, defaultValue: 0, required: false }),
-      numberInput('memory', 'Memory (0–26, optional)', { min: 0, max: 26, defaultValue: 0, required: false }),
-      numberInput('fluency', 'Fluency (0–14, optional)', { min: 0, max: 14, defaultValue: 0, required: false }),
-      numberInput('language', 'Language (0–26, optional)', { min: 0, max: 26, defaultValue: 0, required: false }),
-      numberInput('visuospatial', 'Visuospatial (0–16, optional)', { min: 0, max: 16, defaultValue: 0, required: false }),
+      numberInput('attention', 'Attention / Orientation (0–18, optional)', { min: 0, max: 18, defaultValue: 0, required: false, helpText: 'Leave blank if this domain was not scored (blank is not a 0).' }),
+      numberInput('memory', 'Memory (0–26, optional)', { min: 0, max: 26, defaultValue: 0, required: false, helpText: 'Leave blank if this domain was not scored (blank is not a 0).' }),
+      numberInput('fluency', 'Fluency (0–14, optional)', { min: 0, max: 14, defaultValue: 0, required: false, helpText: 'Leave blank if this domain was not scored (blank is not a 0).' }),
+      numberInput('language', 'Language (0–26, optional)', { min: 0, max: 26, defaultValue: 0, required: false, helpText: 'Leave blank if this domain was not scored (blank is not a 0).' }),
+      numberInput('visuospatial', 'Visuospatial (0–16, optional)', { min: 0, max: 16, defaultValue: 0, required: false, helpText: 'Leave blank if this domain was not scored (blank is not a 0).' }),
     ],
     calculate(values) {
       const total = num(values.total, 88);
@@ -1446,7 +1600,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         max: 5,
         step: 0.1,
         defaultValue: 3.0,
-        helpText: 'Mean of items (short 16-item or full 26-item); 3 = no change',
+        helpText: 'Mean of items (short 16-item or full 26-item). Rate CHANGE vs ~10 years ago; 3 = no change, 1 much improved, 5 much worse. Prefer a reliable informant.',
       }),
       selectInput('form', 'Form used', [
         { label: 'Short IQCODE (16 items)', value: 'short' },
@@ -1530,14 +1684,54 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Brief dementia screen in primary care, neurology, or geriatrics using informant-preferred AD8.',
     whyUse: 'Two or more “yes” responses suggest cognitive impairment warranting further evaluation.',
     inputs: [
-      yesNo('q1', 'Problems with judgment (e.g., bad financial decisions, odd gifts)'),
-      yesNo('q2', 'Reduced interest in hobbies/activities'),
-      yesNo('q3', 'Repeats questions, stories, or statements'),
-      yesNo('q4', 'Trouble learning how to use a tool, appliance, or gadget'),
-      yesNo('q5', 'Forgets correct month or year'),
-      yesNo('q6', 'Difficulty handling complicated financial affairs'),
-      yesNo('q7', 'Difficulty remembering appointments'),
-      yesNo('q8', 'Consistent problems with thinking and/or memory'),
+      yesNo(
+        'q1',
+        'Problems with judgment (e.g., bad financial decisions, odd gifts)',
+        1,
+        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.',
+      ),
+      yesNo(
+        'q2',
+        'Reduced interest in hobbies/activities',
+        1,
+        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.',
+      ),
+      yesNo(
+        'q3',
+        'Repeats questions, stories, or statements',
+        1,
+        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.',
+      ),
+      yesNo(
+        'q4',
+        'Trouble learning how to use a tool, appliance, or gadget (e.g. TV remote, microwave)',
+        1,
+        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.',
+      ),
+      yesNo(
+        'q5',
+        'Forgets correct month or year',
+        1,
+        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.',
+      ),
+      yesNo(
+        'q6',
+        'Difficulty handling complicated financial affairs (bills, taxes, checkbook)',
+        1,
+        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.',
+      ),
+      yesNo(
+        'q7',
+        'Difficulty remembering appointments',
+        1,
+        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.',
+      ),
+      yesNo(
+        'q8',
+        'Consistent problems with thinking and/or memory',
+        1,
+        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.',
+      ),
     ],
     calculate(values) {
       const keys = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
@@ -1713,7 +1907,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         min: 0,
         max: 38,
         defaultValue: 6,
-        helpText: '19 items rated 0–2 (absent / mild-intermittent / severe)',
+        helpText: '19 items rated 0–2 (absent / mild-intermittent / severe) over the prior week; use caregiver + clinician observation. Enter the official CSDD total — do not score items from this screen.',
       }),
     ],
     calculate(values) {
@@ -1801,7 +1995,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         min: 0,
         max: 88,
         defaultValue: 10,
-        helpText: 'Each item 0–4 (never → nearly always)',
+        helpText: 'Enter the total from the official Zarit form (do not administer items here). Each item 0 = never to 4 = nearly always.',
       }),
     ],
     calculate(values) {
@@ -1920,7 +2114,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         min: 0,
         max: 21,
         defaultValue: 5,
-        helpText: 'Sum of 7 component scores (0–3 each)',
+        helpText: 'Sum of 7 component scores (0–3 each) over the past month. Enter the official PSQI global total — do not score items from this screen.',
       }),
     ],
     calculate(values) {
@@ -2001,7 +2195,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         min: 0,
         max: 40,
         defaultValue: 15,
-        helpText: '10 items × 0–4',
+        helpText: 'Official IRLS 10 items × 0–4 (none → very severe), typically over the past week. Enter the total from the official form — do not administer items here.',
       }),
     ],
     calculate(values) {
@@ -2080,12 +2274,21 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Primary care or general medical screening when lifetime traumatic event exposure is endorsed.',
     whyUse: 'Ultra-brief DSM-5 PTSD screen; ≥3 positive items suggests further PTSD assessment.',
     inputs: [
-      yesNo('trauma', 'Lifetime trauma exposure criterion (// required before scoring symptoms)', 0),
-      yesNo('q1', '1. Nightmares or unwanted thoughts of the event(s)', 0),
-      yesNo('q2', '2. Tried hard not to think about it or avoided situations that remind you', 0),
-      yesNo('q3', '3. Been constantly on guard, watchful, or easily startled', 0),
-      yesNo('q4', '4. Felt numb or detached from people, activities, or surroundings', 0),
-      yesNo('q5', '5. Felt guilty or unable to stop blaming yourself or others', 0),
+      yesNo(
+        'trauma',
+        'Lifetime trauma exposure criterion (required before scoring symptoms)',
+        0,
+        'NCPTSD gate — Sometimes things happen that are unusually frightening, horrible, or traumatic (serious accident/fire, physical or sexual assault, disaster, war, seeing someone killed/seriously injured, or a loved one dying by homicide/suicide). Have you ever experienced this kind of event?',
+      ),
+      yesNo('q1', '1. In the past month: nightmares or unwanted thoughts of the event(s)', 0),
+      yesNo('q2', '2. In the past month: tried hard not to think about it or avoided situations that remind you', 0),
+      yesNo('q3', '3. In the past month: been constantly on guard, watchful, or easily startled', 0),
+      yesNo('q4', '4. In the past month: felt numb or detached from people, activities, or surroundings', 0),
+      yesNo(
+        'q5',
+        '5. In the past month: felt guilty or unable to stop blaming yourself or others for the event(s) or problems they caused',
+        0,
+      ),
     ],
     calculate(values) {
       const trauma = bool(values.trauma);
@@ -2175,10 +2378,10 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         min: 0,
         max: 80,
         defaultValue: 10,
-        helpText: 'Enter scored total from institutional CIWA-B form',
+        helpText: 'Enter the scored total from the official/institutional CIWA-B form (typically ~20 items, 0–80). Do not score items from this screen.',
       }),
       yesNo('seizureHx', 'History of withdrawal seizures', 0),
-      yesNo('highDose', 'High-dose or prolonged benzodiazepine use', 0),
+      yesNo('highDose', 'High-dose or prolonged benzodiazepine use', 0, 'High-dose often >40 mg diazepam-equivalent per day, or daily use for weeks–months (local protocol).'),
       yesNo('concurrentAlcohol', 'Concurrent alcohol use disorder', 0),
     ],
     calculate(values) {
@@ -2270,20 +2473,36 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Before initiating chronic opioid therapy for non-cancer pain to stratify misuse risk.',
     whyUse: 'Brief weighted checklist; low / moderate / high risk bands guide monitoring intensity (not a ban on treatment).',
     inputs: [
-      selectInput('sex', 'Patient sex (scoring differs)', [
-        { label: 'Female', value: 'f' },
-        { label: 'Male', value: 'm' },
-      ]),
-      yesNo('fhAlcohol', 'Family history: alcohol abuse'),
-      yesNo('fhIllegal', 'Family history: illegal drug abuse', 2),
-      yesNo('fhRx', 'Family history: prescription drug abuse', 4),
-      yesNo('phAlcohol', 'Personal history: alcohol abuse', 3),
-      yesNo('phIllegal', 'Personal history: illegal drug abuse', 4),
-      yesNo('phRx', 'Personal history: prescription drug abuse', 5),
-      yesNo('age', 'Age 16–45 years'),
-      yesNo('sexualAbuse', 'History of preadolescent sexual abuse', 3),
-      yesNo('psychAdd', 'Psychiatric history: ADHD, OCD, bipolar, or schizophrenia', 2),
-      yesNo('psychDep', 'Psychiatric history: depression'),
+      selectInput(
+        'sex',
+        'Patient sex (scoring differs)',
+        [
+          { label: 'Female', value: 'f' },
+          { label: 'Male', value: 'm' },
+        ],
+        'f',
+        'ORT is sex-specific. Family-history alcohol, illegal-drug, and preadolescent sexual-abuse weights differ by sex — see each item. Do not trust a generic +N chip on those items.',
+      ),
+      yesNo('fhAlcohol', 'Family history: alcohol abuse (+1 F / +3 M)', null, 'Webster ORT: +1 if female, +3 if male.'),
+      yesNo('fhIllegal', 'Family history: illegal drug abuse (+2 F / +3 M)', null, 'Webster ORT: +2 if female, +3 if male.'),
+      yesNo('fhRx', 'Family history: prescription drug abuse', 4, '+4 points regardless of sex.'),
+      yesNo('phAlcohol', 'Personal history: alcohol abuse', 3, '+3 points regardless of sex.'),
+      yesNo('phIllegal', 'Personal history: illegal drug abuse', 4, '+4 points regardless of sex.'),
+      yesNo('phRx', 'Personal history: prescription drug abuse', 5, '+5 points regardless of sex.'),
+      yesNo('age', 'Age 16–45 years', 1, '+1 if current age is 16–45 years.'),
+      yesNo(
+        'sexualAbuse',
+        'History of preadolescent sexual abuse (+3 F / +0 M)',
+        null,
+        'Webster ORT: +3 if female, +0 if male (still record the history).',
+      ),
+      yesNo(
+        'psychAdd',
+        'Psychiatric history: ADHD, OCD, bipolar, or schizophrenia',
+        2,
+        '+2 if any of ADHD, OCD, bipolar disorder, or schizophrenia.',
+      ),
+      yesNo('psychDep', 'Psychiatric history: depression', 1, '+1 if depression history.'),
     ],
     calculate(values) {
       const female = String(values.sex ?? 'f') === 'f';

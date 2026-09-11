@@ -49,13 +49,13 @@ export const wave4FormulasCalcs: Calculator[] = [
         { label: 'Female', value: 'F' },
       ]),
       selectInput('activity', 'Activity / stress multiplier (optional TDEE)', [
-        { label: 'BMR only (×1.0)', value: 1 },
-        { label: 'Sedentary (×1.2)', value: 1.2 },
-        { label: 'Light activity (×1.375)', value: 1.375 },
-        { label: 'Moderate (×1.55)', value: 1.55 },
-        { label: 'Very active (×1.725)', value: 1.725 },
-        { label: 'Extra active (×1.9)', value: 1.9 },
-      ]),
+        { label: 'BMR only (×1.0)', value: 1, description: 'No activity multiplier; resting estimate only' },
+        { label: 'Sedentary (×1.2)', value: 1.2, description: 'Little or no exercise; desk work / ADLs only' },
+        { label: 'Light activity (×1.375)', value: 1.375, description: 'Light exercise 1–3 days/week' },
+        { label: 'Moderate (×1.55)', value: 1.55, description: 'Moderate exercise 3–5 days/week' },
+        { label: 'Very active (×1.725)', value: 1.725, description: 'Hard exercise 6–7 days/week' },
+        { label: 'Extra active (×1.9)', value: 1.9, description: 'Very hard exercise plus physical job, or twice-daily training' },
+      ], 1, 'TDEE = BMR × factor. These are Harris–Benedict/Mifflin population activity averages — not ICU stress factors. Sedentary = desk/ADL only; light = 1–3 d/wk; moderate = 3–5 d/wk; very active = hard 6–7 d/wk; extra active = very hard daily plus physical job or two-a-days.'),
     ],
     calculate(values) {
       const w = num(values.weight, 70);
@@ -135,13 +135,13 @@ export const wave4FormulasCalcs: Calculator[] = [
         { label: 'Female', value: 'F' },
       ]),
       selectInput('activity', 'Activity multiplier (optional TDEE)', [
-        { label: 'REE only (×1.0)', value: 1 },
-        { label: 'Sedentary (×1.2)', value: 1.2 },
-        { label: 'Light (×1.375)', value: 1.375 },
-        { label: 'Moderate (×1.55)', value: 1.55 },
-        { label: 'Very active (×1.725)', value: 1.725 },
-        { label: 'Extra active (×1.9)', value: 1.9 },
-      ]),
+        { label: 'REE only (×1.0)', value: 1, description: 'No activity multiplier; resting estimate only' },
+        { label: 'Sedentary (×1.2)', value: 1.2, description: 'Little or no exercise; desk work / ADLs only' },
+        { label: 'Light (×1.375)', value: 1.375, description: 'Light exercise 1–3 days/week' },
+        { label: 'Moderate (×1.55)', value: 1.55, description: 'Moderate exercise 3–5 days/week' },
+        { label: 'Very active (×1.725)', value: 1.725, description: 'Hard exercise 6–7 days/week' },
+        { label: 'Extra active (×1.9)', value: 1.9, description: 'Very hard exercise plus physical job, or twice-daily training' },
+      ], 1, 'TDEE = REE × factor. Same activity bands as Harris–Benedict: sedentary desk/ADL; light 1–3 d/wk; moderate 3–5 d/wk; very active hard 6–7 d/wk; extra active very hard plus physical job or two-a-days. Population averages — not ICU stress factors.'),
     ],
     calculate(values) {
       const w = num(values.weight, 70);
@@ -208,13 +208,13 @@ export const wave4FormulasCalcs: Calculator[] = [
         helpText: 'Use IBW/AdjBW per local nutrition protocol when obese',
       }),
       selectInput('target', 'Protein target', [
-        { label: 'RDA healthy adult (~0.8 g/kg)', value: 0.8 },
-        { label: 'Active / older adult (~1.2 g/kg)', value: 1.2 },
-        { label: 'Illness / wound healing (~1.5 g/kg)', value: 1.5 },
-        { label: 'Critical illness common (~1.8 g/kg)', value: 1.8 },
-        { label: 'High / burns-range (~2.0 g/kg)', value: 2.0 },
-        { label: 'Custom (use g/kg field)', value: 0 },
-      ]),
+        { label: 'RDA healthy adult (~0.8 g/kg)', value: 0.8, description: 'Healthy adult RDA ≈ 0.8 g/kg actual or IBW per protocol' },
+        { label: 'Active / older adult (~1.2 g/kg)', value: 1.2, description: 'Active adults or older adults aiming to preserve lean mass' },
+        { label: 'Illness / wound healing (~1.5 g/kg)', value: 1.5, description: 'Hospitalized illness, postoperative, or wound-healing target used in many protocols' },
+        { label: 'Critical illness common (~1.8 g/kg)', value: 1.8, description: 'Common ICU/ASPEN-range target (often 1.2–2.0; 1.8 is a mid-high teaching pick)' },
+        { label: 'High / burns-range (~2.0 g/kg)', value: 2.0, description: 'Burns, polytrauma, or continuous RRT-range targets in some protocols' },
+        { label: 'Custom (use g/kg field)', value: 0, description: 'Enter a custom g/kg/day in the next field' },
+      ], 0.8, 'Protein g/day = kg × g/kg. These are teaching ranges (RDA → illness → ICU/burns), not ICU stress multipliers. Use IBW/AdjBW when the local protocol says so.'),
       numberInput('customGkg', 'Custom g/kg (if custom)', {
         unit: 'g/kg/day',
         min: 0.4,
@@ -275,7 +275,7 @@ export const wave4FormulasCalcs: Calculator[] = [
     whenToUse: 'Assessing catabolic state / adequacy of protein delivery with 24-h UUN collection.',
     whyUse: 'Simple bedside estimate of anabolic vs catabolic nitrogen status.',
     inputs: [
-      numberInput('proteinIntake', 'Protein intake (24 h)', { unit: 'g/day', min: 0, max: 400, defaultValue: 100 }),
+      numberInput('proteinIntake', 'Protein intake (24 h)', { unit: 'g/day', min: 0, max: 400, defaultValue: 100, helpText: 'N balance = (protein g / 6.25) − (UUN g + insensible). Complete 24-h collection required.' }),
       numberInput('uun', 'Urine urea nitrogen (24 h)', { unit: 'g/day', min: 0, max: 50, step: 0.1, defaultValue: 10 }),
       numberInput('insensible', 'Insensible / fecal N factor', {
         unit: 'g/day',
@@ -351,8 +351,8 @@ export const wave4FormulasCalcs: Calculator[] = [
     whenToUse: 'Session adequacy estimate from pre- and post-dialysis BUN.',
     whyUse: 'Simple adequacy metric; target often URR ≥65% for thrice-weekly HD (with caveats).',
     inputs: [
-      numberInput('preBun', 'Pre-dialysis BUN', { unit: 'mg/dL', min: 10, max: 200, defaultValue: 60 }),
-      numberInput('postBun', 'Post-dialysis BUN', { unit: 'mg/dL', min: 5, max: 150, defaultValue: 20 }),
+      numberInput('preBun', 'Pre-dialysis BUN', { unit: 'mg/dL', min: 10, max: 200, defaultValue: 60, helpText: 'URR = (pre − post)/pre × 100%. Common thrice-weekly target URR ≥65% (KDOQI teaching). Draw pre-BUN before dialysis starts.' }),
+      numberInput('postBun', 'Post-dialysis BUN', { unit: 'mg/dL', min: 5, max: 150, defaultValue: 20, helpText: 'Slow-flow / stop-pump post-BUN sampling per unit protocol. Timing and rebound affect URR and Kt/V.' }),
     ],
     calculate(values) {
       const pre = num(values.preBun, 60);
@@ -430,7 +430,7 @@ export const wave4FormulasCalcs: Calculator[] = [
     whenToUse: 'Estimating single-pool dialysis dose from pre/post BUN, session length, UF, and post weight.',
     whyUse: 'Standard clinical approximation of urea kinetic dose for thrice-weekly HD.',
     inputs: [
-      numberInput('preBun', 'Pre-dialysis BUN', { unit: 'mg/dL', min: 10, max: 200, defaultValue: 60 }),
+      numberInput('preBun', 'Pre-dialysis BUN', { unit: 'mg/dL', min: 10, max: 200, defaultValue: 60, helpText: 'Daugirdas II: spKt/V = −ln(R − 0.008t) + (4 − 3.5R)×(UF/W); R = post/pre. Common thrice-weekly target spKt/V ≥1.2 (many programs aim ≥1.4).' }),
       numberInput('postBun', 'Post-dialysis BUN', { unit: 'mg/dL', min: 5, max: 150, defaultValue: 18 }),
       numberInput('hours', 'Session length', { unit: 'hours', min: 1, max: 8, step: 0.25, defaultValue: 4 }),
       numberInput('uf', 'Ultrafiltration volume', { unit: 'L', min: 0, max: 8, step: 0.1, defaultValue: 2 }),
@@ -535,7 +535,7 @@ export const wave4FormulasCalcs: Calculator[] = [
     tags: ['fluids', '4-2-1', 'maintenance', 'ivf', 'pediatrics'],
     whenToUse: 'Quick hourly maintenance rate from weight when daily 100/50/20 math is not needed.',
     whyUse: 'Bedside mnemonic identical in intent to Holliday–Segar hourly delivery.',
-    inputs: [numberInput('weight', 'Weight', { unit: 'kg', min: 1, max: 200, step: 0.1, defaultValue: 20 })],
+    inputs: [numberInput('weight', 'Weight', { unit: 'kg', min: 1, max: 200, step: 0.1, defaultValue: 20, helpText: '4 mL/kg/h for first 10 kg, 2 mL/kg/h for next 10 kg, 1 mL/kg/h for each kg above 20. Same as Holliday–Segar hourly.' })],
     calculate(values) {
       const w = num(values.weight, 20);
       let rate: number;
@@ -589,7 +589,7 @@ export const wave4FormulasCalcs: Calculator[] = [
     whyUse: 'Lower starting crystalloid estimate (2 mL/kg/%TBSA) than classic Parkland 4 mL; used in some burn protocols.',
     inputs: [
       numberInput('weight', 'Weight', { unit: 'kg', min: 5, max: 200, defaultValue: 70 }),
-      numberInput('tbsa', 'TBSA burned', { unit: '%', min: 1, max: 100, defaultValue: 20 }),
+      numberInput('tbsa', 'TBSA burned', { unit: '%', min: 1, max: 100, defaultValue: 20, helpText: 'Partial- + full-thickness %TBSA (2nd-degree and deeper). Do not include first-degree/erythema-only. Use Lund–Browder when age-sensitive.' }),
     ],
     calculate(values) {
       const w = num(values.weight, 70);
@@ -645,14 +645,14 @@ export const wave4FormulasCalcs: Calculator[] = [
     whyUse: 'Head and leg proportions change with age; Lund–Browder is the preferred chart method.',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 0, max: 100, step: 0.5, defaultValue: 3 }),
-      numberInput('head', 'Head & neck burned', { unit: '% of region 0–100', min: 0, max: 100, defaultValue: 0, helpText: 'Percent of this region burned (100 = entire region)' }),
-      numberInput('antTrunk', 'Anterior trunk burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0 }),
-      numberInput('postTrunk', 'Posterior trunk burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0 }),
-      numberInput('armR', 'Right arm (whole) burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0 }),
-      numberInput('armL', 'Left arm (whole) burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0 }),
-      numberInput('legR', 'Right leg (whole) burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0 }),
-      numberInput('legL', 'Left leg (whole) burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0 }),
-      numberInput('perineum', 'Perineum / genitalia burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0 }),
+      numberInput('head', 'Head & neck burned', { unit: '% of region 0–100', min: 0, max: 100, defaultValue: 0, helpText: 'Enter % of this anatomic region that is 2nd- or 3rd-degree — not first-degree erythema; 100 = entire region; do not enter % of whole-body TBSA.' }),
+      numberInput('antTrunk', 'Anterior trunk burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Enter % of this anatomic region that is 2nd- or 3rd-degree — not first-degree erythema; 100 = entire region; do not enter % of whole-body TBSA.' }),
+      numberInput('postTrunk', 'Posterior trunk burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Enter % of this anatomic region that is 2nd- or 3rd-degree — not first-degree erythema; 100 = entire region; do not enter % of whole-body TBSA.' }),
+      numberInput('armR', 'Right arm (whole) burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Helper collapses upper arm + forearm (+hand not separate). Enter % of this whole arm that is 2nd-/3rd-degree; 100 = entire arm. Use a full Lund–Browder chart when precision matters.' }),
+      numberInput('armL', 'Left arm (whole) burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Helper collapses upper arm + forearm. Enter % of this whole arm that is 2nd-/3rd-degree (not first-degree); 100 = entire arm; do not enter % of whole-body TBSA.' }),
+      numberInput('legR', 'Right leg (whole) burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Helper collapses thigh + leg + foot. Enter % of this whole leg that is 2nd-/3rd-degree; 100 = entire leg. Use a full Lund–Browder chart when precision matters.' }),
+      numberInput('legL', 'Left leg (whole) burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Helper collapses thigh + leg + foot. Enter % of this whole leg that is 2nd-/3rd-degree (not first-degree); 100 = entire leg; do not enter % of whole-body TBSA.' }),
+      numberInput('perineum', 'Perineum / genitalia burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Enter % of this anatomic region that is 2nd- or 3rd-degree — not first-degree erythema; 100 = entire region; do not enter % of whole-body TBSA.' }),
     ],
     calculate(values) {
       const age = num(values.age, 3);
@@ -1563,7 +1563,7 @@ export const wave4FormulasCalcs: Calculator[] = [
     whenToUse: 'First branch point after finding low hemoglobin/hematocrit.',
     whyUse: 'MCV directs differential (iron/thalassemia vs bleed/hemolysis/CKD vs B12/folate/etc.).',
     inputs: [
-      numberInput('mcv', 'MCV', { unit: 'fL', min: 40, max: 150, defaultValue: 78 }),
+      numberInput('mcv', 'MCV', { unit: 'fL', min: 40, max: 150, defaultValue: 78, helpText: 'Teaching cutoffs: microcytic <80 fL; normocytic 80–100 fL; macrocytic >100 fL (lab ranges vary slightly).' }),
       numberInput('hb', 'Hemoglobin (optional)', { unit: 'g/dL', min: 3, max: 20, step: 0.1, defaultValue: 10, required: false }),
     ],
     calculate(values) {
@@ -1636,10 +1636,9 @@ export const wave4FormulasCalcs: Calculator[] = [
     whenToUse: 'CBC differential hints when both MCV and RDW are available.',
     whyUse: 'Classic teaching tables pair high/normal RDW with micro/normo/macro MCV.',
     inputs: [
-      numberInput('mcv', 'MCV', { unit: 'fL', min: 40, max: 150, defaultValue: 75 }),
+      numberInput('mcv', 'MCV', { unit: 'fL', min: 40, max: 150, defaultValue: 75, helpText: 'Same teaching cutoffs as MCV classify: micro <80, normo 80–100, macro >100 fL.' }),
       numberInput('rdw', 'RDW-CV', {
-        unit: '%',
-        min: 8,
+        unit: '%',        min: 8,
         max: 40,
         step: 0.1,
         defaultValue: 16,

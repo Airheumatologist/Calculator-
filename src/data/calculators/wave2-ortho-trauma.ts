@@ -14,7 +14,12 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     inputs: [
       yesNo('mechanism', 'Blunt trauma or fall mechanism', 0),
       yesNo('ageExtreme', 'Age <12 or >50 years', 0),
-      yesNo('walk', 'Unable to walk 4 weight-bearing steps in the ED', 0),
+      yesNo(
+        'walk',
+        'Unable to walk 4 weight-bearing steps in the ED',
+        0,
+        'Each of 4 steps must be full weight-bearing (limping allowed). Both feet take a step. Tested in the ED, not only at the scene.',
+      ),
     ],
     calculate(values) {
       const mechanism = bool(values.mechanism);
@@ -88,8 +93,18 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     inputs: [
       yesNo('traumaPain', 'Acute hip/groin pain after fall or blunt trauma', 0),
       yesNo('age65', 'Age ≥65 years', 0),
-      yesNo('walk', 'Unable to bear weight 4 steps both immediately AND in ED', 0),
-      yesNo('limitedRom', 'Painful limited active hip ROM (or inability to flex hip)', 0),
+      yesNo(
+        'walk',
+        'Unable to bear weight 4 steps both immediately AND in ED',
+        0,
+        'Same 4-step rule as Ottawa ankle/knee: unable BOTH immediately after injury AND in the ED. Limping is allowed if each step is weight-bearing.',
+      ),
+      yesNo(
+        'limitedRom',
+        'Painful limited active hip ROM (or inability to flex hip)',
+        0,
+        'Pain that limits active hip range, or inability to flex the hip (typically to 90°).',
+      ),
     ],
     calculate(values) {
       const traumaPain = bool(values.traumaPain);
@@ -166,7 +181,12 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'Child with acute nontraumatic hip pain / limp / irritable hip evaluating septic arthritis vs transient synovitis.',
     whyUse: 'Stratifies urgency for urgent aspiration/OR vs observation.',
     inputs: [
-      yesNo('nwb', 'Non–weight-bearing on affected side', 1),
+      yesNo(
+        'nwb',
+        'Non–weight-bearing on affected side',
+        1,
+        'Child refuses or is unable to bear weight on the affected limb (not merely a limp).',
+      ),
       yesNo('esr40', 'ESR ≥40 mm/hr', 1),
       yesNo('fever', 'Fever >38.5 °C', 1),
       yesNo('wbc12', 'WBC >12,000 cells/mm³', 1),
@@ -279,8 +299,18 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
       yesNo('pop', 'Sudden pop or feeling of being kicked in the calf'),
       yesNo('gap', 'Palpable gap in Achilles tendon'),
       yesNo('weakPush', 'Weak or absent plantar flexion / push-off'),
-      yesNo('thompsonPos', 'Thompson (calf squeeze): NO plantar flexion of foot'),
-      yesNo('matles', 'Matles: increased resting dorsiflexion of injured foot (prone)'),
+      yesNo(
+        'thompsonPos',
+        'Thompson (calf squeeze): NO plantar flexion of foot',
+        1,
+        'Prone, feet free. Squeeze the mid-calf (gastrocnemius) firmly; positive = no plantar flexion of that foot. Always compare the other calf. Intact plantaris/partial tear may still flex.',
+      ),
+      yesNo(
+        'matles',
+        'Matles: increased resting dorsiflexion of injured foot (prone)',
+        1,
+        'Prone, both knees flexed to 90°. Positive = injured ankle hangs more dorsiflexed than the other.',
+      ),
     ],
     calculate(values) {
       const findings =
@@ -363,13 +393,39 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'Pediatric fractures involving or near the growth plate.',
     whyUse: 'Guides prognosis for growth disturbance and treatment urgency.',
     inputs: [
-      selectInput('type', 'Salter-Harris type', [
-        { label: 'I — Through physis only', value: 1, description: 'Often radiographically subtle; clinical diagnosis' },
-        { label: 'II — Physis + metaphysis (Thurston-Holland fragment)', value: 2 },
-        { label: 'III — Physis + epiphysis (intra-articular)', value: 3 },
-        { label: 'IV — Metaphysis + physis + epiphysis', value: 4 },
-        { label: 'V — Crush injury to physis', value: 5 },
-      ]),
+      selectInput(
+        'type',
+        'Salter-Harris type',
+        [
+          {
+            label: 'I — Through physis only',
+            value: 1,
+            description: 'Transverse through the physis; x-ray often normal except possible widening — clinical diagnosis if tender over the physis',
+          },
+          {
+            label: 'II — Physis + metaphysis (Thurston-Holland fragment)',
+            value: 2,
+            description: 'Through physis then out metaphysis, leaving a Thurston-Holland metaphyseal triangle (most common)',
+          },
+          {
+            label: 'III — Physis + epiphysis (intra-articular)',
+            value: 3,
+            description: 'Through physis then out epiphysis (intra-articular); anatomic reduction often required',
+          },
+          {
+            label: 'IV — Metaphysis + physis + epiphysis',
+            value: 4,
+            description: 'Vertical fracture across metaphysis, physis, and epiphysis; unstable growth prognosis',
+          },
+          {
+            label: 'V — Crush injury to physis',
+            value: 5,
+            description: 'Compression/crush of the physis; often occult initially and diagnosed when growth arrest appears',
+          },
+        ],
+        undefined,
+        'Classify the fracture path relative to the growth plate on x-ray (and exam for type I/V). Higher types (III–V) carry more growth-disturbance risk.',
+      ),
     ],
     calculate(values) {
       const t = num(values.type, 2);
@@ -445,13 +501,39 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'Any open fracture for communication, antibiotics, and surgical planning.',
     whyUse: 'Correlates with infection risk, soft-tissue coverage needs, and outcomes.',
     inputs: [
-      selectInput('type', 'Gustilo-Anderson type', [
-        { label: 'I — Clean wound <1 cm', value: 1 },
-        { label: 'II — >1 cm, moderate soft-tissue damage, no flap needed', value: 2 },
-        { label: 'IIIA — Extensive soft tissue, adequate coverage still possible', value: 3 },
-        { label: 'IIIB — Extensive periosteal stripping; soft-tissue coverage procedure needed', value: 4 },
-        { label: 'IIIC — Arterial injury requiring repair for limb salvage', value: 5 },
-      ]),
+      selectInput(
+        'type',
+        'Gustilo-Anderson type',
+        [
+          {
+            label: 'I — Clean wound <1 cm',
+            value: 1,
+            description: 'Low-energy, clean puncture <1 cm; no periosteal stripping or crush',
+          },
+          {
+            label: 'II — >1 cm, moderate soft-tissue damage, no flap needed',
+            value: 2,
+            description: 'Wound >1 cm without extensive crush, contamination, or flap need',
+          },
+          {
+            label: 'IIIA — Extensive soft tissue, adequate coverage still possible',
+            value: 3,
+            description: 'High-energy/extensive; bone still coverable with local soft tissue after debridement',
+          },
+          {
+            label: 'IIIB — Extensive periosteal stripping; soft-tissue coverage procedure needed',
+            value: 4,
+            description: 'Extensive periosteal stripping/contamination; needs rotational or free flap coverage',
+          },
+          {
+            label: 'IIIC — Arterial injury requiring repair for limb salvage',
+            value: 5,
+            description: 'Named arterial injury requiring repair for salvage (not merely a pulse deficit)',
+          },
+        ],
+        undefined,
+        'Assign after debridement when possible. Any high-energy mechanism, farm/soil contamination, shotgun, segmental fracture, or inadequate coverage starts at type III even if the skin wound is small.',
+      ),
     ],
     calculate(values) {
       const t = num(values.type, 1);
@@ -542,25 +624,35 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whyUse: 'Standardized site/pain/lesion/size scoring for fracture risk counseling.',
     inputs: [
       selectInput('site', 'Site', [
-        { label: 'Upper limb (1)', value: 1 },
-        { label: 'Lower limb (2)', value: 2 },
-        { label: 'Peritrochanteric (3)', value: 3 },
+        { label: 'Upper limb (1)', value: 1, description: 'Humerus, radius, or ulna' },
+        { label: 'Lower limb (2)', value: 2, description: 'Femur (not pertrochanteric) or tibia' },
+        { label: 'Peritrochanteric (3)', value: 3, description: 'Inter-/sub-/pertrochanteric femur — highest site risk' },
       ]),
       selectInput('pain', 'Pain', [
-        { label: 'Mild (1)', value: 1 },
-        { label: 'Moderate (2)', value: 2 },
-        { label: 'Functional / mechanical (3)', value: 3 },
+        { label: 'Mild (1)', value: 1, description: 'Mild pain, not activity-limiting' },
+        { label: 'Moderate (2)', value: 2, description: 'More constant pain, not clearly mechanical' },
+        {
+          label: 'Functional / mechanical (3)',
+          value: 3,
+          description: 'Pain aggravated by loading/use of the limb (mechanical insufficiency)',
+        },
       ]),
       selectInput('lesion', 'Lesion type', [
-        { label: 'Blastic (1)', value: 1 },
-        { label: 'Mixed (2)', value: 2 },
-        { label: 'Lytic (3)', value: 3 },
+        { label: 'Blastic (1)', value: 1, description: 'Purely sclerotic / osteoblastic on x-ray' },
+        { label: 'Mixed (2)', value: 2, description: 'Mixed lytic and blastic' },
+        { label: 'Lytic (3)', value: 3, description: 'Purely osteolytic' },
       ]),
-      selectInput('size', 'Size (cortical involvement)', [
-        { label: '<1/3 (1)', value: 1 },
-        { label: '1/3–2/3 (2)', value: 2 },
-        { label: '>2/3 (3)', value: 3 },
-      ]),
+      selectInput(
+        'size',
+        'Size (cortical involvement)',
+        [
+          { label: '<1/3 (1)', value: 1, description: '<1/3 of bone diameter' },
+          { label: '1/3–2/3 (2)', value: 2, description: '1/3 to 2/3 of bone diameter' },
+          { label: '>2/3 (3)', value: 3, description: '>2/3 of cortical involvement of bone diameter' },
+        ],
+        undefined,
+        'Greatest cortical involvement as a fraction of bone diameter on AP/lateral x-ray (not craniocaudal lesion length).',
+      ),
     ],
     calculate(values) {
       const score = num(values.site, 1) + num(values.pain, 1) + num(values.lesion, 1) + num(values.size, 1);
@@ -626,12 +718,37 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'Adult femoral neck fracture characterization and surgical planning.',
     whyUse: 'Communicates displacement; guides ORIF vs arthroplasty decisions with age/comorbidity.',
     inputs: [
-      selectInput('garden', 'Garden type', [
-        { label: 'I — Incomplete / valgus impacted', value: 1 },
-        { label: 'II — Complete, nondisplaced', value: 2 },
-        { label: 'III — Complete, partially displaced', value: 3 },
-        { label: 'IV — Complete, fully displaced', value: 4 },
-      ]),
+      selectInput(
+        'garden',
+        'Garden type',
+        [
+          {
+            label: 'I — Incomplete / valgus impacted',
+            value: 1,
+            description:
+              'Incomplete neck fracture, typically valgus-impacted; inferior cortex often intact; trabeculae of head in valgus relative to neck',
+          },
+          {
+            label: 'II — Complete, nondisplaced',
+            value: 2,
+            description: 'Complete fracture line through the neck but no displacement; medial trabeculae of head and neck aligned',
+          },
+          {
+            label: 'III — Complete, partially displaced',
+            value: 3,
+            description:
+              'Complete fracture with partial displacement; trabeculae of head no longer aligned with the neck/acetabulum',
+          },
+          {
+            label: 'IV — Complete, fully displaced',
+            value: 4,
+            description:
+              'Complete, fully displaced; fragments lose contact; trabeculae of the head often parallel to the acetabulum (rotated independently)',
+          },
+        ],
+        undefined,
+        'Based on AP radiograph displacement and trabecular alignment, not fragment count. I–II = nondisplaced (including valgus impacted); III–IV = displaced.',
+      ),
     ],
     calculate(values) {
       const g = num(values.garden, 1);
@@ -709,12 +826,34 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'Proximal humerus fracture description using displaced “parts.”',
     whyUse: 'Standard language for displacement pattern and treatment discussion.',
     inputs: [
-      selectInput('parts', 'Number of displaced parts', [
-        { label: '1-part — no segment displaced (≥1 cm or 45°)', value: 1 },
-        { label: '2-part — one segment displaced', value: 2 },
-        { label: '3-part — two segments displaced', value: 3 },
-        { label: '4-part — three segments displaced (head + both tuberosities + shaft pattern)', value: 4 },
-      ]),
+      selectInput(
+        'parts',
+        'Number of displaced parts',
+        [
+          {
+            label: '1-part — no segment displaced (≥1 cm or 45°)',
+            value: 1,
+            description: 'None of the four parts meets ≥1 cm displacement or ≥45° angulation',
+          },
+          {
+            label: '2-part — one segment displaced',
+            value: 2,
+            description: 'One of head / GT / LT / shaft is displaced ≥1 cm or ≥45°',
+          },
+          {
+            label: '3-part — two segments displaced',
+            value: 3,
+            description: 'Two displaced segments (typically surgical neck + one tuberosity)',
+          },
+          {
+            label: '4-part — three segments displaced (head + both tuberosities + shaft pattern)',
+            value: 4,
+            description: 'Three displaced segments (typically head + both tuberosities relative to shaft)',
+          },
+        ],
+        undefined,
+        'Four potential parts: articular head, greater tuberosity, lesser tuberosity, shaft. Count a part only if displaced ≥1 cm or angulated ≥45°. 1-part = none of the four meet that; 2-part = one displaced segment; 3-part = two; 4-part = three. Head-split and dislocation are separate modifiers already on the form.',
+      ),
       yesNo('headSplit', 'Head-splitting or articular surface involvement', 0),
       yesNo('dislocation', 'Associated glenohumeral dislocation', 0),
     ],
@@ -793,13 +932,43 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'Lateral malleolar / fibular fractures about the ankle.',
     whyUse: 'Quick communication of syndesmotic level and stability concerns.',
     inputs: [
-      selectInput('weber', 'Weber type', [
-        { label: 'A — Infrasyndesmotic (below syndesmosis)', value: 'A' },
-        { label: 'B — Transsyndesmotic (at syndesmosis level)', value: 'B' },
-        { label: 'C — Suprasyndesmotic (above syndesmosis)', value: 'C' },
-      ]),
-      yesNo('medial', 'Medial malleolus fracture or deltoid incompetence (bimalleolar equivalent)', 0),
-      yesNo('unstable', 'Talar shift / mortise widening / positive stress test', 0),
+      selectInput(
+        'weber',
+        'Weber type',
+        [
+          {
+            label: 'A — Infrasyndesmotic (below syndesmosis)',
+            value: 'A',
+            description: 'Fibular fracture distal to the tibial plafond / syndesmosis; syndesmosis typically intact',
+          },
+          {
+            label: 'B — Transsyndesmotic (at syndesmosis level)',
+            value: 'B',
+            description:
+              'Fibular fracture at the level of the syndesmosis (often spiral starting at the plafond); stability depends on the medial side / mortise',
+          },
+          {
+            label: 'C — Suprasyndesmotic (above syndesmosis)',
+            value: 'C',
+            description:
+              'Fibular fracture proximal to the syndesmosis (includes high fibula / Maisonneuve); syndesmotic injury likely',
+          },
+        ],
+        undefined,
+        'Classify by the level of the fibular fracture relative to the tibial plafond/syndesmosis on mortise and lateral views. Stability is not the letter alone — check deltoid and mortise.',
+      ),
+      yesNo(
+        'medial',
+        'Medial malleolus fracture or deltoid incompetence (bimalleolar equivalent)',
+        0,
+        'Medial malleolus fracture, medial tenderness with medial clear-space widening, or clinical deltoid incompetence.',
+      ),
+      yesNo(
+        'unstable',
+        'Talar shift / mortise widening / positive stress test',
+        0,
+        'Talar shift, medial clear space >4–5 mm, or positive gravity / external-rotation stress test.',
+      ),
     ],
     calculate(values) {
       const w = String(values.weber ?? 'B');
@@ -876,14 +1045,54 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'Children after blunt trauma when considering cervical spine imaging.',
     whyUse: 'Highlights factors associated with CSI to support imaging decisions (not a standalone clearance rule).',
     inputs: [
-      yesNo('ams', 'Altered mental status'),
-      yesNo('focal', 'Focal neurologic findings'),
-      yesNo('neckPain', 'Neck pain or midline tenderness / torticollis'),
-      yesNo('torso', 'Substantial torso injury'),
-      yesNo('predispose', 'Predisposing condition (e.g., Down syndrome, cervical anomaly)'),
-      yesNo('highRiskMvc', 'High-risk MVC (e.g., rollover, ejection, death in vehicle)'),
-      yesNo('diving', 'Diving or axial load mechanism'),
-      yesNo('otherHigh', 'Other high-risk mechanism (hanging, clothesline, etc.)'),
+      yesNo(
+        'ams',
+        'Altered mental status',
+        1,
+        'GCS <15, AVPU not A, intoxication, or other altered awareness — not merely a bit sleepy.',
+      ),
+      yesNo(
+        'focal',
+        'Focal neurologic findings',
+        1,
+        'Paresthesia, numbness, weakness, or other focal deficit (includes isolated paresthesia).',
+      ),
+      yesNo(
+        'neckPain',
+        'Neck pain or midline tenderness / torticollis',
+        1,
+        'Patient-reported neck pain OR midline cervical tenderness OR torticollis.',
+      ),
+      yesNo(
+        'torso',
+        'Substantial torso injury',
+        1,
+        'Thoracic, abdominal, or pelvic injury warranting admission or intervention.',
+      ),
+      yesNo(
+        'predispose',
+        'Predisposing condition (e.g., Down syndrome, cervical anomaly)',
+        1,
+        'e.g. Down syndrome, cervical stenosis, os odontoideum, EDS, RA, prior cervical surgery.',
+      ),
+      yesNo(
+        'highRiskMvc',
+        'High-risk MVC (e.g., rollover, ejection, death in vehicle)',
+        1,
+        'Rollover, ejection, death of another occupant, or similar high-risk crash features.',
+      ),
+      yesNo(
+        'diving',
+        'Diving or axial load mechanism',
+        1,
+        'Diving injury or other axial load to the head (e.g. struck on the vertex).',
+      ),
+      yesNo(
+        'otherHigh',
+        'Other high-risk mechanism (hanging, clothesline, etc.)',
+        1,
+        'Hanging, clothesline, or similar high-risk mechanism not already listed.',
+      ),
     ],
     calculate(values) {
       const keys = ['ams', 'focal', 'neckPain', 'torso', 'predispose', 'highRiskMvc', 'diving', 'otherHigh'] as const;
@@ -949,12 +1158,48 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'Trauma registries, research, and severity stratification after AIS coding.',
     whyUse: 'Standard anatomic injury burden metric (major trauma often ISS >15).',
     inputs: [
-      numberInput('head', 'Head & neck AIS (highest)', { min: 0, max: 6, step: 1, defaultValue: 0 }),
-      numberInput('face', 'Face AIS (highest)', { min: 0, max: 6, step: 1, defaultValue: 0 }),
-      numberInput('chest', 'Chest AIS (highest)', { min: 0, max: 6, step: 1, defaultValue: 0 }),
-      numberInput('abdomen', 'Abdomen AIS (highest)', { min: 0, max: 6, step: 1, defaultValue: 0 }),
-      numberInput('extremity', 'Extremities / pelvic girdle AIS (highest)', { min: 0, max: 6, step: 1, defaultValue: 0 }),
-      numberInput('external', 'External AIS (highest)', { min: 0, max: 6, step: 1, defaultValue: 0 }),
+      numberInput('head', 'Head & neck AIS (highest)', {
+        min: 0,
+        max: 6,
+        step: 1,
+        defaultValue: 0,
+        helpText: 'AIS 1=minor, 2=moderate, 3=serious, 4=severe, 5=critical, 6=maximal/currently untreatable. Highest AIS in this ISS region (0 if none). AIS 6 assigns ISS 75.',
+      }),
+      numberInput('face', 'Face AIS (highest)', {
+        min: 0,
+        max: 6,
+        step: 1,
+        defaultValue: 0,
+        helpText: 'AIS 1–6 as above; highest in the face region (0 if none).',
+      }),
+      numberInput('chest', 'Chest AIS (highest)', {
+        min: 0,
+        max: 6,
+        step: 1,
+        defaultValue: 0,
+        helpText: 'AIS 1–6 as above; highest in the chest region (0 if none).',
+      }),
+      numberInput('abdomen', 'Abdomen AIS (highest)', {
+        min: 0,
+        max: 6,
+        step: 1,
+        defaultValue: 0,
+        helpText: 'AIS 1–6 as above; highest in the abdomen region (0 if none).',
+      }),
+      numberInput('extremity', 'Extremities / pelvic girdle AIS (highest)', {
+        min: 0,
+        max: 6,
+        step: 1,
+        defaultValue: 0,
+        helpText: 'AIS 1–6 as above; highest in extremities/pelvic girdle (0 if none).',
+      }),
+      numberInput('external', 'External AIS (highest)', {
+        min: 0,
+        max: 6,
+        step: 1,
+        defaultValue: 0,
+        helpText: 'AIS 1–6 as above; highest external/skin (0 if none).',
+      }),
     ],
     calculate(values) {
       const regions = [
@@ -1042,9 +1287,27 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'When multiple severe injuries share one body region (ISS may undercall severity).',
     whyUse: 'Often outperforms ISS for mortality prediction when several injuries cluster in one region.',
     inputs: [
-      numberInput('ais1', 'Highest AIS injury', { min: 0, max: 6, step: 1, defaultValue: 0 }),
-      numberInput('ais2', 'Second highest AIS injury', { min: 0, max: 6, step: 1, defaultValue: 0 }),
-      numberInput('ais3', 'Third highest AIS injury', { min: 0, max: 6, step: 1, defaultValue: 0 }),
+      numberInput('ais1', 'Highest AIS injury', {
+        min: 0,
+        max: 6,
+        step: 1,
+        defaultValue: 0,
+        helpText: 'AIS 1=minor, 2=moderate, 3=serious, 4=severe, 5=critical, 6=maximal/currently untreatable. NISS uses the three highest AIS injuries regardless of body region. AIS 6 assigns NISS 75.',
+      }),
+      numberInput('ais2', 'Second highest AIS injury', {
+        min: 0,
+        max: 6,
+        step: 1,
+        defaultValue: 0,
+        helpText: 'Second-highest AIS (any region). 0 if fewer than two injuries.',
+      }),
+      numberInput('ais3', 'Third highest AIS injury', {
+        min: 0,
+        max: 6,
+        step: 1,
+        defaultValue: 0,
+        helpText: 'Third-highest AIS (any region). 0 if fewer than three injuries.',
+      }),
     ],
     calculate(values) {
       const a = [num(values.ais1, 0), num(values.ais2, 0), num(values.ais3, 0)].map((v) =>
@@ -1208,33 +1471,39 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'Traumatic or nontraumatic spinal cord injury grading after ISNCSCI exam.',
     whyUse: 'Standard international language for completeness and prognosis framing.',
     inputs: [
-      selectInput('grade', 'ASIA Impairment Scale grade', [
-        {
-          label: 'A — Complete',
-          value: 'A',
-          description: 'No sensory or motor function in S4–5',
-        },
-        {
-          label: 'B — Sensory incomplete',
-          value: 'B',
-          description: 'Sensory but not motor function preserved below NLI and includes S4–5',
-        },
-        {
-          label: 'C — Motor incomplete (weak)',
-          value: 'C',
-          description: 'Motor incomplete; more than half of key muscles below NLI have grade <3',
-        },
-        {
-          label: 'D — Motor incomplete (stronger)',
-          value: 'D',
-          description: 'Motor incomplete; at least half of key muscles below NLI have grade ≥3',
-        },
-        {
-          label: 'E — Normal',
-          value: 'E',
-          description: 'Normal sensory and motor function (in a patient with prior deficits)',
-        },
-      ]),
+      selectInput(
+        'grade',
+        'ASIA Impairment Scale grade',
+        [
+          {
+            label: 'A — Complete',
+            value: 'A',
+            description: 'No sensory or motor function in S4–5',
+          },
+          {
+            label: 'B — Sensory incomplete',
+            value: 'B',
+            description: 'Sensory but not motor function preserved below NLI and includes S4–5',
+          },
+          {
+            label: 'C — Motor incomplete (weak)',
+            value: 'C',
+            description: 'Motor incomplete; more than half of key muscles below NLI have grade <3',
+          },
+          {
+            label: 'D — Motor incomplete (stronger)',
+            value: 'D',
+            description: 'Motor incomplete; at least half of key muscles below NLI have grade ≥3',
+          },
+          {
+            label: 'E — Normal',
+            value: 'E',
+            description: 'Normal sensory and motor function (in a patient with prior deficits)',
+          },
+        ],
+        undefined,
+        'Complete vs incomplete = sacral sparing. Sensory sparing = LT and PP at S4–5 mucocutaneous junction and/or deep anal pressure (DAP). Motor incomplete = voluntary anal contraction (VAC) OR motor function more than three levels below the motor level on a given side. C: more than half of key muscles below NLI grade <3; D: at least half ≥3. If a key muscle is NT, do not invent a grade — document NT. Use the official ASIA worksheet for the full exam; this control only maps the AIS letter.',
+      ),
     ],
     calculate(values) {
       const g = String(values.grade ?? 'A');
@@ -1323,13 +1592,39 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'Historical/educational SCI severity grading or literature comparison with ASIA.',
     whyUse: 'Simple five-grade scale preceding modern ASIA Impairment Scale.',
     inputs: [
-      selectInput('grade', 'Frankel grade', [
-        { label: 'A — Complete: no motor or sensory function below level', value: 'A' },
-        { label: 'B — Sensory only: some sensation, no motor below level', value: 'B' },
-        { label: 'C — Motor useless: some motor, nonfunctional for ambulation', value: 'C' },
-        { label: 'D — Motor useful: motor preserved, useful function (may walk with/without aids)', value: 'D' },
-        { label: 'E — Normal: no neurological deficit', value: 'E' },
-      ]),
+      selectInput(
+        'grade',
+        'Frankel grade',
+        [
+          {
+            label: 'A — Complete: no motor or sensory function below level',
+            value: 'A',
+            description: 'Complete motor and sensory loss below the injury level',
+          },
+          {
+            label: 'B — Sensory only: some sensation, no motor below level',
+            value: 'B',
+            description: 'Some sensation preserved below the level (including sacral); no motor',
+          },
+          {
+            label: 'C — Motor useless: some motor, nonfunctional for ambulation',
+            value: 'C',
+            description: 'Motor preserved but not useful for walking (cannot ambulate even with aids)',
+          },
+          {
+            label: 'D — Motor useful: motor preserved, useful function (may walk with/without aids)',
+            value: 'D',
+            description: 'Motor useful — can walk with or without aids',
+          },
+          {
+            label: 'E — Normal: no neurological deficit',
+            value: 'E',
+            description: 'Normal motor and sensory function (reflexes may still be abnormal)',
+          },
+        ],
+        undefined,
+        'Frankel C vs D is whether residual motor is useful for practical ambulation — not the ASIA C/D muscle-majority (≥ half of key muscles grade ≥3) rule. Prefer ASIA/ISNCSCI for contemporary documentation.',
+      ),
     ],
     calculate(values) {
       const g = String(values.grade ?? 'A');
@@ -1404,13 +1699,39 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'Outcome assessment after traumatic brain injury or other severe brain insults.',
     whyUse: 'Simple, widely used endpoint in TBI research and follow-up clinics.',
     inputs: [
-      selectInput('gos', 'GOS category', [
-        { label: '1 — Death', value: 1 },
-        { label: '2 — Vegetative state (unresponsive wakefulness)', value: 2 },
-        { label: '3 — Severe disability (conscious but dependent)', value: 3 },
-        { label: '4 — Moderate disability (independent but disabled)', value: 4 },
-        { label: '5 — Good recovery (resumes normal life; may have minor deficits)', value: 5 },
-      ]),
+      selectInput(
+        'gos',
+        'GOS category',
+        [
+          { label: '1 — Death', value: 1, description: 'Dead' },
+          {
+            label: '2 — Vegetative state (unresponsive wakefulness)',
+            value: 2,
+            description:
+              'Eyes-open unresponsive wakefulness: no awareness; does not follow commands or speak. Sleep–wake cycles and reflex responses may be present.',
+          },
+          {
+            label: '3 — Severe disability (conscious but dependent)',
+            value: 3,
+            description:
+              'Conscious but needs another person for daily support (dressing, feeding, toileting, or cannot be left alone). Includes those who follow commands but cannot live independently.',
+          },
+          {
+            label: '4 — Moderate disability (independent but disabled)',
+            value: 4,
+            description:
+              'Independent at home (manages ADLs; can shop and travel locally) but disabled — cannot resume previous work, study, or social life at former capacity.',
+          },
+          {
+            label: '5 — Good recovery (resumes normal life; may have minor deficits)',
+            value: 5,
+            description:
+              'Resumes normal life; minor residual neurologic or psychological deficits allowed if they do not prevent independent living.',
+          },
+        ],
+        undefined,
+        'Rate current vs pre-injury (Jennett/Bond or Wilson interview); overall = worst domain. Severe vs moderate hinges on independence at home (needs daily help vs independent but not back to prior work/social life). Prefer GOS-E when lower/upper splits (8 h alone, shop/travel, work) are needed.',
+      ),
     ],
     calculate(values) {
       const g = num(values.gos, 5);
@@ -1479,16 +1800,51 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'More granular functional outcome after TBI than classic 5-point GOS.',
     whyUse: 'Standard secondary endpoint in modern TBI trials and clinics.',
     inputs: [
-      selectInput('gose', 'GOS-E category', [
-        { label: '1 — Death', value: 1 },
-        { label: '2 — Vegetative state', value: 2 },
-        { label: '3 — Lower severe disability', value: 3 },
-        { label: '4 — Upper severe disability', value: 4 },
-        { label: '5 — Lower moderate disability', value: 5 },
-        { label: '6 — Upper moderate disability', value: 6 },
-        { label: '7 — Lower good recovery', value: 7 },
-        { label: '8 — Upper good recovery', value: 8 },
-      ]),
+      selectInput(
+        'gose',
+        'GOS-E category',
+        [
+          { label: '1 — Death', value: 1, description: 'Dead' },
+          {
+            label: '2 — Vegetative state',
+            value: 2,
+            description: 'Not obeying commands and not saying words (unresponsive wakefulness)',
+          },
+          {
+            label: '3 — Lower severe disability',
+            value: 3,
+            description: 'Dependent for daily support; cannot be left alone for 8 h',
+          },
+          {
+            label: '4 — Upper severe disability',
+            value: 4,
+            description: 'Dependent but can be left ≥8 h; cannot shop OR travel locally without assistance',
+          },
+          {
+            label: '5 — Lower moderate disability',
+            value: 5,
+            description:
+              'Independent at home and can shop/travel but cannot work/study, or major social/leisure restriction',
+          },
+          {
+            label: '6 — Upper moderate disability',
+            value: 6,
+            description: 'Reduced work capacity and/or social/leisure less than half as often as before injury',
+          },
+          {
+            label: '7 — Lower good recovery',
+            value: 7,
+            description: 'Residual symptoms still affecting daily life',
+          },
+          {
+            label: '8 — Upper good recovery',
+            value: 8,
+            description: 'Full return; residuals none or not affecting daily life',
+          },
+        ],
+        undefined,
+        'Rate current vs pre-injury with the Wilson structured interview; overall = worst domain. Lower vs upper severe = cannot vs can be left alone 8 h. Lower vs upper moderate = cannot work vs reduced work/social. Lower vs upper good = residuals affecting vs not affecting daily life.',
+      ),
     ],
     calculate(values) {
       const g = num(values.gose, 8);

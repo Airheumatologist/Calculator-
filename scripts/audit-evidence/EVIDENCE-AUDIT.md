@@ -2,8 +2,8 @@
 
 <!-- GENERATED FILE. Do not edit by hand. Regenerate with: npm run audit:evidence -->
 
-Generated: 2026-09-11T05:37:37.244Z
-Source: `src/data/calculators/*.ts` (48 files, sha256 `169f2f13af3d1e8d…`)
+Generated: 2026-09-11T07:17:14.129Z
+Source: `src/data/calculators/*.ts` (48 files, sha256 `53e37fcd079f1b5e…`)
 
 This file and `refs-inventory.json` are the only authoritative evidence-audit
 outputs in this repository. Both come from the same parser

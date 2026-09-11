@@ -17,32 +17,32 @@ export const wave3CardioVascCalcs: Calculator[] = [
         {
           label: 'A — At risk',
           value: 0,
-          description: 'Hemodynamically stable; large MI, prior infarct, or acute HF without hypoperfusion',
+          description: 'Hemodynamically stable without hypotension or hypoperfusion (e.g. large MI, prior infarct, or acute HF)',
         },
         {
           label: 'B — Beginning shock',
           value: 1,
-          description: 'Relative hypotension or tachycardia without hypoperfusion',
+          description: 'SBP <90 or MAP <60 or >30 mmHg drop from baseline, or HR ≥100, AND no hypoperfusion',
         },
         {
           label: 'C — Classic shock',
           value: 2,
-          description: 'Hypoperfusion requiring intervention beyond volume resuscitation',
+          description: 'Hypoperfusion requiring drug/device beyond volume (lactate ≥2, UOP <30 mL/h, cool/mottled, delayed CRT, AMS). Hypotension typical but not required',
         },
         {
           label: 'D — Deteriorating',
           value: 3,
-          description: 'Failing to respond to initial interventions; escalating support',
+          description: 'Worsening or escalating support after initial intervention (failing volume/vasoactives ± MCS)',
         },
         {
           label: 'E — Extremis',
           value: 4,
-          description: 'Circulatory collapse, actual/impending arrest, refractory shock',
+          description: 'Circulatory collapse, actual or impending arrest, or refractory shock',
         },
-      ]),
-      yesNo('lactateHigh', 'Lactate elevated (e.g. >2 mmol/L) or rising', 0),
-      yesNo('vasoactive', 'On vasopressor and/or inotrope', 0),
-      yesNo('mcs', 'Mechanical circulatory support in use or imminent', 0),
+      ], undefined, '2022 SCAI SHOCK update: pick the stage that best matches current hemodynamics and hypoperfusion, not the worst historical stage.'),
+      yesNo('lactateHigh', 'Lactate elevated (e.g. >2 mmol/L) or rising', 0, 'Lactate ≥2 mmol/L or a rising trend — a hypoperfusion marker that supports stage C+ but does not by itself assign the stage.'),
+      yesNo('vasoactive', 'On vasopressor and/or inotrope', 0, 'Any vasopressor or inotrope infusion (typical of stage C–E).'),
+      yesNo('mcs', 'Mechanical circulatory support in use or imminent', 0, 'IABP, Impella, VA-ECMO, or other MCS in place or being initiated.'),
     ],
     calculate(values) {
       const stage = num(values.stage, 0);
@@ -115,16 +115,16 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whyUse: 'Profiles correlate with outcomes after LVAD/transplant and standardize “how sick” language.',
     inputs: [
       selectInput('profile', 'INTERMACS profile', [
-        { label: '1 — Crash and burn (critical cardiogenic shock)', value: 1 },
-        { label: '2 — Progressive decline on inotropes', value: 2 },
-        { label: '3 — Stable but inotrope-dependent', value: 3 },
-        { label: '4 — Resting symptoms at home on oral therapy', value: 4 },
-        { label: '5 — Exertion intolerant; comfortable at rest; housebound', value: 5 },
-        { label: '6 — Exertion limited; can do mild activity', value: 6 },
-        { label: '7 — Advanced NYHA III', value: 7 },
-      ]),
-      yesNo('tempModifier', 'Temporary circulatory support modifier (e.g. IABP/Impella/ECMO)', 0),
-      yesNo('arrhythmiaModifier', 'Frequent ventricular arrhythmia modifier', 0),
+        { label: '1 — Crash and burn (critical cardiogenic shock)', value: 1, description: 'Life-threatening hypotension despite escalating inotropes ± rising lactate (hours)' },
+        { label: '2 — Progressive decline on inotropes', value: 2, description: 'Declining renal function, nutrition, or volume despite IV inotropes (days)' },
+        { label: '3 — Stable but inotrope-dependent', value: 3, description: 'Stable on continuous IV inotropes but repeated failure to wean' },
+        { label: '4 — Resting symptoms at home on oral therapy', value: 4, description: 'Daily rest/ADL congestion on oral therapy; often high-dose diuretics' },
+        { label: '5 — Exertion intolerant; comfortable at rest; housebound', value: 5, description: 'Comfortable at rest but cannot do activity above ADLs; lives predominantly in the house' },
+        { label: '6 — Exertion limited; can do mild activity', value: 6, description: 'Can do mild activity then fatigue (“walking wounded”)' },
+        { label: '7 — Advanced NYHA III', value: 7, description: 'Stable advanced NYHA III without recent decompensation' },
+      ], undefined, 'Score current advanced-HF acuity (not the worst historical profile). Use the time-course and activity descriptors — not titles alone — to separate 3 vs 4 vs 5 vs 6.'),
+      yesNo('tempModifier', 'Temporary circulatory support modifier (e.g. IABP/Impella/ECMO)', 0, 'INTERMACS TCS modifier: currently on IABP, Impella, TandemHeart, ECMO, or similar temporary MCS.'),
+      yesNo('arrhythmiaModifier', 'Frequent ventricular arrhythmia modifier', 0, 'INTERMACS A modifier: recurrent VT/VF contributing to the current profile.'),
     ],
     calculate(values) {
       const p = num(values.profile, 4);
@@ -230,20 +230,20 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whyUse: 'Simple 7-variable score from a prospective European CS cohort; bedside applicable.',
     inputs: [
       yesNo('age75', 'Age > 75 years', 1),
-      yesNo('confusion', 'Confusion at presentation', 1),
-      yesNo('priorMiCabg', 'Previous MI or CABG', 1),
-      yesNo('acs', 'ACS etiology of shock', 1),
-      yesNo('ef40', 'LVEF < 40%', 1),
+      yesNo('confusion', 'Confusion / altered mental status at presentation', 1, 'New disorientation, inappropriate behavior, or reduced consciousness as a hypoperfusion sign — not chronic dementia without acute change. No GCS cutoff was used in the derivation.'),
+      yesNo('priorMiCabg', 'Previous MI or CABG', 1, 'Prior myocardial infarction or coronary bypass — not PCI alone unless there was also MI/CABG.'),
+      yesNo('acs', 'ACS etiology of shock', 1, 'Shock caused by acute coronary syndrome (STEMI/NSTEMI/UA), not isolated acute-on-chronic HF without ACS.'),
+      yesNo('ef40', 'LVEF < 40%', 1, 'LVEF <40% on echo or ventriculography during the shock episode.'),
       selectInput('lactate', 'Blood lactate', [
-        { label: '< 2 mmol/L', value: 0, points: 0 },
-        { label: '2–4 mmol/L', value: 1, points: 1 },
-        { label: '> 4 mmol/L', value: 2, points: 2 },
-      ]),
+        { label: '< 2 mmol/L', value: 0, points: 0, description: 'Arterial or venous lactate <2 mmol/L (0 points)' },
+        { label: '2–4 mmol/L', value: 1, points: 1, description: 'Lactate 2–4 mmol/L (1 point)' },
+        { label: '> 4 mmol/L', value: 2, points: 2, description: 'Lactate >4 mmol/L (2 points)' },
+      ], undefined, 'Admission / presentation lactate in mmol/L (mg/dL ÷ 9 ≈ mmol/L).'),
       selectInput('egfr', 'eGFR (mL/min/1.73 m²)', [
-        { label: '> 60', value: 0, points: 0 },
-        { label: '30–60', value: 1, points: 1 },
-        { label: '< 30', value: 2, points: 2 },
-      ]),
+        { label: '> 60', value: 0, points: 0, description: 'eGFR >60 mL/min/1.73 m² (0 points)' },
+        { label: '30–60', value: 1, points: 1, description: 'eGFR 30–60 mL/min/1.73 m² (1 point)' },
+        { label: '< 30', value: 2, points: 2, description: 'eGFR <30 mL/min/1.73 m² (2 points)' },
+      ], undefined, 'Presentation eGFR (MDRD/CKD-EPI). Dialysis / anuria maps to the <30 band.'),
     ],
     calculate(values) {
       const score =
@@ -330,12 +330,12 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'NSTE-ACS patients when balancing ischemic vs bleeding risk for antithrombotic intensity.',
     whyUse: 'Widely cited bleeding risk model from the CRUSADE registry using admission variables.',
     inputs: [
-      numberInput('hct', 'Baseline hematocrit', { unit: '%', min: 10, max: 60, step: 0.1, defaultValue: 40 }),
-      numberInput('crcl', 'Creatinine clearance', { unit: 'mL/min', min: 5, max: 200, defaultValue: 80 }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 200, defaultValue: 80 }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, defaultValue: 130 }),
-      yesNo('hf', 'Signs of heart failure at presentation', 7),
-      yesNo('vascular', 'Prior vascular disease (PAD / stroke)', 6),
+      numberInput('hct', 'Baseline hematocrit', { unit: '%', min: 10, max: 60, step: 0.1, defaultValue: 40, helpText: 'Admission hematocrit (%), not hemoglobin. Original CRUSADE used Hct.' }),
+      numberInput('crcl', 'Creatinine clearance', { unit: 'mL/min', min: 5, max: 200, defaultValue: 80, helpText: 'Cockcroft–Gault creatinine clearance (mL/min), not eGFR in mL/min/1.73 m².' }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 200, defaultValue: 80, helpText: 'Admission heart rate (beats/min).' }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, defaultValue: 130, helpText: 'Admission systolic BP (mmHg).' }),
+      yesNo('hf', 'Signs of heart failure at presentation', 7, 'Killip class II–IV: rales, S3, or radiographic pulmonary congestion at presentation (not remote compensated HF alone).'),
+      yesNo('vascular', 'Prior vascular disease (PAD / stroke)', 6, 'Prior peripheral artery disease or stroke/TIA (CRUSADE “vascular disease”).'),
       yesNo('dm', 'Diabetes mellitus', 6),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'male' },
@@ -478,12 +478,12 @@ export const wave3CardioVascCalcs: Calculator[] = [
       ]),
       yesNo('smoker', 'Cigarette smoker (within past 2 years)', 1),
       yesNo('dm', 'Diabetes mellitus', 1),
-      yesNo('miPresentation', 'MI at presentation', 1),
-      yesNo('priorPciMi', 'Prior PCI or prior MI', 1),
+      yesNo('miPresentation', 'MI at presentation', 1, 'Index PCI was for MI (STEMI or NSTEMI), not elective PCI for stable CAD.'),
+      yesNo('priorPciMi', 'Prior PCI or prior MI', 1, 'PCI or MI before the index procedure.'),
       yesNo('stentSmall', 'Stent diameter < 3 mm', 1),
-      yesNo('paclitaxel', 'Paclitaxel-eluting stent', 1),
-      yesNo('chfEf', 'CHF or LVEF < 30%', 2),
-      yesNo('veinGraft', 'Vein graft stent', 2),
+      yesNo('paclitaxel', 'Paclitaxel-eluting stent', 1, 'First-generation paclitaxel-eluting stent (historical DAPT-trial variable; uncommon with contemporary DES).'),
+      yesNo('chfEf', 'CHF or LVEF < 30%', 2, 'Clinical heart failure or LVEF <30%.'),
+      yesNo('veinGraft', 'Vein graft stent', 2, 'Index stent in a saphenous vein graft.'),
     ],
     calculate(values) {
       const score =
@@ -570,7 +570,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
       numberInput('crcl', 'Creatinine clearance', { unit: 'mL/min', min: 5, max: 200, defaultValue: 70 }),
       numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 5, max: 20, step: 0.1, defaultValue: 13 }),
       numberInput('wbc', 'White blood cell count', { unit: '×10⁹/L', min: 1, max: 50, step: 0.1, defaultValue: 8 }),
-      yesNo('priorBleed', 'Prior bleeding', 15),
+      yesNo('priorBleed', 'Previous spontaneous bleeding (hospitalized / TIMI-style, not access-site or traumatic)', 15, 'Costa 2017 nomogram item is prior spontaneous bleed. This tool remains educational, not the official PRECISE-DAPT nomogram.'),
     ],
     calculate(values) {
       const age = num(values.age, 68);
@@ -665,13 +665,13 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whyUse: 'Counts major ESC-model inputs and classic risk markers for structured counseling; full 5-year % needs official tool.',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 16, max: 90, defaultValue: 45 }),
-      numberInput('mwt', 'Maximal wall thickness', { unit: 'mm', min: 5, max: 50, defaultValue: 18 }),
-      numberInput('la', 'Left atrial diameter', { unit: 'mm', min: 20, max: 80, defaultValue: 42 }),
-      numberInput('lvot', 'Max LVOT gradient', { unit: 'mmHg', min: 0, max: 200, defaultValue: 20 }),
-      yesNo('fhScd', 'Family history of SCD in first-degree relative', 1),
-      yesNo('nsvt', 'NSVT on Holter', 1),
-      yesNo('syncope', 'Unexplained syncope', 1),
-      yesNo('abnormalBP', 'Abnormal exercise BP response (optional classic factor)', 1),
+      numberInput('mwt', 'Maximal wall thickness', { unit: 'mm', min: 5, max: 50, defaultValue: 18, helpText: 'Greatest LV wall thickness (mm) in any segment. ≥30 mm is a classic major SCD factor and is also counted automatically.' }),
+      numberInput('la', 'Left atrial diameter', { unit: 'mm', min: 20, max: 80, defaultValue: 42, helpText: 'Anteroposterior LA diameter (mm). ESC model is continuous; this helper also flags ≥45 mm educationally.' }),
+      numberInput('lvot', 'Max LVOT gradient', { unit: 'mmHg', min: 0, max: 200, defaultValue: 20, helpText: 'Peak LVOT gradient (rest or Valsalva/exercise), mmHg. ESC model is continuous; ≥30 mmHg is flagged here.' }),
+      yesNo('fhScd', 'Family history of SCD in first-degree relative', 1, '≥1 first-degree SCD <40 y, or SCD at any age if that relative had confirmed HCM.'),
+      yesNo('nsvt', 'NSVT on Holter', 1, '≥3 consecutive ventricular beats ≥120 bpm lasting <30 s on 24–48 h ECG.'),
+      yesNo('syncope', 'Unexplained syncope', 1, 'Unexplained TLOC, not neurally mediated or purely LVOTO; strongest if within ~6 months.'),
+      yesNo('abnormalBP', 'Abnormal exercise BP response (optional classic factor)', 1, 'Optional AHA classic marker (not in the ESC continuous model): SBP fails to rise ≥20 mmHg or falls ≥10 mmHg during exercise.'),
       yesNo('massiveH', 'Massive hypertrophy ≥30 mm (classic major factor)', 1),
     ],
     calculate(values) {
@@ -783,18 +783,24 @@ export const wave3CardioVascCalcs: Calculator[] = [
         {
           label: 'Type 1 — Coved STE ≥2 mm with negative T in ≥1 of V1–V2 (high leads OK)',
           value: 1,
+          description: 'Diagnostic pattern: coved ST-segment elevation ≥2 mm (0.2 mV) followed by a negative T wave in ≥1 right precordial lead (V1–V2), recorded at the 4th ICS or high leads (2nd/3rd ICS).',
         },
         {
           label: 'Type 2 — Saddleback STE ≥2 mm (r′), trough ≥1 mm, positive/biphasic T',
           value: 2,
+          description: 'Saddleback: r′ ≥2 mm with ST trough ≥1 mm and a positive or biphasic T in V1–V2. Not diagnostic of Brugada syndrome by itself — convert with high leads or (in expert hands) drug challenge if suspicion is high.',
         },
-        { label: 'Nondiagnostic / incomplete RBBB-like only', value: 0 },
-      ]),
-      yesNo('highLeads', 'Recorded with V1–V2 in 2nd intercostal space', 0),
-      yesNo('fever', 'Fever at time of ECG', 0),
-      yesNo('syncope', 'Syncope (especially nocturnal/at rest)', 0),
-      yesNo('fhScd', 'Family history of SCD / Brugada', 0),
-      yesNo('drugs', 'Possible sodium-channel blocker or other Brugada-inducing drug', 0),
+        {
+          label: 'Nondiagnostic / incomplete RBBB-like only',
+          value: 0,
+          description: 'Incomplete RBBB, rSR′ without the STE/trough criteria, athlete ECG, or lead misplacement — does not meet type 1 or type 2.',
+        },
+      ], undefined, 'Measure STE at the J point in V1–V2 (standard or 2nd ICS). Type 1 is the only diagnostic Brugada ECG pattern; type 2 needs conversion or clinical context.'),
+      yesNo('highLeads', 'Recorded with V1–V2 in 2nd intercostal space', 0, 'High leads increase sensitivity for type 1. Repeat ECG with V1–V2 at the 2nd ICS if standard leads show type 2 or suspicion remains.'),
+      yesNo('fever', 'Fever at time of ECG', 0, 'Fever can unmask type 1 — treat the fever and repeat ECG when afebrile.'),
+      yesNo('syncope', 'Syncope (especially nocturnal/at rest)', 0, 'Arrhythmic syncope (nocturnal, at rest, without prodrome) is higher risk than vasovagal syncope.'),
+      yesNo('fhScd', 'Family history of SCD / Brugada', 0, 'SCD or documented Brugada in a first-degree relative.'),
+      yesNo('drugs', 'Possible sodium-channel blocker or other Brugada-inducing drug', 0, 'Class Ic (flecainide, procainamide, ajmaline), some psychotropics, anesthetics — see brugadadrugs.org.'),
     ],
     calculate(values) {
       const p = num(values.pattern, 0);
@@ -896,12 +902,12 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whyUse: 'Recognizing Wellens pattern prompts urgent angiography rather than stress testing.',
     inputs: [
       yesNo('anginaHx', 'Recent anginal chest pain (often resolved at time of ECG)', 1),
-      yesNo('patternA', 'Type A: biphasic T waves in V2–V3 (±V1–V4)', 2),
-      yesNo('patternB', 'Type B: deep symmetric inverted T waves in V2–V3 (±V1–V6)', 2),
+      yesNo('patternA', 'Type A: biphasic T waves in V2–V3 (±V1–V4)', 2, 'Biphasic T: initial positive then terminal negative, typically when pain-free.'),
+      yesNo('patternB', 'Type B: deep symmetric inverted T waves in V2–V3 (±V1–V6)', 2, 'Deep, symmetric, inverted precordial T waves (often >5 mm), typically when pain-free. More common than type A.'),
       yesNo('isoelectric', 'Isoelectric or minimally elevated ST (<1 mm) in precordials', 1),
-      yesNo('noQ', 'No precordial pathologic Q waves / loss of R progression', 1),
-      yesNo('tropNormal', 'Normal or only slightly elevated cardiac troponin', 1),
-      yesNo('preservedR', 'Preserved R-wave progression', 1),
+      yesNo('noQ', 'No precordial pathologic Q waves', 1),
+      yesNo('tropNormal', 'Normal or only slightly elevated cardiac troponin', 1, 'Normal or minimally above URL (classic series often <2× ULN).'),
+      yesNo('preservedR', 'Preserved R-wave progression (e.g. R in V3 ≥3 mm)', 1),
     ],
     calculate(values) {
       const pattern = bool(values.patternA) || bool(values.patternB);
@@ -981,8 +987,8 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'Suspected occlusion MI with LBBB or ventricular paced rhythm when original Sgarbossa is negative/indeterminate.',
     whyUse: 'Proportional discordance improves sensitivity vs the fixed ≥5 mm discordant STE rule.',
     inputs: [
-      yesNo('concordantSte', 'Concordant ST elevation ≥1 mm in any lead with positive QRS', 1),
-      yesNo('concordantStd', 'Concordant ST depression ≥1 mm in V1–V3', 1),
+      yesNo('concordantSte', 'Concordant ST elevation ≥1 mm in any lead with positive QRS', 1, 'STE ≥1 mm in the same direction as a predominantly positive QRS (any lead).'),
+      yesNo('concordantStd', 'Concordant ST depression ≥1 mm in V1–V3', 1, 'STD ≥1 mm in V1, V2, or V3 when the QRS is predominantly negative (concordant with the S wave).'),
       numberInput('stMm', 'Discordant ST elevation magnitude (most concerning lead)', {
         unit: 'mm',
         min: 0,
@@ -997,6 +1003,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
         max: 50,
         step: 0.5,
         defaultValue: 20,
+        helpText: 'Absolute depth of the S wave in the same lead as the discordant STE (positive millimetres). Ratio uses −STE/S; ≤ −0.25 is excessive discordance.',
       }),
     ],
     calculate(values) {
@@ -1090,16 +1097,16 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'Confirmed or suspected PE when cataloguing RV strain markers for severity discussion.',
     whyUse: 'Organizes ECG/echo strain findings that influence intermediate-high vs intermediate-low PE risk classification.',
     inputs: [
-      yesNo('tInv', 'T-wave inversion in V1–V4 (or right precordials)', 1),
-      yesNo('rbbb', 'Complete or incomplete RBBB (new)', 1),
-      yesNo('s1q3t3', 'S1Q3T3 pattern', 1),
-      yesNo('stRad', 'Right axis / RAD strain pattern', 1),
-      yesNo('rvDilated', 'RV dilation on echo/CT', 1),
-      yesNo('rvHypo', 'RV free-wall hypokinesis', 1),
-      yesNo('mcconnell', 'McConnell’s sign', 1),
-      yesNo('trElev', 'Elevated TR velocity / estimated RVSP', 1),
-      yesNo('septumD', 'D-sign / septal flattening', 1),
-      yesNo('biomarker', 'Elevated troponin and/or BNP/NT-proBNP', 1),
+      yesNo('tInv', 'T-wave inversion in V1–V4 (or right precordials)', 1, 'New or presumed-new T-wave inversion in the right precordial leads (V1–V4), not known chronic strain.'),
+      yesNo('rbbb', 'Complete or incomplete RBBB (new)', 1, 'New complete or incomplete right bundle-branch block vs a known old RBBB.'),
+      yesNo('s1q3t3', 'S1Q3T3 pattern', 1, 'S wave in lead I plus Q wave and inverted T in lead III.'),
+      yesNo('stRad', 'Right axis / RAD strain pattern', 1, 'QRS axis >+90° or new right-axis strain.'),
+      yesNo('rvDilated', 'RV dilation on echo/CT', 1, 'RV/LV ≥0.9 or RV appearing larger than LV.'),
+      yesNo('rvHypo', 'RV free-wall hypokinesis', 1, 'Reduced RV free-wall systolic motion on echo (not just dilation).'),
+      yesNo('mcconnell', 'McConnell’s sign', 1, 'Mid RV free-wall akinesia with apical sparing.'),
+      yesNo('trElev', 'Elevated TR velocity / estimated RVSP', 1, 'TR velocity ≥2.6–2.8 m/s or estimated RVSP ≳35–40 mmHg.'),
+      yesNo('septumD', 'D-sign / septal flattening', 1, 'Parasternal short-axis D-shaped LV from systolic (pressure) or diastolic (volume) septal flattening.'),
+      yesNo('biomarker', 'Elevated troponin and/or BNP/NT-proBNP', 1, 'Troponin or BNP/NT-proBNP above the local URL.'),
     ],
     calculate(values) {
       const ecgKeys = ['tInv', 'rbbb', 's1q3t3', 'stRad'] as const;
@@ -1176,8 +1183,8 @@ export const wave3CardioVascCalcs: Calculator[] = [
     inputs: [
       yesNo('sbp', 'SBP 90–100 mmHg', 2, 'Do not use BOVA if SBP <90 (high-risk PE)'),
       yesNo('hr', 'Heart rate ≥ 110 bpm', 1),
-      yesNo('rv', 'RV dysfunction (echo or CT)', 2),
-      yesNo('trop', 'Elevated cardiac troponin', 2),
+      yesNo('rv', 'RV dysfunction (echo or CT)', 2, 'RV dilation (EDD >30 mm PLAX or RV>LV / RV:LV ≥0.9–1.0), free-wall hypokinesis, or peak TR velocity ≥2.6 m/s.'),
+      yesNo('trop', 'Elevated cardiac troponin', 2, 'Any cardiac troponin above the local 99th percentile URL.'),
     ],
     calculate(values) {
       const score =
@@ -1257,9 +1264,9 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'Educational estimate of LV mass from IVSd, LVIDd, and PWT linear measurements.',
     whyUse: 'Quantifies LVH beyond voltage criteria; index to BSA for sex-specific reference ranges.',
     inputs: [
-      numberInput('ivsd', 'IVS thickness (diastole)', { unit: 'cm', min: 0.4, max: 3, step: 0.1, defaultValue: 1.0 }),
-      numberInput('lvidd', 'LVID diastole', { unit: 'cm', min: 2, max: 8, step: 0.1, defaultValue: 5.0 }),
-      numberInput('pwt', 'Posterior wall thickness (diastole)', { unit: 'cm', min: 0.4, max: 3, step: 0.1, defaultValue: 1.0 }),
+      numberInput('ivsd', 'IVS thickness (diastole)', { unit: 'cm', min: 0.4, max: 3, step: 0.1, defaultValue: 1.0, helpText: 'Enter centimeters (e.g. 1.0 cm), not millimetres (not 10). End-diastolic septal thickness.' }),
+      numberInput('lvidd', 'LVID diastole', { unit: 'cm', min: 2, max: 8, step: 0.1, defaultValue: 5.0, helpText: 'Left ventricular internal diameter in diastole, in centimeters (e.g. 5.0 cm, not 50 mm).' }),
+      numberInput('pwt', 'Posterior wall thickness (diastole)', { unit: 'cm', min: 0.4, max: 3, step: 0.1, defaultValue: 1.0, helpText: 'End-diastolic posterior wall thickness in centimeters (e.g. 1.0 cm, not 10 mm).' }),
       numberInput('height', 'Height (for BSA)', { unit: 'cm', min: 100, max: 230, defaultValue: 170 }),
       numberInput('weight', 'Weight (for BSA)', { unit: 'kg', min: 30, max: 250, defaultValue: 70 }),
       selectInput('sex', 'Sex (reference ranges)', [
@@ -1350,7 +1357,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
         { label: 'Male (waist > 102 cm / 40 in)', value: 'male' },
         { label: 'Female (waist > 88 cm / 35 in)', value: 'female' },
       ]),
-      yesNo('waist', 'Elevated waist circumference (sex-specific ATP III threshold)', 1),
+      yesNo('waist', 'Elevated waist circumference (sex-specific ATP III threshold)', 1, 'ATP III: >102 cm (40 in) men, >88 cm (35 in) women. Treated dyslipidemia/HTN/hyperglycemia still count. IDF ethnicity-specific waist is not this tool.'),
       yesNo('tg', 'Triglycerides ≥ 150 mg/dL (1.7 mmol/L) or on treatment', 1),
       yesNo('hdl', 'Low HDL-C (men <40, women <50 mg/dL) or on treatment', 1),
       yesNo('bp', 'BP ≥ 130/85 mmHg or on antihypertensive therapy', 1),
@@ -1417,13 +1424,13 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whyUse:
       'SCORE2 replaced SCORE with nonfatal events, HDL, competing risk, and region-specific calibration used in ESC prevention guidelines.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 40, max: 69, defaultValue: 50 }),
+      numberInput('age', 'Age', { unit: 'years', min: 40, max: 69, defaultValue: 50, helpText: 'SCORE2 is for ages 40–69. Use SCORE2-OP if ≥70; not for diabetes or established CVD.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
       ]),
-      yesNo('smoker', 'Current smoker', null),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, defaultValue: 140 }),
+      yesNo('smoker', 'Current smoker', null, 'Current tobacco smoker. Former smokers are scored as non-smokers in SCORE2.'),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, defaultValue: 140, helpText: 'Office SBP (mmHg), treated or untreated.' }),
       numberInput('totalChol', 'Total cholesterol', {
         unit: 'mmol/L',
         min: 2,
@@ -1441,11 +1448,31 @@ export const wave3CardioVascCalcs: Calculator[] = [
         helpText: 'If in mg/dL, divide by 38.67.',
       }),
       selectInput('region', 'European risk region', [
-        { label: 'Low-risk region (e.g. France, Spain, UK, NL)', value: 'low' },
-        { label: 'Moderate-risk region (e.g. Germany, Italy)', value: 'mod' },
-        { label: 'High-risk region (e.g. Poland, Hungary)', value: 'high' },
-        { label: 'Very high-risk region (e.g. Russia, Ukraine)', value: 'vhigh' },
-      ]),
+        {
+          label: 'Low-risk region (e.g. France, Spain, UK, NL)',
+          value: 'low',
+          description:
+            'ESC 2021 low-risk countries (WHO CVD mortality <100/100 000): Belgium, Denmark, France, Israel, Luxembourg, Netherlands, Norway, Spain, Switzerland, United Kingdom',
+        },
+        {
+          label: 'Moderate-risk region (e.g. Germany, Italy)',
+          value: 'mod',
+          description:
+            'ESC 2021 moderate-risk countries (100–<150): Austria, Cyprus, Finland, Germany, Greece, Iceland, Ireland, Italy, Malta, Portugal, San Marino, Slovenia, Sweden',
+        },
+        {
+          label: 'High-risk region (e.g. Poland, Hungary)',
+          value: 'high',
+          description:
+            'ESC 2021 high-risk countries (150–<300): Albania, Bosnia and Herzegovina, Croatia, Czechia, Estonia, Hungary, Kazakhstan, Poland, Slovakia, Turkey',
+        },
+        {
+          label: 'Very high-risk region (e.g. Russia, Ukraine)',
+          value: 'vhigh',
+          description:
+            'ESC 2021 very high-risk countries (≥300): Algeria, Armenia, Azerbaijan, Belarus, Bulgaria, Egypt, Georgia, Kyrgyzstan, Latvia, Lebanon, Libya, Lithuania, Montenegro, Morocco, North Macedonia, Moldova, Romania, Russia, Serbia, Syria, Tunisia, Ukraine, Uzbekistan',
+        },
+      ], undefined, 'Use the patient’s country of residence (ESC 2021 / HeartScore lists). Region recalibrates absolute 10-year risk; the same risk-factor profile is several-fold higher in very-high- vs low-risk countries.'),
     ],
     calculate(values) {
       const age = num(values.age, 50);
@@ -1596,7 +1623,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 220, defaultValue: 130 }),
       numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 100, max: 400, defaultValue: 210 }),
       numberInput('hdl', 'HDL-C', { unit: 'mg/dL', min: 15, max: 120, defaultValue: 50 }),
-      numberInput('hscrp', 'hsCRP', { unit: 'mg/L', min: 0.1, max: 20, step: 0.1, defaultValue: 2 }),
+      numberInput('hscrp', 'hsCRP', { unit: 'mg/L', min: 0.1, max: 20, step: 0.1, defaultValue: 2, helpText: 'High-sensitivity CRP (mg/L). Do not measure during acute illness/infection — wait until baseline.' }),
       yesNo('smoker', 'Current smoker', 0),
       yesNo('parentMi', 'Parental MI before age 60', 0),
       yesNo('dm', 'Diabetes', 0),
@@ -1918,9 +1945,9 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'Suspected PAD, atypical leg symptoms, or CV risk stratification with Doppler SBP measurements.',
     whyUse: 'First-line noninvasive test for lower-extremity PAD diagnosis and severity.',
     inputs: [
-      numberInput('rightBrachial', 'Right brachial SBP', { unit: 'mmHg', min: 50, max: 300, defaultValue: 130 }),
+      numberInput('rightBrachial', 'Right brachial SBP', { unit: 'mmHg', min: 50, max: 300, defaultValue: 130, helpText: 'Supine, rest 5–10 min. Doppler SBP. Use the higher of the two brachials as the denominator for both legs.' }),
       numberInput('leftBrachial', 'Left brachial SBP', { unit: 'mmHg', min: 50, max: 300, defaultValue: 128 }),
-      numberInput('rightPtp', 'Right posterior tibial SBP', { unit: 'mmHg', min: 0, max: 300, defaultValue: 120 }),
+      numberInput('rightPtp', 'Right posterior tibial SBP', { unit: 'mmHg', min: 0, max: 300, defaultValue: 120, helpText: 'Doppler PT SBP. ABI uses the higher of PT or DP on that side.' }),
       numberInput('rightDp', 'Right dorsalis pedis SBP', { unit: 'mmHg', min: 0, max: 300, defaultValue: 118 }),
       numberInput('leftPtp', 'Left posterior tibial SBP', { unit: 'mmHg', min: 0, max: 300, defaultValue: 122 }),
       numberInput('leftDp', 'Left dorsalis pedis SBP', { unit: 'mmHg', min: 0, max: 300, defaultValue: 120 }),
@@ -2002,10 +2029,10 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'Suspected upper-extremity DVT (arm swelling/pain ± catheter or pacemaker lead).',
     whyUse: 'Simple 4-item rule to stratify UEDVT pretest probability before ultrasound.',
     inputs: [
-      yesNo('venousMaterial', 'Venous material (catheter or pacemaker/ICD lead) present', 1),
-      yesNo('localizedPain', 'Localized pain', 1),
-      yesNo('pittingEdema', 'Unilateral pitting edema of the arm', 1),
-      yesNo('otherDx', 'Other diagnosis at least as plausible', -1),
+      yesNo('venousMaterial', 'Venous material (catheter or pacemaker/ICD lead) present', 1, 'Indwelling central venous catheter, PICC, or pacemaker/ICD lead in the symptomatic arm/chest.'),
+      yesNo('localizedPain', 'Localized pain', 1, 'Pain localized to the upper extremity (arm, shoulder, or ipsilateral neck/chest) — not generalized body pain.'),
+      yesNo('pittingEdema', 'Unilateral pitting edema of the arm', 1, 'Pitting edema of the symptomatic arm only (compare to the contralateral arm).'),
+      yesNo('otherDx', 'Other diagnosis at least as plausible', -1, 'An alternative diagnosis is at least as likely (e.g. cellulitis, superficial thrombophlebitis, lymphedema, trauma, intramuscular hematoma).'),
     ],
     calculate(values) {
       const score =
@@ -2094,10 +2121,10 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whyUse: 'Identifies lower vs higher recurrence risk while anticoagulated; informs counseling and intensity discussions (not a stop rule).',
     inputs: [
       yesNo('female', 'Female sex', 1),
-      yesNo('lung', 'Lung cancer', 1),
-      yesNo('breast', 'Breast cancer', -1),
-      yesNo('tnm1', 'TNM stage I disease', -2),
-      yesNo('priorVte', 'Previous VTE before the cancer-associated event', 1),
+      yesNo('lung', 'Lung cancer', 1, 'Primary lung cancer as the cancer associated with this VTE.'),
+      yesNo('breast', 'Breast cancer', -1, 'Breast cancer as the cancer associated with this VTE (negative points — lower recurrence stratum).'),
+      yesNo('tnm1', 'TNM stage I disease', -2, 'TNM stage I of the current cancer (not a remote treated in-situ lesion of another site).'),
+      yesNo('priorVte', 'Previous VTE before the cancer-associated event', 1, 'VTE episode that occurred before this cancer-associated thrombosis (not the index event).'),
     ],
     calculate(values) {
       const score =
@@ -2176,7 +2203,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
       'Women with a first unprovoked VTE after completing 5–12 months of anticoagulation when considering discontinuation.',
     whyUse: '0–1 HERDOO2 points ≈ low recurrence risk suitable for stopping in management studies; ≥2 continue.',
     inputs: [
-      yesNo('hyperpig', 'Hyperpigmentation, edema, or redness in either lower extremity', 1),
+      yesNo('hyperpig', 'Hyperpigmentation, edema, or redness in either lower extremity', 1, 'Post-thrombotic skin changes (hyperpigmentation, edema, or redness) in either leg — not acute cellulitis alone.'),
       yesNo('ddimer', 'Vidas D-dimer ≥ 250 µg/L while on anticoagulation', 1, 'Assay-specific threshold from derivation'),
       yesNo('obesity', 'BMI ≥ 30 kg/m²', 1),
       yesNo('older', 'Age ≥ 65 years', 1),

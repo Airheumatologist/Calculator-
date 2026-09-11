@@ -15,9 +15,9 @@ export const wave4HemeOncCalcs: Calculator[] = [
     inputs: [
       yesNo('age', 'Age > 60 years', 1),
       yesNo('ldh', 'Serum LDH > upper limit of normal', 1),
-      yesNo('ecog', 'ECOG performance status ≥ 2', 1),
+      yesNo('ecog', 'ECOG performance status ≥ 2', 1, 'ECOG 2 = ambulatory, all self-care, unable to work, up and about >50% of waking hours. 0 = fully active; 1 = strenuous activity limited but light work OK; 3 = limited self-care, in bed/chair >50% of waking hours; 4 = completely disabled.'),
       yesNo('stage', 'Ann Arbor stage III or IV', 1),
-      yesNo('extranodal', 'More than one extranodal site', 1),
+      yesNo('extranodal', 'More than one extranodal site', 1, 'Count distinct extranodal organs/sites (each organ/site once).'),
     ],
     calculate(values) {
       const score =
@@ -103,10 +103,10 @@ export const wave4HemeOncCalcs: Calculator[] = [
     inputs: [
       yesNo('age', 'Age > 60 years', 1),
       yesNo('ldh', 'Serum LDH > upper limit of normal', 1),
-      yesNo('ecog', 'ECOG performance status ≥ 2', 1),
+      yesNo('ecog', 'ECOG performance status ≥ 2', 1, 'ECOG 2 = ambulatory, all self-care, unable to work, up and about >50% of waking hours. 0 = fully active; 1 = strenuous activity limited but light work OK; 3 = limited self-care, in bed/chair >50% of waking hours; 4 = completely disabled.'),
       yesNo('stage', 'Ann Arbor stage III or IV', 1),
-      yesNo('extranodal', 'More than one extranodal site', 1),
-      yesNo('kidneyAdrenal', 'Kidney and/or adrenal involvement', 1),
+      yesNo('extranodal', 'More than one extranodal site', 1, 'Count distinct extranodal organs/sites (each organ/site once).'),
+      yesNo('kidneyAdrenal', 'Kidney and/or adrenal involvement', 1, 'Also counted in the extranodal-site factor if >1 extranodal site overall.'),
     ],
     calculate(values) {
       const score =
@@ -198,7 +198,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
       yesNo('wbc', 'WBC > 25 × 10⁹/L', 1),
       yesNo('hb', 'Hemoglobin < 10 g/dL', 2, 'Worth 2 points in DIPSS'),
       yesNo('blasts', 'Circulating blasts ≥ 1%', 1),
-      yesNo('symptoms', 'Constitutional symptoms (weight loss, night sweats, or fever)', 1),
+      yesNo('symptoms', 'Constitutional symptoms (IWG-MRT)', 1, 'Weight loss >10% of baseline in the past year, and/or unexplained fever, and/or excessive (drenching) sweats, persisting >1 month. Fatigue, pruritus, or bone pain alone do not count.'),
     ],
     calculate(values) {
       const score =
@@ -285,13 +285,13 @@ export const wave4HemeOncCalcs: Calculator[] = [
     inputs: [
       selectInput('dipssCategory', 'Current DIPSS risk category', [
         { label: 'Low (0 DIPSS points) → 0', value: 0 },
-        { label: 'Intermediate-1 → 1', value: 1 },
-        { label: 'Intermediate-2 → 2', value: 2 },
-        { label: 'High → 3', value: 3 },
-      ]),
+        { label: 'Intermediate-1 (1–2 DIPSS points) → 1', value: 1 },
+        { label: 'Intermediate-2 (3–4 DIPSS points) → 2', value: 2 },
+        { label: 'High (5–6 DIPSS points) → 3', value: 3 },
+      ], undefined, 'Map the current DIPSS integer (age>65, WBC>25, Hb<10 worth 2, blasts≥1%, IWG-MRT symptoms) onto these bands, then add the three plus factors.'),
       yesNo('unfavorableKaryotype', 'Unfavorable karyotype', 1, 'Complex karyotype or sole/two abnormalities including +8, −7/7q−, i(17q), inv(3), −5/5q−, 12p−, or 11q23 rearrangement'),
       yesNo('platelets', 'Platelets < 100 × 10⁹/L', 1),
-      yesNo('transfusion', 'RBC transfusion need', 1),
+      yesNo('transfusion', 'RBC transfusion need', 1, 'Tick if the patient currently requires RBC transfusions (typically started for Hb <10 g/dL). Do not tick a remote one-off that has resolved.'),
     ],
     calculate(values) {
       const score =
@@ -377,7 +377,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
         max: 40,
         step: 0.5,
         defaultValue: 0,
-        helpText: '0 if not palpable',
+        helpText: 'Clinical exam, cm below left costal margin in the midclavicular line; 0 if not palpable',
       }),
       numberInput('platelets', 'Platelet count', { unit: '×10⁹/L', min: 10, max: 3000, defaultValue: 300 }),
       numberInput('blasts', 'Peripheral blood blasts', { unit: '%', min: 0, max: 30, step: 0.1, defaultValue: 1 }),
@@ -458,7 +458,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whyUse: 'Complementary to Sokal; developed in interferon era and still cited alongside Sokal/EUTOS/ELTS.',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 1, max: 120, defaultValue: 50 }),
-      numberInput('spleen', 'Spleen size below costal margin', { unit: 'cm', min: 0, max: 40, step: 0.5, defaultValue: 0 }),
+      numberInput('spleen', 'Spleen size below costal margin', { unit: 'cm', min: 0, max: 40, step: 0.5, defaultValue: 0, helpText: 'Clinical exam, cm below left costal margin in the midclavicular line; 0 if not palpable' }),
       numberInput('blasts', 'Peripheral blood blasts', { unit: '%', min: 0, max: 30, step: 0.1, defaultValue: 1 }),
       numberInput('eosinophils', 'Peripheral eosinophils', { unit: '%', min: 0, max: 50, step: 0.1, defaultValue: 2 }),
       numberInput('basophils', 'Peripheral basophils', { unit: '%', min: 0, max: 30, step: 0.1, defaultValue: 1 }),
@@ -544,7 +544,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Chronic-phase CML at diagnosis when a simple spleen + basophil score is desired.',
     whyUse: 'Minimal inputs; originally validated for CCyR probability on imatinib (not identical to ELTS long-term survival model).',
     inputs: [
-      numberInput('spleen', 'Spleen size below costal margin', { unit: 'cm', min: 0, max: 40, step: 0.5, defaultValue: 0 }),
+      numberInput('spleen', 'Spleen size below costal margin', { unit: 'cm', min: 0, max: 40, step: 0.5, defaultValue: 0, helpText: 'Clinical exam, cm below left costal margin in the midclavicular line; 0 if not palpable' }),
       numberInput('basophils', 'Peripheral basophils', { unit: '%', min: 0, max: 30, step: 0.1, defaultValue: 1 }),
     ],
     calculate(values) {
@@ -609,8 +609,8 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Newly diagnosed multiple myeloma staging (pair with R-ISS when cytogenetics/LDH available).',
     whyUse: 'Simple, widely validated three-stage system that correlates with overall survival.',
     inputs: [
-      numberInput('b2m', 'Serum β₂-microglobulin', { unit: 'mg/L', min: 0.5, max: 50, step: 0.1, defaultValue: 3.0 }),
-      numberInput('albumin', 'Serum albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, defaultValue: 3.8 }),
+      numberInput('b2m', 'Serum β₂-microglobulin', { unit: 'mg/L', min: 0.5, max: 50, step: 0.1, defaultValue: 3.0, helpText: 'ISS I if <3.5 mg/L (with albumin ≥3.5 g/dL); ISS III if ≥5.5 mg/L regardless of albumin.' }),
+      numberInput('albumin', 'Serum albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, defaultValue: 3.8, helpText: 'ISS I requires albumin ≥3.5 g/dL together with β2M <3.5 mg/L.' }),
     ],
     calculate(values) {
       const b2m = num(values.b2m, 3);
@@ -679,10 +679,10 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whyUse: 'Improves prognostic separation versus ISS alone in the novel-agent era.',
     inputs: [
       selectInput('iss', 'ISS stage', [
-        { label: 'ISS I', value: 1 },
-        { label: 'ISS II', value: 2 },
-        { label: 'ISS III', value: 3 },
-      ]),
+        { label: 'ISS I', value: 1, description: 'β₂-microglobulin <3.5 mg/L AND albumin ≥3.5 g/dL' },
+        { label: 'ISS II', value: 2, description: 'Neither ISS I nor ISS III' },
+        { label: 'ISS III', value: 3, description: 'β₂-microglobulin ≥5.5 mg/L (albumin any)' },
+      ], undefined, 'Use the ISS (Greipp) calculator in this app if needed. High-risk CA = del(17p) and/or t(4;14) and/or t(14;16) by iFISH.'),
       yesNo('highLdh', 'LDH > upper limit of normal', 1),
       yesNo('highRiskCa', 'High-risk CA by iFISH', 1, 'del(17p) and/or t(4;14) and/or t(14;16)'),
     ],
@@ -763,15 +763,17 @@ export const wave4HemeOncCalcs: Calculator[] = [
     inputs: [
       selectInput('stageFeatures', 'Highest applicable burden category', [
         {
-          label: 'Stage I pattern: all low-burden features (Hb >10, normal Ca, limited bone disease, low M-protein)',
+          label: 'Stage I: ALL of Hb >10 g/dL, Ca normal (≤12 mg/dL), bone x-ray normal or solitary plasmacytoma, low M-protein',
           value: 1,
+          description: 'Low M-protein = IgG <5 g/dL, IgA <3 g/dL, or urine light chain <4 g/24 h (Durie & Salmon 1975)',
         },
-        { label: 'Stage II: intermediate (neither I nor III)', value: 2 },
+        { label: 'Stage II: intermediate (neither I nor III)', value: 2, description: 'Does not meet all Stage I criteria and has no Stage III feature' },
         {
-          label: 'Stage III pattern: high burden (Hb <8.5, Ca elevated, advanced lytic disease, or high M-protein)',
+          label: 'Stage III: ONE or more of Hb <8.5 g/dL, Ca >12 mg/dL, advanced lytic lesions, or high M-protein',
           value: 3,
+          description: 'High M-protein = IgG >7 g/dL, IgA >5 g/dL, or urine light chain >12 g/24 h. Advanced lytic lesions = multiple punched-out osteolytic lesions (not a solitary plasmacytoma).',
         },
-      ]),
+      ], undefined, 'Pick the highest burden category that applies. Stage I requires ALL low-burden features; Stage III needs only ONE high-burden feature; Stage II is everything in between.'),
       selectInput('creatinine', 'Creatinine substage', [
         { label: 'A — Creatinine < 2.0 mg/dL (<177 µmol/L)', value: 'A' },
         { label: 'B — Creatinine ≥ 2.0 mg/dL (≥177 µmol/L)', value: 'B' },
@@ -844,12 +846,12 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whyUse: 'Simple exam/lab stages correlate with survival and are used with CLL-IPI for treatment timing discussions.',
     inputs: [
       selectInput('rai', 'Highest applicable Rai stage', [
-        { label: '0 — Lymphocytosis only in blood/marrow', value: 0 },
-        { label: 'I — Lymphocytosis + lymphadenopathy', value: 1 },
-        { label: 'II — Lymphocytosis + spleen and/or liver enlargement (± nodes)', value: 2 },
-        { label: 'III — Lymphocytosis + anemia (Hb < 11 g/dL)', value: 3 },
-        { label: 'IV — Lymphocytosis + thrombocytopenia (Plt < 100 × 10⁹/L)', value: 4 },
-      ]),
+        { label: '0 — Lymphocytosis only in blood/marrow', value: 0, description: 'Absolute lymphocytosis without adenopathy, organomegaly, anemia, or thrombocytopenia' },
+        { label: 'I — Lymphocytosis + lymphadenopathy', value: 1, description: 'Enlarged nodes (any site) without spleen/liver enlargement or cytopenias below the III–IV cuts' },
+        { label: 'II — Lymphocytosis + spleen and/or liver enlargement (± nodes)', value: 2, description: 'Palpable splenomegaly and/or hepatomegaly; nodes may also be present' },
+        { label: 'III — Lymphocytosis + anemia (Hb < 11 g/dL)', value: 3, description: 'Hb <11 g/dL from CLL (exclude hemolysis/other causes when assigning stage). Outranks nodes/organomegaly.' },
+        { label: 'IV — Lymphocytosis + thrombocytopenia (Plt < 100 × 10⁹/L)', value: 4, description: 'Platelets <100 × 10⁹/L from CLL (exclude ITP when assigning stage). Highest Rai stage if present.' },
+      ], undefined, 'Select the highest applicable stage. Anemia (III, Hb <11) or thrombocytopenia (IV, Plt <100) outranks lymphadenopathy or organomegaly even if those are also present. Lymphocytosis is required at every stage.'),
     ],
     calculate(values) {
       const stage = num(values.rai, 0);
@@ -923,7 +925,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
           label: 'C — Hb < 10 g/dL and/or platelets < 100 × 10⁹/L (any area count)',
           value: 'C',
         },
-      ]),
+      ], undefined, 'Five lymphoid areas: cervical, axillary, inguinal, spleen, liver. Involvement of both sides of one region counts as ONE area (max 5). Palpable enlargement.'),
     ],
     calculate(values) {
       const stage = String(values.binet ?? 'A');
@@ -993,7 +995,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
       yesNo('age', 'Age > 65 years', 1),
       yesNo('stage', 'Advanced stage (Rai I–IV or Binet B–C)', 1),
       yesNo('b2m', 'β₂-microglobulin > upper limit of normal', 2),
-      yesNo('ighv', 'IGHV unmutated', 2),
+      yesNo('ighv', 'IGHV unmutated (≥98% identity to germline)', 2, 'Unmutated = ≥98% identity to germline (CLL-IPI / ERIC). Mutated = <98%. 97.0–97.9% is mutated on the 98% convention; use the report’s stated cutoff if the lab uses 97%.'),
       yesNo('tp53', 'del(17p) and/or TP53 mutation', 4),
     ],
     calculate(values) {
@@ -1073,7 +1075,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whyUse: 'Four-factor model tailored to PTCL; simpler alternative to IPI in T-cell lymphoma literature.',
     inputs: [
       yesNo('age', 'Age > 60 years', 1),
-      yesNo('ecog', 'ECOG performance status ≥ 2', 1),
+      yesNo('ecog', 'ECOG performance status ≥ 2', 1, 'ECOG 2 = ambulatory, all self-care, unable to work, up and about >50% of waking hours. 0 = fully active; 1 = strenuous activity limited but light work OK; 3 = limited self-care, in bed/chair >50% of waking hours; 4 = completely disabled.'),
       yesNo('ldh', 'LDH > upper limit of normal', 1),
       yesNo('marrow', 'Bone marrow involvement', 1),
     ],
@@ -1148,8 +1150,8 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Aggressive NHL / DLBCL in patients age ≤60 for risk grouping without the age factor.',
     whyUse: 'Focuses on LDH, performance status, and stage — the dominant factors in younger adults.',
     inputs: [
-      yesNo('ldh', 'Serum LDH > upper limit of normal', 1),
-      yesNo('ecog', 'ECOG performance status ≥ 2', 1),
+      yesNo('ldh', 'Serum LDH > upper limit of normal', 1, 'Original aaIPI is for age ≤60; if >60 use full IPI/R-IPI.'),
+      yesNo('ecog', 'ECOG performance status ≥ 2', 1, 'ECOG 2 = ambulatory, all self-care, unable to work, up and about >50% of waking hours. 0 = fully active; 1 = strenuous activity limited but light work OK; 3 = limited self-care, in bed/chair >50% of waking hours; 4 = completely disabled.'),
       yesNo('stage', 'Ann Arbor stage III or IV', 1),
     ],
     calculate(values) {
@@ -1231,15 +1233,15 @@ export const wave4HemeOncCalcs: Calculator[] = [
         { label: '≥ 70 years (3)', value: 3 },
       ]),
       selectInput('ecogPts', 'ECOG performance status', [
-        { label: '0–1 (0)', value: 0 },
-        { label: '2–4 (2)', value: 2 },
-      ]),
+        { label: '0–1 (0)', value: 0, description: '0 = fully active; 1 = strenuous activity limited but light work OK' },
+        { label: '2–4 (2)', value: 2, description: '2 = ambulatory, all self-care, unable to work, up >50% of waking hours; 3 = limited self-care, in bed/chair >50%; 4 = completely disabled' },
+      ], undefined, 'Oken/Zubrod scale. MIPI awards 0 points for ECOG 0–1 and 2 points for ECOG 2–4.'),
       selectInput('ldhPts', 'LDH / ULN ratio', [
         { label: '< 0.67 (0)', value: 0 },
         { label: '0.67–0.99 (1)', value: 1 },
         { label: '1.00–1.49 (2)', value: 2 },
         { label: '≥ 1.50 (3)', value: 3 },
-      ]),
+      ], undefined, 'Ratio = this patient’s LDH ÷ that lab’s ULN (not raw U/L).'),
       selectInput('wbcPts', 'WBC (×10⁹/L)', [
         { label: '< 6.7 (0)', value: 0 },
         { label: '6.7–9.9 (1)', value: 1 },
@@ -1368,10 +1370,10 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Adult solid-tumor patients with febrile neutropenia who appear clinically stable at presentation (not for unstable patients or most hematologic malignancies).',
     whyUse: 'Helps identify who remains high-risk for complications despite apparent stability; complements MASCC.',
     inputs: [
-      yesNo('ecog', 'ECOG performance status ≥ 2', 2),
-      yesNo('copd', 'COPD', 1),
-      yesNo('cvd', 'Chronic cardiovascular disease', 1),
-      yesNo('mucositis', 'Mucositis NCI grade ≥ 2', 1),
+      yesNo('ecog', 'ECOG performance status ≥ 2', 2, 'ECOG 2 = ambulatory, all self-care, unable to work, up and about >50% of waking hours. 0 = fully active; 1 = strenuous activity limited but light work OK; 3 = limited self-care, in bed/chair >50% of waking hours; 4 = completely disabled.'),
+      yesNo('copd', 'COPD', 1, 'COPD on chronic treatment — not remote childhood asthma.'),
+      yesNo('cvd', 'Chronic cardiovascular disease', 1, 'Documented CHF, ischemic heart disease, or arrhythmia. Hypertension alone does not count.'),
+      yesNo('mucositis', 'Mucositis NCI grade ≥ 2', 1, 'CTCAE/NCI-CTC grade 2 = moderate pain, modified diet, oral intake preserved. Grade 3+ = severe pain interfering with oral intake. Tick if ≥2.'),
       yesNo('monocytes', 'Monocytes < 200/µL (< 0.2 × 10⁹/L)', 1),
       yesNo('hyperglycemia', 'Stress-induced hyperglycemia', 2, 'e.g., glucose ≥121 mg/dL without prior diabetes in validation context'),
     ],
@@ -1454,8 +1456,8 @@ export const wave4HemeOncCalcs: Calculator[] = [
         { label: 'DAS28-ESR', value: 'esr' },
         { label: 'DAS28-CRP', value: 'crp' },
       ]),
-      numberInput('tjc', 'Tender joint count (28)', { min: 0, max: 28, defaultValue: 4 }),
-      numberInput('sjc', 'Swollen joint count (28)', { min: 0, max: 28, defaultValue: 2 }),
+      numberInput('tjc', 'Tender joint count (28)', { min: 0, max: 28, defaultValue: 4, helpText: '28 joints = bilateral shoulders, elbows, wrists, MCP1–5, PIP1–5, knees (not hips, ankles, or feet). Tender = pain on pressure/motion.' }),
+      numberInput('sjc', 'Swollen joint count (28)', { min: 0, max: 28, defaultValue: 2, helpText: 'Same 28-joint set. Swollen = synovitis, not bony enlargement.' }),
       numberInput('apr', 'ESR (mm/h) or CRP (mg/L)', {
         min: 0,
         max: 200,
@@ -1468,7 +1470,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
         min: 0,
         max: 100,
         defaultValue: 30,
-        helpText: 'VAS 0–100',
+        helpText: 'How active has your arthritis been during the last week? 0 = not active, 100 = extremely active (VAS 0–100 mm).',
       }),
     ],
     calculate(values) {
@@ -1558,10 +1560,10 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'RA disease activity assessment when labs are unavailable or a purely clinical composite is preferred.',
     whyUse: 'Simple sum of joint counts and global assessments; same-day scoring without ESR/CRP.',
     inputs: [
-      numberInput('tjc', 'Tender joint count (28)', { min: 0, max: 28, defaultValue: 4 }),
-      numberInput('sjc', 'Swollen joint count (28)', { min: 0, max: 28, defaultValue: 2 }),
-      numberInput('pga', 'Patient global assessment', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 3 }),
-      numberInput('ega', 'Evaluator global assessment', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 3 }),
+      numberInput('tjc', 'Tender joint count (28)', { min: 0, max: 28, defaultValue: 4, helpText: '28 joints = bilateral shoulders, elbows, wrists, MCP1–5, PIP1–5, knees (not hips, ankles, or feet). Tender = pain on pressure/motion.' }),
+      numberInput('sjc', 'Swollen joint count (28)', { min: 0, max: 28, defaultValue: 2, helpText: 'Same 28-joint set. Swollen = synovitis, not bony enlargement.' }),
+      numberInput('pga', 'Patient global assessment', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 3, helpText: 'Considering all the ways your arthritis affects you, how have you been? 0 = best, 10 = worst (not 0–100).' }),
+      numberInput('ega', 'Evaluator global assessment', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 3, helpText: 'Evaluator/physician global of current RA activity, 0 = none to 10 = worst imaginable.' }),
     ],
     calculate(values) {
       const tjc = num(values.tjc, 0);
@@ -1634,10 +1636,10 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'RA monitoring when tender/swollen counts, dual globals, and CRP are available.',
     whyUse: 'ACR/EULAR-endorsed composite; remission cutoff commonly used in trials and practice.',
     inputs: [
-      numberInput('tjc', 'Tender joint count (28)', { min: 0, max: 28, defaultValue: 4 }),
-      numberInput('sjc', 'Swollen joint count (28)', { min: 0, max: 28, defaultValue: 2 }),
-      numberInput('pga', 'Patient global assessment', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 3 }),
-      numberInput('ega', 'Evaluator global assessment', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 3 }),
+      numberInput('tjc', 'Tender joint count (28)', { min: 0, max: 28, defaultValue: 4, helpText: '28 joints = bilateral shoulders, elbows, wrists, MCP1–5, PIP1–5, knees (not hips, ankles, or feet). Tender = pain on pressure/motion.' }),
+      numberInput('sjc', 'Swollen joint count (28)', { min: 0, max: 28, defaultValue: 2, helpText: 'Same 28-joint set. Swollen = synovitis, not bony enlargement.' }),
+      numberInput('pga', 'Patient global assessment', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 3, helpText: 'Considering all the ways your arthritis affects you, how have you been? 0 = best, 10 = worst (not 0–100).' }),
+      numberInput('ega', 'Evaluator global assessment', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 3, helpText: 'Evaluator/physician global of current RA activity, 0 = none to 10 = worst imaginable.' }),
       numberInput('crp', 'CRP', { unit: 'mg/dL', min: 0, max: 30, step: 0.1, defaultValue: 0.5, helpText: 'Note mg/dL (not mg/L)' }),
     ],
     calculate(values) {
@@ -1713,18 +1715,18 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Axial spondyloarthritis / AS disease activity monitoring and biologic eligibility discussions.',
     whyUse: 'Standard PRO composite; BASDAI ≥4 often denotes active disease in pathways and trials.',
     inputs: [
-      numberInput('q1', 'Q1 Fatigue', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 4 }),
-      numberInput('q2', 'Q2 Spinal pain', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 5 }),
-      numberInput('q3', 'Q3 Peripheral joint pain/swelling', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 2 }),
-      numberInput('q4', 'Q4 Enthesitis', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 3 }),
-      numberInput('q5', 'Q5 Severity of morning stiffness', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 4 }),
+      numberInput('q1', 'Q1 Overall level of fatigue / tiredness', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 4, helpText: 'Past week. 0 = none, 10 = very severe. Score from the official BASDAI sheet if available.' }),
+      numberInput('q2', 'Q2 Overall AS neck, back, or hip pain', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 5, helpText: 'Past week. Neck, back, or hip pain from AS — not generic spinal pain.' }),
+      numberInput('q3', 'Q3 Pain/swelling in joints other than neck, back, or hips', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 2, helpText: 'Past week. Peripheral joints OTHER THAN neck, back, or hips.' }),
+      numberInput('q4', 'Q4 Discomfort from areas tender to touch or pressure', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 3, helpText: 'Past week. Tender-to-touch/pressure discomfort (entheseal), not the word “enthesitis” alone.' }),
+      numberInput('q5', 'Q5 Level of morning stiffness from waking', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 4, helpText: 'Past week. Severity/LEVEL of morning stiffness on waking (0 none – 10 very severe).' }),
       numberInput('q6', 'Q6 Duration of morning stiffness', {
         unit: '0–10',
         min: 0,
         max: 10,
         step: 0.1,
         defaultValue: 3,
-        helpText: '0 = 0 h, 10 = 2 h or more (standard 0–10 mapping)',
+        helpText: 'Past week. 0 = 0 h, 10 = 2 h or more (standard 0–10 mapping of duration)',
       }),
     ],
     calculate(values) {
@@ -1794,7 +1796,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
         min: 0,
         max: 105,
         defaultValue: 6,
-        helpText: 'Sum of weighted descriptors (max theoretical 105)',
+        helpText: 'Enter the total from the official SLEDAI-2K form (24 weighted descriptors over the prior 10–30 days). Do not score descriptors here.',
       }),
     ],
     calculate(values) {
@@ -1884,7 +1886,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
         max: 72,
         step: 0.1,
         defaultValue: 8,
-        helpText: 'Range 0–72 from head/trunk/upper/lower extremity erythema, induration, scale, and area',
+        helpText: 'Enter the total from the official PASI worksheet (0–72). Do not compute regional erythema/induration/scale here.',
       }),
     ],
     calculate(values) {

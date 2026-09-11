@@ -99,7 +99,7 @@ export const criticalCareCalcs: Calculator[] = [
     whyUse: 'Bedside mortality/organ-dysfunction risk prompt; not a sole sepsis screen (SSC 2021) or diagnostic criterion alone.',
     inputs: [
       yesNo('rr', 'Respiratory rate ≥ 22/min', 1),
-      yesNo('ams', 'Altered mentation', 1),
+      yesNo('ams', 'Altered mentation (GCS <15)', 1, 'Sepsis-3 qSOFA mentation is GCS <15 (any drop from 15) or new disorientation/confusion. If baseline dementia, score only an acute change.'),
       yesNo('sbp', 'SBP ≤ 100 mmHg', 1),
     ],
     calculate(values) {
@@ -141,47 +141,47 @@ export const criticalCareCalcs: Calculator[] = [
     whyUse: 'Sepsis-3 defines organ dysfunction as acute change in SOFA ≥2.',
     inputs: [
       selectInput('resp', 'Respiration (PaO₂/FiO₂)', [
-        { label: '≥ 400 (0)', value: 0 },
-        { label: '< 400 (1)', value: 1 },
-        { label: '< 300 (2)', value: 2 },
-        { label: '< 200 + ventilated (3)', value: 3 },
-        { label: '< 100 + ventilated (4)', value: 4 },
-      ]),
+        { label: '≥ 400 (0)', value: 0, description: 'PaO₂/FiO₂ ≥400 mmHg' },
+        { label: '< 400 (1)', value: 1, description: 'PaO₂/FiO₂ 300–399 mmHg' },
+        { label: '< 300 (2)', value: 2, description: 'PaO₂/FiO₂ 200–299, or <200 without mechanical ventilation' },
+        { label: '< 200 + ventilated (3)', value: 3, description: 'PaO₂/FiO₂ <200 mmHg AND mechanically ventilated' },
+        { label: '< 100 + ventilated (4)', value: 4, description: 'PaO₂/FiO₂ <100 mmHg AND mechanically ventilated' },
+      ], 0, 'PaO₂/FiO₂ in mmHg (PaO₂ mmHg ÷ FiO₂ as a fraction). Pick the worst matching band. Scores 3 and 4 require mechanical ventilation; P/F <200 without a ventilator stays 2.'),
       selectInput('coag', 'Coagulation (Platelets ×10³/µL)', [
-        { label: '≥ 150 (0)', value: 0 },
-        { label: '< 150 (1)', value: 1 },
-        { label: '< 100 (2)', value: 2 },
-        { label: '< 50 (3)', value: 3 },
-        { label: '< 20 (4)', value: 4 },
-      ]),
+        { label: '≥ 150 (0)', value: 0, description: 'Platelets ≥150 ×10³/µL (×10⁹/L)' },
+        { label: '< 150 (1)', value: 1, description: 'Platelets 100–149 ×10³/µL' },
+        { label: '< 100 (2)', value: 2, description: 'Platelets 50–99 ×10³/µL' },
+        { label: '< 50 (3)', value: 3, description: 'Platelets 20–49 ×10³/µL' },
+        { label: '< 20 (4)', value: 4, description: 'Platelets <20 ×10³/µL' },
+      ], 0, 'Use the lowest platelet count in the scoring period. Nested labels: pick the worst (lowest) band that applies.'),
       selectInput('liver', 'Liver (Bilirubin mg/dL)', [
-        { label: '< 1.2 (0)', value: 0 },
-        { label: '1.2–1.9 (1)', value: 1 },
-        { label: '2.0–5.9 (2)', value: 2 },
-        { label: '6.0–11.9 (3)', value: 3 },
-        { label: '≥ 12.0 (4)', value: 4 },
-      ]),
+        { label: '< 1.2 (0)', value: 0, description: '<1.2 mg/dL (≈ <20 µmol/L)' },
+        { label: '1.2–1.9 (1)', value: 1, description: '1.2–1.9 mg/dL (≈ 20–32 µmol/L)' },
+        { label: '2.0–5.9 (2)', value: 2, description: '2.0–5.9 mg/dL (≈ 33–101 µmol/L)' },
+        { label: '6.0–11.9 (3)', value: 3, description: '6.0–11.9 mg/dL (≈ 102–204 µmol/L)' },
+        { label: '≥ 12.0 (4)', value: 4, description: '≥12.0 mg/dL (≈ ≥204 µmol/L)' },
+      ], 0, 'Total bilirubin. 1.2 mg/dL ≈ 20 µmol/L; 2.0 ≈ 34; 6.0 ≈ 102; 12.0 ≈ 204.'),
       selectInput('cv', 'Cardiovascular', [
-        { label: 'MAP ≥ 70 (0)', value: 0 },
-        { label: 'MAP < 70 (1)', value: 1 },
-        { label: 'Dopamine ≤5 or dobutamine (2)', value: 2 },
-        { label: 'Dopamine >5 or epi/norepi ≤0.1 (3)', value: 3 },
-        { label: 'Dopamine >15 or epi/norepi >0.1 (4)', value: 4 },
-      ]),
+        { label: 'MAP ≥ 70 (0)', value: 0, description: 'MAP ≥70 mmHg without vasopressors' },
+        { label: 'MAP < 70 (1)', value: 1, description: 'MAP <70 mmHg, no pressors' },
+        { label: 'Dopamine ≤5 or dobutamine (2)', value: 2, description: 'Dopamine ≤5 µg/kg/min or any dobutamine (µg/kg/min)' },
+        { label: 'Dopamine >5 or epi/norepi ≤0.1 (3)', value: 3, description: 'Dopamine >5 or epinephrine/norepinephrine ≤0.1 µg/kg/min' },
+        { label: 'Dopamine >15 or epi/norepi >0.1 (4)', value: 4, description: 'Dopamine >15 or epinephrine/norepinephrine >0.1 µg/kg/min' },
+      ], 0, 'Pressor doses are µg/kg/min. Score the highest applicable band. MAP in mmHg.'),
       selectInput('cns', 'CNS (GCS)', [
-        { label: '15 (0)', value: 0 },
-        { label: '13–14 (1)', value: 1 },
-        { label: '10–12 (2)', value: 2 },
-        { label: '6–9 (3)', value: 3 },
-        { label: '< 6 (4)', value: 4 },
-      ]),
+        { label: '15 (0)', value: 0, description: 'Total GCS 15 (E+V+M)' },
+        { label: '13–14 (1)', value: 1, description: 'Total GCS 13 or 14' },
+        { label: '10–12 (2)', value: 2, description: 'Total GCS 10–12' },
+        { label: '6–9 (3)', value: 3, description: 'Total GCS 6–9' },
+        { label: '< 6 (4)', value: 4, description: 'Total GCS 3–5' },
+      ], 0, 'Use total GCS (E+V+M). If intubated, document VT rather than silently scoring verbal as 1, then apply the resulting total to this table.'),
       selectInput('renal', 'Renal (Creatinine or UOP)', [
-        { label: 'Cr < 1.2 (0)', value: 0 },
-        { label: 'Cr 1.2–1.9 (1)', value: 1 },
-        { label: 'Cr 2.0–3.4 (2)', value: 2 },
-        { label: 'Cr 3.5–4.9 or UOP <500 (3)', value: 3 },
-        { label: 'Cr ≥ 5.0 or UOP <200 (4)', value: 4 },
-      ]),
+        { label: 'Cr < 1.2 (0)', value: 0, description: 'Creatinine <1.2 mg/dL' },
+        { label: 'Cr 1.2–1.9 (1)', value: 1, description: 'Creatinine 1.2–1.9 mg/dL' },
+        { label: 'Cr 2.0–3.4 (2)', value: 2, description: 'Creatinine 2.0–3.4 mg/dL' },
+        { label: 'Cr 3.5–4.9 or UOP <500 (3)', value: 3, description: 'Cr 3.5–4.9 mg/dL or urine output <500 mL/24 h (not mL/h)' },
+        { label: 'Cr ≥ 5.0 or UOP <200 (4)', value: 4, description: 'Cr ≥5.0 mg/dL or urine output <200 mL/24 h' },
+      ], 0, 'Creatinine in mg/dL. UOP is mL per 24 hours — do not read <500 as mL/h.'),
     ],
     calculate(values) {
       const score =
@@ -218,10 +218,10 @@ export const criticalCareCalcs: Calculator[] = [
     whenToUse: 'Educational/historical; still used in some pathways as infection screen.',
     whyUse: 'Sensitive but non-specific; replaced by SOFA for sepsis definition.',
     inputs: [
-      yesNo('temp', 'Temp >38°C or <36°C', 1),
-      yesNo('hr', 'HR > 90', 1),
-      yesNo('rr', 'RR > 20 or PaCO₂ < 32 mmHg', 1),
-      yesNo('wbc', 'WBC >12k, <4k, or >10% bands', 1),
+      yesNo('temp', 'Temp >38°C or <36°C', 1, 'Core temperature >38.0°C or <36.0°C.'),
+      yesNo('hr', 'HR > 90', 1, 'Heart rate >90 bpm.'),
+      yesNo('rr', 'RR > 20 or PaCO₂ < 32 mmHg', 1, 'Respiratory rate >20/min or PaCO₂ <32 mmHg.'),
+      yesNo('wbc', 'WBC >12k, <4k, or >10% bands', 1, 'WBC >12×10⁹/L, <4×10⁹/L, or >10% band neutrophils.'),
     ],
     calculate(values) {
       const score = ['temp', 'hr', 'rr', 'wbc'].reduce((s, k) => s + (bool(values[k]) ? 1 : 0), 0);
@@ -255,20 +255,20 @@ export const criticalCareCalcs: Calculator[] = [
     whenToUse: 'Hospitalized adults for routine observation and escalation.',
     whyUse: 'Standardized track-and-trigger system (NHS).',
     inputs: [
-      selectInput('rr', 'Respiratory rate', [
+      selectInput('rr', 'Respiratory rate (/min)', [
         { label: '≤8 (3)', value: 3 },
         { label: '9–11 (1)', value: 1 },
         { label: '12–20 (0)', value: 0 },
         { label: '21–24 (2)', value: 2 },
         { label: '≥25 (3)', value: 3 },
-      ]),
+      ], undefined, 'Breaths per minute. A single parameter scoring 3 is itself an urgent-review trigger in NEWS2.'),
       selectInput('spo2', 'SpO₂ Scale 1 (%)', [
         { label: '≥96 (0)', value: 0 },
         { label: '94–95 (1)', value: 1 },
         { label: '92–93 (2)', value: 2 },
         { label: '≤91 (3)', value: 3 },
-      ]),
-      yesNo('o2air', 'On supplemental oxygen', 2),
+      ], 0, 'Scale 1 target 94–98%. For confirmed hypercapnic respiratory failure with a prescribed 88–92% target, RCP Scale 2 applies — not implemented in this tool (do not use these bins for Scale 2 patients).'),
+      yesNo('o2air', 'On supplemental oxygen', 2, 'Yes if any supplemental O₂ (nasal cannula, mask, HFNC, or ventilator). Room air = No. NEWS2 adds +2 for oxygen.'),
       selectInput('temp', 'Temperature °C', [
         { label: '≤35.0 (3)', value: 3 },
         { label: '35.1–36.0 (1)', value: 1 },
@@ -276,14 +276,14 @@ export const criticalCareCalcs: Calculator[] = [
         { label: '38.1–39.0 (1)', value: 1 },
         { label: '≥39.1 (2)', value: 2 },
       ]),
-      selectInput('sbp', 'Systolic BP', [
+      selectInput('sbp', 'Systolic BP (mmHg)', [
         { label: '≤90 (3)', value: 3 },
         { label: '91–100 (2)', value: 2 },
         { label: '101–110 (1)', value: 1 },
         { label: '111–219 (0)', value: 0 },
         { label: '≥220 (3)', value: 3 },
       ]),
-      selectInput('hr', 'Heart rate', [
+      selectInput('hr', 'Heart rate (bpm)', [
         { label: '≤40 (3)', value: 3 },
         { label: '41–50 (1)', value: 1 },
         { label: '51–90 (0)', value: 0 },
@@ -291,10 +291,10 @@ export const criticalCareCalcs: Calculator[] = [
         { label: '111–130 (2)', value: 2 },
         { label: '≥131 (3)', value: 3 },
       ]),
-      selectInput('conscious', 'Consciousness', [
-        { label: 'Alert (0)', value: 0 },
-        { label: 'New confusion / V / P / U (3)', value: 3 },
-      ]),
+      selectInput('conscious', 'Consciousness (ACVPU)', [
+        { label: 'Alert (A) (0)', value: 0, description: 'Alert — eyes open, interacting' },
+        { label: 'New confusion (C) or Voice (V) / Pain (P) / Unresponsive (U) (3)', value: 3, description: 'C = new disorientation/delirium (scores 3 even if still “alert” by old AVPU); V = response to speech; P = pain only; U = none' },
+      ], 0, 'NEWS2 uses ACVPU. New confusion (C) scores 3 even if the patient still appears “alert” by old AVPU. V = any response to spoken voice; P = pain only (trapezius/nail-bed); U = none.'),
     ],
     calculate(values) {
       const score =
@@ -333,39 +333,39 @@ export const criticalCareCalcs: Calculator[] = [
     whenToUse: 'Ward patients to detect clinical deterioration.',
     whyUse: 'Predecessor/alternative to NEWS used in many hospitals.',
     inputs: [
-      selectInput('sbp', 'SBP', [
+      selectInput('sbp', 'SBP (mmHg)', [
         { label: '≤70 (3)', value: 3 },
         { label: '71–80 (2)', value: 2 },
         { label: '81–100 (1)', value: 1 },
         { label: '101–199 (0)', value: 0 },
         { label: '≥200 (2)', value: 2 },
-      ]),
-      selectInput('hr', 'Heart rate', [
+      ], undefined, 'Systolic BP in mmHg (Subbe MEWS).'),
+      selectInput('hr', 'Heart rate (bpm)', [
         { label: '≤40 (2)', value: 2 },
         { label: '41–50 (1)', value: 1 },
         { label: '51–100 (0)', value: 0 },
         { label: '101–110 (1)', value: 1 },
         { label: '111–129 (2)', value: 2 },
         { label: '≥130 (3)', value: 3 },
-      ]),
-      selectInput('rr', 'Respiratory rate', [
+      ], undefined, 'Heart rate in beats/min.'),
+      selectInput('rr', 'Respiratory rate (/min)', [
         { label: '<9 (2)', value: 2 },
         { label: '9–14 (0)', value: 0 },
         { label: '15–20 (1)', value: 1 },
         { label: '21–29 (2)', value: 2 },
         { label: '≥30 (3)', value: 3 },
-      ]),
-      selectInput('temp', 'Temperature', [
+      ], undefined, 'Breaths per minute.'),
+      selectInput('temp', 'Temperature (°C)', [
         { label: '<35 (2)', value: 2 },
         { label: '35–38.4 (0)', value: 0 },
         { label: '≥38.5 (2)', value: 2 },
-      ]),
+      ], undefined, 'Core temperature in °C, not °F.'),
       selectInput('avpu', 'AVPU', [
-        { label: 'Alert (0)', value: 0 },
-        { label: 'Voice (1)', value: 1 },
-        { label: 'Pain (2)', value: 2 },
-        { label: 'Unresponsive (3)', value: 3 },
-      ]),
+        { label: 'Alert (0)', value: 0, description: 'Eyes open, interacting' },
+        { label: 'Voice (1)', value: 1, description: 'Any response to spoken/shouted voice' },
+        { label: 'Pain (2)', value: 2, description: 'Response only to pain (trapezius or nail-bed)' },
+        { label: 'Unresponsive (3)', value: 3, description: 'No response to voice or pain' },
+      ], 0, 'A = alert; V = voice; P = pain only; U = unresponsive.'),
     ],
     calculate(values) {
       const score = num(values.sbp) + num(values.hr) + num(values.rr) + num(values.temp) + num(values.avpu);
@@ -394,9 +394,9 @@ export const criticalCareCalcs: Calculator[] = [
     whenToUse: 'Adults with community-acquired pneumonia for site-of-care decisions.',
     whyUse: 'Simple 5-variable score endorsed by BTS guidelines.',
     inputs: [
-      yesNo('confusion', 'Confusion (new)', 1),
+      yesNo('confusion', 'Confusion (new): AMTS ≤8 or new disorientation to person/place/time', 1, 'Lim/BTS: new disorientation in person, place, or time, or Abbreviated Mental Test Score ≤8. Do not reprint a copyrighted AMTS card here — use the official BTS/AMTS instrument if scoring AMTS.'),
       yesNo('urea', 'Urea > 7 mmol/L (BUN > 19 mg/dL)', 1),
-      yesNo('rr', 'Respiratory rate ≥ 30', 1),
+      yesNo('rr', 'Respiratory rate ≥ 30/min', 1),
       yesNo('bp', 'SBP < 90 or DBP ≤ 60', 1),
       yesNo('age', 'Age ≥ 65', 1),
     ],
@@ -437,24 +437,24 @@ export const criticalCareCalcs: Calculator[] = [
         { label: 'Female (−10)', value: -10 },
         { label: 'Male (0)', value: 0 },
       ]),
-      yesNo('nh', 'Nursing home resident', 10),
-      yesNo('neoplasm', 'Neoplastic disease', 30),
-      yesNo('liver', 'Liver disease', 20),
-      yesNo('chf', 'CHF', 10),
-      yesNo('cerebro', 'Cerebrovascular disease', 10),
-      yesNo('renal', 'Renal disease', 10),
-      yesNo('ams', 'Altered mental status', 20),
-      yesNo('rr30', 'RR ≥ 30', 20),
-      yesNo('sbp90', 'SBP < 90', 20),
-      yesNo('temp35', 'Temp <35 or ≥40°C', 15),
-      yesNo('hr125', 'Pulse ≥ 125', 10),
+      yesNo('nh', 'Nursing home resident', 10, 'Residing in a nursing home or long-term care facility at presentation (Fine 1997).'),
+      yesNo('neoplasm', 'Neoplastic disease', 30, 'Any cancer except basal/squamous skin cancer; active or diagnosed within 1 year (Fine 1997).'),
+      yesNo('liver', 'Liver disease', 20, 'Cirrhosis or other chronic liver disease (Fine 1997).'),
+      yesNo('chf', 'CHF', 10, 'History of congestive heart failure (systolic or diastolic), not an isolated exam finding today.'),
+      yesNo('cerebro', 'Cerebrovascular disease', 10, 'Stroke, TIA, or known cerebrovascular disease.'),
+      yesNo('renal', 'Renal disease', 10, 'Chronic renal disease or documented insufficiency — not the BUN ≥30 item alone.'),
+      yesNo('ams', 'Altered mental status', 20, 'Disorientation to person, place, or time, stupor, or coma (Fine 1997).'),
+      yesNo('rr30', 'RR ≥ 30', 20, 'Respiratory rate ≥30 breaths/min.'),
+      yesNo('sbp90', 'SBP < 90', 20, 'Systolic BP <90 mmHg.'),
+      yesNo('temp35', 'Temp <35 or ≥40°C', 15, 'Core temperature <35.0°C or ≥40.0°C.'),
+      yesNo('hr125', 'Pulse ≥ 125', 10, 'Heart rate ≥125 bpm.'),
       yesNo('ph735', 'Arterial pH < 7.35', 30),
       yesNo('bun30', 'BUN ≥ 30 mg/dL', 20),
-      yesNo('na130', 'Sodium < 130', 20),
-      yesNo('glu250', 'Glucose ≥ 250', 10),
+      yesNo('na130', 'Sodium < 130 mEq/L', 20),
+      yesNo('glu250', 'Glucose ≥ 250 mg/dL', 10),
       yesNo('hct30', 'Hematocrit < 30%', 10),
       yesNo('pao260', 'PaO₂ < 60 or SpO₂ < 90%', 10),
-      yesNo('pleural', 'Pleural effusion', 10),
+      yesNo('pleural', 'Pleural effusion', 10, 'Pleural effusion on chest radiograph (any size; Fine 1997).'),
     ],
     calculate(values) {
       let score = num(values.age) + num(values.sex);
@@ -515,66 +515,66 @@ export const criticalCareCalcs: Calculator[] = [
     whenToUse: 'Educational approximation of ICU mortality risk.',
     whyUse: 'Classic ICU severity score; full APACHE II needs 12 physiologic variables.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 0, max: 110, defaultValue: 60 }),
+      numberInput('age', 'Age', { unit: 'years', min: 0, max: 110, defaultValue: 60, helpText: 'Worst physiology in the first 24 hours of ICU admission (official APACHE II). This educational tool omits pH, A–a gradient, temperature, and oxygenation.' }),
       // APACHE II neurologic points = 15 − GCS (not SOFA-style buckets)
-      numberInput('gcs', 'GCS', { min: 3, max: 15, defaultValue: 15, helpText: 'Points = 15 − GCS' }),
-      selectInput('map', 'MAP category', [
+      numberInput('gcs', 'GCS', { min: 3, max: 15, defaultValue: 15, helpText: 'Points = 15 − GCS. Enter total GCS 3–15; if intubated document VT rather than guessing verbal.' }),
+      selectInput('map', 'MAP category (mmHg)', [
         { label: '70–109 (0)', value: 0 },
         { label: '50–69 or 110–129 (2)', value: 2 },
         { label: '130–159 (3)', value: 3 },
         { label: '≤49 or ≥160 (4)', value: 4 },
-      ]),
-      selectInput('hr', 'HR category', [
+      ], 0, 'Mean arterial pressure in mmHg. Worst value in the first 24 h of ICU.'),
+      selectInput('hr', 'HR category (bpm)', [
         { label: '70–109 (0)', value: 0 },
         { label: '55–69 or 110–139 (2)', value: 2 },
         { label: '40–54 or 140–179 (3)', value: 3 },
         { label: '≤39 or ≥180 (4)', value: 4 },
-      ]),
-      selectInput('rr', 'RR category', [
+      ], 0, 'Heart rate in beats/min. Worst value in the first 24 h.'),
+      selectInput('rr', 'RR category (/min)', [
         { label: '12–24 (0)', value: 0 },
         { label: '10–11 or 25–34 (1)', value: 1 },
         { label: '6–9 or 35–49 (3)', value: 3 },
         { label: '≤5 or ≥50 (4)', value: 4 },
-      ]),
-      selectInput('na', 'Sodium', [
+      ], 0, 'Respiratory rate in breaths/min (or ventilator rate). Worst in first 24 h.'),
+      selectInput('na', 'Sodium (mEq/L)', [
         { label: '130–149 (0)', value: 0 },
         { label: '150–154 (1)', value: 1 },
         { label: '120–129 or 155–159 (2)', value: 2 },
         { label: '111–119 or 160–179 (3)', value: 3 },
         { label: '≤110 or ≥180 (4)', value: 4 },
-      ]),
-      selectInput('k', 'Potassium', [
+      ], 0, 'Serum sodium in mEq/L (mmol/L). Worst in first 24 h.'),
+      selectInput('k', 'Potassium (mEq/L)', [
         { label: '3.5–5.4 (0)', value: 0 },
         { label: '3.0–3.4 or 5.5–5.9 (1)', value: 1 },
         { label: '2.5–2.9 (2)', value: 2 },
         { label: '<2.5 or ≥7 (4)', value: 4 },
         { label: '6.0–6.9 (3)', value: 3 },
-      ]),
+      ], 0, 'Serum potassium in mEq/L. Worst in first 24 h. Pick the matching band (6.0–6.9 is 3 points; ≥7 is 4).'),
       selectInput('cr', 'Creatinine (acute)', [
         { label: '0.6–1.4 (0)', value: 0 },
         { label: '1.5–1.9 (2)', value: 2 },
         { label: '2.0–3.4 (3)', value: 3 },
         { label: '≥3.5 (4)', value: 4 },
         { label: '<0.6 (2)', value: 2 },
-      ]),
-      selectInput('hct', 'Hematocrit', [
+      ], 0, 'Worst creatinine in the first 24 h (mg/dL). Official APACHE II doubles these points when acute renal failure is present; this educational tool does not double.'),
+      selectInput('hct', 'Hematocrit (%)', [
         { label: '30–45.9 (0)', value: 0 },
         { label: '46–49.9 (1)', value: 1 },
         { label: '20–29.9 or ≥50 (2)', value: 2 },
         { label: '<20 (4)', value: 4 },
-      ]),
-      selectInput('wbc', 'WBC', [
+      ], 0, 'Hematocrit in percent. Worst in first 24 h.'),
+      selectInput('wbc', 'WBC (×10³/µL)', [
         { label: '3–14.9 (0)', value: 0 },
         { label: '15–19.9 (1)', value: 1 },
         { label: '1–2.9 or 20–39.9 (2)', value: 2 },
         { label: '<1 or ≥40 (4)', value: 4 },
-      ]),
-      yesNo('chronic', 'Severe chronic organ insufficiency or immunocompromise', 0),
+      ], 0, 'WBC ×10³/µL (×10⁹/L). Worst in first 24 h.'),
+      yesNo('chronic', 'Severe chronic organ insufficiency or immunocompromise', 0, 'Must predate this admission (Knaus). Liver: cirrhosis + portal HTN, prior variceal bleed, or encephalopathy. CV: NYHA IV. Respiratory: cannot climb stairs or chronic hypoxia/hypercapnia/secondary polycythemia/mPAP >40/ventilator-dependent. Renal: chronic dialysis. Immune: chemo/radiation/immunosuppression/high-dose steroids, or leukemia/lymphoma/AIDS. Ordinary CHF/COPD do not all count.'),
       selectInput('admitType', 'Admission type (chronic-health points only if chronic disease present)', [
         { label: 'No chronic disease / none applicable (0)', value: 0 },
         { label: 'Elective postoperative (+2 if chronic)', value: 2 },
         { label: 'Non-operative or emergency postoperative (+5 if chronic)', value: 5 },
-      ]),
+      ], 0, 'These points are added only if the chronic-disease item is Yes. Elective postop = +2; non-operative or emergency postop = +5. If chronic disease is No, this field contributes 0.'),
     ],
     calculate(values) {
       let agePts = 0;
@@ -639,21 +639,21 @@ export const criticalCareCalcs: Calculator[] = [
         { label: '6–8 (2)', value: 2 },
         { label: '4–5 (1)', value: 1 },
         { label: '3 (0)', value: 0 },
-      ]),
-      selectInput('sbp', 'SBP coded', [
+      ], 4, 'Enter the coded GCS band (not the raw 3–15 total). Weighted RTS = 0.9368·GCSc + 0.7326·SBPc + 0.2908·RRc.'),
+      selectInput('sbp', 'SBP coded (mmHg)', [
         { label: '>89 (4)', value: 4 },
         { label: '76–89 (3)', value: 3 },
         { label: '50–75 (2)', value: 2 },
         { label: '1–49 (1)', value: 1 },
         { label: '0 (0)', value: 0 },
-      ]),
-      selectInput('rr', 'RR coded', [
+      ], 4, 'Systolic BP in mmHg, then pick the coded band (not the raw SBP).'),
+      selectInput('rr', 'RR coded (/min)', [
         { label: '10–29 (4)', value: 4 },
         { label: '>29 (3)', value: 3 },
         { label: '6–9 (2)', value: 2 },
         { label: '1–5 (1)', value: 1 },
         { label: '0 (0)', value: 0 },
-      ]),
+      ], 4, 'Respiratory rate in breaths/min, then pick the coded band.'),
     ],
     calculate(values) {
       const g = num(values.gcs);
@@ -688,10 +688,10 @@ export const criticalCareCalcs: Calculator[] = [
     whenToUse: 'ABG interpretation for hypoxemia differential.',
     whyUse: 'Distinguishes V/Q mismatch, shunt, diffusion vs hypoventilation/low FiO₂.',
     inputs: [
-      numberInput('fio2', 'FiO₂', { unit: '(0.21–1.0)', min: 0.21, max: 1, step: 0.01, defaultValue: 0.21 }),
+      numberInput('fio2', 'FiO₂', { unit: '(0.21–1.0)', min: 0.21, max: 1, step: 0.01, defaultValue: 0.21, helpText: 'Enter as a fraction (0.21 = 21% oxygen), not as a percent (21).' }),
       numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 100, defaultValue: 40 }),
       numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, defaultValue: 90 }),
-      numberInput('age', 'Age (for expected)', { unit: 'years', min: 0, max: 110, defaultValue: 40 }),
+      numberInput('age', 'Age (for expected)', { unit: 'years', min: 0, max: 110, defaultValue: 40, helpText: 'Expected A–a ≈ age/4 + 4 mmHg. This tool flags elevated if measured A–a exceeds expected by more than 5 mmHg.' }),
       numberInput('patm', 'Atmospheric pressure', { unit: 'mmHg', min: 500, max: 800, defaultValue: 760 }),
     ],
     calculate(values) {
@@ -740,7 +740,7 @@ export const criticalCareCalcs: Calculator[] = [
     whyUse: 'Berlin definition severity tiers based on P/F with PEEP ≥5.',
     inputs: [
       numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, defaultValue: 80 }),
-      numberInput('fio2', 'FiO₂', { unit: 'fraction', min: 0.21, max: 1, step: 0.01, defaultValue: 0.5 }),
+      numberInput('fio2', 'FiO₂', { unit: 'fraction', min: 0.21, max: 1, step: 0.01, defaultValue: 0.5, helpText: 'Enter as a fraction (0.50 = 50% oxygen). Berlin ARDS P/F tiers assume PEEP ≥5 cmH₂O plus radiographic/timing criteria.' }),
     ],
     calculate(values) {
       const pao2 = num(values.pao2, 80);

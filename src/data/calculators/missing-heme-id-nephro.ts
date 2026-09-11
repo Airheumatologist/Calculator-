@@ -14,16 +14,16 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     inputs: [
       selectInput('crStage', 'Creatinine criterion (highest applicable)', [
         { label: 'None / no Cr criteria met (0)', value: 0 },
-        { label: 'Stage 1: ↑Cr ≥0.3 mg/dL in 48h or 1.5–1.9× baseline (1)', value: 1 },
-        { label: 'Stage 2: Cr 2.0–2.9× baseline (2)', value: 2 },
-        { label: 'Stage 3: Cr ≥3× baseline, Cr ≥4.0 mg/dL, or RRT (3)', value: 3 },
-      ]),
+        { label: 'Stage 1: ↑Cr ≥0.3 mg/dL within 48 h or 1.5–1.9× baseline within 7 days (1)', value: 1 },
+        { label: 'Stage 2: Cr 2.0–2.9× baseline within 7 days (2)', value: 2 },
+        { label: 'Stage 3: Cr ≥3× baseline within 7 days, Cr ≥4.0 mg/dL, or RRT (3)', value: 3 },
+      ], 0, 'KDIGO 1.5×/2×/3× fold-change is within 7 days (known or presumed baseline). Stage 3 also if eGFR <35 in age <18, or RRT initiated.'),
       selectInput('uopStage', 'Urine output criterion (highest applicable)', [
         { label: 'None / UOP criteria not met (0)', value: 0 },
         { label: 'Stage 1: <0.5 mL/kg/h for 6–12 h (1)', value: 1 },
         { label: 'Stage 2: <0.5 mL/kg/h for ≥12 h (2)', value: 2 },
         { label: 'Stage 3: <0.3 mL/kg/h ≥24 h or anuria ≥12 h (3)', value: 3 },
-      ]),
+      ], 0, 'Use mL/kg/h from hourly UOP and current (measured) weight. UOP criteria require accurate weight-based hourly measurement.'),
     ],
     calculate(values) {
       const cr = num(values.crStage, 0);
@@ -95,8 +95,8 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Children ~1–16 years for CKD staging, drug dosing context, or renal function estimates.',
     whyUse: 'Preferred simple bedside pediatric eGFR with IDMS-traceable creatinine.',
     inputs: [
-      numberInput('height', 'Height', { unit: 'cm', min: 40, max: 200, defaultValue: 120 }),
-      numberInput('scr', 'Serum creatinine (IDMS)', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.01, defaultValue: 0.5 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 40, max: 200, defaultValue: 120, helpText: 'Length/height in cm. Bedside Schwartz is for children ~1–16 y, not neonates or adults.' }),
+      numberInput('scr', 'Serum creatinine (IDMS)', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.01, defaultValue: 0.5, helpText: 'IDMS-traceable creatinine in mg/dL (use k = 0.413). µmol/L ÷ 88.4 ≈ mg/dL.' }),
     ],
     calculate(values) {
       const height = num(values.height, 120);
@@ -164,13 +164,13 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Thrombotic microangiopathy when deciding urgency of plasma exchange pending ADAMTS13 activity.',
     whyUse: 'High scores support early caplacizumab/PEX pathway while low scores argue against severe TTP.',
     inputs: [
-      yesNo('plt', 'Platelet count < 30 × 10⁹/L', 1),
-      yesNo('hemolysis', 'Hemolysis evidence (indirect bili >2 mg/dL, retic >2.5%, or undetectable haptoglobin)', 1),
-      yesNo('noCancer', 'No active cancer', 1),
-      yesNo('noTransplant', 'No solid-organ or stem-cell transplant', 1),
-      yesNo('mcv', 'MCV < 90 fL', 1),
-      yesNo('inr', 'INR < 1.5', 1),
-      yesNo('cr', 'Creatinine < 2.0 mg/dL', 1),
+      yesNo('plt', 'Platelet count < 30 × 10⁹/L', 1, 'Admission/presentation platelet count <30 × 10⁹/L (not after transfusion).'),
+      yesNo('hemolysis', 'Hemolysis evidence (indirect bili >2 mg/dL, retic >2.5%, or undetectable haptoglobin)', 1, 'Any one: indirect bilirubin >2 mg/dL, reticulocytes >2.5%, or undetectable haptoglobin. Schistocytes support TMA but are not a PLASMIC point.'),
+      yesNo('noCancer', 'No active cancer', 1, 'Yes = NO active cancer (solid or hematologic). Active cancer scores 0 on this item.'),
+      yesNo('noTransplant', 'No solid-organ or stem-cell transplant', 1, 'Yes = NO solid-organ or HSCT history. Prior transplant scores 0 on this item.'),
+      yesNo('mcv', 'MCV < 90 fL', 1, 'Mean corpuscular volume <90 fL (surrogate for microangiopathic fragmentation).'),
+      yesNo('inr', 'INR < 1.5', 1, 'INR <1.5 (near-normal coagulation; higher INR argues against TTP toward DIC/liver).'),
+      yesNo('cr', 'Creatinine < 2.0 mg/dL', 1, 'Creatinine <2.0 mg/dL (≈177 µmol/L). Higher Cr is more aHUS/other TMA than TTP.'),
     ],
     calculate(values) {
       const keys = ['plt', 'hemolysis', 'noCancer', 'noTransplant', 'mcv', 'inr', 'cr'] as const;
@@ -223,24 +223,24 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whyUse: 'Standardized criteria for overt DIC diagnosis and serial monitoring.',
     inputs: [
       selectInput('platelets', 'Platelet count (×10⁹/L)', [
-        { label: '> 100 (0)', value: 0 },
-        { label: '50–100 (1)', value: 1 },
-        { label: '< 50 (2)', value: 2 },
-      ]),
+        { label: '> 100 (0)', value: 0, description: '>100 × 10⁹/L' },
+        { label: '50–100 (1)', value: 1, description: '50–100 × 10⁹/L' },
+        { label: '< 50 (2)', value: 2, description: '<50 × 10⁹/L' },
+      ], undefined, 'Current platelet count (×10⁹/L). Requires an underlying DIC-associated condition to interpret as overt DIC.'),
       selectInput('fibrin', 'Elevated fibrin marker (D-dimer / FDP)', [
-        { label: 'No increase (0)', value: 0 },
-        { label: 'Moderate increase (2)', value: 2 },
-        { label: 'Strong increase (3)', value: 3 },
-      ], undefined, 'Use lab-specific cutoffs for moderate vs strong elevation'),
+        { label: 'No increase (0)', value: 0, description: 'Within laboratory reference range' },
+        { label: 'Moderate increase (2)', value: 2, description: '≈ >3× ULN (or ~0.4–4 µg/mL FEU in older cohorts); use lab ULN' },
+        { label: 'Strong increase (3)', value: 3, description: '≈ >7× ULN (or >4 µg/mL FEU); use lab ULN' },
+      ], undefined, 'Use lab-specific cutoffs for moderate vs strong elevation. ISTH SSC 2025 proposal: moderate ≈ ×3 ULN, strong ≈ ×7 ULN.'),
       selectInput('pt', 'Prolonged PT', [
         { label: '< 3 seconds prolonged (0)', value: 0 },
         { label: '3–6 seconds prolonged (1)', value: 1 },
         { label: '> 6 seconds prolonged (2)', value: 2 },
-      ]),
+      ], 0, 'Seconds above laboratory mean normal PT (not INR).'),
       selectInput('fibrinogen', 'Fibrinogen', [
         { label: '≥ 1.0 g/L (0)', value: 0 },
         { label: '< 1.0 g/L (1)', value: 1 },
-      ]),
+      ], 0, '1.0 g/L = 100 mg/dL.'),
     ],
     calculate(values) {
       const score =
@@ -286,14 +286,14 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whyUse: 'Identifies higher-risk oncology outpatients who may benefit from thromboprophylaxis discussion.',
     inputs: [
       selectInput('site', 'Primary tumor site risk', [
-        { label: 'Very high risk: stomach or pancreas (2)', value: 2 },
-        { label: 'High risk: lung, lymphoma, gynecologic, bladder, testicular (1)', value: 1 },
-        { label: 'Other sites (0)', value: 0 },
-      ]),
-      yesNo('plt', 'Pre-chemo platelet count ≥ 350 × 10⁹/L', 1),
-      yesNo('hb', 'Hemoglobin < 10 g/dL and/or using ESA', 1),
-      yesNo('wbc', 'Pre-chemo leukocyte count > 11 × 10⁹/L', 1),
-      yesNo('bmi', 'BMI ≥ 35 kg/m²', 1),
+        { label: 'Very high risk: stomach or pancreas (2)', value: 2, description: 'Stomach or pancreas primary' },
+        { label: 'High risk: lung, lymphoma, gynecologic, bladder, testicular (1)', value: 1, description: 'Lung, lymphoma, gynecologic, bladder, or testicular primary' },
+        { label: 'Other sites (0)', value: 0, description: 'Breast, colorectal, prostate, and other sites not listed above' },
+      ], undefined, 'Primary site at start of systemic therapy. Very high = stomach or pancreas (2); high = lung, lymphoma, gyn, bladder, testicular (1).'),
+      yesNo('plt', 'Pre-chemo platelet count ≥ 350 × 10⁹/L', 1, 'Platelet count ≥350 × 10⁹/L before this cycle of chemotherapy.'),
+      yesNo('hb', 'Hemoglobin < 10 g/dL and/or using ESA', 1, 'Hb <10 g/dL and/or currently receiving an erythropoiesis-stimulating agent.'),
+      yesNo('wbc', 'Pre-chemo leukocyte count > 11 × 10⁹/L', 1, 'Pre-chemo WBC >11 × 10⁹/L.'),
+      yesNo('bmi', 'BMI ≥ 35 kg/m²', 1, 'BMI ≥35 kg/m².'),
     ],
     calculate(values) {
       const score =
@@ -349,16 +349,16 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whyUse: 'Score ≥21 predicts lower risk of serious medical complications and may support oral/step-down care.',
     inputs: [
       selectInput('burden', 'Burden of illness (symptoms)', [
-        { label: 'No or mild symptoms (5)', value: 5 },
-        { label: 'Moderate symptoms (3)', value: 3 },
-        { label: 'Severe symptoms / moribund (0)', value: 0 },
-      ]),
-      yesNo('noHypotension', 'No hypotension (SBP > 90 mmHg)', 5),
-      yesNo('noCopd', 'No COPD', 4),
-      yesNo('solidOrNoFungal', 'Solid tumor OR hematologic malignancy with no prior fungal infection', 4),
-      yesNo('noDehydration', 'No dehydration requiring parenteral fluids', 3),
-      yesNo('outpatient', 'Outpatient status at fever onset', 3),
-      yesNo('age', 'Age < 60 years', 2),
+        { label: 'No or mild symptoms (5)', value: 5, description: 'Looks well aside from fever/chills, self-caring' },
+        { label: 'Moderate symptoms (3)', value: 3, description: 'Significant symptoms but not critically ill' },
+        { label: 'Severe symptoms / moribund (0)', value: 0, description: 'Appears severely ill or dying' },
+      ], 5, 'Clinician global assessment of this febrile illness, not underlying cancer extent. Instability overrides a high MASCC.'),
+      yesNo('noHypotension', 'No hypotension (SBP > 90 mmHg)', 5, 'Yes = SBP >90 mmHg (no hypotension). Hypotension scores 0 on this item and usually precludes outpatient care.'),
+      yesNo('noCopd', 'No COPD', 4, 'Yes = no COPD. Known COPD scores 0 on this item.'),
+      yesNo('solidOrNoFungal', 'Solid tumor OR hematologic malignancy with no prior fungal infection', 4, 'Yes if solid tumor, OR hematologic malignancy without prior invasive fungal infection. Prior fungal infection in heme malignancy scores 0.'),
+      yesNo('noDehydration', 'No dehydration requiring parenteral fluids', 3, 'Yes = not dehydrated enough to need IV fluids. Dehydration requiring parenteral fluids scores 0.'),
+      yesNo('outpatient', 'Outpatient status at fever onset', 3, 'Yes = fever started while an outpatient. Inpatient fever onset scores 0.'),
+      yesNo('age', 'Age < 60 years', 2, 'Yes = age <60. Age ≥60 scores 0 on this item.'),
     ],
     calculate(values) {
       const score =
@@ -411,10 +411,10 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Acute pharyngitis to guide RADT/culture and antibiotic stewardship.',
     whyUse: 'Age adjustment improves discrimination versus classic Centor alone, especially at extremes of age.',
     inputs: [
-      yesNo('fever', 'Temperature > 38°C or history of fever', 1),
-      yesNo('noCough', 'Absence of cough', 1),
-      yesNo('tender', 'Tender anterior cervical nodes', 1),
-      yesNo('exudate', 'Tonsillar swelling or exudate', 1),
+      yesNo('fever', 'Temperature > 38°C or history of fever', 1, 'T >38.0 °C now or a clear history of fever with this illness.'),
+      yesNo('noCough', 'Absence of cough', 1, 'Yes = no cough. Cough present scores 0 (more viral).'),
+      yesNo('tender', 'Tender anterior cervical nodes', 1, 'Tender anterior cervical lymphadenopathy (not posterior-only).'),
+      yesNo('exudate', 'Tonsillar swelling or exudate', 1, 'Tonsillar swelling and/or exudate on exam.'),
       selectInput('age', 'Age group', [
         { label: '3–14 years (+1)', value: 1 },
         { label: '15–44 years (0)', value: 0 },
@@ -486,12 +486,12 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Febrile children with possible mucocutaneous lymph node syndrome.',
     whyUse: 'Classic criteria support timely IVIG to reduce coronary artery complications.',
     inputs: [
-      yesNo('fever', 'Fever lasting ≥ 5 days (or fever present and KD strongly suspected)', 0),
-      yesNo('conjunctivitis', 'Bilateral bulbar conjunctival injection (nonexudative)', 1),
-      yesNo('oral', 'Oral mucosal changes (strawberry tongue, red cracked lips, injected pharynx)', 1),
-      yesNo('extremity', 'Extremity changes (erythema/edema of hands/feet or periungual peeling)', 1),
-      yesNo('rash', 'Polymorphous rash', 1),
-      yesNo('nodes', 'Cervical lymphadenopathy (≥1.5 cm, usually unilateral)', 1),
+      yesNo('fever', 'Fever lasting ≥ 5 days (or fever present and KD strongly suspected)', 0, 'Classic KD: fever ≥5 days. AHA allows treating earlier if ≥4 principal features and KD is strongly suspected. Incomplete KD uses lab/echo supplements.'),
+      yesNo('conjunctivitis', 'Bilateral bulbar conjunctival injection (nonexudative)', 1, 'Bilateral, nonexudative, often spares the limbus (perilimbal sparing). Not bacterial conjunctivitis with discharge.'),
+      yesNo('oral', 'Oral mucosal changes (strawberry tongue, red cracked lips, injected pharynx)', 1, 'Strawberry tongue, erythematous cracked lips, and/or diffuse injected oropharynx — not isolated exudative tonsillitis.'),
+      yesNo('extremity', 'Extremity changes (erythema/edema of hands/feet or periungual peeling)', 1, 'Acute: erythema or firm edema of palms/soles. Convalescent: periungual desquamation (usually week 2–3).'),
+      yesNo('rash', 'Polymorphous rash', 1, 'Maculopapular, diffuse erythroderma, or erythema multiforme-like. Not typically vesicular or bullous. May include perineal accentuation.'),
+      yesNo('nodes', 'Cervical lymphadenopathy (≥1.5 cm, usually unilateral)', 1, '≥1.5 cm, usually unilateral anterior cervical. Least common principal criterion.'),
     ],
     calculate(values) {
       const fever = bool(values.fever);
@@ -560,13 +560,13 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Well-appearing febrile infants (historically ≤60 days) when applying classic low-risk labs.',
     whyUse: 'Educational/historical low-risk tool; modern practice often prefers PECARN/Step-by-Step/AAP pathways.',
     inputs: [
-      yesNo('well', 'Infant appears well (nontoxic)', 1),
-      yesNo('previouslyHealthy', 'Previously healthy term infant (no antibiotics, no underlying disease, not prolonged neonatal stay)', 1),
-      yesNo('noFocus', 'No ear, soft tissue, bone, or skin infection on exam', 1),
-      yesNo('wbcOk', 'WBC 5,000–15,000/mm³', 1),
-      yesNo('bandsOk', 'Absolute band count ≤ 1,500/mm³', 1),
-      yesNo('uaOk', 'UA ≤ 10 WBC/hpf', 1),
-      yesNo('stoolOk', 'If diarrhea: stool ≤ 5 WBC/hpf (or no diarrhea)', 1),
+      yesNo('well', 'Infant appears well (nontoxic)', 1, 'Nontoxic = alert, well-perfused, age-appropriate interaction. Historically well-appearing febrile infants ≤60 days with T ≥38°C; not a substitute for AAP 2021/PECARN.'),
+      yesNo('previouslyHealthy', 'Previously healthy term infant (no antibiotics, no underlying disease, not prolonged neonatal stay)', 1, 'Term ≥37 wks; no perinatal or current antibiotics; not hospitalized longer than the mother; no unexplained hyperbilirubinemia; no underlying illness.'),
+      yesNo('noFocus', 'No ear, soft tissue, bone, or skin infection on exam', 1, 'No otitis, cellulitis, osteomyelitis, or other focal bacterial infection on exam.'),
+      yesNo('wbcOk', 'WBC 5,000–15,000/mm³', 1, 'WBC 5–15 × 10³/µL.'),
+      yesNo('bandsOk', 'Absolute band count ≤ 1,500/mm³', 1, 'Absolute band count ≤1,500/mm³ (1.5 × 10⁹/L).'),
+      yesNo('uaOk', 'UA ≤ 10 WBC/hpf', 1, 'Spun UA ≤10 WBC/hpf (not nitrites/LE as a substitute in classic Rochester).'),
+      yesNo('stoolOk', 'If diarrhea: stool ≤ 5 WBC/hpf (or no diarrhea)', 1, 'If diarrhea is present, stool ≤5 WBC/hpf. If no diarrhea, score Yes.'),
     ],
     calculate(values) {
       const items = ['well', 'previouslyHealthy', 'noFocus', 'wbcOk', 'bandsOk', 'uaOk', 'stoolOk'] as const;
@@ -619,14 +619,14 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
         { label: 'Male', value: 'M', points: 1 },
       ]),
       numberInput('gfr', 'GFR', { unit: 'mL/min/1.73 m²', min: 5, max: 120, defaultValue: 70, helpText: '≥60: 0; 30–59: 1; <30: 2.5' }),
-      yesNo('cancer', 'Active cancer (within 6 months)', 2),
-      yesNo('rheumatic', 'Rheumatic disease', 2),
-      yesNo('cvc', 'Central venous catheter', 2),
-      yesNo('icu', 'ICU/CCU admission', 2.5),
-      yesNo('liver', 'Hepatic failure (INR >1.5)', 2.5),
+      yesNo('cancer', 'Active cancer (within 6 months)', 2, 'Cancer diagnosed or treated within 6 months, or metastatic disease.'),
+      yesNo('rheumatic', 'Rheumatic disease', 2, 'Active rheumatic/autoimmune disease (e.g. RA, SLE) as in IMPROVE.'),
+      yesNo('cvc', 'Central venous catheter', 2, 'Central line in situ (PICC, port, internal jugular/subclavian CVC).'),
+      yesNo('icu', 'ICU/CCU admission', 2.5, 'Admitted to ICU or CCU during this hospitalization.'),
+      yesNo('liver', 'Hepatic failure (INR >1.5)', 2.5, 'INR >1.5 attributed to hepatic failure (not isolated warfarin).'),
       numberInput('plt', 'Platelet count', { unit: '×10⁹/L', min: 5, max: 800, defaultValue: 200, helpText: '<50: +4' }),
-      yesNo('recentBleed', 'Bleeding in the 3 months before admission', 4),
-      yesNo('ulcer', 'Active gastroduodenal ulcer', 4.5),
+      yesNo('recentBleed', 'Bleeding in the 3 months before admission', 4, 'Any clinically significant bleed in the 3 months before this admission.'),
+      yesNo('ulcer', 'Active gastroduodenal ulcer', 4.5, 'Active gastroduodenal ulcer (not remote PUD history alone).'),
     ],
     calculate(values) {
       const age = num(values.age, 70);
@@ -701,10 +701,10 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'High anion gap metabolic acidosis to screen for coexisting NAGMA or metabolic alkalosis.',
     whyUse: 'Delta-delta (excess AG + HCO₃) reveals mixed disorders missed by AG alone.',
     inputs: [
-      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, defaultValue: 140 }),
-      numberInput('cl', 'Chloride', { unit: 'mEq/L', min: 70, max: 140, defaultValue: 100 }),
-      numberInput('hco3', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 50, defaultValue: 12 }),
-      numberInput('albumin', 'Albumin (optional)', { unit: 'g/dL', min: 1, max: 6, step: 0.1, defaultValue: 4.0, required: false }),
+      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, defaultValue: 140, helpText: 'Serum Na in mEq/L (= mmol/L).' }),
+      numberInput('cl', 'Chloride', { unit: 'mEq/L', min: 70, max: 140, defaultValue: 100, helpText: 'Serum Cl in mEq/L.' }),
+      numberInput('hco3', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 50, defaultValue: 12, helpText: 'Serum HCO₃ / total CO₂ in mEq/L.' }),
+      numberInput('albumin', 'Albumin (optional)', { unit: 'g/dL', min: 1, max: 6, step: 0.1, defaultValue: 4.0, required: false, helpText: 'If entered, AG is corrected ≈ +2.5 mEq/L per 1 g/dL albumin below 4. Leave blank to skip correction.' }),
       numberInput('normalAg', 'Assumed normal AG', { unit: 'mEq/L', min: 6, max: 16, defaultValue: 12, helpText: 'Lab-specific normal; often 10–12' }),
     ],
     calculate(values) {
@@ -781,7 +781,7 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Planning IV fluid therapy for hypo- or hypernatremia.',
     whyUse: 'Estimates ΔNa per liter to design safer correction rates and reduce ODS risk.',
     inputs: [
-      numberInput('serumNa', 'Current serum Na', { unit: 'mEq/L', min: 90, max: 190, defaultValue: 120 }),
+      numberInput('serumNa', 'Current serum Na', { unit: 'mEq/L', min: 90, max: 190, defaultValue: 120, helpText: 'Current measured serum sodium. For chronic hyponatremia typical limits are often ≤8–10 mEq/L in 24 h (stricter if high ODS risk).' }),
       numberInput('infusateNa', 'Infusate Na concentration', {
         unit: 'mEq/L',
         min: 0,
@@ -791,10 +791,10 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       }),
       numberInput('weight', 'Body weight', { unit: 'kg', min: 2, max: 300, defaultValue: 70 }),
       selectInput('tbwFactor', 'TBW fraction', [
-        { label: 'Child / young man ≈ 0.6', value: 0.6 },
-        { label: 'Young woman / elderly man ≈ 0.5', value: 0.5 },
-        { label: 'Elderly woman ≈ 0.45', value: 0.45 },
-      ]),
+        { label: 'Child / young man ≈ 0.6', value: 0.6, description: 'Total body water ≈ 0.6 × weight (child or young man)' },
+        { label: 'Young woman / elderly man ≈ 0.5', value: 0.5, description: 'TBW ≈ 0.5 × weight' },
+        { label: 'Elderly woman ≈ 0.45', value: 0.45, description: 'TBW ≈ 0.45 × weight' },
+      ], undefined, 'Adrogué–Madias TBW fraction. Use the closest demographic; actual TBW varies with obesity and cachexia.'),
       numberInput('infusateK', 'Infusate K (optional, for Na+K formula)', {
         unit: 'mEq/L',
         min: 0,
@@ -852,10 +852,10 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Educational evaluation of renal K handling in hypo/hyperkalemia when urine is concentrated.',
     whyUse: 'Classic teaching aid for mineralocorticoid effect; limited validity with modern understanding of urea and flow.',
     inputs: [
-      numberInput('uk', 'Urine potassium', { unit: 'mEq/L', min: 1, max: 200, defaultValue: 30 }),
-      numberInput('pk', 'Plasma / serum potassium', { unit: 'mEq/L', min: 1.5, max: 10, step: 0.1, defaultValue: 3.0 }),
-      numberInput('uosm', 'Urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1200, defaultValue: 400 }),
-      numberInput('posm', 'Plasma osmolality', { unit: 'mOsm/kg', min: 200, max: 400, defaultValue: 290 }),
+      numberInput('uk', 'Urine potassium', { unit: 'mEq/L', min: 1, max: 200, defaultValue: 30, helpText: 'Spot urine K. TTKG is largely historical — many experts prefer urine K/Cr.' }),
+      numberInput('pk', 'Plasma / serum potassium', { unit: 'mEq/L', min: 1.5, max: 10, step: 0.1, defaultValue: 3.0, helpText: 'Plasma/serum K in mEq/L.' }),
+      numberInput('uosm', 'Urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1200, defaultValue: 400, helpText: 'Traditional TTKG is valid only if Uosm > Posm (concentrated urine) and distal Na delivery is adequate.' }),
+      numberInput('posm', 'Plasma osmolality', { unit: 'mOsm/kg', min: 200, max: 400, defaultValue: 290, helpText: 'Measured plasma osmolality preferred (not calculated).' }),
     ],
     calculate(values) {
       const uk = num(values.uk, 30);
@@ -942,10 +942,10 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Hypomagnesemia workup when deciding renal vs GI losses.',
     whyUse: 'Accounts for protein-bound Mg (~30% bound → ultrafilterable fraction ~0.7).',
     inputs: [
-      numberInput('umg', 'Urine magnesium', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 5 }),
-      numberInput('pmg', 'Plasma / serum magnesium', { unit: 'mg/dL', min: 0.3, max: 6, step: 0.1, defaultValue: 1.2 }),
-      numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', min: 1, max: 500, defaultValue: 100 }),
-      numberInput('pcr', 'Plasma creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.0 }),
+      numberInput('umg', 'Urine magnesium', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 5, helpText: 'Use the same concentration units for urine and plasma Mg (both mg/dL here).' }),
+      numberInput('pmg', 'Plasma / serum magnesium', { unit: 'mg/dL', min: 0.3, max: 6, step: 0.1, defaultValue: 1.2, helpText: 'Formula uses 0.7 × plasma Mg as the ultrafilterable fraction (~30% protein-bound).' }),
+      numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', min: 1, max: 500, defaultValue: 100, helpText: 'Spot urine creatinine in mg/dL (same unit system as plasma Cr).' }),
+      numberInput('pcr', 'Plasma creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.0, helpText: 'Plasma creatinine in mg/dL. FEMg <2% suggests extrarenal losses; >4% renal wasting (approximate).' }),
     ],
     calculate(values) {
       const umg = num(values.umg, 5);
@@ -1017,8 +1017,8 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
         helpText: 'If baseline unknown, Sepsis-3 allows assuming baseline SOFA = 0',
         required: false,
       }),
-      numberInput('current', 'Current total SOFA', { unit: 'points', min: 0, max: 24, defaultValue: 2 }),
-      yesNo('infection', 'Suspected or documented infection', 0),
+      numberInput('current', 'Current total SOFA', { unit: 'points', min: 0, max: 24, defaultValue: 2, helpText: 'Current total SOFA (0–24) from the six organ scores. ΔSOFA ≥2 with infection supports Sepsis-3 organ dysfunction.' }),
+      yesNo('infection', 'Suspected or documented infection', 0, 'Yes if infection is suspected or documented. Sepsis-3 requires infection plus ΔSOFA ≥2.'),
     ],
     calculate(values) {
       const baselineMissing = isMissingValue(values.baseline, true);
@@ -1088,19 +1088,19 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
         { label: 'Sleeping (1)', value: 1 },
         { label: 'Irritable (2)', value: 2 },
         { label: 'Lethargic / confused or reduced pain response (3)', value: 3 },
-      ]),
+      ], 0, 'Sleeping scores 1 even if otherwise well (Monaghan). 3 = lethargic/confused or reduced pain response.'),
       selectInput('cv', 'Cardiovascular', [
         { label: 'Pink or CRT 1–2 s (0)', value: 0 },
         { label: 'Pale or CRT 3 s (1)', value: 1 },
         { label: 'Grey or CRT 4 s or tachycardia +20 from normal (2)', value: 2 },
         { label: 'Grey/mottled, CRT ≥5 s, +30 HR, or bradycardia (3)', value: 3 },
-      ]),
+      ], 0, 'CRT: press 5 s on sternum or finger. Age-normal HR (Monaghan/Brighton-style): neonate 110–160, infant 100–160, 1–3y 90–150, 4–6y 80–140, 7–12y 70–120, ≥13y 60–100. +20 / +30 is from that age-normal band.'),
       selectInput('resp', 'Respiratory', [
         { label: 'RR normal, no recession (0)', value: 0 },
         { label: 'RR >10 above normal, accessory muscles, or FiO₂ ~30% (1)', value: 1 },
         { label: 'RR >20 above normal, recession, or FiO₂ ~40% (2)', value: 2 },
         { label: 'RR ≥5 below normal with distress/grunting or FiO₂ ≥50% (3)', value: 3 },
-      ]),
+      ], 0, 'Age-normal RR: neonate 30–60, infant 30–50, toddler 25–35, preschool 20–30, school-age 18–25, adolescent 12–20. Score vs that band, not an adult RR.'),
       yesNo('oxygen', 'Receiving any supplemental oxygen (+2 in many PEWS variants)', 2),
     ],
     calculate(values) {
@@ -1162,16 +1162,16 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Patients on or considered for anticoagulation when quantifying bleeding risk factors.',
     whyUse: 'Includes prior bleed double-weighting and geriatric/comorbidity factors; highlights modifiable risks.',
     inputs: [
-      yesNo('hepaticRenal', 'Hepatic or renal disease', 1),
-      yesNo('etoh', 'Ethanol abuse', 1),
-      yesNo('malignancy', 'Malignancy', 1),
+      yesNo('hepaticRenal', 'Hepatic or renal disease', 1, 'Hepatic = cirrhosis, AST or ALP ≥2× ULN, or albumin <3.6 g/dL. Renal = CrCl <30 mL/min.'),
+      yesNo('etoh', 'Ethanol abuse', 1, 'Abuse history or recent alcohol-related admission.'),
+      yesNo('malignancy', 'Malignancy', 1, 'Recent or metastatic cancer.'),
       yesNo('older', 'Older age (> 75 years)', 1),
-      yesNo('reducedPlt', 'Reduced platelet count or function (including aspirin)', 1),
-      yesNo('rebleeding', 'Rebleeding — prior major bleed (2 points)', 2),
-      yesNo('htn', 'Hypertension (uncontrolled)', 1),
-      yesNo('anemia', 'Anemia', 1),
-      yesNo('genetic', 'Genetic factors (e.g., CYP2C9 variant) if known', 1),
-      yesNo('falls', 'Excessive fall risk', 1),
+      yesNo('reducedPlt', 'Reduced platelet count or function (including aspirin)', 1, 'Plt <75 × 10⁹/L or scheduled antiplatelet/NSAID.'),
+      yesNo('rebleeding', 'Rebleeding — prior major bleed (2 points)', 2, 'Prior hospitalization for bleeding.'),
+      yesNo('htn', 'Hypertension (uncontrolled)', 1, 'Most recent SBP >160 mmHg.'),
+      yesNo('anemia', 'Anemia', 1, 'Hct <30% or Hb <10 g/dL.'),
+      yesNo('genetic', 'Genetic factors (e.g., CYP2C9 variant) if known', 1, 'CYP2C9*2 and/or *3 if known; skip if unknown (do not guess).'),
+      yesNo('falls', 'Excessive fall risk', 1, 'Dementia, Parkinson, schizophrenia, or repeated-fall condition.'),
       yesNo('stroke', 'Stroke history', 1),
     ],
     calculate(values) {
@@ -1237,11 +1237,11 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'AF patients on oral anticoagulation for major bleeding risk estimation.',
     whyUse: 'Simple five-factor score with good calibration in ORBIT-AF; emphasizes anemia and prior bleed.',
     inputs: [
-      yesNo('older', 'Older age (≥ 75 years) — 1 point', 1),
-      yesNo('anemia', 'Reduced hemoglobin / anemia (or Hct <40 men / <36 women) — 2 points', 2),
-      yesNo('bleed', 'Bleeding history — 2 points', 2),
-      yesNo('renal', 'Insufficient kidney function (eGFR < 60 mL/min/1.73m²) — 1 point', 1),
-      yesNo('antiplt', 'Treatment with antiplatelet — 1 point', 1),
+      yesNo('older', 'Older age (≥ 75 years) — 1 point', 1, 'Age ≥75 years.'),
+      yesNo('anemia', 'Reduced hemoglobin / anemia (or Hct <40 men / <36 women) — 2 points', 2, 'Anemia or Hct <40% (men) / <36% (women) as in ORBIT-AF.'),
+      yesNo('bleed', 'Bleeding history — 2 points', 2, 'Any prior clinically significant / major bleed (GI, ICH, or other hospitalization for bleeding).'),
+      yesNo('renal', 'Insufficient kidney function (eGFR < 60 mL/min/1.73m²) — 1 point', 1, 'eGFR <60 mL/min/1.73 m².'),
+      yesNo('antiplt', 'Treatment with antiplatelet — 1 point', 1, 'Aspirin, P2Y12 inhibitor, or other antiplatelet at the time of scoring.'),
     ],
     calculate(values) {
       const score =

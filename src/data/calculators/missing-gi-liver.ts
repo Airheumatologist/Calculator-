@@ -12,9 +12,9 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'Suspected or confirmed alcoholic hepatitis to assess severity and steroid candidacy.',
     whyUse: 'DF ≥32 identifies severe AH with high short-term mortality; classically used with Lille for treatment response.',
     inputs: [
-      numberInput('pt', 'Patient prothrombin time', { unit: 'sec', min: 8, max: 120, step: 0.1, defaultValue: 18 }),
+      numberInput('pt', 'Patient prothrombin time', { unit: 'sec', min: 8, max: 120, step: 0.1, defaultValue: 18, helpText: 'Patient PT in seconds (not INR). Original Maddrey uses PT, not INR.' }),
       numberInput('ptControl', 'Control (lab reference) PT', { unit: 'sec', min: 8, max: 20, step: 0.1, defaultValue: 12, helpText: 'Use local lab control/mean normal PT' }),
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 8 }),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 8, helpText: 'mg/dL. If lab reports µmol/L, divide by 17.1.' }),
     ],
     calculate(values) {
       const pt = num(values.pt, 18);
@@ -191,7 +191,7 @@ export const missingGiLiverCalcs: Calculator[] = [
     inputs: [
       yesNo('albumin', 'Albumin < 3.0 g/dL', 1),
       yesNo('inr', 'INR > 1.5', 1),
-      yesNo('mental', 'Altered mental status', 1),
+      yesNo('mental', 'Altered mental status (GCS <14)', 1, 'Saltzman AIMS65: GCS <14 or disorientation at presentation.'),
       yesNo('sbp', 'Systolic BP ≤ 90 mmHg', 1),
       yesNo('age', 'Age > 65 years', 1),
     ],
@@ -204,8 +204,7 @@ export const missingGiLiverCalcs: Calculator[] = [
         (bool(values.age) ? 1 : 0);
       const mortApprox = ['~0.3%', '~1%', '~3%', '~9%', '~15%', '~25%+'][score];
       const r = riskFromThresholds(score, [
-        { max: 1, level: 'low', label: 'Lower mortality risk', interpretation: `AIMS65 ${score}: lower in-hospital mortality (approx ${mortApprox} in derivation cohorts). Still use GBS for intervention need.` },
-        { max: 2, level: 'moderate', label: 'Intermediate', interpretation: `AIMS65 ${score}: intermediate mortality risk (approx ${mortApprox}). Inpatient care and timely endoscopy.` },
+        { max: 1, level: 'low', label: 'Lower mortality risk', interpretation: `AIMS65 ${score}: lower in-hospital mortality (approx ${mortApprox} in derivation cohorts). Still use GBS for intervention need.` },        { max: 2, level: 'moderate', label: 'Intermediate', interpretation: `AIMS65 ${score}: intermediate mortality risk (approx ${mortApprox}). Inpatient care and timely endoscopy.` },
         { max: 5, level: 'high', label: 'High mortality risk', interpretation: `AIMS65 ${score}: high mortality risk (approx ${mortApprox}). Aggressive resuscitation; consider higher level of care.` },
       ]);
       return { score, ...r, details: [{ label: 'Approx mortality band', value: mortApprox }] };
@@ -240,7 +239,7 @@ export const missingGiLiverCalcs: Calculator[] = [
       numberInput('albumin', 'Albumin day 0', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, defaultValue: 2.5, helpText: 'Converted to g/L in formula' }),
       numberInput('bili0', 'Bilirubin day 0', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 12 }),
       numberInput('bili7', 'Bilirubin day 7', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 10 }),
-      numberInput('pt', 'Prothrombin time', { unit: 'sec', min: 8, max: 120, step: 0.1, defaultValue: 20 }),
+      numberInput('pt', 'Prothrombin time', { unit: 'sec', min: 8, max: 120, step: 0.1, defaultValue: 20, helpText: 'PT in seconds (Louvet model), not INR. Same-day as the day-0/7 bilirubin pair as specified in the original paper (typically day 0).' }),
       yesNo('renal', 'Renal insufficiency (Cr >1.3 mg/dL or renal support at day 0)', 0.023000000000000007),
     ],
     calculate(values) {
@@ -324,20 +323,18 @@ export const missingGiLiverCalcs: Calculator[] = [
     whyUse: 'Classic high-specificity criteria for poor prognosis without transplant; still widely referenced with modern refinements.',
     inputs: [
       selectInput('etiology', 'Etiology mode', [
-        { label: 'Acetaminophen (paracetamol)', value: 'apap' },
-        { label: 'Non-acetaminophen', value: 'non' },
-      ]),
-      // Shared / APAP
-      yesNo('ph', 'Arterial pH < 7.30 (after fluid resuscitation)', 1),
-      yesNo('enceph34', 'Hepatic encephalopathy grade III–IV', 0),
-      yesNo('inr65', 'INR > 6.5 (or PT > 100 sec)', 0),
-      yesNo('cr34', 'Creatinine > 3.4 mg/dL (>300 μmol/L)', 0),
-      // Non-APAP extras
-      yesNo('inr35', 'INR > 3.5 (or PT > 50 sec)', 0),
-      yesNo('bili175', 'Bilirubin > 17.5 mg/dL (>300 μmol/L)', 0),
-      yesNo('ageExtreme', 'Age <10 or >40 years', 0),
-      yesNo('unfavEtiol', 'Unfavorable etiology (idiosyncratic drug, seronegative, Wilson, Budd-Chiari, etc.)', 0),
-      yesNo('jaundiceEnceph7', 'Jaundice to encephalopathy interval > 7 days', 0),
+        { label: 'Acetaminophen (paracetamol)', value: 'apap', description: 'Uses pH <7.3 OR (INR >6.5 + Cr >3.4 + HE III–IV)' },
+        { label: 'Non-acetaminophen', value: 'non', description: 'Uses INR >6.5 alone, or ≥3 of 5 accessory factors' },
+      ], undefined, 'Switch APAP vs non-APAP first. APAP items: pH, HE III–IV, INR >6.5, Cr >3.4. Non-APAP extras: INR >3.5, bili >17.5, age <10/>40, unfavorable etiology, jaundice-to-HE >7 d. INR >6.5 is used in both pathways.'),      // Shared / APAP
+      yesNo('ph', 'Arterial pH < 7.30 (after fluid resuscitation)', 1, 'Acetaminophen pathway only. Volume-resuscitate before interpreting pH. Ignored in non-APAP mode.'),
+      yesNo('enceph34', 'Hepatic encephalopathy grade III–IV', 0, 'West Haven: III = somnolent but arousable, marked confusion, incoherent speech; IV = coma (unresponsive to verbal stimuli). Grades I–II do not count. Used in the APAP triad (with INR >6.5 and Cr >3.4).'),
+      yesNo('inr65', 'INR > 6.5 (or PT > 100 sec)', 0, 'Both pathways: APAP triad item, and standalone non-APAP listing criterion.'),
+      yesNo('cr34', 'Creatinine > 3.4 mg/dL (>300 μmol/L)', 0, 'Acetaminophen pathway only (APAP triad with INR >6.5 and grade III–IV HE). Not scored in non-APAP mode.'),
+      yesNo('inr35', 'INR > 3.5 (or PT > 50 sec)', 0, 'Non-acetaminophen pathway only — one of five accessory poor-prognosis factors (≥3 of 5, or INR >6.5 alone).'),
+      yesNo('bili175', 'Bilirubin > 17.5 mg/dL (>300 μmol/L)', 0, 'Non-acetaminophen pathway only — accessory factor.'),
+      yesNo('ageExtreme', 'Age <10 or >40 years', 0, 'Non-acetaminophen pathway only — accessory factor.'),
+      yesNo('unfavEtiol', 'Unfavorable etiology (idiosyncratic drug, seronegative, Wilson, Budd-Chiari, etc.)', 0, 'Non-acetaminophen pathway only — accessory factor (idiosyncratic drug, seronegative hepatitis, Wilson, Budd-Chiari; not HAV/HBV or pregnancy-related).'),
+      yesNo('jaundiceEnceph7', 'Jaundice to encephalopathy interval > 7 days', 0, 'Non-acetaminophen pathway only — accessory factor: time from first jaundice to onset of HE >7 days.'),
     ],
     calculate(values) {
       const mode = String(values.etiology ?? 'apap');
@@ -488,10 +485,10 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'Suspected drug-induced liver injury to characterize biochemical pattern at presentation (or peak).',
     whyUse: 'Pattern guides differential (e.g., hepatocellular vs cholestatic drugs), causality assessment, and expected course.',
     inputs: [
-      numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 10000, defaultValue: 200 }),
-      numberInput('altUln', 'ALT upper limit of normal', { unit: 'U/L', min: 10, max: 80, defaultValue: 40 }),
-      numberInput('alp', 'Alkaline phosphatase', { unit: 'U/L', min: 1, max: 5000, defaultValue: 120 }),
-      numberInput('alpUln', 'ALP upper limit of normal', { unit: 'U/L', min: 20, max: 200, defaultValue: 120 }),
+      numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 10000, defaultValue: 200, helpText: 'Use the same time point as ALP (recognition or peak).' }),
+      numberInput('altUln', 'ALT upper limit of normal', { unit: 'U/L', min: 10, max: 80, defaultValue: 40, helpText: 'Local lab ULN, same assay as the ALT entered.' }),
+      numberInput('alp', 'Alkaline phosphatase', { unit: 'U/L', min: 1, max: 5000, defaultValue: 120, helpText: 'Same time point as ALT.' }),
+      numberInput('alpUln', 'ALP upper limit of normal', { unit: 'U/L', min: 20, max: 200, defaultValue: 120, helpText: 'Local lab ULN, same assay as the ALP entered.' }),
     ],
     calculate(values) {
       const alt = num(values.alt, 200);
@@ -556,14 +553,20 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'During or after endoscopy for bleeding peptic ulcer to describe stigmata and guide therapy/disposition.',
     whyUse: 'Standardizes rebleeding risk communication and need for endoscopic hemostasis / high-dose PPI.',
     inputs: [
-      selectInput('grade', 'Forrest grade', [
-        { label: 'Ia — Spurting arterial hemorrhage', value: 'Ia', description: 'Active spurting' },
-        { label: 'Ib — Oozing hemorrhage', value: 'Ib', description: 'Active oozing' },
-        { label: 'IIa — Nonbleeding visible vessel', value: 'IIa' },
-        { label: 'IIb — Adherent clot', value: 'IIb' },
-        { label: 'IIc — Flat pigmented spot', value: 'IIc' },
-        { label: 'III — Clean ulcer base', value: 'III' },
-      ]),
+      selectInput(
+        'grade',
+        'Forrest grade',
+        [
+          { label: 'Ia — Spurting arterial hemorrhage', value: 'Ia', description: 'Active pulsatile/spurting arterial bleeding from the ulcer' },
+          { label: 'Ib — Oozing hemorrhage', value: 'Ib', description: 'Active non-pulsatile oozing from the ulcer' },
+          { label: 'IIa — Nonbleeding visible vessel', value: 'IIa', description: 'Protuberant pigmented (sentinel) vessel, not actively bleeding' },
+          { label: 'IIb — Adherent clot', value: 'IIb', description: 'Adherent clot remaining after gentle washing; not easily washed off' },
+          { label: 'IIc — Flat pigmented spot', value: 'IIc', description: 'Flat pigmented red or black spot in the ulcer base; not raised' },
+          { label: 'III — Clean ulcer base', value: 'III', description: 'Clean ulcer base, no stigmata of recent hemorrhage' },
+        ],
+        undefined,
+        'Grade after gentle irrigation of the ulcer. IIb = clot that remains adherent after washing; if washing reveals a vessel or active bleed, score the underlying stigma (IIa/Ia/Ib).',
+      ),
     ],
     calculate(values) {
       const g = String(values.grade ?? 'III');
@@ -648,12 +651,22 @@ export const missingGiLiverCalcs: Calculator[] = [
     whyUse: 'Revised Atlanta (2012) is the consensus clinical severity framework guiding intensity of care.',
     inputs: [
       selectInput('organFailure', 'Organ failure (respiratory, cardiovascular, or renal per modified Marshall)', [
-        { label: 'None', value: 'none' },
-        { label: 'Transient (<48 hours)', value: 'transient' },
-        { label: 'Persistent (≥48 hours)', value: 'persistent' },
-      ]),
-      yesNo('localComp', 'Local complications (acute peripancreatic fluid, necrosis, pseudocyst, walled-off necrosis, etc.)'),
-      yesNo('systemicComp', 'Systemic complications (exacerbation of comorbidity, e.g., CAD, COPD)'),
+        { label: 'None', value: 'none', description: 'No modified Marshall ≥2 in respiratory, CV, or renal systems' },
+        { label: 'Transient (<48 hours)', value: 'transient', description: 'Organ failure present but resolved within 48 h' },
+        { label: 'Persistent (≥48 hours)', value: 'persistent', description: 'Organ failure lasting ≥48 h (defines severe AP)' },
+      ], undefined, 'Organ failure = modified Marshall ≥2 in any system: respiratory PaO₂/FiO₂ <300; renal creatinine ≥1.9 mg/dL (≥170 µmol/L); CV SBP <90 mmHg not fluid-responsive (off inotropes). Estimate FiO₂ for non-ventilated patients; interpret creatinine against CKD baseline. Transient <48 h; persistent ≥48 h.'),
+      yesNo(
+        'localComp',
+        'Local complications (acute peripancreatic fluid, necrosis, pseudocyst, walled-off necrosis, etc.)',
+        1,
+        'Revised Atlanta local complications: APFC, acute necrotic collection, pancreatic pseudocyst, or walled-off necrosis. Usually diagnosed on contrast CT ≥72 h. Does not by itself make severe AP (needs persistent organ failure).',
+      ),
+      yesNo(
+        'systemicComp',
+        'Systemic complications (exacerbation of comorbidity, e.g., CAD, COPD)',
+        1,
+        'Exacerbation of a pre-existing comorbidity precipitated by pancreatitis (e.g., CAD, COPD, HF) that is not organ failure by modified Marshall. Together with transient OF or local complications defines moderately severe AP.',
+      ),
     ],
     calculate(values) {
       const of = String(values.organFailure ?? 'none');
@@ -710,30 +723,30 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'Suspected appendicitis to stratify low vs high probability and guide imaging/surgery.',
     whyUse: 'Incorporates graded peritonitis and CRP; often better calibrated than Alvarado in validations.',
     inputs: [
-      yesNo('vomiting', 'Vomiting', 1),
-      yesNo('rlqPain', 'Pain in right inferior fossa', 1),
+      yesNo('vomiting', 'Vomiting', 1, 'Any vomiting (not nausea alone).'),
+      yesNo('rlqPain', 'Pain in right inferior fossa', 1, 'Pain localized to the right iliac fossa / RLQ (not just migration).'),
       selectInput('rebound', 'Rebound tenderness / muscular defense', [
-        { label: 'None (0)', value: 0 },
-        { label: 'Light (1)', value: 1 },
-        { label: 'Medium (2)', value: 2 },
-        { label: 'Strong (3)', value: 3 },
-      ]),
+        { label: 'None (0)', value: 0, description: 'No rebound and no guarding' },
+        { label: 'Light (1)', value: 1, description: 'Grimace or localized tenderness on release; mild guarding' },
+        { label: 'Medium (2)', value: 2, description: 'Obvious guarding, still examinable' },
+        { label: 'Strong (3)', value: 3, description: 'Board-like or generalized defense; cannot tolerate palpation' },
+      ], undefined, 'Press slowly in the right iliac fossa then release, or grade muscular defense. Light = grimace/localized; medium = obvious guarding, still examinable; strong = board-like/generalized, cannot tolerate palpation.'),
       yesNo('temp', 'Body temperature ≥38.5°C', 1),
       selectInput('pmn', 'Polymorphonuclear leukocytes', [
-        { label: '<70% (0)', value: 0 },
-        { label: '70–84% (1)', value: 1 },
-        { label: '≥85% (2)', value: 2 },
-      ]),
+        { label: '<70% (0)', value: 0, description: 'Neutrophil percentage of WBC <70%' },
+        { label: '70–84% (1)', value: 1, description: 'Neutrophils 70–84% of WBC' },
+        { label: '≥85% (2)', value: 2, description: 'Neutrophils ≥85% of WBC' },
+      ], undefined, 'Differential: % neutrophils (PMN) of the total WBC, not the absolute neutrophil count.'),
       selectInput('wbc', 'WBC count', [
-        { label: '<10 ×10⁹/L (0)', value: 0 },
-        { label: '10–14.9 ×10⁹/L (1)', value: 1 },
-        { label: '≥15 ×10⁹/L (2)', value: 2 },
+        { label: '<10 ×10⁹/L (0)', value: 0, description: 'WBC <10 ×10⁹/L (10,000/µL)' },
+        { label: '10–14.9 ×10⁹/L (1)', value: 1, description: 'WBC 10.0–14.9 ×10⁹/L' },
+        { label: '≥15 ×10⁹/L (2)', value: 2, description: 'WBC ≥15 ×10⁹/L (15,000/µL)' },
       ]),
       selectInput('crp', 'CRP', [
-        { label: '<10 mg/L (0)', value: 0 },
-        { label: '10–49 mg/L (1)', value: 1 },
-        { label: '≥50 mg/L (2)', value: 2 },
-      ]),
+        { label: '<10 mg/L (0)', value: 0, description: 'CRP <10 mg/L' },
+        { label: '10–49 mg/L (1)', value: 1, description: 'CRP 10–49 mg/L' },
+        { label: '≥50 mg/L (2)', value: 2, description: 'CRP ≥50 mg/L' },
+      ], undefined, 'CRP in mg/L (not mg/dL). If the lab reports mg/dL, multiply by 10.'),
     ],
     calculate(values) {
       const score =
@@ -806,14 +819,14 @@ export const missingGiLiverCalcs: Calculator[] = [
         { label: '<48 hours (1.0)', value: 1 },
         { label: '≥48 hours (0.5)', value: 0.5 },
       ]),
-      yesNo('rlqTender', 'RLQ tenderness', 1),
-      yesNo('guarding', 'Guarding', 2),
-      yesNo('rebound', 'Rebound tenderness', 1),
-      yesNo('rovsing', "Rovsing's sign", 2),
-      yesNo('fever', 'Fever ≥37.5°C (or >37°C per local RIPASA variant)', 1),
-      yesNo('wbc', 'Raised WBC', 1),
-      yesNo('negUA', 'Negative urinalysis', 1),
-      yesNo('foreign', 'Foreign national (original score context)', 1),
+      yesNo('rlqTender', 'RLQ tenderness', 1, 'Tenderness on palpation of the right lower quadrant / McBurney region.'),
+      yesNo('guarding', 'Guarding', 2, 'Involuntary abdominal wall muscle contraction over the RLQ (not voluntary tensing).'),
+      yesNo('rebound', 'Rebound tenderness', 1, 'Pain on sudden release of RLQ palpation (Blumberg). Distinct from Rovsing (LLQ press → RLQ pain).'),
+      yesNo('rovsing', "Rovsing's sign", 2, 'Press deeply in the left lower quadrant; positive if pain is referred to the right lower quadrant.'),
+      yesNo('fever', 'Fever ≥37.5°C (or >37°C per local RIPASA variant)', 1, 'Original RIPASA often used a 37–39°C band. Pick the local convention (≥37.5°C is the label default; some sites score >37°C).'),
+      yesNo('wbc', 'Raised WBC', 1, 'WBC >10 ×10⁹/L (10,000/µL).'),
+      yesNo('negUA', 'Negative urinalysis', 1, 'No RBCs, WBCs, or bacteria/nitrites on urinalysis (helps exclude UTI/stone as the pain source).'),
+      yesNo('foreign', 'Foreign national (original score context)', 1, '+1 only in the original Brunei/Singapore derivation context. Otherwise score No.'),
     ],
     calculate(values) {
       const score = round(
@@ -888,7 +901,7 @@ export const missingGiLiverCalcs: Calculator[] = [
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 50 }),
       numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 70, step: 0.1, defaultValue: 32 }),
-      yesNo('ifg', 'Impaired fasting glucose or diabetes', 1.1300000000000001),
+      yesNo('ifg', 'Impaired fasting glucose or diabetes', 1.1300000000000001, 'Yes if known diabetes or IFG. Original Angulo NFS: fasting glucose ≥110 mg/dL (6.1 mmol/L). ADA later IFG ≥100 mg/dL — use the local definition; diabetes always Yes.'),
       numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, defaultValue: 45 }),
       numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 2000, defaultValue: 50 }),
       numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 1000, defaultValue: 220 }),
@@ -902,8 +915,7 @@ export const missingGiLiverCalcs: Calculator[] = [
       const alt = Math.max(num(values.alt, 50), 0.01);
       const plt = num(values.plt, 220);
       const albumin = num(values.albumin, 4);
-      const nfs = round(
-        -1.675 + 0.037 * age + 0.094 * bmi + 1.13 * ifg + 0.99 * (ast / alt) - 0.013 * plt - 0.66 * albumin,
+      const nfs = round(        -1.675 + 0.037 * age + 0.094 * bmi + 1.13 * ifg + 0.99 * (ast / alt) - 0.013 * plt - 0.66 * albumin,
         3
       );
 
@@ -960,7 +972,7 @@ export const missingGiLiverCalcs: Calculator[] = [
       numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 40, step: 0.1, defaultValue: 1.5 }),
       numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, defaultValue: 80 }),
       numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, defaultValue: 3.8 }),
-      yesNo('variceal', 'History of variceal bleeding', 1.24),
+      yesNo('variceal', 'History of variceal bleeding', 1.24, 'Any prior esophageal or gastric variceal bleed (not just varices on imaging).'),
     ],
     calculate(values) {
       const age = num(values.age, 40);
@@ -1030,7 +1042,7 @@ export const missingGiLiverCalcs: Calculator[] = [
       yesNo('pao2', 'PaO₂ < 60 mmHg (<8 kPa)'),
       yesNo('calcium', 'Serum calcium < 2.0 mmol/L (<8 mg/dL)'),
       yesNo('albumin', 'Albumin < 32 g/L (<3.2 g/dL)'),
-      yesNo('ldh', 'LDH > 600 IU/L (or AST >200 U/L in some versions)'),
+      yesNo('ldh', 'LDH > 600 IU/L', 1, 'Modified Glasgow-Imrie (Blamey 8-factor) uses LDH >600 IU/L. Do not score AST here. Original 9-factor Imrie listed AST >200 U/L as a separate item.'),
     ],
     calculate(values) {
       const keys = ['age', 'wbc', 'glucose', 'urea', 'pao2', 'calcium', 'albumin', 'ldh'] as const;
