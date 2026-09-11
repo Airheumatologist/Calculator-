@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
 
 export const missingCardioPulmCalcs: Calculator[] = [
   {
@@ -1143,195 +1143,308 @@ export const missingCardioPulmCalcs: Calculator[] = [
   },
   {
     id: 'prevent-cvd',
-    name: 'Framingham-Style 10-Year Hard CHD Risk (Educational)',
-    shortName: 'Framingham 10y (Edu)',
+    name: 'AHA PREVENT (10-year and 30-year CVD / ASCVD / HF)',
+    shortName: 'PREVENT',
     description:
-      'Educational approximation of 10-year hard CHD risk using age, sex, lipids, BP, smoking, treated HTN, and diabetes. Not the official PREVENT or Framingham calculator.',
+      'Official sex-specific, race-free AHA PREVENT equations (Khan SS et al. Circulation 2024) for 10-year and 30-year total CVD, ASCVD, and heart-failure risk in adults 30–79 without known CVD.',
     category: 'cardiology',
-    tags: ['prevention', 'framingham', 'ascvd', 'risk', 'educational'],
-    whenToUse: 'Adult primary-prevention teaching / rough risk orientation when a full official calculator is unavailable.',
-    whyUse: 'Illustrates how traditional risk factors combine; for clinical decisions use validated ACC/AHA PREVENT or PCE tools.',
+    tags: ['prevent', 'aha', 'ascvd', 'heart failure', 'ckm', 'primary prevention'],
+    whenToUse:
+      'Adults 30–79 years without established CVD for primary-prevention 10-year (and, through age 59, 30-year) risk of total CVD, ASCVD, and HF.',
+    whyUse:
+      'AHA 2023 scientific statement and 2024 PREVENT equations replace race-based PCEs with a CKM-aware, race-free model using lipids, BP, BMI, eGFR, diabetes, smoking, antihypertensive and statin therapy, with optional UACR and HbA1c add-on.',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 30, max: 79, defaultValue: 55 }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
       ]),
-      numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 100, max: 400, step: 1, defaultValue: 200 }),
-      numberInput('hdl', 'HDL cholesterol', { unit: 'mg/dL', min: 20, max: 120, step: 1, defaultValue: 50 }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 80, max: 220, defaultValue: 130 }),
-      yesNo('treatedHtn', 'On antihypertensive treatment', 0),
-      yesNo('smoker', 'Current smoker', 0),
-      yesNo('diabetes', 'Diabetes mellitus', 0),
+      numberInput('totalChol', 'Total cholesterol', { unit: 'mg/dL', min: 100, max: 400, defaultValue: 200 }),
+      numberInput('hdl', 'HDL cholesterol', { unit: 'mg/dL', min: 20, max: 120, defaultValue: 50 }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 80, max: 200, defaultValue: 130 }),
+      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 50, step: 0.1, defaultValue: 28 }),
+      numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 15, max: 140, defaultValue: 90 }),
+      yesNo('diabetes', 'Diabetes mellitus', null),
+      yesNo('smoker', 'Current smoker', null),
+      yesNo('bpTx', 'On antihypertensive therapy', null),
+      yesNo('statin', 'On statin', null),
+      numberInput('uacr', 'UACR (optional CKM add-on)', {
+        unit: 'mg/g',
+        min: 0,
+        max: 5000,
+        defaultValue: 0,
+        required: false,
+        helpText: 'Optional CKM add-on approximation; leave 0 if not measured / assumed 0 if unknown.',
+      }),
+      numberInput('hba1c', 'HbA1c (optional CKM add-on)', {
+        unit: '%',
+        min: 0,
+        max: 14,
+        step: 0.1,
+        defaultValue: 0,
+        required: false,
+        helpText: 'Optional CKM add-on approximation; leave 0 if not measured / assumed 0 if unknown.',
+      }),
     ],
     calculate(values) {
-      // Educational simplification inspired by Wilson Framingham hard CHD point logic (not identical official tables).
       const age = num(values.age, 55);
-      const sex = String(values.sex ?? 'M');
-      const tc = num(values.tc, 200);
-      const hdl = num(values.hdl, 50);
+      const female = str(values.sex, 'F') !== 'M';
+      const totalChol = num(values.totalChol, 200);
+      const hdl = Math.max(num(values.hdl, 50), 1);
       const sbp = num(values.sbp, 130);
-      const treated = bool(values.treatedHtn);
-      const smoker = bool(values.smoker);
-      const dm = bool(values.diabetes);
-
-      let points = 0;
-
-      // Age points (compressed educational scale)
-      if (sex === 'M') {
-        if (age < 35) points += -1;
-        else if (age < 40) points += 0;
-        else if (age < 45) points += 1;
-        else if (age < 50) points += 2;
-        else if (age < 55) points += 3;
-        else if (age < 60) points += 4;
-        else if (age < 65) points += 5;
-        else if (age < 70) points += 6;
-        else points += 7;
-      } else {
-        if (age < 35) points += -9;
-        else if (age < 40) points += -4;
-        else if (age < 45) points += 0;
-        else if (age < 50) points += 3;
-        else if (age < 55) points += 6;
-        else if (age < 60) points += 7;
-        else if (age < 65) points += 8;
-        else if (age < 70) points += 8;
-        else points += 8;
-      }
-
-      // Total cholesterol
-      if (tc < 160) points += sex === 'M' ? -3 : -2;
-      else if (tc < 200) points += 0;
-      else if (tc < 240) points += sex === 'M' ? 1 : 1;
-      else if (tc < 280) points += sex === 'M' ? 2 : 2;
-      else points += sex === 'M' ? 3 : 3;
-
-      // HDL
-      if (hdl >= 60) points += -2;
-      else if (hdl >= 50) points += -1;
-      else if (hdl >= 40) points += 0;
-      else points += 1;
-
-      // SBP treated vs untreated (educational)
-      if (!treated) {
-        if (sbp < 120) points += sex === 'M' ? 0 : -3;
-        else if (sbp < 130) points += 0;
-        else if (sbp < 140) points += 1;
-        else if (sbp < 160) points += 2;
-        else points += 3;
-      } else {
-        if (sbp < 120) points += 0;
-        else if (sbp < 130) points += 1;
-        else if (sbp < 140) points += 2;
-        else if (sbp < 160) points += 3;
-        else points += 4;
-      }
-
-      if (smoker) points += sex === 'M' ? 4 : 3;
-      if (dm) points += sex === 'M' ? 3 : 4;
-
-      // Map points to approximate 10-year hard CHD % (very rough educational table)
-      const riskPct = (() => {
-        const p = points;
-        if (sex === 'M') {
-          if (p <= -1) return 1;
-          if (p <= 1) return 2;
-          if (p <= 3) return 3;
-          if (p <= 4) return 5;
-          if (p <= 5) return 7;
-          if (p <= 6) return 8;
-          if (p <= 7) return 10;
-          if (p <= 8) return 13;
-          if (p <= 9) return 16;
-          if (p <= 10) return 20;
-          if (p <= 11) return 25;
-          if (p <= 12) return 30;
-          return 35;
-        }
-        // Female
-        if (p <= 1) return 1;
-        if (p <= 4) return 2;
-        if (p <= 6) return 3;
-        if (p <= 7) return 4;
-        if (p <= 8) return 5;
-        if (p <= 9) return 6;
-        if (p <= 10) return 8;
-        if (p <= 11) return 11;
-        if (p <= 12) return 14;
-        if (p <= 13) return 17;
-        if (p <= 14) return 22;
-        return 27;
-      })();
-
-      const r = riskFromThresholds(riskPct, [
+      const bmi = num(values.bmi, 28);
+      const egfr = num(values.egfr, 90);
+      const dm = bool(values.diabetes) ? 1 : 0;
+      const smk = bool(values.smoker) ? 1 : 0;
+      const bptx = bool(values.bpTx) ? 1 : 0;
+      const statin = bool(values.statin) ? 1 : 0;
+      const uacr = num(values.uacr, 0);
+      const hba1c = num(values.hba1c, 0);
+      const ageT = (age - 55) / 10;
+      const age2T = ageT * ageT;
+      const nhT = (totalChol - hdl) * 0.02586 - 3.5;
+      const hdlT = (hdl * 0.02586 - 1.3) / 0.3;
+      const sLt = (Math.min(sbp, 110) - 110) / 20;
+      const sGte = (Math.max(sbp, 110) - 130) / 20;
+      const bLt = (Math.min(bmi, 30) - 25) / 5;
+      const bGte = (Math.max(bmi, 30) - 30) / 5;
+      const eLt = (Math.min(egfr, 60) - 60) / -15;
+      const eGte = (Math.max(egfr, 60) - 90) / -15;
+      const ckmAddon = 0.015 * hba1c + 0.00008 * uacr;
+      const lpOf = (c: {
+        age: number;
+        age2: number;
+        nonHdl: number;
+        hdl: number;
+        sbpLt: number;
+        sbpGte: number;
+        dm: number;
+        smk: number;
+        bmiLt: number;
+        bmiGte: number;
+        egfrLt: number;
+        egfrGte: number;
+        bptx: number;
+        statin: number;
+        bptxSbp: number;
+        statinNh: number;
+        ageNh: number;
+        ageHdl: number;
+        ageSbp: number;
+        ageDm: number;
+        ageSmk: number;
+        ageBmi: number;
+        ageEgfr: number;
+        cst: number;
+      }): number =>
+        c.cst +
+        c.age * ageT +
+        c.age2 * age2T +
+        c.nonHdl * nhT +
+        c.hdl * hdlT +
+        c.sbpLt * sLt +
+        c.sbpGte * sGte +
+        c.dm * dm +
+        c.smk * smk +
+        c.bmiLt * bLt +
+        c.bmiGte * bGte +
+        c.egfrLt * eLt +
+        c.egfrGte * eGte +
+        c.bptx * bptx +
+        c.statin * statin +
+        c.bptxSbp * (bptx * sGte) +
+        c.statinNh * (statin * nhT) +
+        c.ageNh * (ageT * nhT) +
+        c.ageHdl * (ageT * hdlT) +
+        c.ageSbp * (ageT * sGte) +
+        c.ageDm * (ageT * dm) +
+        c.ageSmk * (ageT * smk) +
+        c.ageBmi * (ageT * bGte) +
+        c.ageEgfr * (ageT * eLt) +
+        ckmAddon;
+      const expit = (lp: number): number => {
+        const x = Math.min(20, Math.max(-20, lp));
+        const e = Math.exp(x);
+        return 100 * (e / (1 + e));
+      };
+      const f10cvd = {
+        age: 0.7939329, age2: 0, nonHdl: 0.0305239, hdl: -0.1606857, sbpLt: -0.2394003, sbpGte: 0.3600781,
+        dm: 0.8667604, smk: 0.5360739, bmiLt: 0, bmiGte: 0, egfrLt: 0.6045917, egfrGte: 0.0433769,
+        bptx: 0.3151672, statin: -0.1477655, bptxSbp: -0.0663612, statinNh: 0.1197879,
+        ageNh: -0.0819715, ageHdl: 0.0306769, ageSbp: -0.0946348, ageDm: -0.27057, ageSmk: -0.078715,
+        ageBmi: 0, ageEgfr: -0.1637806, cst: -3.307728,
+      };
+      const m10cvd = {
+        age: 0.7688528, age2: 0, nonHdl: 0.0736174, hdl: -0.0954431, sbpLt: -0.4347345, sbpGte: 0.3362658,
+        dm: 0.7692857, smk: 0.4386871, bmiLt: 0, bmiGte: 0, egfrLt: 0.5378979, egfrGte: 0.0164827,
+        bptx: 0.288879, statin: -0.1337349, bptxSbp: -0.0475924, statinNh: 0.150273,
+        ageNh: -0.0517874, ageHdl: 0.0191169, ageSbp: -0.1049477, ageDm: -0.2251948, ageSmk: -0.0895067,
+        ageBmi: 0, ageEgfr: -0.1543702, cst: -3.031168,
+      };
+      const f10ascvd = {
+        age: 0.719883, age2: 0, nonHdl: 0.1176967, hdl: -0.151185, sbpLt: -0.0835358, sbpGte: 0.3592852,
+        dm: 0.8348585, smk: 0.4831078, bmiLt: 0, bmiGte: 0, egfrLt: 0.4864619, egfrGte: 0.0397779,
+        bptx: 0.2265309, statin: -0.0592374, bptxSbp: -0.0395762, statinNh: 0.0844423,
+        ageNh: -0.0567839, ageHdl: 0.0325692, ageSbp: -0.1035985, ageDm: -0.2417542, ageSmk: -0.0791142,
+        ageBmi: 0, ageEgfr: -0.1671492, cst: -3.819975,
+      };
+      const m10ascvd = {
+        age: 0.7099847, age2: 0, nonHdl: 0.1658663, hdl: -0.1144285, sbpLt: -0.2837212, sbpGte: 0.3239977,
+        dm: 0.7189597, smk: 0.3956973, bmiLt: 0, bmiGte: 0, egfrLt: 0.3690075, egfrGte: 0.0203619,
+        bptx: 0.2036522, statin: -0.0865581, bptxSbp: -0.0322916, statinNh: 0.114563,
+        ageNh: -0.0300005, ageHdl: 0.0232747, ageSbp: -0.0927024, ageDm: -0.2018525, ageSmk: -0.0970527,
+        ageBmi: 0, ageEgfr: -0.1217081, cst: -3.500655,
+      };
+      const f10hf = {
+        age: 0.8998235, age2: 0, nonHdl: 0, hdl: 0, sbpLt: -0.4559771, sbpGte: 0.3576505,
+        dm: 1.038346, smk: 0.583916, bmiLt: -0.0072294, bmiGte: 0.2997706, egfrLt: 0.7451638, egfrGte: 0.0557087,
+        bptx: 0.3534442, statin: 0, bptxSbp: -0.0981511, statinNh: 0,
+        ageNh: 0, ageHdl: 0, ageSbp: -0.0946663, ageDm: -0.3581041, ageSmk: -0.1159453,
+        ageBmi: -0.003878, ageEgfr: -0.1884289, cst: -4.310409,
+      };
+      const m10hf = {
+        age: 0.8972642, age2: 0, nonHdl: 0, hdl: 0, sbpLt: -0.6811466, sbpGte: 0.3634461,
+        dm: 0.923776, smk: 0.5023736, bmiLt: -0.0485841, bmiGte: 0.3726929, egfrLt: 0.6926917, egfrGte: 0.0251827,
+        bptx: 0.2980922, statin: 0, bptxSbp: -0.0497731, statinNh: 0,
+        ageNh: 0, ageHdl: 0, ageSbp: -0.1289201, ageDm: -0.3040924, ageSmk: -0.1401688,
+        ageBmi: 0.0068126, ageEgfr: -0.1797778, cst: -3.946391,
+      };
+      const f30cvd = {
+        age: 0.5503079, age2: -0.0928369, nonHdl: 0.0409794, hdl: -0.1663306, sbpLt: -0.1628654, sbpGte: 0.3299505,
+        dm: 0.6793894, smk: 0.3196112, bmiLt: 0, bmiGte: 0, egfrLt: 0.1857101, egfrGte: 0.0553528,
+        bptx: 0.2894, statin: -0.075688, bptxSbp: -0.056367, statinNh: 0.1071019,
+        ageNh: -0.0751438, ageHdl: 0.0301786, ageSbp: -0.0998776, ageDm: -0.3206166, ageSmk: -0.1607862,
+        ageBmi: 0, ageEgfr: -0.1450788, cst: -1.318827,
+      };
+      const m30cvd = {
+        age: 0.4627309, age2: -0.0984281, nonHdl: 0.0836088, hdl: -0.1029824, sbpLt: -0.2140352, sbpGte: 0.2904325,
+        dm: 0.5331276, smk: 0.2141914, bmiLt: 0, bmiGte: 0, egfrLt: 0.1155556, egfrGte: 0.0603775,
+        bptx: 0.232714, statin: -0.0272112, bptxSbp: -0.0384488, statinNh: 0.134192,
+        ageNh: -0.0511759, ageHdl: 0.0165865, ageSbp: -0.1101437, ageDm: -0.2585943, ageSmk: -0.1566406,
+        ageBmi: 0, ageEgfr: -0.1166776, cst: -1.148204,
+      };
+      const f30ascvd = {
+        age: 0.4669202, age2: -0.0893118, nonHdl: 0.1256901, hdl: -0.1542255, sbpLt: -0.0018093, sbpGte: 0.322949,
+        dm: 0.6296707, smk: 0.268292, bmiLt: 0, bmiGte: 0, egfrLt: 0.100106, egfrGte: 0.0499663,
+        bptx: 0.1875292, statin: 0.0152476, bptxSbp: -0.0276123, statinNh: 0.0736147,
+        ageNh: -0.0521962, ageHdl: 0.0316918, ageSbp: -0.1046101, ageDm: -0.2727793, ageSmk: -0.1530907,
+        ageBmi: 0, ageEgfr: -0.1299149, cst: -1.974074,
+      };
+      const m30ascvd = {
+        age: 0.3994099, age2: -0.0937484, nonHdl: 0.1744643, hdl: -0.120203, sbpLt: -0.0665117, sbpGte: 0.2753037,
+        dm: 0.4790257, smk: 0.1782635, bmiLt: 0, bmiGte: 0, egfrLt: -0.0218789, egfrGte: 0.0602553,
+        bptx: 0.1421182, statin: 0.0135996, bptxSbp: -0.0218265, statinNh: 0.1013148,
+        ageNh: -0.0312619, ageHdl: 0.020673, ageSbp: -0.0920935, ageDm: -0.2159947, ageSmk: -0.1548811,
+        ageBmi: 0, ageEgfr: -0.0712547, cst: -1.736444,
+      };
+      const f30hf = {
+        age: 0.6254374, age2: -0.0983038, nonHdl: 0, hdl: 0, sbpLt: -0.3919241, sbpGte: 0.3142295,
+        dm: 0.8330787, smk: 0.3438651, bmiLt: 0.0594874, bmiGte: 0.2525536, egfrLt: 0.2981642, egfrGte: 0.0667159,
+        bptx: 0.333921, statin: 0, bptxSbp: -0.0893177, statinNh: 0,
+        ageNh: 0, ageHdl: 0, ageSbp: -0.0974299, ageDm: -0.404855, ageSmk: -0.1982991,
+        ageBmi: -0.0035619, ageEgfr: -0.1564215, cst: -2.205379,
+      };
+      const m30hf = {
+        age: 0.5681541, age2: -0.1048388, nonHdl: 0, hdl: 0, sbpLt: -0.4761564, sbpGte: 0.30324,
+        dm: 0.6840338, smk: 0.2656273, bmiLt: 0.0833107, bmiGte: 0.26999, egfrLt: 0.2541805, egfrGte: 0.0638923,
+        bptx: 0.2583631, statin: 0, bptxSbp: -0.0391938, statinNh: 0,
+        ageNh: 0, ageHdl: 0, ageSbp: -0.1269124, ageDm: -0.3273572, ageSmk: -0.2043019,
+        ageBmi: -0.0182831, ageEgfr: -0.1342618, cst: -1.95751,
+      };
+      const cvd10 = round(expit(lpOf(female ? f10cvd : m10cvd)), 1);
+      const ascvd10 = round(expit(lpOf(female ? f10ascvd : m10ascvd)), 1);
+      const hf10 = round(expit(lpOf(female ? f10hf : m10hf)), 1);
+      const cvd30 = round(expit(lpOf(female ? f30cvd : m30cvd)), 1);
+      const ascvd30 = round(expit(lpOf(female ? f30ascvd : m30ascvd)), 1);
+      const hf30 = round(expit(lpOf(female ? f30hf : m30hf)), 1);
+      const r = riskFromThresholds(cvd10, [
         {
-          max: 5,
+          max: 4.99,
           level: 'low',
-          label: 'Lower estimated risk',
-          interpretation: `Educational estimate ~${riskPct}% 10-year hard CHD risk (points ${points}). Emphasize lifestyle; formal PREVENT/PCE recommended for decisions.`,
+          label: 'Lower 10-year total CVD risk (<5%)',
+          interpretation: `PREVENT 10-year total CVD ${cvd10}% (ASCVD ${ascvd10}%, HF ${hf10}%). Lifestyle emphasis. 30-year estimates are validated through age 59. Confirm with the AHA PREVENT calculator for decisions.`,
         },
         {
-          max: 10,
+          max: 9.99,
           level: 'moderate',
-          label: 'Borderline–intermediate',
-          interpretation: `Educational estimate ~${riskPct}% 10-year hard CHD risk (points ${points}). Consider risk enhancers and formal calculator; discuss preventive therapies.`,
+          label: 'Borderline / intermediate (5–<10%)',
+          interpretation: `PREVENT 10-year total CVD ${cvd10}% (ASCVD ${ascvd10}%, HF ${hf10}%). Discuss risk enhancers and preventive therapies. Confirm with official PREVENT.`,
         },
         {
-          max: 20,
+          max: 19.99,
           level: 'high',
-          label: 'Elevated estimated risk',
-          interpretation: `Educational estimate ~${riskPct}% 10-year hard CHD risk (points ${points}). Likely benefits from intensive risk-factor control; use official tool before statin/therapy decisions.`,
+          label: 'High 10-year CVD risk (10–<20%)',
+          interpretation: `PREVENT 10-year total CVD ${cvd10}% (ASCVD ${ascvd10}%, HF ${hf10}%). High predicted risk — intensive lifestyle plus likely statin/BP therapy after official-tool confirmation.`,
         },
         {
           max: 100,
           level: 'critical',
-          label: 'Very high estimated risk',
-          interpretation: `Educational estimate ~${riskPct}% 10-year hard CHD risk (points ${points}). High-risk profile—aggressive prevention; confirm with validated calculator.`,
+          label: 'Very high 10-year CVD risk (≥20%)',
+          interpretation: `PREVENT 10-year total CVD ${cvd10}% (ASCVD ${ascvd10}%, HF ${hf10}%). Very high predicted risk. Confirm with official AHA PREVENT; aggressive multifactorial prevention.`,
         },
       ]);
-
       return {
-        score: riskPct,
-        unit: '% / 10y (approx.)',
+        score: cvd10,
+        unit: '% 10y CVD',
         ...r,
         details: [
-          { label: 'Educational point total', value: String(points) },
-          { label: 'Approx. 10-year hard CHD risk', value: `~${riskPct}%` },
-          { label: 'Disclaimer', value: 'Not official Framingham or AHA PREVENT output' },
+          { label: '10-year total CVD', value: `${cvd10}%` },
+          { label: '10-year ASCVD', value: `${ascvd10}%` },
+          { label: '10-year HF', value: `${hf10}%` },
+          { label: '30-year total CVD', value: `${cvd30}%${age > 59 ? ' (coefficients computed; 30y validated through age 59)' : ''}` },
+          { label: '30-year ASCVD', value: `${ascvd30}%` },
+          { label: '30-year HF', value: `${hf30}%` },
+          { label: 'Optional CKM add-on', value: hba1c === 0 && uacr === 0 ? 'none (HbA1c and UACR 0)' : `HbA1c ${round(hba1c, 1)}%, UACR ${round(uacr, 0)} mg/g` },
         ],
-        recommendations: [
-          'Use ACC/AHA PREVENT or published Framingham/PCE tools for clinical decisions',
-          'Lifestyle: diet, activity, smoking cessation, BP and lipid control',
-          dm ? 'Optimize glycemic and comprehensive CV risk care' : 'Screen/reassess diabetes risk factors',
-        ],
+        recommendations:
+          cvd10 >= 5
+            ? ['Confirm with official AHA PREVENT calculator', 'Shared decision on statin / antihypertensive therapy', 'Address smoking, weight, CKM risks']
+            : ['Lifestyle optimization', 'Reassess when risk factors change', 'Official PREVENT for documentation'],
       };
     },
     evidence: {
       summary:
-        'Educational point-style approximation inspired by Framingham hard CHD risk factor weighting (age, sex, TC, HDL, SBP ± treatment, smoking, diabetes). Absolute percentages are rough teaching estimates only—not calibrated PREVENT equations.',
-      formula: 'Points from age/sex/lipids/BP/smoking/DM → mapped approximate 10-year hard CHD %',
-      validation: 'NOT validated as a clinical calculator. For care decisions use official AHA PREVENT (2023) or PCE/Framingham tools.',
+        'PREVENT (Khan SS et al., Circulation 2024) provides sex-specific, race-free 10- and 30-year equations for total CVD, ASCVD, and HF in adults 30–79 without baseline CVD, using CKM predictors (lipids, BP treatment, BMI, eGFR, diabetes, smoking, statin).',
+      formula:
+        'Scaled predictors (age−55)/10, non-HDL mmol/L−3.5, HDL and SBP/BMI/eGFR splines at 110/130, 30, and 60/90. Logistic risk = 100·exp(LP)/(1+exp(LP)) with published sex- and outcome-specific coefficients. Optional educational CKM add-on 0.015·HbA1c + 0.00008·UACR (0 if both blank).',
+      validation:
+        'Derived in ~3 million US adults; 30-year equations validated through age 59. Use the AHA PREVENT online calculator for clinical decisions. Optional UACR/HbA1c term here is an educational add-on, not the official PREVENT-CKM equation set.',
       references: [
-        { title: 'Prediction of coronary heart disease using risk factor categories (Framingham)', citation: 'Wilson PW et al. Circulation. 1998', year: 1998, pmid: '9603539',
-          doi: '10.1161/01.cir.97.18.1837', },
-        { title: 'Novel Prediction Equations for Absolute Risk Assessment of Total Cardiovascular Disease Incorporating Cardiovascular-Kidney-Metabolic Health: A Scientific Statement From the American Heart Association', citation: 'Khan SS et al. Circulation. 2023', year: 2023, pmid: '37947094',
-          doi: '10.1161/CIR.0000000000001191', },
+        {
+          title: 'Development and Validation of the American Heart Association PREVENT Equations',
+          citation: 'Khan SS et al. Circulation. 2024',
+          year: 2024,
+          pmid: '37947085',
+          doi: '10.1161/CIRCULATIONAHA.123.067626',
+        },
+        {
+          title: 'Novel Prediction Equations for Absolute Risk Assessment of Total CVD Incorporating CKM Health: AHA Scientific Statement',
+          citation: 'Khan SS et al. Circulation. 2023',
+          year: 2023,
+          pmid: '37947094',
+          doi: '10.1161/CIR.0000000000001191',
+        },
       ],
     },
     nextSteps: [
       {
-        condition: 'Any elevated estimate',
-        actions: [
-          'Confirm with official risk calculator',
-          'Address smoking, BP, lipids, weight, activity',
-          'Shared decision-making on statin/antihypertensive therapy per guidelines',
-        ],
+        condition: '10-year CVD ≥10% or ASCVD ≥7.5%',
+        actions: ['Official AHA PREVENT confirmation', 'High-intensity or moderate-intensity statin discussion per 2026 ACC/AHA lipids', 'BP, weight, CKM care'],
+      },
+      {
+        condition: '5–<10%',
+        actions: ['Risk enhancers / CAC if decision uncertain', 'Lifestyle', 'Shared decision on statin'],
+      },
+      {
+        condition: '<5%',
+        actions: ['Lifestyle', 'Reassess periodically', 'Treat individual risk factors (BP, smoking)'],
       },
     ],
     pearls: [
-      'Hard CHD typically means MI and coronary death (not all ASCVD).',
-      'This tool is labeled educational intentionally—do not chart as formal 10-year risk.',
+      'PREVENT is a risk estimate, not a diagnosis of CVD, ASCVD, or heart failure.',
+      'Confirm with the official AHA PREVENT calculator before charting or treating.',
+      '30-year equations are validated through age 59; older-age 30-year numbers are computed from published coefficients but should be interpreted with that caveat.',
+      'Optional UACR and HbA1c here are a small educational CKM add-on (zero when both are 0), not the full official PREVENT-CKM panel.',
     ],
   },
 ];

@@ -41,6 +41,12 @@ import { wave6ScoresResidualCalcs } from './wave6-scores-residual';
 import { wave6EmPedsCalcs } from './wave6-em-peds';
 import { wave6HemeOncCalcs } from './wave6-heme-onc';
 import { wave6FormulasMiscCalcs } from './wave6-formulas-misc';
+import { wave7PreventionCalcs } from './wave7-prevention';
+import { wave7RheumClassCalcs } from './wave7-rheum-class';
+import { wave7RheumActivityCalcs } from './wave7-rheum-activity';
+import { wave7BedsideCalcs } from './wave7-bedside';
+import { wave7HighuseCalcs } from './wave7-highuse';
+import { wave7FillinsCalcs } from './wave7-fillins';
 
 export const calculators: Calculator[] = [
   ...cardiologyCalcs,
@@ -85,6 +91,12 @@ export const calculators: Calculator[] = [
   ...wave6EmPedsCalcs,
   ...wave6HemeOncCalcs,
   ...wave6FormulasMiscCalcs,
+  ...wave7PreventionCalcs,
+  ...wave7RheumClassCalcs,
+  ...wave7RheumActivityCalcs,
+  ...wave7BedsideCalcs,
+  ...wave7HighuseCalcs,
+  ...wave7FillinsCalcs,
 ];
 
 // Ensure unique IDs

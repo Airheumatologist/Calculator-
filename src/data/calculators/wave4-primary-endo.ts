@@ -1451,17 +1451,17 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
     pearls: ['Measure 25-OH D, not 1,25-OH D, for routine status.', 'Obesity and malabsorption need higher repletion doses.'],
   },
 
-  // ─── 15. FRAX simplified (educational) ─────────────────────────────────────
+  // ─── 15. FRAX clinical risk-factor checklist (licensing-safe) ───────────────
   {
     id: 'frax-simp',
-    name: 'FRAX-Style Major Risk Factor Checklist (Educational)',
-    shortName: 'FRAX-simp',
+    name: 'FRAX Clinical Risk Factor Checklist (use official FRAX for probabilities)',
+    shortName: 'FRAX checklist',
     description:
-      'Educational count of major clinical osteoporosis fracture risk factors inspired by FRAX inputs — NOT the official FRAX calculator or probabilities.',
+      'Bedside tally of major FRAX-style clinical osteoporosis fracture risk factors. Does NOT compute 10-year fracture probabilities — use the official FRAX tool at https://frax.shef.ac.uk/FRAX/.',
     category: 'endocrinology',
-    tags: ['osteoporosis', 'frax', 'fracture', 'bone', 'educational'],
-    whenToUse: 'Quick bedside tally of clinical risk factors before formal FRAX or densitometry decisions.',
-    whyUse: 'Highlights who needs DXA, fall prevention, and treatment discussion. Does not replace official FRAX tool.',
+    tags: ['osteoporosis', 'frax', 'fracture', 'bone', 'checklist'],
+    whenToUse: 'Quick bedside tally of clinical risk factors before opening official FRAX or deciding on densitometry.',
+    whyUse: 'Highlights who needs DXA, fall prevention, and treatment discussion. Official FRAX (Sheffield) is required for 10-year major osteoporotic and hip fracture probabilities.',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 40, max: 100, defaultValue: 65 }),
       selectInput('sex', 'Sex', [
@@ -1515,25 +1515,24 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
           factors.push(lab);
         }
       }
-      // Weight prior fracture and steroids more for interpretation only
       const r = riskFromThresholds(score, [
         {
           max: 1,
           level: 'low',
           label: 'Few major factors',
-          interpretation: `Educational factor count ${score}. Few FRAX-style clinical risks flagged — still follow age-based screening guidelines. NOT an official fracture probability.`,
+          interpretation: `Clinical risk-factor count ${score}. Few FRAX-style clinical risks flagged — still follow age-based screening guidelines. This is NOT a 10-year fracture probability. Open official FRAX at https://frax.shef.ac.uk/FRAX/.`,
         },
         {
           max: 3,
           level: 'moderate',
           label: 'Several risk factors',
-          interpretation: `Educational factor count ${score}. Multiple clinical risks — obtain formal FRAX (with/without BMD) and consider DXA if not done.`,
+          interpretation: `Clinical risk-factor count ${score}. Multiple clinical risks — obtain DXA if not done and compute official 10-year probabilities. Open official FRAX at https://frax.shef.ac.uk/FRAX/.`,
         },
         {
           max: 20,
           level: 'high',
           label: 'Many risk factors',
-          interpretation: `Educational factor count ${score}. Substantial clinical risk burden — prioritize DXA, fall assessment, and treatment evaluation. Use official FRAX website/tool for 10-year probabilities.`,
+          interpretation: `Clinical risk-factor count ${score}. Substantial clinical risk burden — prioritize DXA, fall assessment, and treatment evaluation. Do not invent a fracture probability from this count. Open official FRAX at https://frax.shef.ac.uk/FRAX/.`,
         },
       ]);
       const interpretation = bmiMissing
@@ -1548,9 +1547,10 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         details: [
           { label: 'Factors flagged', value: factors.length ? factors.join('; ') : 'None' },
           ...(bmiMissing ? [{ label: 'BMI <20 flag', value: 'Not assessed — BMI not entered' }] : []),
+          { label: 'Official FRAX', value: 'https://frax.shef.ac.uk/FRAX/' },
         ],
         recommendations: [
-          'Use official FRAX at sheffield.ac.uk/FRAX for probabilities',
+          'Open official FRAX at https://frax.shef.ac.uk/FRAX/ for 10-year major osteoporotic and hip fracture probabilities',
           'DXA when indicated by age/guidelines/risks',
           'Calcium, vitamin D, exercise, fall prevention',
         ],
@@ -1558,9 +1558,9 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Official FRAX estimates 10-year major osteoporotic and hip fracture probabilities from age, sex, BMI, clinical risks, and optional BMD. This tool only tallies educational factors.',
-      formula: 'Count of selected major clinical risk factors (not FRAX algorithm)',
-      validation: 'Educational only — not calibrated to fracture probability.',
+        'Official FRAX estimates 10-year major osteoporotic and hip fracture probabilities from age, sex, BMI, clinical risks, and optional BMD, using licensed country-specific models. This tool only tallies clinical risk factors and never reports a fracture probability.',
+      formula: 'Count of selected major clinical risk factors (not the FRAX algorithm)',
+      validation: 'Checklist only — not calibrated to fracture probability. Use https://frax.shef.ac.uk/FRAX/.',
       references: [
         {
           title: 'FRAX and the assessment of fracture probability in men and women from the UK',
@@ -1568,15 +1568,17 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
           year: 2008,
           pmid: '18292978',
           doi: '10.1007/s00198-007-0543-5',
+          url: 'https://frax.shef.ac.uk/FRAX/',
         },
       ],
     },
     nextSteps: [
-      { condition: '≥2–3 factors or age-eligible', actions: ['Official FRAX', 'DXA', 'Treat if high risk / osteoporosis'] },
+      { condition: 'Always', actions: ['Open official FRAX at https://frax.shef.ac.uk/FRAX/', 'Enter age, sex, BMI, clinical risks, and optional femoral-neck BMD'] },
+      { condition: '≥2–3 factors or age-eligible', actions: ['Open official FRAX', 'DXA', 'Treat if osteoporosis or if official FRAX exceeds guideline thresholds'] },
     ],
     pearls: [
       'Prior fracture and high-dose steroids are among the strongest clinical risks.',
-      'This is NOT official FRAX output — do not use for treatment thresholds alone.',
+      'This checklist does not compute FRAX probabilities — the algorithm is licensed. Always open https://frax.shef.ac.uk/FRAX/.',
     ],
   },
 

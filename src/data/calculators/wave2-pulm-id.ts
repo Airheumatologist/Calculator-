@@ -1056,111 +1056,75 @@ export const wave2PulmIdCalcs: Calculator[] = [
   },
   {
     id: 'saps-ii-simp',
-    name: 'SAPS II (Simplified Educational)',
-    shortName: 'SAPS II≈',
-    description: 'Educational simplification of SAPS II major components for ICU severity estimation.',
+    name: 'SAPS II',
+    shortName: 'SAPS II',
+    description:
+      'Simplified Acute Physiology Score II (Le Gall 1993): official variable bands from the first 24 hours plus chronic disease and admission type. Outputs points and logistic hospital-mortality estimate.',
     category: 'critical-care',
-    tags: ['saps', 'icu', 'severity', 'mortality', 'educational'],
-    whenToUse: 'Teaching/approximate ICU severity when full SAPS II calculator is unavailable.',
-    whyUse: 'SAPS II is a classic admission severity score; this version captures major drivers only.',
+    tags: ['saps', 'saps ii', 'icu', 'severity', 'mortality'],
+    whenToUse: 'Adult ICU patients for admission-day severity and estimated hospital mortality (worst values in first 24 h).',
+    whyUse: 'Classic, widely validated ICU score. Prefer institutional APACHE/SAPS software for official benchmarking.',
     inputs: [
-      selectInput('age', 'Age points', [
-        { label: '< 40 (0)', value: 0 },
-        { label: '40–59 (7)', value: 7 },
-        { label: '60–69 (12)', value: 12 },
-        { label: '70–74 (15)', value: 15 },
-        { label: '75–79 (16)', value: 16 },
-        { label: '≥ 80 (18)', value: 18 },
+      numberInput('age', 'Age', { unit: 'years', min: 16, max: 110, defaultValue: 65, helpText: '<40: 0; 40–59: 7; 60–69: 12; 70–74: 15; 75–79: 16; ≥80: 18' }),
+      numberInput('hr', 'Heart rate (worst 24 h)', { unit: '/min', min: 20, max: 220, defaultValue: 90, helpText: '<40: 11; 40–69: 2; 70–119: 0; 120–159: 4; ≥160: 7' }),
+      numberInput('sbp', 'Systolic BP (worst 24 h)', { unit: 'mmHg', min: 40, max: 250, defaultValue: 120, helpText: '<70: 13; 70–99: 5; 100–199: 0; ≥200: 2' }),
+      numberInput('temp', 'Temperature (worst 24 h)', { unit: '°C', min: 32, max: 42, step: 0.1, defaultValue: 37, helpText: '≥39 °C: 3' }),
+      numberInput('gcs', 'Worst GCS', { min: 3, max: 15, defaultValue: 15, helpText: '14–15: 0; 11–13: 5; 9–10: 7; 6–8: 13; <6: 26' }),
+      selectInput('vent', 'Ventilated or CPAP', [
+        { label: 'Not ventilated', value: 'none' },
+        { label: 'Ventilated / CPAP', value: 'vent' },
       ]),
-      selectInput('hr', 'Heart rate', [
-        { label: '70–119 (0)', value: 0 },
-        { label: '40–69 or 120–159 (2–4 ≈3)', value: 3 },
-        { label: '≥ 160 or < 40 (4–11 ≈7)', value: 7 },
-      ]),
-      selectInput('sbp', 'Systolic BP', [
-        { label: '100–199 (0)', value: 0 },
-        { label: '≥ 200 (2)', value: 2 },
-        { label: '70–99 (5)', value: 5 },
-        { label: '< 70 (13)', value: 13 },
-      ]),
-      selectInput('temp', 'Temperature', [
-        { label: '< 39°C (0)', value: 0 },
-        { label: '≥ 39°C (3)', value: 3 },
-      ]),
-      selectInput('gcs', 'GCS points (SAPS weighting)', [
-        { label: '14–15 (0)', value: 0 },
-        { label: '11–13 (5)', value: 5 },
-        { label: '9–10 (7)', value: 7 },
-        { label: '6–8 (13)', value: 13 },
-        { label: '< 6 (26)', value: 26 },
-      ]),
-      selectInput('pao2fio2', 'PaO₂/FiO₂ if ventilated', [
-        { label: 'Not ventilated (0)', value: 0 },
-        { label: '≥ 200 (6)', value: 6 },
-        { label: '100–199 (9)', value: 9 },
-        { label: '< 100 (11)', value: 11 },
-      ]),
-      selectInput('bun', 'BUN / urea', [
-        { label: 'BUN < 28 mg/dL (0)', value: 0 },
-        { label: 'BUN 28–83 (6)', value: 6 },
-        { label: 'BUN ≥ 84 (10)', value: 10 },
-      ]),
-      selectInput('wbc', 'WBC', [
-        { label: '1–19.9 ×10³ (0)', value: 0 },
-        { label: '≥ 20 (3)', value: 3 },
-        { label: '< 1 (12)', value: 12 },
-      ]),
-      selectInput('k', 'Potassium', [
-        { label: '3.0–4.9 (0)', value: 0 },
-        { label: '± mild derangement (≈3)', value: 3 },
-        { label: '< 3.0 or ≥ 5.0 severe band (≈3–5)', value: 5 },
-      ]),
-      selectInput('na', 'Sodium', [
-        { label: '125–144 (0)', value: 0 },
-        { label: '≥ 145 (1)', value: 1 },
-        { label: '< 125 (5)', value: 5 },
-      ]),
-      selectInput('hco3', 'HCO₃', [
-        { label: '≥ 20 (0)', value: 0 },
-        { label: '15–19 (3)', value: 3 },
-        { label: '< 15 (6)', value: 6 },
-      ]),
-      selectInput('bili', 'Bilirubin', [
-        { label: '< 4.0 mg/dL (0)', value: 0 },
-        { label: '4.0–5.9 (4)', value: 4 },
-        { label: '≥ 6.0 (9)', value: 9 },
-      ]),
+      numberInput('pao2fio2', 'PaO₂/FiO₂ (if ventilated/CPAP)', { unit: 'mmHg', min: 40, max: 600, defaultValue: 300, helpText: '<100: 11; 100–199: 9; ≥200: 6; ignored if not ventilated' }),
+      numberInput('uop', 'Urine output', { unit: 'L/24 h', min: 0, max: 10, step: 0.1, defaultValue: 1.5, helpText: '<0.5 L: 11; 0.5–0.999: 4; ≥1.0: 0' }),
+      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 3, max: 200, defaultValue: 18, helpText: '<28: 0; 28–83: 6; ≥84: 10' }),
+      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 80, step: 0.1, defaultValue: 10, helpText: '<1.0: 12; 1.0–19.9: 0; ≥20: 3' }),
+      numberInput('k', 'Potassium', { unit: 'mmol/L', min: 1.5, max: 8, step: 0.1, defaultValue: 4.0, helpText: '<3.0 or ≥5.0: 3' }),
+      numberInput('na', 'Sodium', { unit: 'mmol/L', min: 110, max: 170, defaultValue: 140, helpText: '<125: 5; 125–144: 0; ≥145: 1' }),
+      numberInput('hco3', 'HCO₃', { unit: 'mmol/L', min: 5, max: 45, defaultValue: 24, helpText: '<15: 6; 15–19: 3; ≥20: 0' }),
+      numberInput('bili', 'Bilirubin', { unit: 'mg/dL', min: 0.1, max: 30, step: 0.1, defaultValue: 0.8, helpText: '<4.0: 0; 4.0–5.9: 4; ≥6.0: 9' }),
       selectInput('chronic', 'Chronic disease', [
-        { label: 'None (0)', value: 0 },
-        { label: 'Metastatic cancer (9)', value: 9 },
-        { label: 'Hematologic malignancy (10)', value: 10 },
-        { label: 'AIDS (17)', value: 17 },
+        { label: 'None (0)', value: 0, points: 0 },
+        { label: 'Metastatic cancer (9)', value: 9, points: 9 },
+        { label: 'Hematologic malignancy (10)', value: 10, points: 10 },
+        { label: 'AIDS (17)', value: 17, points: 17 },
       ]),
       selectInput('admit', 'Type of admission', [
-        { label: 'Scheduled surgical (0)', value: 0 },
-        { label: 'Medical (6)', value: 6 },
-        { label: 'Unscheduled surgical (8)', value: 8 },
+        { label: 'Scheduled surgical (0)', value: 0, points: 0 },
+        { label: 'Medical (6)', value: 6, points: 6 },
+        { label: 'Unscheduled surgical (8)', value: 8, points: 8 },
       ]),
     ],
     calculate(values) {
-      const keys = [
-        'age',
-        'hr',
-        'sbp',
-        'temp',
-        'gcs',
-        'pao2fio2',
-        'bun',
-        'wbc',
-        'k',
-        'na',
-        'hco3',
-        'bili',
-        'chronic',
-        'admit',
-      ];
-      const score = keys.reduce((s, k) => s + num(values[k]), 0);
-      // Educational logit approximation only — not full published equation precision
+      const age = num(values.age, 65);
+      const agePts = age < 40 ? 0 : age < 60 ? 7 : age < 70 ? 12 : age < 75 ? 15 : age < 80 ? 16 : 18;
+      const hr = num(values.hr, 90);
+      const hrPts = hr < 40 ? 11 : hr < 70 ? 2 : hr < 120 ? 0 : hr < 160 ? 4 : 7;
+      const sbp = num(values.sbp, 120);
+      const sbpPts = sbp < 70 ? 13 : sbp < 100 ? 5 : sbp < 200 ? 0 : 2;
+      const tempPts = num(values.temp, 37) >= 39 ? 3 : 0;
+      const gcs = num(values.gcs, 15);
+      const gcsPts = gcs < 6 ? 26 : gcs < 9 ? 13 : gcs < 11 ? 7 : gcs < 14 ? 5 : 0;
+      const vented = String(values.vent ?? 'none') === 'vent';
+      const pf = num(values.pao2fio2, 300);
+      const oxPts = !vented ? 0 : pf < 100 ? 11 : pf < 200 ? 9 : 6;
+      const uop = num(values.uop, 1.5);
+      const uopPts = uop < 0.5 ? 11 : uop < 1 ? 4 : 0;
+      const bun = num(values.bun, 18);
+      const bunPts = bun >= 84 ? 10 : bun >= 28 ? 6 : 0;
+      const wbc = num(values.wbc, 10);
+      const wbcPts = wbc < 1 ? 12 : wbc >= 20 ? 3 : 0;
+      const k = num(values.k, 4);
+      const kPts = k < 3 || k >= 5 ? 3 : 0;
+      const na = num(values.na, 140);
+      const naPts = na < 125 ? 5 : na >= 145 ? 1 : 0;
+      const hco3 = num(values.hco3, 24);
+      const hco3Pts = hco3 < 15 ? 6 : hco3 < 20 ? 3 : 0;
+      const bili = num(values.bili, 0.8);
+      const biliPts = bili >= 6 ? 9 : bili >= 4 ? 4 : 0;
+      const chronicPts = num(values.chronic, 0);
+      const admitPts = num(values.admit, 0);
+      const score =
+        agePts + hrPts + sbpPts + tempPts + gcsPts + oxPts + uopPts + bunPts + wbcPts + kPts + naPts + hco3Pts + biliPts + chronicPts + admitPts;
       const logit = -7.7631 + 0.0737 * score + 0.9971 * Math.log(score + 1);
       const prob = round((Math.exp(logit) / (1 + Math.exp(logit))) * 100, 1);
       const r = riskFromThresholds(score, [
@@ -1168,40 +1132,43 @@ export const wave2PulmIdCalcs: Calculator[] = [
           max: 29,
           level: 'low',
           label: 'Lower severity',
-          interpretation: `Educational SAPS II≈ ${score}. Approximate hospital mortality ~${prob}% (rough logit estimate — not for formal benchmarking).`,
+          interpretation: `SAPS II ${score} points. Estimated hospital mortality ≈ ${prob}% (Le Gall logistic).`,
         },
         {
           max: 40,
           level: 'moderate',
           label: 'Moderate severity',
-          interpretation: `Educational SAPS II≈ ${score}. Approximate mortality ~${prob}%. Full SAPS II preferred for research/benchmarking.`,
+          interpretation: `SAPS II ${score} points. Estimated hospital mortality ≈ ${prob}%.`,
         },
         {
           max: 52,
           level: 'high',
           label: 'High severity',
-          interpretation: `Educational SAPS II≈ ${score}. Approximate mortality ~${prob}%. High illness burden.`,
+          interpretation: `SAPS II ${score} points. Estimated hospital mortality ≈ ${prob}%. High illness burden.`,
         },
         {
           max: 200,
           level: 'critical',
           label: 'Very high severity',
-          interpretation: `Educational SAPS II≈ ${score}. Approximate mortality ~${prob}%. Critical illness; confirm with full SAPS II if needed.`,
+          interpretation: `SAPS II ${score} points. Estimated hospital mortality ≈ ${prob}%. Critical illness; do not use a single score for futility.`,
         },
       ]);
       return {
         score,
+        unit: 'points',
         ...r,
         details: [
-          { label: 'Approx. mortality (educational)', value: `${prob}%` },
-          { label: 'Note', value: 'Simplified inputs — not a full SAPS II implementation' },
+          { label: 'Estimated hospital mortality', value: `${prob}%` },
+          { label: 'Age / GCS / chronic / admit', value: `${agePts} / ${gcsPts} / ${chronicPts} / ${admitPts}` },
+          { label: 'Ox / UOP / BUN', value: `${oxPts} / ${uopPts} / ${bunPts}` },
         ],
       };
     },
     evidence: {
-      summary: 'SAPS II predicts hospital mortality from ICU admission physiology, age, chronic disease, and admission type.',
-      formula: 'Weighted points → logistic equation (educational approximation here)',
-      validation: 'Original SAPS II widely validated; this app version uses coarse bands for teaching only.',
+      summary:
+        'SAPS II (Le Gall JAMA 1993) assigns published points for age, HR, SBP, temperature, GCS, PaO₂/FiO₂ if ventilated, urine output, BUN, WBC, K, Na, HCO₃, bilirubin, chronic disease (AIDS 17 / heme 10 / metastatic 9), and admission type (medical 6 / unscheduled surgical 8). Logistic: logit = −7.7631 + 0.0737×score + 0.9971×ln(score+1).',
+      formula: 'Points from official bands; p = exp(logit)/(1+exp(logit))',
+      validation: 'Original SAPS II derived in 13 152 ICU patients (Europe/North America). Widely validated; worst values in the first 24 h.',
       references: [
         {
           title: 'A new Simplified Acute Physiology Score (SAPS II) based on a European/North American multicenter study',
@@ -1215,7 +1182,11 @@ export const wave2PulmIdCalcs: Calculator[] = [
     nextSteps: [
       { condition: 'High score', actions: ['ICU-level care', 'Use formal SAPS II/APACHE software for benchmarking', 'Reassess goals of care'] },
     ],
-    pearls: ['Do not use this simplified tool for official quality reporting.', 'Worst values in first 24 h are used in full SAPS II.'],
+    pearls: [
+      'PaO₂/FiO₂ points apply only if the patient is ventilated or on CPAP.',
+      'Original SAPS II uses the worst value in the first 24 hours.',
+      'Chronic disease: score only the single highest-weighted condition.',
+    ],
   },
   {
     id: 'lods',

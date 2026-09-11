@@ -2,8 +2,8 @@
 
 <!-- GENERATED FILE. Do not edit by hand. Regenerate with: npm run audit:evidence -->
 
-Generated: 2026-09-10T13:56:05.979Z
-Source: `src/data/calculators/*.ts` (42 files, sha256 `a33cb8b7f1a886d6…`)
+Generated: 2026-09-10T23:54:37.184Z
+Source: `src/data/calculators/*.ts` (48 files, sha256 `c4f0585a02e4f255…`)
 
 This file and `refs-inventory.json` are the only authoritative evidence-audit
 outputs in this repository. Both come from the same parser
@@ -14,18 +14,18 @@ outputs in this repository. Both come from the same parser
 
 | Metric | Count |
 |--------|------:|
-| Calculator source files | 42 |
-| Calculators with references | 918 |
-| Total references | 982 |
-| With PMID | 838 (85.3%) |
-| Unique PMIDs | 725 |
-| With DOI | 762 (77.6%) |
-| Unique DOIs | 662 |
-| With direct URL | 153 |
+| Calculator source files | 48 |
+| Calculators with references | 1003 |
+| Total references | 1091 |
+| With PMID | 947 (86.8%) |
+| Unique PMIDs | 822 |
+| With DOI | 865 (79.3%) |
+| Unique DOIs | 754 |
+| With direct URL | 154 |
 | URL only (no PMID, no DOI) | 141 |
 | Without a PMID | 144 |
-| PMID without DOI | 79 |
-| With at least one identifier or link | 982 (100%) |
+| PMID without DOI | 85 |
+| With at least one identifier or link | 1091 (100%) |
 | Without any identifier or link | 0 |
 
 ## References per source file
@@ -60,7 +60,7 @@ outputs in this repository. Both come from the same parser
 | `wave4-formulas.ts` | 25 |
 | `wave4-heme-onc.ts` | 24 |
 | `wave4-icu-vent.ts` | 26 |
-| `wave4-neuro-psych.ts` | 24 |
+| `wave4-neuro-psych.ts` | 25 |
 | `wave4-primary-endo.ts` | 28 |
 | `wave5-cardio.ts` | 26 |
 | `wave5-general-misc.ts` | 27 |
@@ -72,8 +72,14 @@ outputs in this repository. Both come from the same parser
 | `wave6-em-peds.ts` | 30 |
 | `wave6-formulas-misc.ts` | 25 |
 | `wave6-heme-onc.ts` | 26 |
-| `wave6-psych-sleep.ts` | 25 |
+| `wave6-psych-sleep.ts` | 26 |
 | `wave6-scores-residual.ts` | 25 |
+| `wave7-bedside.ts` | 17 |
+| `wave7-fillins.ts` | 14 |
+| `wave7-highuse.ts` | 17 |
+| `wave7-prevention.ts` | 11 |
+| `wave7-rheum-activity.ts` | 27 |
+| `wave7-rheum-class.ts` | 21 |
 
 ## Notes
 

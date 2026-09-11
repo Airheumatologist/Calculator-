@@ -11,6 +11,7 @@ const DATA_FAMILIES = [
   'wave4',
   'wave5',
   'wave6',
+  'wave7',
   'missing',
 ] as const
 

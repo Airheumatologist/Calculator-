@@ -450,13 +450,13 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
   // ─── 5. MELD 3.0 educational ───────────────────────────────────────────────
   {
     id: 'meld-3-edu',
-    name: 'MELD 3.0 (Educational)',
+    name: 'MELD 3.0 (UNOS/OPTN)',
     shortName: 'MELD 3.0',
     description:
-      'Educational MELD 3.0 estimate incorporating sex and albumin (plus bilirubin, INR, creatinine, sodium). Not an allocation API.',
+      'MELD 3.0 (Kim 2021) incorporating sex and albumin plus bilirubin, INR, creatinine, and sodium. Labs and timing must match the transplant-center/OPTN calculator for listing.',
     category: 'gastroenterology',
     tags: ['meld', 'meld 3.0', 'transplant', 'cirrhosis', 'prognosis', 'albumin'],
-    whenToUse: 'Adult chronic liver disease prognosis education when labs for MELD 3.0 components are available.',
+    whenToUse: 'Adult chronic liver disease prognosis and transplant-risk discussion when labs for MELD 3.0 components are available.',
     whyUse: 'MELD 3.0 improves mortality prediction vs MELD-Na and addresses sex disparity with a female coefficient and albumin.',
     inputs: [
       numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 2.0 }),
@@ -468,7 +468,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
       ]),
-      yesNo('dialysis', 'Dialysis ≥2× in past week (or continuous RRT)', 8),
+      yesNo('dialysis', 'Dialysis ≥2× in past week (or continuous RRT)', null),
     ],
     calculate(values) {
       let bili = Math.max(num(values.bili, 2), 1);
@@ -532,7 +532,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
           { label: 'Albumin used', value: `${round(alb, 1)} g/dL (bound 1.5–3.5)` },
         ],
         recommendations: [
-          'Educational estimate — confirm with official OPTN/center calculators for listing',
+          'Confirm with the official OPTN/transplant-center calculator for listing — labs, units, and draw timing must match their policy',
           'Labs in mg/dL and g/dL; convert SI units first',
         ],
       };
@@ -542,7 +542,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         'MELD 3.0 = 1.33(if ♀) + 4.56 ln(bili) + 0.82(137−Na) − 0.24(137−Na)ln(bili) + 9.09 ln(INR) + 11.14 ln(Cr) + 1.85(3.5−alb) − 1.83(3.5−alb)ln(Cr) + 6; bounds on labs; score scaled ~6–40.',
       formula:
         'MELD3.0 = 1.33♀ + 4.56ln(Bili) + 0.82(137−Na) − 0.24(137−Na)ln(Bili) + 9.09ln(INR) + 11.14ln(Cr) + 1.85(3.5−Alb) − 1.83(3.5−Alb)ln(Cr) + 6',
-      validation: 'Kim et al. Gastroenterology 2021; adopted in US allocation updates. This tool is educational only.',
+      validation: 'Kim et al. Gastroenterology 2021; adopted in US allocation updates. Listing decisions must use the transplant-center/OPTN calculator.',
       references: [
         {
           title: 'MELD 3.0: The Model for End-Stage Liver Disease Updated for the Modern Era',
@@ -560,6 +560,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     pearls: [
       'Creatinine cap is 3.0 in MELD 3.0 (not 4.0 as in older MELD).',
       'Albumin and female sex are the major structural additions vs MELD-Na.',
+      'Listing uses the transplant-center/OPTN calculator; labs must match their units and timing.',
     ],
   },
 

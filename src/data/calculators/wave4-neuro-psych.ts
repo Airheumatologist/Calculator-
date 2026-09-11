@@ -1,5 +1,32 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
+import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
+
+function gdsReverse(id: string, n: number, question: string) {
+  return selectInput(
+    id,
+    `${n}. ${question}`,
+    [
+      { label: 'Yes', value: 'yes', points: 0 },
+      { label: 'No', value: 'no', points: 1 },
+    ],
+    'yes',
+  );
+}
+function gdsForward(id: string, n: number, question: string) {
+  return selectInput(
+    id,
+    `${n}. ${question}`,
+    [
+      { label: 'No', value: 'no', points: 0 },
+      { label: 'Yes', value: 'yes', points: 1 },
+    ],
+    'no',
+  );
+}
+function gdsPoints(v: string | number | boolean | null | undefined, reverse: boolean): number {
+  const s = str(v, reverse ? 'yes' : 'no');
+  return reverse ? (s === 'no' ? 1 : 0) : s === 'yes' ? 1 : 0;
+}
 
 export const wave4NeuroPsychCalcs: Calculator[] = [
   {
@@ -1487,83 +1514,113 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
 
   {
     id: 'gds-15',
-    name: 'Geriatric Depression Scale (GDS-15)',
+    name: 'Geriatric Depression Scale-15 (GDS-15)',
     shortName: 'GDS-15',
-    description: '15-item Geriatric Depression Scale total interpreter (0–15).',
-    category: 'psychiatry',
-    tags: ['gds', 'depression', 'geriatrics', 'screening'],
-    whenToUse: 'Depression screening in older adults when GDS-15 total is available.',
-    whyUse: 'Yes/no format well tolerated in elderly; validated cutoffs for mild to severe depression ranges.',
+    description:
+      '15-item Yesavage short-form depression screen for older adults. Five items are reverse-scored (No = 1). Score 0–15.',
+    category: 'geriatrics',
+    tags: ['gds', 'depression', 'geriatrics', 'screening', 'yesavage'],
+    whenToUse: 'Screening for depressive symptoms in adults typically ≥60 years, including those with mild cognitive impairment.',
+    whyUse: 'Brief yes/no format avoids somatic items that confound depression screening in medically ill older adults. Score ≥5 warrants further evaluation.',
     inputs: [
-      numberInput('score', 'GDS-15 total (0–15)', {
-        min: 0,
-        max: 15,
-        defaultValue: 4,
-        helpText: 'Sum of 15 yes/no items (scoring keys differ by item direction)',
-      }),
+      gdsReverse('gds1', 1, 'Are you basically satisfied with your life?'),
+      gdsForward('gds2', 2, 'Have you dropped many of your activities and interests?'),
+      gdsForward('gds3', 3, 'Do you feel that your life is empty?'),
+      gdsForward('gds4', 4, 'Do you often get bored?'),
+      gdsReverse('gds5', 5, 'Are you in good spirits most of the time?'),
+      gdsForward('gds6', 6, 'Are you afraid that something bad is going to happen to you?'),
+      gdsReverse('gds7', 7, 'Do you feel happy most of the time?'),
+      gdsForward('gds8', 8, 'Do you often feel helpless?'),
+      gdsForward('gds9', 9, 'Do you prefer to stay at home rather than going out and doing new things?'),
+      gdsForward('gds10', 10, 'Do you feel you have more problems with memory than most?'),
+      gdsReverse('gds11', 11, 'Do you think it is wonderful to be alive now?'),
+      gdsForward('gds12', 12, 'Do you feel pretty worthless the way you are now?'),
+      gdsReverse('gds13', 13, 'Do you feel full of energy?'),
+      gdsForward('gds14', 14, 'Do you feel that your situation is hopeless?'),
+      gdsForward('gds15', 15, 'Do you think that most people are better off than you are?'),
     ],
     calculate(values) {
-      const score = num(values.score, 4);
+      const score =
+        gdsPoints(values.gds1, true) +
+        gdsPoints(values.gds2, false) +
+        gdsPoints(values.gds3, false) +
+        gdsPoints(values.gds4, false) +
+        gdsPoints(values.gds5, true) +
+        gdsPoints(values.gds6, false) +
+        gdsPoints(values.gds7, true) +
+        gdsPoints(values.gds8, false) +
+        gdsPoints(values.gds9, false) +
+        gdsPoints(values.gds10, false) +
+        gdsPoints(values.gds11, true) +
+        gdsPoints(values.gds12, false) +
+        gdsPoints(values.gds13, true) +
+        gdsPoints(values.gds14, false) +
+        gdsPoints(values.gds15, false);
       const r = riskFromThresholds(score, [
         {
           max: 4,
-          level: 'low',
-          label: 'Normal range',
-          interpretation: 'GDS-15 0–4: normal range — depression less likely; reassess if clinical concern or functional decline.',
+          level: 'normal',
+          label: 'Normal range (0–4)',
+          interpretation: `GDS-15 score ${score}/15: below the usual screening cutoff. Not indicative of depression on this screen — recheck if clinical concern persists.`,
         },
         {
-          max: 8,
+          max: 9,
           level: 'moderate',
-          label: 'Mild depression range',
-          interpretation: 'GDS-15 5–8: suggestive of mild depression — clinical interview, supports, consider therapy and medical contributors.',
-        },
-        {
-          max: 11,
-          level: 'high',
-          label: 'Moderate depression range',
-          interpretation: 'GDS-15 9–11: moderate depression range — structured assessment, safety screen, treat contributing illness, consider pharmacotherapy/psychotherapy.',
+          label: 'Mild depression screen (5–9)',
+          interpretation: `GDS-15 score ${score}/15: suggests mild depressive symptoms. Complete a diagnostic interview, review medical contributors, and consider treatment or geriatrics/psychiatry referral.`,
         },
         {
           max: 15,
-          level: 'critical',
-          label: 'Severe depression range',
-          interpretation: 'GDS-15 12–15: severe range — urgent comprehensive evaluation, suicide risk assessment, and treatment planning.',
+          level: 'high',
+          label: 'Moderate–severe screen (10–15)',
+          interpretation: `GDS-15 score ${score}/15: suggests moderate to severe depressive symptoms. Prompt diagnostic evaluation, safety assessment, and treatment planning.`,
         },
       ]);
       return {
         score,
         unit: '/15',
         ...r,
-        details: [{ label: 'Bands', value: '0–4 normal · 5–8 mild · 9–11 moderate · 12–15 severe' }],
+        details: [
+          { label: 'Reverse-scored items (No = 1)', value: '1, 5, 7, 11, 13' },
+          { label: 'Cutoff', value: '≥5 possible depression; 10–15 moderate/severe screen' },
+        ],
+        recommendations: [
+          'GDS-15 is a screen, not a diagnosis',
+          'Assess suicide risk if score is elevated or the patient expresses hopelessness',
+        ],
       };
     },
     evidence: {
       summary:
-        'GDS-15 scores 0–15. Common bands: 0–4 normal, 5–8 mild, 9–11 moderate, 12–15 severe. Cutoff ≥5 often used for further evaluation.',
-      formula: 'Enter total 0–15',
-      validation: 'Short form of Yesavage GDS; widely validated in community and medical elderly populations.',
+        'GDS-15 (Sheikh & Yesavage 1986) scores 1 point per depressive response. Reverse-scored items 1, 5, 7, 11, and 13 score 1 for No; remaining items score 1 for Yes. Conventional bands: 0–4 normal, 5–9 mild, 10–15 moderate/severe.',
+      formula: 'Sum of 15 items (0 or 1); reverse items 1, 5, 7, 11, 13',
+      validation: 'Widely validated in community, clinic, and long-term care samples; usable with mild cognitive impairment.',
       references: [
         {
-          title: 'Development and validation of a geriatric depression screening scale',
-          citation: 'Yesavage JA et al. J Psychiatr Res. 1982–83; GDS-15 short form literature',
-          year: 1982,
-          pmid: '7183759',
-          doi: '10.1016/0022-3956(82)90033-4',
+          title: 'Geriatric Depression Scale (GDS): recent evidence and development of a shorter version',
+          citation: 'Sheikh JI, Yesavage JA. Clin Gerontol. 1986',
+          year: 1986,
+          pmid: '3335884',
+        },
+        {
+          title: 'Criterion-based validity and reliability of the Geriatric Depression Screening Scale (GDS-15)',
+          citation: 'Almeida OP, Almeida SA. Int J Geriatr Psychiatry / related validations',
+          year: 2009,
+          pmid: '18914586',
+          doi: '10.1002/gps.2181',
         },
       ],
     },
     nextSteps: [
-      {
-        condition: 'Score ≥5',
-        actions: ['Diagnostic interview for depression', 'PHQ-9 optional complement', 'Suicide risk screen', 'Review meds and medical illness'],
-      },
+      { condition: 'Score 0–4', actions: ['Routine monitoring', 'Re-screen if function, sleep, or affect change'] },
+      { condition: 'Score ≥5', actions: ['Diagnostic interview', 'Review meds/medical illness', 'Consider SSRI/psychotherapy per geriatrics guidance', 'Safety screen'] },
+      { condition: 'Score ≥10 or suicidal ideation', actions: ['Urgent mental-health evaluation', 'Do not leave at-risk patients unsupervised'] },
     ],
     pearls: [
-      'Less somatically loaded than some depression scales — helpful in medically ill elderly.',
-      'Not a substitute for full diagnostic assessment.',
+      'Items 1, 5, 7, 11, and 13 are reverse-scored (No is the depressive answer).',
+      'Does not replace a clinical diagnosis; somatic-light items help in medically ill elders.',
     ],
   },
-
   {
     id: 'cornell-dementia',
     name: 'Cornell Scale for Depression in Dementia',
