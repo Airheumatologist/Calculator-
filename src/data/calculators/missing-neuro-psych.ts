@@ -408,10 +408,10 @@ export const missingNeuroPsychCalcs: Calculator[] = [
       validation: 'Structured interviews improve reliability; central adjudication common in trials.',
       references: [
         {
-          title: 'Improving the assessment of outcomes in stroke: use of a structured interview for mRS',
-          citation: 'Wilson JTL et al. Stroke. 2002; Rankin J. 1957 original',
-          year: 2002, pmid: '12215594',
-          doi: '10.1161/01.str.0000027437.22450.bd', },
+          title: 'Interobserver agreement for the assessment of handicap in stroke patients',
+          citation: 'van Swieten JC et al. Stroke. 1988;19:604-607 (modified Rankin scale)',
+          year: 1988, pmid: '3363593',
+          doi: '10.1161/01.str.19.5.604', },
       ],
     },
     nextSteps: [
@@ -678,8 +678,8 @@ export const missingNeuroPsychCalcs: Calculator[] = [
       validation: 'Validated brief screen for heavy drinking and AUD across VA and primary care populations.',
       references: [
         {
-          title: 'AUDIT-C as a brief screen for alcohol misuse in primary care',
-          citation: 'Bush K et al. Arch Intern Med. 1998; Bradley KA et al. various',
+          title: 'The AUDIT alcohol consumption questions (AUDIT-C): an effective brief screening test for problem drinking',
+          citation: 'Bush K et al. Arch Intern Med. 1998;158:1789-1795',
           year: 1998, pmid: '9738608',
           doi: '10.1001/archinte.158.16.1789', },
       ],
@@ -1025,10 +1025,10 @@ export const missingNeuroPsychCalcs: Calculator[] = [
       validation: 'Validated brief dementia screen; performance varies by population and cutoff.',
       references: [
         {
-          title: 'The Mini-Cog as a screen for dementia: validation in a population-based sample',
-          citation: 'Borson S et al. J Am Geriatr Soc. 2003',
-          year: 2003, pmid: '14511167',
-          doi: '10.1046/j.1532-5415.2003.51465.x', },
+          title: 'The mini-cog: a cognitive \'vital signs\' measure for dementia screening in multi-lingual elderly',
+          citation: 'Borson S et al. Int J Geriatr Psychiatry. 2000;15:1021-1027',
+          year: 2000, pmid: '11113982',
+          doi: '10.1002/1099-1166(200011)15:11<1021::aid-gps234>3.0.co;2-6', },
       ],
     },
     nextSteps: [
@@ -1332,8 +1332,8 @@ export const missingNeuroPsychCalcs: Calculator[] = [
       validation: 'Used in stroke trials and thrombectomy selection; interrater variability exists — training recommended.',
       references: [
         {
-          title: 'Use of ASPECTS for hyperacute stroke',
-          citation: 'Barber PA et al. Lancet. 2000',
+          title: 'Validity and reliability of a quantitative computed tomography score in predicting outcome of hyperacute stroke before thrombolytic therapy (ASPECTS)',
+          citation: 'Barber PA et al. Lancet. 2000;355:1670-1674',
           year: 2000, pmid: '10905241',
           doi: '10.1016/s0140-6736(00)02237-6', },
       ],

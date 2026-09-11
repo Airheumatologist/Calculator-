@@ -420,8 +420,8 @@ export const cardiologyCalcs: Calculator[] = [
       summary: 'GRACE uses age, HR, SBP, creatinine, Killip class, cardiac arrest (39), ST deviation (28), and elevated enzymes (14). Killip I/II/III/IV = 0/20/39/59.',
       formula: 'Sum of GRACE point-table weights (in-hospital death model)',
       validation: 'Derived from GRACE registry (>100,000 ACS patients); extensively validated.',
-      references: [{ title: 'Prediction of risk of death and MI in the six months after presentation with ACS', citation: 'Fox KA et al. BMJ. 2006', year: 2006, pmid: '17032691',
-          doi: '10.1136/bmj.38985.646481.55', }],
+      references: [{ title: 'Predictors of hospital mortality in the global registry of acute coronary events', citation: 'Granger CB et al. Arch Intern Med. 2003', year: 2003, pmid: '14581255',
+          doi: '10.1001/archinte.163.19.2345', }],
     },
     nextSteps: [
       { condition: 'High GRACE', actions: ['Early invasive strategy (NSTE-ACS)', 'ICU-level monitoring if unstable', 'Optimize GDMT'] },
@@ -581,8 +581,12 @@ export const cardiologyCalcs: Calculator[] = [
     evidence: {
       summary: 'Wells DVT criteria stratify pretest probability; two-tier version (unlikely ≤0, likely ≥1) is commonly used with D-dimer.',
       validation: 'Extensively validated outpatient DVT diagnostic algorithm.',
-      references: [{ title: 'Value of assessment of pretest probability of DVT in clinical management', citation: 'Wells PS et al. Lancet. 1997', year: 1997, pmid: '9428249',
-          doi: '10.1016/S0140-6736(97)08140-3', }],
+      references: [
+        { title: 'Value of assessment of pretest probability of DVT in clinical management', citation: 'Wells PS et al. Lancet. 1997', year: 1997, pmid: '9428249',
+          doi: '10.1016/S0140-6736(97)08140-3', },
+        { title: 'Evaluation of D-dimer in the diagnosis of suspected deep-vein thrombosis', citation: 'Wells PS et al. N Engl J Med. 2003', year: 2003, pmid: '14507948',
+          doi: '10.1056/NEJMoa023153', },
+      ],
     },
     nextSteps: [
       { condition: 'Unlikely + neg D-dimer', actions: ['No ultrasound needed', 'Reassess if symptoms worsen'] },
@@ -946,9 +950,7 @@ export const cardiologyCalcs: Calculator[] = [
       summary: 'Bazett (QTc = QT/√RR) is most common but overcorrects at high HR and undercorrects at low HR. Fridericia preferred at extremes.',
       formula: 'QTc (Bazett) = QT / √(RR) with RR in seconds',
       validation: 'Standard ECG teaching; thresholds vary by sex and method.',
-      references: [{ title: 'An analysis of the time-relations of electrocardiograms (Bazett QT correction)', citation: 'Bazett HC. Heart. 1920 (classic; modern discussions in ECG literature)', year: 1920,
-          pmid: '16993419',
-          doi: '10.1113/jphysiol.1920.sp001881', url: 'https://en.wikipedia.org/wiki/QT_interval#Correction_for_heart_rate' }],
+      references: [{ title: 'An analysis of the time-relations of electrocardiograms', citation: 'Bazett HC. Heart. 1920;7:353-370', year: 1920 }],
     },
     nextSteps: [
       { condition: 'QTc ≥ 500', actions: ['Telemetry', 'MgSO4 if TdP or very high risk', 'Discontinue offending agents', 'Replete K+ to >4 and Mg >2'] },

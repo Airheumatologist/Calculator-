@@ -99,11 +99,11 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       validation: 'Educational bedside approximation; formulas and normal ranges vary by institution and units.',
       references: [
         {
-          title: 'Serum osmolality and the osmolar gap',
-          citation: 'Purssell RA et al. / toxic alcohol reviews',
+          title: 'Derivation and validation of a formula to calculate the contribution of ethanol to the osmolal gap',
+          citation: 'Purssell RA, Pudek M, Brubacher J, Abu-Laban RB. Ann Emerg Med. 2001;38:653-659',
           year: 2001,
-          pmid: '18442409',
-          doi: '10.1186/1471-227X-8-5',
+          pmid: '11719745',
+          doi: '10.1067/mem.2001.119455',
         },
         {
           title: 'Toxic alcohol ingestions',
@@ -333,11 +333,11 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       validation: 'Standard APAP antidote dosing; institutional caps (often 100 kg) and diluent volumes vary.',
       references: [
         {
-          title: 'Acetaminophen poisoning and NAC',
-          citation: 'Prescott LF / Smilkstein MJ et al.; product labeling',
-          year: 1988,
-          pmid: '3059186',
-          doi: '10.1056/NEJM198812153192401',
+          title: 'Intravenous N-acetylcystine: the treatment of choice for paracetamol poisoning',
+          citation: 'Prescott LF, Illingworth RN, Critchley JA, et al. Br Med J. 1979;2:1097-1100',
+          year: 1979,
+          pmid: '519312',
+          doi: '10.1136/bmj.2.6198.1097',
         },
       ],
     },
@@ -627,10 +627,10 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       references: [
         {
           title: 'Fomepizole for ethylene glycol and methanol poisoning',
-          citation: 'Brent J et al. N Engl J Med. 1999/2001',
-          year: 2001,
-          pmid: '11762672',
-          doi: '10.1081/clt-100108496',
+          citation: 'Brent J. N Engl J Med. 2009;360:2216-2223',
+          year: 2009,
+          pmid: '19458366',
+          doi: '10.1056/NEJMct0806112',
         },
       ],
     },
@@ -699,11 +699,12 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       validation: 'Bedside rule of thumb from toxicology practice; not a substitute for titration and airway management.',
       references: [
         {
-          title: 'Global Strategy for Prevention, Diagnosis and Management of COPD (GOLD)',
-          citation: 'Global Initiative for Chronic Obstructive Lung Disease (GOLD) Report',
-          year: 2024,
-          pmid: '28128970',
-          doi: '10.1164/rccm.201701-0218PP', url: 'https://goldcopd.org/2024-gold-report/' },
+          title: 'A dosing nomogram for continuous infusion intravenous naloxone',
+          citation: 'Goldfrank L, Weisman RS, Errick JK, Lo MW. Ann Emerg Med. 1986;15:566-570',
+          year: 1986,
+          pmid: '3963538',
+          doi: '10.1016/S0196-0644(86)80994-5',
+        },
       ],
     },
     nextSteps: [
@@ -889,8 +890,8 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       validation: 'Multiple diagnostic criteria sets (Levenson, DSM-5, international consensus); this tool is a simplified bedside helper.',
       references: [
         {
-          title: 'Neuroleptic malignant syndrome',
-          citation: 'Gurrera RJ et al. / Caroff SN reviews',
+          title: 'An international consensus study of neuroleptic malignant syndrome diagnostic criteria using the Delphi method',
+          citation: 'Gurrera RJ, Caroff SN, Cohen A, et al. J Clin Psychiatry. 2011;72:1222-1228',
           year: 2011,
           pmid: '21733489',
           doi: '10.4088/JCP.10m06438',
@@ -967,9 +968,12 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       validation: 'Classic toxicology teaching mnemonic; not a validated numeric risk score.',
       references: [
         {
-          title: 'Toxicologic emergencies textbooks / review articles',
-          citation: 'Toxicologic emergencies textbooks / review articles',
-          year: 2015, url: 'https://www.ncbi.nlm.nih.gov/books/NBK537087/' },
+          title: 'Anticholinergic Toxicity (StatPearls)',
+          citation: 'Broderick ED, Metheny H, Crosby B. StatPearls. Treasure Island (FL): StatPearls Publishing; 2023',
+          year: 2023,
+          pmid: '30521219',
+          url: 'https://www.ncbi.nlm.nih.gov/books/NBK534798/',
+        },
       ],
     },
     nextSteps: [
@@ -1135,9 +1139,12 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       validation: 'Classic toxicology teaching; treatment is clinical airway + naloxone titration.',
       references: [
         {
-          title: 'CDC / clinical toxicology reviews',
-          citation: 'CDC / clinical toxicology reviews',
-          year: 2015, url: 'https://www.cdc.gov/' },
+          title: 'Management of opioid analgesic overdose',
+          citation: 'Boyer EW. N Engl J Med. 2012;367:146-155',
+          year: 2012,
+          pmid: '22784117',
+          doi: '10.1056/NEJMra1202561',
+        },
       ],
     },
     nextSteps: [
@@ -1222,9 +1229,12 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       validation: 'Standard exposure metric in pulmonary and oncology guidelines.',
       references: [
         {
-          title: 'USPSTF / NCCN smoking exposure definitions',
-          citation: 'USPSTF / NCCN smoking exposure definitions',
-          year: 2021, url: 'https://www.uspreventiveservicestaskforce.org/' },
+          title: 'Screening for lung cancer: US Preventive Services Task Force recommendation statement',
+          citation: 'US Preventive Services Task Force; Krist AH, Davidson KW, et al. JAMA. 2021;325:962-970',
+          year: 2021,
+          pmid: '33687470',
+          doi: '10.1001/jama.2021.1117',
+        },
       ],
     },
     nextSteps: [
@@ -1406,7 +1416,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         {
           title: 'What is a standard drink?',
           citation: 'NIAAA / WHO alcohol unit definitions',
-          year: 2023, url: 'https://www.niaaa.nih.gov/alcohols-effects-health/overview-alcohol-consumption/what-standard-drink' },
+          year: 2023, url: 'https://www.niaaa.nih.gov/alcohols-effects-health/what-standard-drink' },
       ],
     },
     nextSteps: [
@@ -1619,9 +1629,9 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       validation: 'Anthropometric risk marker validated epidemiologically for CVD and metabolic outcomes.',
       references: [
         {
-          title: 'Waist circumference and waist–hip ratio (WHO)',
-          citation: 'WHO Expert Consultation',
-          year: 2008, url: 'https://www.who.int/publications/i/item/9789241501491' },
+          title: 'Waist circumference and waist–hip ratio: report of a WHO expert consultation',
+          citation: 'WHO Expert Consultation. Geneva, 8–11 December 2008. Geneva: World Health Organization; 2011',
+          year: 2011, url: 'https://www.who.int/publications/i/item/9789241501491' },
       ],
     },
     nextSteps: [
@@ -1942,7 +1952,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       references: [
         {
           title: 'Life-threatening thyrotoxicosis: thyroid storm',
-          citation: 'Burch HB, Wartofsky L. Endocrinol Metab Clin North Am. 1993',
+          citation: 'Burch HB, Wartofsky L. Endocrinol Metab Clin North Am. 1993;22:263-277',
           year: 1993,
           pmid: '8325286',
         },

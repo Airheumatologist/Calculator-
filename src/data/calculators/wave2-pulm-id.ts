@@ -219,10 +219,12 @@ export const wave2PulmIdCalcs: Calculator[] = [
       validation: 'Early switch strategies using stability criteria reduce length of stay without increasing failure in selected CAP patients.',
       references: [
         {
-          title: 'Antibiotic treatment strategies for community-acquired pneumonia and clinical stability criteria',
-          citation: 'Halm EA et al. / related CAP switch literature; IDSA CAP guidance',
-          year: 2002, pmid: '11556940',
-          doi: '10.1046/j.1525-1497.2001.016009599.x', },
+          title: 'Time to clinical stability in patients hospitalized with community-acquired pneumonia: implications for practice guidelines',
+          citation: 'Halm EA et al. JAMA. 1998',
+          year: 1998,
+          pmid: '9600479',
+          doi: '10.1001/jama.279.18.1452',
+        },
       ],
     },
     nextSteps: [
@@ -581,9 +583,19 @@ export const wave2PulmIdCalcs: Calculator[] = [
       validation: 'Extensively used in neonatal respiratory failure; adult use is adjunctive to P/F ratio and clinical criteria.',
       references: [
         {
-          title: 'Oxygenation index as a predictor of outcome in respiratory failure',
-          citation: 'Classic neonatal/pediatric critical care literature; adult ECMO selection variants',
-          year: 2000, url: 'https://www.ncbi.nlm.nih.gov/books/NBK482278/' },
+          title: 'Oxygenation index predicts outcome in children with acute hypoxemic respiratory failure',
+          citation: 'Trachsel D et al. Am J Respir Crit Care Med. 2005',
+          year: 2005,
+          pmid: '15817802',
+          doi: '10.1164/rccm.200405-625OC',
+        },
+        {
+          title: 'Extracorporeal membrane oxygenation in pediatric respiratory failure',
+          citation: 'Ortiz RM, Cilley RE, Bartlett RH. Pediatr Clin North Am. 1987 (OI in neonatal/pediatric ECMO pathways)',
+          year: 1987,
+          pmid: '3808772',
+          doi: '10.1016/s0031-3955(16)36179-x',
+        },
       ],
     },
     nextSteps: [
@@ -669,9 +681,18 @@ export const wave2PulmIdCalcs: Calculator[] = [
       validation: 'Physiologic standard; Enghoff modification substitutes PaCO₂ for ideal alveolar PCO₂ when using arterial blood gas.',
       references: [
         {
-          title: 'Bohr dead space equation (historical physiology)',
-          citation: 'Bohr C. classic respiratory gas exchange / dead space physiology',
-          year: 1891, url: 'https://www.ncbi.nlm.nih.gov/books/NBK541021/' },
+          title: 'Ueber die Lungenathmung',
+          citation: 'Bohr C. Skand Arch Physiol. 1891 (original Bohr dead-space equation)',
+          year: 1891,
+          doi: '10.1111/j.1748-1716.1891.tb00581.x',
+        },
+        {
+          title: 'Dead space: the physiology of wasted ventilation',
+          citation: 'Robertson HT. Eur Respir J. 2015',
+          year: 2015,
+          pmid: '25395032',
+          doi: '10.1183/09031936.00137614',
+        },
       ],
     },
     nextSteps: [
@@ -761,9 +782,19 @@ export const wave2PulmIdCalcs: Calculator[] = [
       validation: 'Rule of thumb; alternate regressions exist (e.g., 104.2 − 0.27×age). Not a substitute for A-a gradient when precise assessment is needed.',
       references: [
         {
-          title: 'Age-related decline in arterial oxygen tension (teaching approximation)',
-          citation: 'Classic pulmonary physiology teaching approximations for expected PaO2 with age',
-          year: 1970, url: 'https://www.ncbi.nlm.nih.gov/books/NBK482430/' },
+          title: 'The alveolar-arterial oxygen difference: its size and components in normal man',
+          citation: 'Mellemgaard K. Acta Physiol Scand. 1966 (often cited as PaO₂ ≈ 104.2 − 0.27×age; 100 − 0.3×age is a bedside rounding of such regressions)',
+          year: 1966,
+          pmid: '5963295',
+          doi: '10.1111/j.1748-1716.1966.tb03281.x',
+        },
+        {
+          title: 'Arterial oxygen tension in relation to age in healthy subjects',
+          citation: 'Sorbini CA et al. Respiration. 1968',
+          year: 1968,
+          pmid: '5644025',
+          doi: '10.1159/000192549',
+        },
       ],
     },
     nextSteps: [
@@ -925,10 +956,12 @@ export const wave2PulmIdCalcs: Calculator[] = [
       validation: 'Validated historically; largely superseded in practice by revised Geneva and Wells scores.',
       references: [
         {
-          title: 'Prediction of pulmonary embolism in the emergency department: the original Geneva score',
-          citation: 'Wicki J et al. Ann Intern Med. 2001',
-          year: 2001, pmid: '11146703',
-          doi: '10.1001/archinte.161.1.92', },
+          title: 'Assessing clinical probability of pulmonary embolism in the emergency ward: a simple score',
+          citation: 'Wicki J et al. Arch Intern Med. 2001',
+          year: 2001,
+          pmid: '11146703',
+          doi: '10.1001/archinte.161.1.92',
+        },
       ],
     },
     nextSteps: [
@@ -1792,8 +1825,16 @@ export const wave2PulmIdCalcs: Calculator[] = [
       references: [
         {
           title: 'Targeted tuberculin testing and treatment of latent tuberculosis infection',
-          citation: 'CDC / ATS guidance on LTBI testing and treatment',
-          year: 2000, url: 'https://www.cdc.gov/tb/topic/testing/default.htm' },
+          citation: 'American Thoracic Society / CDC. MMWR Recomm Rep. 2000',
+          year: 2000,
+          pmid: '10881762',
+        },
+        {
+          title: 'Clinical Testing Guidance for Tuberculosis: Tuberculin Skin Test',
+          citation: 'CDC. TST interpretation by risk-group induration cutoffs (5 / 10 / 15 mm)',
+          year: 2025,
+          url: 'https://www.cdc.gov/tb/hcp/testing-diagnosis/tuberculin-skin-test.html',
+        },
       ],
     },
     nextSteps: [

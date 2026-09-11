@@ -306,9 +306,12 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         'International multicenter derivation/validation for UGIB mortality; complementary to GBS (intervention) and AIMS65/Rockall.',
       references: [
         {
-          title: 'Upper GI bleeding risk literature (Laursen / related scores)',
-          citation: 'Laursen SB et al. Gut / related UGIB risk literature',
-          year: 2015, url: 'https://pubmed.ncbi.nlm.nih.gov/?term=Laursen+upper+gastrointestinal+bleeding+risk' },
+          title: 'ABC score: a new risk score that accurately predicts mortality in acute upper and lower gastrointestinal bleeding',
+          citation: 'Laursen SB et al. Gut. 2021;70(4):707-716',
+          year: 2021,
+          pmid: '32723845',
+          doi: '10.1136/gutjnl-2019-320002',
+        },
       ],
     },
     nextSteps: [
@@ -404,8 +407,8 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
       validation: 'Oakland et al. multicentre UK derivation/validation; thresholds may vary by local pathway.',
       references: [
         {
-          title: 'External validation of the Oakland score for safe discharge in lower GI bleeding',
-          citation: 'Oakland K et al. Lancet Gastroenterol Hepatol. 2017; related validations',
+          title: 'Derivation and validation of a novel risk score for safe discharge after acute lower gastrointestinal bleeding',
+          citation: 'Oakland K et al. Lancet Gastroenterol Hepatol. 2017;2(9):635-643',
           year: 2017,
           pmid: '28651935',
           doi: '10.1016/S2468-1253(17)30150-4',
@@ -491,9 +494,12 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         'Composite of classic surgical teaching and observational SBO ischemia literature; not a validated single score — use with CT and surgical judgment.',
       references: [
         {
-          title: 'Small bowel obstruction ischemia risk literature',
-          citation: 'Classic surgical literature; Jancelewicz et al. and related SBO ischemia prediction',
-          year: 2010, url: 'https://pubmed.ncbi.nlm.nih.gov/?term=Jancelewicz+small+bowel+obstruction' },
+          title: 'Predicting strangulated small bowel obstruction: an old problem revisited',
+          citation: 'Jancelewicz T et al. J Gastrointest Surg. 2009;13(1):93-99',
+          year: 2009,
+          pmid: '18685902',
+          doi: '10.1007/s11605-008-0610-z',
+        },
       ],
     },
     nextSteps: [
@@ -1036,7 +1042,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
       validation: 'Educational only — official tool: riskcalculator.facs.org',
       references: [
         {
-          title: 'Universal ACS-NSQIP surgical risk calculator',
+          title: 'Development and evaluation of the universal ACS NSQIP surgical risk calculator',
           citation: 'Bilimoria KY et al. J Am Coll Surg. 2013;217:833-842',
           year: 2013,
           pmid: '24055383',
@@ -1366,9 +1372,12 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
       validation: 'Derived/validated in air-medical and emergency airway literature (Davis et al. / related HEAVEN studies).',
       references: [
         {
-          title: 'Emergency airway / air medical difficult airway literature',
-          citation: 'Davis DP et al. air medical / emergency airway literature',
-          year: 2005, url: 'https://pubmed.ncbi.nlm.nih.gov/?term=Davis+DP+airway+emergency' },
+          title: 'HEAVEN Criteria: Derivation of a New Difficult Airway Prediction Tool',
+          citation: 'Davis DP, Olvera DJ. Air Med J. 2017;36(4):195-197',
+          year: 2017,
+          pmid: '28739243',
+          doi: '10.1016/j.amj.2017.04.001',
+        },
       ],
     },
     nextSteps: [
@@ -1521,7 +1530,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
       validation: 'De Jong et al. multicenter ICU cohort; external validations support threshold ≥3.',
       references: [
         {
-          title: 'Macocha score for difficult intubation in ICU',
+          title: 'Early identification of patients at risk for difficult intubation in the intensive care unit: development and validation of the MACOCHA score',
           citation: 'De Jong A et al. Am J Respir Crit Care Med. 2013;187:832-839',
           year: 2013,
           pmid: '23348979',
@@ -1796,9 +1805,12 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
       validation: 'Composite of trauma triage guidelines and clinical decision-rule definitions — educational synthesizer.',
       references: [
         {
-          title: 'Guidelines for Field Triage of Injured Patients',
-          citation: 'CDC / ACS COT field triage guidelines (updated iterations)',
-          year: 2011, url: 'https://www.cdc.gov/mmwr/preview/mmwrhtml/rr6101a1.htm' },
+          title: 'Guidelines for field triage of injured patients: recommendations of the National Expert Panel on Field Triage, 2011',
+          citation: 'Sasser SM et al. MMWR Recomm Rep. 2012;61(RR-1):1-20',
+          year: 2012,
+          pmid: '22237112',
+          url: 'https://www.cdc.gov/mmwr/preview/mmwrhtml/rr6101a1.htm',
+        },
       ],
     },
     nextSteps: [
@@ -1920,9 +1932,11 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
       validation: 'ATLS teaching classification; not precise volumetric measurement.',
       references: [
         {
-          title: 'ATLS hemorrhagic shock classification',
-          citation: 'American College of Surgeons Committee on Trauma — Hemorrhagic shock classes (ATLS)',
-          year: 2018, url: 'https://www.facs.org/quality-programs/trauma/education/atls/' },
+          title: 'Advanced Trauma Life Support (ATLS) hemorrhagic shock classification',
+          citation: 'American College of Surgeons Committee on Trauma. ATLS Student Course Manual, 10th ed. 2018',
+          year: 2018,
+          url: 'https://www.facs.org/quality-programs/trauma/education/advanced-trauma-life-support/',
+        },
       ],
     },
     nextSteps: [

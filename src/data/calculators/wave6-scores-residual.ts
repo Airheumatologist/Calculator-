@@ -573,8 +573,8 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
       validation: 'Validated clinician AD score; primary endpoint family in AD RCTs.',
       references: [
         {
-          title: 'What is the EASI?',
-          citation: 'Hanifin JM et al. Exp Dermatol. 2001 / severity banding literature',
+          title: 'The eczema area and severity index (EASI): assessment of reliability in atopic dermatitis',
+          citation: 'Hanifin JM et al. Exp Dermatol. 2001;10:11-18',
           year: 2001,
           pmid: '11168575',
           doi: '10.1034/j.1600-0625.2001.100102.x',
@@ -754,8 +754,10 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
       references: [
         {
           title: 'Primary Open-Angle Glaucoma Preferred Practice Pattern',
-          citation: 'AAO PPP / glaucoma society guidance',
-          year: 2020,
+          citation: 'Gedde SJ et al. Ophthalmology. 2021;128:P71-P150 (AAO PPP)',
+          year: 2021,
+          pmid: '34933745',
+          doi: '10.1016/j.ophtha.2020.10.022',
           url: 'https://www.aao.org/education/preferred-practice-pattern/primary-open-angle-glaucoma-ppp',
         },
       ],
@@ -957,7 +959,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
       validation: 'Rosen et al. short form of original VHI; widely used in laryngology.',
       references: [
         {
-          title: 'Validation of the Voice Handicap Index-10',
+          title: 'Development and validation of the Voice Handicap Index-10',
           citation: 'Rosen CA et al. Laryngoscope. 2004',
           year: 2004,
           pmid: '15475780',
@@ -1060,13 +1062,13 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
       summary:
         'PTA averages pure-tone air-conduction thresholds at specified frequencies. Common adult degree bands: ≤25 normal, 26–40 mild, 41–55 moderate, 56–70 moderately severe, 71–90 severe, >90 profound (definitions vary slightly by organization).',
       formula: 'PTA₃ = (0.5+1+2 kHz)/3; PTA₄ = (0.5+1+2+4 kHz)/4',
-      validation: 'Standard audiometric summary; WHO and ASHA degree scales are closely related educational bands.',
+      validation: 'Clark/ASHA adult degree bands (this implementation). WHO grades differ (no separate moderately-severe band).',
       references: [
         {
-          title: 'Grades of hearing impairment',
-          citation: 'WHO / audiology society degree of hearing loss classifications',
-          year: 2021,
-          url: 'https://www.who.int/news-room/fact-sheets/detail/deafness-and-hearing-loss',
+          title: 'Uses and abuses of hearing loss classification',
+          citation: 'Clark JG. ASHA. 1981;23:493-500 (mild 26–40, moderate 41–55, moderately severe 56–70, severe 71–90, profound ≥91 dB HL)',
+          year: 1981,
+          pmid: '7052898',
         },
       ],
     },
@@ -1374,11 +1376,11 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
       validation: 'Puhan et al. updated ADO; validated against BODE for mortality prediction.',
       references: [
         {
-          title: 'Expansion of the prognostic assessment of patients with chronic obstructive pulmonary disease: the updated ADO index',
-          citation: 'Puhan MA et al. Lancet. 2009 / Eur Respir J updates',
-          year: 2009,
-          pmid: '19716962',
-          doi: '10.1016/S0140-6736(09)61301-5',
+          title: 'Large-scale international validation of the ADO index in subjects with COPD: an individual subject data analysis of 10 cohorts',
+          citation: 'Puhan MA et al. BMJ Open. 2012;2:e002152 (updated ADO 0–14)',
+          year: 2012,
+          pmid: '23242246',
+          doi: '10.1136/bmjopen-2012-002152',
         },
       ],
     },
@@ -1457,10 +1459,10 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
       validation: 'Global Initiative for Chronic Obstructive Lung Disease strategy documents.',
       references: [
         {
-          title: 'Global Strategy for Prevention, Diagnosis and Management of COPD',
-          citation: 'GOLD Report',
-          year: 2024,
-          url: 'https://goldcopd.org/',
+          title: 'Global Strategy for the Diagnosis, Management, and Prevention of COPD: 2026 Report',
+          citation: 'Global Initiative for Chronic Obstructive Lung Disease (GOLD). 2026 Report',
+          year: 2026,
+          url: 'https://goldcopd.org/2026-gold-report-and-pocket-guide/',
         },
       ],
     },
@@ -1683,10 +1685,10 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
       validation: 'Global Initiative for Asthma strategy (annual updates).',
       references: [
         {
-          title: 'Global Strategy for Asthma Management and Prevention',
-          citation: 'GINA Report',
-          year: 2024,
-          url: 'https://ginasthma.org/',
+          title: 'Global Strategy for Asthma Management and Prevention (2026 update)',
+          citation: 'Global Initiative for Asthma (GINA). 2026 Strategy Report',
+          year: 2026,
+          url: 'https://ginasthma.org/2026-gina-strategy-report/',
         },
       ],
     },
@@ -2243,8 +2245,8 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
       validation: 'Nested in full MNA; validated in community and hospital elderly populations.',
       references: [
         {
-          title: 'Overview of the MNA – Its history and challenges',
-          citation: 'Vellas B et al. / Rubenstein LZ et al. J Nutr Health Aging. MNA-SF validation',
+          title: 'Screening for undernutrition in geriatric practice: developing the short-form mini-nutritional assessment (MNA-SF)',
+          citation: 'Rubenstein LZ et al. J Gerontol A Biol Sci Med Sci. 2001;56:M366-M372',
           year: 2001,
           pmid: '11382797',
           doi: '10.1093/gerona/56.6.m366',

@@ -127,8 +127,8 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
       validation: 'Standard laboratory correction used when nRBCs inflate automated WBC counts.',
       references: [
         {
-          title: 'Nucleated red blood cells in the blood of medical intensive care patients',
-          citation: 'Stachon A et al. / standard clinical hematology texts on nRBC correction',
+          title: 'Nucleated red blood cells in the blood of medical intensive care patients indicate increased mortality risk',
+          citation: 'Stachon A et al. Crit Care. 2007 (nRBC clinical significance; WBC correction formula is standard hematology teaching)',
           year: 2007,
           pmid: '17550592',
           doi: '10.1186/cc5932',
@@ -197,10 +197,16 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
       validation: 'James 1976; still used but may yield non-physiologic values in very high BMI — prefer Janmahasatian in obesity.',
       references: [
         {
-          title: 'Research on obesity (James WPT lean body weight equations)',
-          citation: 'James WPT. Research on obesity. London: HMSO; 1976 / subsequent PK applications',
+          title: 'Research on Obesity (DHSS/MRC report; James LBW equations)',
+          citation: 'James WPT. Research on Obesity. London: HMSO; 1976',
           year: 1976,
-          url: 'https://pubmed.ncbi.nlm.nih.gov/?term=James+lean+body+weight+equation',
+        },
+        {
+          title: 'What is the best size descriptor to use for pharmacokinetic studies in the obese?',
+          citation: 'Green B, Duffull SB. Br J Clin Pharmacol. 2004 (documents James LBW equations)',
+          year: 2004,
+          pmid: '15255794',
+          doi: '10.1111/j.1365-2125.2004.02157.x',
         },
       ],
     },
@@ -340,17 +346,24 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
       validation: 'Practice-pattern summary only — not a substitute for monographs, PK services, or oncology protocols.',
       references: [
         {
-          title: 'The effects of obesity on drug pharmacokinetics in humans',
-          citation: 'Hanley MJ et al. Expert Opin Drug Metab Toxicol. 2010',
+          title: 'Effect of obesity on the pharmacokinetics of drugs in humans',
+          citation: 'Hanley MJ et al. Clin Pharmacokinet. 2010',
           year: 2010,
           pmid: '20067334',
           doi: '10.2165/11318100-000000000-00000',
         },
         {
-          title: 'Gentamicin therapy (Devine IBW)',
-          citation: 'Devine BJ. Drug Intell Clin Pharm. 1974',
+          title: 'Gentamicin therapy (Devine IBW equations)',
+          citation: 'McCarron MM, Devine BJ. Drug Intell Clin Pharm. 1974',
           year: 1974,
-          url: 'https://pubmed.ncbi.nlm.nih.gov/?term=Devine+BJ+gentamicin+1974',
+          doi: '10.1177/106002807400801104',
+        },
+        {
+          title: 'The origin of the "ideal" body weight equations',
+          citation: 'Pai MP, Paloucek FP. Ann Pharmacother. 2000',
+          year: 2000,
+          pmid: '10981254',
+          doi: '10.1345/aph.19381',
         },
       ],
     },
@@ -481,8 +494,8 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
       validation: 'Standard ACSM-style exercise prescription approach using heart-rate reserve.',
       references: [
         {
-          title: 'The effects of training on heart rate; a longitudinal study (Karvonen method roots)',
-          citation: 'Karvonen MJ et al. Ann Med Exp Biol Fenn. 1957 / ACSM exercise guidelines applications',
+          title: 'The effects of training on heart rate; a longitudinal study',
+          citation: 'Karvonen MJ, Kentala E, Mustala O. Ann Med Exp Biol Fenn. 1957',
           year: 1957,
           pmid: '13470504',
         },
@@ -559,9 +572,16 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
       validation: 'Correlates with MVO₂ in classic exercise physiology; ischemic thresholds are individual.',
       references: [
         {
-          title: 'Hemodynamic determinants of oxygen consumption of the heart with special reference to the tension-time index',
-          citation: 'Sarnoff SJ et al. / classic RPP–MVO₂ literature; Gobel FL et al. Circulation. 1978',
+          title: 'The rate-pressure product as an index of myocardial oxygen consumption during exercise in patients with angina pectoris',
+          citation: 'Gobel FL et al. Circulation. 1978',
           year: 1978,
+          pmid: '624164',
+          doi: '10.1161/01.cir.57.3.549',
+        },
+        {
+          title: 'Hemodynamic determinants of oxygen consumption of the heart with special reference to the tension-time index',
+          citation: 'Sarnoff SJ et al. Am J Physiol. 1958',
+          year: 1958,
           pmid: '13498167',
           doi: '10.1152/ajplegacy.1957.192.1.148',
         },
@@ -730,8 +750,8 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
       validation: 'Proposed as an intuitive ratio scale; same limitations as BMI (muscle mass, ethnicity, age).',
       references: [
         {
-          title: 'BMI Prime — a useful measure of percent ideal body mass',
-          citation: 'Gadzik J. / BMI Prime educational literature',
+          title: '"How much should I weigh?"—Quetelet\'s equation, upper weight limits, and BMI prime',
+          citation: 'Gadzik J. Conn Med. 2006',
           year: 2006,
           pmid: '16768059',
         },
@@ -928,10 +948,16 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
       validation: 'Historical anthropometric index; neonatal ponderal index uses g/cm³ variants — confirm unit system.',
       references: [
         {
-          title: 'Indices of adiposity (ponderal / Rohrer index historical use)',
-          citation: 'Rohrer F. / classic anthropometry; modern comparisons with BMI in growth literature',
+          title: 'Der Index der Körperfülle als Maß des Ernährungszustandes',
+          citation: 'Rohrer F. Münch Med Wochenschr. 1921;68:580-582',
           year: 1921,
-          url: 'https://pubmed.ncbi.nlm.nih.gov/?term=Rohrer+ponderal+index+anthropometry',
+        },
+        {
+          title: 'Tri-Ponderal Mass Index vs Body Mass Index in Estimating Body Fat During Adolescence',
+          citation: 'Peterson CM et al. JAMA Pediatr. 2017',
+          year: 2017,
+          pmid: '28505241',
+          doi: '10.1001/jamapediatrics.2017.0460',
         },
       ],
     },
@@ -1098,6 +1124,7 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
           citation: 'Robinson JD et al. Am J Hosp Pharm. 1983',
           year: 1983,
           pmid: '6869387',
+          doi: '10.1093/ajhp/40.6.1016',
         },
       ],
     },
@@ -1149,10 +1176,11 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
       validation: 'Miller et al. 1983; one of several linear IBW formulas compared in pharmacy literature.',
       references: [
         {
-          title: 'Ideal body weight equations for drug dosing',
-          citation: 'Miller DR et al. / Robinson JD et al. Am J Hosp Pharm. 1983 (formula comparisons)',
-          year: 1983,
-          pmid: '6869387',
+          title: 'The origin of the "ideal" body weight equations',
+          citation: 'Pai MP, Paloucek FP. Ann Pharmacother. 2000 (documents Miller IBW coefficients)',
+          year: 2000,
+          pmid: '10981254',
+          doi: '10.1345/aph.19381',
         },
       ],
     },
@@ -1450,8 +1478,15 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
       validation: 'Schoels / Aletaha validations for PsA disease activity states.',
       references: [
         {
-          title: 'Disease activity in psoriatic arthritis (DAPSA)',
-          citation: 'Schoels M et al. Ann Rheum Dis. 2010 / 2016 cutoffs literature',
+          title: 'Application of the DAREA/DAPSA score for assessment of disease activity in psoriatic arthritis',
+          citation: 'Schoels M et al. Ann Rheum Dis. 2010',
+          year: 2010,
+          pmid: '20525844',
+          doi: '10.1136/ard.2009.122259',
+        },
+        {
+          title: 'Disease activity in psoriatic arthritis (PsA): defining remission and treatment success using the DAPSA score',
+          citation: 'Schoels MM et al. Ann Rheum Dis. 2016',
           year: 2016,
           pmid: '26269398',
           doi: '10.1136/annrheumdis-2015-207507',
@@ -1678,8 +1713,8 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
           title: 'Assessment of enthesitis in ankylosing spondylitis',
           citation: 'Heuft-Dorenbosch L et al. Ann Rheum Dis. 2003',
           year: 2003,
-          pmid: '12525383',
-          doi: '10.1136/ard.62.2.140',
+          pmid: '12525381',
+          doi: '10.1136/ard.62.2.127',
         },
       ],
     },

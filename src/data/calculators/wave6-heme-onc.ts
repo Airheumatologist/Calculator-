@@ -320,6 +320,13 @@ export const wave6HemeOncCalcs: Calculator[] = [
       validation: 'Iba et al. BMJ Open 2017 / ISTH SSC; designed to capture earlier septic coagulopathy than overt DIC.',
       references: [
         {
+          title: 'New criteria for sepsis-induced coagulopathy (SIC) following the revised sepsis definition: a retrospective analysis of a nationwide survey',
+          citation: 'Iba T, Nisio MD, Levy JH, Kitamura N, Thachil J. BMJ Open. 2017',
+          year: 2017,
+          pmid: '28963294',
+          doi: '10.1136/bmjopen-2017-017046',
+        },
+        {
           title: 'Diagnosis and management of sepsis-induced coagulopathy and disseminated intravascular coagulation',
           citation: 'Iba T et al. J Thromb Haemost. 2019',
           year: 2019,
@@ -408,8 +415,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
       validation: 'ISTH-SSC BAT; normal ranges from international reference cohorts.',
       references: [
         {
-          title: 'Normal range of bleeding scores for the ISTH-BAT: adult and pediatric data',
-          citation: 'Elbatarny M et al. J Thromb Haemost. 2014',
+          title: 'Normal range of bleeding scores for the ISTH-BAT: adult and pediatric data from the merging project',
+          citation: 'Elbatarny M et al. Haemophilia. 2014',
           year: 2014,
           pmid: '25196510',
           doi: '10.1111/hae.12503',
@@ -495,8 +502,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
       validation: 'Derived from RIETE registry patients with acute VTE on anticoagulation.',
       references: [
         {
-          title: 'Predicting major bleeding risk in patients with PE / RIETE bleeding score literature',
-          citation: 'Ruíz-Giménez N et al. / RIETE investigators. Thromb Haemost. 2008',
+          title: 'Predictive variables for major bleeding events in patients presenting with documented acute venous thromboembolism. Findings from the RIETE Registry',
+          citation: 'Ruíz-Giménez N et al. Thromb Haemost. 2008',
           year: 2008,
           pmid: '18612534',
           doi: '10.1160/TH08-03-0193',
@@ -799,8 +806,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
       validation: 'Standard laboratory hematology calculation.',
       references: [
         {
-          title: 'WHO classification criteria for CMML (monocytosis definitions in clinical use)',
-          citation: 'Arber DA et al. / WHO myeloid neoplasm criteria discussions',
+          title: 'The 2016 revision to the World Health Organization classification of myeloid neoplasms and acute leukemia',
+          citation: 'Arber DA et al. Blood. 2016',
           year: 2016,
           pmid: '27069254',
           doi: '10.1182/blood-2016-03-643544',
@@ -888,8 +895,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
       validation: 'Standard laboratory calculation; severity bands used in allergy/hematology teaching.',
       references: [
         {
-          title: 'Contemporary consensus on hypereosinophilic syndromes',
-          citation: 'Valent P et al. / World Allergy Organization eosinophilia discussions',
+          title: 'Contemporary consensus proposal on criteria and classification of eosinophilic disorders and related syndromes',
+          citation: 'Valent P et al. J Allergy Clin Immunol. 2012',
           year: 2012,
           pmid: '22460074',
           doi: '10.1016/j.jaci.2012.02.019',
@@ -997,11 +1004,10 @@ export const wave6HemeOncCalcs: Calculator[] = [
       validation: 'Teaching composite of standard hematology hemolysis evaluation.',
       references: [
         {
-          title: 'Hemolytic anemia evaluation (standard clinical hematology)',
-          citation: 'Brodsky RA. / ASH educational materials on hemolysis workup',
-          year: 2019,
-          pmid: '31693820',
-          doi: '10.1056/NEJMc1912352',
+          title: 'Hemolytic Anemia: Evaluation and Differential Diagnosis',
+          citation: 'Phillips J, Henderson AC. Am Fam Physician. 2018',
+          year: 2018,
+          pmid: '30215915',
         },
       ],
     },
@@ -1087,8 +1093,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
       validation: 'Universal laboratory definition of INR.',
       references: [
         {
-          title: 'WHO guidelines for thromboplastins and plasma used to control oral anticoagulant therapy',
-          citation: 'WHO Expert Committee on Biological Standardization / INR methodology',
+          title: 'WHO Expert Committee on Biological Standardization (including thromboplastin/INR guidelines)',
+          citation: 'WHO Expert Committee on Biological Standardization. World Health Organ Tech Rep Ser. 1999;889:1-111',
           year: 1999,
           pmid: '10853384',
         },
@@ -1769,7 +1775,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
       references: [
         {
           title: 'Hypercalcemia and cancer: Differential diagnosis and treatment',
-          citation: 'Zagzag J et al. / classic HCM management reviews; ASCO educational materials',
+          citation: 'Zagzag J, Hu MI, Fisher SB, Perrier ND. CA Cancer J Clin. 2018',
           year: 2018,
           pmid: '30240520',
           doi: '10.3322/caac.21489',
@@ -1858,9 +1864,9 @@ export const wave6HemeOncCalcs: Calculator[] = [
       validation: 'NICE/NCCN-style MSCC pathways and oncology emergency literature.',
       references: [
         {
-          title: 'Metastatic spinal cord compression in adults (NICE guidance concepts)',
-          citation: 'NICE NG / Loblaw DA et al. clinical MSCC reviews',
-          year: 2005,
+          title: 'A 2011 updated systematic review and clinical practice guideline for the management of malignant extradural spinal cord compression',
+          citation: 'Loblaw DA, Mitera G, Ford M, et al. Int J Radiat Oncol Biol Phys. 2012',
+          year: 2012,
           pmid: '22420969',
           doi: '10.1016/j.ijrobp.2012.01.014',
         },
@@ -2066,8 +2072,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
       validation: 'Oncology supportive care literature on typhlitis diagnosis and management.',
       references: [
         {
-          title: 'Neutropenic enterocolitis',
-          citation: 'Nesher L, Rolston KV. Clin Infect Dis. / classic typhlitis reviews',
+          title: 'Neutropenic enterocolitis, a growing concern in the era of widespread use of aggressive chemotherapy',
+          citation: 'Nesher L, Rolston KV. Clin Infect Dis. 2013',
           year: 2013,
           pmid: '23196957',
           doi: '10.1093/cid/cis998',
@@ -2146,10 +2152,17 @@ export const wave6HemeOncCalcs: Calculator[] = [
       validation: 'WHO handbook grading used widely alongside NCI CTCAE mucositis scales.',
       references: [
         {
-          title: 'WHO handbook for reporting results of cancer treatment (mucositis grading)',
-          citation: 'World Health Organization. 1979 / supportive care applications',
+          title: 'WHO handbook for reporting results of cancer treatment',
+          citation: 'World Health Organization. WHO Offset Publication No. 48. 1979',
           year: 1979,
-          url: 'https://apps.who.int/iris/handle/10665/37200',
+          url: 'https://iris.who.int/handle/10665/37200',
+        },
+        {
+          title: 'Reporting results of cancer treatment',
+          citation: 'Miller AB et al. Cancer. 1981 (journal publication of WHO toxicity grading including mucositis)',
+          year: 1981,
+          pmid: '7459811',
+          doi: '10.1002/1097-0142(19810101)47:1<207::AID-CNCR2820470134>3.0.CO;2-6',
         },
       ],
     },
@@ -2241,7 +2254,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
           title: 'ACR BI-RADS Atlas',
           citation: 'American College of Radiology BI-RADS',
           year: 2013,
-          url: 'https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/Bi-Rads',
+          url: 'https://www.acr.org/Clinical-Resources/Clinical-Tools-and-Reference/Reporting-and-Data-Systems/BI-RADS',
         },
       ],
     },
@@ -2350,7 +2363,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
           title: 'Lung-RADS Version guidance (American College of Radiology)',
           citation: 'American College of Radiology Lung-RADS',
           year: 2022,
-          url: 'https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/Lung-Rads',
+          url: 'https://www.acr.org/Clinical-Resources/Clinical-Tools-and-Reference/Reporting-and-Data-Systems/Lung-RADS',
         },
       ],
     },
@@ -2456,7 +2469,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
           title: 'LI-RADS CT/MRI Manual (American College of Radiology)',
           citation: 'American College of Radiology LI-RADS',
           year: 2018,
-          url: 'https://www.acr.org/Clinical-Resources/Reporting-and-Data-Systems/LI-RADS',
+          url: 'https://www.acr.org/Clinical-Resources/Clinical-Tools-and-Reference/Reporting-and-Data-Systems/LI-RADS',
         },
       ],
     },

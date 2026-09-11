@@ -528,8 +528,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
       references: [
         { title: 'Recommended guidelines for uniform reporting of data from out-of-hospital cardiac arrest (Utstein)', citation: 'Cummins RO et al. Circulation. 1991', year: 1991, pmid: '1860248',
           doi: '10.1161/01.cir.84.2.960', },
-        { title: 'Cerebral Performance Categories (CPC) in cardiac arrest outcome reporting', citation: 'Cummins RO et al. Circulation. 1991 (Utstein-style outcome categories including CPC)', year: 1991, pmid: '1860248',
-          doi: '10.1161/01.cir.84.2.960', },
+        { title: 'Cerebral resuscitation after cardiac arrest: a review', citation: 'Safar P. Circulation. 1986', year: 1986, pmid: '3536160' },
       ],
     },
     nextSteps: [
@@ -707,8 +706,8 @@ export const wave2CardiologyCalcs: Calculator[] = [
       formula: 'CI (L/min/m²) = CO (L/min) / BSA (m²)',
       validation: 'Standard hemodynamic definition used in shock and HF literature.',
       references: [
-        { title: 'Medical therapy of acute myocardial infarction by application of hemodynamic subsets (second of two parts)', citation: 'Forrester JS et al. N Engl J Med. 1976', year: 1976, pmid: '790194',
-          doi: '10.1056/NEJM197612162952505', },
+        { title: 'Medical therapy of acute myocardial infarction by application of hemodynamic subsets (first of two parts)', citation: 'Forrester JS et al. N Engl J Med. 1976', year: 1976, pmid: '790191',
+          doi: '10.1056/NEJM197612092952406', },
       ],
     },
     nextSteps: [
@@ -790,7 +789,13 @@ export const wave2CardiologyCalcs: Calculator[] = [
       formula: 'SVR = 80 × (MAP − CVP) / CO (dyn·s·cm⁻⁵); Wood units = (MAP − CVP) / CO',
       validation: 'Standard critical care hemodynamic equation.',
       references: [
-        { title: 'Hemodynamic calculations (SVR) — standard critical care physiology', citation: 'Textbook of Critical Care / standard hemodynamic equations (MAP−CVP)/CO × 80', year: 2010, url: 'https://www.ncbi.nlm.nih.gov/books/NBK482255/' },
+        {
+          title: 'Calculating vascular resistances',
+          citation: 'Skimming JW, Cassin S, Nichols WW. Clin Cardiol. 1997',
+          year: 1997,
+          pmid: '9294674',
+          doi: '10.1002/clc.4960200918',
+        },
       ],
     },
     nextSteps: [
@@ -1030,9 +1035,11 @@ export const wave2CardiologyCalcs: Calculator[] = [
       formula: 'QTc_Hodges = QT + 1.75 × (HR − 60)',
       validation: 'One of several linear/nonlinear corrections superior to Bazett at extreme HR in comparative studies.',
       references: [
-        { title: 'QT interval corrections (Hodges linear formula)', citation: 'Hodges M et al. J Electrocardiol. 1983 (linear QT correction; classic ECG methods)', year: 1983,
-          pmid: '34253795',
-          doi: '10.1038/s41598-021-93774-9', url: 'https://en.wikipedia.org/wiki/QT_interval#Hodges_correction' },
+        {
+          title: "Bazett's QT correction reviewed: evidence that a linear QT correction for heart rate is better",
+          citation: 'Hodges M, Salerno D, Erlien D. J Am Coll Cardiol. 1983 (abstract; QTc = QT + 1.75×(HR−60))',
+          year: 1983,
+        },
       ],
     },
     nextSteps: [
@@ -1524,7 +1531,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
       references: [
         {
           title: 'The ABC (age, biomarkers, clinical history) bleeding risk score',
-          citation: 'Hijazi Z et al. Eur Heart J. 2016',
+          citation: 'Hijazi Z et al. Lancet. 2016',
           year: 2016, pmid: '27056738', doi: '10.1016/S0140-6736(16)00741-8' },
       ],
     },
@@ -1964,10 +1971,10 @@ export const wave2CardiologyCalcs: Calculator[] = [
       validation: 'Classic Swan-Ganz era classification; clinical wet/cold exam often used when catheters unavailable.',
       references: [
         {
-          title: 'Medical therapy of acute myocardial infarction by application of hemodynamic subsets',
+          title: 'Medical therapy of acute myocardial infarction by application of hemodynamic subsets (first of two parts)',
           citation: 'Forrester JS et al. N Engl J Med. 1976',
-          year: 1976, pmid: '790194',
-          doi: '10.1056/NEJM197612162952505', },
+          year: 1976, pmid: '790191',
+          doi: '10.1056/NEJM197612092952406', },
       ],
     },
     nextSteps: [

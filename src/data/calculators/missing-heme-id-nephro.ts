@@ -72,8 +72,10 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       formula: 'Stage = max(creatinine stage, UOP stage); Stage 3 also if RRT initiated',
       validation: 'International consensus; widely used in research and clinical pathways.',
       references: [
-        { title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury', citation: 'Kidney Int Suppl. 2012 (KDIGO AKI)', year: 2012, pmid: '22890468',
-          doi: '10.1159/000339789', url: 'https://kdigo.org/guidelines/acute-kidney-injury/' },
+        { title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury', citation: 'KDIGO AKI Work Group. Kidney Int Suppl. 2012;2:1–138', year: 2012,
+          url: 'https://kdigo.org/guidelines/acute-kidney-injury/' },
+        { title: 'KDIGO clinical practice guidelines for acute kidney injury (journal summary)', citation: 'Khwaja A. Nephron Clin Pract. 2012', year: 2012, pmid: '22890468',
+          doi: '10.1159/000339789' },
       ],
     },
     nextSteps: [
@@ -674,7 +676,7 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
           title: 'Factors at admission associated with bleeding risk in medical patients: findings from the IMPROVE investigators',
           citation: 'Decousus H et al. Chest. 2011',
           year: 2011,
-          pmid: '21239736',
+          pmid: '20453069',
           doi: '10.1378/chest.09-3081',
         },
       ],
@@ -1142,8 +1144,8 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       formula: 'Behavior (0–3) + CV (0–3) + Resp (0–3) + O₂ (0 or 2)',
       validation: 'Multiple PEWS variants associate higher scores with ICU transfer; not a substitute for clinical concern.',
       references: [
-        { title: 'Pediatric early warning systems literature', citation: 'Monaghan A. Paediatr Nurs. 2005 / subsequent PEWS validations', year: 2005, pmid: '28699997',
-          doi: '10.1590/1518-8345.1733.2912', },
+        { title: 'Detecting and managing deterioration in children', citation: 'Monaghan A. Paediatr Nurs. 2005', year: 2005, pmid: '15751446',
+          doi: '10.7748/paed2005.02.17.1.32.c964' },
       ],
     },
     nextSteps: [

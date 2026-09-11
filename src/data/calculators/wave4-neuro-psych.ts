@@ -261,8 +261,8 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       validation: 'Derived from LAPSS motor items; validated for LVO and outcome prediction in EMS/ED cohorts.',
       references: [
         {
-          title: 'A brief prehospital stroke severity scale identifies ICH and LVO',
-          citation: 'Nazliel B et al. Stroke. 2008; LAMS applications in LVO routing literature',
+          title: 'A brief prehospital stroke severity scale identifies ischemic stroke patients harboring persisting large arterial occlusions',
+          citation: 'Nazliel B et al. Stroke. 2008',
           year: 2008,
           pmid: '18556587',
           doi: '10.1161/STROKEAHA.107.508127',
@@ -338,8 +338,8 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       validation: 'Derived from Cincinnati Prehospital Stroke Scale components; studied for LVO prediction and destination decisions.',
       references: [
         {
-          title: 'Design and validation of a prehospital scale to predict LVO: C-STAT',
-          citation: 'Katz BS et al. Stroke. 2015',
+          title: 'Design and validation of a prehospital scale to predict stroke severity: Cincinnati Prehospital Stroke Severity Scale',
+          citation: 'Katz BS et al. Stroke. 2015 (CPSSS; later called C-STAT)',
           year: 2015,
           pmid: '25899242',
           doi: '10.1161/STROKEAHA.115.008804',
@@ -453,11 +453,11 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       validation: 'Validated against CTA-defined LVO; comparable performance to other EMS LVO scales.',
       references: [
         {
-          title: 'Field Assessment Stroke Triage for Emergency Destination (FAST-ED)',
+          title: 'Field Assessment Stroke Triage for Emergency Destination: A Simple and Accurate Prehospital Scale to Detect Large Vessel Occlusion Strokes',
           citation: 'Lima FO et al. Stroke. 2016',
           year: 2016,
-          pmid: '27834749',
-          doi: '10.1161/STROKEAHA.116.015296',
+          pmid: '27364531',
+          doi: '10.1161/STROKEAHA.116.013301',
         },
       ],
     },
@@ -783,8 +783,8 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       validation: 'International standard grading system for aSAH severity and outcome communication.',
       references: [
         {
-          title: 'Report of World Federation of Neurological Surgeons Committee on a universal SAH grading scale',
-          citation: 'Teasdale GM et al. J Neurosurg. 1988',
+          title: 'A universal subarachnoid hemorrhage scale: report of a committee of the World Federation of Neurosurgical Societies',
+          citation: 'Teasdale GM et al. J Neurol Neurosurg Psychiatry. 1988',
           year: 1988,
           pmid: '3236024',
           doi: '10.1136/jnnp.51.11.1457',
@@ -1099,11 +1099,18 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       validation: 'Embedded in consensus sports concussion tools (Concussion in Sport Group); track change from baseline when available.',
       references: [
         {
-          title: 'Sport concussion assessment tool (SCAT5 / SCAT6 consensus materials)',
-          citation: 'Echemendia RJ et al. Br J Sports Med. 2017; SCAT6 updates 2023',
+          title: 'The Sport Concussion Assessment Tool 5th Edition (SCAT5): Background and rationale',
+          citation: 'Echemendia RJ et al. Br J Sports Med. 2017',
           year: 2017,
-          pmid: '29098983',
-          doi: '10.1136/bjsports-2016-097403',
+          pmid: '28446453',
+          doi: '10.1136/bjsports-2017-097506',
+        },
+        {
+          title: 'Sport concussion assessment tool 6 (SCAT6)',
+          citation: 'Echemendia RJ et al. Br J Sports Med. 2023',
+          year: 2023,
+          pmid: '37316203',
+          doi: '10.1136/bjsports-2023-107036',
         },
       ],
     },
@@ -1234,11 +1241,18 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       validation: 'Consensus framework (not a prognostic score); widely embedded in sports medicine protocols.',
       references: [
         {
-          title: 'Consensus statement on concussion in sport',
-          citation: 'McCrory P et al. Br J Sports Med. 2017; Patricios JS et al. 2023 updates',
+          title: 'Consensus statement on concussion in sport-the 5th international conference on concussion in sport held in Berlin, October 2016',
+          citation: 'McCrory P et al. Br J Sports Med. 2017',
           year: 2017,
           pmid: '28446457',
           doi: '10.1136/bjsports-2017-097699',
+        },
+        {
+          title: 'Consensus statement on concussion in sport: the 6th International Conference on Concussion in Sport-Amsterdam, October 2022',
+          citation: 'Patricios JS et al. Br J Sports Med. 2023',
+          year: 2023,
+          pmid: '37316210',
+          doi: '10.1136/bjsports-2023-106898',
         },
       ],
     },
@@ -1654,11 +1668,11 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       validation: 'Extensively validated informant tool across cultures and care settings.',
       references: [
         {
-          title: 'The Informant Questionnaire on Cognitive Decline in the Elderly (IQCODE)',
-          citation: 'Jorm AF. Int Psychogeriatr. 2004; original work 1989–1994',
-          year: 2004,
-          pmid: '15559753',
-          doi: '10.1017/s1041610204000390',
+          title: 'The Informant Questionnaire on Cognitive Decline in the Elderly (IQCODE): socio-demographic correlates, reliability, validity and some norms',
+          citation: 'Jorm AF, Jacomb PA. Psychol Med. 1989',
+          year: 1989,
+          pmid: '2594878',
+          doi: '10.1017/s0033291700005742',
         },
       ],
     },
@@ -1872,14 +1886,14 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
           title: 'Geriatric Depression Scale (GDS): recent evidence and development of a shorter version',
           citation: 'Sheikh JI, Yesavage JA. Clin Gerontol. 1986',
           year: 1986,
-          pmid: '3335884',
+          doi: '10.1300/J018v05n01_09',
         },
         {
-          title: 'Criterion-based validity and reliability of the Geriatric Depression Screening Scale (GDS-15)',
-          citation: 'Almeida OP, Almeida SA. Int J Geriatr Psychiatry / related validations',
-          year: 2009,
-          pmid: '18914586',
-          doi: '10.1002/gps.2181',
+          title: 'Short versions of the geriatric depression scale: a study of their validity for the diagnosis of a major depressive episode according to ICD-10 and DSM-IV',
+          citation: 'Almeida OP, Almeida SA. Int J Geriatr Psychiatry. 1999',
+          year: 1999,
+          pmid: '10521885',
+          doi: '10.1002/(sici)1099-1166(199910)14:10<858::aid-gps35>3.0.co;2-8',
         },
       ],
     },
@@ -2240,11 +2254,11 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       validation: 'IRLS Study Group validated scale for clinical trials and practice.',
       references: [
         {
-          title: 'Validation of the International Restless Legs Syndrome Study Group rating scale',
+          title: 'Validation of the International Restless Legs Syndrome Study Group rating scale for restless legs syndrome',
           citation: 'Walters AS et al. Sleep Med. 2003',
           year: 2003,
-          pmid: '14592344',
-          doi: '10.1016/s1389-9457(03)00006-6',
+          pmid: '14592342',
+          doi: '10.1016/s1389-9457(02)00258-7',
         },
       ],
     },
@@ -2439,10 +2453,11 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         'CIWA-B described for benzo withdrawal monitoring; local protocols vary. Prefer validated full item administration over total-only estimation.',
       references: [
         {
-          title: 'Assessment of benzodiazepine dependence and withdrawal (CIWA-B related literature)',
-          citation: 'Busto UE et al. J Clin Psychopharmacol. 1989; institutional CIWA-B forms',
+          title: 'A clinical scale to assess benzodiazepine withdrawal',
+          citation: 'Busto UE, Sykora K, Sellers EM. J Clin Psychopharmacol. 1989',
           year: 1989,
           pmid: '2574193',
+          doi: '10.1097/00004714-198912000-00005',
         },
       ],
     },

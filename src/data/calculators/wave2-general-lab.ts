@@ -345,7 +345,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       validation: 'Correlates with HOMA-IR and clamp measures in multiple cohorts; absolute cutoffs vary by population.',
       references: [
         {
-          title: 'The product of triglycerides and glucose, a simple measure of insulin sensitivity',
+          title: 'The product of fasting glucose and triglycerides as surrogate for identifying insulin resistance in apparently healthy subjects',
           citation: 'Simental-Mendía LE et al. Metab Syndr Relat Disord. 2008',
           year: 2008, pmid: '19067533',
           doi: '10.1089/met.2008.0034', },
@@ -508,7 +508,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       formula: 'IFCC = 10.929 × (A1c% − 2.15)',
       validation: 'Master equation linking NGSP and IFCC reference systems.',
       references: [
-        { title: 'IFCC reference system for HbA1c', citation: 'Hoelzel W et al. / IFCC consensus', year: 2004, pmid: '14709644',
+        { title: 'IFCC reference system for measurement of hemoglobin A1c in human blood', citation: 'Hoelzel W et al. Clin Chem. 2004', year: 2004, pmid: '14709644',
           doi: '10.1373/clinchem.2003.024802', },
       ],
     },
@@ -563,7 +563,10 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       summary: 'Glucose: mmol/L = mg/dL ÷ 18; mg/dL = mmol/L × 18 (molecular weight factor for glucose).',
       formula: 'mg/dL ↔ mmol/L × 18',
       validation: 'Standard clinical chemistry conversion.',
-      references: [{ title: 'SI unit conversions for laboratory medicine', citation: 'Clinical chemistry standard conversion factors (mg/dL ↔ mmol/L)', year: 2000, url: 'https://www.nist.gov/pml/owm/metric-si/si-units' }],
+      references: [
+        { title: 'Implementation of SI units for clinical laboratory data. Style specifications and conversion tables', citation: 'Young DS. Ann Intern Med. 1987', year: 1987, pmid: '3789557', doi: '10.7326/0003-4819-106-1-114' },
+        { title: 'NIST SI units (general metrology; molecular-weight conversion factors are laboratory conventions)', citation: 'National Institute of Standards and Technology. The International System of Units (SI)', year: 2019, url: 'https://www.nist.gov/pml/owm/metric-si/si-units' },
+      ],
     },
     nextSteps: [{ condition: 'Abnormal glucose', actions: ['Interpret in clinical context (fasting vs random)', 'Confirm with A1c / OGTT as appropriate'] }],
   },
@@ -616,7 +619,10 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       summary: 'Creatinine: µmol/L = mg/dL × 88.4; mg/dL = µmol/L ÷ 88.4.',
       formula: 'µmol/L = mg/dL × 88.4',
       validation: 'Standard SI conversion factor for creatinine.',
-      references: [{ title: 'Laboratory unit conversion factors', citation: 'Clinical chemistry standard conversion factors', year: 2000, url: 'https://www.nist.gov/pml/owm/metric-si/si-units' }],
+      references: [
+        { title: 'Implementation of SI units for clinical laboratory data. Style specifications and conversion tables', citation: 'Young DS. Ann Intern Med. 1987', year: 1987, pmid: '3789557', doi: '10.7326/0003-4819-106-1-114' },
+        { title: 'NIST SI units (general metrology; creatinine MW ≈ 113.12 g/mol)', citation: 'National Institute of Standards and Technology. The International System of Units (SI)', year: 2019, url: 'https://www.nist.gov/pml/owm/metric-si/si-units' },
+      ],
     },
     nextSteps: [{ condition: 'Elevated creatinine', actions: ['Calculate eGFR (CKD-EPI)', 'Review nephrotoxins', 'Assess acuity vs chronic'] }],
   },
@@ -669,7 +675,10 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       summary: 'Bilirubin: µmol/L = mg/dL × 17.1; mg/dL = µmol/L ÷ 17.1.',
       formula: 'µmol/L = mg/dL × 17.1',
       validation: 'Standard clinical chemistry conversion.',
-      references: [{ title: 'Laboratory unit conversion factors', citation: 'Clinical chemistry standard conversion factors', year: 2000, url: 'https://www.nist.gov/pml/owm/metric-si/si-units' }],
+      references: [
+        { title: 'Implementation of SI units for clinical laboratory data. Style specifications and conversion tables', citation: 'Young DS. Ann Intern Med. 1987', year: 1987, pmid: '3789557', doi: '10.7326/0003-4819-106-1-114' },
+        { title: 'NIST SI units (general metrology; bilirubin MW ≈ 584.7 g/mol)', citation: 'National Institute of Standards and Technology. The International System of Units (SI)', year: 2019, url: 'https://www.nist.gov/pml/owm/metric-si/si-units' },
+      ],
     },
     nextSteps: [{ condition: 'Elevated bilirubin', actions: ['Fractionate direct/indirect', 'Evaluate hemolysis vs hepatobiliary obstruction'] }],
   },
@@ -718,7 +727,10 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       summary: 'Total Ca: mmol/L ≈ mg/dL × 0.2495; mg/dL ≈ mmol/L × 4.008 (atomic weight–based).',
       formula: 'mmol/L = mg/dL × 0.2495',
       validation: 'Standard SI conversion for total calcium.',
-      references: [{ title: 'Laboratory unit conversion factors', citation: 'Clinical chemistry standard conversion factors', year: 2000, url: 'https://www.nist.gov/pml/owm/metric-si/si-units' }],
+      references: [
+        { title: 'Implementation of SI units for clinical laboratory data. Style specifications and conversion tables', citation: 'Young DS. Ann Intern Med. 1987', year: 1987, pmid: '3789557', doi: '10.7326/0003-4819-106-1-114' },
+        { title: 'NIST SI units (general metrology; calcium AW ≈ 40.08 g/mol)', citation: 'National Institute of Standards and Technology. The International System of Units (SI)', year: 2019, url: 'https://www.nist.gov/pml/owm/metric-si/si-units' },
+      ],
     },
     nextSteps: [
       { condition: 'Abnormal calcium', actions: ['Prefer ionized Ca if critically ill', 'Correct for albumin if total Ca only', 'Check PTH, Mg, vitamin D as indicated'] },
@@ -820,7 +832,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       formula: 'FEK = (UK × PCr) / (PK × UCr) × 100',
       validation: 'Teaching tool; TTKG historically used but has limitations; 24h urine K often preferred when available.',
       references: [
-        { title: 'Evaluation of hypokalemia (FEK teaching)', citation: 'Standard nephrology frameworks for urinary potassium excretion', year: 2015, url: 'https://www.ncbi.nlm.nih.gov/books/NBK482465/' },
+        { title: 'Fractional excretion of potassium in normal subjects and in patients with hypokalaemia', citation: 'Elisaf M, Siamopoulos KC. Postgrad Med J. 1995', year: 1995, pmid: '7784279', doi: '10.1136/pgmj.71.834.211' },
       ],
     },
     nextSteps: [
@@ -889,7 +901,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       formula: 'UOG = Uosm_meas − (2(UNa+UK) + UUN/2.8 + Uglu/18)',
       validation: 'Standard acid-base teaching adjunct to urine anion gap; not perfect if other osmoles (ketoanions, toxins) present.',
       references: [
-        { title: 'Urine osmolal gap and ammonium excretion', citation: 'Dyck RF et al. / classic nephrology teaching', year: 1990, pmid: '2080786',
+        { title: 'A modification of the urine osmolal gap: an improved method for estimating urine ammonium', citation: 'Dyck RF et al. Am J Nephrol. 1990', year: 1990, pmid: '2080786',
           doi: '10.1159/000168150', },
       ],
     },
@@ -941,8 +953,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       formula: 'pH = 6.1 + log₁₀(HCO₃ / (0.0307 × PCO₂))',
       validation: 'Foundational physical chemistry of blood buffers; solubility coefficient ~0.03–0.0307.',
       references: [
-        { title: 'Modern quantitative acid-base chemistry (Stewart) and Henderson-Hasselbalch context', citation: 'Stewart PA. Can J Physiol Pharmacol. 1983', year: 1983, pmid: '6423247',
-          doi: '10.1139/y83-207', },
+        { title: 'Concerning the relationship between the strength of acids and their capacity to preserve neutrality', citation: 'Henderson LJ. Am J Physiol. 1908;21:427-448', year: 1908 },
       ],
     },
     nextSteps: [
@@ -992,7 +1003,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       formula: 'AG_corr = Na − (Cl + HCO₃) + 2.5 × (4 − albumin)',
       validation: 'Widely taught correction; essential in hypoalbuminemic critically ill patients.',
       references: [
-        { title: 'Figge equation / albumin effect on anion gap', citation: 'Figge J et al. Crit Care Med. 1998', year: 1998, pmid: '9824071',
+        { title: 'Anion gap and hypoalbuminemia', citation: 'Figge J et al. Crit Care Med. 1998', year: 1998, pmid: '9824071',
           doi: '10.1097/00003246-199811000-00019', },
       ],
     },
@@ -1070,7 +1081,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       formula: 'Δ ratio = (AG − 12) / (24 − HCO₃) [normals adjustable]',
       validation: 'Standard teaching aid; cutoffs approximate and cause-dependent (ketoacidosis vs lactate).',
       references: [
-        { title: 'Mixed acid-base disorders and the delta ratio', citation: 'Rastegar A. / classic acid-base reviews', year: 2005, pmid: '17656477',
+        { title: 'Use of the DeltaAG/DeltaHCO3- ratio in the diagnosis of mixed acid-base disorders', citation: 'Rastegar A. J Am Soc Nephrol. 2007', year: 2007, pmid: '17656477',
           doi: '10.1681/ASN.2006121408', },
       ],
     },
@@ -1127,7 +1138,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       references: [
         { title: 'Modern quantitative acid-base chemistry', citation: 'Stewart PA. Can J Physiol Pharmacol. 1983', year: 1983, pmid: '6423247',
           doi: '10.1139/y83-207', },
-        { title: 'Stewart acid-base: clinical applications', citation: 'Kellum JA / Fencl V reviews', year: 2000, pmid: '17893626',
+        { title: 'Disorders of acid-base balance', citation: 'Kellum JA. Crit Care Med. 2007', year: 2007, pmid: '17893626',
           doi: '10.1097/01.CCM.0000286399.21008.64', },
       ],
     },
@@ -1189,7 +1200,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       formula: 'CH₂O = V − (Uosm × V)/Posm',
       validation: 'Classic renal physiology; electrolyte-free water clearance variants refine Na-based analysis.',
       references: [
-        { title: 'Free water and osmolar clearance (classic renal physiology)', citation: 'Classic renal physiology teaching of CH2O and Cosm', year: 1960, url: 'https://www.ncbi.nlm.nih.gov/books/NBK482389/' },
+        { title: 'Effect of osmotic and mercurial diuresis on simultaneous water diuresis', citation: 'Wesson LG Jr, Anslow WP Jr. Am J Physiol. 1952', year: 1952, pmid: '12985890', doi: '10.1152/ajplegacy.1952.170.2.255' },
       ],
     },
     nextSteps: [
@@ -1240,7 +1251,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       formula: 'Cosm = Uosm × V / Posm',
       validation: 'Standard renal physiology measurement.',
       references: [
-        { title: 'Free water and osmolar clearance (classic renal physiology)', citation: 'Classic renal physiology teaching of CH2O and Cosm', year: 1960, url: 'https://www.ncbi.nlm.nih.gov/books/NBK482389/' },
+        { title: 'Effect of osmotic and mercurial diuresis on simultaneous water diuresis', citation: 'Wesson LG Jr, Anslow WP Jr. Am J Physiol. 1952', year: 1952, pmid: '12985890', doi: '10.1152/ajplegacy.1952.170.2.255' },
       ],
     },
     nextSteps: [
@@ -1295,7 +1306,8 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       formula: 'CrCl (mL/min) = (UCr × Volume_mL) / (PCr × time_min)',
       validation: 'Classic clearance method; incomplete collection is the main error source. CKD-EPI preferred for routine staging.',
       references: [
-        { title: 'KDIGO evaluation of kidney function (context for timed CrCl)', citation: 'KDIGO Clinical Practice Guideline for the Evaluation and Management of CKD (related chapters)', year: 2012, url: 'https://kdigo.org/guidelines/ckd-evaluation-and-management/' },
+        { title: 'Studies on Kidney Function: The Rate of Filtration and Reabsorption in the Human Kidney', citation: 'Rehberg PB. Biochem J. 1926', year: 1926, pmid: '16743679', doi: '10.1042/bj0200447' },
+        { title: 'KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease', citation: 'KDIGO CKD Work Group. Kidney Int. 2024', year: 2024, pmid: '38490803', doi: '10.1016/j.kint.2023.10.018' },
       ],
     },
     nextSteps: [

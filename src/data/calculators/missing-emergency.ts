@@ -754,9 +754,16 @@ export const missingEmergencyCalcs: Calculator[] = [
       validation: 'Studied in trauma, postpartum hemorrhage, sepsis, and ED triage; thresholds vary by population.',
       references: [
         {
-          title: 'Shock index as a marker for significant injury in trauma patients',
-          citation: 'Allgöwer M, Burri C. concept; modern trauma validations e.g. Cannon CM et al. J Trauma. 2009',
-          year: 2009, pmid: '5656857' },
+          title: 'Shock-index',
+          citation: 'Allgöwer M, Burri C. Ger Med Mon. 1968;13:14-19',
+          year: 1968, pmid: '5656857' },
+        {
+          title: 'Utility of the shock index in predicting mortality in traumatically injured patients',
+          citation: 'Cannon CM et al. J Trauma. 2009;67:1426-1430',
+          year: 2009,
+          pmid: '20009697',
+          doi: '10.1097/TA.0b013e3181bbf728',
+        },
       ],
     },
     nextSteps: [
@@ -889,9 +896,18 @@ export const missingEmergencyCalcs: Calculator[] = [
       validation: 'Widely taught MCI system (Newport Beach FD / Hoag); JumpSTART used for pediatrics; local variants exist (SALT).',
       references: [
         {
-          title: 'START triage methodology (Simple Triage and Rapid Treatment)',
-          citation: 'Community EMS / disaster medicine literature (Newport Beach Fire Department origins; modern START teaching)',
-          year: 1983, url: 'https://remm.hhs.gov/startadult.htm' },
+          title: 'Disaster triage: START, then SAVE—a new method of dynamic triage for victims of a catastrophic earthquake',
+          citation: 'Benson M, Koenig KL, Schultz CH. Prehosp Disaster Med. 1996;11:117-124',
+          year: 1996,
+          pmid: '10159733',
+          doi: '10.1017/s1049023x0004276x',
+        },
+        {
+          title: 'START Adult Triage Algorithm',
+          citation: 'Radiation Emergency Medical Management (REMM), U.S. Department of Health and Human Services',
+          year: 1983,
+          url: 'https://remm.hhs.gov/startadult.htm',
+        },
       ],
     },
     nextSteps: [

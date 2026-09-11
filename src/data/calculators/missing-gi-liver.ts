@@ -44,7 +44,7 @@ export const missingGiLiverCalcs: Calculator[] = [
       validation: 'Widely used severity threshold; steroids studied mainly in DF ≥32 populations. Complementary to MELD and GAHS.',
       references: [
         { title: 'Corticosteroid therapy of alcoholic hepatitis', citation: 'Maddrey WC et al. Gastroenterology. 1978', year: 1978, pmid: '352788',
-          doi: '10.1093/geront/18.3.230', },
+          doi: '10.1016/0016-5085(78)90401-8', },
       ],
     },
     nextSteps: [
@@ -532,8 +532,8 @@ export const missingGiLiverCalcs: Calculator[] = [
       formula: 'R = (ALT/ULN) / (ALP/ULN)',
       validation: 'Standard DILI phenotype definition used in RUCAM and regulatory guidance.',
       references: [
-        { title: 'Criteria of drug-induced liver disorders: report of an international consensus meeting', citation: 'Danan G, Benichou C. J Hepatol. 1993 / CIOMS', year: 1993, pmid: '8229110',
-          doi: '10.1016/0895-4356(93)90101-6', },
+        { title: 'Criteria of drug-induced liver disorders: report of an international consensus meeting', citation: 'Benichou C. J Hepatol. 1990 / CIOMS', year: 1990, pmid: '2254635',
+          doi: '10.1016/0168-8278(90)90124-a', },
       ],
     },
     nextSteps: [

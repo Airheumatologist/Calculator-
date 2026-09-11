@@ -195,7 +195,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     evidence: {
       summary: 'FENa = (UNa×PCr)/(PNa×UCr)×100. <1% prerenal, >2% ATN in oliguric AKI without diuretics.',
       validation: 'Classic teaching; many exceptions (contrast, rhabdo, contrast nephropathy, CKD, diuretics).',
-      references: [{ title: 'Urinary sodium and diagnostic indices in acute renal failure', citation: 'Espinel CH. JAMA. 1976', year: 1976, pmid: '947239',
+      references: [{ title: 'The FENa test. Use in the differential diagnosis of acute renal failure', citation: 'Espinel CH. JAMA. 1976', year: 1976, pmid: '947239',
           doi: '10.1001/jama.236.6.579', }],
     },
     nextSteps: [
@@ -286,7 +286,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     evidence: {
       summary: 'AG = Na − (Cl + HCO₃). Correct ~2.5 mEq/L per 1 g/dL albumin below 4.',
       validation: 'Standard clinical chemistry.',
-      references: [{ title: 'The anion gap', citation: 'Emmett M, Narins RG. Medicine. 1977', year: 1977, pmid: '401925' }],
+      references: [{ title: 'Clinical use of the anion gap', citation: 'Emmett M, Narins RG. Medicine (Baltimore). 1977', year: 1977, pmid: '401925' }],
     },
     nextSteps: [
       { condition: 'High AG', actions: ['Lactate, ketones, toxic alcohols if indicated', 'ABG/VBG', 'Osmolal gap'] },
@@ -413,8 +413,8 @@ export const nephrologyEndoCalcs: Calculator[] = [
     evidence: {
       summary: "Winter's formula: expected PCO₂ = 1.5 × [HCO₃] + 8 ± 2.",
       validation: 'Standard acid-base teaching.',
-      references: [{ title: 'Simple and mixed acid-base disorders: a practical approach (Winter\'s formula teaching)', citation: 'Narins RG, Emmett M. Medicine (Baltimore). 1980', year: 1980, pmid: '6774200',
-          doi: '10.1097/00005792-198005000-00001', }],
+      references: [{ title: 'Quantitative displacement of acid-base equilibrium in metabolic acidosis', citation: 'Albert MS, Dell RB, Winters RW. Ann Intern Med. 1967 (Winter’s formula)', year: 1967, pmid: '6016545',
+          doi: '10.7326/0003-4819-66-2-312', }],
     },
     nextSteps: [
       { condition: 'Mixed disorder', actions: ['Search for second process (e.g., pneumonia + DKA)', 'ABG correlation'] },
@@ -471,8 +471,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     evidence: {
       summary: 'Calculated osm and gap help detect unmeasured osmoles in toxic alcohol ingestion.',
       validation: 'Standard toxicology and electrolyte practice.',
-      references: [{ title: 'An evaluation of the osmole gap as a screening test for toxic alcohol poisoning', citation: 'Purssell RA et al. various reviews', year: 2001, pmid: '18442409',
-          doi: '10.1186/1471-227X-8-5', }],
+      references: [{ title: 'Comparison of methods for calculating serum osmolality from chemical concentrations, and the prognostic value of such calculations', citation: 'Dorwart WV, Chalmers L. Clin Chem. 1975', year: 1975, pmid: '1112025' }],
     },
     nextSteps: [
       { condition: 'High gap + suspicion', actions: ['Urgent toxic alcohol testing', 'Fomepizole if indicated', 'Nephrology for dialysis criteria'] },
@@ -504,7 +503,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     evidence: {
       summary: 'Osm gap = measured − calculated. Early toxic alcohol: high gap; later metabolized acids raise AG as gap falls.',
       validation: 'Core toxicology concept.',
-      references: [{ title: 'AACT practice guidelines on methanol and ethylene glycol poisoning', citation: 'Barceloux DG et al. J Toxicol Clin Toxicol. 1999/2002', year: 2002, pmid: '12216995',
+      references: [{ title: 'American Academy of Clinical Toxicology practice guidelines on the treatment of methanol poisoning', citation: 'Barceloux DG et al. J Toxicol Clin Toxicol. 2002', year: 2002, pmid: '12216995',
           doi: '10.1081/clt-120006745', }],
     },
     nextSteps: [
@@ -584,7 +583,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     evidence: {
       summary: 'Deficit ≈ 0.5 × weight × (desired − measured HCO₃).',
       validation: 'Teaching estimate; Vd of bicarb increases as pH falls.',
-      references: [{ title: 'Lactic acidosis', citation: 'Kraut JA, Madias NE. N Engl J Med. 2014', year: 2014, pmid: '25494270', doi: '10.1056/NEJMra1309483' }],
+      references: [{ title: 'Severity of metabolic acidosis as a determinant of bicarbonate requirements', citation: 'Garella S, Dana CL, Chazan JA. N Engl J Med. 1973', year: 1973, pmid: '4711340', doi: '10.1056/NEJM197307192890303' }],
     },
     nextSteps: [{ condition: 'Severe acidosis', actions: ['Treat cause (source control, insulin, dialysis)', 'Avoid overcorrection'] }],
   },
@@ -619,10 +618,11 @@ export const nephrologyEndoCalcs: Calculator[] = [
       summary: 'BMI = weight(kg)/height(m)². WHO cutoffs; limitations in athletes, elderly, different ethnicities.',
       validation: 'Population-level risk marker.',
       references: [{
-        title: 'WHO BMI classification',
-        citation: 'World Health Organization. Obesity: preventing and managing the global epidemic (TRS 894) / BMI classification',
+        title: 'Obesity: preventing and managing the global epidemic. Report of a WHO consultation (TRS 894)',
+        citation: 'World Health Organization. World Health Organ Tech Rep Ser. 2000',
         year: 2000,
-        url: 'https://www.who.int/data/gho/data/themes/topics/topic-details/GHO/body-mass-index',
+        pmid: '11234459',
+        url: 'https://iris.who.int/handle/10665/42330',
       }],
     },
     nextSteps: [
@@ -661,7 +661,12 @@ export const nephrologyEndoCalcs: Calculator[] = [
     evidence: {
       summary: 'Devine (1974): Men 50 + 2.3 kg/inch >5 ft; Women 45.5 + 2.3 kg/inch >5 ft.',
       validation: 'Widely used in clinical pharmacy.',
-      references: [{ title: 'Gentamicin therapy (Devine ideal body weight formula)', citation: 'Devine BJ. Drug Intell Clin Pharm. 1974 (classic IBW; widely cited in pharmacy dosing)', year: 1974, url: 'https://pubmed.ncbi.nlm.nih.gov/?term=Devine+BJ+gentamicin+1974' }],
+      references: [{
+        title: 'Gentamicin therapy (Case Number 25)',
+        citation: 'Devine BJ. Drug Intell Clin Pharm. 1974;8:650-655',
+        year: 1974,
+        doi: '10.1177/106002807400801104',
+      }],
     },
     nextSteps: [{ condition: 'Obesity', actions: ['Calculate AdjBW = IBW + 0.4×(TBW−IBW) for selected drugs'] }],
   },
@@ -695,7 +700,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     evidence: {
       summary: 'Adjusted body weight commonly used for aminoglycosides and some other agents in obesity.',
       validation: 'Pharmacy practice standard; factor may vary by drug.',
-      references: [{ title: 'The effects of obesity on drug pharmacokinetics in humans', citation: 'Hanley MJ et al. Expert Opin Drug Metab Toxicol. 2010', year: 2010, pmid: '20067334',
+      references: [{ title: 'Effect of obesity on the pharmacokinetics of drugs in humans', citation: 'Hanley MJ et al. Clin Pharmacokinet. 2010', year: 2010, pmid: '20067334',
           doi: '10.2165/11318100-000000000-00000', }],
     },
     nextSteps: [{ condition: 'Any', actions: ['Confirm specific drug monograph for weight scalar'] }],
@@ -898,7 +903,12 @@ export const nephrologyEndoCalcs: Calculator[] = [
     evidence: {
       summary: 'ANC = WBC × % (segs + bands) / 100 (with WBC in cells/µL).',
       validation: 'Standard hematology definition for neutropenia grades.',
-      references: [{ title: 'Common Terminology Criteria for Adverse Events (CTCAE) v5.0', citation: 'National Cancer Institute CTEP. CTCAE v5.0. 2017', year: 2017, url: 'https://ctep.cancer.gov/protocoldevelopment/electronic_applications/ctc.htm' }],
+      references: [{
+        title: 'Common Terminology Criteria for Adverse Events (CTCAE) v5.0',
+        citation: 'National Cancer Institute CTEP. CTCAE v5.0. 2017',
+        year: 2017,
+        url: 'https://evs.nci.nih.gov/ftp1/CTCAE/CTCAE_5.0/',
+      }],
     },
     nextSteps: [
       { condition: 'ANC <500 + fever', actions: ['Urgent broad-spectrum antibiotics', 'Cultures', 'Oncology pathways'] },

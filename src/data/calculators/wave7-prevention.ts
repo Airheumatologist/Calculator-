@@ -600,9 +600,10 @@ export const wave7PreventionCalcs: Calculator[] = [
       references: [
         {
           title: 'Prediction of incident heart failure in individuals without prior cardiovascular disease: the SCORE2-HF risk model',
-          citation: 'SCORE2-HF working group. Eur Heart J. 2025',
-          year: 2025,
+          citation: 'SCORE2-HF working group. Eur Heart J. 2026',
+          year: 2026,
           pmid: '41810943',
+          doi: '10.1093/eurheartj/ehag154',
         },
       ],
     },
@@ -711,10 +712,11 @@ export const wave7PreventionCalcs: Calculator[] = [
           doi: '10.1093/eurjpc/zwac176',
         },
         {
-          title: 'KDIGO 2012 CKD evaluation and management (heatmap)',
-          citation: 'KDIGO. Kidney Int Suppl. 2013',
+          title: 'Evaluation and management of chronic kidney disease: synopsis of the KDIGO 2012 clinical practice guideline',
+          citation: 'Stevens PE, Levin A; KDIGO CKD Work Group. Ann Intern Med. 2013',
           year: 2013,
-          pmid: '27043745',
+          pmid: '23732715',
+          doi: '10.7326/0003-4819-158-11-201306040-00007',
         },
         {
           title: 'SCORE2 risk prediction algorithms',

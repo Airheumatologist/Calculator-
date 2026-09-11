@@ -121,11 +121,11 @@ export const wave6EmPedsCalcs: Calculator[] = [
           doi: '10.1542/peds.2010-3464',
         },
         {
-          title: 'Management of neonates born at ≥35 weeks with suspected EOS',
+          title: 'Management of Neonates Born at ≥35 0/7 Weeks\' Gestation With Suspected or Proven Early-Onset Bacterial Sepsis',
           citation: 'Puopolo KM et al. Pediatrics. 2018 (AAP COFN)',
           year: 2018,
-          pmid: '30455344',
-          doi: '10.1542/peds.2018-2896',
+          pmid: '30455342',
+          doi: '10.1542/peds.2018-2894',
         },
       ],
     },
@@ -245,11 +245,11 @@ export const wave6EmPedsCalcs: Calculator[] = [
           doi: '10.1016/S0140-6736(17)31002-4',
         },
         {
-          title: 'Management of neonates with suspected or proven early-onset bacterial sepsis',
-          citation: 'Polin RA et al. / AAP COFN guidance context for sepsis frameworks',
-          year: 2012,
-          pmid: '22547779',
-          doi: '10.1542/peds.2012-0541',
+          title: 'Late-onset sepsis in very low birth weight neonates: the experience of the NICHD Neonatal Research Network',
+          citation: 'Stoll BJ et al. Pediatrics. 2002',
+          year: 2002,
+          pmid: '12165580',
+          doi: '10.1542/peds.110.2.285',
         },
       ],
     },
@@ -360,7 +360,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
           doi: '10.1097/00000658-197801000-00001',
         },
         {
-          title: 'Modified Bell staging (Walsh & Kliegman and subsequent refinements)',
+          title: 'Necrotizing enterocolitis: treatment based on staging criteria',
           citation: 'Walsh MC, Kliegman RM. Pediatr Clin North Am. 1986',
           year: 1986,
           pmid: '3081865',
@@ -618,7 +618,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
       references: [
         {
           title: 'Adaptation and validation of a pediatric sequential organ failure assessment score',
-          citation: 'Matics TJ, Sanchez-Pinto LN. Crit Care Med. 2017',
+          citation: 'Matics TJ, Sanchez-Pinto LN. JAMA Pediatr. 2017',
           year: 2017,
           pmid: '28783810',
           doi: '10.1001/jamapediatrics.2017.2352',
@@ -1206,10 +1206,10 @@ export const wave6EmPedsCalcs: Calculator[] = [
       validation: 'Widely used; MVP may reduce overdiagnosis of oligohydramnios vs AFI alone (RCTs/meta-analyses).',
       references: [
         {
-          title: 'Amniotic fluid volume assessment',
-          citation: 'Phelan JP et al. classic AFI method / subsequent ACOG practice guidance',
+          title: 'Amniotic fluid volume assessment with the four-quadrant technique at 36-42 weeks\' gestation',
+          citation: 'Phelan JP et al. J Reprod Med. 1987',
           year: 1987,
-          pmid: '3306497',
+          pmid: '3305930',
         },
       ],
     },
@@ -1934,9 +1934,9 @@ export const wave6EmPedsCalcs: Calculator[] = [
       validation: 'Multiple obstetric cohorts; cutoffs vary slightly by study. Educational thresholds used here.',
       references: [
         {
-          title: 'Shock index and early recognition of maternal hemorrhage',
-          citation: 'Nathan HL et al. / related obstetric SI literature; Le Bas et al. observations',
-          year: 2013,
+          title: 'Shock index thresholds to predict adverse outcomes in maternal hemorrhage and sepsis',
+          citation: 'Nathan HL et al. Acta Obstet Gynecol Scand. 2019',
+          year: 2019,
           pmid: '31001814',
           doi: '10.1111/aogs.13626',
         },
@@ -2363,10 +2363,11 @@ export const wave6EmPedsCalcs: Calculator[] = [
       validation: 'Clinical teaching aid only — not a validated diagnostic test.',
       references: [
         {
-          title: 'Transient tachypnea of the newborn',
-          citation: 'Jha K et al. StatPearls / classic Avery literature context',
-          year: 2023,
-          pmid: '30726039',
+          title: 'Transient tachypnea of newborn. Possible delayed resorption of fluid at birth',
+          citation: 'Avery ME, Gatewood OB, Brumley G. Am J Dis Child. 1966',
+          year: 1966,
+          pmid: '5906048',
+          doi: '10.1001/archpedi.1966.02090070078010',
         },
       ],
     },

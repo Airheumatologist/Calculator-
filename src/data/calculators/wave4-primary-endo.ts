@@ -85,17 +85,17 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       validation: 'Public ADA screening tool adapted from validated risk models for community use.',
       references: [
         {
-          title: 'ADA Diabetes Risk Test / Standards of Care in Diabetes',
-          citation: 'American Diabetes Association. Diabetes Care (Standards of Care)',
+          title: 'ADA Type 2 Diabetes Risk Test',
+          citation: 'American Diabetes Association. diabetes.org public screening tool',
           year: 2024,
           url: 'https://diabetes.org/diabetes/risk-test',
         },
         {
-          title: 'Screening for type 2 diabetes mellitus',
-          citation: 'Bang H et al. Ann Intern Med. 2009 (related risk score literature)',
+          title: 'Development and validation of a patient self-assessment score for diabetes risk',
+          citation: 'Bang H et al. Ann Intern Med. 2009',
           year: 2009,
-          pmid: '25168549',
-          doi: '10.1016/j.urology.2014.05.017',
+          pmid: '19949143',
+          doi: '10.7326/0003-4819-151-11-200912010-00005',
         },
       ],
     },
@@ -397,8 +397,8 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       validation: 'Thresholds from ADA Standards of Care; diagnosis should be confirmed when asymptomatic.',
       references: [
         {
-          title: 'Classification and Diagnosis of Diabetes: Standards of Care in Diabetes',
-          citation: 'American Diabetes Association. Diabetes Care',
+          title: '2. Diagnosis and Classification of Diabetes: Standards of Care in Diabetes-2024',
+          citation: 'ADA Professional Practice Committee. Diabetes Care. 2024',
           year: 2024,
           pmid: '38078589',
           doi: '10.2337/dc24-S002',
@@ -526,11 +526,11 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
           doi: '10.2337/dc16-2215',
         },
         {
-          title: 'Glycemic Targets: Standards of Care in Diabetes',
-          citation: 'ADA. Diabetes Care',
+          title: '6. Glycemic Goals and Hypoglycemia: Standards of Care in Diabetes-2024',
+          citation: 'ADA Professional Practice Committee. Diabetes Care. 2024',
           year: 2024,
-          pmid: '38078590',
-          doi: '10.2337/dc24-S009',
+          pmid: '38078586',
+          doi: '10.2337/dc24-S006',
         },
       ],
     },
@@ -600,8 +600,8 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       validation: 'Clinical rule of thumb; not a substitute for supervised titration.',
       references: [
         {
-          title: 'Using insulin',
-          citation: 'Davidson PC et al. / Walsh J pump therapy teaching; standard diabetes education texts',
+          title: 'Analysis of guidelines for basal-bolus insulin dosing: basal insulin, correction factor, and carbohydrate-to-insulin ratio',
+          citation: 'Davidson PC et al. Endocr Pract. 2008',
           year: 2008,
           pmid: '19158048',
           doi: '10.4158/EP.14.9.1095',
@@ -666,9 +666,9 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       validation: 'Educational estimate only; wide inter-individual variation.',
       references: [
         {
-          title: 'Insulin dosing formulas in diabetes education',
-          citation: 'Walsh J, Roberts R. Pumping Insulin / standard ICR teaching',
-          year: 2012,
+          title: 'Analysis of guidelines for basal-bolus insulin dosing: basal insulin, correction factor, and carbohydrate-to-insulin ratio',
+          citation: 'Davidson PC et al. Endocr Pract. 2008',
+          year: 2008,
           pmid: '19158048',
           doi: '10.4158/EP.14.9.1095',
         },
@@ -755,11 +755,11 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       validation: 'Standard pump/MDI teaching formula; always individualize.',
       references: [
         {
-          title: 'Insulin correction bolus teaching',
-          citation: 'ADA / diabetes self-management education standards; pump therapy manuals',
-          year: 2022,
-          pmid: '42438920',
-          doi: '10.1177/19322968261465689',
+          title: 'Analysis of guidelines for basal-bolus insulin dosing: basal insulin, correction factor, and carbohydrate-to-insulin ratio',
+          citation: 'Davidson PC et al. Endocr Pract. 2008',
+          year: 2008,
+          pmid: '19158048',
+          doi: '10.4158/EP.14.9.1095',
         },
       ],
     },
@@ -886,8 +886,8 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       validation: 'Educational starting framework; CGM-guided titration preferred.',
       references: [
         {
-          title: 'Insulin therapy in type 1 diabetes',
-          citation: 'ADA Standards / clinical insulin manuals',
+          title: '9. Pharmacologic Approaches to Glycemic Treatment: Standards of Care in Diabetes-2024',
+          citation: 'ADA Professional Practice Committee. Diabetes Care. 2024',
           year: 2024,
           pmid: '38078590',
           doi: '10.2337/dc24-S009',
@@ -1007,7 +1007,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       references: [
         {
           title: 'Management of hyperglycaemia and steroid (glucocorticoid) therapy: a guideline from the Joint British Diabetes Societies (JBDS) for Inpatient Care group',
-          citation: 'Roberts A et al. / ADA hospital glycemic guidance',
+          citation: 'Roberts A et al. Diabet Med. 2018',
           year: 2018,
           pmid: '30152586',
           doi: '10.1111/dme.13675',
@@ -1840,7 +1840,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       validation: 'CDC growth chart categories; WHO charts used in some settings for younger children.',
       references: [
         {
-          title: 'CDC BMI-for-age growth charts / Expert Committee recommendations',
+          title: 'Expert committee recommendations regarding the prevention, assessment, and treatment of child and adolescent overweight and obesity: summary report',
           citation: 'Barlow SE et al. Pediatrics. 2007',
           year: 2007,
           pmid: '18055651',
@@ -2111,10 +2111,17 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       validation: 'NIDA clinical screening resource for general medical settings.',
       references: [
         {
-          title: 'NIDA Quick Screen V1.0 / NM-ASSIST',
-          citation: 'National Institute on Drug Abuse',
+          title: 'Screening for Drug Use in General Medical Settings: Quick Reference Guide (NIDA Quick Screen)',
+          citation: 'National Institute on Drug Abuse. NIDAMED clinician screening resource',
           year: 2012,
-          url: 'https://nida.nih.gov/nidamed-medical-health-professionals/screening-tools-resources/resource-guide-clinicians',
+          url: 'https://nida.nih.gov/sites/default/files/pdf/screening_qr.pdf',
+        },
+        {
+          title: 'A single-question screening test for drug use in primary care',
+          citation: 'Smith PC et al. Arch Intern Med. 2010',
+          year: 2010,
+          pmid: '20625025',
+          doi: '10.1001/archinternmed.2010.140',
         },
       ],
     },
@@ -2405,10 +2412,11 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       validation: 'Hemodynamic teaching parameter; risk associations strongest for chronically wide PP in older adults.',
       references: [
         {
-          title: 'Pulse pressure and cardiovascular risk',
-          citation: 'Franklin SS et al. Circulation. 1999 / related Framingham analyses',
+          title: 'Is pulse pressure useful in predicting risk for coronary heart disease? The Framingham Heart Study',
+          citation: 'Franklin SS et al. Circulation. 1999',
           year: 1999,
-          pmid: '10472070',
+          pmid: '10421594',
+          doi: '10.1161/01.cir.100.4.354',
         },
       ],
     },

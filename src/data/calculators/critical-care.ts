@@ -315,7 +315,7 @@ export const criticalCareCalcs: Calculator[] = [
     evidence: {
       summary: 'NEWS2 is the UK standard early warning score including SpO₂ scales for hypercapnic respiratory failure.',
       validation: 'NHS England endorsed; predicts ICU transfer and mortality.',
-      references: [{ title: 'National Early Warning Score (NEWS) 2', citation: 'Royal College of Physicians. NEWS2 standardising the assessment of acute-illness severity in the NHS. 2017', year: 2017, url: 'https://www.rcp.ac.uk/improving-care/resources/national-early-warning-score-news-2/' }],
+      references: [{ title: 'National Early Warning Score (NEWS) 2', citation: 'Royal College of Physicians. NEWS2: Standardising the assessment of acute-illness severity in the NHS. 2017', year: 2017, url: 'https://www.rcp.ac.uk/resources/national-early-warning-score-news-2/' }],
     },
     nextSteps: [
       { condition: 'Score ≥7', actions: ['Emergency critical care assessment', 'Continuous monitoring / higher-level care'] },
@@ -723,7 +723,7 @@ export const criticalCareCalcs: Calculator[] = [
       summary: 'PAO₂ = FiO₂(Patm−47) − PaCO₂/R; A–a = PAO₂ − PaO₂. Expected rises with age.',
       formula: 'A–a = [FiO₂(P atm−47) − PaCO₂/0.8] − PaO₂',
       validation: 'Standard respiratory physiology teaching.',
-      references: [{ title: 'West\'s Respiratory Physiology: The Essentials', citation: 'West JB, Luks AM. West\'s Respiratory Physiology (textbook chapters on gas exchange / A-a gradient)', year: 2016, url: 'https://www.wolterskluwer.com/en/solutions/ovid/wests-respiratory-physiology-the-essentials-3363' }],
+      references: [{ title: 'Ideal alveolar air and the analysis of ventilation-perfusion relationships in the lungs', citation: 'Riley RL, Cournand A. J Appl Physiol. 1949;1:825-847', year: 1949, pmid: '18145478' }],
     },
     nextSteps: [
       { condition: 'Elevated A–a + hypoxemia', actions: ['CXR/CT as indicated', 'Consider PE, pneumonia, edema, ILD', 'Supplemental O₂ / ventilatory support'] },

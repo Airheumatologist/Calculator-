@@ -436,6 +436,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
           citation: 'Sokal JE et al. Blood. 1984',
           year: 1984,
           pmid: '6584184',
+          doi: '10.1182/blood.V63.4.789.789',
         },
       ],
     },
@@ -891,6 +892,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
           citation: 'Rai KR et al. Blood. 1975',
           year: 1975,
           pmid: '1139039',
+          doi: '10.1182/blood.V46.2.219.219',
         },
       ],
     },
@@ -1288,8 +1290,8 @@ export const wave4HemeOncCalcs: Calculator[] = [
           title: 'A new prognostic index (MIPI) for patients with advanced-stage mantle cell lymphoma',
           citation: 'Hoster E et al. Blood. 2008',
           year: 2008,
-          pmid: '18077791',
-          doi: '10.1182/blood-2007-10-117010',
+          pmid: '17962512',
+          doi: '10.1182/blood-2007-06-095331',
         },
       ],
     },
@@ -1422,8 +1424,8 @@ export const wave4HemeOncCalcs: Calculator[] = [
       validation: 'Carmona-Bayonas et al.; useful adjunct to MASCC in solid-tumor outpatient FN pathways.',
       references: [
         {
-          title: 'Prediction of serious complications in patients with seemingly stable febrile neutropenia: validation of the Clinical Index of Stable Febrile Neutropenia in a prospective cohort',
-          citation: 'Carmona-Bayonas A et al. J Clin Oncol. 2015 / related CISNE publications',
+          title: 'Prediction of serious complications in patients with seemingly stable febrile neutropenia: validation of the Clinical Index of Stable Febrile Neutropenia in a prospective cohort of patients from the FINITE study',
+          citation: 'Carmona-Bayonas A et al. J Clin Oncol. 2015',
           year: 2015,
           pmid: '25559804',
           doi: '10.1200/JCO.2014.57.2347',
@@ -1534,8 +1536,8 @@ export const wave4HemeOncCalcs: Calculator[] = [
       validation: 'Widely validated; DAS28-CRP and DAS28-ESR are not interchangeable at the same numeric cutoffs perfectly.',
       references: [
         {
-          title: 'Disease activity scores for rheumatoid arthritis',
-          citation: 'Prevoo ML et al. / EULAR DAS documentation',
+          title: 'Modified disease activity scores that include twenty-eight-joint counts. Development and validation in a prospective longitudinal study of patients with rheumatoid arthritis',
+          citation: 'Prevoo ML et al. Arthritis Rheum. 1995;38:44-48',
           year: 1995,
           pmid: '7818570',
           doi: '10.1002/art.1780380107',
@@ -1612,10 +1614,11 @@ export const wave4HemeOncCalcs: Calculator[] = [
       validation: 'Aletaha & Smolen; correlates with DAS28 without needing acute-phase reactants.',
       references: [
         {
-          title: 'The Simplified Disease Activity Index (SDAI) and the Clinical Disease Activity Index (CDAI)',
-          citation: 'Aletaha D, Smolen J. Clin Exp Rheumatol / related methods papers',
+          title: 'Acute phase reactants add little to composite disease activity indices for rheumatoid arthritis: validation of a clinical activity score',
+          citation: 'Aletaha D et al. Arthritis Res Ther. 2005;7:R796-R806',
           year: 2005,
-          pmid: '16273793',
+          pmid: '15987481',
+          doi: '10.1186/ar1740',
         },
       ],
     },

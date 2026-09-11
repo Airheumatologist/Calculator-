@@ -111,7 +111,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
     evidence: {
       summary: 'Child-Turcotte-Pugh uses bili, albumin, INR, ascites, encephalopathy.',
       validation: 'Longstanding surgical risk and cirrhosis severity tool.',
-      references: [{ title: 'Surgery and portal hypertension', citation: 'Child CG, Turcotte JG. 1964; Pugh modification 1973', year: 1973, pmid: '4950264',
+      references: [{ title: 'Transection of the oesophagus for bleeding oesophageal varices', citation: 'Pugh RNH et al. Br J Surg. 1973 (Child-Pugh modification)', year: 1973, pmid: '4541913',
           doi: '10.1002/bjs.1800600817', }],
     },
     nextSteps: [
@@ -437,7 +437,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
     evidence: {
       summary: 'Ranson criteria: 5 at admission + 6 at 48 hours predict pancreatitis mortality.',
       validation: 'Historical standard; requires 48h for completion.',
-      references: [{ title: 'Prognostic signs and nonoperative peritoneal lavage in acute pancreatitis', citation: 'Ranson JH et al. Surg Gynecol Obstet. 1974', year: 1974, pmid: '4834279' }],
+      references: [{ title: 'Prognostic signs and the role of operative management in acute pancreatitis', citation: 'Ranson JH et al. Surg Gynecol Obstet. 1974', year: 1974, pmid: '4834279' }],
     },
     nextSteps: [
       { condition: 'Any acute pancreatitis', actions: ['Aggressive early fluids (goal-directed)', 'Early feeding as tolerated', 'ERCP if cholangitis/obstruction'] },
