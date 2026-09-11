@@ -12,27 +12,45 @@ export const criticalCareCalcs: Calculator[] = [
     whenToUse: 'Altered mental status, trauma, ICU sedation assessment.',
     whyUse: 'Universal language for neurologic status and triage.',
     inputs: [
-      selectInput('eye', 'Eye opening', [
-        { label: '4 — Spontaneous', value: 4 },
-        { label: '3 — To speech', value: 3 },
-        { label: '2 — To pain', value: 2 },
-        { label: '1 — None', value: 1 },
-      ]),
-      selectInput('verbal', 'Verbal response', [
-        { label: '5 — Oriented', value: 5 },
-        { label: '4 — Confused', value: 4 },
-        { label: '3 — Inappropriate words', value: 3 },
-        { label: '2 — Incomprehensible sounds', value: 2 },
-        { label: '1 — None', value: 1 },
-      ]),
-      selectInput('motor', 'Motor response', [
-        { label: '6 — Obeys commands', value: 6 },
-        { label: '5 — Localizes pain', value: 5 },
-        { label: '4 — Withdraws from pain', value: 4 },
-        { label: '3 — Abnormal flexion (decorticate)', value: 3 },
-        { label: '2 — Abnormal extension (decerebrate)', value: 2 },
-        { label: '1 — None', value: 1 },
-      ]),
+      selectInput(
+        'eye',
+        'Eye opening',
+        [
+          { label: '4 — Spontaneous', value: 4, description: 'Opens eyes without stimulation' },
+          { label: '3 — To sound', value: 3, description: 'Opens to voice or other sound (Teasdale 2014; formerly “to speech”)' },
+          { label: '2 — To pressure', value: 2, description: 'Opens to fingertip pressure, trapezius pinch, or supraorbital notch (not sternal rub as first-line)' },
+          { label: '1 — None', value: 1, description: 'No eye opening. If lids are swollen shut, record C / NT — do not assign 1 for the swelling' },
+        ],
+        4,
+        'Teasdale 2014 sequence: spontaneous → sound → pressure. If eyes are closed by swelling or bandage, record C (or NT) beside the total; do not silently score 1.',
+      ),
+      selectInput(
+        'verbal',
+        'Verbal response',
+        [
+          { label: '5 — Oriented', value: 5, description: 'Oriented to person, place, and time (typically month/year, not just name)' },
+          { label: '4 — Confused', value: 4, description: 'Converses in sentences but is disoriented or confused' },
+          { label: '3 — Inappropriate words', value: 3, description: 'Intelligible words that are not organized into sentences (exclamation or random words)' },
+          { label: '2 — Incomprehensible sounds', value: 2, description: 'Moans or groans only — no words' },
+          { label: '1 — None', value: 1, description: 'No verbal response. If intubated or tracheostomy, record VT / T — do not silently assign 1 for the tube' },
+        ],
+        5,
+        'Oriented = person, place, and month/year. If an endotracheal tube or tracheostomy prevents speech, record VT (or T) and do not assign 1 solely because of the tube.',
+      ),
+      selectInput(
+        'motor',
+        'Motor response',
+        [
+          { label: '6 — Obeys commands', value: 6, description: 'Performs a two-part command (e.g. “take my hand, then let go”)' },
+          { label: '5 — Localizes pain', value: 5, description: 'Hand crosses midline / reaches above the clavicle toward the stimulus (trapezius or supraorbital)' },
+          { label: '4 — Withdraws from pain', value: 4, description: 'Normal flexion / withdrawal at the elbow away from a fingernail-bed stimulus' },
+          { label: '3 — Abnormal flexion (decorticate)', value: 3, description: 'Slow, stereotyped flexion at the elbow with shoulder adduction (decorticate)' },
+          { label: '2 — Abnormal extension (decerebrate)', value: 2, description: 'Extension at the elbow (decerebrate)' },
+          { label: '1 — None', value: 1, description: 'No motor response in the best arm' },
+        ],
+        6,
+        'Score the best arm. Two-part command for 6. Use trapezius pinch or supraorbital notch to test localization (hand above clavicle). Use fingernail-bed pressure to distinguish normal flexion from abnormal flexion vs extension. Do not use sternal rub as the first-line stimulus.',
+      ),
     ],
     calculate(values) {
       const e = num(values.eye, 4);
@@ -63,6 +81,11 @@ export const criticalCareCalcs: Calculator[] = [
     nextSteps: [
       { condition: 'GCS ≤ 8', actions: ['Airway assessment / RSI as indicated', 'Urgent CT head if trauma/unknown cause', 'Treat reversible causes (glucose, opioids, etc.)'] },
       { condition: 'Any drop ≥2 points', actions: ['Urgent reassessment', 'Repeat imaging as indicated'] },
+    ],
+    pearls: [
+      'Always report E/V/M components, not only the total.',
+      'Intubated verbal = VT (do not silently score 1). Eyes closed by swelling = C / NT (do not silently score 1).',
+      'Localization requires the hand to reach above the clavicle. Use trapezius/supraorbital for that test; fingernail-bed for flexion vs extension.',
     ],
   },
   {

@@ -42,40 +42,76 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whyUse:
       'Simple cortical + motor scale; RACE ≥5 suggests high likelihood of LVO and may support direct transport to thrombectomy centers.',
     inputs: [
-      selectInput('face', 'Facial palsy', [
-        { label: 'Absent (0)', value: 0 },
-        { label: 'Mild (1)', value: 1 },
-        { label: 'Moderate to severe (2)', value: 2 },
-      ]),
-      selectInput('arm', 'Arm motor function', [
-        { label: 'Normal to mild (0)', value: 0 },
-        { label: 'Moderate (1)', value: 1 },
-        { label: 'Severe (2)', value: 2 },
-      ]),
-      selectInput('leg', 'Leg motor function', [
-        { label: 'Normal to mild (0)', value: 0 },
-        { label: 'Moderate (1)', value: 1 },
-        { label: 'Severe (2)', value: 2 },
-      ]),
-      selectInput('gaze', 'Head / gaze deviation', [
-        { label: 'Absent (0)', value: 0 },
-        { label: 'Present (1)', value: 1 },
-      ]),
+      selectInput(
+        'face',
+        'Facial palsy',
+        [
+          { label: 'Absent (0)', value: 0, description: 'Smile / show teeth is symmetrical' },
+          { label: 'Mild (1)', value: 1, description: 'Slightly asymmetrical smile or show-teeth' },
+          { label: 'Moderate to severe (2)', value: 2, description: 'Completely asymmetrical (one side does not move)' },
+        ],
+        0,
+        'Ask the patient to show teeth or smile. Score the weaker side.',
+      ),
+      selectInput(
+        'arm',
+        'Arm motor function',
+        [
+          { label: 'Normal to mild (0)', value: 0, description: 'Weaker arm upholds 90° sitting or 45° supine for >10 s' },
+          { label: 'Moderate (1)', value: 1, description: 'Arm is raised but drops before 10 s' },
+          { label: 'Severe (2)', value: 2, description: 'Cannot raise the arm, or it drops immediately' },
+        ],
+        0,
+        'Extend the weaker arm, palms up, 90° sitting or 45° supine. Time the hold: >10 s = 0; <10 s = 1; cannot raise / drops immediately = 2.',
+      ),
+      selectInput(
+        'leg',
+        'Leg motor function',
+        [
+          { label: 'Normal to mild (0)', value: 0, description: 'Weaker leg upholds 30° supine for >5 s' },
+          { label: 'Moderate (1)', value: 1, description: 'Leg is raised but drops before 5 s' },
+          { label: 'Severe (2)', value: 2, description: 'Cannot raise the leg, or it drops immediately' },
+        ],
+        0,
+        'Supine, raise the weaker leg to 30°. Time the hold: >5 s = 0; <5 s = 1; cannot raise = 2.',
+      ),
+      selectInput(
+        'gaze',
+        'Head / gaze deviation',
+        [
+          { label: 'Absent (0)', value: 0, description: 'Can shift gaze past midline both ways' },
+          { label: 'Present (1)', value: 1, description: 'Forced to one side, or cannot shift gaze past midline when asked to look the other way' },
+        ],
+        0,
+        'If gaze is forced to one side, ask the patient to look the other way. Present = cannot shift past midline.',
+      ),
       selectInput('side', 'Hemiparesis side (cortical testing branch)', [
         { label: 'Right hemiparesis → score aphasia', value: 'right' },
         { label: 'Left hemiparesis → score agnosia', value: 'left' },
         { label: 'No clear laterality / bilateral', value: 'na' },
       ]),
-      selectInput('aphasia', 'Aphasia (right hemiparesis): close eyes + “make a fist”', [
-        { label: 'Performs both (0)', value: 0 },
-        { label: 'Performs one (1)', value: 1 },
-        { label: 'Performs neither (2)', value: 2 },
-      ], 0, 'Use when right-sided weakness (left hemisphere)'),
-      selectInput('agnosia', 'Agnosia / neglect (left hemiparesis)', [
-        { label: 'Recognizes arm and impairment (0)', value: 0 },
-        { label: 'Does not recognize arm OR impairment (1)', value: 1 },
-        { label: 'Does not recognize either (2)', value: 2 },
-      ], 0, 'Use when left-sided weakness (right hemisphere)'),
+      selectInput(
+        'aphasia',
+        'Aphasia (right hemiparesis): close eyes + “make a fist”',
+        [
+          { label: 'Performs both (0)', value: 0, description: 'Closes eyes AND makes a fist (or opens/closes the hand)' },
+          { label: 'Performs one (1)', value: 1, description: 'Performs only one of the two commands' },
+          { label: 'Performs neither (2)', value: 2, description: 'Performs neither command' },
+        ],
+        0,
+        'Use when right-sided weakness (left hemisphere). Commands: (1) close your eyes; (2) make a fist / open and close your hand.',
+      ),
+      selectInput(
+        'agnosia',
+        'Agnosia / neglect (left hemiparesis)',
+        [
+          { label: 'Recognizes arm and impairment (0)', value: 0, description: 'Knows whose arm it is AND knows it is weak' },
+          { label: 'Does not recognize arm OR impairment (1)', value: 1, description: 'Asomatognosia or anosognosia (one of the two)' },
+          { label: 'Does not recognize either (2)', value: 2, description: 'Both asomatognosia and anosognosia' },
+        ],
+        0,
+        'Use when left-sided weakness (right hemisphere). Show the paretic arm: “Whose arm is this?” then “Can you move your arm?”',
+      ),
     ],
     calculate(values) {
       const side = String(values.side ?? 'right');
@@ -145,6 +181,8 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     ],
     pearls: [
       'Score only one cortical branch based on hemiparesis side.',
+      'Arm hold is >10 s at 90° sitting or 45° supine; leg hold is >5 s at 30° supine.',
+      'Agnosia prompts: “Whose arm is this?” then “Can you move your arm?”',
       'RACE does not replace full NIHSS or vessel imaging.',
     ],
   },
@@ -228,9 +266,24 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Prehospital or triage LVO screening with minimal items.',
     whyUse: 'Quick weighted scale; C-STAT ≥2 commonly used as LVO-positive screen.',
     inputs: [
-      yesNo('gaze', 'Gaze preference / conjugate deviation present', 2),
-      yesNo('arm', 'Arm weakness — cannot hold arm up against gravity for 10 s', 1),
-      yesNo('loc', 'LOC: incorrect on ≥1 of 2 orientation questions OR fails ≥1 of 2 commands', 1),
+      yesNo(
+        'gaze',
+        'Gaze preference / conjugate deviation present',
+        2,
+        'Present if conjugate deviation, or the patient cannot shift gaze past midline.',
+      ),
+      yesNo(
+        'arm',
+        'Arm weakness — cannot hold arm up against gravity for 10 s',
+        1,
+        'Ask the patient to hold both arms up (or the weaker arm) against gravity for 10 seconds.',
+      ),
+      yesNo(
+        'loc',
+        'LOC: incorrect on ≥1 of 2 orientation questions OR fails ≥1 of 2 commands',
+        1,
+        'Questions: “What is your age?” and “What month is it?” Commands: “Close your eyes.” then “Make a fist” / open and close your hand. Score Yes if ≥1 question is wrong OR ≥1 command is failed (this tool’s coded rule — do not switch to AND).',
+      ),
     ],
     calculate(values) {
       const score = (bool(values.gaze) ? 2 : 0) + (bool(values.arm) ? 1 : 0) + (bool(values.loc) ? 1 : 0);
@@ -276,7 +329,11 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     nextSteps: [
       { condition: 'C-STAT ≥2', actions: ['Consider mothership / EVT center routing', 'Early advanced imaging'] },
     ],
-    pearls: ['Gaze carries double weight.', 'False negatives occur with mild LVO or posterior circulation stroke.'],
+    pearls: [
+      'Gaze carries double weight (2 points).',
+      'LOC questions are age and month; commands are close eyes and make a fist. This tool scores Yes if ≥1 question is wrong OR ≥1 command fails (not AND).',
+      'False negatives occur with mild LVO or posterior circulation stroke.',
+    ],
   },
 
   {
@@ -1180,10 +1237,30 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whenToUse: 'ED or ward delirium assessment using bCAM/CAM feature logic after attention testing.',
     whyUse: 'Structured binary algorithm aligned with CAM: inattention + acute change plus either altered LOC or disorganized thinking.',
     inputs: [
-      yesNo('f1', 'Feature 1 — Altered mental status OR fluctuating course'),
-      yesNo('f2', 'Feature 2 — Inattention (e.g., months backwards / digit span errors)'),
-      yesNo('f3', 'Feature 3 — Altered level of consciousness (RASS ≠ 0 or not alert)'),
-      yesNo('f4', 'Feature 4 — Disorganized thinking (illogical answers / unclear flow)'),
+      yesNo(
+        'f1',
+        'Feature 1 — Altered mental status OR fluctuating course',
+        1,
+        'Acute change from baseline mental status, or fluctuating course over the past 24 hours (nurse, family, or chart).',
+      ),
+      yesNo(
+        'f2',
+        'Feature 2 — Inattention (e.g., months backwards / digit span errors)',
+        1,
+        'Say: “Name the months backwards from December to July.” Inattention = any error, a pause >15 s or perseveration, or cannot start.',
+      ),
+      yesNo(
+        'f3',
+        'Feature 3 — Altered level of consciousness (RASS ≠ 0 or not alert)',
+        1,
+        'Any RASS other than 0 (not alert and calm). If unarousable (RASS −4/−5), do not diagnose delirium this round — reassess when arousable.',
+      ),
+      yesNo(
+        'f4',
+        'Feature 4 — Disorganized thinking (illogical answers / unclear flow)',
+        1,
+        'Set A yes/no: Will a stone float on water? Are there fish in the sea? Does 1 lb weigh more than 2 lb? Can you use a hammer to pound a nail? Then: “Hold up this many fingers” (show 2); “Now the same with the other hand” (do not demonstrate). Disorganized = ≥2 errors.',
+      ),
     ],
     calculate(values) {
       const f1 = bool(values.f1);
@@ -1254,8 +1331,9 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       { condition: 'Negative but high concern', actions: ['Serial screening', 'Collateral history for fluctuation'] },
     ],
     pearls: [
-      'Inattention is required — without it, algorithm is negative.',
-      'Hyperactive and hypoactive delirium both count when features met.',
+      'Inattention is required — without it, algorithm is negative (need F1 + F2 and F3 or F4).',
+      'F2: months backwards December to July. F4: four yes/no questions plus a two-step finger command (≥2 errors).',
+      'Hyperactive and hypoactive delirium both count when features met. Unarousable (RASS −4/−5): do not diagnose this round.',
     ],
   },
 

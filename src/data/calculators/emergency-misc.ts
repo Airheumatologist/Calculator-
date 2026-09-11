@@ -487,27 +487,45 @@ export const emergencyMiscCalcs: Calculator[] = [
     whenToUse: 'Altered consciousness in infants/young children.',
     whyUse: 'Verbal component modified for developmental stage.',
     inputs: [
-      selectInput('eye', 'Eye opening', [
-        { label: '4 — Spontaneous', value: 4 },
-        { label: '3 — To speech', value: 3 },
-        { label: '2 — To pain', value: 2 },
-        { label: '1 — None', value: 1 },
-      ]),
-      selectInput('verbal', 'Verbal (pediatric)', [
-        { label: '5 — Coos/babbles / oriented', value: 5 },
-        { label: '4 — Irritable cry / confused', value: 4 },
-        { label: '3 — Cries to pain / inappropriate', value: 3 },
-        { label: '2 — Moans to pain / incomprehensible', value: 2 },
-        { label: '1 — None', value: 1 },
-      ]),
-      selectInput('motor', 'Motor', [
-        { label: '6 — Normal spontaneous / obeys', value: 6 },
-        { label: '5 — Withdraws to touch / localizes', value: 5 },
-        { label: '4 — Withdraws to pain', value: 4 },
-        { label: '3 — Flexion to pain', value: 3 },
-        { label: '2 — Extension to pain', value: 2 },
-        { label: '1 — None', value: 1 },
-      ]),
+      selectInput(
+        'eye',
+        'Eye opening',
+        [
+          { label: '4 — Spontaneous', value: 4, description: 'Opens eyes without stimulation (infant or child)' },
+          { label: '3 — To sound', value: 3, description: 'Opens to voice or other sound (Teasdale 2014; formerly “to speech”)' },
+          { label: '2 — To pressure', value: 2, description: 'Opens to fingertip pressure, trapezius pinch, or supraorbital notch' },
+          { label: '1 — None', value: 1, description: 'No eye opening. If lids are swollen shut, record C / NT — do not assign 1 for the swelling' },
+        ],
+        4,
+        'Same sequence as adult GCS 2014: spontaneous → sound → pressure. If eyes are closed by swelling, record C (or NT); do not silently score 1.',
+      ),
+      selectInput(
+        'verbal',
+        'Verbal (pediatric)',
+        [
+          { label: '5 — Coos/babbles / oriented', value: 5, description: 'Infant (preverbal / <2 y): coos or babbles. Child: oriented to name, place, and month' },
+          { label: '4 — Irritable cry / confused', value: 4, description: 'Infant: irritable / consolable cry. Child: confused conversation or sentences' },
+          { label: '3 — Cries to pain / inappropriate', value: 3, description: 'Infant: cries to pain. Child: inappropriate words' },
+          { label: '2 — Moans to pain / incomprehensible', value: 2, description: 'Infant: moans to pain. Child: incomprehensible sounds' },
+          { label: '1 — None', value: 1, description: 'No verbal response. If intubated, record VT — do not assign 1 solely for the tube' },
+        ],
+        5,
+        'Use infant descriptors if preverbal / <2 years; use child descriptors once the child talks. Oriented = name, place, month. Endotracheal tube or tracheostomy = record VT; do not assign 1 for the tube.',
+      ),
+      selectInput(
+        'motor',
+        'Motor',
+        [
+          { label: '6 — Normal spontaneous / obeys', value: 6, description: 'Infant: normal spontaneous movements. Child: obeys a two-part command' },
+          { label: '5 — Withdraws to touch / localizes', value: 5, description: 'Infant: withdraws to touch (not localization). Child: localizes — hand above the clavicle toward trapezius / supraorbital stimulus' },
+          { label: '4 — Withdraws to pain', value: 4, description: 'Normal flexion / withdrawal at the elbow away from a fingernail-bed stimulus' },
+          { label: '3 — Flexion to pain', value: 3, description: 'Abnormal / stereotyped flexion (decorticate)' },
+          { label: '2 — Extension to pain', value: 2, description: 'Extension at the elbow (decerebrate)' },
+          { label: '1 — None', value: 1, description: 'No motor response in the best arm' },
+        ],
+        6,
+        'Infant motor 6 = normal spontaneous movement; infant 5 = withdraws to touch (not localization). Child 6 = two-part command; child 5 = localizes (hand above clavicle). Trapezius / supraorbital for localization; fingernail-bed for flexion vs extension. Score the best arm.',
+      ),
     ],
     calculate(values) {
       const score = num(values.eye) + num(values.verbal) + num(values.motor);
@@ -525,6 +543,11 @@ export const emergencyMiscCalcs: Calculator[] = [
           doi: '10.1007/BF00274080', }],
     },
     nextSteps: [{ condition: 'Low GCS', actions: ['NRP/PALS as indicated', 'CT if trauma/concern for ICH'] }],
+    pearls: [
+      'Pick the infant column if preverbal / <2 y and the child column once the child talks.',
+      'Infant motor 5 is withdraws-to-touch, not localization. Child 5 is hand above the clavicle.',
+      'Intubated verbal = VT. Eyes closed by swelling = C / NT. Do not silently assign 1.',
+    ],
   },
   {
     id: 'westley-croup',
