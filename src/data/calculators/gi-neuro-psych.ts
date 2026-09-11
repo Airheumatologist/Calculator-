@@ -448,64 +448,64 @@ export const giNeuroPsychCalcs: Calculator[] = [
     inputs: [
       selectInput(
         'loc',
-        '1a. LOC (0–3)',
+        '1a. Level of consciousness (0–3)',
         [
-          { label: '0 — Alert', value: 0, description: 'Keenly responsive' },
-          { label: '1 — Not alert, arousable', value: 1, description: 'Arousable by minor stimulation to obey, answer, or respond' },
-          { label: '2 — Not alert, obtunded', value: 2, description: 'Requires repeated or strong/painful stimulation for non-stereotyped movements' },
-          { label: '3 — Unresponsive / reflex only', value: 3, description: 'Reflex motor or autonomic responses only, or flaccid and areflexic' },
+          { label: '0 — Alert', value: 0, points: 0, description: 'Keenly responsive' },
+          { label: '1 — Not alert, arousable', value: 1, points: 1, description: 'Arousable by minor stimulation to obey, answer, or respond' },
+          { label: '2 — Not alert, obtunded', value: 2, points: 2, description: 'Requires repeated or strong/painful stimulation for non-stereotyped movements' },
+          { label: '3 — Unresponsive / reflex only', value: 3, points: 3, description: 'Reflex motor or autonomic responses only, or flaccid and areflexic' },
         ],
         0,
         'Must pick a score even if ET tube, language barrier, or bandages. Score 3 only if no movement other than reflex posturing to noxious stimulation.',
       ),
       selectInput(
         'locQ',
-        '1b. LOC questions (0–2)',
+        '1b. Ask month and age (0–2)',
         [
-          { label: '0 — Both correct', value: 0, description: 'Month and age both correct on first attempt' },
-          { label: '1 — One correct', value: 1, description: 'One correct, or intubated / severe dysarthria / language barrier' },
-          { label: '2 — Neither correct', value: 2, description: 'Neither correct, or aphasic / stuporous with no comprehension' },
+          { label: '0 — Both questions right', value: 0, points: 0, description: 'Month and age both correct on first attempt' },
+          { label: '1 — One question right (or intubated / dysarthria / language barrier)', value: 1, points: 1, description: 'One correct, or untestable due to ET tube, severe dysarthria, trauma, or language barrier' },
+          { label: '2 — Neither correct (or aphasic)', value: 2, points: 2, description: 'Neither correct, or aphasic / stuporous with no comprehension' },
         ],
         0,
         'Ask: “What month is it?” and “How old are you?” Grade the first answer. Do not coach. Not date, place, or president.',
       ),
       selectInput(
         'locC',
-        '1c. LOC commands (0–2)',
+        "1c. 'Open/close eyes' and 'grip/release' (0–2)",
         [
-          { label: '0 — Both correct', value: 0, description: 'Both one-step commands performed' },
-          { label: '1 — One correct', value: 1, description: 'One command performed (credit an unequivocal attempt limited by weakness)' },
-          { label: '2 — Neither correct', value: 2, description: 'Neither command performed' },
+          { label: '0 — Performs both tasks', value: 0, points: 0, description: 'Both one-step commands performed' },
+          { label: '1 — Performs 1 task', value: 1, points: 1, description: 'One command performed (credit an unequivocal attempt limited by weakness)' },
+          { label: '2 — Performs 0 tasks', value: 2, points: 2, description: 'Neither command performed' },
         ],
         0,
-        'Commands: (1) open and close the eyes; (2) grip and release the non-paretic hand. Substitute another one-step command if the hand is unusable. Do not coach.',
+        'Commands: (1) open and close the eyes; (2) grip and release the non-paretic hand. Pantomime if there is a communication barrier. Substitute another one-step command if the hand is unusable. Do not coach.',
       ),
       selectInput(
         'gaze',
-        '2. Best gaze (0–2)',
+        '2. Horizontal extraocular movements (0–2)',
         [
-          { label: '0 — Normal', value: 0, description: 'Voluntary or oculocephalic gaze intact' },
-          { label: '1 — Partial gaze palsy', value: 1, description: 'Abnormal gaze in one or both eyes, but not forced deviation or total paresis' },
-          { label: '2 — Forced deviation', value: 2, description: 'Forced deviation or total gaze paresis not overcome by oculocephalic maneuver' },
+          { label: '0 — Normal', value: 0, points: 0, description: 'Voluntary or oculocephalic gaze intact' },
+          { label: '1 — Partial gaze palsy (can be overcome)', value: 1, points: 1, description: 'Abnormal gaze in one or both eyes, but not forced deviation or total paresis; includes isolated III/IV/VI and gaze that corrects with oculocephalic reflex' },
+          { label: '2 — Forced deviation (not overcome by oculocephalic)', value: 2, points: 2, description: 'Forced deviation or total gaze paresis not overcome by oculocephalic maneuver' },
         ],
         0,
-        'Test voluntary or oculocephalic (doll’s-eye) gaze. Do not use calorics. Isolated cranial-nerve palsy (e.g. III, IV, VI) scores 1.',
+        'Only assess horizontal gaze. Test voluntary or oculocephalic (doll’s-eye) gaze. Do not use calorics. Isolated cranial-nerve palsy (e.g. III, IV, VI) scores 1.',
       ),
       selectInput(
         'visual',
-        '3. Visual (0–3)',
+        '3. Visual fields (0–3)',
         [
-          { label: '0 — No loss', value: 0, description: 'No visual loss by confrontation' },
-          { label: '1 — Partial hemianopia', value: 1, description: 'Partial (quadrantanopia or clear asymmetry, including extinction)' },
-          { label: '2 — Complete hemianopia', value: 2, description: 'Dense visual loss in an entire hemifield' },
-          { label: '3 — Bilateral / blind', value: 3, description: 'Bilateral hemianopia, including cortical blindness; any-cause blindness scores 3' },
+          { label: '0 — No loss', value: 0, points: 0, description: 'No visual loss by confrontation' },
+          { label: '1 — Partial hemianopia', value: 1, points: 1, description: 'Partial (quadrantanopia or clear asymmetry, including extinction)' },
+          { label: '2 — Complete hemianopia', value: 2, points: 2, description: 'Dense visual loss in an entire hemifield' },
+          { label: '3 — Bilateral / blind', value: 3, points: 3, description: 'Bilateral hemianopia, including cortical blindness; any-cause blindness scores 3' },
         ],
         0,
         'Confrontation visual fields, upper and lower quadrants. If unilaterally blind, test the remaining eye. Patients who are blind from any cause score 3.',
       ),
       selectInput(
         'facial',
-        '4. Facial palsy (0–3)',
+        '4. Facial palsy — show teeth / raise brows / close eyes (0–3)',
         [
           { label: '0 — Normal', value: 0, description: 'Symmetrical movement' },
           { label: '1 — Minor', value: 1, description: 'Flattened nasolabial fold or asymmetrical smile' },
@@ -517,7 +517,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
       ),
       selectInput(
         'armL',
-        '5a. Motor arm left (0–4)',
+        '5a. Left arm hold 90°/45° × 10 s (0–4)',
         [
           { label: '0 — No drift', value: 0, description: 'Holds 90° sitting or 45° supine for full 10 s' },
           { label: '1 — Drift', value: 1, description: 'Falls before 10 s but does not hit the bed' },
@@ -530,7 +530,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
       ),
       selectInput(
         'armR',
-        '5b. Motor arm right (0–4)',
+        '5b. Right arm hold 90°/45° × 10 s (0–4)',
         [
           { label: '0 — No drift', value: 0, description: 'Holds 90° sitting or 45° supine for full 10 s' },
           { label: '1 — Drift', value: 1, description: 'Falls before 10 s but does not hit the bed' },
@@ -543,7 +543,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
       ),
       selectInput(
         'legL',
-        '6a. Motor leg left (0–4)',
+        '6a. Left leg hold 30° × 5 s (0–4)',
         [
           { label: '0 — No drift', value: 0, description: 'Holds 30° supine for full 5 s' },
           { label: '1 — Drift', value: 1, description: 'Falls before 5 s but does not hit the bed' },
@@ -556,7 +556,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
       ),
       selectInput(
         'legR',
-        '6b. Motor leg right (0–4)',
+        '6b. Right leg hold 30° × 5 s (0–4)',
         [
           { label: '0 — No drift', value: 0, description: 'Holds 30° supine for full 5 s' },
           { label: '1 — Drift', value: 1, description: 'Falls before 5 s but does not hit the bed' },
@@ -569,7 +569,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
       ),
       selectInput(
         'ataxia',
-        '7. Limb ataxia (0–2)',
+        '7. Finger-nose and heel-shin ataxia (0–2)',
         [
           { label: '0 — Absent', value: 0, description: 'No ataxia, or paralyzed / does not understand (score 0, not UN)' },
           { label: '1 — One limb', value: 1, description: 'Ataxia in one limb, out of proportion to weakness' },
@@ -580,7 +580,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
       ),
       selectInput(
         'sensory',
-        '8. Sensory (0–2)',
+        '8. Pinprick sensory (0–2)',
         [
           { label: '0 — Normal', value: 0, description: 'No sensory loss to pinprick' },
           { label: '1 — Mild–moderate loss', value: 1, description: 'Aware of being touched, but pinprick is less sharp or dull on the affected side' },
@@ -591,7 +591,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
       ),
       selectInput(
         'language',
-        '9. Best language (0–3)',
+        '9. Best language — picture, naming, reading (0–3)',
         [
           { label: '0 — No aphasia', value: 0, description: 'Normal comprehension and expression' },
           { label: '1 — Mild–moderate', value: 1, description: 'Loss of fluency or comprehension, but examiner can still identify picture or naming-card content from the response' },
@@ -603,7 +603,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
       ),
       selectInput(
         'dysarthria',
-        '10. Dysarthria (0–2)',
+        '10. Dysarthria — read/repeat word list (0–2)',
         [
           { label: '0 — Normal', value: 0, description: 'Clear articulation' },
           { label: '1 — Mild–moderate', value: 1, description: 'Slurs at least some words; understood with some difficulty' },
@@ -614,7 +614,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
       ),
       selectInput(
         'extinction',
-        '11. Extinction / inattention (0–2)',
+        '11. Extinction / inattention (double simultaneous) (0–2)',
         [
           { label: '0 — No abnormality', value: 0, description: 'No inattention; aphasia attending to both sides scores 0' },
           { label: '1 — Mild (one modality)', value: 1, description: 'Inattention or extinction to bilateral simultaneous stimulation in one modality (visual, tactile, auditory, spatial, or personal)' },
