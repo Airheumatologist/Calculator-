@@ -54,10 +54,10 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Widely used clinical pharmacy standard; not a measure of “healthy” weight.',
       references: [
         {
-          title: 'Gentamicin therapy (Devine ideal body weight)',
-          citation: 'Devine BJ. Drug Intell Clin Pharm. 1974',
+          title: 'Gentamicin therapy (Case Number 25; Devine ideal body weight)',
+          citation: 'McCarron MM, Devine BJ. Drug Intell Clin Pharm. 1974;8:650-655',
           year: 1974,
-          url: 'https://pubmed.ncbi.nlm.nih.gov/?term=Devine+BJ+gentamicin+1974',
+          doi: '10.1177/106002807400801104',
         },
       ],
     },
@@ -142,10 +142,9 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Historical anthropometric index; cutoffs less standardized than BMI for clinical labeling.',
       references: [
         {
-          title: 'Rohrer index / ponderal index anthropometry',
-          citation: 'Rohrer F. historical; modern use in growth and body-composition literature',
+          title: 'Der Index der Körperfülle als Maß des Ernährungszustandes',
+          citation: 'Rohrer F. Münch Med Wochenschr. 1921;68:580-582',
           year: 1921,
-          url: 'https://pubmed.ncbi.nlm.nih.gov/?term=Rohrer+ponderal+index+anthropometry',
         },
       ],
     },
@@ -332,8 +331,8 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Supported in multiple epidemiologic analyses as a simple central obesity marker; cutoffs may vary by age/ethnicity.',
       references: [
         {
-          title: 'Waist-to-height ratio as an indicator of early health risk',
-          citation: 'Ashwell M, Gibson S. / related WHtR public-health literature',
+          title: "Waist-to-height ratio as an indicator of 'early health risk': simpler and more predictive than using a 'matrix' based on BMI and waist circumference",
+          citation: 'Ashwell M, Gibson S. BMJ Open. 2016',
           year: 2016,
           pmid: '26975935',
           doi: '10.1136/bmjopen-2015-010159',
@@ -503,8 +502,8 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Used in epidemiologic studies of central obesity; clinical cutoffs vary by sex and population.',
       references: [
         {
-          title: 'A new index of abdominal adiposity as an indicator of risk for cardiovascular disease',
-          citation: 'Valdez R. Int J Obes. 1991 / related conicity literature',
+          title: 'A simple model-based index of abdominal adiposity',
+          citation: 'Valdez R. J Clin Epidemiol. 1991',
           year: 1991,
           pmid: '1890438',
           doi: '10.1016/0895-4356(91)90059-i',
@@ -579,10 +578,11 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Derived from residual analysis of REE vs fat-free mass; better when LBM is measured, not guessed.',
       references: [
         {
-          title: 'Exercise Physiology Energy, Nutrition, and Human Performance (Katch–McArdle equation)',
-          citation: 'McArdle WD, Katch FI, Katch VL. Exercise Physiology textbooks / classic LBM-based BMR',
-          year: 2001,
-          url: 'https://pubmed.ncbi.nlm.nih.gov/?term=Katch-McArdle+resting+metabolic+rate',
+          title: 'Body composition as a determinant of energy expenditure: a synthetic review and a proposed general prediction equation',
+          citation: 'Cunningham JJ. Am J Clin Nutr. 1991 (REE = 370 + 21.6 × FFM; popularized as Katch–McArdle)',
+          year: 1991,
+          pmid: '1957828',
+          doi: '10.1093/ajcn/54.6.963',
         },
       ],
     },
@@ -758,9 +758,9 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Standard pediatric dehydration teaching; actual deficits vary with composition (isonatremic vs hypo/hypernatremic).',
       references: [
         {
-          title: 'Management of dehydration in children',
-          citation: 'WHO / AAP oral rehydration and IV deficit teaching literature',
-          year: 2004,
+          title: 'Evaluation and Management of Dehydration in Children',
+          citation: 'Santillanes G, Rose E. Emerg Med Clin North Am. 2018',
+          year: 2018,
           pmid: '29622321',
           doi: '10.1016/j.emc.2017.12.004',
         },
@@ -924,10 +924,11 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Institutional policies differ; some allow slightly higher concentrations with monitoring. Not a protocol.',
       references: [
         {
-          title: 'ISMP IV potassium safety',
-          citation: 'ISMP / hospital electrolyte infusion policies',
-          year: 2018,
-          url: 'https://www.ismp.org/',
+          title: 'Treatment of electrolyte disorders in adult patients in the intensive care unit',
+          citation: 'Kraft MD, Btaiche IF, Sacks GS, Kudsk KA. Am J Health Syst Pharm. 2005',
+          year: 2005,
+          pmid: '16085929',
+          doi: '10.2146/ajhp040300',
         },
       ],
     },
@@ -998,10 +999,11 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Product labeling may vary slightly (e.g., balanced crystalloids); confirm bag label.',
       references: [
         {
-          title: 'Intravenous fluid composition teaching tables',
-          citation: 'Standard critical care / nephrology fluid composition references',
-          year: 2018,
-          url: 'https://www.ncbi.nlm.nih.gov/books/NBK513297/',
+          title: 'Crystalloid fluid therapy',
+          citation: 'Reddy S, Weinberg L, Young P. Crit Care. 2016;20:59',
+          year: 2016,
+          pmid: '26976277',
+          doi: '10.1186/s13054-016-1217-5',
         },
       ],
     },
@@ -1205,7 +1207,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       references: [
         {
           title: 'Postnatal glucose homeostasis in late-preterm and term infants',
-          citation: 'AAP / neonatology textbooks on GIR targeting',
+          citation: 'Committee on Fetus and Newborn, Adamkin DH. Pediatrics. 2011',
           year: 2011,
           pmid: '21357346',
           doi: '10.1542/peds.2010-3851',
@@ -1276,8 +1278,8 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Dimensional identity; safety depends on correct compounding and labeling.',
       references: [
         {
-          title: 'Hyperglycemic crises in adults (DKA/HHS) insulin infusion principles',
-          citation: 'ADA / AACE hyperglycemic crisis guidance',
+          title: 'Hyperglycemic crises in adult patients with diabetes',
+          citation: 'Kitabchi AE, Umpierrez GE, Miles JM, Fisher JN. Diabetes Care. 2009',
           year: 2009,
           pmid: '19564476',
           doi: '10.2337/dc09-9032',
@@ -1343,10 +1345,16 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Dimensional conversion used universally in ICU drug libraries.',
       references: [
         {
-          title: 'Critical care infusion calculation standards',
-          citation: 'Standard ICU pharmacology / smart-pump library methodology',
-          year: 2015,
-          url: 'https://www.ismp.org/',
+          title: 'Guidelines for Optimizing Safe Implementation and Use of Smart Infusion Pumps',
+          citation: 'Institute for Safe Medication Practices (ISMP). 2020',
+          year: 2020,
+          url: 'https://www.ismp.org/guidelines/safe-implementation-and-use-smart-pumps',
+        },
+        {
+          title: 'Dose Calculation',
+          citation: 'StatPearls [Internet]. NCBI Bookshelf NBK430836 (includes mcg/kg/min infusion examples)',
+          year: 2023,
+          url: 'https://www.ncbi.nlm.nih.gov/books/NBK430836/',
         },
       ],
     },
@@ -1405,10 +1413,16 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Exact inverse of the forward drip conversion.',
       references: [
         {
-          title: 'Critical care infusion calculation standards',
-          citation: 'Standard ICU pharmacology methodology',
-          year: 2015,
-          url: 'https://www.ismp.org/',
+          title: 'Guidelines for Optimizing Safe Implementation and Use of Smart Infusion Pumps',
+          citation: 'Institute for Safe Medication Practices (ISMP). 2020',
+          year: 2020,
+          url: 'https://www.ismp.org/guidelines/safe-implementation-and-use-smart-pumps',
+        },
+        {
+          title: 'Dose Calculation',
+          citation: 'StatPearls [Internet]. NCBI Bookshelf NBK430836 (includes mcg/kg/min infusion examples)',
+          year: 2023,
+          url: 'https://www.ncbi.nlm.nih.gov/books/NBK430836/',
         },
       ],
     },
@@ -1468,10 +1482,16 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Standard nursing calculation; rounding to whole drops is practical.',
       references: [
         {
-          title: 'Clinical nursing skills — IV flow rate calculation',
-          citation: 'Standard nursing education references; Nursing Advanced Skills (NCBI Bookshelf)',
-          year: 2015,
-          url: 'https://www.ncbi.nlm.nih.gov/books/NBK594496/',
+          title: 'Chapter 1 Initiate IV Therapy (gravity drip and drop factor)',
+          citation: 'Ernstmeyer K, Christman E, eds. Nursing Advanced Skills. Open RN / Chippewa Valley Technical College. NCBI Bookshelf NBK594499',
+          year: 2023,
+          url: 'https://www.ncbi.nlm.nih.gov/books/NBK594499/',
+        },
+        {
+          title: 'Dose Calculation (gtt/min = volume × drop factor / minutes)',
+          citation: 'StatPearls [Internet]. NCBI Bookshelf NBK430836',
+          year: 2023,
+          url: 'https://www.ncbi.nlm.nih.gov/books/NBK430836/',
         },
       ],
     },
@@ -1585,10 +1605,9 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Exact for ideal miscible liquids; account for displacement in some powder reconstitutions.',
       references: [
         {
-          title: 'Pharmaceutical calculations — alligation and dilution',
-          citation: 'Standard pharmacy calculation texts',
-          year: 2016,
-          url: 'https://pubmed.ncbi.nlm.nih.gov/?term=pharmaceutical+calculations+dilution+C1V1+C2V2',
+          title: "Stoklosa and Ansel's Pharmaceutical Calculations (dilution identity C₁V₁ = C₂V₂)",
+          citation: "Stockton SJ. Stoklosa and Ansel's Pharmaceutical Calculations. 16th ed. Wolters Kluwer; 2021",
+          year: 2021,
         },
       ],
     },
@@ -1666,8 +1685,8 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Educational estimate only; not identical to machine-reported standard base excess (SBE).',
       references: [
         {
-          title: 'The van Slyke equation relating pH, PCO2 and base excess',
-          citation: 'Siggaard-Andersen / van Slyke acid-base literature',
+          title: 'The van Slyke equation',
+          citation: 'Siggaard-Andersen O. Scand J Clin Lab Invest Suppl. 1977',
           year: 1977,
           pmid: '13478',
           doi: '10.3109/00365517709098927',
@@ -1763,11 +1782,10 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Foundational acid-base relationship; solubility coefficient 0.03 mmol/L/mmHg at body temperature.',
       references: [
         {
-          title: 'Modern quantitative acid-base chemistry (Stewart) and Henderson–Hasselbalch context',
-          citation: 'Stewart PA. Can J Physiol Pharmacol. 1983; classic HH relationship in clinical ABG teaching',
-          year: 1983,
-          pmid: '6423247',
-          doi: '10.1139/y83-207',
+          title: 'The Henderson-Hasselbalch equation: its history and limitations',
+          citation: 'Po HN, Senozan NM. J Chem Educ. 2001;78:1499-1503',
+          year: 2001,
+          doi: '10.1021/ed078p1499',
         },
       ],
     },
@@ -1856,9 +1874,9 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Mnemonic only. Prefer A-a gradient / P/F / SpO₂ trends for clinical decisions.',
       references: [
         {
-          title: 'Alveolar gas equation and oxygenation assessment',
-          citation: 'Standard pulmonary physiology; educational FiO2×5 bedside rule; StatPearls Alveolar Gas Equation',
-          year: 2012,
+          title: 'Alveolar Gas Equation',
+          citation: 'Hendrix JM, Burns B. StatPearls [Internet]. NCBI Bookshelf NBK482268 (FiO₂%×5 is a bedside approximation of expected PaO₂)',
+          year: 2024,
           url: 'https://www.ncbi.nlm.nih.gov/books/NBK482268/',
         },
       ],
@@ -2160,8 +2178,8 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       validation: 'Thresholds vary by study (often concern rising above ~1.3); complementary to SI, lactate, and clinical exam.',
       references: [
         {
-          title: 'Modified shock index and mortality in emergency patients',
-          citation: 'Liu YC et al. / MSI emergency medicine literature (e.g., Am J Emerg Med)',
+          title: 'Modified shock index and mortality rate of emergency patients',
+          citation: 'Liu YC et al. World J Emerg Med. 2012',
           year: 2012,
           pmid: '25215048',
           doi: '10.5847/wjem.j.issn.1920-8642.2012.02.006',

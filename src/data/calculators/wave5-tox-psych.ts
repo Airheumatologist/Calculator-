@@ -597,7 +597,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       references: [
         {
           title: 'Management of carbamazepine overdose',
-          citation: 'Spiller HA. Toxicol Rev. / standard toxicology references',
+          citation: 'Spiller HA. Pediatr Emerg Care. 2001',
           year: 2001,
           pmid: '11753195',
           doi: '10.1097/00006565-200112000-00015',
@@ -1146,11 +1146,11 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       validation: 'Educational composite — not a validated formal score; local EMS/ED protocols vary.',
       references: [
         {
-          title: 'Cyanide poisoning and hydroxocobalamin',
-          citation: 'Borron SW et al. Ann Emerg Med. 2007; smoke inhalation reviews',
+          title: 'Prospective study of hydroxocobalamin for acute cyanide poisoning in smoke inhalation',
+          citation: 'Borron SW et al. Ann Emerg Med. 2007',
           year: 2007,
-          pmid: '17963990',
-          doi: '10.1016/j.annemergmed.2007.05.027',
+          pmid: '17481777',
+          doi: '10.1016/j.annemergmed.2007.01.026',
         },
       ],
     },
@@ -1485,9 +1485,9 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       validation: 'Aligned with CDC Pink Book / ACIP wound management tables (educational).',
       references: [
         {
-          title: 'CDC Tetanus: wound management',
-          citation: 'CDC Pink Book / ACIP recommendations',
-          year: 2021,
+          title: 'Clinical Guidance for Wound Management to Prevent Tetanus',
+          citation: 'CDC. Tetanus wound management and prophylaxis (ACIP-aligned)',
+          year: 2024,
           url: 'https://www.cdc.gov/tetanus/hcp/clinical-guidance/index.html',
         },
       ],
@@ -1645,10 +1645,16 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       validation: 'Educational summary of ACIP/CDC rabies PEP principles; local epidemiology matters.',
       references: [
         {
-          title: 'ACIP rabies vaccine and PEP recommendations',
-          citation: 'CDC/ACIP MMWR rabies guidance',
-          year: 2022,
+          title: 'Rabies Post-exposure Prophylaxis Guidance',
+          citation: 'CDC. Rabies PEP clinical care (wound care, HRIG, vaccine schedule)',
+          year: 2025,
           url: 'https://www.cdc.gov/rabies/hcp/clinical-care/post-exposure-prophylaxis.html',
+        },
+        {
+          title: 'Use of a reduced (4-dose) vaccine schedule for postexposure prophylaxis to prevent human rabies',
+          citation: 'Rupprecht CE et al. MMWR Recomm Rep. 2010 (ACIP)',
+          year: 2010,
+          pmid: '20300058',
         },
       ],
     },
@@ -2052,6 +2058,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
             'Bettencourt AP, Romanowski KS, Joe V, et al. Updating the Burn Center Referral Criteria: Results From the 2018 eDelphi Consensus Study. J Burn Care Res. 2020;41(5):1052-1062 (American Burn Association)',
           year: 2020,
           pmid: '32123911',
+          doi: '10.1093/jbcr/iraa038',
           url: 'https://www.ameriburn.org/burn-care-team/resources/guidelines-for-burn-patient-referral',
         },
       ],

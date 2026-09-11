@@ -115,11 +115,11 @@ export const wave5PedsIdCalcs: Calculator[] = [
         'PEWS systems associate higher scores with unplanned ICU transfer; performance depends on response algorithms and local vital-sign norms.',
       references: [
         {
-          title: 'Evaluating the Pediatric Early Warning Score (PEWS) system for emergency department triage',
-          citation: 'Monaghan A. Paediatr Nurs. 2005 / subsequent PEWS validations',
+          title: 'Detecting and managing deterioration in children',
+          citation: 'Monaghan A. Paediatr Nurs. 2005',
           year: 2005,
-          pmid: '25377402',
-          doi: '10.1111/acem.12514',
+          pmid: '15751446',
+          doi: '10.7748/paed2005.02.17.1.32.c964',
         },
         {
           title: 'Effect of a PEWS on all-cause mortality in hospitalized children',
@@ -215,10 +215,11 @@ export const wave5PedsIdCalcs: Calculator[] = [
       validation: 'Teaching ranges from AHA PALS provider materials; institutional vital tables may differ slightly.',
       references: [
         {
-          title: 'Pediatric Advanced Life Support (PALS) Provider Manual',
-          citation: 'American Heart Association',
+          title: '2020 AHA Guidelines for CPR and ECC — Pediatric Basic and Advanced Life Support',
+          citation: 'Topjian AA et al. Circulation. 2020',
           year: 2020,
-          url: 'https://cpr.heart.org/en/cpr-courses-and-kits/healthcare-professional/pediatric',
+          pmid: '33081526',
+          doi: '10.1161/CIR.0000000000000901',
         },
       ],
     },
@@ -298,10 +299,11 @@ export const wave5PedsIdCalcs: Calculator[] = [
       validation: 'Teaching ranges from AHA PALS materials; slight table differences exist across textbooks.',
       references: [
         {
-          title: 'Pediatric Advanced Life Support (PALS) Provider Manual',
-          citation: 'American Heart Association',
+          title: '2020 AHA Guidelines for CPR and ECC — Pediatric Basic and Advanced Life Support',
+          citation: 'Topjian AA et al. Circulation. 2020',
           year: 2020,
-          url: 'https://cpr.heart.org/en/cpr-courses-and-kits/healthcare-professional/pediatric',
+          pmid: '33081526',
+          doi: '10.1161/CIR.0000000000000901',
         },
       ],
     },
@@ -415,10 +417,11 @@ export const wave5PedsIdCalcs: Calculator[] = [
       validation: 'AHA PALS teaching thresholds; local charts may refine percentiles (e.g., 5th percentile SBP).',
       references: [
         {
-          title: 'Pediatric Advanced Life Support (PALS) Provider Manual',
-          citation: 'American Heart Association',
+          title: '2020 AHA Guidelines for CPR and ECC — Pediatric Basic and Advanced Life Support',
+          citation: 'Topjian AA et al. Circulation. 2020',
           year: 2020,
-          url: 'https://cpr.heart.org/en/cpr-courses-and-kits/healthcare-professional/pediatric',
+          pmid: '33081526',
+          doi: '10.1161/CIR.0000000000000901',
         },
       ],
     },
@@ -495,10 +498,11 @@ export const wave5PedsIdCalcs: Calculator[] = [
       validation: 'Teaching estimate only; anatomy varies — always confirm placement clinically and with ETCO₂.',
       references: [
         {
-          title: 'Pediatric Advanced Life Support (PALS) airway teaching',
-          citation: 'American Heart Association PALS provider materials',
+          title: '2020 AHA Guidelines for CPR and ECC — Pediatric Basic and Advanced Life Support',
+          citation: 'Topjian AA et al. Circulation. 2020',
           year: 2020,
-          url: 'https://cpr.heart.org/en/cpr-courses-and-kits/healthcare-professional/pediatric',
+          pmid: '33081526',
+          doi: '10.1161/CIR.0000000000000901',
         },
       ],
     },
@@ -801,9 +805,11 @@ export const wave5PedsIdCalcs: Calculator[] = [
       references: [
         {
           title: 'Dietary Reference Intakes for Energy',
-          citation: 'National Academies / IOM DRI reports (energy)',
-          year: 2005,
-          url: 'https://www.ncbi.nlm.nih.gov/books/NBK545442/',
+          citation: 'National Academies of Sciences, Engineering, and Medicine. 2023',
+          year: 2023,
+          pmid: '36693139',
+          doi: '10.17226/26818',
+          url: 'https://www.ncbi.nlm.nih.gov/books/NBK588659/',
         },
       ],
     },
@@ -900,9 +906,11 @@ export const wave5PedsIdCalcs: Calculator[] = [
       validation: 'Not a formal validated score — organizes WHO-style z thresholds and clinical practice concepts.',
       references: [
         {
-          title: 'WHO child growth standards',
-          citation: 'WHO Multicentre Growth Reference Study',
+          title: 'WHO Child Growth Standards based on length/height, weight and age',
+          citation: 'WHO Multicentre Growth Reference Study Group. Acta Paediatr Suppl. 2006',
           year: 2006,
+          pmid: '16817681',
+          doi: '10.1111/j.1651-2227.2006.tb02378.x',
           url: 'https://www.who.int/tools/child-growth-standards',
         },
         {
@@ -1395,7 +1403,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
       validation: 'Used in clinical pathways and research as a pragmatic severity metric; institutional cutoffs may vary slightly.',
       references: [
         {
-          title: 'The pulmonary score: an asthma severity score for children',
+          title: 'Validation of the pulmonary score: an asthma severity score for children',
           citation: 'Smith SR et al. Acad Emerg Med. 2002',
           year: 2002,
           pmid: '11825832',
@@ -1581,10 +1589,11 @@ export const wave5PedsIdCalcs: Calculator[] = [
       validation: 'Educational alignment with public health case definitions; formal diagnosis requires clinical judgment and published criteria.',
       references: [
         {
-          title: 'CDC MIS-C case definition resources',
-          citation: 'US CDC MIS-C',
-          year: 2023,
-          url: 'https://www.cdc.gov/mis/index.html',
+          title: 'CSTE/CDC surveillance case definition for MIS-C associated with SARS-CoV-2 infection',
+          citation: 'Melgar M et al. MMWR Recomm Rep. 2022',
+          year: 2022,
+          pmid: '36520808',
+          doi: '10.15585/mmwr.rr7104a1',
         },
         {
           title: 'WHO preliminary case definition for MIS-C',
@@ -1688,7 +1697,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
       validation: 'Educational checklist based on classic clinical teaching and pediatric ENT/ophthalmology practice.',
       references: [
         {
-          title: 'Pediatric orbital cellulitis review / management principles',
+          title: 'Periorbital and orbital cellulitis',
           citation: 'Hauser A, Fogarasi S. Pediatr Rev. 2010',
           year: 2010,
           pmid: '20516236',
@@ -1777,9 +1786,16 @@ export const wave5PedsIdCalcs: Calculator[] = [
       validation: 'Derived/validated in meningococcal septicemia cohorts; modern critical care has improved outcomes but score remains educationally useful.',
       references: [
         {
-          title: 'The Glasgow Meningococcal Septicemia Prognostic Score',
-          citation: 'Sinclair JF et al. Lancet. 1987; subsequent validations',
+          title: 'Prognosis of meningococcal septicaemia',
+          citation: 'Sinclair JF, Skeoch CH, Hallworth D. Lancet. 1987',
           year: 1987,
+          pmid: '2885519',
+          doi: '10.1016/s0140-6736(87)93067-4',
+        },
+        {
+          title: 'Validation of the Glasgow Meningococcal Septicemia Prognostic Score',
+          citation: 'Thomson AP et al. Crit Care Med. 1991',
+          year: 1991,
           pmid: '1898875',
           doi: '10.1097/00003246-199101000-00010',
         },
@@ -1974,10 +1990,10 @@ export const wave5PedsIdCalcs: Calculator[] = [
           doi: '10.1542/peds.2011-1330',
         },
         {
-          title: 'NICE NG111 Urinary tract infection in under 16s',
-          citation: 'NICE guideline',
-          year: 2018,
-          url: 'https://www.nice.org.uk/guidance/ng111',
+          title: 'Urinary tract infection in under 16s: diagnosis and management (NICE NG224)',
+          citation: 'NICE guideline NG224 (updates and replaces CG54)',
+          year: 2022,
+          url: 'https://www.nice.org.uk/guidance/ng224',
         },
       ],
     },
@@ -2271,9 +2287,16 @@ export const wave5PedsIdCalcs: Calculator[] = [
       validation: 'WHO severe malaria definitions guide global treatment standards.',
       references: [
         {
-          title: 'WHO Guidelines for malaria',
+          title: 'Severe malaria',
+          citation: 'World Health Organization. Trop Med Int Health. 2014',
+          year: 2014,
+          pmid: '25214480',
+          doi: '10.1111/tmi.12313_2',
+        },
+        {
+          title: 'WHO Guidelines for malaria (living guideline)',
           citation: 'World Health Organization',
-          year: 2023,
+          year: 2024,
           url: 'https://www.who.int/publications/i/item/guidelines-for-malaria',
         },
       ],

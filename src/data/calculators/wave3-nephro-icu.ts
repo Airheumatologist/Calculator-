@@ -231,9 +231,13 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       validation: 'KDIGO CKD guideline standard.',
       references: [
         {
-          title: 'KDIGO Clinical Practice Guideline for Lipid Management / CKD-related Kidney Int Suppl 2013',
-          citation: 'Kidney Int Suppl. 2013 (KDIGO)',
-          year: 2013, url: 'https://kdigo.org/guidelines/' },
+          title: 'KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease',
+          citation: 'KDIGO CKD Work Group. Kidney Int. 2024;105(4S):S117-S314',
+          year: 2024,
+          pmid: '38490803',
+          doi: '10.1016/j.kint.2023.10.018',
+          url: 'https://kdigo.org/guidelines/ckd-evaluation-and-management/',
+        },
       ],
     },
     nextSteps: [
@@ -337,9 +341,13 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       validation: 'Derived from large CKD prognosis consortia; embedded in KDIGO guidelines.',
       references: [
         {
-          title: 'KDIGO Clinical Practice Guideline for Lipid Management / CKD-related Kidney Int Suppl 2013',
-          citation: 'Kidney Int Suppl. 2013 (KDIGO)',
-          year: 2013, url: 'https://kdigo.org/guidelines/' },
+          title: 'KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease',
+          citation: 'KDIGO CKD Work Group. Kidney Int. 2024;105(4S):S117-S314',
+          year: 2024,
+          pmid: '38490803',
+          doi: '10.1016/j.kint.2023.10.018',
+          url: 'https://kdigo.org/guidelines/ckd-evaluation-and-management/',
+        },
       ],
     },
     nextSteps: [
@@ -879,9 +887,12 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       validation: 'Standard nephrology teaching for hyponatremia water balance.',
       references: [
         {
-          title: 'Free water and osmolar clearance (classic renal physiology)',
-          citation: 'Classic renal physiology teaching of CH2O and Cosm',
-          year: 1960, url: 'https://www.ncbi.nlm.nih.gov/books/NBK482389/' },
+          title: 'New approach to disturbances in the plasma sodium concentration',
+          citation: 'Rose BD. Am J Med. 1986;81:1033-1040',
+          year: 1986,
+          pmid: '3799631',
+          doi: '10.1016/0002-9343(86)90401-8',
+        },
       ],
     },
     nextSteps: [
@@ -952,8 +963,8 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       validation: 'Widely used teaching estimate; actual change varies with urine losses and intake.',
       references: [
         {
-          title: 'Hyponatremia / Hypernatremia',
-          citation: 'Adrogué HJ, Madias NE. N Engl J Med. 2000',
+          title: 'Hypernatremia',
+          citation: 'Adrogué HJ, Madias NE. N Engl J Med. 2000;342:1493-1499',
           year: 2000,
           pmid: '10816188',
           doi: '10.1056/NEJM200005183422006',
@@ -1030,9 +1041,12 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       validation: 'Educational approximation only; wide individual variation (acid-base, insulin, catecholamines).',
       references: [
         {
-          title: 'Critical care electrolyte management reviews',
-          citation: 'Standard nephrology / critical care electrolyte reviews',
-          year: 2015, url: 'https://www.ncbi.nlm.nih.gov/books/NBK534232/' },
+          title: 'Hypokalemia',
+          citation: 'Gennari FJ. N Engl J Med. 1998;339:451-458',
+          year: 1998,
+          pmid: '9700180',
+          doi: '10.1056/NEJM199808133390707',
+        },
       ],
     },
     nextSteps: [
@@ -1202,9 +1216,11 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       validation: 'Institution-specific policies vary; this is an educational safety check, not a protocol.',
       references: [
         {
-          title: 'ISMP guidance on IV electrolyte safety',
-          citation: 'ISMP / hospital electrolyte policies (various)',
-          year: 2018, url: 'https://www.ismp.org/' },
+          title: 'Rapid correction of hypokalemia using concentrated intravenous potassium chloride infusions',
+          citation: 'Kruse JA, Carlson RW. Arch Intern Med. 1990;150:613-617',
+          year: 1990,
+          pmid: '2310280',
+        },
       ],
     },
     nextSteps: [
@@ -1286,9 +1302,12 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       validation: 'Physiologic approximation; report measured iCa with actual pH for clinical decisions.',
       references: [
         {
-          title: 'Blood gas interpretation teaching references',
-          citation: 'Clinical chemistry / blood gas teaching references',
-          year: 2010, url: 'https://www.ncbi.nlm.nih.gov/books/NBK536919/' },
+          title: 'pH effects on measurements of ionized calcium and ionized magnesium in blood',
+          citation: 'Wang S et al. Arch Pathol Lab Med. 2002;126:947-950',
+          year: 2002,
+          pmid: '12171493',
+          doi: '10.5858/2002-126-0947-PEOMOI',
+        },
       ],
     },
     nextSteps: [
@@ -1383,9 +1402,12 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       validation: 'Common ICU protocol ranges; product concentrations vary — verify local formulation.',
       references: [
         {
-          title: 'ICU electrolyte repletion protocols',
-          citation: 'Various ICU electrolyte protocols / reviews',
-          year: 2015, url: 'https://www.ncbi.nlm.nih.gov/books/NBK534232/' },
+          title: 'Treatment of hypophosphatemia in patients receiving specialized nutrition support using a graduated dosing scheme',
+          citation: 'Clark CL et al. Crit Care Med. 1995;23:1504-1511',
+          year: 1995,
+          pmid: '7664552',
+          doi: '10.1097/00003246-199509000-00010',
+        },
       ],
     },
     nextSteps: [
@@ -1678,9 +1700,12 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       validation: 'Moderate accuracy; limited by spontaneous efforts, low TV, abdominal hypertension, RV failure.',
       references: [
         {
-          title: 'Critical care ultrasound reviews (IVC / volume assessment)',
-          citation: 'Multiple critical care ultrasound reviews',
-          year: 2016, url: 'https://pubmed.ncbi.nlm.nih.gov/?term=critical+care+ultrasound+IVC+volume' },
+          title: 'Respiratory changes in inferior vena cava diameter are helpful in predicting fluid responsiveness in ventilated septic patients',
+          citation: 'Barbier C et al. Intensive Care Med. 2004;30:1740-1746',
+          year: 2004,
+          pmid: '15034650',
+          doi: '10.1007/s00134-004-2259-8',
+        },
       ],
     },
     nextSteps: [
@@ -1763,11 +1788,11 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       validation: 'Strong evidence among dynamic tests when SV/CO measured accurately.',
       references: [
         {
-          title: 'Passive leg raising for predicting fluid responsiveness: systematic review',
-          citation: 'Monnet X, Teboul JL. various Crit Care Med / Intensive Care Med',
-          year: 2015,
-          pmid: '25649527',
-          doi: '10.1007/s00134-014-3637-5',
+          title: 'Passive leg raising for predicting fluid responsiveness: a systematic review and meta-analysis',
+          citation: 'Monnet X, Marik P, Teboul JL. Intensive Care Med. 2016;42:1935-1947',
+          year: 2016,
+          pmid: '26825952',
+          doi: '10.1007/s00134-015-4134-1',
         },
       ],
     },
@@ -1858,9 +1883,12 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       validation: 'Well validated under strict conditions; many ICU patients fall outside validity criteria.',
       references: [
         {
-          title: 'Fluid responsiveness prediction reviews (Michard / Marik)',
-          citation: 'Michard / Marik / related reviews in Crit Care',
-          year: 2015, url: 'https://pubmed.ncbi.nlm.nih.gov/?term=Michard+fluid+responsiveness' },
+          title: 'Relation between respiratory changes in arterial pulse pressure and fluid responsiveness in septic patients with acute circulatory failure',
+          citation: 'Michard F et al. Am J Respir Crit Care Med. 2000;162:134-138',
+          year: 2000,
+          pmid: '10903232',
+          doi: '10.1164/ajrccm.162.1.9903035',
+        },
       ],
     },
     nextSteps: [
@@ -1962,9 +1990,13 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       validation: 'BTF and neuroICU protocols commonly target CPP ≥60 mmHg with individualized care.',
       references: [
         {
-          title: 'Guidelines for the Management of Severe Traumatic Brain Injury',
-          citation: 'Brain Trauma Foundation guidelines',
-          year: 2016, url: 'https://braintrauma.org/coma/guidelines' },
+          title: 'Guidelines for the Management of Severe Traumatic Brain Injury, Fourth Edition',
+          citation: 'Carney N et al. Neurosurgery. 2017;80:6-15',
+          year: 2017,
+          pmid: '27654000',
+          doi: '10.1227/NEU.0000000000001432',
+          url: 'https://braintrauma.org/coma/guidelines',
+        },
       ],
     },
     nextSteps: [
@@ -2039,9 +2071,12 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       validation: 'Core physiology; absolute targets less useful than trends and clinical perfusion markers.',
       references: [
         {
-          title: 'Critical care physiology textbooks / reviews',
-          citation: 'Critical care physiology textbooks / reviews',
-          year: 2015, url: 'https://www.ncbi.nlm.nih.gov/books/NBK482255/' },
+          title: 'Oxygen transport-1. Basic principles',
+          citation: 'Treacher DF, Leach RM. BMJ. 1998;317:1302-1306',
+          year: 1998,
+          pmid: '9804723',
+          doi: '10.1136/bmj.317.7168.1302',
+        },
       ],
     },
     nextSteps: [

@@ -306,7 +306,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Upper chest + lower chest + xiphoid + nares + grunt (each 0–2)',
       validation: 'Classic neonatal scoring tool for RDS severity and monitoring; educational use alongside modern SpO₂/ABG/support algorithms.',
       references: [
-        { title: 'Silverman-Andersen respiratory severity score (historical)', citation: 'Silverman WA, Andersen DH. Pediatrics. 1956 (historical scoring tradition)', year: 1956, url: 'https://pubmed.ncbi.nlm.nih.gov/?term=Silverman+Andersen+respiratory+distress+score' },
+        { title: 'A controlled clinical trial of effects of water mist on obstructive respiratory signs, death rate and necropsy findings among premature infants', citation: 'Silverman WA, Andersen DH. Pediatrics. 1956;17(1):1-10', year: 1956, pmid: '13353856', doi: '10.1542/peds.17.1.1' },
       ],
     },
     nextSteps: [
@@ -503,8 +503,8 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Sum of HR + RR + SBP + cap refill + O₂ therapy + SpO₂ + effort + behavior (simplified points)',
       validation: 'PEWS systems reduce unrecognized deterioration in pediatric wards when paired with response algorithms; thresholds are institution-specific.',
       references: [
-        { title: 'Bedside PEWS and unplanned PICU transfers', citation: 'Parshuram CS et al. related PEWS literature / CMAJ implementations', year: 2011, pmid: '29486493',
-          doi: '10.1001/jama.2018.0948', },
+        { title: 'Development and initial validation of the Bedside Paediatric Early Warning System score', citation: 'Parshuram CS, Hutchison J, Middaugh K. Crit Care. 2009;13(4):R135', year: 2009, pmid: '19678924',
+          doi: '10.1186/cc7998', },
       ],
     },
     nextSteps: [
@@ -830,7 +830,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Five domains −2 to +2; interpret positive vs negative subtotals',
       validation: 'Validated in neonatal intensive care for pain and sedation assessment.',
       references: [
-        { title: 'Neonatal Pain, Agitation, and Sedation Scale', citation: 'Hummel P et al. J Perinatol / related N-PASS validations', year: 2008, pmid: '18165830',
+        { title: 'Clinical reliability and validity of the N-PASS: neonatal pain, agitation and sedation scale with prolonged pain', citation: 'Hummel P, Puchalski M, Creech SD, Weiss MG. J Perinatol. 2008;28(1):55-60', year: 2008, pmid: '18165830',
           doi: '10.1038/sj.jp.7211861', },
       ],
     },
@@ -980,7 +980,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Patient selects face → score 0–10',
       validation: 'Extensively used self-report scale in pediatrics.',
       references: [
-        { title: 'Wong-Baker FACES Pain Rating Scale', citation: 'Wong DL, Baker CM. Pediatr Nurs. 1988', year: 1988, url: 'https://wongbakerfaces.org/' },
+        { title: 'Pain in children: comparison of assessment scales', citation: 'Wong DL, Baker CM. Pediatr Nurs. 1988;14(1):9-17', year: 1988, pmid: '3344163', url: 'https://wongbakerfaces.org/' },
       ],
     },
     nextSteps: [
@@ -1060,7 +1060,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Sum of 6 behavioral items',
       validation: 'Common neonatal procedural pain scale with good inter-rater reliability when trained.',
       references: [
-        { title: 'Neonatal Infant Pain Scale', citation: 'Lawrence J et al. Neonatal Netw. 1993', year: 1993, pmid: '8413140' },
+        { title: 'The development of a tool to assess neonatal pain', citation: 'Lawrence J et al. Neonatal Netw. 1993;12(6):59-66', year: 1993, pmid: '8413140' },
       ],
     },
     nextSteps: [
@@ -1132,7 +1132,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Categorical: A / V / P / U',
       validation: 'Standard emergency teaching tool; not a substitute for serial full GCS in head injury.',
       references: [
-        { title: 'Pediatric emergency dosing teaching (PALS context)', citation: 'Emergency medicine / PALS teaching literature', year: 2020, url: 'https://cpr.heart.org/en/cpr-courses-and-kits/healthcare-professional/pediatric' },
+        { title: 'Simple bedside assessment of level of consciousness: comparison of two simple assessment scales with the Glasgow Coma scale', citation: 'McNarry AF, Goldhill DR. Anaesthesia. 2004;59(1):34-37', year: 2004, pmid: '14687096', doi: '10.1111/j.1365-2044.2004.03526.x' },
       ],
     },
     nextSteps: [
@@ -1214,7 +1214,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Length (preferred) or weight → color zone table',
       validation: 'Widely used in pediatric emergency care; updated editions revise color–dose cards.',
       references: [
-        { title: 'Broselow-Luten pediatric emergency tape system', citation: 'Luten R et al. / Broselow-Luten system literature', year: 2007, url: 'https://pubmed.ncbi.nlm.nih.gov/?term=Broselow+Luten+pediatric+resuscitation' },
+        { title: 'Length-based endotracheal tube and emergency equipment in pediatrics', citation: 'Luten RC, Wears RL, Broselow J, et al. Ann Emerg Med. 1992;21(8):900-904', year: 1992, pmid: '1497153', doi: '10.1016/s0196-0644(05)82924-5' },
       ],
     },
     nextSteps: [
@@ -1275,7 +1275,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Uncuffed = age/4 + 4; Cuffed ≈ formula − 0.5',
       validation: 'Classic teaching formulas; individual anatomy and cuffed-tube practice vary — clinical confirmation required.',
       references: [
-        { title: 'AHA Pediatric Advanced Life Support (PALS)', citation: 'American Heart Association PALS provider materials', year: 2020, url: 'https://cpr.heart.org/en/cpr-courses-and-kits/healthcare-professional/pediatric' },
+        { title: 'Pediatric formulas for the anesthesiologist', citation: 'Cole F. AMA J Dis Child. 1957;94(6):672-673', year: 1957, pmid: '13478300', doi: '10.1001/archpedi.1957.04030070084009' },
       ],
     },
     nextSteps: [
@@ -1351,7 +1351,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Neonate <60; infant <70; 1–10 y: <70+2×age; >10 y: <90',
       validation: 'Standard PALS teaching thresholds for decompensated hypotension.',
       references: [
-        { title: 'AHA Pediatric Advanced Life Support (PALS)', citation: 'American Heart Association PALS provider materials', year: 2020, url: 'https://cpr.heart.org/en/cpr-courses-and-kits/healthcare-professional/pediatric' },
+        { title: 'Part 4: Pediatric Basic and Advanced Life Support: 2020 American Heart Association Guidelines for CPR and ECC', citation: 'Topjian AA et al. Circulation. 2020;142(16_suppl_2):S469-S523', year: 2020, pmid: '33081526', doi: '10.1161/CIR.0000000000000901' },
       ],
     },
     nextSteps: [
@@ -1497,7 +1497,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Stage by max of fold-change, absolute rise, RRT, pediatric eGFR criterion',
       validation: 'KDIGO 2012 criteria used in pediatric nephrology; UOP criteria are parallel (not fully entered here).',
       references: [
-        { title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury', citation: 'Kidney Int Suppl. 2012 (KDIGO AKI)', year: 2012,
+        { title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury', citation: 'KDIGO Acute Kidney Injury Work Group. Kidney Int Suppl. 2012;2:1-138', year: 2012, doi: '10.1038/kisup.2012.1',
           url: 'https://kdigo.org/guidelines/acute-kidney-injury/' },
       ],
     },
@@ -1586,7 +1586,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'UOP (mL/kg/h) = volume ÷ weight ÷ hours',
       validation: 'Standard pediatric critical care / KDIGO urine criteria.',
       references: [
-        { title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury', citation: 'Kidney Int Suppl. 2012 (KDIGO AKI)', year: 2012,
+        { title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury', citation: 'KDIGO Acute Kidney Injury Work Group. Kidney Int Suppl. 2012;2:1-138', year: 2012, doi: '10.1038/kisup.2012.1',
           url: 'https://kdigo.org/guidelines/acute-kidney-injury/' },
       ],
     },
@@ -1861,8 +1861,8 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Educational domain sum + life-threatening red flags',
       validation: 'Consistent with NAEPP/GINA and pediatric emergency pathways.',
       references: [
-        { title: 'Expert Panel Report 3: Guidelines for the Diagnosis and Management of Asthma', citation: 'NHLBI EPR-3', year: 2007, url: 'https://www.nhlbi.nih.gov/health-topics/guidelines-for-diagnosis-management-of-asthma' },
-        { title: 'Global Initiative for Asthma (GINA) Report', citation: 'GINA Report', year: 2024, url: 'https://ginasthma.org/reports/' },
+        { title: 'Expert Panel Report 3 (EPR-3): Guidelines for the Diagnosis and Management of Asthma—Summary Report 2007', citation: 'National Asthma Education and Prevention Program. J Allergy Clin Immunol. 2007;120(5 Suppl):S94-138', year: 2007, pmid: '17983880', doi: '10.1016/j.jaci.2007.09.043', url: 'https://www.nhlbi.nih.gov/health-topics/guidelines-for-diagnosis-management-of-asthma' },
+        { title: 'Global Strategy for Asthma Management and Prevention', citation: 'Global Initiative for Asthma (GINA). 2024 report', year: 2024, url: 'https://ginasthma.org/reports/' },
       ],
     },
     nextSteps: [
@@ -1942,7 +1942,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'RR + O₂ + auscultation + retractions + dyspnea (each 1–3)',
       validation: 'Used in multiple pediatric hospital QI pathways; exact RR age tables vary by institution.',
       references: [
-        { title: 'Pediatric asthma pathway literature', citation: 'Children’s hospital asthma pathway literature', year: 2015, url: 'https://www.nhlbi.nih.gov/health-topics/guidelines-for-diagnosis-management-of-asthma' },
+        { title: 'Improved outcomes for hospitalized asthmatic children using a clinical pathway', citation: 'Kelly CS, Andersen CL, Pestian JP, et al. Ann Allergy Asthma Immunol. 2000;84(5):509-516', year: 2000, pmid: '10831004', doi: '10.1016/S1081-1206(10)62514-8' },
       ],
     },
     nextSteps: [
@@ -2400,7 +2400,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Count severe vs some clinical signs (≥2)',
       validation: 'WHO diarrheal disease management standard worldwide.',
       references: [
-        { title: 'World Health Organization clinical / growth standards resources', citation: 'World Health Organization', year: 2006, url: 'https://www.who.int/' },
+        { title: 'The treatment of diarrhoea: a manual for physicians and other senior health workers', citation: 'World Health Organization. 4th rev. 2005', year: 2005, url: 'https://www.who.int/publications/i/item/9241593180' },
       ],
     },
     nextSteps: [
@@ -2474,7 +2474,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Deficit mL = wt × % × 10; or Plan B = 75 mL/kg',
       validation: 'Standard pediatric emergency and WHO rehydration teaching.',
       references: [
-        { title: 'World Health Organization clinical / growth standards resources', citation: 'World Health Organization', year: 2006, url: 'https://www.who.int/' },
+        { title: 'The treatment of diarrhoea: a manual for physicians and other senior health workers', citation: 'World Health Organization. 4th rev. 2005', year: 2005, url: 'https://www.who.int/publications/i/item/9241593180' },
       ],
     },
     nextSteps: [
@@ -2564,7 +2564,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Rate = Δdilation / hours; educational alerts for no change ≥4 h active or very slow rate',
       validation: 'Educational only — use institutional partograph and ACOG definitions for decisions.',
       references: [
-        { title: 'ACOG/SMFM Obstetric Care Consensus', citation: 'ACOG/SMFM Obstetric Care Consensus documents', year: 2019, url: 'https://www.acog.org/clinical/clinical-guidance/obstetric-care-consensus' },
+        { title: 'Safe prevention of the primary cesarean delivery', citation: 'Caughey AB et al. ACOG/SMFM Obstetric Care Consensus No. 1. Am J Obstet Gynecol. 2014;210(3):179-193', year: 2014, pmid: '24565430', doi: '10.1016/j.ajog.2014.01.026' },
         { title: 'Contemporary labor patterns', citation: 'Zhang J et al. Obstet Gynecol. 2010', year: 2010, pmid: '21099592',
           doi: '10.1097/AOG.0b013e3181fdef6e', },
       ],
@@ -2740,7 +2740,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       references: [
         { title: 'Criteria for screening tests for gestational diabetes', citation: 'Carpenter MW, Coustan DR. Am J Obstet Gynecol. 1982', year: 1982, pmid: '7148898',
           doi: '10.1016/0002-9378(82)90349-0', },
-        { title: 'Gestational Hypertension and Preeclampsia: ACOG Practice Bulletin No. 222', citation: 'ACOG. Obstet Gynecol. 2020', year: 2020, pmid: '32443079', doi: '10.1097/AOG.0000000000003891' },
+        { title: 'ACOG Practice Bulletin No. 190: Gestational Diabetes Mellitus', citation: 'ACOG. Obstet Gynecol. 2018;131(2):e49-e64', year: 2018, pmid: '29370047', doi: '10.1097/AOG.0000000000002501' },
       ],
     },
     nextSteps: [
@@ -2824,7 +2824,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Interpret pH bands + base deficit magnitude (+ optional PCO₂ for respiratory vs metabolic)',
       validation: 'Standard obstetric/neonatal cord gas interpretation teaching; ACOG criteria for acute intrapartum event include pH <7.0 and BD ≥12 among other elements.',
       references: [
-        { title: 'ACOG Task Force on Hypertension in Pregnancy / related obstetric guidance', citation: 'ACOG Task Force reports', year: 2013, url: 'https://www.acog.org/clinical' },
+        { title: 'ACOG Committee Opinion No. 348: Umbilical cord blood gas and acid-base analysis', citation: 'ACOG Committee on Obstetric Practice. Obstet Gynecol. 2006;108(5):1319-1322', year: 2006, pmid: '17077266', doi: '10.1097/00006250-200611000-00058' },
       ],
     },
     nextSteps: [
@@ -2887,7 +2887,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       formula: 'Δ = SFH(cm) − GA(weeks)',
       validation: 'Common prenatal care screen with limited sensitivity/specificity; ultrasound confirms growth concerns.',
       references: [
-        { title: 'ACOG antepartum care guidance', citation: 'Prenatal care guidelines / ACOG antepartum care teaching', year: 2010, url: 'https://www.acog.org/clinical' },
+        { title: 'Diagnosis of intrauterine growth retardation by a simple clinical method: measurement of uterine height', citation: 'Belizán JM et al. Am J Obstet Gynecol. 1978;131(6):643-646', year: 1978, pmid: '686050', doi: '10.1016/0002-9378(78)90824-4' },
       ],
     },
     nextSteps: [

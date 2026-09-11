@@ -355,7 +355,7 @@ export const wave4EmIdCalcs: Calculator[] = [
       validation: 'Derived from RIETE registry PE cohorts; use alongside clinical judgment and other scores (sPESI, Bova).',
       references: [
         {
-          title: 'Simplification of the pulmonary embolism severity index for prognostication in patients with acute symptomatic PE (related RIETE / sPESI literature)',
+          title: 'Simplification of the pulmonary embolism severity index for prognostication in patients with acute symptomatic pulmonary embolism',
           citation: 'Jiménez D et al. Arch Intern Med. 2010;170:1383-1389',
           year: 2010,
           pmid: '20696966',
@@ -363,7 +363,7 @@ export const wave4EmIdCalcs: Calculator[] = [
         },
         {
           title: 'Clinical predictors for fatal pulmonary embolism in 15,520 patients with VTE (RIETE Registry)',
-          citation: 'Laporte S et al. Circulation. 2008 (RIETE Investigators)',
+          citation: 'Laporte S et al. Circulation. 2008;117:1711-1716',
           year: 2008,
           pmid: '18347212',
           doi: '10.1161/CIRCULATIONAHA.107.726232',
@@ -650,7 +650,7 @@ export const wave4EmIdCalcs: Calculator[] = [
       validation: 'Clinical teaching aid — imaging/ENT evaluation when exam is equivocal or airway threatened.',
       references: [
         {
-          title: 'Peritonsillar abscess clinical review',
+          title: 'Peritonsillar Abscess',
           citation: 'Galioto NJ. Am Fam Physician. 2017;95:501-506',
           year: 2017,
           pmid: '28409615',
@@ -829,11 +829,11 @@ export const wave4EmIdCalcs: Calculator[] = [
       validation: 'Pediatric ENT/EM teaching aid; CT with contrast is common confirmatory test when safe.',
       references: [
         {
-          title: 'Retropharyngeal and parapharyngeal infections in children',
-          citation: 'Craig FW, Schunk JE. Pediatrics. 2003 / contemporary pediatric ID reviews',
+          title: 'Retropharyngeal abscess in children: clinical presentation, utility of imaging, and current management',
+          citation: 'Craig FW, Schunk JE. Pediatrics. 2003;111:1394-1398',
           year: 2003,
-          pmid: '42275833',
-          doi: '10.1016/j.amjoto.2026.104864',
+          pmid: '12777558',
+          doi: '10.1542/peds.111.6.1394',
         },
       ],
     },
@@ -1191,8 +1191,8 @@ export const wave4EmIdCalcs: Calculator[] = [
       validation: 'Miller et al. ATLAS score; used in CDI literature for severity and outcome correlation.',
       references: [
         {
-          title: 'Comparison of the ATLAS score vs other severity criteria for CDI',
-          citation: 'Miller MA et al. BMC Infect Dis. 2013 / related ATLAS publications',
+          title: 'Derivation and validation of a simple clinical bedside score (ATLAS) for Clostridium difficile infection which predicts response to therapy',
+          citation: 'Miller MA et al. BMC Infect Dis. 2013;13:148',
           year: 2013,
           pmid: '23530807',
           doi: '10.1186/1471-2334-13-148',
@@ -1500,11 +1500,11 @@ export const wave4EmIdCalcs: Calculator[] = [
       validation: 'Derived and validated in primary care populations (Oudega / Toll et al.).',
       references: [
         {
-          title: 'Safely ruling out deep venous thrombosis in primary care',
-          citation: 'Oudega R et al. Ann Intern Med. 2005;143:100-107',
+          title: 'Ruling out deep venous thrombosis in primary care: a simple diagnostic algorithm including D-dimer testing',
+          citation: 'Oudega R, Moons KG, Hoes AW. Thromb Haemost. 2005;94:200-205',
           year: 2005,
-          pmid: '16027451',
-          doi: '10.7326/0003-4819-143-2-200507190-00008',
+          pmid: '16113804',
+          doi: '10.1160/TH04-12-0829',
         },
       ],
     },
@@ -1877,11 +1877,11 @@ export const wave4EmIdCalcs: Calculator[] = [
         'Grossman et al.; sensitive but not specific — educational simplified checklist of original categories.',
       references: [
         {
-          title: 'The yield of head CT in syncope: a pilot study / Boston syncope criteria literature',
-          citation: 'Grossman SA et al. related Boston Syncope Rule publications (J Emerg Med / Ann Emerg Med)',
+          title: 'Predicting adverse outcomes in syncope',
+          citation: 'Grossman SA et al. J Emerg Med. 2007;33:233-239',
           year: 2007,
-          pmid: '34251124',
-          doi: '10.1016/j.jemermed.2006.08.015',
+          pmid: '17976548',
+          doi: '10.1016/j.jemermed.2007.04.001',
         },
       ],
     },

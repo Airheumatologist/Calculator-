@@ -68,8 +68,8 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
       validation: 'High sensitivity for knee fracture in derivation/validation cohorts; compare with Ottawa Knee Rules.',
       references: [
         {
-          title: 'Decision rules for selective radiographs in acute knee injuries (Pittsburgh)',
-          citation: 'Seaberg DC, Jackson R. Ann Emerg Med. 1994',
+          title: 'Clinical decision rule for knee radiographs',
+          citation: 'Seaberg DC, Jackson R. Am J Emerg Med. 1994;12:541-543',
           year: 1994, pmid: '8060409',
           doi: '10.1016/0735-6757(94)90274-7', },
       ],
@@ -155,10 +155,12 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
         'Derived from Ottawa methodology literature for selective hip radiography; sensitivity high but occult fracture remains a concern in elderly.',
       references: [
         {
-          title: 'Clinical decision rules for hip radiography (Ottawa/Canadian hip literature)',
-          citation: 'Stiell IG et al. related Ottawa decision-rule program; hip/pelvis radiography decision instruments',
-          year: 1997,
-          pmid: '9403421', url: 'https://pubmed.ncbi.nlm.nih.gov/?term=Stiell+hip+radiography+decision' },
+          title: 'Derivation of a decision rule for the use of radiography in acute knee injuries',
+          citation: 'Stiell IG, Greenberg GH, Wells GA, et al. Ann Emerg Med. 1995;26:405-413. Educational analog of Ottawa selective-radiography rules; no independently derived Ottawa Hip Rule',
+          year: 1995,
+          pmid: '7574120',
+          doi: '10.1016/S0196-0644(95)70106-0',
+        },
       ],
     },
     nextSteps: [
@@ -479,9 +481,11 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
       validation: 'Standard pediatric orthopedics classification (Salter & Harris, 1963).',
       references: [
         {
-          title: 'Injuries involving the epiphyseal plate (Salter-Harris)',
-          citation: 'Salter RB, Harris WR. J Bone Joint Surg Am. 1963 (classic classification; widely reprinted)',
-          year: 1963, url: 'https://pubmed.ncbi.nlm.nih.gov/?term=Salter+Harris+epiphyseal+plate+1963' },
+          title: 'Injuries involving the epiphyseal plate',
+          citation: 'Salter RB, Harris WR. J Bone Joint Surg Am. 1963;45:587-622',
+          year: 1963,
+          doi: '10.2106/00004623-196345030-00019',
+        },
       ],
     },
     nextSteps: [
@@ -796,9 +800,11 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
       validation: 'Classic hip fracture taxonomy; interobserver agreement better for nondisplaced vs displaced grouping.',
       references: [
         {
-          title: 'Low-angle fixation in fractures of the femoral neck (Garden classification)',
-          citation: 'Garden RS. J Bone Joint Surg Br. 1961',
-          year: 1961, url: 'https://pubmed.ncbi.nlm.nih.gov/?term=Garden+RS+femoral+neck+1961' },
+          title: 'Low-angle fixation in fractures of the femoral neck',
+          citation: 'Garden RS. J Bone Joint Surg Br. 1961;43-B:647-663',
+          year: 1961,
+          doi: '10.1302/0301-620X.43B4.647',
+        },
       ],
     },
     nextSteps: [
@@ -911,9 +917,9 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
       validation: 'Neer 1970 system remains common despite moderate interobserver reliability.',
       references: [
         {
-          title: 'Displaced proximal humeral fractures. Classification and evaluation',
-          citation: 'Neer CS 2nd. J Bone Joint Surg Am. 1970',
-          year: 1970, pmid: '5455340' },
+          title: 'Displaced proximal humeral fractures. I. Classification and evaluation',
+          citation: 'Neer CS 2nd. J Bone Joint Surg Am. 1970;52:1077-1089',
+          year: 1970, pmid: '5455339' },
       ],
     },
     nextSteps: [
@@ -1021,9 +1027,10 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
       validation: 'Standard trauma classification; often combined with Lauge-Hansen mechanism language.',
       references: [
         {
-          title: 'Danis-Weber ankle fracture classification',
-          citation: 'Weber BG. Die Verletzungen des oberen Sprunggelenkes. Huber; classic AO/Danis-Weber teaching',
-          year: 1972, url: 'https://www.orthobullets.com/trauma/1047/ankle-fractures' },
+          title: 'Die Verletzungen des oberen Sprunggelenkes',
+          citation: 'Weber BG. 2nd ed. Bern: Verlag Hans Huber; 1972 (Danis-Weber classification)',
+          year: 1972,
+        },
       ],
     },
     nextSteps: [
@@ -1135,8 +1142,8 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
         'Derived from large PECARN cohort of children with blunt trauma. Use with full clinical assessment and local imaging guidelines.',
       references: [
         {
-          title: 'Cervical spine injury risk factors in children with blunt trauma',
-          citation: 'Leonard JC et al. (PECARN). Pediatrics / related CSI literature',
+          title: 'Factors associated with cervical spine injury in children after blunt trauma',
+          citation: 'Leonard JC, Kuppermann N, Olsen C, et al. (PECARN). Ann Emerg Med. 2011;58:145-155',
           year: 2011, pmid: '21035905',
           doi: '10.1016/j.annemergmed.2010.08.038', },
       ],
@@ -1563,9 +1570,20 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
       validation: 'International Standards for Neurological Classification of SCI (ASIA/ISCoS).',
       references: [
         {
-          title: 'International Standards for Neurological Classification of Spinal Cord Injury (ISNCSCI)',
-          citation: 'ASIA / ISCoS ISNCSCI revisions',
-          year: 2019, url: 'https://asia-spinalinjury.org/international-standards-neurological-classification-sci-isncsci-worksheet/' },
+          title: 'International standards for neurological classification of spinal cord injury (revised 2011)',
+          citation: 'Kirshblum SC, Burns SP, Biering-Sorensen F, et al. J Spinal Cord Med. 2011;34:535-546',
+          year: 2011,
+          pmid: '22330108',
+          doi: '10.1179/204577211X13207446293695',
+        },
+        {
+          title: 'International Standards for Neurological Classification of Spinal Cord Injury: Revised 2019',
+          citation: 'Rupp R, Biering-Sørensen F, Burns SP, et al. Top Spinal Cord Inj Rehabil. 2021;27:1-22',
+          year: 2021,
+          pmid: '34108832',
+          doi: '10.46292/sci2702-1',
+          url: 'https://asia-spinalinjury.org/international-standards-neurological-classification-sci-isncsci-worksheet/',
+        },
       ],
     },
     nextSteps: [
@@ -1678,9 +1696,9 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
       references: [
         {
           title: 'The value of postural reduction in the initial management of closed injuries of the spine with paraplegia and tetraplegia',
-          citation: 'Frankel HL et al. Paraplegia. 1969',
+          citation: 'Frankel HL, Hancock DO, Hyslop G, et al. Paraplegia. 1969;7:179-192',
           year: 1969,
-          url: 'https://asia-spinalinjury.org/isncsci-2019/', pmid: '5360915',
+          pmid: '5360915',
           doi: '10.1038/sc.1969.30', },
       ],
     },
@@ -2024,11 +2042,12 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
       validation: 'Core diagnostic EBM identity relating operating characteristics to Bayes factors.',
       references: [
         {
-          title: 'Users\' guides to the medical literature: diagnostic tests and likelihood ratios',
-          citation: 'Jaeschke R, Guyatt GH, Sackett DL. JAMA. 1994 (Users\' Guides diagnostic test series)',
+          title: 'Users\' guides to the medical literature. III. How to use an article about a diagnostic test. B. What are the results and will they help me in caring for my patients?',
+          citation: 'Jaeschke R, Guyatt GH, Sackett DL. JAMA. 1994;271:703-707',
           year: 1994,
           pmid: '8309035',
-          doi: '10.1001/jama.271.9.703', url: 'https://pubmed.ncbi.nlm.nih.gov/?term=Jaeschke+Users+guides+diagnostic+test+1994' },
+          doi: '10.1001/jama.1994.03510330081039',
+        },
       ],
     },
     nextSteps: [

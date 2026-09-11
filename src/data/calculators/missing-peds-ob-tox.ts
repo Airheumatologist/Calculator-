@@ -214,8 +214,10 @@ export const missingPedsObToxCalcs: Calculator[] = [
       formula: 'Sequential exclusion gates → low risk only if all gates passed',
       validation: 'Mintegi et al. / European multicentre validation; apply only within intended age and clinical setting.',
       references: [
-        { title: 'Step-by-step approach to febrile infants', citation: 'Mintegi S et al. Pediatrics / Arch Dis Child validations', year: 2014, pmid: '23851127',
+        { title: 'Accuracy of a sequential approach to identify young febrile infants at low risk for invasive bacterial infection', citation: 'Mintegi S et al. Emerg Med J. 2014', year: 2014, pmid: '23851127',
           doi: '10.1136/emermed-2013-202449', },
+        { title: 'Validation of the "Step-by-Step" Approach in the Management of Young Febrile Infants', citation: 'Gomez B, Mintegi S et al. Pediatrics. 2016', year: 2016, pmid: '27382134',
+          doi: '10.1542/peds.2015-4381', },
       ],
     },
     nextSteps: [
@@ -508,7 +510,9 @@ export const missingPedsObToxCalcs: Calculator[] = [
       summary: 'Tennessee criteria often use LDH ≥600, AST ≥70 (or ≥2× ULN), platelets ≤100k. Mississippi classifies by platelet nadir.',
       validation: 'Clinical diagnosis; smear, haptoglobin, and trends aid hemolysis confirmation.',
       references: [
-        { title: 'Diagnosis and management of hemolysis, elevated liver enzymes, and low platelets syndrome', citation: 'Sibai BM. Obstet Gynecol. / Tennessee & Mississippi classifications', year: 2004, pmid: '15519429',
+        { title: 'Syndrome of hemolysis, elevated liver enzymes, and low platelet count: a severe consequence of hypertension in pregnancy', citation: 'Weinstein L. Am J Obstet Gynecol. 1982', year: 1982, pmid: '7055180',
+          doi: '10.1016/s0002-9378(16)32330-4', },
+        { title: 'Diagnosis and management of hemolysis, elevated liver enzymes, and low platelets syndrome', citation: 'Sibai BM. Clin Perinatol. 2004 (Tennessee and Mississippi classifications)', year: 2004, pmid: '15519429',
           doi: '10.1016/j.clp.2004.06.008', },
       ],
     },
@@ -590,7 +594,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
       formula: 'mEq/L × 1.2 ≈ mg/dL (approximate conversion)',
       validation: 'Classic obstetric teaching; clinical signs and renal function matter more than a single number.',
       references: [
-        { title: 'Magnesium sulfate use in obstetrics (ACOG Committee Opinion context)', citation: 'ACOG Committee Opinion No. 652 / related obstetric anesthesia teaching on Mg toxicity', year: 2016, url: 'https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2016/01/magnesium-sulfate-use-in-obstetrics' },
+        { title: 'Magnesium: physiology and pharmacology', citation: 'Fawcett WJ, Haxby EJ, Male DA. Br J Anaesth. 1999 (includes obstetric Mg toxicity ranges)', year: 1999, pmid: '10618948', doi: '10.1093/bja/83.2.302' },
       ],
     },
     nextSteps: [
@@ -681,7 +685,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
       formula: 'Gap mode: EtOH ≈ gap × 4.6; Widmark: (A/(rW))×100 − βt',
       validation: 'Bedside approximations only; measured ethanol and full toxic alcohol workup when indicated.',
       references: [
-        { title: 'Widmark formula and ethanol kinetics (clinical/forensic teaching)', citation: 'Classic Widmark ethanol distribution teaching; clinical toxicology reviews', year: 1981, url: 'https://www.ncbi.nlm.nih.gov/books/NBK537009/' },
+        { title: 'Die theoretischen Grundlagen und die praktische Verwendbarkeit der gerichtlich-medizinischen Alkoholbestimmung', citation: 'Widmark EMP. Berlin: Urban & Schwarzenberg; 1932', year: 1932 },
+        { title: 'Prediction of blood alcohol concentrations in human subjects. Updating the Widmark Equation', citation: 'Watson PE, Watson ID, Batt RD. J Stud Alcohol. 1981', year: 1981, pmid: '7289599', doi: '10.15288/jsa.1981.42.547' },
       ],
     },
     nextSteps: [
@@ -781,7 +786,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
       formula: 'Treatment line ≈ 150 × 0.5^((hours−4)/4) µg/mL',
       validation: 'Nomogram standard of care; this helper approximates the log-linear line for education.',
       references: [
-        { title: 'Acetaminophen poisoning and the Rumack-Matthew nomogram', citation: 'Rumack BH, Matthew H. Pediatrics. 1975', year: 1975, pmid: '1134886' },
+        { title: 'Acetaminophen poisoning and toxicity', citation: 'Rumack BH, Matthew H. Pediatrics. 1975', year: 1975, pmid: '1134886' },
       ],
     },
     nextSteps: [
@@ -834,7 +839,10 @@ export const missingPedsObToxCalcs: Calculator[] = [
       summary: 'Loading dose = Cp × Vd × weight / F. Units must be consistent (mg/L × L/kg × kg = mg).',
       formula: 'LD = Cp × Vd × weight / F',
       validation: 'Fundamental PK identity; drug monographs override teaching estimates.',
-      references: [{ title: 'Clinical pharmacokinetics basics (loading dose concepts)', citation: 'Standard clinical pharmacokinetics teaching (Vd × target concentration)', year: 2012, url: 'https://www.ncbi.nlm.nih.gov/books/NBK557794/' }],
+      references: [
+        { title: 'Clinical Pharmacokinetics (first of two parts)', citation: 'Greenblatt DJ, Koch-Weser J. N Engl J Med. 1975', year: 1975, pmid: '1160938', doi: '10.1056/NEJM197510022931406' },
+        { title: 'The target concentration approach to clinical drug development', citation: 'Holford NH. Clin Pharmacokinet. 1995 (loading dose = target concentration × Vd)', year: 1995, pmid: '8582116', doi: '10.2165/00003088-199529050-00001' },
+      ],
     },
     nextSteps: [
       { condition: 'After loading', actions: ['Start maintenance regimen', 'Therapeutic drug monitoring when indicated'] },
@@ -881,7 +889,10 @@ export const missingPedsObToxCalcs: Calculator[] = [
       summary: 'mL/hr = (mcg/kg/min × kg × 60) / (mcg/mL). Confirm bag labeling (mg/mL vs mcg/mL).',
       formula: 'rate = dose × weight × 60 / concentration',
       validation: 'Standard ICU drip calculation.',
-      references: [{ title: 'Continuous infusion rate calculations', citation: 'Critical care nursing / pharmacy standards for IV infusion math', year: 2015, url: 'https://www.ismp.org/resources/guidelines-safe-preparation-compounded-sterile-preparations' }],
+      references: [
+        { title: 'IV Therapy Management (calculating infusion rates)', citation: 'Open RN. Nursing Skills. NCBI Bookshelf. Chapter 23', year: 2021, url: 'https://www.ncbi.nlm.nih.gov/books/NBK596734/' },
+        { title: 'Infusion Therapy Standards of Practice, 8th Edition', citation: 'Gorski LA et al. J Infus Nurs. 2021', year: 2021, pmid: '33394637', doi: '10.1097/NAN.0000000000000396' },
+      ],
     },
     nextSteps: [
       { condition: 'Any drip', actions: ['Independent double-check', 'Smart-pump drug library', 'Titrate to clinical endpoint'] },
@@ -952,7 +963,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
       summary: 'Corrected retic = retic% × (Hct/45). RPI = corrected / maturation (1–2.5 by Hct). RPI >3 adequate response.',
       formula: 'Corrected retic = retic × (Hct/normalHct); RPI = corrected / maturation factor',
       validation: 'Standard hematology teaching tool.',
-      references: [{ title: 'Reticulocyte production index (standard hematology)', citation: 'Classic hematology references for corrected reticulocyte count / RPI', year: 2000, url: 'https://www.ncbi.nlm.nih.gov/books/NBK431092/' }],
+      references: [{ title: 'Reticulocytes (corrected count and reticulocyte index)', citation: 'Hillman RS. In: Walker HK, Hall WD, Hurst JW, eds. Clinical Methods. 3rd ed. Boston: Butterworths; 1990. Chapter 156', year: 1990, url: 'https://www.ncbi.nlm.nih.gov/books/NBK264/' }],
     },
     nextSteps: [
       { condition: 'Low RPI', actions: ['Iron/B12/folate studies', 'EPO/renal function', 'Review meds', 'Consider marrow evaluation'] },
@@ -1023,7 +1034,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
       summary: 'ALC = WBC × lymphocyte fraction. Pediatric reference ranges are age-dependent and higher in infants.',
       formula: 'ALC = WBC × (% lymphocytes / 100)',
       validation: 'Universal CBC-derived absolute count.',
-      references: [{ title: 'CBC absolute lymphocyte/neutrophil counts', citation: 'Standard laboratory hematology definitions', year: 2010, url: 'https://www.ncbi.nlm.nih.gov/books/NBK557422/' }],
+      references: [{ title: 'How to interpret and pursue an abnormal complete blood cell count in adults', citation: 'Tefferi A, Hanson CA, Inwards DJ. Mayo Clin Proc. 2005', year: 2005, pmid: '16007898', doi: '10.4065/80.7.923' }],
     },
     nextSteps: [
       { condition: 'Severe lymphopenia', actions: ['HIV test if appropriate', 'Medication review', 'Immunology referral if persistent'] },
@@ -1209,9 +1220,9 @@ export const missingPedsObToxCalcs: Calculator[] = [
       formula: 'Na_corrected = Na_measured + factor × (glucose − 100)/100',
       validation: 'Standard endocrine/electrolyte practice; Hillier may be more accurate at very high glucose.',
       references: [
-        { title: 'Hyperglycemia-induced hyponatremia', citation: 'Katz MA. N Engl J Med. 1973', year: 1973, pmid: '4763428',
+        { title: 'Hyperglycemia-induced hyponatremia—calculation of expected serum sodium depression', citation: 'Katz MA. N Engl J Med. 1973', year: 1973, pmid: '4763428',
           doi: '10.1056/NEJM197310182891607', },
-        { title: 'Correction factor for hyperglycemia', citation: 'Hillier TA et al. Am J Med. 1999', year: 1999, pmid: '10225241',
+        { title: 'Hyponatremia: evaluating the correction factor for hyperglycemia', citation: 'Hillier TA et al. Am J Med. 1999', year: 1999, pmid: '10225241',
           doi: '10.1016/s0002-9343(99)00055-8', },
       ],
     },
@@ -1343,8 +1354,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
       formula: 'IBW = 2.396 × e^(0.01863 × ht_cm)',
       validation: 'Used in pediatric dosing literature; validate against local pharmacy standards.',
       references: [
-        { title: 'Traub-Johnson pediatric IBW', citation: 'Traub SL, Johnson CE. Am J Hosp Pharm. 1980', year: 1980, pmid: '6823980',
-          doi: '10.1177/014860718000400316', },
+        { title: 'Estimating ideal body mass in children', citation: 'Traub SL, Kichen L. Am J Hosp Pharm. 1983', year: 1983, pmid: '6823980' },
       ],
     },
     nextSteps: [
@@ -1470,7 +1480,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
       summary: 'Finnegan Neonatal Abstinence Scoring System sums CNS, metabolic/vasomotor, and GI signs. Treatment thresholds often ≥8 ×3 or ≥12 once.',
       validation: 'Classic NAS tool; many centers now use Eat-Sleep-Console approaches.',
       references: [
-        { title: 'Neonatal abstinence syndrome scoring', citation: 'Finnegan LP et al. Addict Dis. 1975', year: 1975, pmid: '1163358' },
+        { title: 'Neonatal abstinence syndrome: assessment and management', citation: 'Finnegan LP et al. Addict Dis. 1975', year: 1975, pmid: '1163358' },
       ],
     },
     nextSteps: [
@@ -1535,7 +1545,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
       formula: 'UAG = UNa + UK − UCl',
       validation: 'Classic teaching; unreliable with toluene, ketoanions, or large urinary unmeasured anions; direct NH₄ preferred when available.',
       references: [
-        { title: 'The urine anion gap', citation: 'Batlle DC et al. N Engl J Med. 1988', year: 1988, pmid: '3344005',
+        { title: 'The use of the urinary anion gap in the diagnosis of hyperchloremic metabolic acidosis', citation: 'Batlle DC et al. N Engl J Med. 1988', year: 1988, pmid: '3344005',
           doi: '10.1056/NEJM198803103181002', },
       ],
     },

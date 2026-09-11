@@ -344,7 +344,12 @@ export const extraCalcs: Calculator[] = [
     evidence: {
       summary: 'NYHA classes I–IV describe functional capacity in heart failure.',
       validation: 'Universal HF communication standard; subjective but clinically useful.',
-      references: [{ title: 'Nomenclature and criteria for diagnosis of diseases of the heart and great vessels (NYHA functional classification)', citation: 'Criteria Committee of the New York Heart Association (classic); modern use reviewed in HF guidelines', year: 1994, url: 'https://www.heart.org/en/health-topics/heart-failure/what-is-heart-failure/classes-of-heart-failure' }],
+      references: [{
+        title: 'Nomenclature and Criteria for Diagnosis of Diseases of the Heart and Great Vessels. 9th ed.',
+        citation: 'The Criteria Committee of the New York Heart Association. Little, Brown & Co. 1994. p. 253-256',
+        year: 1994,
+        url: 'https://professional.heart.org/en/guidelines-and-statements/classification',
+      }],
     },
     nextSteps: [
       { condition: 'Class III–IV', actions: ['Ensure GDMT', 'Evaluate for CRT/ICD if indicated', 'Advanced HF referral'] },
@@ -379,8 +384,7 @@ export const extraCalcs: Calculator[] = [
     evidence: {
       summary: 'Rule of thumb: expected PaO₂ ≈ 100 − 0.3×age (room air, sea level).',
       validation: 'Teaching approximation; varies with FiO₂ and altitude.',
-      references: [{ title: 'Disorders of acid-base balance', citation: 'Kellum JA. Crit Care Med. 2007', year: 2007, pmid: '17893626',
-          doi: '10.1097/01.CCM.0000286399.21008.64', }],
+      references: [{ title: 'The alveolar-arterial oxygen difference: its size and components in normal man', citation: 'Mellemgaard K. Acta Physiol Scand. 1966 (classic PaO₂–age regression; bedside 100 − 0.3×age is a rounded teaching form)', year: 1966, pmid: '5963295' }],
     },
     nextSteps: [{ condition: 'Low PaO₂', actions: ['Calculate A–a gradient', 'Supplemental O₂', 'Diagnose cause'] }],
   },
@@ -423,7 +427,7 @@ export const extraCalcs: Calculator[] = [
     evidence: {
       summary: 'QTcF = QT / ∛RR. Preferred over Bazett when HR extreme.',
       validation: 'Increasingly recommended in drug studies and clinical practice.',
-      references: [{ title: 'Duration of systole in electrocardiogram', citation: 'Fridericia LS. Acta Med Scand. 1920', year: 1920, pmid: '14516292',
+      references: [{ title: 'The duration of systole in an electrocardiogram in normal humans and in patients with heart disease (1920)', citation: 'Fridericia LS. Acta Med Scand. 1920. English reprint: Ann Noninvasive Electrocardiol. 2003', year: 1920, pmid: '14516292',
           doi: '10.1046/j.1542-474x.2003.08413.x', }],
     },
     nextSteps: [{ condition: 'QTc ≥500', actions: ['Telemetry', 'Stop QT drugs', 'Replete K/Mg'] }],
@@ -456,8 +460,7 @@ export const extraCalcs: Calculator[] = [
     evidence: {
       summary: 'AG variants: without K (common US) vs with K (some regions/labs).',
       validation: 'Method awareness prevents false “high AG”.',
-      references: [{ title: 'Anion gap and hypoalbuminemia (Figge correction context)', citation: 'Figge J et al. Crit Care Med. 1998', year: 1998, pmid: '9824071',
-          doi: '10.1097/00003246-199811000-00019', }],
+      references: [{ title: 'Clinical use of the anion gap', citation: 'Emmett M, Narins RG. Medicine (Baltimore). 1977', year: 1977, pmid: '401925' }],
     },
     nextSteps: [{ condition: 'Elevated', actions: ['Evaluate HAGMA causes', 'Check albumin correction'] }],
   },
@@ -492,8 +495,20 @@ export const extraCalcs: Calculator[] = [
     evidence: {
       summary: 'Hamwi: Men 106 lb + 6 lb/inch >5 ft; Women 100 + 5 lb/inch >5 ft.',
       validation: 'Nutrition practice formula.',
-      references: [{ title: 'Hamwi ideal body weight formula (historical pharmacy teaching)', citation: 'Hamwi GJ. 1964 (classic pharmacy teaching; modern IBW comparisons in nutrition literature)', year: 1964, pmid: '6869387',
-          doi: '10.1053/j.jrn.2006.01.008', }],
+      references: [
+        {
+          title: 'Therapy: changing dietary concepts (Hamwi ideal body weight)',
+          citation: 'Hamwi GJ. In: Danowski TS, ed. Diabetes Mellitus: Diagnosis and Treatment. Vol 1. American Diabetes Association. 1964:73-78',
+          year: 1964,
+        },
+        {
+          title: 'The origin of the “ideal” body weight equations',
+          citation: 'Pai MP, Paloucek FP. Ann Pharmacother. 2000',
+          year: 2000,
+          pmid: '10981254',
+          doi: '10.1345/aph.19381',
+        },
+      ],
     },
     nextSteps: [{ condition: 'Any', actions: ['Use with clinical nutrition assessment'] }],
   },

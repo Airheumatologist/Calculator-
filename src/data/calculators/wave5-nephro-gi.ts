@@ -597,9 +597,11 @@ export const wave5NephroGiCalcs: Calculator[] = [
       validation: 'Core of KDIGO CGA staging; first-void morning samples preferred; confirm persistent albuminuria.',
       references: [
         {
-          title: 'KDIGO 2012 / 2024 CKD evaluation and management (albuminuria categories)',
-          citation: 'Kidney Disease: Improving Global Outcomes CKD guidelines',
+          title: 'KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease',
+          citation: 'Kidney Disease: Improving Global Outcomes (KDIGO) CKD Work Group. Kidney Int. 2024 (albuminuria A1–A3 categories)',
           year: 2024,
+          pmid: '38490803',
+          doi: '10.1016/j.kint.2023.10.018',
           url: 'https://kdigo.org/guidelines/ckd-evaluation-and-management/',
         },
       ],
@@ -762,8 +764,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
       validation: 'Standard teaching in dysnatremia evaluation; measured osm still needed for osmolal gap toxins.',
       references: [
         {
-          title: 'The pathophysiology and treatment of hyponatraemic encephalopathy',
-          citation: 'Classic tonicity teaching; Adrogué & Madias hyponatremia reviews',
+          title: 'Hyponatremia',
+          citation: 'Adrogué HJ, Madias NE. N Engl J Med. 2000',
           year: 2000,
           pmid: '10824078',
           doi: '10.1056/NEJM200005253422107',
@@ -1129,11 +1131,11 @@ export const wave5NephroGiCalcs: Calculator[] = [
       validation: 'Teaching mnemonic; modern GOLDMARK preferred by many educators.',
       references: [
         {
-          title: 'Mind the gap (acid-base teaching mnemonics)',
-          citation: 'Classic nephrology/EM teaching; Mehta AN et al. related reviews on AG acidosis',
+          title: 'GOLD MARK: an anion gap mnemonic for the 21st century',
+          citation: 'Mehta AN, Emmett JB, Emmett M. Lancet. 2008 (updates classic MUDPILES teaching)',
           year: 2008,
-          pmid: '38837536',
-          doi: '10.1111/imj.16418',
+          pmid: '18790311',
+          doi: '10.1016/S0140-6736(08)61398-7',
         },
       ],
     },
@@ -1193,9 +1195,9 @@ export const wave5NephroGiCalcs: Calculator[] = [
       validation: 'Educational mnemonic — not a validated score.',
       references: [
         {
-          title: 'Hyperchloremic metabolic acidosis teaching reviews',
-          citation: 'Standard nephrology texts / acid-base monographs',
-          year: 2010,
+          title: 'Demystifying normal-anion-gap metabolic acidosis: pathophysiology, aetiology, evaluation and diagnosis',
+          citation: 'Bhandari R et al. Intern Med J. 2024',
+          year: 2024,
           pmid: '38837536',
           doi: '10.1111/imj.16418',
         },
@@ -1556,9 +1558,11 @@ export const wave5NephroGiCalcs: Calculator[] = [
       validation: 'Guideline-based educational threshold; RCTs mixed on hard outcomes — individualize sodium load and HTN risk.',
       references: [
         {
-          title: 'KDIGO CKD evaluation and management (metabolic acidosis recommendations)',
-          citation: 'KDIGO CKD guidelines',
+          title: 'KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease',
+          citation: 'Kidney Disease: Improving Global Outcomes (KDIGO) CKD Work Group. Kidney Int. 2024 (metabolic acidosis / alkali therapy recommendations)',
           year: 2024,
+          pmid: '38490803',
+          doi: '10.1016/j.kint.2023.10.018',
           url: 'https://kdigo.org/guidelines/ckd-evaluation-and-management/',
         },
       ],

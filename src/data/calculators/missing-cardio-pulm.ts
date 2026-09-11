@@ -367,7 +367,19 @@ export const missingCardioPulmCalcs: Calculator[] = [
       formula: 'Ordinal grade 0–4 based on activity limitation from breathlessness',
       validation: 'Widely used in COPD trials and guidelines; correlates with health status but is not a full QoL instrument.',
       references: [
-        { title: 'Global Strategy for Prevention, Diagnosis and Management of COPD (GOLD)', citation: 'Global Initiative for Chronic Obstructive Lung Disease (GOLD) Report', year: 2024, url: 'https://goldcopd.org/2024-gold-report/' },
+        {
+          title: 'Usefulness of the Medical Research Council (MRC) dyspnoea scale as a measure of disability in patients with chronic obstructive pulmonary disease',
+          citation: 'Bestall JC et al. Thorax. 1999',
+          year: 1999,
+          pmid: '10377201',
+          doi: '10.1136/thx.54.7.581',
+        },
+        {
+          title: 'Global Strategy for Prevention, Diagnosis and Management of COPD (GOLD) 2024 Report',
+          citation: 'Global Initiative for Chronic Obstructive Lung Disease (GOLD)',
+          year: 2024,
+          url: 'https://goldcopd.org/2024-gold-report/',
+        },
       ],
     },
     nextSteps: [
@@ -662,8 +674,8 @@ export const missingCardioPulmCalcs: Calculator[] = [
       formula: 'Sex female (1) + Age<60 (1) + Medical history ≥2 comorbidities (1) + Treatment interacting drugs (1) + Tobacco (2) + Race non-white (2)',
       validation: 'Validated in multiple AF cohorts for TTR prediction.',
       references: [
-        { title: 'The SAMe-TT2R2 score predicts poor anticoagulation control in AF patients on VKA', citation: 'Apostolakis S et al. Chest. 2013', year: 2013, pmid: '23669885',
-          doi: '10.1378/chest.13-0054', },
+        { title: 'Factors affecting quality of anticoagulation control among patients with atrial fibrillation on warfarin: the SAMe-TT₂R₂ score', citation: 'Apostolakis S, Sullivan RM, Olshansky B, Lip GY. Chest. 2013', year: 2013, pmid: '23669885',
+          doi: '10.1378/chest.13-0054' },
       ],
     },
     nextSteps: [
@@ -736,10 +748,10 @@ export const missingCardioPulmCalcs: Calculator[] = [
       formula: 'Concordant STE≥1mm (5) + concordant STD V1–V3 ≥1mm (3) + discordant STE≥5mm (2); modified replaces 5mm with ST/S ≤ −0.25',
       validation: 'Derived from GUSTO-1; Smith-modified rule validated with improved sensitivity.',
       references: [
-        { title: 'Electrocardiographic diagnosis of evolving MI in LBBB (Sgarbossa)', citation: 'Sgarbossa EB et al. N Engl J Med. 1996', year: 1996, pmid: '8559200',
+        { title: 'Electrocardiographic diagnosis of evolving acute myocardial infarction in the presence of left bundle-branch block', citation: 'Sgarbossa EB et al. N Engl J Med. 1996', year: 1996, pmid: '8559200',
           doi: '10.1056/NEJM199602223340801' },
-        { title: 'Diagnosis of MI with LBBB using ST-segment/S-wave ratio', citation: 'Smith SW et al. Ann Emerg Med. 2012', year: 2012, pmid: '22939607',
-          doi: '10.1016/j.annemergmed.2012.07.119', },
+        { title: 'Diagnosis of ST-elevation myocardial infarction in the presence of left bundle branch block with the ST-elevation to S-wave ratio in a modified Sgarbossa rule', citation: 'Smith SW et al. Ann Emerg Med. 2012', year: 2012, pmid: '22939607',
+          doi: '10.1016/j.annemergmed.2012.07.119' },
       ],
     },
     nextSteps: [
@@ -827,8 +839,8 @@ export const missingCardioPulmCalcs: Calculator[] = [
       formula: 'DTS = exercise time − (5 × ST deviation) − (4 × angina index)',
       validation: 'Derived at Duke University; widely validated for prognosis after exercise ECG.',
       references: [
-        { title: 'Prognostic value of a treadmill exercise score in outpatients with suspected CAD', citation: 'Mark DB et al. N Engl J Med. 1991', year: 1991, pmid: '9822093',
-          doi: '10.1016/s0735-1097(98)00451-3', },
+        { title: 'Prognostic value of a treadmill exercise score in outpatients with suspected coronary artery disease', citation: 'Mark DB et al. N Engl J Med. 1991', year: 1991, pmid: '1875969',
+          doi: '10.1056/NEJM199109193251204' },
       ],
     },
     nextSteps: [
@@ -980,8 +992,8 @@ export const missingCardioPulmCalcs: Calculator[] = [
       formula: 'Exudate if protein >2.9 OR cholesterol >45 OR LDH >0.45× ULN',
       validation: 'Meta-analysis-derived simplified criteria; slightly less sensitive than full Light’s in some comparisons.',
       references: [
-        { title: 'Pleural fluid chemical analysis in parapneumonic effusions: a meta-analysis', citation: 'Heffner JE et al. Am J Respir Crit Care Med. 1995 / related cut-point work', year: 1995, pmid: '7767510',
-          doi: '10.1164/ajrccm.151.6.7767510', },
+        { title: 'Diagnostic value of tests that discriminate between exudative and transudative pleural effusions', citation: 'Heffner JE, Brown LK, Barbieri CA. Chest. 1997', year: 1997, pmid: '9106577',
+          doi: '10.1378/chest.111.4.970' },
       ],
     },
     nextSteps: [
@@ -1131,8 +1143,8 @@ export const missingCardioPulmCalcs: Calculator[] = [
       formula: 'SI = HR/SBP; ASI = SI × age; RPP = HR × SBP',
       validation: 'Multiple trauma and ED studies support SI/ASI for occult shock detection; exact cutoffs vary by population.',
       references: [
-        { title: 'Age-adjusted shock index in trauma risk stratification', citation: 'Zarzaur BL et al. related trauma literature; various ED validations', year: 2008, pmid: '18498875',
-          doi: '10.1016/j.jss.2008.03.025', },
+        { title: 'New vitals after injury: shock index for the young and age x shock index for the old', citation: 'Zarzaur BL, Croce MA, Fischer PE, Magnotti LJ, Fabian TC. J Surg Res. 2008', year: 2008, pmid: '18498875',
+          doi: '10.1016/j.jss.2008.03.025' },
       ],
     },
     nextSteps: [

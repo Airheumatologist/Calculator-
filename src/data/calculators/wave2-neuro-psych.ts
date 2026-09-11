@@ -209,8 +209,8 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       references: [
         {
           title: 'Development and testing of the Migraine Disability Assessment (MIDAS) Questionnaire',
-          citation: 'Stewart WF et al. Cephalalgia. 1999; Lipton RB et al. Neurology. 2001',
-          year: 1999, pmid: '11294956',
+          citation: 'Stewart WF et al. Neurology. 2001',
+          year: 2001, pmid: '11294956',
           doi: '10.1212/wnl.56.suppl_1.s20', },
       ],
     },
@@ -668,10 +668,10 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       validation: 'Widely used clinical approximation with known error vs measured free levels; assay preferred in critical decisions.',
       references: [
         {
-          title: 'The clinical pharmacokinetics of phenytoin',
-          citation: 'Martin E, Tozer TN et al. J Pharmacokinet Biopharm. 1977',
-          year: 1977, pmid: '599408',
-          doi: '10.1007/BF01059685', },
+          title: 'A comprehensive review on the predictive performance of the Sheiner-Tozer and derivative equations for the correction of phenytoin concentrations',
+          citation: 'Kiang TKL et al. Ann Pharmacother. 2016; original correction: Sheiner LB, Tozer TN. In Melmon & Morelli, Clinical Pharmacology. 1978',
+          year: 2016, pmid: '26825643',
+          doi: '10.1177/1060028016628166', },
       ],
     },
     nextSteps: [
@@ -1026,7 +1026,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       validation: 'Validated in multiple languages/settings for neuropathic pain identification.',
       references: [
         {
-          title: 'Development and validation of the Neuropathic Pain Symptom Inventory and DN4',
+          title: 'Comparison of pain syndromes associated with nervous or somatic lesions and development of a new neuropathic pain diagnostic questionnaire (DN4)',
           citation: 'Bouhassira D et al. Pain. 2005',
           year: 2005, pmid: '15733628',
           doi: '10.1016/j.pain.2004.12.010', },
@@ -1591,9 +1591,11 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       validation: 'Extensively validated self-report depression measure.',
       references: [
         {
-          title: 'Beck Depression Inventory–II Manual',
-          citation: 'Beck AT, Steer RA, Brown GK. BDI-II Manual. Psychological Corporation. 1996',
-          year: 1996, url: 'https://www.pearsonassessments.com/store/usassessments/en/Store/Professional-Assessments/Personality-%26-Biopsychosocial/Beck-Depression-Inventory-II/p/100000159.html' },
+          title: 'Comparison of Beck Depression Inventories-IA and -II in psychiatric outpatients',
+          citation: 'Beck AT, Steer RA, Ball R, Ranieri WF. J Pers Assess. 1996; BDI-II Manual: Beck AT, Steer RA, Brown GK. Psychological Corporation. 1996',
+          year: 1996,
+          pmid: '8991972',
+          doi: '10.1207/s15327752jpa6703_13', },
       ],
     },
     nextSteps: [
@@ -1777,7 +1779,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       references: [
         {
           title: 'The Positive and Negative Syndrome Scale (PANSS) for schizophrenia',
-          citation: 'Kay SR et al. Schizophr Bull. 1987; Leucht S et al. linking analyses',
+          citation: 'Kay SR et al. Schizophr Bull. 1987',
           year: 1987, pmid: '3616518',
           doi: '10.1093/schbul/13.2.261', },
       ],
@@ -1887,9 +1889,18 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       validation: 'WHO-validated cross-national alcohol screen; foundation for AUDIT-C.',
       references: [
         {
-          title: 'The Alcohol Use Disorders Identification Test: Guidelines for Use in Primary Care',
-          citation: 'Babor TF et al. WHO. 2001 (2nd ed.)',
-          year: 2001, url: 'https://www.who.int/publications/i/item/WHO-MSD-MSB-01.6a' },
+          title: 'Development of the Alcohol Use Disorders Identification Test (AUDIT): WHO Collaborative Project on Early Detection of Persons with Harmful Alcohol Consumption-II',
+          citation: 'Saunders JB et al. Addiction. 1993',
+          year: 1993,
+          pmid: '8329970',
+          doi: '10.1111/j.1360-0443.1993.tb02093.x',
+        },
+        {
+          title: 'The Alcohol Use Disorders Identification Test: Guidelines for Use in Primary Care (2nd ed.)',
+          citation: 'Babor TF, Higgins-Biddle JC, Saunders JB, Monteiro MG. WHO. 2001',
+          year: 2001,
+          url: 'https://iris.who.int/handle/10665/67205',
+        },
       ],
     },
     nextSteps: [
@@ -2161,7 +2172,8 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         {
           title: 'The World Health Organization Adult ADHD Self-Report Scale (ASRS): a short screening scale for use in the general population',
           citation: 'Kessler RC et al. Psychol Med. 2005',
-          year: 2005, pmid: '15841682' },
+          year: 2005, pmid: '15841682',
+          doi: '10.1017/s0033291704002892', },
       ],
     },
     nextSteps: [
@@ -2237,8 +2249,8 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       validation: 'Validated insomnia severity measure (Morin et al.); sensitive to treatment change.',
       references: [
         {
-          title: 'The Insomnia Severity Index: psychometric indicators and detection of insomnia cases',
-          citation: 'Bastien CH, Vallières A, Morin CM. Sleep Med. 2001; Morin et al. Sleep. 2011',
+          title: 'Validation of the Insomnia Severity Index as an outcome measure for insomnia research',
+          citation: 'Bastien CH, Vallières A, Morin CM. Sleep Med. 2001',
           year: 2001, pmid: '11438246',
           doi: '10.1016/s1389-9457(00)00065-4', },
       ],
@@ -2320,8 +2332,8 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       validation: 'National Center for PTSD recommended measure; strong psychometrics vs CAPS-5.',
       references: [
         {
-          title: 'Psychometric properties of the PTSD Checklist for DSM-5 (PCL-5)',
-          citation: 'Blevins CA et al. J Trauma Stress. 2015; NCPTSD PCL-5 materials',
+          title: 'The Posttraumatic Stress Disorder Checklist for DSM-5 (PCL-5): Development and Initial Psychometric Evaluation',
+          citation: 'Blevins CA et al. J Trauma Stress. 2015',
           year: 2015, pmid: '26606250',
           doi: '10.1002/jts.22059', },
       ],

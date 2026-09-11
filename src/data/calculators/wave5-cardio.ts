@@ -1839,8 +1839,8 @@ export const wave5CardioCalcs: Calculator[] = [
       validation: 'Derived for aneurysm repair mortality prediction; performance varies by era and EVAR use.',
       references: [
         {
-          title: 'Glasgow Aneurysm Score',
-          citation: 'Samy AK et al. Eur J Vasc Endovasc Surg. 1994 (and subsequent validations)',
+          title: 'Glasgow aneurysm score',
+          citation: 'Samy AK et al. Cardiovasc Surg. 1994',
           year: 1994,
           pmid: '8049922',
           doi: '10.1177/096721099400200109',
@@ -2436,11 +2436,11 @@ export const wave5CardioCalcs: Calculator[] = [
           doi: '10.1161/01.cir.88.2.782',
         },
         {
-          title: 'The long QT syndrome spectrum (score refinements in literature)',
-          citation: 'Schwartz PJ, Crotti L. Circulation. 2011 related reviews',
+          title: 'QTc behavior during exercise and genetic testing for the long-QT syndrome',
+          citation: 'Schwartz PJ, Crotti L. Circulation. 2011',
           year: 2011,
-          pmid: '8339437',
-          doi: '10.1161/01.cir.88.2.782',
+          pmid: '22083145',
+          doi: '10.1161/CIRCULATIONAHA.111.062182',
         },
       ],
     },

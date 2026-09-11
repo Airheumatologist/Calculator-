@@ -127,7 +127,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     evidence: {
       summary: 'Ottawa Knee Rules: age≥55, fibular head tenderness, patellar tenderness, flex <90, inability to bear weight.',
       validation: 'High sensitivity for knee fractures.',
-      references: [{ title: 'Implementation of the Ottawa Knee Rule', citation: 'Stiell IG et al. JAMA. 1997', year: 1997, pmid: '9403421' }],
+      references: [{ title: 'Prospective validation of a decision rule for the use of radiography in acute knee injuries', citation: 'Stiell IG et al. JAMA. 1996', year: 1996, pmid: '8594242' }],
     },
     nextSteps: [
       { condition: 'Positive', actions: ['Knee X-ray series'] },
@@ -290,7 +290,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     evidence: {
       summary: 'Parkland: 4 mL × kg × %TBSA LR in 24h (half in 8h).',
       validation: 'Foundational burn resuscitation formula; modern practice titrates to endpoints.',
-      references: [{ title: 'Fluid volume and electrolyte changes in the early postburn period', citation: 'Baxter CR / Parkland formula literature', year: 1970, pmid: '4609676' }],
+      references: [{ title: 'Fluid volume and electrolyte changes of the early postburn period', citation: 'Baxter CR. Clin Plast Surg. 1974', year: 1974, pmid: '4609676' }],
     },
     nextSteps: [
       { condition: 'Major burn', actions: ['ABCs, airway if inhalation', 'Transfer to burn center per ABA criteria', 'Tetanus, analgesia', 'Titrate fluids to UOP'] },
@@ -625,7 +625,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     evidence: {
       summary: 'Westley score 0–17 used in croup research and clinical severity grading.',
       validation: 'Standard in pediatric emergency literature.',
-      references: [{ title: 'A scoring system for croup', citation: 'Westley CR et al. Am J Dis Child. 1978', year: 1978, pmid: '347921',
+      references: [{ title: 'Nebulized racemic epinephrine by IPPB for the treatment of croup: a double-blind study', citation: 'Westley CR et al. Am J Dis Child. 1978', year: 1978, pmid: '347921',
           doi: '10.1001/archpedi.1978.02120300044008', }],
     },
     nextSteps: [
@@ -936,8 +936,12 @@ export const emergencyMiscCalcs: Calculator[] = [
     evidence: {
       summary: 'STOP-BANG: Snore, Tired, Observed, Pressure, BMI, Age, Neck, Gender.',
       validation: 'Validated preoperative screen with high sensitivity.',
-      references: [{ title: 'STOP questionnaire', citation: 'Chung F et al. Anesthesiology. 2008', year: 2008, pmid: '18431116',
-          doi: '10.1097/ALN.0b013e31816d83e4', }],
+      references: [
+        { title: 'STOP questionnaire: a tool to screen patients for obstructive sleep apnea', citation: 'Chung F et al. Anesthesiology. 2008', year: 2008, pmid: '18431116',
+          doi: '10.1097/ALN.0b013e31816d83e4', },
+        { title: 'High STOP-Bang score indicates a high probability of obstructive sleep apnoea', citation: 'Chung F et al. Br J Anaesth. 2012', year: 2012, pmid: '22401881',
+          doi: '10.1093/bja/aes022', },
+      ],
     },
     nextSteps: [
       { condition: 'High risk', actions: ['Polysomnography or HSAT', 'CPAP if diagnosed', 'Periop airway caution'] },
@@ -1181,8 +1185,8 @@ export const emergencyMiscCalcs: Calculator[] = [
     evidence: {
       summary: 'Sheiner-Tozer: Corrected = Total / [(0.2 × albumin) + 0.1]; use 0.1 × albumin in ESRD/CrCl <20. Free levels preferred.',
       validation: 'Common clinical approximation with known limitations.',
-      references: [{ title: 'The clinical pharmacokinetics of phenytoin', citation: 'Sheiner-Tozer equation clinical pharmacy references', year: 1977, pmid: '599408',
-          doi: '10.1007/BF01059685', }],
+      references: [{ title: 'Renal function and therapeutic concentrations of phenytoin', citation: 'Liponi DF, Winter ME, Tozer TN. Neurology. 1984', year: 1984, pmid: '6538287',
+          doi: '10.1212/wnl.34.3.395', }],
     },
     nextSteps: [
       { condition: 'Toxic range', actions: ['Hold/reduce dose', 'Supportive care', 'Check free phenytoin if available'] },

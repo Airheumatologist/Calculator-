@@ -677,11 +677,11 @@ export const wave3GiHepCalcs: Calculator[] = [
       validation: 'Classic ascitic fluid analysis framework; imaging remains essential.',
       references: [
         {
-          title: 'Monomicrobial non-neutrocytic bacterascites / secondary peritonitis concepts',
-          citation: 'Runyon BA et al. Hepatology / ascites literature',
+          title: 'Utility of an algorithm in differentiating spontaneous from secondary bacterial peritonitis',
+          citation: 'Akriviadis EA, Runyon BA. Gastroenterology. 1990',
           year: 1990,
-          pmid: '2210672',
-          doi: '10.1002/hep.1840120415',
+          pmid: '2293571',
+          doi: '10.1016/0016-5085(90)91300-u',
         },
       ],
     },
@@ -1264,8 +1264,8 @@ export const wave3GiHepCalcs: Calculator[] = [
           title: 'Prognosis in primary biliary cirrhosis: model for decision making',
           citation: 'Dickson ER et al. Hepatology. 1989',
           year: 1989,
-          pmid: '2680867',
-          doi: '10.1002/hep.1840100516',
+          pmid: '2737595',
+          doi: '10.1002/hep.1840100102',
         },
       ],
     },
@@ -1533,7 +1533,7 @@ export const wave3GiHepCalcs: Calculator[] = [
       validation: 'Multiple validations; miss rate for varices needing treatment very low with original criteria.',
       references: [
         {
-          title: 'Expanding consensus in portal hypertension (Baveno VI)',
+          title: 'Expanding consensus in portal hypertension: Report of the Baveno VI Consensus Workshop',
           citation: 'de Franchis R et al. J Hepatol. 2015',
           year: 2015,
           pmid: '26047908',
@@ -1613,8 +1613,8 @@ export const wave3GiHepCalcs: Calculator[] = [
       validation: 'Gold-standard portal pressure measurement; prognostic across cirrhosis natural history.',
       references: [
         {
-          title: 'Portal hypertension and variceal bleeding consensus (Baveno)',
-          citation: 'de Franchis R et al. Baveno consensus series',
+          title: 'Expanding consensus in portal hypertension: Report of the Baveno VI Consensus Workshop',
+          citation: 'de Franchis R et al. J Hepatol. 2015',
           year: 2015,
           pmid: '26047908',
           doi: '10.1016/j.jhep.2015.05.022',
@@ -1791,11 +1791,11 @@ export const wave3GiHepCalcs: Calculator[] = [
       validation: 'Dynamic MELD change reported as prognostic in transplant waitlist cohorts; thresholds vary by study.',
       references: [
         {
-          title: 'Delta-MELD and waitlist outcomes (dynamic MELD literature)',
-          citation: 'Merion RM et al. / related transplant epidemiology studies',
-          year: 2005,
-          pmid: '31165776',
-          doi: '10.1038/s41598-019-44814-y',
+          title: 'Longitudinal assessment of mortality risk among candidates for liver transplantation',
+          citation: 'Merion RM et al. Liver Transpl. 2003',
+          year: 2003,
+          pmid: '12514767',
+          doi: '10.1053/jlts.2003.50009',
         },
       ],
     },
@@ -1993,7 +1993,7 @@ export const wave3GiHepCalcs: Calculator[] = [
           citation: 'Maddrey WC et al. Gastroenterology. 1978',
           year: 1978,
           pmid: '352788',
-          doi: '10.1093/geront/18.3.230',
+          doi: '10.1016/0016-5085(78)90401-8',
         },
       ],
     },

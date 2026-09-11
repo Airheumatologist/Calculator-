@@ -573,10 +573,10 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         'Official NELA models are validated on UK audit data; this simplification is for bedside teaching only.',
       references: [
         {
-          title: 'National Emergency Laparotomy Audit (NELA) — risk prediction resources',
-          citation: 'NELA Project Team / RCoA & RCS England',
-          year: 2020,
-          url: 'https://www.nela.org.uk/',
+          title: 'NELA risk calculator — official audit resources',
+          citation: 'NELA Project Team. Royal College of Anaesthetists / RCS England',
+          year: 2018,
+          url: 'https://www.nela.org.uk/nela-risk-calculator-explainers',
         },
         {
           title: 'Development and internal validation of a novel risk adjustment model for adult patients undergoing emergency laparotomy surgery: the National Emergency Laparotomy Audit risk model',
@@ -1015,11 +1015,11 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         'Long used by CDC NNIS; modern NHSN uses more procedure-specific models — interpret rates in local context.',
       references: [
         {
-          title: 'National Nosocomial Infections Surveillance (NNIS) System Report',
-          citation: 'CDC NNIS. Am J Infect Control (various years); Culver DH et al. Am J Med. 1991',
+          title: 'Surgical wound infection rates by wound class, operative procedure, and patient risk index',
+          citation: 'Culver DH et al. Am J Med. 1991;91(3B):152S-157S',
           year: 1991,
-          pmid: '1850582',
-          doi: '10.1016/0196-6553(91)90157-8',
+          pmid: '1656747',
+          doi: '10.1016/0002-9343(91)90361-z',
         },
       ],
     },
@@ -1517,11 +1517,11 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         'Derived from WISS study / WSES multicenter data; higher scores associate with increased mortality.',
       references: [
         {
-          title: 'Physiological parameters for Prognosis in Abdominal Sepsis (WISS) study / WSES sepsis severity score',
-          citation: 'Sartelli M et al. World J Emerg Surg. 2015;10:22',
+          title: 'Global validation of the WSES Sepsis Severity Score for patients with complicated intra-abdominal infections: a prospective multicentre study (WISS Study)',
+          citation: 'Sartelli M et al. World J Emerg Surg. 2015;10:61',
           year: 2015,
-          pmid: '26269709',
-          doi: '10.1186/s13017-015-0032-7',
+          pmid: '26677396',
+          doi: '10.1186/s13017-015-0055-0',
         },
       ],
     },
@@ -2376,11 +2376,11 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         'Supported across biopsy and MRI-era cohorts; volume measurement method affects precision.',
       references: [
         {
-          title: 'PSA density of the transition zone in BPH and prostate cancer',
-          citation: 'Benson MC et al. J Urol. 1992 / subsequent PSAD literature',
+          title: 'Prostate specific antigen density: a means of distinguishing benign prostatic hypertrophy and prostate cancer',
+          citation: 'Benson MC et al. J Urol. 1992;147:815-816',
           year: 1992,
-          pmid: '7508785',
-          doi: '10.1007/BF00185070',
+          pmid: '1371554',
+          doi: '10.1016/s0022-5347(17)37393-7',
         },
       ],
     },

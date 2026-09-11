@@ -459,7 +459,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       validation: 'Historical standard; requires 48 h. Revised Atlanta uses organ failure for severity; BISAP is simpler early.',
       references: [
         {
-          title: 'Prognostic signs and nonoperative peritoneal lavage in acute pancreatitis',
+          title: 'Prognostic signs and the role of operative management in acute pancreatitis',
           citation: 'Ranson JH et al. Surg Gynecol Obstet. 1974',
           year: 1974,
           pmid: '4834279',
@@ -687,8 +687,8 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         },
         {
           title: 'A Unifying Approach for GFR Estimation: Recommendations of the NKF-ASN Task Force',
-          citation: 'Delgado C et al. Am J Kidney Dis. 2021',
-          year: 2021,
+          citation: 'Delgado C et al. Am J Kidney Dis. 2022',
+          year: 2022,
           pmid: '34563581',
           doi: '10.1053/j.ajkd.2021.08.003',
         },
@@ -990,11 +990,11 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
           doi: '10.7326/0003-4819-73-5-721',
         },
         {
-          title: 'Copeptin-based diagnosis of diabetes insipidus',
-          citation: 'Fenske W / Christ-Crain M et al. related literature',
+          title: 'A Copeptin-Based Approach in the Diagnosis of Diabetes Insipidus',
+          citation: 'Fenske W, Refardt J, Christ-Crain M et al. N Engl J Med. 2018',
           year: 2018,
-          pmid: '30380393',
-          doi: '10.1056/NEJMc1811694',
+          pmid: '30067922',
+          doi: '10.1056/NEJMoa1803760',
         },
       ],
     },
@@ -1273,8 +1273,8 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       validation: 'Educational Bayesian helper; not a validated score. Confirm with dynamic endocrine testing.',
       references: [
         {
-          title: 'Diagnosis of diabetes insipidus',
-          citation: 'Christ-Crain M et al. Nat Rev Endocrinol / related reviews',
+          title: 'Arginine-stimulated copeptin measurements in the differential diagnosis of diabetes insipidus',
+          citation: 'Winzeler B, Christ-Crain M et al. Lancet. 2019',
           year: 2019,
           pmid: '31303316',
           doi: '10.1016/S0140-6736(19)31255-3',
@@ -1567,10 +1567,18 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       validation: 'Educational pattern aid; CGM is preferred for adjudication.',
       references: [
         {
-          title: 'Dawn phenomenon and Somogyi effect in diabetes',
-          citation: 'Classic endocrine teaching; clinical diabetes reviews of dawn vs Somogyi phenomena',
-          year: 2011,
-          url: 'https://www.ncbi.nlm.nih.gov/books/NBK279114/',
+          title: 'The dawn phenomenon, an early morning glucose rise: implications for diabetic intraday blood glucose variation',
+          citation: 'Schmidt MI et al. Diabetes Care. 1981',
+          year: 1981,
+          pmid: '6751733',
+          doi: '10.2337/diacare.4.6.579',
+        },
+        {
+          title: 'Dawn phenomenon and Somogyi effect in IDDM',
+          citation: 'Stephenson JM, Schernthaner G. Diabetes Care. 1989',
+          year: 1989,
+          pmid: '2651053',
+          doi: '10.2337/diacare.12.4.245',
         },
       ],
     },
@@ -1915,7 +1923,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       validation: 'Standard teaching algorithm; rules of thumb approximate acute vs chronic respiratory disorders.',
       references: [
         {
-          title: 'Acid-base disorders',
+          title: 'Physiological approach to assessment of acid-base disturbances',
           citation: 'Berend K et al. N Engl J Med. 2014',
           year: 2014,
           pmid: '25295502',
@@ -2060,7 +2068,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       validation: 'Teaching approximations; wide confidence bands in real patients — clinical correlation required.',
       references: [
         {
-          title: 'Simple and mixed acid-base disorders',
+          title: 'Physiological approach to assessment of acid-base disturbances',
           citation: 'Berend K et al. N Engl J Med. 2014',
           year: 2014,
           pmid: '25295502',
@@ -2192,10 +2200,16 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       validation: 'Educational physiology aid; iso-shunt charts historically related PaO₂/FiO₂ to shunt under assumptions.',
       references: [
         {
-          title: 'Pulmonary physiology of shunt and V/Q mismatch',
-          citation: 'Classic respiratory physiology references; West JB; StatPearls Hypoxia and Hypoxemia',
-          year: 2012,
-          url: 'https://www.ncbi.nlm.nih.gov/books/NBK482316/',
+          title: 'The oxygen deficit of arterial blood caused by non-ventilating parts of the lung',
+          citation: 'Berggren SM. Acta Physiol Scand. 1942;4(Suppl 11):1-92 (classic shunt / Berggren equation)',
+          year: 1942,
+        },
+        {
+          title: 'Simple, accurate equations for human blood O2 dissociation computations',
+          citation: 'Severinghaus JW. J Appl Physiol. 1979',
+          year: 1979,
+          pmid: '35496',
+          doi: '10.1152/jappl.1979.46.3.599',
         },
       ],
     },
@@ -2293,10 +2307,11 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       validation: 'Rough teaching rule only; age-related A–a increase and non-sea-level barometric pressure limit accuracy.',
       references: [
         {
-          title: 'The alveolar gas equation',
-          citation: 'Classic respiratory physiology teaching; StatPearls Alveolar Gas Equation',
-          year: 2012,
-          url: 'https://www.ncbi.nlm.nih.gov/books/NBK482268/',
+          title: 'A theoretical study of the composition of the alveolar air at altitude',
+          citation: 'Fenn WO, Rahn H, Otis AB. Am J Physiol. 1946 (alveolar gas equation; bedside rule of 150 approximates PIO₂≈150 mmHg at sea level)',
+          year: 1946,
+          pmid: '20996488',
+          doi: '10.1152/ajplegacy.1946.146.5.637',
         },
       ],
     },
@@ -2386,10 +2401,11 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       validation: 'Educational approximation of barometric pressure; actual PB varies with weather and exact location.',
       references: [
         {
-          title: 'Altitude physiology and hypoxemia',
-          citation: 'West JB. High-altitude medicine physiology texts; StatPearls High-Altitude Oxygenation',
-          year: 2012,
-          url: 'https://www.ncbi.nlm.nih.gov/books/NBK539701/',
+          title: 'Prediction of barometric pressures at high altitude with the use of model atmospheres',
+          citation: 'West JB. J Appl Physiol. 1996 (calculator uses the teaching exponential PB≈760·e^(−alt/8500) simplification)',
+          year: 1996,
+          pmid: '8904608',
+          doi: '10.1152/jappl.1996.81.4.1850',
         },
       ],
     },
@@ -2467,9 +2483,9 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       validation: 'Clinical consensus / burn society teaching; bronchoscopy is diagnostic gold standard in many centers.',
       references: [
         {
-          title: 'Inhalation injury and burn care',
-          citation: 'ABA / burn critical care reviews',
-          year: 2017,
+          title: 'Smoke inhalation injury: a narrative review',
+          citation: 'Galeiras R. Mediastinum. 2021',
+          year: 2021,
           pmid: '35118322',
           doi: '10.21037/med-21-7',
         },

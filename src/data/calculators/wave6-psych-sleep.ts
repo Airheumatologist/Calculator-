@@ -188,11 +188,11 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       validation: 'Extensively validated in social anxiety disorder trials; sensitive to treatment change.',
       references: [
         {
-          title: 'Social phobia: review of a neglected anxiety disorder',
-          citation: 'Liebowitz MR. Arch Gen Psychiatry / LSAS development literature; subsequent validation studies',
+          title: 'Social phobia',
+          citation: 'Liebowitz MR. Mod Probl Pharmacopsychiatry. 1987;22:141-173 (LSAS introduced)',
           year: 1987,
-          pmid: '3324159',
-          doi: '10.1016/s0033-3182(87)72520-1',
+          pmid: '2885745',
+          doi: '10.1159/000414022',
         },
       ],
     },
@@ -523,10 +523,17 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       validation: 'Widely used in US primary care ADHD pathways; aligns with DSM symptom counts but is not itself a full diagnostic interview.',
       references: [
         {
+          title: 'Psychometric properties of the Vanderbilt ADHD diagnostic parent rating scale in a referred population',
+          citation: 'Wolraich ML et al. J Pediatr Psychol. 2003;28:559-567',
+          year: 2003,
+          pmid: '14602846',
+          doi: '10.1093/jpepsy/jsg046',
+        },
+        {
           title: 'NICHQ Vanderbilt Assessment Scales',
-          citation: 'American Academy of Pediatrics / NICHQ ADHD toolkit',
+          citation: 'American Academy of Pediatrics / NICHQ. Caring for Children With ADHD: A Resource Toolkit for Clinicians (forms and scoring rules)',
           year: 2002,
-          url: 'https://www.nichq.org/resource/nichq-vanderbilt-assessment-scales',
+          url: 'https://nichq.org/downloadable/nichq-vanderbilt-assessment-scales/',
         },
       ],
     },
@@ -728,10 +735,17 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         'Based on commonly published approximate equivalence tables (Ashton and clinical references); not a substitute for formal taper protocols.',
       references: [
         {
-          title: 'Benzodiazepine equivalence and withdrawal (clinical references)',
-          citation: 'Ashton H. Benzodiazepines: how they work and how to withdraw; standard psychopharmacology texts',
+          title: 'Benzodiazepines: How they work and how to withdraw (The Ashton Manual)',
+          citation: 'Ashton H. Revised 2002. Unofficial monograph; source of the widely used oral diazepam-equivalence table (approximate)',
           year: 2002,
           url: 'https://www.benzo.org.uk/manual/',
+        },
+        {
+          title: 'Management of benzodiazepine misuse and dependence',
+          citation: 'Brett J, Murnion B. Aust Prescr. 2015;38:152-155 (peer-reviewed diazepam-equivalent doses, Ashton-based)',
+          year: 2015,
+          pmid: '26648651',
+          doi: '10.18773/austprescr.2015.055',
         },
       ],
     },
@@ -841,10 +855,11 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       validation: 'Standard opioid equianalgesic teaching; institutional protocols may differ slightly.',
       references: [
         {
-          title: 'Opioid equianalgesic tables and morphine conversion principles',
-          citation: 'NCCN / WHO analgesic ladder references; standard pain medicine texts',
-          year: 2023,
-          url: 'https://www.nccn.org',
+          title: 'Adult Cancer Pain, Version 2.2025, NCCN Clinical Practice Guidelines in Oncology',
+          citation: 'Swarm RA et al. J Natl Compr Canc Netw. 2025;23:e250032 (morphine 10 mg parenteral ≈ 30 mg oral; IV:PO factor 3)',
+          year: 2025,
+          pmid: '40639401',
+          doi: '10.6004/jnccn.2025.0032',
         },
       ],
     },
@@ -1253,7 +1268,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       validation: 'Widely validated in cancer and noncancer pain; sensitive to treatment change.',
       references: [
         {
-          title: 'The Brief Pain Inventory: reliability and validity',
+          title: 'Pain assessment: global use of the Brief Pain Inventory',
           citation: 'Cleeland CS, Ryan KM. Ann Acad Med Singapore. 1994;23:129-138',
           year: 1994,
           pmid: '8080219',
@@ -1847,17 +1862,17 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       validation: 'Original SAPS 3 developed on a multinational ICU cohort (Metnitz/Moreno 2005). Use official calculators and custom equations operationally.',
       references: [
         {
-          title: 'SAPS 3—From evaluation of the patient to evaluation of the intensive care unit. Part 2',
+          title: 'SAPS 3—From evaluation of the patient to evaluation of the intensive care unit. Part 2: Development of a prognostic model for hospital mortality at ICU admission',
           citation: 'Moreno RP et al. Intensive Care Med. 2005;31:1345-1355',
           year: 2005,
-          pmid: '16132893',
+          pmid: '16132892',
           doi: '10.1007/s00134-005-2763-5',
         },
         {
-          title: 'SAPS 3—Part 1: Evaluation of the patient',
-          citation: 'Metnitz PG et al. Intensive Care Med. 2005',
+          title: 'SAPS 3—From evaluation of the patient to evaluation of the intensive care unit. Part 1: Objectives, methods and cohort description',
+          citation: 'Metnitz PG et al. Intensive Care Med. 2005;31:1336-1344',
           year: 2005,
-          pmid: '16132892',
+          pmid: '16132893',
           doi: '10.1007/s00134-005-2762-6',
         },
       ],
@@ -2078,11 +2093,11 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       validation: 'Historical clinical teaching; Tokyo criteria are preferred for research and severity grading.',
       references: [
         {
-          title: 'Tokyo Guidelines for acute cholangitis (diagnostic criteria and severity)',
-          citation: 'Kiriyama S et al. J Hepatobiliary Pancreat Sci. 2018; TG18',
+          title: 'Tokyo Guidelines 2018: diagnostic criteria and severity grading of acute cholangitis',
+          citation: 'Kiriyama S et al. J Hepatobiliary Pancreat Sci. 2018;25:17-30',
           year: 2018,
-          pmid: '29090868',
-          doi: '10.1002/jhbp.519',
+          pmid: '29032610',
+          doi: '10.1002/jhbp.512',
         },
       ],
     },
@@ -2259,11 +2274,11 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       validation: 'Derived and validated in pediatric acute scrotum cohorts to reduce unnecessary US in low/high extremes (protocol-dependent).',
       references: [
         {
-          title: 'Testicular Workup for Ischemia and Suspected Torsion (TWIST) score',
-          citation: 'Barbosa JA et al. J Urol. 2013;189:1859-1864',
+          title: 'Development and initial validation of a scoring system to diagnose testicular torsion in children',
+          citation: 'Barbosa JA et al. J Urol. 2013;189:1859-1864 (TWIST)',
           year: 2013,
-          pmid: '32844355',
-          doi: '10.1007/s11255-020-02618-4',
+          pmid: '23103800',
+          doi: '10.1016/j.juro.2012.10.056',
         },
       ],
     },
@@ -2350,8 +2365,8 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       validation: 'Developed and validated in Japanese ED cohorts; performance may vary by population and CRP availability.',
       references: [
         {
-          title: 'The CHOKAI score for prediction of ureteral stones',
-          citation: 'Fukuhara H et al. Am J Emerg Med / related validation literature',
+          title: 'Internal validation of a scoring system to evaluate the probability of ureteral stones: The CHOKAI score',
+          citation: 'Fukuhara H et al. Am J Emerg Med. 2017;35:1859-1866',
           year: 2017,
           pmid: '28633903',
           doi: '10.1016/j.ajem.2017.06.023',

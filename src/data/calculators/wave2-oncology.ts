@@ -332,7 +332,7 @@ export const wave2OncologyCalcs: Calculator[] = [
       formula: 'Grade from ANC thresholds (×10⁹/L)',
       validation: 'NCI CTCAE used universally in oncology trials; confirm version in protocol.',
       references: [
-        { title: 'Common Terminology Criteria for Adverse Events (CTCAE) v5.0', citation: 'National Cancer Institute CTEP. CTCAE v5.0. 2017', year: 2017, url: 'https://ctep.cancer.gov/protocoldevelopment/electronic_applications/ctc.htm' },
+        { title: 'Common Terminology Criteria for Adverse Events (CTCAE) v5.0', citation: 'National Cancer Institute CTEP. CTCAE v5.0. 2017', year: 2017, url: 'https://dctd.cancer.gov/research/ctep-trials/trial-development' },
       ],
     },
     nextSteps: [
@@ -408,7 +408,7 @@ export const wave2OncologyCalcs: Calculator[] = [
       formula: 'Grade from platelet count thresholds',
       validation: 'NCI CTCAE; protocol-specific hold parameters may be stricter.',
       references: [
-        { title: 'Common Terminology Criteria for Adverse Events (CTCAE) v5.0', citation: 'National Cancer Institute CTEP. CTCAE v5.0. 2017', year: 2017, url: 'https://ctep.cancer.gov/protocoldevelopment/electronic_applications/ctc.htm' },
+        { title: 'Common Terminology Criteria for Adverse Events (CTCAE) v5.0', citation: 'National Cancer Institute CTEP. CTCAE v5.0. 2017', year: 2017, url: 'https://dctd.cancer.gov/research/ctep-trials/trial-development' },
       ],
     },
     nextSteps: [
@@ -967,8 +967,8 @@ export const wave2OncologyCalcs: Calculator[] = [
           title: 'Liver transplantation for the treatment of small hepatocellular carcinomas in patients with cirrhosis',
           citation: 'Mazzaferro V et al. N Engl J Med. 1996',
           year: 1996,
-          pmid: '8654604',
-          doi: '10.1016/s0748-7983(96)80010-2',
+          pmid: '8594428',
+          doi: '10.1056/NEJM199603143341104',
         },
       ],
     },
@@ -1164,7 +1164,7 @@ export const wave2OncologyCalcs: Calculator[] = [
         {
           title: 'Toxicity and response criteria of the Eastern Cooperative Oncology Group',
           citation: 'Oken MM et al. Am J Clin Oncol. 1982',
-          year: 1982, pmid: '7165009' },
+          year: 1982, pmid: '7165009', doi: '10.1097/00000421-198212000-00014' },
       ],
     },
     nextSteps: [
@@ -1250,9 +1250,9 @@ export const wave2OncologyCalcs: Calculator[] = [
       validation: 'Long-standing performance scale in oncology and palliative care.',
       references: [
         {
-          title: 'The clinical evaluation of chemotherapeutic agents in cancer (Karnofsky Performance Status)',
+          title: 'The clinical evaluation of chemotherapeutic agents in cancer',
           citation: 'Karnofsky DA, Burchenal JH. In: MacLeod CM, ed. Evaluation of Chemotherapeutic Agents. Columbia University Press. 1949',
-          year: 1949, url: 'https://www.ncbi.nlm.nih.gov/books/NBK11382/' },
+          year: 1949 },
       ],
     },
     nextSteps: [
@@ -1470,9 +1470,20 @@ export const wave2OncologyCalcs: Calculator[] = [
       validation: 'Widely implemented screening tool in cancer centers; cut-offs may vary slightly by institution.',
       references: [
         {
-          title: 'NCCN Guidelines: Distress Management',
-          citation: 'National Comprehensive Cancer Network. Distress Management',
-          year: 2024, url: 'https://www.nccn.org/guidelines/guidelines-detail?category=3&id=1431' },
+          title: 'Rapid screening for psychologic distress in men with prostate carcinoma: a pilot study',
+          citation: 'Roth AJ et al. Cancer. 1998',
+          year: 1998,
+          pmid: '9587123',
+          doi: '10.1002/(sici)1097-0142(19980515)82:10<1904::aid-cncr13>3.0.co;2-x',
+        },
+        {
+          title: 'Distress Management, Version 3.2019, NCCN Clinical Practice Guidelines in Oncology',
+          citation: 'Riba MB et al. J Natl Compr Canc Netw. 2019',
+          year: 2019,
+          pmid: '31590149',
+          doi: '10.6004/jnccn.2019.0048',
+          url: 'https://www.nccn.org/guidelines/guidelines-detail?category=3&id=1431',
+        },
       ],
     },
     nextSteps: [
