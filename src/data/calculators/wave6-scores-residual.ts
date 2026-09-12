@@ -799,7 +799,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         helpText: 'Feet: usually 20; meters: often 6',
       }),
       numberInput('line', 'Snellen denominator (letter size line)', {
-        min: 10,
+        min: 6,
         max: 400,
         defaultValue: 40,
         helpText: 'e.g., 40 for 20/40; 6 for 6/6 metric',

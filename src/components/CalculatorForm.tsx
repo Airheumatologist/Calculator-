@@ -201,8 +201,8 @@ export function CalculatorForm({ inputs, values, onChange, onReset }: Props) {
                   labelledBy={labelId}
                   selectedIndex={input.options.findIndex((o) => o.value === value)}
                   onSelect={(v) => onChange(input.id, v as number | string | boolean)}
-                  options={input.options.map((opt) => ({
-                    key: String(opt.value),
+                  options={input.options.map((opt, i) => ({
+                    key: `${input.id}-${i}`,
                     label: opt.label,
                     description: opt.description,
                     points: opt.points,

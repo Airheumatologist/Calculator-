@@ -1253,20 +1253,16 @@ export const wave2PulmIdCalcs: Calculator[] = [
         { label: 'No significant dysfunction (0)', value: 0, description: 'Not mechanically ventilated and not on CPAP' },
         { label: 'Mild (1)', value: 1, description: 'MV or CPAP and PaO₂/FiO₂ ≥150 mmHg' },
         { label: 'Moderate (3)', value: 3, description: 'MV or CPAP and PaO₂/FiO₂ <150 mmHg (official LODS pulmonary maximum is 3)' },
-        { label: 'Severe (5)', value: 5, description: 'Not an official LODS pulmonary band (max is 3); keep only if matching a local educational mapping' },
-      ], undefined, 'Official LODS pulmonary points are 0 / 1 / 3 only. The “Severe (5)” option is unused in the original table.'),
+      ], undefined, 'Official LODS pulmonary points are 0 / 1 / 3 only (Le Gall Table 1).'),
       selectInput('heme', 'Hematologic (WBC / platelets)', [
         { label: 'Normal (0)', value: 0, description: 'WBC 2.5–49.9 ×10⁹/L and platelets ≥50 ×10⁹/L' },
         { label: 'Mild (1)', value: 1, description: 'WBC 1.0–2.4 or ≥50 ×10⁹/L, or platelets <50 ×10⁹/L' },
         { label: 'Moderate (3)', value: 3, description: 'WBC <1.0 ×10⁹/L (official hematologic maximum is 3)' },
-        { label: 'Severe (5)', value: 5, description: 'Not an official LODS hematologic band (max is 3)' },
-      ], undefined, 'Score the worse of WBC or platelets (Le Gall Table 1).'),
+      ], undefined, 'Score the worse of WBC or platelets (Le Gall Table 1). Official hematologic points are 0 / 1 / 3 only.'),
       selectInput('hepatic', 'Hepatic (bilirubin / PT)', [
         { label: 'Normal (0)', value: 0, description: 'Bilirubin <2.0 mg/dL (<34.2 µmol/L) and PT <3 s above control' },
         { label: 'Mild (1)', value: 1, description: 'Bilirubin ≥2.0 mg/dL or PT ≥3 s above control (official LODS hepatic maximum is 1)' },
-        { label: 'Moderate (3)', value: 3, description: 'Not an official LODS hepatic band (max is 1)' },
-        { label: 'Severe (5)', value: 5, description: 'Not an official LODS hepatic band (max is 1)' },
-      ], undefined, 'Official LODS hepatic points are 0 or 1 only. Moderate/Severe options are unused in the original table.'),
+      ], undefined, 'Official LODS hepatic points are 0 or 1 only (Le Gall Table 1).'),
     ],
     calculate(values) {
       const score =
@@ -1296,10 +1292,10 @@ export const wave2PulmIdCalcs: Calculator[] = [
           interpretation: `LODS≈ ${score}: substantial organ failure burden.`,
         },
         {
-          max: 30,
+          max: 22,
           level: 'critical',
           label: 'Very high dysfunction',
-          interpretation: `LODS≈ ${score}: severe multi-organ dysfunction; high predicted mortality in original LODS models.`,
+          interpretation: `LODS≈ ${score}: severe multi-organ dysfunction; high predicted mortality in original LODS models (official max 22).`,
         },
       ]);
       return {

@@ -1186,7 +1186,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
         max: 5000,
         defaultValue: 0,
         required: false,
-        helpText: 'Optional CKM add-on approximation; leave 0 if not measured / assumed 0 if unknown.',
+        helpText: 'Optional display field; not used in this base PREVENT probability. Leave 0 if not measured.',
       }),
       numberInput('hba1c', 'HbA1c (optional CKM add-on)', {
         unit: '%',
@@ -1195,7 +1195,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
         step: 0.1,
         defaultValue: 0,
         required: false,
-        helpText: 'Optional CKM add-on approximation; leave 0 if not measured / assumed 0 if unknown.',
+        helpText: 'Optional display field; not used in this base PREVENT probability. Leave 0 if not measured.',
       }),
     ],
     calculate(values) {
@@ -1222,7 +1222,6 @@ export const missingCardioPulmCalcs: Calculator[] = [
       const bGte = (Math.max(bmi, 30) - 30) / 5;
       const eLt = (Math.min(egfr, 60) - 60) / -15;
       const eGte = (Math.max(egfr, 60) - 90) / -15;
-      const ckmAddon = 0.015 * hba1c + 0.00008 * uacr;
       const lpOf = (c: {
         age: number;
         age2: number;
@@ -1272,8 +1271,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
         c.ageDm * (ageT * dm) +
         c.ageSmk * (ageT * smk) +
         c.ageBmi * (ageT * bGte) +
-        c.ageEgfr * (ageT * eLt) +
-        ckmAddon;
+        c.ageEgfr * (ageT * eLt);
       const expit = (lp: number): number => {
         const x = Math.min(20, Math.max(-20, lp));
         const e = Math.exp(x);
@@ -1399,6 +1397,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
         score: cvd10,
         unit: '% 10y CVD',
         ...r,
+        interpretation: `${r.interpretation} This implementation is the base PREVENT equation without the unofficial CKM addon.`,
         details: [
           { label: '10-year total CVD', value: `${cvd10}%` },
           { label: '10-year ASCVD', value: `${ascvd10}%` },
@@ -1406,7 +1405,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
           { label: '30-year total CVD', value: `${cvd30}%${age > 59 ? ' (coefficients computed; 30y validated through age 59)' : ''}` },
           { label: '30-year ASCVD', value: `${ascvd30}%` },
           { label: '30-year HF', value: `${hf30}%` },
-          { label: 'Optional CKM add-on', value: hba1c === 0 && uacr === 0 ? 'none (HbA1c and UACR 0)' : `HbA1c ${round(hba1c, 1)}%, UACR ${round(uacr, 0)} mg/g` },
+          { label: 'Optional CKM inputs (not in base equation)', value: hba1c === 0 && uacr === 0 ? 'none (HbA1c and UACR 0)' : `HbA1c ${round(hba1c, 1)}%, UACR ${round(uacr, 0)} mg/g — displayed only; not used in probability` },
         ],
         recommendations:
           cvd10 >= 5
@@ -1418,9 +1417,9 @@ export const missingCardioPulmCalcs: Calculator[] = [
       summary:
         'PREVENT (Khan SS et al., Circulation 2024) provides sex-specific, race-free 10- and 30-year equations for total CVD, ASCVD, and HF in adults 30–79 without baseline CVD, using CKM predictors (lipids, BP treatment, BMI, eGFR, diabetes, smoking, statin).',
       formula:
-        'Scaled predictors (age−55)/10, non-HDL mmol/L−3.5, HDL and SBP/BMI/eGFR splines at 110/130, 30, and 60/90. Logistic risk = 100·exp(LP)/(1+exp(LP)) with published sex- and outcome-specific coefficients. Optional educational CKM add-on 0.015·HbA1c + 0.00008·UACR (0 if both blank).',
+        'Scaled predictors (age−55)/10, non-HDL mmol/L−3.5, HDL and SBP/BMI/eGFR splines at 110/130, 30, and 60/90. Logistic risk = 100·exp(LP)/(1+exp(LP)) with published sex- and outcome-specific coefficients. Base PREVENT equation only — HbA1c/UACR are optional display inputs and do not enter the linear predictor.',
       validation:
-        'Derived in ~3 million US adults; 30-year equations validated through age 59. Use the AHA PREVENT online calculator for clinical decisions. Optional UACR/HbA1c term here is an educational add-on, not the official PREVENT-CKM equation set.',
+        'Derived in ~3 million US adults; 30-year equations validated through age 59. Use the AHA PREVENT online calculator for clinical decisions. This implementation is the official base PREVENT equation set without the unofficial CKM addon.',
       references: [
         {
           title: 'Development and Validation of the American Heart Association PREVENT Equations',
@@ -1456,7 +1455,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
       'PREVENT is a risk estimate, not a diagnosis of CVD, ASCVD, or heart failure.',
       'Confirm with the official AHA PREVENT calculator before charting or treating.',
       '30-year equations are validated through age 59; older-age 30-year numbers are computed from published coefficients but should be interpreted with that caveat.',
-      'Optional UACR and HbA1c here are a small educational CKM add-on (zero when both are 0), not the full official PREVENT-CKM panel.',
+      'Optional UACR and HbA1c are displayed if entered but do not affect probability (base PREVENT, no unofficial CKM addon).',
     ],
   },
 ];

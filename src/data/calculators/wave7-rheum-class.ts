@@ -147,7 +147,7 @@ const SSC_FINGERTIP: Opt[] = [
 ];
 
 const PMR_ALG: Opt[] = [
-  { label: 'Clinical only (threshold ≥4)', value: 'clinical', description: 'Use clinical items only; classify if score ≥4. US items still add to the displayed total if checked — uncheck them for a pure clinical score' },
+  { label: 'Clinical only (threshold ≥4)', value: 'clinical', description: 'Clinical items only; US points are not added. Classify if score ≥4.' },
   { label: 'Clinical + ultrasound (threshold ≥5)', value: 'us', description: 'Include US items; classify if score ≥5' },
 ];
 
@@ -417,9 +417,9 @@ export const wave7RheumClassCalcs: Calculator[] = [
         'Focus = aggregate of ≥50 lymphocytes per 4 mm² of glandular tissue. Focus score ≥1 means at least one such focus.'),
       yesNo('ssa', 'Anti-SSA/Ro positive', 3,
         'Anti-SSA/Ro (Ro60 ± Ro52) above the laboratory positive cut.'),
-      yesNo('oss', 'Ocular staining score (OSS) ≥5', 1, 'OSS ≥5 in at least one eye (SICCA OSS method). OSS and van Bijsterveld are alternative ocular-staining methods (do not add both unless both were performed).'),
-      yesNo('vanBijsterveld', 'van Bijsterveld score ≥4', 1,
-        'van Bijsterveld rose-bengal or lissamine-green score ≥4 in at least one eye (0–9 scale). Alternative to OSS — do not double-count the same staining exam.'),
+      yesNo('oss', 'Ocular staining score (OSS) ≥5', null, 'OSS ≥5 in at least one eye (SICCA OSS method). OSS and van Bijsterveld are alternative ocular-staining methods — 1 point if either is positive, not 2.'),
+      yesNo('vanBijsterveld', 'van Bijsterveld score ≥4', null,
+        'van Bijsterveld rose-bengal or lissamine-green score ≥4 in at least one eye (0–9 scale). Alternative to OSS — one ocular-staining domain (1 point if OSS or van Bijsterveld is positive).'),
       yesNo('schirmer', 'Schirmer ≤5 mm/5 min', 1,
         'Unanesthetized Schirmer test: ≤5 mm of wetting at 5 minutes in either eye.'),
       yesNo('saliva', 'Unstimulated whole saliva ≤0.1 mL/min', 1,
@@ -428,11 +428,10 @@ export const wave7RheumClassCalcs: Calculator[] = [
     calculate(values) {
       const focus = bool(values.focusScore) ? 3 : 0;
       const ssa = bool(values.ssa) ? 3 : 0;
-      const oss = bool(values.oss) ? 1 : 0;
-      const vbs = bool(values.vanBijsterveld) ? 1 : 0;
+      const ocularStain = bool(values.oss) || bool(values.vanBijsterveld) ? 1 : 0;
       const schirmer = bool(values.schirmer) ? 1 : 0;
       const saliva = bool(values.saliva) ? 1 : 0;
-      const score = focus + ssa + oss + vbs + schirmer + saliva;
+      const score = focus + ssa + ocularStain + schirmer + saliva;
       const entry = bool(values.entrySicca);
       const classified = entry && score >= 4;
       return classResult(
@@ -446,8 +445,9 @@ export const wave7RheumClassCalcs: Calculator[] = [
           { label: 'Sicca entry', value: entry ? 'Yes' : 'No' },
           { label: 'Focus score ≥1', value: bool(values.focusScore) ? 'Yes (3)' : 'No' },
           { label: 'Anti-SSA/Ro', value: bool(values.ssa) ? 'Yes (3)' : 'No' },
-          { label: 'OSS ≥5', value: bool(values.oss) ? 'Yes (1)' : 'No' },
-          { label: 'van Bijsterveld ≥4', value: bool(values.vanBijsterveld) ? 'Yes (1)' : 'No' },
+          { label: 'OSS ≥5', value: bool(values.oss) ? 'Yes' : 'No' },
+          { label: 'van Bijsterveld ≥4', value: bool(values.vanBijsterveld) ? 'Yes' : 'No' },
+          { label: 'Ocular staining domain', value: ocularStain ? 'Yes (1)' : 'No' },
           { label: 'Schirmer ≤5 mm', value: bool(values.schirmer) ? 'Yes (1)' : 'No' },
           { label: 'Unstimulated saliva ≤0.1 mL/min', value: bool(values.saliva) ? 'Yes (1)' : 'No' },
         ],
@@ -455,8 +455,8 @@ export const wave7RheumClassCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        '2016 ACR/EULAR primary Sjögren: among those with sicca, weighted items (focus score 3, anti-SSA/Ro 3, OSS 1, van Bijsterveld 1, Schirmer 1, unstimulated saliva 1); threshold ≥4.',
-      formula: '3×FS≥1 + 3×SSA + 1×OSS + 1×vBS + 1×Schirmer + 1×UWS; classify if ≥4 AND sicca entry',
+        '2016 ACR/EULAR primary Sjögren: among those with sicca, weighted items (focus score 3, anti-SSA/Ro 3, ocular staining 1 if OSS ≥5 or van Bijsterveld ≥4, Schirmer 1, unstimulated saliva 1); threshold ≥4.',
+      formula: '3×FS≥1 + 3×SSA + 1×(OSS≥5 OR vBS≥4) + 1×Schirmer + 1×UWS; classify if ≥4 AND sicca entry',
       validation: 'Shiboski et al. 2016; intended to unify AECG 2002 and ACR 2012 sets.',
       references: [
         {
@@ -471,7 +471,7 @@ export const wave7RheumClassCalcs: Calculator[] = [
     nextSteps: classSteps('primary Sjögren'),
     pearls: classPearls([
       'Exclude other conditions that better explain sicca (e.g. head/neck radiation, active HCV, AIDS, sarcoidosis, amyloidosis, GVHD, IgG4-related disease) before applying these criteria.',
-      'Both ocular staining methods are listed; many studies use one method only.',
+      'OSS and van Bijsterveld are alternative ocular-staining methods (1 point if either is positive, not 2).',
     ]),
   },
 
@@ -567,9 +567,9 @@ export const wave7RheumClassCalcs: Calculator[] = [
         'Both RF and ACPA ≤ laboratory ULN.'),
       yesNo('noPeripheralSynovitis', 'No other peripheral synovitis', 1,
         'No synovitis of joints other than shoulders and hips (knees, wrists, MCPs, etc. would negate this item).'),
-      yesNo('usShoulderHip', 'Ultrasound: ≥1 abnormal shoulder AND ≥1 abnormal hip', 1, 'Abnormal shoulder = subdeltoid bursitis, biceps tenosynovitis, and/or glenohumeral synovitis; abnormal hip = coxofemoral synovitis and/or trochanteric bursitis.'),
-      yesNo('usBothShoulders', 'Ultrasound: both shoulders abnormal', 1, 'Each shoulder: subdeltoid bursitis, biceps tenosynovitis, and/or glenohumeral synovitis.'),
-      selectInput('algorithm', 'Scoring algorithm', PMR_ALG, 'clinical', 'Ultrasound points always add to the displayed total; the algorithm selects the threshold (4 vs 5)'),
+      yesNo('usShoulderHip', 'Ultrasound: ≥1 abnormal shoulder AND ≥1 abnormal hip', null, 'Abnormal shoulder = subdeltoid bursitis, biceps tenosynovitis, and/or glenohumeral synovitis; abnormal hip = coxofemoral synovitis and/or trochanteric bursitis. Counted only on the clinical+US algorithm.'),
+      yesNo('usBothShoulders', 'Ultrasound: both shoulders abnormal', null, 'Each shoulder: subdeltoid bursitis, biceps tenosynovitis, and/or glenohumeral synovitis. Counted only on the clinical+US algorithm.'),
+      selectInput('algorithm', 'Scoring algorithm', PMR_ALG, 'clinical', 'Clinical-without-US pathway uses threshold ≥4 and does not add US points. US algorithm uses threshold ≥5 and includes US items.'),
     ],
     calculate(values) {
       const stiffness = bool(values.stiffness) ? 2 : 0;
@@ -578,8 +578,9 @@ export const wave7RheumClassCalcs: Calculator[] = [
       const noPeriph = bool(values.noPeripheralSynovitis) ? 1 : 0;
       const usSH = bool(values.usShoulderHip) ? 1 : 0;
       const usBoth = bool(values.usBothShoulders) ? 1 : 0;
-      const score = stiffness + hip + seronegative + noPeriph + usSH + usBoth;
       const algorithm = str(values.algorithm, 'clinical');
+      const usPts = algorithm === 'us' ? usSH + usBoth : 0;
+      const score = stiffness + hip + seronegative + noPeriph + usPts;
       const threshold = algorithm === 'us' ? 5 : 4;
       const classified = score >= threshold;
       return classResult(
@@ -596,15 +597,15 @@ export const wave7RheumClassCalcs: Calculator[] = [
           { label: 'Hip pain / limited ROM', value: bool(values.hip) ? 'Yes (1)' : 'No' },
           { label: 'RF and ACPA negative', value: bool(values.seronegative) ? 'Yes (2)' : 'No' },
           { label: 'No other peripheral synovitis', value: bool(values.noPeripheralSynovitis) ? 'Yes (1)' : 'No' },
-          { label: 'US shoulder + hip', value: bool(values.usShoulderHip) ? 'Yes (1)' : 'No' },
-          { label: 'US both shoulders', value: bool(values.usBothShoulders) ? 'Yes (1)' : 'No' },
+          { label: 'US shoulder + hip', value: algorithm === 'us' ? (bool(values.usShoulderHip) ? 'Yes (1)' : 'No') : (bool(values.usShoulderHip) ? 'Yes (not counted — clinical algorithm)' : 'No') },
+          { label: 'US both shoulders', value: algorithm === 'us' ? (bool(values.usBothShoulders) ? 'Yes (1)' : 'No') : (bool(values.usBothShoulders) ? 'Yes (not counted — clinical algorithm)' : 'No') },
         ],
       );
     },
     evidence: {
       summary:
-        '2012 ACR/EULAR PMR: required age ≥50, bilateral shoulder aching, abnormal CRP/ESR. Additive: stiffness 2, hip 1, RF/ACPA negative 2, no peripheral synovitis 1; optional US shoulder+hip 1 and both shoulders 1. Classify if ≥4 without US algorithm or ≥5 with US.',
-      formula: 'Sum of clinical (and US) items; threshold 4 (clinical) or 5 (clinical+US)',
+        '2012 ACR/EULAR PMR: required age ≥50, bilateral shoulder aching, abnormal CRP/ESR. Additive: stiffness 2, hip 1, RF/ACPA negative 2, no peripheral synovitis 1. US shoulder+hip 1 and both shoulders 1 are added only on the US algorithm. Classify if ≥4 without US or ≥5 with US.',
+      formula: 'Clinical items always; US items only on the US algorithm. Threshold 4 (clinical, no US points) or 5 (clinical+US)',
       validation: 'Dasgupta et al. 2012; score ≥4 sensitivity 68% / specificity 78% without US; US algorithm ≥5 specificity 81%.',
       references: [
         {
@@ -619,7 +620,7 @@ export const wave7RheumClassCalcs: Calculator[] = [
     nextSteps: classSteps('PMR'),
     pearls: classPearls([
       'Required setting is age ≥50 + bilateral shoulder aching + raised CRP or ESR — not scored as points.',
-      'Ultrasound points are included in the total; choose the matching threshold (4 vs 5).',
+      'Ultrasound points are added only when the clinical+US algorithm is selected (threshold ≥5). The clinical-without-US pathway uses threshold ≥4 and ignores US items.',
     ]),
   },
 

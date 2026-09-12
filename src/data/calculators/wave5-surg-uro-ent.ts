@@ -1273,6 +1273,8 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
       ], 0, 'Subjective pain intensity on history/exam (Lintula has no numeric VAS cut).'),
       yesNo('relocation', 'Relocation of pain', 4,
         'Pain started periumbilical or epigastric and later migrated to the RLQ.'),
+      yesNo('rlqPain', 'Pain in the right lower quadrant', 4,
+        'Pain localized to the RLQ (McBurney). Distinct from migration/relocation.'),
       yesNo('vomiting', 'Vomiting', 2,
         'Vomiting (not nausea alone).'),
       yesNo('fever', 'Fever (temperature ≥37.5°C / 99.5°F)', 3),
@@ -1282,7 +1284,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         'Pain on sudden release of RLQ palpation (Blumberg) — greater than the pain of compression.'),
       selectInput('bowelSounds', 'Bowel sounds', [
         { label: 'Normal (0)', value: 0, description: 'Normoactive bowel sounds' },
-        { label: 'Absent / tinkling / high-pitched (2)', value: 2, description: 'Absent, tinkling, or high-pitched bowel sounds' },
+        { label: 'Absent / tinkling / high-pitched (4)', value: 4, description: 'Absent, tinkling, or high-pitched bowel sounds' },
       ], undefined, 'Auscultate in the RLQ/abdomen: normal vs absent/tinkling/high-pitched.'),
     ],
     calculate(values) {
@@ -1290,6 +1292,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         num(values.sex) +
         num(values.intensity) +
         (bool(values.relocation) ? 4 : 0) +
+        (bool(values.rlqPain) ? 4 : 0) +
         (bool(values.vomiting) ? 2 : 0) +
         (bool(values.fever) ? 3 : 0) +
         (bool(values.guarding) ? 4 : 0) +
@@ -1326,7 +1329,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Lintula score (0–32): male sex, pain intensity, relocation, vomiting, fever ≥37.5°C, guarding, rebound, abnormal bowel sounds — no labs.',
+        'Lintula score (0–32): male sex, pain intensity, relocation, RLQ pain, vomiting, fever ≥37.5°C, guarding, rebound, abnormal bowel sounds — no labs.',
       formula: 'Sum of weighted clinical items',
       validation:
         'Derived in children; subsequent adult evaluations show variable performance — combine with labs/imaging as needed.',

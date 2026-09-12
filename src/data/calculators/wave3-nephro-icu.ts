@@ -991,15 +991,15 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       numberInput('goal', 'Goal serum K', { unit: 'mEq/L', min: 3.0, max: 5.0, step: 0.1, defaultValue: 4.0 }),
       numberInput('weight', 'Body weight', { unit: 'kg', min: 20, max: 300, defaultValue: 70 }),
       selectInput('method', 'Estimate method', [
-        { label: 'Vd method: (goal−K)×0.4×wt', value: 'vd' },
-        { label: 'Rule of thumb: ~100 mEq per 0.4 mEq/L deficit', value: 'rule' },
-      ]),
+        { label: 'Rule of thumb: ~100 mEq per 0.4 mEq/L deficit (Gennari-style)', value: 'rule' },
+        { label: 'ECF-only Vd: (goal−K)×0.4×wt', value: 'vd' },
+      ], 'rule'),
     ],
     calculate(values) {
       const k = num(values.k, 2.8);
       const goal = num(values.goal, 4);
       const wt = num(values.weight, 70);
-      const method = str(values.method, 'vd');
+      const method = str(values.method, 'rule');
       if (k >= goal) {
         return {
           score: 0,
@@ -1026,7 +1026,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         riskLevel: severe ? 'high' : k < 3.0 ? 'moderate' : 'info',
         details: [
           { label: 'ΔK', value: `${round(delta, 1)} mEq/L` },
-          { label: 'Method', value: method === 'rule' ? '~100 mEq per 0.4 mEq/L' : '(goal−K)×0.4×wt' },
+          { label: 'Method', value: method === 'rule' ? '~100 mEq per 0.4 mEq/L' : 'ECF-only (goal−K)×0.4×wt' },
         ],
         recommendations: [
           'Correct concurrent hypomagnesemia',
@@ -1037,7 +1037,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     },
     evidence: {
       summary: 'Serum K poorly reflects total-body stores; teaching estimates use Vd≈0.4 L/kg or ~100 mEq per 0.4 mEq/L fall.',
-      formula: 'Deficit ≈ (K_goal − K)×0.4×weight  OR  ≈ (ΔK/0.4)×100 mEq',
+      formula: 'Deficit ≈ (ΔK/0.4)×100 mEq (default)  OR  ECF-only (K_goal − K)×0.4×weight',
       validation: 'Educational approximation only; wide individual variation (acid-base, insulin, catecholamines).',
       references: [
         {

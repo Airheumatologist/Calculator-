@@ -328,23 +328,23 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     name: 'ACR/EULAR Boolean Remission (RA)',
     shortName: 'Boolean RA',
     description:
-      'ACR/EULAR Boolean remission for rheumatoid arthritis, with the original 2011 PGA ≤1 definition and the 2022 PGA ≤1.5 revision.',
+      'ACR/EULAR Boolean remission for rheumatoid arthritis, with the original 2011 PGA ≤1 definition and Boolean 2.0 (PGA ≤2.0; Studenic / ACR-EULAR 2022).',
     category: 'rheumatology',
     tags: ['boolean', 'remission', 'ra', 'acr', 'eular', 'treat-to-target'],
     whenToUse:
       'Documenting Boolean remission in RA treat-to-target, trials, or clinic follow-up when TJC28, SJC28, CRP, and patient global are available.',
     whyUse:
-      'Stringent four-variable remission used alongside SDAI/CDAI. The 2022 revision relaxes patient global to reduce false-negative “near-remission” driven by non-inflammatory PGA.',
+      'Stringent four-variable remission used alongside SDAI/CDAI. Boolean 2.0 relaxes patient global to PGA ≤2.0 to reduce false-negative “near-remission” driven by non-inflammatory PGA.',
     inputs: [
       selectInput(
         'revision',
         'Boolean definition',
         [
           { label: 'Original 2011 (PGA ≤1.0)', value: 'original' },
-          { label: '2022 revision (PGA ≤1.5)', value: '2022' },
+          { label: 'Boolean 2.0 / 2022 (PGA ≤2.0)', value: '2022' },
         ],
         '2022',
-        'Do not treat this switch as additive points — it only changes the PGA cutoff. Official Boolean 2.0 also uses PGA ≤2; this tool implements the 1.5 cutoff specified for the 2022 update pathway.',
+        'Do not treat this switch as additive points — it only changes the PGA cutoff. Official Boolean 2.0 (Studenic / ACR-EULAR 2022) uses PGA ≤2.0.',
       ),
       numberInput('tjc28', 'Tender joint count (28)', {
         min: 0,
@@ -374,7 +374,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         max: 10,
         step: 0.1,
         defaultValue: 0.5,
-        helpText: '0–10 NRS/VAS. Original Boolean PGA ≤1; 2022 revision PGA ≤1.5.',
+        helpText: '0–10 NRS/VAS. Original Boolean PGA ≤1; Boolean 2.0 (2022) PGA ≤2.0.',
       }),
     ],
     calculate(values) {
@@ -383,7 +383,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
       const sjc = num(values.sjc28, 0);
       const crp = num(values.crp, 0);
       const pga = num(values.pga, 0);
-      const pgaCut = revision === 'original' ? 1 : 1.5;
+      const pgaCut = revision === 'original' ? 1 : 2;
       const tjcOk = tjc <= 1;
       const sjcOk = sjc <= 1;
       const crpOk = crp <= 1;
@@ -393,17 +393,17 @@ export const wave7RheumActivityCalcs: Calculator[] = [
       if (!tjcOk) failed.push(`TJC28 ${tjc} > 1`);
       if (!sjcOk) failed.push(`SJC28 ${sjc} > 1`);
       if (!crpOk) failed.push(`CRP ${crp} mg/dL > 1`);
-      if (!pgaOk) failed.push(`PGA ${pga} > ${pgaCut} (${revision === 'original' ? '2011' : '2022'} cutoff)`);
+      if (!pgaOk) failed.push(`PGA ${pga} > ${pgaCut} (${revision === 'original' ? '2011' : 'Boolean 2.0'} cutoff)`);
       const score = remission ? 1 : 0;
       const result: CalcResult = {
         score,
         label: remission ? 'Boolean remission' : 'Not in Boolean remission',
         interpretation: remission
-          ? `Meets ${revision === 'original' ? '2011' : '2022'} Boolean remission (TJC≤1, SJC≤1, CRP≤1 mg/dL, PGA≤${pgaCut}).`
-          : `Does not meet ${revision === 'original' ? '2011' : '2022'} Boolean remission. Failed: ${failed.join('; ')}.`,
+          ? `Meets ${revision === 'original' ? '2011' : 'Boolean 2.0 (2022)'} Boolean remission (TJC≤1, SJC≤1, CRP≤1 mg/dL, PGA≤${pgaCut}).`
+          : `Does not meet ${revision === 'original' ? '2011' : 'Boolean 2.0 (2022)'} Boolean remission. Failed: ${failed.join('; ')}.`,
         riskLevel: remission ? 'normal' : 'high',
         details: [
-          { label: 'Definition', value: revision === 'original' ? 'Original 2011 (PGA ≤1.0)' : '2022 revision (PGA ≤1.5)' },
+          { label: 'Definition', value: revision === 'original' ? 'Original 2011 (PGA ≤1.0)' : 'Boolean 2.0 (PGA ≤2.0)' },
           { label: 'PGA cutoff used', value: String(pgaCut) },
           { label: 'TJC28', value: `${tjc} (${tjcOk ? 'pass' : 'fail'})` },
           { label: 'SJC28', value: `${sjc} (${sjcOk ? 'pass' : 'fail'})` },
@@ -418,7 +418,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        '2011 Boolean: TJC28 ≤1 AND SJC28 ≤1 AND CRP ≤1 mg/dL AND PGA ≤1 (0–10). 2022 revision raises PGA to ≤1.5 (Boolean 1.5 pathway; official Boolean 2.0 uses PGA ≤2). Score 1 = remission, 0 = not.',
+        '2011 Boolean: TJC28 ≤1 AND SJC28 ≤1 AND CRP ≤1 mg/dL AND PGA ≤1 (0–10). Boolean 2.0 (Studenic / ACR-EULAR 2022) raises PGA to ≤2.0. Score 1 = remission, 0 = not.',
       formula: 'All four variables must be at target; PGA cutoff depends on selected revision.',
       validation:
         'Felson 2011 ACR/EULAR provisional Boolean; Studenic 2022 revision validated better agreement with SDAI/CDAI remission without loss of radiographic/functional prediction.',
@@ -445,8 +445,8 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     ],
     pearls: [
       'CRP must be mg/dL, not mg/L.',
-      'PGA 1.2 fails original Boolean (≤1) but meets the 2022 PGA ≤1.5 revision — that is why the definition selector exists.',
-      'Official ACR/EULAR Boolean 2.0 uses PGA ≤2; this calculator’s 2022 arm uses 1.5 as specified for the revision pathway.',
+      'PGA 1.2 fails original Boolean (≤1) but meets Boolean 2.0 (PGA ≤2.0) — that is why the definition selector exists.',
+      'Official ACR/EULAR Boolean 2.0 uses PGA ≤2.0 (Studenic 2022); TJC28, SJC28, and CRP ≤1 mg/dL are unchanged.',
     ],
   },
 
@@ -891,6 +891,45 @@ export const wave7RheumActivityCalcs: Calculator[] = [
       const myositis = yn(values.myositis);
       const serositis = yn(values.serositis);
       const hemolytic = yn(values.hemolytic);
+      if (pprot && prot < 500) {
+        return {
+          score: '—',
+          label: 'Invalid inputs',
+          interpretation:
+            'PProt is Yes but proteinuria is <500 mg/24 h. Enter proteinuria ≥500 mg/24 h (the PProt definition) or set PProt to No. The ln(Prot) term is not computed when the flag and amount are inconsistent.',
+          riskLevel: 'info',
+          details: [
+            { label: 'PProt >500 mg/24 h', value: String(pprot) },
+            { label: 'Proteinuria mg/24 h', value: String(prot) },
+          ],
+        };
+      }
+      if (thromb && platCount >= 100) {
+        return {
+          score: '—',
+          label: 'Invalid inputs',
+          interpretation:
+            'Thrombocytopenia flag is Yes but platelets are ≥100 ×10⁹/L. The flag requires platelets <100 ×10⁹/L, or set the flag to No. The ln(PlatCount) term is not computed when the flag and count are inconsistent.',
+          riskLevel: 'info',
+          details: [
+            { label: 'Thrombocytopenia flag', value: String(thromb) },
+            { label: 'Platelets ×10⁹/L', value: String(platCount) },
+          ],
+        };
+      }
+      if (leuk && leukCount >= 3) {
+        return {
+          score: '—',
+          label: 'Invalid inputs',
+          interpretation:
+            'Leukopenia flag is Yes but leukocytes are ≥3 ×10⁹/L. The flag requires WBC <3 ×10⁹/L, or set the flag to No. The ln(LeukCount) term is not computed when the flag and count are inconsistent.',
+          riskLevel: 'info',
+          details: [
+            { label: 'Leukopenia flag', value: String(leuk) },
+            { label: 'WBC ×10⁹/L', value: String(leukCount) },
+          ],
+        };
+      }
       const protLn = Math.log(Math.max(prot, 1));
       const platLn = Math.log(Math.max(platCount, 1));
       const leukLn = Math.log(Math.max(leukCount, 0.1));
@@ -967,7 +1006,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     evidence: {
       summary:
         'Published SLE-DAS (Jesus 2019 Fig. 1): 0.366 + 3.132·Arthritis + 0.454·SJC + 4.408·mucocutaneous vasculitis + 3.138·local rash + 3.887·general rash + 0.973·alopecia + 2.769·ulcers + 0.754·hypoC + 0.956·anti-dsDNA − 17.584·PProt + 3.811·PProt·ln(Prot) + 26.105·Thromb − 5.577·Thromb·ln(Plat) + 6.118·Leuk − 5.058·Leuk·ln(WBC) + 18·NPSLE + 18·systemic vasculitis + 18·cardiopulmonary + 9·myositis + 6·serositis + 9·haemolysis. Cutoffs: ≤2.08 remission, ≤7.64 mild, >7.64 moderate/severe.',
-      formula: 'Weighted 17-item continuous score (ln = natural log). Continuous proteinuria/platelet/WBC terms apply only when the corresponding binary flag is 1.',
+      formula: 'Weighted 17-item continuous score (ln = natural log). Continuous proteinuria/platelet/WBC terms apply only when the corresponding binary flag is 1 and the count matches the flag definition (Prot ≥500; platelets <100; WBC <3).',
       validation: 'Derived and validated against PGA and SLEDAI-2K (n=520); activity category cutoffs validated 2021 (n=1190).',
       references: [
         {
@@ -992,7 +1031,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     ],
     pearls: [
       'Intercept 0.366 means completely inactive disease still scores ~0.37, which is within the ≤2.08 remission band.',
-      'Proteinuria amount, platelet count, and WBC change the numeric score only when their binary flags are Yes — both the flag and the count are required inputs.',
+      'Proteinuria amount, platelet count, and WBC change the numeric score only when their binary flags are Yes — both the flag and a physiologic count are required (PProt needs ≥500 mg/24 h; thrombocytopenia platelets <100; leukopenia WBC <3).',
     ],
   },
 

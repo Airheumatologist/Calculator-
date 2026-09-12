@@ -43,19 +43,19 @@ export const wave5CardioCalcs: Calculator[] = [
         3: {
           label: 'EHRA IIb — Moderate symptoms',
           interpretation:
-            'Moderate symptoms affecting normal daily activity. Stronger rationale for rhythm-control strategies (AAD, cardioversion, ablation) in addition to anticoagulation when indicated.',
+            'Moderate symptoms that do not affect normal daily activity, but the patient is troubled by them. Stronger rationale for rhythm-control strategies (AAD, cardioversion, ablation) in addition to anticoagulation when indicated.',
           riskLevel: 'moderate',
         },
         4: {
           label: 'EHRA III — Severe symptoms',
           interpretation:
-            'Severe symptoms; normal daily activity discontinued. Prioritize symptom control — consider AAD, cardioversion, and/or catheter ablation per guidelines and preference.',
+            'Severe symptoms affecting normal daily activity. Prioritize symptom control — consider AAD, cardioversion, and/or catheter ablation per guidelines and preference.',
           riskLevel: 'high',
         },
         5: {
           label: 'EHRA IV — Disabling symptoms',
           interpretation:
-            'Disabling symptoms with ordinary activity. Urgent evaluation for rate/rhythm strategy, reversible triggers, and heart-failure contribution; ablation referral often appropriate.',
+            'Disabling symptoms; normal daily activity discontinued. Urgent evaluation for rate/rhythm strategy, reversible triggers, and heart-failure contribution; ablation referral often appropriate.',
           riskLevel: 'high',
         },
       };

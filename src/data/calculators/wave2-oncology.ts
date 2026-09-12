@@ -12,7 +12,18 @@ export const wave2OncologyCalcs: Calculator[] = [
     whenToUse: 'Fever or suspected CRS after CAR-T, bispecifics, or other T-cell engagers to assign ASTCT CRS grade.',
     whyUse: 'Standardizes severity for tocilizumab/steroids decisions and trial reporting; grade drives escalation of care.',
     inputs: [
-      yesNo('fever', 'Fever ≥ 38.0 °C attributed to CRS', 1, 'Onset fever ≥38.0 °C not solely infection. After antipyretics, tocilizumab, or steroids, fever is no longer required to grade subsequent CRS — grade remaining hypotension/hypoxia. This tool still gates on fever, so ignore “no fever = no CRS” in that treated setting.'),
+      yesNo(
+        'fever',
+        'Fever ≥ 38.0 °C attributed to CRS',
+        1,
+        'Onset fever ≥38.0 °C not solely infection. After antipyretics, tocilizumab, or steroids, fever is no longer required to continue grading — set “Fever already treated” and grade remaining hypotension/hypoxia.',
+      ),
+      yesNo(
+        'crsTreated',
+        'Fever already treated (antipyretics / tocilizumab / steroids)',
+        null,
+        'If CRS treatment removed the fever, grade remaining hypotension/hypoxia anyway.',
+      ),
       selectInput(
         'hypotension',
         'Hypotension / cardiovascular',
@@ -40,19 +51,37 @@ export const wave2OncologyCalcs: Calculator[] = [
     ],
     calculate(values) {
       const fever = bool(values.fever);
-      if (!fever) {
+      const crsTreated = bool(values.crsTreated);
+      const hypo = num(values.hypotension);
+      const ox = num(values.hypoxia);
+
+      if (!fever && !crsTreated) {
         return {
           score: 0,
           label: 'No CRS by ASTCT (no fever)',
           interpretation:
-            'ASTCT CRS requires fever ≥38 °C not attributable solely to infection. Without fever, do not grade as CRS; evaluate infection, ICANS, and other causes of shock/hypoxia.',
+            'ASTCT CRS requires fever ≥38 °C not attributable solely to infection. Without fever (and without prior antipyretics/tocilizumab/steroids that removed fever), do not grade as CRS; evaluate infection, ICANS, and other causes of shock/hypoxia.',
           riskLevel: 'info',
           details: [{ label: 'Grade', value: 'N/A' }],
         };
       }
-      const hypo = num(values.hypotension);
-      const ox = num(values.hypoxia);
-      const grade = Math.max(1, hypo, ox);
+
+      if (!fever && crsTreated && hypo <= 0 && ox <= 0) {
+        return {
+          score: 0,
+          label: 'Grade 0 / resolved CRS (fever treated)',
+          interpretation:
+            'Fever already treated (antipyretics / tocilizumab / steroids) and no remaining hypotension or hypoxia. ASTCT grade 0 / resolved from current vitals — continue monitoring; this is not a CRS rule-out if symptoms recur.',
+          riskLevel: 'info',
+          details: [
+            { label: 'Fever', value: 'Treated (not currently febrile)' },
+            { label: 'Hypotension tier', value: '0' },
+            { label: 'Hypoxia tier', value: '0' },
+          ],
+        };
+      }
+
+      const grade = Math.max(fever ? 1 : 0, hypo, ox);
       const map: Record<number, { label: string; interpretation: string; riskLevel: 'low' | 'moderate' | 'high' | 'critical' }> = {
         1: {
           label: 'Grade 1 CRS',
@@ -63,29 +92,32 @@ export const wave2OncologyCalcs: Calculator[] = [
         2: {
           label: 'Grade 2 CRS',
           interpretation:
-            'Fever with hypotension not requiring vasopressors and/or hypoxia needing low-flow nasal cannula. Consider tocilizumab (± steroids per product/protocol); escalate monitoring.',
+            'Hypotension not requiring vasopressors and/or hypoxia needing low-flow nasal cannula. Consider tocilizumab (± steroids per product/protocol); escalate monitoring.',
           riskLevel: 'moderate',
         },
         3: {
           label: 'Grade 3 CRS',
           interpretation:
-            'Fever with hypotension requiring one vasopressor (± vasopressin) and/or hypoxia requiring high-flow O₂, facemask, NRB, or Venturi. ICU-level care; tocilizumab + corticosteroids commonly indicated.',
+            'Hypotension requiring one vasopressor (± vasopressin) and/or hypoxia requiring high-flow O₂, facemask, NRB, or Venturi. ICU-level care; tocilizumab + corticosteroids commonly indicated.',
           riskLevel: 'high',
         },
         4: {
           label: 'Grade 4 CRS',
           interpretation:
-            'Fever with life-threatening hypotension (multiple vasopressors) and/or hypoxia needing positive pressure ventilation. Immediate ICU management; anti-IL-6 + high-dose steroids per institutional CAR-T pathway.',
+            'Life-threatening hypotension (multiple vasopressors) and/or hypoxia needing positive pressure ventilation. Immediate ICU management; anti-IL-6 + high-dose steroids per institutional CAR-T pathway.',
           riskLevel: 'critical',
         },
       };
       const r = map[grade] ?? map[1];
+      const treatedNote = !fever && crsTreated ? 'Fever already treated. Grade remaining hypotension/hypoxia per ASTCT. ' : '';
       return {
         score: grade,
         unit: 'grade',
-        ...r,
+        label: r.label,
+        interpretation: treatedNote + r.interpretation,
+        riskLevel: r.riskLevel,
         details: [
-          { label: 'Fever', value: 'Yes (≥38 °C)' },
+          { label: 'Fever', value: fever ? 'Yes (≥38 °C)' : 'Already treated (not currently febrile)' },
           { label: 'Hypotension tier', value: String(hypo || 0) },
           { label: 'Hypoxia tier', value: String(ox || 0) },
         ],
@@ -99,8 +131,9 @@ export const wave2OncologyCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'ASTCT CRS grading is driven by fever plus the worst of hypotension or hypoxia organ toxicity tiers (grades 1–4). Grade 5 is death.',
-      formula: 'Grade = max(hypotension tier, hypoxia tier) with fever required; fever alone = grade 1',
+        'ASTCT CRS grading is driven by fever plus the worst of hypotension or hypoxia organ toxicity tiers (grades 1–4). After antipyretics, tocilizumab, or steroids, fever is not required to continue grading remaining hypotension/hypoxia. Grade 5 is death.',
+      formula:
+        'Grade = max(hypotension tier, hypoxia tier, fever?1:0); fever required unless already treated with antipyretics/toci/steroids',
       validation: 'ASTCT consensus (Lee et al. 2019) adopted widely for CAR-T and bispecific toxicity reporting.',
       references: [
         {
@@ -119,6 +152,7 @@ export const wave2OncologyCalcs: Calculator[] = [
     pearls: [
       'Infection can coexist with CRS — culture and cover broadly when appropriate.',
       'ICANS is graded separately; CRS and ICANS may occur together.',
+      'After antipyretics, tocilizumab, or steroids, ASTCT still grades remaining hypotension/hypoxia even if fever has resolved.',
     ],
   },
 
@@ -271,18 +305,17 @@ export const wave2OncologyCalcs: Calculator[] = [
     whyUse: 'Maps ANC to familiar grade 1–4 thresholds used in protocols and adverse event logs.',
     inputs: [
       numberInput('anc', 'Absolute neutrophil count (ANC)', {
-        unit: '×10⁹/L or ×10³/µL',
+        unit: '×10⁹/L',
         min: 0,
         max: 20,
         step: 0.01,
         defaultValue: 1.2,
-        helpText: 'Same numeric value for ×10⁹/L and cells ×10³/µL (e.g., 0.5 = 500/µL)',
+        helpText: 'SI units ×10⁹/L only (e.g., 0.5 = 500/µL). Do not enter cells/µL.',
       }),
     ],
     calculate(values) {
       const anc = num(values.anc, 1.2);
-      // Accept raw cells/µL (e.g. 1200) or ×10⁹/L (e.g. 1.2)
-      const ancK = anc > 50 ? anc / 1000 : anc;
+      const ancK = anc;
 
       let grade = 0;
       let label = 'Grade 0';
@@ -322,7 +355,7 @@ export const wave2OncologyCalcs: Calculator[] = [
         interpretation: `${interpretation} Entered ANC ≈ ${round(ancK, 2)} ×10⁹/L.`,
         riskLevel,
         details: [
-          { label: 'ANC (normalized)', value: `${round(ancK, 3)} ×10⁹/L` },
+          { label: 'ANC', value: `${round(ancK, 3)} ×10⁹/L` },
           { label: 'CTCAE bands', value: 'G2 1.0–<1.5; G3 0.5–<1.0; G4 <0.5' },
         ],
       };

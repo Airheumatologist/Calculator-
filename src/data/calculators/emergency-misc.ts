@@ -485,7 +485,10 @@ export const emergencyMiscCalcs: Calculator[] = [
       const rem = days % 7;
       const edd = new Date(lmp);
       edd.setDate(edd.getDate() + 280);
-      const eddStr = edd.toISOString().slice(0, 10);
+      const y = edd.getFullYear();
+      const m = String(edd.getMonth() + 1).padStart(2, '0');
+      const d = String(edd.getDate()).padStart(2, '0');
+      const eddStr = `${y}-${m}-${d}`;
       return {
         score: `${weeks}+${rem}`,
         label: 'Gestational age',

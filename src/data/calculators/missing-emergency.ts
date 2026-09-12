@@ -82,6 +82,23 @@ export const missingEmergencyCalcs: Calculator[] = [
           recommendations: ['Obtain non-contrast CT head', 'Discharge only if CT negative and clinically stable'],
         };
       }
+      if (gcs < 15) {
+        return {
+          score: '—',
+          label: 'CCHR not yet negative — GCS <15 at assessment',
+          interpretation: `Current GCS is ${gcs} (13–14). The high-risk CCHR item is GCS <15 at 2 hours after injury, not the arrival GCS. Observe until 2 hours and rescore, or obtain CT. Do not discharge as rule-negative.`,
+          riskLevel: 'moderate' as const,
+          details: [
+            { label: 'Risk tier', value: 'Indeterminate' },
+            { label: 'GCS', value: String(gcs) },
+          ],
+          recommendations: [
+            'Observe until 2 hours post-injury and rescore CCHR',
+            'Obtain CT if observation to 2 hours is not feasible or GCS does not recover to 15',
+            'Do not discharge as CCHR-negative while GCS remains <15',
+          ],
+        };
+      }
       return {
         score: 0,
         label: 'Rule negative — CT not required by CCHR',

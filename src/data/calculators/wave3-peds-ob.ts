@@ -56,13 +56,13 @@ export const wave3PedsObCalcs: Calculator[] = [
         { label: '<90° (5)', value: 5, description: 'Cannot extend to 90°' },
       ], -1, 'Thigh flexed beside the abdomen (knee to chest). Hold the thigh and extend the lower leg until resistance. Measure the angle behind the knee (popliteal angle). Do not force past resistance.'),
       selectInput('scarf', 'Scarf sign (elbow vs chest landmarks)', [
-        { label: 'Elbow past midline (−1)', value: -1, description: 'Elbow crosses the midline (very little resistance)' },
-        { label: 'Elbow to midline (0)', value: 0, description: 'Elbow reaches the midline' },
-        { label: 'Elbow to contralateral nipple (1)', value: 1, description: 'Elbow reaches the opposite nipple' },
-        { label: 'Elbow to ipsilateral nipple (2)', value: 2, description: 'Elbow reaches the same-side nipple' },
-        { label: 'Elbow does not reach midline (3)', value: 3, description: 'Elbow falls short of the midline' },
-        { label: 'Elbow does not reach axillary line (4)', value: 4, description: 'Elbow does not reach the ipsilateral axillary line' },
-      ], -1, 'Draw the infant’s hand around the neck toward the opposite shoulder (scarf). Note where the elbow lands relative to midline, nipples, and axillary line. Do not force past resistance.'),
+        { label: 'Elbow past opposite axillary line (−1)', value: -1, description: 'Elbow crosses beyond the opposite axillary line (greatest scarf travel; most premature)' },
+        { label: 'Elbow to opposite axillary line (0)', value: 0, description: 'Elbow reaches the opposite axillary line' },
+        { label: 'Elbow to contralateral nipple (1)', value: 1, description: 'Elbow reaches the opposite nipple (past midline but not to opposite axilla)' },
+        { label: 'Elbow to midline (2)', value: 2, description: 'Elbow reaches the midline (less travel than contralateral nipple)' },
+        { label: 'Elbow does not reach midline (3)', value: 3, description: 'Elbow falls short of the midline (ipsilateral chest)' },
+        { label: 'Elbow does not reach ipsilateral axillary line (4)', value: 4, description: 'Minimal scarf travel; elbow remains near the ipsilateral axilla' },
+      ], -1, 'Draw the infant’s hand around the neck toward the opposite shoulder (scarf). Note where the elbow lands. Official Ballard: more scarf travel = more premature = lower score. Do not force past resistance.'),
       selectInput('heelToEar', 'Heel to ear (foot toward ipsilateral ear)', [
         { label: 'Toes to ear (−1)', value: -1, description: 'Foot reaches the ear; little or no resistance' },
         { label: 'Near ear (0)', value: 0, description: 'Heel approaches the ear' },
@@ -2371,7 +2371,7 @@ export const wave3PedsObCalcs: Calculator[] = [
         riskLevel = 'critical';
         interpretation =
           '≥2 severe signs: WHO severe dehydration — urgent IV rehydration (Plan C), then ORS; treat shock if present.';
-      } else if (someCount >= 2 || (severeCount === 1 && someCount >= 1)) {
+      } else if (someCount >= 2) {
         plan = 'B';
         label = 'Some dehydration';
         riskLevel = 'moderate';

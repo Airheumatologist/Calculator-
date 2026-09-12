@@ -2,8 +2,8 @@
 
 <!-- GENERATED FILE. Do not edit by hand. Regenerate with: npm run audit:evidence -->
 
-Generated: 2026-09-11T20:28:06.372Z
-Source: `src/data/calculators/*.ts` (48 files, sha256 `9b45ea869484b8f6…`)
+Generated: 2026-09-12T16:06:05.217Z
+Source: `src/data/calculators/*.ts` (48 files, sha256 `3d46ccd8f9cf4e8e…`)
 
 This file and `refs-inventory.json` are the only authoritative evidence-audit
 outputs in this repository. Both come from the same parser
@@ -16,16 +16,16 @@ outputs in this repository. Both come from the same parser
 |--------|------:|
 | Calculator source files | 48 |
 | Calculators with references | 1003 |
-| Total references | 1147 |
-| With PMID | 1060 (92.4%) |
+| Total references | 1148 |
+| With PMID | 1060 (92.3%) |
 | Unique PMIDs | 921 |
-| With DOI | 985 (85.9%) |
-| Unique DOIs | 860 |
-| With direct URL | 81 |
-| URL only (no PMID, no DOI) | 59 |
-| Without a PMID | 87 |
-| PMID without DOI | 89 |
-| With at least one identifier or link | 1133 (98.8%) |
+| With DOI | 984 (85.7%) |
+| Unique DOIs | 859 |
+| With direct URL | 82 |
+| URL only (no PMID, no DOI) | 60 |
+| Without a PMID | 88 |
+| PMID without DOI | 90 |
+| With at least one identifier or link | 1134 (98.8%) |
 | Without any identifier or link | 14 |
 
 ## References per source file
@@ -48,7 +48,7 @@ outputs in this repository. Both come from the same parser
 | `wave2-general-lab.ts` | 29 |
 | `wave2-neuro-psych.ts` | 26 |
 | `wave2-oncology.ts` | 21 |
-| `wave2-ortho-trauma.ts` | 22 |
+| `wave2-ortho-trauma.ts` | 23 |
 | `wave2-pulm-id.ts` | 24 |
 | `wave3-cardio-vasc.ts` | 23 |
 | `wave3-em-surgery.ts` | 22 |
