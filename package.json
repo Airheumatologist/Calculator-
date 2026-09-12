@@ -8,13 +8,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "audit:evidence": "node scripts/audit-evidence.mjs",
-    "validate:pmids": "python3 scripts/validate-pmids.py",
-    "validate:pmids:strict": "python3 scripts/validate-pmids.py --strict",
-    "audit:relevance": "python3 scripts/audit-pmid-relevance.py"
+    "preview": "vite preview"
   },
   "dependencies": {
     "react": "^19.2.7",
@@ -28,7 +22,6 @@
     "@vitejs/plugin-react": "^6.0.3",
     "oxlint": "^1.71.0",
     "typescript": "~6.0.2",
-    "vite": "^8.1.1",
-    "vitest": "^4.1.11"
+    "vite": "^8.1.1"
   }
 }

@@ -339,15 +339,6 @@ references: [
 ]
 ```
 
-### Audit & validation
-
-```bash
-npm run audit:evidence     # offline coverage stats (PMID/DOI/URL %)
-npm run validate:pmids     # live NCBI check that every PMID resolves
-```
-
-Coverage is intentionally high for primary literature; remaining unlinked items are typically textbook formulas, conversion factors, or pharmacy teaching notes (prefer `url` when an official page exists).
-
 ---
 
 ## Adding a new calculator
