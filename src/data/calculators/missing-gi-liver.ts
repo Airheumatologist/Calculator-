@@ -849,7 +849,7 @@ export const missingGiLiverCalcs: Calculator[] = [
       );
       const r = riskFromThresholds(score, [
         {
-          max: 5,
+          max: 4.5,
           level: 'low',
           label: 'Low probability',
           interpretation: 'RIPASA <5: appendicitis unlikely — observe / alternative workup.',

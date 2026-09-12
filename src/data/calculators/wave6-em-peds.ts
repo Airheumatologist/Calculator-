@@ -787,7 +787,17 @@ export const wave6EmPedsCalcs: Calculator[] = [
       const depth =
         age === 'infant' ? '≈4 cm (⅓ AP chest diameter)' : age === 'child' ? '≈5 cm (⅓ AP diameter)' : '5–6 cm (adult)';
       const depthTarget = age === 'infant' ? 4 : age === 'child' ? 5 : 5.5;
-      const ratio = aaw ? 'Continuous compressions; ventilate 1 breath every 2–3 s (~20–30/min peds)' : two ? '15:2' : '30:2';
+      const isAdolescent = age === 'adolescent';
+      let ratio: string;
+      if (aaw) {
+        ratio = isAdolescent
+          ? 'Continuous compressions; ventilate 1 breath every 6 s (10/min adult)'
+          : 'Continuous compressions; ventilate 1 breath every 2–3 s (~20–30/min peds)';
+      } else if (isAdolescent) {
+        ratio = '30:2';
+      } else {
+        ratio = two ? '15:2' : '30:2';
+      }
       const rate = num(values.measuredRate, 0);
       const depthM = num(values.measuredDepthCm, 0);
       let rateOk = rate >= 100 && rate <= 120;
@@ -826,7 +836,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
     },
     evidence: {
       summary: 'AHA PALS emphasizes high-quality CPR: 100–120 compressions/min, age-appropriate depth (~⅓ AP diameter), full recoil, and proper ventilation ratios.',
-      formula: 'Infant ~4 cm; child ~5 cm; rate 100–120; 15:2 (2-rescuer child/infant) or 30:2 single; continuous with advanced airway',
+      formula: 'Infant ~4 cm; child ~5 cm; adolescent 5–6 cm; rate 100–120; infant/child 15:2 (2-rescuer) or 30:2 (single); adolescent 30:2 regardless of rescuer count; advanced airway 20–30/min (infant/child) or 10/min q6s (adolescent/adult)',
       validation: 'AHA Guidelines for CPR and ECC; quality metrics linked to ROSC in observational data.',
       references: [
         {

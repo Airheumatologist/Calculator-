@@ -426,22 +426,28 @@ export const wave7PreventionCalcs: Calculator[] = [
       const pct = round(100 * cal, 1);
       const r = riskFromThresholds(pct, [
         {
-          max: 4.99,
+          max: 4.999,
           level: 'low',
-          label: 'Lower 10-year risk (<5%)',
-          interpretation: `SCORE2-Diabetes ${pct}%. Relatively lower predicted 10-year CVD risk for T2DM — still apply diabetes-specific LDL/BP/SGLT2–GLP1 pathways as indicated. Confirm with official ESC tool.`,
+          label: 'Low (<5%)',
+          interpretation: `SCORE2-Diabetes ${pct}%. Low 10-year CVD risk for T2DM (ESC 2023 diabetes: <5%). Still apply diabetes-specific LDL/BP/SGLT2–GLP1 pathways as indicated. Confirm with official ESC tool.`,
         },
         {
-          max: 9.99,
+          max: 9.999,
+          level: 'moderate',
+          label: 'Moderate (5–<10%)',
+          interpretation: `SCORE2-Diabetes ${pct}%. Moderate-risk band (ESC 2023 diabetes: 5–<10%). Intensify risk-factor control; confirm on official SCORE2-Diabetes.`,
+        },
+        {
+          max: 19.999,
           level: 'high',
-          label: 'High risk (5–<10%)',
-          interpretation: `SCORE2-Diabetes ${pct}%. High-risk band — intensive risk-factor control and diabetes agents with CV benefit per ESC. Confirm on official SCORE2-Diabetes.`,
+          label: 'High (10–<20%)',
+          interpretation: `SCORE2-Diabetes ${pct}%. High-risk band (ESC 2023 diabetes: 10–<20%). Intensive risk-factor control and diabetes agents with CV benefit per ESC. Confirm on official SCORE2-Diabetes.`,
         },
         {
           max: 100,
           level: 'critical',
-          label: 'Very high risk (≥10%)',
-          interpretation: `SCORE2-Diabetes ${pct}%. Very high predicted 10-year CVD risk. Aggressive multifactorial prevention; official calculator for decisions.`,
+          label: 'Very high (≥20%)',
+          interpretation: `SCORE2-Diabetes ${pct}%. Very high predicted 10-year CVD risk (ESC 2023 diabetes: ≥20%). Aggressive multifactorial prevention; official calculator for decisions.`,
         },
       ]);
       return {
@@ -455,9 +461,11 @@ export const wave7PreventionCalcs: Calculator[] = [
           { label: 'eGFR', value: `${round(egfr, 0)} mL/min/1.73 m²` },
         ],
         recommendations:
-          pct >= 5
-            ? ['Confirm with official SCORE2-Diabetes', 'Consider SGLT2i / GLP-1 RA with CV benefit', 'Statin and BP to diabetes targets']
-            : ['Lifestyle and glycaemic foundations', 'Statin per diabetes guidelines', 'Reassess with official tool'],
+          pct >= 20
+            ? ['Confirm with official SCORE2-Diabetes', 'High-intensity LDL lowering', 'Agents with proven CV benefit']
+            : pct >= 10
+              ? ['Confirm with official SCORE2-Diabetes', 'Consider SGLT2i / GLP-1 RA with CV benefit', 'Statin and BP to diabetes targets']
+              : ['Lifestyle and glycaemic foundations', 'Statin per diabetes guidelines', 'Reassess with official tool'],
       };
     },
     evidence: {
@@ -478,7 +486,8 @@ export const wave7PreventionCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: '≥10%', actions: ['Official SCORE2-Diabetes confirmation', 'High-intensity LDL lowering', 'Agents with proven CV benefit'] },
+      { condition: '≥20%', actions: ['Official SCORE2-Diabetes confirmation', 'High-intensity LDL lowering', 'Agents with proven CV benefit'] },
+      { condition: '10–<20%', actions: ['Official SCORE2-Diabetes confirmation', 'Intensify risk-factor control', 'Shared decision on add-on diabetes/CV therapy'] },
       { condition: '5–<10%', actions: ['Intensify risk-factor control', 'Shared decision on add-on diabetes/CV therapy'] },
       { condition: '<5%', actions: ['Standard diabetes CV risk-factor care', 'Repeat when HbA1c, BP, lipids, or eGFR change'] },
     ],

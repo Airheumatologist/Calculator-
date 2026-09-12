@@ -305,11 +305,15 @@ export const criticalCareCalcs: Calculator[] = [
         num(values.sbp) +
         num(values.hr) +
         num(values.conscious);
-      const r = riskFromThresholds(score, [
+      let r = riskFromThresholds(score, [
         { max: 4, level: 'low', label: 'Low (0–4)', interpretation: 'Continue routine monitoring (unless single parameter = 3).' },
         { max: 6, level: 'moderate', label: 'Low–medium (5–6)', interpretation: 'Urgent ward-based response; increase monitoring frequency.' },
         { max: 20, level: 'high', label: 'High (≥7)', interpretation: 'Emergency response / critical care review.' },
       ]);
+      const singleThree = [values.rr, values.spo2, values.temp, values.sbp, values.hr, values.conscious].some(v => num(v) === 3);
+      if (singleThree && score <= 4) {
+        r = { ...r, riskLevel: 'moderate', label: 'Low–medium (single parameter = 3)', interpretation: 'NEWS2: any single parameter scoring 3 is an urgent-review trigger even when the total is 0–4.' };
+      }
       return { score, ...r };
     },
     evidence: {

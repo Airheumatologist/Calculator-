@@ -212,12 +212,17 @@ export const wave4IcuVentCalcs: Calculator[] = [
       const hb = num(values.hb, 12);
       const cao2 = 1.34 * hb * (num(values.sao2, 98) / 100) + 0.0031 * num(values.pao2, 90);
       const cvo2 = 1.34 * hb * (num(values.svo2, 70) / 100) + 0.0031 * num(values.pvo2, 40);
-      if (cao2 <= 0) {
+      if (cao2 <= 0 || cvo2 > cao2) {
         return {
           score: '—',
-          label: 'Invalid CaO₂',
-          interpretation: 'Arterial content must be > 0 to compute extraction ratio.',
+          label: 'Invalid O₂ contents',
+          interpretation:
+            'Check arterial vs venous mix-up. CaO₂ must be > 0 and CvO₂ cannot exceed CaO₂; a negative extraction ratio is not “low extraction.”',
           riskLevel: 'info',
+          details: [
+            { label: 'CaO₂', value: `${round(cao2, 2)} mL/dL` },
+            { label: 'CvO₂', value: `${round(cvo2, 2)} mL/dL` },
+          ],
         };
       }
       const o2er = round(((cao2 - cvo2) / cao2) * 100, 1);
@@ -2204,8 +2209,9 @@ export const wave4IcuVentCalcs: Calculator[] = [
         { label: 'Male 50–64 combined (3)', value: 3, description: 'Male 1 + age 2 = 3. Female 50–64 official = 4 (use next row).' },
         { label: 'Male 65–74 or Female 50–64 combined (4)', value: 4, description: 'Male 65–74 = 1+3=4; Female 50–64 = 2+2=4.' },
         { label: 'Male 75–80 or Female 65–74 combined (5)', value: 5, description: 'Male 75–80 = 1+4=5; Female 65–74 = 2+3=5.' },
-        { label: 'Male 81+ or Female 75–80 combined (6)', value: 6, description: 'Male 81+ = 1+5=6; Female 75–80 = 2+4=6. Female 81+ official = 7 (not available in this control).' },
-      ], 1, 'Official Waterlow adds sex (M 1 / F 2) plus age (14–49:1, 50–64:2, 65–74:3, 75–80:4, 81+:5). Pick the combined total. This selector cannot enter Female 81+ = 7. Male/Female-only rows omit age and under-score. Card copyright Judy Waterlow.'),
+        { label: 'Male 81+ or Female 75–80 combined (6)', value: 6, description: 'Male 81+ = 1+5=6; Female 75–80 = 2+4=6.' },
+        { label: 'Female 81+ combined (7)', value: 7, description: 'Female 2 + age 81+ (5) = 7. Official sex/age maximum.' },
+      ], 1, 'Official Waterlow adds sex (M 1 / F 2) plus age (14–49:1, 50–64:2, 65–74:3, 75–80:4, 81+:5). Pick the combined total. Female 81+ = 7. Male/Female-only rows omit age and under-score. Card copyright Judy Waterlow.'),
       selectInput('continence', 'Continence', [
         { label: 'Complete / catheterized (0)', value: 0, description: 'Fully continent, or urine diverted by catheter with continent stool' },
         { label: 'Occasional incontinence (1)', value: 1, description: 'Occasional urine or stool incontinence (not every episode)' },

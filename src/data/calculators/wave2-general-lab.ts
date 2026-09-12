@@ -1117,7 +1117,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       const sid = round(na + k + ca + mg - cl - lac, 1);
       const r = riskFromThresholds(sid, [
         { max: 35, level: 'high', label: 'Low SID — acidosis tendency', interpretation: 'Low apparent SID favors metabolic acidosis (hyperchloremia, high lactate, free water excess effects).' },
-        { max: 42, level: 'normal', label: 'Near-normal SID range', interpretation: 'Apparent SID roughly normal (~38–42 mEq/L typical teaching range; method-dependent).' },
+        { max: 44, level: 'normal', label: 'Near-normal SID range', interpretation: 'Apparent SID roughly normal (~38–44 mEq/L typical teaching range; method-dependent).' },
         { max: 80, level: 'moderate', label: 'High SID — alkalosis tendency', interpretation: 'Elevated SID favors metabolic alkalosis (e.g., chloride loss, contraction).' },
       ]);
       return {

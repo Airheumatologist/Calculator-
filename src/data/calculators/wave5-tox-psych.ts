@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
+import { num, bool, round, clamp, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave5ToxPsychCalcs: Calculator[] = [
   // ─── 1. Acetaminophen acute toxic dose ─────────────────────────────────────
@@ -31,10 +31,11 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       const dose = num(values.dose_mg, 10000);
       const wt = Math.max(num(values.weight, 70), 0.1);
       const mgkg = round(dose / wt, 1);
+      const grams = round(dose / 1000, 2);
       const child = String(values.age_group ?? 'adult') === 'child';
       // Common teaching: adult concern ≥150 mg/kg (or ≥7.5–10 g); child often ≥150–200 mg/kg
       const concern = 150;
-      const r = riskFromThresholds(mgkg, [
+      let r = riskFromThresholds(mgkg, [
         {
           max: 99,
           level: 'low',
@@ -60,6 +61,13 @@ export const wave5ToxPsychCalcs: Calculator[] = [
           interpretation: `≈${mgkg} mg/kg. High-risk acute ingestion. Urgent APAP level, LFTs, coagulation; early NAC; discuss massive OD pathways (higher NAC, HD criteria) with poison control.`,
         },
       ]);
+      if (!child && wt >= 50 && grams >= 10 && r.riskLevel === 'low') {
+        r = {
+          riskLevel: 'moderate',
+          label: 'Adult absolute-dose concern (≥10 g)',
+          interpretation: `≈${mgkg} mg/kg (${grams} g total). Adult acute ingestions ≥10 g warrant NAC consideration and Rumack–Matthew plotting regardless of mg/kg. Obtain timed APAP level; start NAC if the level is above the treatment line or delayed/unavailable.`,
+        };
+      }
       return {
         score: mgkg,
         unit: 'mg/kg',
@@ -1183,7 +1191,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Severe (respiratory failure, profound bronchorrhea, coma, seizures)', value: 'severe', description: 'Need for intubation/ventilatory support, coma, seizures, or life-threatening bronchorrhea' },
       ], undefined, 'SLUDGE = salivation, lacrimation, urination, defecation, GI upset, emesis. Also DUMBBELS (diarrhea, urination, miosis, bronchorrhea/bradycardia/bronchospasm, emesis, lacrimation, salivation). Titrate atropine to dry secretions, not HR alone.'),
       numberInput('weight', 'Body weight', { unit: 'kg', min: 5, max: 200, step: 0.1, defaultValue: 70 }),
-      yesNo('bronchorrhea', 'Significant bronchorrhea / hypoxia from secretions', -0.75),
+      yesNo('bronchorrhea', 'Significant bronchorrhea / hypoxia from secretions', null),
       yesNo('bradycardia', 'Symptomatic bradycardia / AV block', 0),
     ],
     calculate(values) {
@@ -1192,22 +1200,28 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       const bronch = bool(values.bronchorrhea);
       const brady = bool(values.bradycardia);
 
-      // Adult start often 1–3 mg IV; severe much higher/doubling; peds 0.05 mg/kg
+      const mildNoBronch = sev === 'mild' && !bronch;
       let startMg: number;
       let riskLevel: 'moderate' | 'high' | 'critical';
       let label: string;
-      if (sev === 'mild' && !bronch) {
-        startMg = Math.max(1, round(0.02 * wt, 1));
-        // cap educational adult-ish start
-        if (wt >= 50) startMg = 1;
+      if (wt < 50) {
+        const k = mildNoBronch ? 0.02 : 0.05;
+        startMg = clamp(round(k * wt, 2), 0.1, 2);
+      } else if (mildNoBronch) {
+        startMg = 1;
+      } else if (sev === 'moderate' || (sev === 'mild' && bronch)) {
+        startMg = 2;
+      } else {
+        startMg = 3;
+      }
+
+      if (mildNoBronch) {
         riskLevel = 'moderate';
         label = 'Mild severity — atropine PRN secretions/HR';
       } else if (sev === 'moderate' || (sev === 'mild' && bronch)) {
-        startMg = wt >= 50 ? 2 : round(0.05 * wt, 2);
         riskLevel = 'high';
         label = 'Moderate severity — early IV atropine';
       } else {
-        startMg = wt >= 50 ? 3 : round(0.05 * wt, 2);
         riskLevel = 'critical';
         label = 'Severe — aggressive atropine titration';
       }
@@ -1219,7 +1233,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
 
       const interpretation =
         `Severity: ${sev}. Suggested educational initial atropine ≈${startMg} mg IV` +
-        (wt < 50 ? ' (pediatric-style weight-based frame)' : ' (adult start often 1–3 mg)') +
+        (wt < 50 ? ' (pediatric weight-based 0.02–0.05 mg/kg, min 0.1 mg)' : ' (adult start often 1–3 mg)') +
         '. Double dose q3–5 min until secretions dry and ventilation improves (endpoint is drying secretions, not HR alone). Add pralidoxime/oxime per protocol for OP; benzos for seizures. Decontaminate and protect staff.';
 
       return {
@@ -1731,7 +1745,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       if (hiv === 'neg') {
         hivPep = false;
         hivLabel = 'Source HIV negative — HIV PEP not indicated (confirm testing reliability)';
-      } else if (hiv === 'pos_high' || (hiv === 'pos_low' && (exp === 'hollow' || exp === 'mucosa'))) {
+      } else if (hiv === 'pos_high' || hiv === 'pos_low') {
         hivPep = within72;
         hivLabel = within72
           ? 'HIV PEP indicated — start ASAP (3-drug regimen typical)'
@@ -1741,7 +1755,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         hivLabel = within72
           ? 'Source unknown + higher-risk percutaneous — often start HIV PEP pending source testing'
           : 'Outside usual PEP window — occupational health / ID consult';
-      } else if (hiv === 'unknown' || hiv === 'pos_low') {
+      } else if (hiv === 'unknown') {
         hivPep = within72 && exp !== 'solid';
         hivLabel = within72
           ? 'Case-by-case HIV PEP — favor start if higher-risk features; stop if source tests negative'

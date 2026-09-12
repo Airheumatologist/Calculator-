@@ -81,17 +81,17 @@ export const wave7HighuseOracles: OracleCase[] = [
   // ---------------------------------------------------------------- WIfI
   {
     calcId: 'wifi-diabetic-foot',
-    description: 'Wound 2 + Ischemia 2 + foot Infection 1 = 5',
+    description: 'W2-I2-fI1 is Mills clinical stage 4 (high 1-year amputation risk), not a moderate integer sum',
     inputs: { wound: 2, ischemia: 2, infection: 1 },
-    expect: { score: 5, riskLevel: 'moderate' },
-    source: 'Mills JL Sr et al. J Vasc Surg. 2014;59:220-34 — WIfI grades 0–3 each; displayed score is the 0–9 sum (PMID 24126108).',
+    expect: { score: 4, riskLevel: 'high' },
+    source: 'Mills JL Sr et al. J Vasc Surg. 2014;59:220-34 — WIfI W2-I2-fI1 maps to High (clinical stage 4) on the 64-cell amputation-risk grid (PMID 24126108).',
   },
   {
     calcId: 'wifi-diabetic-foot',
-    description: 'All grades 0 = 0',
+    description: 'W0-I0-fI0 is clinical stage 1 (very low)',
     inputs: { wound: 0, ischemia: 0, infection: 0 },
-    expect: { score: 0, riskLevel: 'low' },
-    source: 'Mills 2014 WIfI — W0-I0-fI0 sum 0.',
+    expect: { score: 1, riskLevel: 'low' },
+    source: 'Mills 2014 WIfI — W0-I0-fI0 is very low (clinical stage 1).',
   },
 
   // ---------------------------------------------------------------- CARG

@@ -83,13 +83,16 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
 
   {
     id: 'ottawa-hip',
-    name: 'Ottawa Hip Rules',
-    shortName: 'Ottawa Hip',
-    description: 'Decision aid for hip radiography after trauma with hip/groin pain.',
+    name: 'Hip Radiography Decision Aid (Educational)',
+    shortName: 'Hip X-ray aid',
+    description:
+      'Educational analog of Ottawa-style selective radiography after hip/groin trauma. Not a validated Ottawa Hip Rule — none has been independently derived.',
     category: 'orthopedics',
-    tags: ['hip', 'xray', 'trauma', 'ottawa', 'fracture'],
-    whenToUse: 'Adults with acute hip or groin pain after fall or blunt trauma.',
-    whyUse: 'Structures common high-yield cues for hip radiographs after trauma; occult fracture still possible if nonambulatory.',
+    tags: ['hip', 'xray', 'trauma', 'fracture', 'educational'],
+    whenToUse:
+      'Adults with acute hip or groin pain after fall or blunt trauma, as an educational prompt for when radiographs are commonly obtained. Do not use as a validated rule-out.',
+    whyUse:
+      'Structures common high-yield cues (age, inability to walk, limited ROM) for considering hip radiographs. There is no independently derived Ottawa Hip Rule; occult fracture remains possible.',
     inputs: [
       yesNo('traumaPain', 'Acute hip/groin pain after fall or blunt trauma', 0),
       yesNo('age65', 'Age ≥65 years', 0),
@@ -97,7 +100,7 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
         'walk',
         'Unable to bear weight 4 steps both immediately AND in ED',
         0,
-        'Same 4-step rule as Ottawa ankle/knee: unable BOTH immediately after injury AND in the ED. Limping is allowed if each step is weight-bearing.',
+        'Same 4-step cue as Ottawa ankle/knee teaching: unable BOTH immediately after injury AND in the ED. Limping is allowed if each step is weight-bearing. This is not a validated hip rule.',
       ),
       yesNo(
         'limitedRom',
@@ -122,8 +125,9 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
       if (!traumaPain) {
         return {
           score: 0,
-          label: 'Rules not applicable',
-          interpretation: 'Ottawa hip pathway assumes acute post-traumatic hip/groin pain.',
+          label: 'Aid not applicable',
+          interpretation:
+            'This educational hip-imaging aid assumes acute post-traumatic hip/groin pain. It is not a validated Ottawa Hip Rule.',
           riskLevel: 'info' as const,
           details,
         };
@@ -131,46 +135,63 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
       if (pos) {
         return {
           score: 1,
-          label: 'X-ray indicated',
+          label: 'X-ray indicated (educational cues)',
           interpretation:
-            '≥1 criterion present — obtain AP pelvis and lateral hip radiographs (consider full pelvis views).',
+            '≥1 educational cue present — obtain AP pelvis and lateral hip radiographs (consider full pelvis views). Not a validated decision rule.',
           riskLevel: 'moderate' as const,
           details,
         };
       }
       return {
         score: 0,
-        label: 'Lower likelihood by rules',
+        label: 'Educational cues negative — not a validated rule-out',
         interpretation:
-          'No high-yield criteria. Occult fracture still possible in high-risk patients (elderly, osteoporosis); clinical judgment applies.',
+          'Educational cues negative. Occult hip fracture is still possible (especially elderly, osteoporosis, nonambulatory). This is not a validated rule-out; clinical judgment and advanced imaging when suspicion remains.',
         riskLevel: 'low' as const,
         details,
       };
     },
     evidence: {
       summary:
-        'Post-traumatic hip pain with age ≥65, inability to weight-bear 4 steps (immediately and ED), or painful limited ROM supports imaging.',
-      formula: 'Image if trauma + hip pain AND (age≥65 OR no 4 steps OR limited painful ROM)',
+        'There is no independently derived Ottawa Hip Rule. This tool is an educational analog of selective-radiography cues only. Age ≥65, inability to weight-bear, or painful limited ROM commonly prompt hip films; occult fracture remains a concern if films are negative.',
+      formula:
+        'Educational: consider imaging if trauma + hip pain AND (age≥65 OR no 4 steps OR limited painful ROM). Not a validated rule.',
       validation:
-        'Derived from Ottawa methodology literature for selective hip radiography; sensitivity high but occult fracture remains a concern in elderly.',
+        'Not a validated clinical decision rule. No Ottawa Hip Rule has been published; do not treat a “negative” result as clearance for occult femoral neck fracture.',
       references: [
         {
-          title: 'Derivation of a decision rule for the use of radiography in acute knee injuries',
-          citation: 'Stiell IG, Greenberg GH, Wells GA, et al. Ann Emerg Med. 1995;26:405-413. Educational analog of Ottawa selective-radiography rules; no independently derived Ottawa Hip Rule',
-          year: 1995,
-          pmid: '7574120',
-          doi: '10.1016/S0196-0644(95)70106-0',
+          title: 'Hip fracture: management (NICE CG124)',
+          citation:
+            'National Institute for Health and Care Excellence. NICE guideline CG124. There is no independently derived Ottawa Hip Rule; this calculator is an educational selective-radiography analog only.',
+          year: 2011,
+          url: 'https://www.nice.org.uk/guidance/cg124',
+        },
+        {
+          title: 'Diagnosis of occult fractures about the hip. Magnetic resonance imaging compared with bone-scanning',
+          citation: 'Rizzo PF, Gould ES, Lyden JP, Asnis SE. J Bone Joint Surg Am. 1993;75:395-401',
+          year: 1993,
+          pmid: '8440163',
         },
       ],
     },
     nextSteps: [
       {
-        condition: 'Positive or high suspicion',
+        condition: 'Positive cues or high suspicion',
         actions: ['Hip/pelvis radiographs', 'If films negative but cannot walk: MRI or CT for occult fracture', 'Ortho consult'],
       },
-      { condition: 'Negative and ambulatory', actions: ['Analgesia', 'Early mobilization', 'Close follow-up'] },
+      {
+        condition: 'Educational cues negative',
+        actions: [
+          'Not a validated rule-out — occult fracture still possible',
+          'If high-risk or nonambulatory, still image (MRI/CT if plain films negative)',
+          'Analgesia and close follow-up if discharged after adequate workup',
+        ],
+      },
     ],
-    pearls: ['Elderly patients who cannot walk after a fall warrant advanced imaging even if plain films are negative.'],
+    pearls: [
+      'There is no validated Ottawa Hip Rule; do not discharge on “negative cues” alone.',
+      'Elderly patients who cannot walk after a fall warrant advanced imaging even if plain films are negative.',
+    ],
   },
 
   {
@@ -903,7 +924,7 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
         score: parts,
         label: r.label,
         interpretation,
-        riskLevel: modifiers > 0 && parts >= 2 ? 'high' : r.riskLevel,
+        riskLevel: modifiers > 0 ? 'high' : r.riskLevel,
         details: [
           { label: 'Displaced parts', value: String(parts) },
           { label: 'Parts concept', value: 'Head, greater tuberosity, lesser tuberosity, shaft' },

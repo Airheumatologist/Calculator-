@@ -17,8 +17,8 @@ export const wave7BedsideOracles: OracleCase[] = [
     description:
       'Height 170 cm, waist 80 cm: WC/(2π)=12.732; 0.5×ht=85; ratio=0.1498; 1−ratio²=0.9776; √=0.9887; BRI=364.2−365.5×0.9887=2.82',
     inputs: { height: 170, waist: 80 },
-    expect: { score: 2.82, tolerance: 0.15, riskLevel: 'low' },
-    source: 'Thomas DM et al. Obesity 2013;21:2264-2271 (PMID 23519954) — BRI = 364.2 − 365.5 × √(1 − [(WC/2π)/(0.5×height)]²).',
+    expect: { score: 2.82, tolerance: 0.15, riskLevel: 'moderate' },
+    source: 'Thomas DM et al. Obesity 2013;21:2264-2271 (PMID 23519954) — BRI formula. Zhang et al. JAMA Netw Open 2024: U-shaped mortality; BRI <3.4 is not a protective band (HR 1.25 vs mid quintile).',
   },
 
   // ---------------------------------------------------------------- ROX

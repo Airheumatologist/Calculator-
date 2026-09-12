@@ -23,7 +23,38 @@
 
 ---
 
-## Part 1: Critical Severity Findings (Actionable Clinical & Patient Safety Hazards)
+## Authentication & remediation (12 September 2026)
+
+Independent code review of this report (not trusting the audit prose) then fixes on branch `fix/final-audit-authenticated`.
+
+**Part 1 Critical (14):** 5 confirmed, 4 partial (real but overstated), 5 false positives.
+
+| # | Calculator | Verdict | Action |
+|---|---|---|---|
+| 1 | `organophosphate` | CONFIRMED | Pediatric atropine no longer uses a 1 mg adult floor |
+| 2 | `canadian-ct-head` | PARTIAL | GCS 13–14 at assessment is no longer “rule negative”; CCHR items unchanged |
+| 3 | `ctcae-neutropenia` | PARTIAL | Removed dead `anc>50` heuristic; UI `max: 20` already blocked the claimed 40 cells/µL path |
+| 4 | `ottawa-hip` | CONFIRMED | Renamed educational hip x-ray aid; Ottawa Knee PMID removed as hip evidence |
+| 5 | `sle-das` | CONFIRMED | PProt/thrombocytopenia/leukopenia flags require matching lab values (no −17 “remission”) |
+| 6 | `inr-calc` | PARTIAL | INR 2.0–3.0 labeled typical AF/VTE therapeutic (no dose-escalation advice was present) |
+| 7 | `tmacs` | PARTIAL | Unvalidated age/sex terms removed; they were small educational add-ons, not +1 each |
+| 8 | `wifi-diabetic-foot` | PARTIAL | Live badge now uses Mills 64-cell stage, not W+I+fI sum (grid already existed) |
+| 9 | `dehydration-who` | CONFIRMED | Isolated sunken eyes is Plan A; mixed-count OR removed |
+| 10 | `lintula-score` | CONFIRMED | RLQ +4 and bowel sounds +4 restored (max 32). ≥21 was already reachable |
+| 11 | `cormack-lehane` | FALSE POSITIVE | Grade 4 was selectable; numeric score now returns clinical grade (`4` / `2a` / `2b`) |
+| 12 | `smith-modified-sgarbossa` | FALSE POSITIVE | S-wave already absolute (`min: 0.5`) |
+| 13 | `maddrey-df` / `df-units` | FALSE POSITIVE | Unclamped (PT−control) is Maddrey 1978 |
+| 14 | `corrected-retic` | FALSE POSITIVE | Clear/0 Normal Hct blocked by required + min 35 |
+
+**Part 2 High list:** 14/18 false positives or missing IDs (wrong files/calculators). Not used as a backlog.
+
+**Part 3 “53 calculators with duplicate option values”:** Count is wrong. 16 calculators / 36 inputs have intra-input duplicate values. Form uses radio buttons, not native `<select>`; scoring is intact when values are equal. React keys now unique by index.
+
+**Confirmed high-severity calculation/guidance bugs that were fixed:** NEWS2 single-parameter=3, RIPASA score 5, PREVENT unofficial CKM addon, gestational-age UTC EDD, CAR-T CRS treated-fever path, Neer dislocation badge, LODS unofficial options, SID 43 “alkalosis”, potassium-deficit default, New Ballard scarf, O₂ER mix-up, Waterlow female 81+, EHRA IIb/III text, needle-stick PEP for solid + HIV+, adult ≥10 g acetaminophen, Snellen 6/6 min, benzo 0.125 mg step, SAPS-III SBP <40, PALS adolescent 30:2, HEP timing default, Sjögren OSS/vBS double-count, PMR US-in-clinical, Boolean PGA ≤2.0, SCORE2-Diabetes 2023 bands, BRI U-shape, ROX 4.88 success.
+
+False-positive highs (not changed): Alvarado/PAS grouping, FOUR score, BAP-65 (absent), NEWS2 Scale 2 as claimed, GRACE splines, TIMI lbs conversion, CRUSADE Hb, DAPT paclitaxel, Padua >4, IPSS-R MDS (absent), HAS-BLED auto labile INR, DIC fibrinogen units, Bishop 4.5 cm, APGAR tone swap, PECARN age=2.0 numeric, pediatric GCS grimace, Maddrey clamp, Sgarbossa negative S, etc.
+
+---
 
 ### 1. [CRITICAL] Pediatric Atropine 10x Overdose Risk
 - **Calculator:** `organophosphate` (Organophosphate Toxicity Staging & Atropine Dosing)

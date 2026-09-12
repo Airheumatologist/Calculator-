@@ -1442,7 +1442,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
       };
       const row = displayMap[g] ?? displayMap[1];
       return {
-        score: g,
+        score: row.grade,
         label: row.label,
         interpretation: row.interpretation,
         riskLevel: row.riskLevel,

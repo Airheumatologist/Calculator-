@@ -207,7 +207,7 @@ export const wave7BedsideCalcs: Calculator[] = [
     tags: ['bri', 'adiposity', 'obesity', 'waist', 'body composition'],
     whenToUse: 'When waist and height are available to describe central adiposity beyond BMI (cardiometabolic risk, epidemiology).',
     whyUse:
-      'BRI models the body as an ellipse; higher values indicate rounder (more viscerally adiposity-like) shape. 2024 US cohort data link higher BRI with all-cause mortality.',
+      'BRI models the body as an ellipse; higher values indicate rounder (more viscerally adiposity-like) shape. 2024 US cohort data show a U-shaped link with all-cause mortality — both low and high BRI vs the mid-range nadir.',
     inputs: [
       numberInput('height', 'Height', { unit: 'cm', min: 100, max: 220, step: 0.1, defaultValue: 170 }),
       numberInput('waist', 'Waist circumference', {
@@ -231,27 +231,27 @@ export const wave7BedsideCalcs: Calculator[] = [
       const r = riskFromThresholds(bri, [
         {
           max: 3.39,
-          level: 'low',
-          label: 'Lower BRI (<3.4)',
-          interpretation: `BRI ${bri}: below the approximate lowest 2024 JAMA Network Open quartile — lower observed mortality than mid/high BRI in that cohort (not a diagnostic cut-off).`,
-        },
-        {
-          max: 4.49,
           level: 'moderate',
-          label: 'Mid BRI (3.4–4.4)',
-          interpretation: `BRI ${bri}: intermediate roundness. Pair with BP, lipids, glucose, and waist guidelines rather than BRI alone.`,
+          label: 'Low BRI (<3.4) — increased mortality vs mid-range',
+          interpretation: `BRI ${bri}: below the 2024 JAMA Network Open lowest quintile. U-shaped association — low BRI had ~25% higher all-cause mortality (HR 1.25) vs the middle quintile (4.5–5.5), not a protective band.`,
         },
         {
           max: 5.49,
+          level: 'low',
+          label: 'Mid-range BRI (3.4–5.5) — lower-risk nadir',
+          interpretation: `BRI ${bri}: mid-range roundness. Zhang 2024 middle quintile (~4.5–5.5) is the mortality nadir. Pair with BP, lipids, glucose, and waist guidelines rather than BRI alone.`,
+        },
+        {
+          max: 6.89,
           level: 'high',
-          label: 'High BRI (4.5–5.5)',
-          interpretation: `BRI ${bri}: high roundness band (approximate upper quartiles). Address central adiposity and cardiometabolic risk.`,
+          label: 'High BRI (5.5–<6.9) — increased mortality',
+          interpretation: `BRI ${bri}: above the mid-range nadir. Higher BRI is associated with increased all-cause mortality (U-shaped). Address central adiposity and cardiometabolic risk.`,
         },
         {
           max: 400,
           level: 'critical',
-          label: 'Very high BRI (≥5.5)',
-          interpretation: `BRI ${bri}: very high roundness. Associated with higher all-cause mortality in NHANES analyses; comprehensive metabolic evaluation.`,
+          label: 'Very high BRI (≥6.9) — increased mortality',
+          interpretation: `BRI ${bri}: Zhang 2024 highest band (BRI ≥6.9, HR ~1.49 vs middle quintile). Comprehensive metabolic evaluation.`,
         },
       ]);
       return {
@@ -268,7 +268,7 @@ export const wave7BedsideCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Thomas 2013: BRI = 364.2 − 365.5 × √(1 − [(WC/(2π)) / (0.5 × height)]²) with WC and height in the same units. Argument of the square root is floored at 0. Higher BRI = rounder body. 2024 JAMA Network Open linked BRI to U-shaped/all-cause mortality; quartile-style bands are approximate.',
+        'Thomas 2013: BRI = 364.2 − 365.5 × √(1 − [(WC/(2π)) / (0.5 × height)]²) with WC and height in the same units. Argument of the square root is floored at 0. Higher BRI = rounder body. 2024 JAMA Network Open (Zhang) linked BRI to U-shaped all-cause mortality: HR 1.25 for BRI <3.4 and HR 1.49 for BRI ≥6.9 vs the middle quintile 4.5–5.5 (nadir). Bands are approximate, not diagnostic cut-offs.',
       formula: 'BRI = 364.2 − 365.5 × sqrt(1 − ((WC/(2π))/(0.5×height))²); clamp inner term at 0',
       validation:
         'Geometric derivation (Thomas); mortality association in NHANES (Zhang/Zhou et al. JAMA Netw Open 2024). Not a replacement for BMI or waist in guidelines.',
@@ -290,10 +290,12 @@ export const wave7BedsideCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Elevated BRI', actions: ['Waist and BMI staging', 'Cardiometabolic labs', 'Lifestyle / GLP-1 / sleep apnea as indicated'] },
+      { condition: 'Low BRI (<3.4)', actions: ['Do not interpret as protective', 'Consider malnutrition / low muscle mass if clinically consistent', 'Cardiometabolic labs as indicated'] },
+      { condition: 'Elevated BRI (≥5.5)', actions: ['Waist and BMI staging', 'Cardiometabolic labs', 'Lifestyle / GLP-1 / sleep apnea as indicated'] },
     ],
     pearls: [
       'Measure waist at the iliac crest or midpoint per local protocol; technique changes BRI.',
+      'Zhang 2024 is U-shaped: very low BRI is not lower-risk — the mid-range (~4.5–5.5) is the mortality nadir.',
       'If WC/(2π) ≥ 0.5×height the ellipse is undefined — inner term is clamped and BRI approaches 364.',
     ],
   },
@@ -308,7 +310,7 @@ export const wave7BedsideCalcs: Calculator[] = [
     category: 'pulmonary',
     tags: ['rox', 'hfnc', 'intubation', 'hypoxemia', 'icu', 'respiratory failure'],
     whenToUse: 'Adults on HFNC for acute hypoxemic respiratory failure (especially pneumonia) when deciding whether to continue HFNC or intubate.',
-    whyUse: 'Simple bedside ratio; 12-hour ROX ≥4.88 predicts HFNC success. Earlier 2 h / 6 h cutoffs (2.85 / 3.47) flag high intubation risk.',
+    whyUse: 'Simple bedside ratio; ROX ≥4.88 predicts HFNC success. Time-specific floors (2 h 2.85 / 6 h 3.47 / 12 h 3.85) flag high failure risk; values between the floor and 4.88 are indeterminate.',
     inputs: [
       numberInput('spo2', 'SpO₂', { unit: '%', min: 50, max: 100, step: 1, defaultValue: 98, helpText: 'Current pulse-oximetry SpO₂ (%) on HFNC at the selected timepoint.' }),
       numberInput('fio2', 'FiO₂ (fraction)', {
@@ -324,12 +326,12 @@ export const wave7BedsideCalcs: Calculator[] = [
         'timepoint',
         'HFNC assessment time',
         [
-          { label: '2 hours', value: '2h', description: 'High intubation-risk cutoff ROX <2.85 at 2 h of HFNC.' },
-          { label: '6 hours', value: '6h', description: 'High intubation-risk cutoff ROX <3.47 at 6 h of HFNC.' },
-          { label: '12 hours', value: '12h', description: '12 h: ≥4.88 success likely; 3.85–4.87 indeterminate; <3.85 high failure risk.' },
+          { label: '2 hours', value: '2h', description: 'Failure floor ROX <2.85; success ≥4.88; 2.85–<4.88 indeterminate.' },
+          { label: '6 hours', value: '6h', description: 'Failure floor ROX <3.47; success ≥4.88; 3.47–<4.88 indeterminate.' },
+          { label: '12 hours', value: '12h', description: 'Failure floor ROX <3.85; success ≥4.88; 3.85–<4.88 indeterminate.' },
         ],
         '12h',
-        'Selects which published intubation-risk cutoff is used for the risk band (does not change the ROX number).',
+        'Selects the published failure-floor cutoff for this timepoint (does not change the ROX number). Success remains ≥4.88 at all times; between floor and 4.88 is indeterminate.',
       ),
     ],
     calculate(values) {
@@ -338,45 +340,24 @@ export const wave7BedsideCalcs: Calculator[] = [
       const rr = Math.max(num(values.rr, 20), 1);
       const timepoint = str(values.timepoint, '12h');
       const rox = round(spo2 / fio2 / rr, 2);
-      const cutoff2 = 2.85;
-      const cutoff6 = 3.47;
-      const cutoff12Low = 4.88;
-      const cutoff12High = 3.85;
-      let riskLevel: 'low' | 'moderate' | 'high' = 'low';
-      let label = '';
-      let interpretation = '';
-      if (timepoint === '2h') {
-        if (rox >= cutoff2) {
-          riskLevel = 'low';
-          label = '2h ROX ≥2.85 — lower intubation risk';
-          interpretation = `ROX ${rox} at 2 h is ≥2.85. Intubation risk is relatively lower at this early time point; continue HFNC with close monitoring.`;
-        } else {
-          riskLevel = 'high';
-          label = '2h ROX <2.85 — high intubation risk';
-          interpretation = `ROX ${rox} at 2 h is <2.85. High risk of HFNC failure — reassess work of breathing and intubation threshold.`;
-        }
-      } else if (timepoint === '6h') {
-        if (rox >= cutoff6) {
-          riskLevel = 'low';
-          label = '6h ROX ≥3.47 — lower intubation risk';
-          interpretation = `ROX ${rox} at 6 h is ≥3.47. Lower predicted intubation risk at 6 hours; continue to reassess.`;
-        } else {
-          riskLevel = 'high';
-          label = '6h ROX <3.47 — high intubation risk';
-          interpretation = `ROX ${rox} at 6 h is <3.47. High risk of HFNC failure — consider intubation if work of breathing or hypoxemia is worsening.`;
-        }
-      } else if (rox >= cutoff12Low) {
-        riskLevel = 'low';
-        label = '12h ROX ≥4.88 — HFNC success likely';
-        interpretation = `ROX ${rox} at 12 h is ≥4.88. HFNC success is likely (Roca validation). Continue current support and wean as able.`;
-      } else if (rox >= cutoff12High) {
-        riskLevel = 'moderate';
-        label = '12h ROX 3.85–4.87 — indeterminate';
-        interpretation = `ROX ${rox} at 12 h is between 3.85 and 4.88. Intermediate intubation risk — frequent reassessment of work of breathing.`;
-      } else {
+      const failCut = timepoint === '2h' ? 2.85 : timepoint === '6h' ? 3.47 : 3.85;
+      const successCut = 4.88;
+      const tLabel = timepoint === '2h' ? '2 h' : timepoint === '6h' ? '6 h' : '12 h';
+      let riskLevel: 'low' | 'moderate' | 'high';
+      let label: string;
+      let interpretation: string;
+      if (rox < failCut) {
         riskLevel = 'high';
-        label = '12h ROX <3.85 — high intubation risk';
-        interpretation = `ROX ${rox} at 12 h is <3.85. High risk of HFNC failure — prepare for intubation if not already improving.`;
+        label = `${timepoint} ROX <${failCut} — high HFNC failure risk`;
+        interpretation = `ROX ${rox} at ${tLabel} is <${failCut}. High risk of HFNC failure (Roca) — reassess work of breathing and intubation threshold.`;
+      } else if (rox >= successCut) {
+        riskLevel = 'low';
+        label = `${timepoint} ROX ≥${successCut} — HFNC success likely`;
+        interpretation = `ROX ${rox} at ${tLabel} is ≥${successCut}. HFNC success is likely (Roca). Continue current support and wean as able.`;
+      } else {
+        riskLevel = 'moderate';
+        label = `${timepoint} ROX ${failCut}–<${successCut} — indeterminate`;
+        interpretation = `ROX ${rox} at ${tLabel} is between the failure floor (${failCut}) and the success cutoff (${successCut}). Indeterminate — do not treat as lower intubation risk; reassess work of breathing frequently.`;
       }
       return {
         score: rox,
@@ -388,16 +369,17 @@ export const wave7BedsideCalcs: Calculator[] = [
           { label: 'SpO₂/FiO₂', value: round(spo2 / fio2, 1).toString() },
           { label: 'RR', value: `${rr} /min` },
           { label: 'Timepoint used', value: timepoint },
-          { label: '2 h high-risk cutoff', value: `<${cutoff2}` },
-          { label: '6 h high-risk cutoff', value: `<${cutoff6}` },
-          { label: '12 h success cutoff', value: `≥${cutoff12Low}` },
-          { label: '12 h high-risk cutoff', value: `<${cutoff12High}` },
+          { label: 'Failure floor this timepoint', value: `<${failCut}` },
+          { label: 'Success cutoff (all times)', value: `≥${successCut}` },
+          { label: '2 h failure floor', value: '<2.85' },
+          { label: '6 h failure floor', value: '<3.47' },
+          { label: '12 h failure floor', value: '<3.85' },
         ],
       };
     },
     evidence: {
       summary:
-        'ROX = (SpO₂/FiO₂)/RR. Roca 2016 (derivation) and subsequent validation: 12 h ROX ≥4.88 predicts HFNC success; <3.85 predicts failure. 2 h cutoff 2.85 and 6 h cutoff 3.47 identify early high risk.',
+        'ROX = (SpO₂/FiO₂)/RR. Roca: ≥4.88 predicts HFNC success at 2, 6, or 12 h. Failure floors (high specificity): <2.85 at 2 h, <3.47 at 6 h, <3.85 at 12 h. Between the floor and 4.88 is indeterminate — not lower intubation risk.',
       formula: 'ROX = (SpO₂ / FiO₂_fraction) / RR',
       validation:
         'Derived in pneumonia/HFNC (Roca J Crit Care 2016); prospectively validated (Roca AJRCCM 2019). Best studied in hypoxemic pneumonia; interpret cautiously in other phenotypes.',
@@ -412,11 +394,13 @@ export const wave7BedsideCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Low risk', actions: ['Continue HFNC', 'Wean FiO₂ as SpO₂ allows', 'Recompute ROX at next timepoint'] },
-      { condition: 'High risk', actions: ['ICU/airway-skilled clinician at bedside', 'Reassess work of breathing', 'Do not delay intubation if tiring'] },
+      { condition: 'Low risk (ROX ≥4.88)', actions: ['Continue HFNC', 'Wean FiO₂ as SpO₂ allows', 'Recompute ROX at next timepoint'] },
+      { condition: 'Indeterminate', actions: ['Do not treat as lower intubation risk', 'Reassess work of breathing frequently', 'Recompute ROX at the next timepoint'] },
+      { condition: 'High risk (below time-specific floor)', actions: ['ICU/airway-skilled clinician at bedside', 'Reassess work of breathing', 'Do not delay intubation if tiring'] },
     ],
     pearls: [
       'FiO₂ must be the fraction (0.21–1.0), not percent.',
+      '2.85 (2 h) and 3.47 (6 h) are failure floors, not success cutoffs — success is ≥4.88; the zone in between is indeterminate.',
       'ROX does not capture hypercapnia, secretions, or declining mental status — those still warrant intubation.',
     ],
   },

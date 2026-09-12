@@ -548,14 +548,6 @@ export const wave7HighuseCalcs: Calculator[] = [
       yesNo('sweating', 'Sweating observed by clinician', null),
       yesNo('hypotension', 'Hypotension (SBP <100 mmHg on arrival)', null),
       yesNo('worseningAngina', 'Worsening (crescendo) angina', null),
-      yesNo('male', 'Male sex', null, 'Educational term — original T-MACS did not include sex.'),
-      numberInput('age', 'Age', {
-        unit: 'years',
-        min: 18,
-        max: 100,
-        defaultValue: 50,
-        helpText: 'Educational term (0.01 per year from age 50). Original T-MACS is age-independent.',
-      }),
     ],
     calculate(values) {
       const ecg = bool(values.ecgIschemia) ? 1 : 0;
@@ -565,8 +557,6 @@ export const wave7HighuseCalcs: Calculator[] = [
       const sweating = bool(values.sweating) ? 1 : 0;
       const hypotension = bool(values.hypotension) ? 1 : 0;
       const worseningAngina = bool(values.worseningAngina) ? 1 : 0;
-      const male = bool(values.male) ? 1 : 0;
-      const age = num(values.age, 50);
       const lp =
         1.713 * ecg +
         0.847 * worseningAngina +
@@ -574,9 +564,7 @@ export const wave7HighuseCalcs: Calculator[] = [
         1.417 * vomiting +
         2.058 * sweating +
         1.208 * hypotension +
-        1.246 * tropRatio +
-        0.2 * male +
-        0.01 * (age - 50) -
+        1.246 * tropRatio -
         4.766;
       const p = logitProb(lp);
       const pct = round(p * 100, 1);
@@ -620,7 +608,6 @@ export const wave7HighuseCalcs: Calculator[] = [
           { label: 'Observed sweating', value: sweating ? 'yes' : 'no' },
           { label: 'SBP <100', value: hypotension ? 'yes' : 'no' },
           { label: 'Crescendo angina', value: worseningAngina ? 'yes' : 'no' },
-          { label: 'Male / age', value: `${male ? 'male' : 'female'}, ${age} y` },
         ],
         recommendations:
           p < 0.02
@@ -632,11 +619,11 @@ export const wave7HighuseCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'T-MACS re-derives MACS without H-FABP. p=1/(1+e^−lp) with ECG, crescendo angina, right-arm radiation, vomiting, observed sweating, SBP <100, and admission hs-cTnT. Very low <2% supports discharge; >95% rules in. Age and sex are small educational add-ons so every listed input moves lp.',
+        'T-MACS re-derives MACS without H-FABP. p=1/(1+e^−lp) with ECG, crescendo angina, right-arm radiation, vomiting, observed sweating, SBP <100, and admission hs-cTnT. Very low <2% supports discharge; >95% rules in.',
       formula:
-        'lp = 1.713·ECG + 0.847·crescendo + 0.607·right-arm + 1.417·vomit + 2.058·sweat + 1.208·SBP<100 + 1.246·(Tn/URL) + 0.20·male + 0.01·(age−50) − 4.766 (1.246 = 0.089 × 14 ng/L URL). p=1/(1+e^−lp).',
+        'lp = 1.713·ECG + 0.847·crescendo + 0.607·right-arm + 1.417·vomit + 2.058·sweat + 1.208·SBP<100 + 1.246·(Tn/URL) − 4.766 (1.246 = 0.089 × 14 ng/L URL). p=1/(1+e^−lp).',
       validation:
-        'Body et al. Emerg Med J 2017: NPV 99.3%, sensitivity ~98% for very-low band; ~40% ruled out with hs-cTnT. Educational sex/age terms are not in the original model.',
+        'Body et al. Emerg Med J 2017: NPV 99.3%, sensitivity ~98% for very-low band; ~40% ruled out with hs-cTnT.',
       references: [
         {
           title: 'Troponin-only Manchester Acute Coronary Syndromes (T-MACS) decision aid: single biomarker re-derivation and external validation in three cohorts',
@@ -655,7 +642,6 @@ export const wave7HighuseCalcs: Calculator[] = [
     pearls: [
       'Sweating must be observed, not only reported.',
       'Pain radiation is specifically right arm/shoulder in T-MACS (not left arm).',
-      'Male and age are educational extras here — official T-MACS ignores them.',
     ],
   },
 
@@ -1187,64 +1173,64 @@ export const wave7HighuseCalcs: Calculator[] = [
     whyUse: 'Replaces one-dimensional “CLI” with a 3-axis grid that better matches diabetic foot reality (wound + perfusion + infection).',
     inputs: [
       selectInput('wound', 'Wound (W)', [
-        { label: '0 — No ulcer, no gangrene (ischemic rest pain only)', value: 0, points: 0, description: 'Ischemic rest pain without ulcer or gangrene' },
-        { label: '1 — Small shallow ulcer; no exposed bone (unless distal phalanx); no gangrene', value: 1, points: 1, description: 'Shallow ulcer of the distal leg/foot; bone exposure only if limited to the distal phalanx; no gangrene' },
-        { label: '2 — Deeper ulcer ± exposed bone/joint/tendon; gangrene limited to digits', value: 2, points: 2, description: 'Deeper ulcer with exposed bone, joint, or tendon, and/or gangrene confined to digits' },
-        { label: '3 — Extensive deep ulcer / forefoot–midfoot gangrene / extensive heel necrosis', value: 3, points: 3, description: 'Extensive ulcer covering the forefoot or midfoot, or full-thickness heel ulcer with calcaneal involvement, or extensive gangrene' },
+        { label: '0 — No ulcer, no gangrene (ischemic rest pain only)', value: 0, description: 'Ischemic rest pain without ulcer or gangrene' },
+        { label: '1 — Small shallow ulcer; no exposed bone (unless distal phalanx); no gangrene', value: 1, description: 'Shallow ulcer of the distal leg/foot; bone exposure only if limited to the distal phalanx; no gangrene' },
+        { label: '2 — Deeper ulcer ± exposed bone/joint/tendon; gangrene limited to digits', value: 2, description: 'Deeper ulcer with exposed bone, joint, or tendon, and/or gangrene confined to digits' },
+        { label: '3 — Extensive deep ulcer / forefoot–midfoot gangrene / extensive heel necrosis', value: 3, description: 'Extensive ulcer covering the forefoot or midfoot, or full-thickness heel ulcer with calcaneal involvement, or extensive gangrene' },
       ]),
       selectInput('ischemia', 'Ischemia (I)', [
-        { label: '0 — ABI >0.80, toe pressure ≥60 mmHg', value: 0, points: 0, description: 'Ankle systolic pressure >100 mmHg; TcPO2 ≥60 mmHg. Prefer toe pressure or TcPO2 in diabetes.' },
-        { label: '1 — ABI 0.60–0.79, toe pressure 40–59 mmHg', value: 1, points: 1, description: 'Ankle systolic pressure 70–100 mmHg; TcPO2 40–59 mmHg' },
-        { label: '2 — ABI 0.40–0.59, toe pressure 30–39 mmHg', value: 2, points: 2, description: 'Ankle systolic pressure 50–70 mmHg; TcPO2 30–39 mmHg' },
-        { label: '3 — ABI <0.40, toe pressure <30 mmHg', value: 3, points: 3, description: 'Ankle systolic pressure <50 mmHg; TcPO2 <30 mmHg' },
+        { label: '0 — ABI >0.80, toe pressure ≥60 mmHg', value: 0, description: 'Ankle systolic pressure >100 mmHg; TcPO2 ≥60 mmHg. Prefer toe pressure or TcPO2 in diabetes.' },
+        { label: '1 — ABI 0.60–0.79, toe pressure 40–59 mmHg', value: 1, description: 'Ankle systolic pressure 70–100 mmHg; TcPO2 40–59 mmHg' },
+        { label: '2 — ABI 0.40–0.59, toe pressure 30–39 mmHg', value: 2, description: 'Ankle systolic pressure 50–70 mmHg; TcPO2 30–39 mmHg' },
+        { label: '3 — ABI <0.40, toe pressure <30 mmHg', value: 3, description: 'Ankle systolic pressure <50 mmHg; TcPO2 <30 mmHg' },
       ], undefined, 'If ABI and toe pressure/TcPO2 conflict, prefer toe pressure or TcPO2 in diabetes (ABI can be falsely high).'),
       selectInput('infection', 'foot Infection (fI)', [
-        { label: '0 — Uninfected', value: 0, points: 0, description: 'No symptoms or signs of infection' },
-        { label: '1 — Mild (skin/subcut only, erythema ≤2 cm)', value: 1, points: 1, description: 'Local infection involving only skin and subcutaneous tissue; erythema ≤2 cm around the ulcer; no SIRS' },
-        { label: '2 — Moderate (deeper or erythema >2 cm)', value: 2, points: 2, description: 'Erythema >2 cm, or infection deeper than skin/subcut (abscess, osteomyelitis, septic arthritis, fasciitis); no SIRS' },
-        { label: '3 — Severe (SIRS / systemic infection)', value: 3, points: 3, description: 'Local infection PLUS SIRS (≥2 of: T >38 or <36 °C; HR >90; RR >20 or PaCO2 <32 mmHg; WBC >12 or <4 ×10³/µL or >10% bands)' },
+        { label: '0 — Uninfected', value: 0, description: 'No symptoms or signs of infection' },
+        { label: '1 — Mild (skin/subcut only, erythema ≤2 cm)', value: 1, description: 'Local infection involving only skin and subcutaneous tissue; erythema ≤2 cm around the ulcer; no SIRS' },
+        { label: '2 — Moderate (deeper or erythema >2 cm)', value: 2, description: 'Erythema >2 cm, or infection deeper than skin/subcut (abscess, osteomyelitis, septic arthritis, fasciitis); no SIRS' },
+        { label: '3 — Severe (SIRS / systemic infection)', value: 3, description: 'Local infection PLUS SIRS (≥2 of: T >38 or <36 °C; HR >90; RR >20 or PaCO2 <32 mmHg; WBC >12 or <4 ×10³/µL or >10% bands)' },
       ], undefined, 'IDSA/IWGDF diabetic-foot infection grades mapped to WIfI fI. SIRS defines grade 3 — local extent alone is grade 1–2.'),
     ],
     calculate(values) {
       const wound = num(values.wound, 0);
       const ischemia = num(values.ischemia, 0);
       const infection = num(values.infection, 0);
-      const score = wound + ischemia + infection;
+      const sum = wound + ischemia + infection;
       const stage = wifiClinicalStage(wound, ischemia, infection);
       const stageLabel =
-        stage <= 1 ? 'Stage 1 — very low amputation risk' : stage === 2 ? 'Stage 2 — low' : stage === 3 ? 'Stage 3 — moderate' : stage === 4 ? 'Stage 4 — high' : 'Stage 5 — unsalvageable / extreme';
-      const r = riskFromThresholds(score, [
-        {
-          max: 2,
-          level: 'low',
-          label: 'WIfI sum 0–2',
-          interpretation: `WIfI sum ${score} (W${wound}-I${ischemia}-fI${infection}). ${stageLabel}. Lower threatened-limb burden — optimize perfusion work-up if rest pain and infection control.`,
-        },
-        {
-          max: 5,
-          level: 'moderate',
-          label: 'WIfI sum 3–5',
-          interpretation: `WIfI sum ${score} (W${wound}-I${ischemia}-fI${infection}). ${stageLabel}. Multidisciplinary diabetic-foot / vascular review; revascularization often considered.`,
-        },
-        {
-          max: 7,
-          level: 'high',
-          label: 'WIfI sum 6–7',
-          interpretation: `WIfI sum ${score} (W${wound}-I${ischemia}-fI${infection}). ${stageLabel}. High 1-year amputation risk in SVS consensus — urgent limb-salvage pathway.`,
-        },
-        {
-          max: 9,
-          level: 'critical',
-          label: 'WIfI sum 8–9',
-          interpretation: `WIfI sum ${score} (W${wound}-I${ischemia}-fI${infection}). ${stageLabel}. Extreme limb threat; salvage vs amputation decision with vascular surgery.`,
-        },
-      ]);
+        stage <= 1
+          ? 'Stage 1 — very low amputation risk'
+          : stage === 2
+            ? 'Stage 2 — low amputation risk'
+            : stage === 3
+              ? 'Stage 3 — moderate amputation risk'
+              : stage === 4
+                ? 'Stage 4 — high amputation risk'
+                : 'Stage 5 — unsalvageable / extreme';
+      let riskLevel: 'low' | 'moderate' | 'high' | 'critical';
+      if (stage <= 2) riskLevel = 'low';
+      else if (stage === 3) riskLevel = 'moderate';
+      else if (stage === 4) riskLevel = 'high';
+      else riskLevel = 'critical';
+      const interpretation =
+        stage <= 1
+          ? `WIfI clinical stage ${stage} (W${wound}-I${ischemia}-fI${infection}; sum ${sum}). ${stageLabel}. Lower threatened-limb burden — optimize perfusion work-up if rest pain and infection control.`
+          : stage === 2
+            ? `WIfI clinical stage ${stage} (W${wound}-I${ischemia}-fI${infection}; sum ${sum}). ${stageLabel}. Multidisciplinary diabetic-foot follow-up; optimize offloading and perfusion assessment.`
+            : stage === 3
+              ? `WIfI clinical stage ${stage} (W${wound}-I${ischemia}-fI${infection}; sum ${sum}). ${stageLabel}. Multidisciplinary diabetic-foot / vascular review; revascularization often considered.`
+              : stage === 4
+                ? `WIfI clinical stage ${stage} (W${wound}-I${ischemia}-fI${infection}; sum ${sum}). ${stageLabel}. High 1-year amputation risk in SVS consensus — urgent limb-salvage pathway.`
+                : `WIfI clinical stage ${stage} (W${wound}-I${ischemia}-fI${infection}; sum ${sum}). ${stageLabel}. Extreme limb threat; salvage vs amputation decision with vascular surgery.`;
       return {
-        score,
-        ...r,
+        score: stage,
+        label: stageLabel,
+        interpretation,
+        riskLevel,
         details: [
           { label: 'WIfI code', value: `W${wound}-I${ischemia}-fI${infection}` },
           { label: 'Clinical stage (amputation-risk grid)', value: String(stage) },
+          { label: 'W+I+fI sum (0–9)', value: String(sum) },
           { label: 'Wound', value: String(wound) },
           { label: 'Ischemia', value: String(ischemia) },
           { label: 'foot Infection', value: String(infection) },
@@ -1257,8 +1243,8 @@ export const wave7HighuseCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'SVS WIfI grades Wound 0–3, Ischemia 0–3, and foot Infection 0–3. A published expert grid maps the 64 combinations to clinical stages 1–4 (very low → high 1-year amputation risk); the most extreme W3-I3-fI3 cell is labeled stage 5 here. Displayed score is the 0–9 sum; stage is in details.',
-      formula: 'Score = W + I + fI (0–9). Stage from Mills 2014 amputation-risk grid (VL=1, L=2, M=3, H=4; W3-I3-fI3 = 5).',
+        'SVS WIfI grades Wound 0–3, Ischemia 0–3, and foot Infection 0–3. A published expert grid maps the 64 combinations to clinical stages 1–4 (very low → high 1-year amputation risk); the most extreme W3-I3-fI3 cell is labeled stage 5 here. Displayed score is the clinical stage; the 0–9 sum and WIfI code are in details.',
+      formula: 'Clinical stage from Mills 2014 amputation-risk grid (VL=1, L=2, M=3, H=4; W3-I3-fI3 = 5). Sum = W + I + fI (0–9) is shown in details, not used as the live risk band.',
       validation: 'Mills et al. J Vasc Surg 2014; subsequent series correlate stage with amputation, wound healing, and benefit of revascularization.',
       references: [
         {
