@@ -1,6 +1,8 @@
 import type { Calculator } from '../../types/calculator';
 import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
+const questionnaireMetadata = { questionnaire: true as const };
+
 const hit6Opts = [
   { label: 'Never (6)', value: 6 },
   { label: 'Rarely (8)', value: 8 },
@@ -1047,6 +1049,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'slums',
+    ...questionnaireMetadata,
     name: 'SLUMS Cognitive Examination',
     shortName: 'SLUMS',
     description: 'Saint Louis University Mental Status (SLUMS) 11-item cognitive exam (0–30) with education-adjusted cutoffs.',
@@ -1308,6 +1311,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'madrs',
+    ...questionnaireMetadata,
     name: 'MADRS Depression Score',
     shortName: 'MADRS',
     description: 'Montgomery–Åsberg Depression Rating Scale 10-item clinician rating (0–60).',
@@ -1512,6 +1516,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
 
   {
     id: 'ham-d',
+    ...questionnaireMetadata,
     name: 'HAM-D Depression Score',
     shortName: 'HAM-D',
     description: 'Hamilton Depression Rating Scale (HAM-D 17) 17-item clinician interview and total (0–52).',
@@ -1544,7 +1549,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         { label: '2 — Wishes he/she were dead or any thoughts of possible death to self', value: 2 },
         { label: '3 — Suicidal ideas or gesture', value: 3 },
         { label: '4 — Attempts at suicide (any serious attempt rates 4)', value: 4 },
-      ], 1),
+      ], 0, 'Any score above 0 requires an independent suicide risk assessment; do not rely on the total score alone.'),
       selectInput('hamd4', '4. Insomnia early (difficulty falling asleep)', [
         { label: '0 — No difficulty falling asleep', value: 0 },
         { label: '1 — Complains of occasional difficulty (more than 30 minutes)', value: 1 },
@@ -1633,11 +1638,6 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         defaultValue: 12,
         helpText: 'Enter official 17-item HDRS total (0–52).',
       }),
-      selectInput('version', 'Version (for context)', [
-        { label: '17-item (standard)', value: '17' },
-        { label: '21-item', value: '21' },
-        { label: 'Other / unspecified', value: 'other' },
-      ], '17'),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');
@@ -1665,6 +1665,13 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
           num(values.hamd16, 0) +
           num(values.hamd17, 0);
       }
+
+      const suicideItem = mode === 'survey' ? num(values.hamd3, 0) : undefined;
+      const suicideAlert = suicideItem !== undefined && suicideItem > 0
+        ? [
+            `HAM-D item 3 (suicide) is positive at ${suicideItem}/4. Perform an independent, immediate suicide risk assessment; the HAM-D total must not be used to rule out acute risk.`,
+          ]
+        : undefined;
 
       const r = riskFromThresholds(score, [
         {
@@ -1704,9 +1711,10 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         ...r,
         details: [
           { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '17-item rating' },
-          { label: 'Version noted', value: String(values.version || '17') },
           { label: '17-item bands', value: '≤7 normal; 8–13 mild; 14–18 moderate; 19–22 severe; ≥23 very severe' },
+          { label: 'HAM-D item 3 (suicide)', value: mode === 'survey' ? `${suicideItem}/4` : 'Unavailable from direct total' },
         ],
+        alerts: suicideAlert,
       };
     },
     evidence: {
@@ -1733,6 +1741,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
 
   {
     id: 'ham-a',
+    ...questionnaireMetadata,
     name: 'HAM-A Anxiety Score',
     shortName: 'HAM-A',
     description: 'Hamilton Anxiety Rating Scale (HAM-A) 14-item clinician interview and total (0–56).',
@@ -1778,15 +1787,15 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');
-      let psychic = 0;
-      let somatic = 0;
+      let psychic: number | undefined;
+      let somatic: number | undefined;
       let score: number;
 
       if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.hama_1 === undefined)) {
         score = Math.max(0, Math.min(56, num(values.score, 18)));
-        psychic = Math.round(score / 2);
-        somatic = score - psychic;
       } else {
+        psychic = 0;
+        somatic = 0;
         for (let i = 1; i <= 6; i++) {
           psychic += num(values[`hama_${i}`], 2);
         }
@@ -1829,8 +1838,8 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         ...r,
         details: [
           { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '14-item clinician interview' },
-          { label: 'Psychic anxiety subscore (items 1–6, 14)', value: `${psychic}/28` },
-          { label: 'Somatic anxiety subscore (items 7–13)', value: `${somatic}/28` },
+          { label: 'Psychic anxiety subscore (items 1–6, 14)', value: psychic !== undefined ? `${psychic}/28` : 'Unavailable from direct total' },
+          { label: 'Somatic anxiety subscore (items 7–13)', value: somatic !== undefined ? `${somatic}/28` : 'Unavailable from direct total' },
           { label: 'Common bands', value: '≤17 mild; 18–24 mild–moderate; 25–30 moderate–severe; >30 severe' },
         ],
       };
@@ -2007,6 +2016,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'ymrs',
+    ...questionnaireMetadata,
     name: 'Young Mania Rating Scale (YMRS)',
     shortName: 'YMRS',
     description: 'Young Mania Rating Scale 11-item clinician interview (0–60) for manic symptom severity.',
@@ -2690,6 +2700,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'isi-insomnia',
+    ...questionnaireMetadata,
     name: 'Insomnia Severity Index (ISI)',
     shortName: 'ISI',
     description: 'Insomnia Severity Index (ISI) 7-item questionnaire and total (0–28) for insomnia severity.',
@@ -2840,6 +2851,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
 
   {
     id: 'pcl5',
+    ...questionnaireMetadata,
     name: 'PCL-5 PTSD Checklist for DSM-5',
     shortName: 'PCL-5',
     description: 'PTSD Checklist for DSM-5 (PCL-5) 20-item survey, total severity score (0–80), and DSM-5 cluster algorithm.',

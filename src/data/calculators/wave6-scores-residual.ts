@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 const odiBand = (pct: number) =>
   riskFromThresholds(pct, [
@@ -35,7 +35,9 @@ const odiBand = (pct: number) =>
     },
   ]);
 
-export const wave6ScoresResidualCalcs: Calculator[] = [
+type AuditedQuestionnaireCalculator = Calculator;
+
+export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
   // ─── 1. Oswestry Disability Index ──────────────────────────────────────────
   {
     id: 'oswestry',
@@ -46,6 +48,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     tags: ['oswestry', 'odi', 'low back pain', 'disability', 'spine'],
     whenToUse: 'When evaluating functional impairment and disability in patients with acute or chronic low back pain.',
     whyUse: 'Most widely used condition-specific disability measure for low back pain outcomes and research.',
+    questionnaire: true,
     inputs: [
       selectInput('pain', 'Section 1: Pain Intensity', [
         { label: 'I have no pain at the moment', value: 0, points: 0 },
@@ -206,6 +209,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     tags: ['ndi', 'neck', 'cervical', 'disability', 'spine'],
     whenToUse: 'When evaluating functional impairment and disability in patients with neck pain, whiplash, or cervical radiculopathy.',
     whyUse: 'Standard neck-specific disability PRO; validated counterpart to the Oswestry Low Back Pain Disability Index.',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Complete 10-section questionnaire (recommended)', value: 'survey' },
@@ -414,6 +418,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     tags: ['dash', 'upper extremity', 'shoulder', 'hand', 'disability'],
     whenToUse: 'When evaluating disability and symptoms in patients with any musculoskeletal condition of the arm, shoulder, or hand.',
     whyUse: 'Gold-standard region-specific PRO for upper-limb function across diagnoses.',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 30-item survey (recommended)', value: 'survey' },
@@ -745,6 +750,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     tags: ['quickdash', 'dash', 'upper extremity', 'hand', 'shoulder'],
     whenToUse: 'Brief upper-extremity PRO when full DASH is too long; same 0–100 metric family.',
     whyUse: '11-item short form correlates highly with full DASH and is practical in clinic.',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 11-item questionnaire (recommended)', value: 'survey' },
@@ -935,6 +941,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     tags: ['womac', 'osteoarthritis', 'knee', 'hip', 'function'],
     whenToUse: 'When evaluating hip or knee osteoarthritis symptoms and physical disability.',
     whyUse: 'Core PRO for hip and knee osteoarthritis trials and clinic outcomes endorsed by OMERACT.',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 24-item questionnaire (recommended)', value: 'survey' },
@@ -1221,6 +1228,19 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     tags: ['ikdc', 'knee', 'acl', 'sports', 'ortho'],
     whenToUse: 'When evaluating knee symptoms, sports function, and daily activities after knee ligament, meniscus, or cartilage injury.',
     whyUse: 'Standard sports-knee PRO spanning symptoms, sports activity, and function endorsed by AOSSM.',
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        survey: [
+          'ikdc_q1', 'ikdc_q2', 'ikdc_q3', 'ikdc_q4', 'ikdc_q5', 'ikdc_q6', 'ikdc_q7', 'ikdc_q8',
+          'ikdc_q9a', 'ikdc_q9b', 'ikdc_q9c', 'ikdc_q9d', 'ikdc_q9e', 'ikdc_q9f', 'ikdc_q9g', 'ikdc_q9h', 'ikdc_q9i',
+          'ikdc_q10b',
+        ],
+        direct: ['total'],
+      },
+    },
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive questionnaire (recommended)', value: 'survey' },
@@ -1233,124 +1253,119 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         { label: '1 - Light activities like walking, housework or yard work', value: 1 },
         { label: '0 - Unable to perform any of the above activities due to knee pain', value: 0 },
       ], 3),
-      selectInput('ikdc_q2', '2. Frequency of knee pain (past 4 weeks)', [
-        { label: '10 - Never', value: 10 },
-        { label: '8 - Rarely', value: 8 },
-        { label: '6 - Sometimes', value: 6 },
-        { label: '4 - Frequently', value: 4 },
-        { label: '2 - Very frequently', value: 2 },
-        { label: '0 - Constantly', value: 0 },
-      ], 8),
-      selectInput('ikdc_q3', '3. Severity of knee pain (past 4 weeks)', [
-        { label: '10 - No pain', value: 10 },
-        { label: '8 - Mild pain', value: 8 },
-        { label: '6 - Moderate pain', value: 6 },
-        { label: '4 - Fairly severe pain', value: 4 },
-        { label: '2 - Very severe pain', value: 2 },
-        { label: '0 - Worst pain imaginable', value: 0 },
-      ], 8),
-      selectInput('ikdc_q4', '4. Stiffness / difficulty moving knee', [
+      numberInput('ikdc_q2', '2. Frequency of knee pain (past 4 weeks)', {
+        min: 0,
+        max: 10,
+        step: 1,
+        helpText: '0 = constantly; 10 = never. Enter the official 0–10 score.',
+      }),
+      numberInput('ikdc_q3', '3. Severity of knee pain (past 4 weeks)', {
+        min: 0,
+        max: 10,
+        step: 1,
+        helpText: '0 = worst pain imaginable; 10 = no pain. Enter the official 0–10 score.',
+      }),
+      selectInput('ikdc_q4', '4. During past 4 weeks, or since injury, how stiff or swollen was your knee?', [
         { label: '4 - Not at all stiff', value: 4 },
         { label: '3 - Mildly stiff', value: 3 },
         { label: '2 - Moderately stiff', value: 2 },
         { label: '1 - Very stiff', value: 1 },
         { label: '0 - Extremely stiff', value: 0 },
       ], 3),
-      selectInput('ikdc_q5', '5. Swelling in your knee', [
-        { label: '4 - Never', value: 4 },
-        { label: '3 - Rarely', value: 3 },
-        { label: '2 - Sometimes', value: 2 },
-        { label: '1 - Frequently', value: 1 },
-        { label: '0 - Constantly', value: 0 },
-      ], 3),
-      selectInput('ikdc_q6', '6. Does your knee lock or catch?', [
-        { label: '1 - No', value: 1 },
-        { label: '0 - Yes', value: 0 },
-      ], 1),
-      selectInput('ikdc_q7', '7. Does your knee give way or feel unstable?', [
-        { label: '4 - Never gives way', value: 4 },
-        { label: '3 - Rarely gives way', value: 3 },
-        { label: '2 - Sometimes gives way', value: 2 },
-        { label: '1 - Frequently gives way', value: 1 },
-        { label: '0 - Constantly gives way', value: 0 },
-      ], 3),
-      selectInput('ikdc_q8', '8. Highest level of activity without significant swelling', [
+      selectInput('ikdc_q5', '5. Highest level of activity without significant swelling in your knee', [
         { label: '4 - Very strenuous activities (jumping/pivoting)', value: 4 },
         { label: '3 - Strenuous activities (heavy work, skiing, tennis)', value: 3 },
         { label: '2 - Moderate activities (jogging, moderate work)', value: 2 },
         { label: '1 - Light activities (walking, housework)', value: 1 },
         { label: '0 - Unable due to swelling', value: 0 },
       ], 3),
-      selectInput('ikdc_q9', '9. Highest level of activity without knee giving way', [
+      selectInput('ikdc_q6', '6. Does your knee lock or catch?', [
+        { label: '1 - No', value: 1 },
+        { label: '0 - Yes', value: 0 },
+      ], 1),
+      selectInput('ikdc_q7', '7. Highest level of activity without significant giving way in your knee', [
         { label: '4 - Very strenuous activities (jumping/pivoting)', value: 4 },
         { label: '3 - Strenuous activities (heavy work, skiing, tennis)', value: 3 },
         { label: '2 - Moderate activities (jogging, moderate work)', value: 2 },
         { label: '1 - Light activities (walking, housework)', value: 1 },
-        { label: '0 - Unable due to instability', value: 0 },
+        { label: '0 - Unable due to giving way', value: 0 },
       ], 3),
-      selectInput('ikdc_q10a', '10a. Go up stairs', [
-        { label: '4 - Not difficult at all', value: 4 },
-        { label: '3 - Minimally difficult', value: 3 },
-        { label: '2 - Moderately difficult', value: 2 },
-        { label: '1 - Extremely difficult', value: 1 },
-        { label: '0 - Unable to do', value: 0 },
+      selectInput('ikdc_q8', '8. Highest level of activity you can participate in on a regular basis', [
+        { label: '4 - Very strenuous activities (jumping/pivoting)', value: 4 },
+        { label: '3 - Strenuous activities (heavy work, skiing, tennis)', value: 3 },
+        { label: '2 - Moderate activities (jogging, moderate work)', value: 2 },
+        { label: '1 - Light activities (walking, housework)', value: 1 },
+        { label: '0 - Unable due to swelling', value: 0 },
       ], 3),
-      selectInput('ikdc_q10b', '10b. Go down stairs', [
-        { label: '4 - Not difficult at all', value: 4 },
-        { label: '3 - Minimally difficult', value: 3 },
-        { label: '2 - Moderately difficult', value: 2 },
-        { label: '1 - Extremely difficult', value: 1 },
-        { label: '0 - Unable to do', value: 0 },
-      ], 3),
-      selectInput('ikdc_q10c', '10c. Kneel on front of your knee', [
-        { label: '4 - Not difficult at all', value: 4 },
-        { label: '3 - Minimally difficult', value: 3 },
-        { label: '2 - Moderately difficult', value: 2 },
-        { label: '1 - Extremely difficult', value: 1 },
-        { label: '0 - Unable to do', value: 0 },
-      ], 2),
-      selectInput('ikdc_q10d', '10d. Squat', [
-        { label: '4 - Not difficult at all', value: 4 },
-        { label: '3 - Minimally difficult', value: 3 },
-        { label: '2 - Moderately difficult', value: 2 },
-        { label: '1 - Extremely difficult', value: 1 },
-        { label: '0 - Unable to do', value: 0 },
-      ], 2),
-      selectInput('ikdc_q10e', '10e. Sit with knee bent', [
+      selectInput('ikdc_q9a', '9a. Go up stairs', [
         { label: '4 - Not difficult at all', value: 4 },
         { label: '3 - Minimally difficult', value: 3 },
         { label: '2 - Moderately difficult', value: 2 },
         { label: '1 - Extremely difficult', value: 1 },
         { label: '0 - Unable to do', value: 0 },
       ], 3),
-      selectInput('ikdc_q10f', '10f. Rise from a chair', [
+      selectInput('ikdc_q9b', '9b. Go down stairs', [
         { label: '4 - Not difficult at all', value: 4 },
         { label: '3 - Minimally difficult', value: 3 },
         { label: '2 - Moderately difficult', value: 2 },
         { label: '1 - Extremely difficult', value: 1 },
         { label: '0 - Unable to do', value: 0 },
       ], 3),
-      selectInput('ikdc_q10g', '10g. Run straight ahead', [
+      selectInput('ikdc_q9c', '9c. Kneel on front of your knee', [
         { label: '4 - Not difficult at all', value: 4 },
         { label: '3 - Minimally difficult', value: 3 },
         { label: '2 - Moderately difficult', value: 2 },
         { label: '1 - Extremely difficult', value: 1 },
         { label: '0 - Unable to do', value: 0 },
       ], 2),
-      selectInput('ikdc_q10h', '10h. Jump and land on your involved leg', [
+      selectInput('ikdc_q9d', '9d. Squat', [
         { label: '4 - Not difficult at all', value: 4 },
         { label: '3 - Minimally difficult', value: 3 },
         { label: '2 - Moderately difficult', value: 2 },
         { label: '1 - Extremely difficult', value: 1 },
         { label: '0 - Unable to do', value: 0 },
       ], 2),
-      selectInput('ikdc_q10i', '10i. Stop and start quickly', [
+      selectInput('ikdc_q9e', '9e. Sit with knee bent', [
+        { label: '4 - Not difficult at all', value: 4 },
+        { label: '3 - Minimally difficult', value: 3 },
+        { label: '2 - Moderately difficult', value: 2 },
+        { label: '1 - Extremely difficult', value: 1 },
+        { label: '0 - Unable to do', value: 0 },
+      ], 3),
+      selectInput('ikdc_q9f', '9f. Rise from a chair', [
+        { label: '4 - Not difficult at all', value: 4 },
+        { label: '3 - Minimally difficult', value: 3 },
+        { label: '2 - Moderately difficult', value: 2 },
+        { label: '1 - Extremely difficult', value: 1 },
+        { label: '0 - Unable to do', value: 0 },
+      ], 3),
+      selectInput('ikdc_q9g', '9g. Run straight ahead', [
         { label: '4 - Not difficult at all', value: 4 },
         { label: '3 - Minimally difficult', value: 3 },
         { label: '2 - Moderately difficult', value: 2 },
         { label: '1 - Extremely difficult', value: 1 },
         { label: '0 - Unable to do', value: 0 },
       ], 2),
+      selectInput('ikdc_q9h', '9h. Jump and land on your involved leg', [
+        { label: '4 - Not difficult at all', value: 4 },
+        { label: '3 - Minimally difficult', value: 3 },
+        { label: '2 - Moderately difficult', value: 2 },
+        { label: '1 - Extremely difficult', value: 1 },
+        { label: '0 - Unable to do', value: 0 },
+      ], 2),
+      selectInput('ikdc_q9i', '9i. Stop and start quickly', [
+        { label: '4 - Not difficult at all', value: 4 },
+        { label: '3 - Minimally difficult', value: 3 },
+        { label: '2 - Moderately difficult', value: 2 },
+        { label: '1 - Extremely difficult', value: 1 },
+        { label: '0 - Unable to do', value: 0 },
+      ], 2),
+      numberInput('ikdc_q10b', '10b. How would you rate the function of your knee today? (0–10)', {
+        min: 0,
+        max: 10,
+        step: 1,
+        helpText: '0 = inability to perform any usual activities; 10 = normal function. This is the current-function item used in the transformed score.',
+      }),
       numberInput('total', 'IKDC subjective total override (0–100)', {
         min: 0,
         max: 100,
@@ -1363,20 +1378,52 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
       const mode = String(values.entryMode ?? 'survey');
       let score: number;
       let rawScore = 0;
-      const maxPossible = 81; // Sum of maxes: 4 + 10 + 10 + 4 + 4 + 1 + 4 + 4 + 4 + (9 * 4) = 45 + 36 = 81
+      const scoredKeys = [
+        'ikdc_q1', 'ikdc_q2', 'ikdc_q3', 'ikdc_q4', 'ikdc_q5', 'ikdc_q6', 'ikdc_q7', 'ikdc_q8',
+        'ikdc_q9a', 'ikdc_q9b', 'ikdc_q9c', 'ikdc_q9d', 'ikdc_q9e', 'ikdc_q9f', 'ikdc_q9g', 'ikdc_q9h', 'ikdc_q9i',
+        'ikdc_q10b',
+      ];
+      const maxByKey: Record<string, number> = {
+        ikdc_q1: 4,
+        ikdc_q2: 10,
+        ikdc_q3: 10,
+        ikdc_q4: 4,
+        ikdc_q5: 4,
+        ikdc_q6: 1,
+        ikdc_q7: 4,
+        ikdc_q8: 4,
+        ikdc_q9a: 4,
+        ikdc_q9b: 4,
+        ikdc_q9c: 4,
+        ikdc_q9d: 4,
+        ikdc_q9e: 4,
+        ikdc_q9f: 4,
+        ikdc_q9g: 4,
+        ikdc_q9h: 4,
+        ikdc_q9i: 4,
+        ikdc_q10b: 10,
+      };
+      const maxPossible = 87;
 
       if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.ikdc_q1 === undefined)) {
         score = round(clamp01_100(num(values.total, 0)), 1);
       } else {
-        const keys = [
-          'ikdc_q1', 'ikdc_q2', 'ikdc_q3', 'ikdc_q4', 'ikdc_q5', 'ikdc_q6', 'ikdc_q7',
-          'ikdc_q8', 'ikdc_q9', 'ikdc_q10a', 'ikdc_q10b', 'ikdc_q10c', 'ikdc_q10d',
-          'ikdc_q10e', 'ikdc_q10f', 'ikdc_q10g', 'ikdc_q10h', 'ikdc_q10i',
-        ];
-        for (const k of keys) {
-          rawScore += num(values[k], 0);
+        const answeredKeys = scoredKeys.filter((key) =>
+          !isMissingValue(values[key], key === 'ikdc_q2' || key === 'ikdc_q3' || key === 'ikdc_q10b'),
+        );
+        if (answeredKeys.length < scoredKeys.length) {
+          return {
+            score: '—',
+            unit: '/100',
+            label: 'Incomplete IKDC',
+            interpretation: `Answer all 18 IKDC items before interpreting the transformed score (${answeredKeys.length}/18 entered).`,
+            riskLevel: 'info' as const,
+            details: [{ label: 'Items entered', value: `${answeredKeys.length} / 18` }],
+          };
         }
-        score = round((rawScore / maxPossible) * 100, 1);
+        rawScore = answeredKeys.reduce((sum, key) => sum + num(values[key], 0), 0);
+        const maxCompleted = answeredKeys.reduce((sum, key) => sum + maxByKey[key], 0);
+        score = round((rawScore / maxCompleted) * 100, 1);
       }
 
       // Higher is better — invert risk banding
@@ -1408,7 +1455,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         { label: 'Direction', value: 'Higher = better (0–100 scale)' },
         { label: 'MCID (approx)', value: '~6–16 points (population-dependent)' },
       ];
-      if (mode === 'survey' || rawScore > 0) {
+      if (mode !== 'direct') {
         details.unshift({ label: 'Raw score', value: `${rawScore} / ${maxPossible}` });
       }
       return {
@@ -1422,8 +1469,8 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'IKDC Subjective Knee Form transformed to 0–100 (100 = no limitation). Covers symptoms, sports, and daily function; cornerstone ACL/sports knee outcome.',
-      formula: 'Transformed IKDC = (Raw Score / Maximum Possible Raw Score) × 100',
+        'IKDC Subjective Knee Form transformed to 0–100 (100 = no limitation). The complete form scores 18 items with a maximum raw score of 87; the prior-function item is recorded separately and is not part of the transformed total.',
+      formula: 'Complete-form IKDC = (Raw Score / 87) × 100',
       validation: 'Irrgang et al.; widely validated; age/sex normative data available.',
       references: [
         {
@@ -1451,6 +1498,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     tags: ['easi', 'eczema', 'atopic dermatitis', 'dermatology', 'severity'],
     whenToUse: 'When evaluating atopic dermatitis severity in clinic or clinical trials.',
     whyUse: 'Core clinician-reported AD severity endpoint in modern dermatology trials and guidelines.',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive regional assessment (recommended)', value: 'survey' },
@@ -1708,6 +1756,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     tags: ['scorad', 'eczema', 'atopic dermatitis', 'dermatology'],
     whenToUse: 'When evaluating atopic dermatitis severity including clinical extent, intensity, and subjective pruritus/sleep loss.',
     whyUse: 'Classic European composite AD severity score combining objective signs and patient symptoms.',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive components assessment (recommended)', value: 'survey' },
@@ -1808,7 +1857,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
 
       const r = riskFromThresholds(score, [
         {
-          max: 25,
+          max: 24,
           level: 'low',
           label: 'Mild (<25)',
           interpretation: `SCORAD ${score}: mild AD band — topical regimen optimization and education.`,
@@ -2113,6 +2162,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     tags: ['vhi-10', 'voice', 'dysphonia', 'ent', 'laryngology'],
     whenToUse: 'When evaluating patient-perceived voice handicap for dysphonia, vocal cord pathology, or post-laryngeal treatment follow-up.',
     whyUse: 'Brief, validated voice-related quality-of-life measure widely used in ENT and speech therapy clinics.',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 10-item survey (recommended)', value: 'survey' },
@@ -2393,6 +2443,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     tags: ['berlin', 'osa', 'sleep apnea', 'screening', 'sleep'],
     whenToUse: 'Primary care or preoperative OSA risk screening when STOP-BANG is not used.',
     whyUse: 'Validated three-category questionnaire classifying high vs low OSA risk.',
+    questionnaire: true,
     inputs: [
       // Category 1 — snoring (positive if ≥2 points)
       selectInput('snore', 'Do you snore?', [
@@ -2527,6 +2578,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     tags: ['cat', 'copd', 'symptoms', 'gold', 'quality of life'],
     whenToUse: 'Routine COPD visits to quantify symptoms and guide GOLD ABE grouping and treatment escalation.',
     whyUse: '8-item validated symptom score preferred in GOLD guidelines for impact assessment (with mMRC).',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 8-item assessment (recommended)', value: 'survey' },
@@ -2541,12 +2593,12 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         { label: '5 - I cough all the time', value: 5 },
       ], 2),
       selectInput('cat_phlegm', '2. Phlegm (mucus) in the chest', [
-        { label: '0 - My chest is completely clear of phlegm', value: 0 },
+        { label: '0 - I have no phlegm (mucus) in my chest at all', value: 0 },
         { label: '1 - Rare phlegm', value: 1 },
         { label: '2 - Moderate phlegm', value: 2 },
         { label: '3 - Substantial phlegm', value: 3 },
         { label: '4 - Very heavy phlegm', value: 4 },
-        { label: '5 - My chest is completely full of phlegm', value: 5 },
+        { label: '5 - My chest is completely full of phlegm (mucus)', value: 5 },
       ], 2),
       selectInput('cat_tightness', '3. Chest tightness', [
         { label: '0 - My chest does not feel tight at all', value: 0 },
@@ -2557,12 +2609,12 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         { label: '5 - My chest feels very tight', value: 5 },
       ], 1),
       selectInput('cat_breathlessness', '4. Breathlessness walking up a hill or one flight of stairs', [
-        { label: '0 - Not breathless at all', value: 0 },
+        { label: '0 - When I walk up a hill or one flight of stairs I am not breathless', value: 0 },
         { label: '1 - Slightly breathless', value: 1 },
         { label: '2 - Moderately breathless', value: 2 },
         { label: '3 - Quite breathless', value: 3 },
         { label: '4 - Very breathless', value: 4 },
-        { label: '5 - Completely breathless / unable to walk up stairs', value: 5 },
+        { label: '5 - When I walk up a hill or one flight of stairs I am very breathless', value: 5 },
       ], 3),
       selectInput('cat_activities', '5. Activity limitation at home', [
         { label: '0 - I am not limited doing any activities at home', value: 0 },
@@ -2570,15 +2622,15 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         { label: '2 - Moderately limited', value: 2 },
         { label: '3 - Substantially limited', value: 3 },
         { label: '4 - Very limited', value: 4 },
-        { label: '5 - I am totally limited doing any activities at home', value: 5 },
+        { label: '5 - I am very limited doing activities at home', value: 5 },
       ], 2),
       selectInput('cat_confidence', '6. Confidence leaving home despite lung condition', [
-        { label: '0 - I am completely confident leaving my home', value: 0 },
+        { label: '0 - I am confident leaving my home despite my lung condition', value: 0 },
         { label: '1 - Mostly confident', value: 1 },
         { label: '2 - Moderately confident', value: 2 },
         { label: '3 - Somewhat anxious / lacking confidence', value: 3 },
         { label: '4 - Very unconfident', value: 4 },
-        { label: '5 - I am not at all confident leaving my home', value: 5 },
+        { label: '5 - I am not at all confident leaving my home because of my lung condition', value: 5 },
       ], 2),
       selectInput('cat_sleep', '7. Sleep quality', [
         { label: '0 - I sleep soundly', value: 0 },
@@ -2586,7 +2638,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         { label: '2 - Moderate sleep interruption', value: 2 },
         { label: '3 - Frequently awake due to chest', value: 3 },
         { label: '4 - Very poor sleep', value: 4 },
-        { label: '5 - I do not sleep soundly at all because of my lung condition', value: 5 },
+        { label: "5 - I don't sleep soundly because of my lung condition", value: 5 },
       ], 2),
       selectInput('cat_energy', '8. Energy level', [
         { label: '0 - I have lots of energy', value: 0 },
@@ -2885,6 +2937,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     tags: ['act', 'asthma', 'control', 'gina'],
     whenToUse: 'Routine asthma clinic visits to assess symptom control and guide step-up / step-down therapy decisions.',
     whyUse: '5-item validated patient questionnaire; cutoff ≤19 identifies uncontrolled asthma with high sensitivity.',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 5-item questionnaire (recommended)', value: 'survey' },
@@ -3012,6 +3065,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     tags: ['acq', 'asthma', 'control', 'juniper'],
     whenToUse: 'When evaluating asthma control continuously in research, specialty asthma clinics, or biologic monitoring.',
     whyUse: 'Juniper ACQ is a standard continuous control metric in asthma clinical trials with well-established cutoffs.',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive item-by-item questionnaire (recommended)', value: 'survey' },
@@ -3744,6 +3798,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     tags: ['mna', 'mna-sf', 'nutrition', 'malnutrition', 'geriatrics'],
     whenToUse: 'Geriatric nutrition screening in outpatient clinics, acute hospital admission, or long-term care settings.',
     whyUse: 'Validated 6-item short form; rapidly identifies older adults malnourished or at risk of malnutrition.',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 6-item screening (recommended)', value: 'survey' },

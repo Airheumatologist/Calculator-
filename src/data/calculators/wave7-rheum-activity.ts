@@ -2138,6 +2138,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     tags: ['basfi', 'axspa', 'function', 'ankylosing spondylitis'],
     whenToUse: 'When the 10 BASFI questions have been answered and a mean function score is needed (not a precomputed total).',
     whyUse: 'Standard axSpA function PRO; pair with BASDAI/ASDAS and BASMI.',
+    questionnaire: true,
     inputs: BASFI_ITEMS.map((q) =>
       numberInput(q.id, q.label, {
         unit: '0–10',

@@ -412,6 +412,19 @@ export const wave6HemeOncCalcs: Calculator[] = [
     tags: ['isth-bat', 'bleeding score', 'vwd', 'mucocutaneous', 'hemostasis', 'platelet disorder'],
     whenToUse: 'When evaluating a bleeding history for suspected inherited bleeding disorder (e.g. Von Willebrand disease, platelet function defects).',
     whyUse: 'Standardized international bleeding score; abnormal cutoff: adult men ≥4, adult women ≥6, children <18y ≥3.',
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        survey: [
+          'cohort', 'epistaxis', 'cutaneous', 'minorWounds', 'oralCavity', 'gi', 'hematuria',
+          'toothExtraction', 'surgery', 'menorrhagia', 'postpartum', 'muscleHematoma',
+          'hemarthrosis', 'cns', 'other',
+        ],
+        direct: ['cohort', 'directTotal'],
+      },
+    },
     inputs: [
       selectInput('entryMode', 'Scoring method', [
         { label: 'Score 14 bleeding domains', value: 'survey' },
@@ -432,7 +445,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
 
       // 14 Validated ISTH Domains
       selectInput('epistaxis', '1. Epistaxis (nosebleeds)', [
-        { label: '0 — None or trivial (≤5 episodes/year)', value: 0, points: 0 },
+        { label: '0 — None or trivial', value: 0, points: 0 },
         { label: '1 — Frequent (>5/year) or prolonged (>10 min)', value: 1, points: 1 },
         { label: '2 — Consultation only (medical evaluation sought)', value: 2, points: 2 },
         { label: '3 — Packing, cautery, or antifibrinolytics', value: 3, points: 3 },
@@ -442,8 +455,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
         { label: '0 — None or trivial', value: 0, points: 0 },
         { label: '1 — ≥5 bruises (>1 cm) in exposed areas', value: 1, points: 1 },
         { label: '2 — Consultation only', value: 2, points: 2 },
-        { label: '3 — Extensive bruising without trauma', value: 3, points: 3 },
-        { label: '4 — Spontaneous hematoma requiring transfusion/admission', value: 4, points: 4 },
+        { label: '3 — Extensive bruising', value: 3, points: 3 },
+        { label: '4 — Spontaneous hematoma requiring blood transfusion', value: 4, points: 4 },
       ], 0),
       selectInput('minorWounds', '3. Bleeding from minor wounds', [
         { label: '0 — None or trivial (≤5 episodes/year, <10 min)', value: 0, points: 0 },
@@ -461,7 +474,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
       ], 0),
       selectInput('gi', '5. Gastrointestinal bleeding', [
         { label: '0 — None or trivial', value: 0, points: 0 },
-        { label: '1 — Spontaneous bleeding not from ulcer/PHTN/hemorrhoids', value: 1, points: 1 },
+        { label: '1 — Spontaneous bleeding not from ulcer/PHTN/hemorrhoids/angiodysplasia', value: 1, points: 1 },
         { label: '2 — Consultation only', value: 2, points: 2 },
         { label: '3 — Surgical/endoscopic hemostasis or antifibrinolytic', value: 3, points: 3 },
         { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
@@ -475,60 +488,58 @@ export const wave6HemeOncCalcs: Calculator[] = [
       ], 0),
       selectInput('toothExtraction', '7. Tooth extraction bleeding', [
         { label: '0 — None / not applicable / no bleeding in extractions', value: 0, points: 0 },
-        { label: '1 — Reported in <25% of extractions, no intervention', value: 1, points: 1 },
+        { label: '1 — Reported in ≤25% of extractions, no intervention', value: 1, points: 1 },
         { label: '2 — Reported in >25% of extractions, no intervention', value: 2, points: 2 },
-        { label: '3 — Resuturing, packing, or antifibrinolytics', value: 3, points: 3 },
+        { label: '3 — Resuturing or packing', value: 3, points: 3 },
         { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
       ], 0),
       selectInput('surgery', '8. Surgical bleeding', [
         { label: '0 — None / not applicable / no surgical challenges', value: 0, points: 0 },
-        { label: '1 — Reported in <25% of surgeries, no intervention', value: 1, points: 1 },
+        { label: '1 — Reported in ≤25% of surgeries, no intervention', value: 1, points: 1 },
         { label: '2 — Reported in >25% of surgeries, no intervention', value: 2, points: 2 },
-        { label: '3 — Surgical re-exploration, packing, or antifibrinolytic', value: 3, points: 3 },
+        { label: '3 — Surgical hemostasis or antifibrinolytic', value: 3, points: 3 },
         { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
       ], 0),
       selectInput('menorrhagia', '9. Menorrhagia (females only)', [
         { label: '0 — None / male / normal menses', value: 0, points: 0 },
-        { label: '1 — Clots or pad changing >every 2h or PBAC >100', value: 1, points: 1 },
-        { label: '2 — Consultation only', value: 2, points: 2 },
-        { label: '3 — Antifibrinolytics, hormones, or iron therapy', value: 3, points: 3 },
-        { label: '4 — D&C, endometrial ablation, transfusion, or DDAVP', value: 4, points: 4 },
+        { label: '1 — Consultation / pads >every 2h / clots-flooding / PBAC >100', value: 1, points: 1 },
+        { label: '2 — Time off work/school >2/year or single-agent therapy', value: 2, points: 2 },
+        { label: '3 — Combined antifibrinolytic + hormonal therapy or since menarche >12 months', value: 3, points: 3 },
+        { label: '4 — Hospital admission, transfusion/replacement/DDAVP, D&C, ablation, or hysterectomy', value: 4, points: 4 },
       ], 0),
       selectInput('postpartum', '10. Postpartum hemorrhage (females only)', [
         { label: '0 — None / male / no deliveries with PPH', value: 0, points: 0 },
-        { label: '1 — Lochia >6 weeks or hematoma without intervention', value: 1, points: 1 },
-        { label: '2 — Consultation only', value: 2, points: 2 },
-        { label: '3 — Uterine packing, uterotonics, or antifibrinolytic', value: 3, points: 3 },
-        { label: '4 — Blood transfusion, surgical embolization, or DDAVP', value: 4, points: 4 },
+        { label: '1 — Consultation / oxytocin / lochia >6 weeks', value: 1, points: 1 },
+        { label: '2 — Antifibrinolytic or iron therapy', value: 2, points: 2 },
+        { label: '3 — Transfusion/replacement/DDAVP, exam under anesthesia, or balloon/packing/tamponade', value: 3, points: 3 },
+        { label: '4 — Critical care or surgery (e.g., ICU, hysterectomy, embolization)', value: 4, points: 4 },
       ], 0),
       selectInput('muscleHematoma', '11. Muscle hematoma', [
-        { label: '0 — None', value: 0, points: 0 },
-        { label: '1 — Post-trauma, no medical intervention', value: 1, points: 1 },
-        { label: '2 — Consultation only', value: 2, points: 2 },
-        { label: '3 — Surgical evacuation or compression management', value: 3, points: 3 },
-        { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
+        { label: '0 — Never', value: 0, points: 0 },
+        { label: '1 — Post-trauma, no treatment', value: 1, points: 1 },
+        { label: '2 — Spontaneous, no treatment', value: 2, points: 2 },
+        { label: '3 — Spontaneous or traumatic, requiring DDAVP or replacement therapy', value: 3, points: 3 },
+        { label: '4 — Spontaneous or traumatic, requiring transfusion or surgery', value: 4, points: 4 },
       ], 0),
       selectInput('hemarthrosis', '12. Hemarthrosis (joint bleeding)', [
-        { label: '0 — None', value: 0, points: 0 },
-        { label: '1 — Post-trauma, no medical intervention', value: 1, points: 1 },
-        { label: '2 — Consultation only', value: 2, points: 2 },
-        { label: '3 — Arthrocentesis or joint immobilization', value: 3, points: 3 },
-        { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
+        { label: '0 — Never', value: 0, points: 0 },
+        { label: '1 — Post-trauma, no treatment', value: 1, points: 1 },
+        { label: '2 — Spontaneous, no treatment', value: 2, points: 2 },
+        { label: '3 — Spontaneous or traumatic, requiring DDAVP or replacement therapy', value: 3, points: 3 },
+        { label: '4 — Spontaneous or traumatic, requiring transfusion or surgery', value: 4, points: 4 },
       ], 0),
       selectInput('cns', '13. Central nervous system bleeding', [
-        { label: '0 — None', value: 0, points: 0 },
-        { label: '1 — Subdural/epidural after major head trauma', value: 1, points: 1 },
-        { label: '2 — Consultation only', value: 2, points: 2 },
-        { label: '3 — Neurosurgical intervention', value: 3, points: 3 },
-        { label: '4 — Transfusion, factor replacement, or DDAVP', value: 4, points: 4 },
-      ], 0),
+        { label: '0 — Never', value: 0, points: 0 },
+        { label: '3 — Subdural hematoma, any intervention', value: 3, points: 3 },
+        { label: '4 — Intracerebral hemorrhage, any intervention', value: 4, points: 4 },
+      ], 0, 'Official ISTH-SSC BAT CNS scoring uses 0, 3, or 4 only; there are no 1- or 2-point CNS anchors.'),
       selectInput('other', '14. Other bleeding manifestations', [
-        { label: '0 — None', value: 0, points: 0 },
-        { label: '1 — Present (e.g., umbilical cord, subconjunctival)', value: 1, points: 1 },
+        { label: '0 — None or trivial', value: 0, points: 0 },
+        { label: '1 — Present (e.g., umbilical stump, cephalohematoma, conjunctival, venipuncture, circumcision)', value: 1, points: 1 },
         { label: '2 — Consultation only', value: 2, points: 2 },
-        { label: '3 — Medical or surgical intervention required', value: 3, points: 3 },
+        { label: '3 — Surgical hemostasis or antifibrinolytic', value: 3, points: 3 },
         { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Examples include umbilical stump, cephalohematoma, conjunctival hemorrhage, excessive venipuncture bleeding, or circumcision bleeding.'),
     ],
     calculate(values) {
       const cohort = String(values.cohort ?? 'male');
@@ -536,7 +547,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
       let total = 0;
 
       if (mode === 'direct') {
-        total = num(values.directTotal, 2);
+        total = Math.max(0, Math.min(56, Math.round(num(values.directTotal, 2))));
       } else {
         const domains = [
           values.epistaxis, values.cutaneous, values.minorWounds, values.oralCavity,
@@ -547,6 +558,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
         for (const d of domains) {
           total += num(d, 0);
         }
+        total = Math.max(0, Math.min(56, total));
       }
 
       const cut = cohort === 'female' ? 6 : cohort === 'child' ? 3 : 4;
@@ -595,6 +607,13 @@ export const wave6HemeOncCalcs: Calculator[] = [
       formula: 'ISTH-BAT = Σ 14 bleeding domain scores (0–56)',
       validation: 'ISTH-SSC BAT; normal ranges from international reference cohorts.',
       references: [
+        {
+          title: 'ISTH/SSC bleeding assessment tool: a standardized questionnaire and a proposal for a new bleeding score for inherited bleeding disorders',
+          citation: 'Rodeghiero F et al. J Thromb Haemost. 2010',
+          year: 2010,
+          pmid: '20626619',
+          doi: '10.1111/j.1538-7836.2010.03975.x',
+        },
         {
           title: 'Normal range of bleeding scores for the ISTH-BAT: adult and pediatric data from the merging project',
           citation: 'Elbatarny M et al. Haemophilia. 2014',

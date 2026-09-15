@@ -1805,6 +1805,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
     tags: ['sledai', 'sle', 'lupus', 'disease activity', 'autoimmune', 'rheumatology'],
     whenToUse: 'When evaluating SLE disease activity at diagnosis or monitoring response to immunosuppressive and biologic therapies.',
     whyUse: 'Globally validated 24-descriptor instrument; foundational for defining clinical response, low disease activity (LLDAS), and remission (DORIS).',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Scoring method', [
         { label: 'Complete 24-descriptor checklist', value: 'survey' },
@@ -1824,7 +1825,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
       yesNo('visual', 'Visual disturbance (retinal cytoid bodies, optic neuritis, retinal hemorrhage)', 8),
       yesNo('cranialNerve', 'Cranial nerve disorder (new sensory or motor cranial neuropathy)', 8),
       yesNo('lupusHeadache', 'Lupus headache (severe persistent headache, unresponsive to narcotics)', 8),
-      yesNo('cva', 'Cerebrovascular accident (new stroke or transient ischemic attack)', 8),
+      yesNo('cva', 'Cerebrovascular accident (new CVA; infarction required)', 8, 'New-onset cerebrovascular accident attributable to SLE; exclude arteriosclerosis. Do not score an isolated transient ischemic attack without infarction.'),
       yesNo('vasculitis', 'Vasculitis (ulceration, gangrene, tender periungual infarcts, splinter hemorrhages)', 8),
 
       // Weight 4 Descriptors (Musculoskeletal & Renal)

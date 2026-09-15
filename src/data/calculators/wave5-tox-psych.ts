@@ -1,6 +1,8 @@
 import type { Calculator } from '../../types/calculator';
 import { num, bool, round, clamp, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
+const questionnaireMetadata = { questionnaire: true as const };
+
 export const wave5ToxPsychCalcs: Calculator[] = [
   // ─── 1. Acetaminophen acute toxic dose ─────────────────────────────────────
   {
@@ -2092,6 +2094,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
   // ─── 20. PHQ-A ─────────────────────────────────────────────────────────────
   {
     id: 'phq-a',
+    ...questionnaireMetadata,
     name: 'PHQ-A (Adolescent Depression Screen)',
     shortName: 'PHQ-A',
     description:
@@ -2290,6 +2293,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
   // ─── 21. ASQ suicide screen ────────────────────────────────────────────────
   {
     id: 'asq-suicide',
+    ...questionnaireMetadata,
     name: 'ASQ Suicide Risk Screen',
     shortName: 'ASQ',
     description: 'Ask Suicide-Screening Questions (ASQ) — 4 core items + acuity question for youth suicide risk screening.',
@@ -2302,17 +2306,27 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       yesNo('q2', '2. In the past few weeks, have you felt that you or your family would be better off if you were dead?'),
       yesNo('q3', '3. In the past week, have you been having thoughts about killing yourself?'),
       yesNo('q4', '4. Have you ever tried to kill yourself?'),
-      yesNo('q5', '5. Are you having thoughts of killing yourself right now? (acuity — ask if any of 1–4 yes)', 0, 'Ask item 5 only if any of items 1–4 is yes. A yes here is an acute positive screen — stay with the patient.'),
+      {
+        ...selectInput('q5', '5. Are you having thoughts of killing yourself right now? (acuity — ask if any of 1–4 yes)', [
+          { label: 'Not answered / not asked', value: 'unanswered' },
+          { label: 'No', value: 'no' },
+          { label: 'Yes', value: 'yes' },
+        ], 'unanswered', 'Ask item 5 only if any of items 1–4 is yes. A yes here is an acute positive screen — stay with the patient. Do not assume “No” when item 5 has not been answered.'),
+        required: false,
+      },
     ],
     calculate(values) {
       const q1 = bool(values.q1);
       const q2 = bool(values.q2);
       const q3 = bool(values.q3);
       const q4 = bool(values.q4);
-      const q5 = bool(values.q5);
+      const q5Raw = values.q5;
+      const q5Answered = q5Raw !== undefined && q5Raw !== null && q5Raw !== '' && String(q5Raw).toLowerCase() !== 'unanswered';
+      const q5 = q5Answered && bool(q5Raw);
       const coreYes = [q1, q2, q3, q4].filter(Boolean).length;
       const positive = coreYes > 0;
       const acute = positive && q5;
+      const acuityPending = positive && !q5Answered;
 
       let label: string;
       let interpretation: string;
@@ -2323,6 +2337,10 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         interpretation =
           'ASQ negative (no to items 1–4). Continue routine care; remain alert to clinical cues and rescreen if status changes.';
         riskLevel = 'normal';
+      } else if (acuityPending) {
+        label = 'Positive screen — acuity not assessed';
+        interpretation = `ASQ positive (${coreYes}/4 core items), but item 5 has not been answered. Ask the acuity question now; do not assume a non-acute result or disposition until current suicidal thoughts are assessed.`;
+        riskLevel = 'high';
       } else if (acute) {
         label = 'Positive screen — ACUTE positive (item 5 yes)';
         interpretation = `ASQ positive (${coreYes}/4 core items) with current suicidal thoughts (item 5). This is an acute positive screen — stay with patient, urgent full safety evaluation, remove means, psychiatric emergency pathway.`;
@@ -2335,15 +2353,22 @@ export const wave5ToxPsychCalcs: Calculator[] = [
 
       return {
         score: acute ? 5 : coreYes,
-        unit: acute ? 'acute' : 'core yes',
+        unit: acute ? 'acute' : acuityPending ? 'core yes; acuity pending' : 'core yes',
         label,
         interpretation,
         riskLevel,
         details: [
           { label: 'Core items yes', value: `${coreYes}/4` },
-          { label: 'Item 5 (now)', value: q5 ? 'Yes' : 'No' },
-          { label: 'Screen result', value: !positive ? 'Negative' : acute ? 'Acute positive' : 'Non-acute positive' },
+          { label: 'Item 5 (now)', value: !q5Answered ? 'Not answered' : q5 ? 'Yes' : 'No' },
+          { label: 'Screen result', value: !positive ? 'Negative' : acuityPending ? 'Positive; acuity pending' : acute ? 'Acute positive' : 'Non-acute positive' },
         ],
+        alerts: acuityPending ? [
+          'ASQ core screen is positive, but item 5 (current suicidal thoughts/acuity) is unanswered. Ask item 5 now; do not default to non-acute.',
+        ] : acute ? [
+          'ASQ item 5 is positive for current suicidal thoughts. Keep the patient safe and obtain urgent/full suicide risk evaluation.',
+        ] : positive ? [
+          'ASQ core screen is positive. Complete the brief suicide safety assessment before disposition.',
+        ] : undefined,
       };
     },
     evidence: {
@@ -2471,6 +2496,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
   // ─── 23. Zung SDS ──────────────────────────────────────────────────────────
   {
     id: 'sds-zung',
+    ...questionnaireMetadata,
     name: 'Zung Self-Rating Depression Scale (SDS)',
     shortName: 'Zung SDS',
     description: 'Zung Self-Rating Depression Scale: 20 items (10 forward, 10 reverse scored; raw 20–80, SDS index 25–100), or direct raw score.',
@@ -2598,6 +2624,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
       ]),
       selectInput('sds19', '19. I feel that others would be better off if I were dead', [
+        { label: 'Not answered', value: '' },
         { label: 'A little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
@@ -2615,10 +2642,10 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       let raw = 0;
 
       if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.sds1 === undefined)) {
-        raw = num(values.score, 38);
+        raw = Math.max(20, Math.min(80, num(values.score, 38)));
       } else {
         for (let i = 1; i <= 20; i++) {
-          raw += num(values[`sds${i}`], 2);
+          raw += Math.max(1, Math.min(4, num(values[`sds${i}`], i === 19 ? 0 : 2)));
         }
       }
 
@@ -2651,8 +2678,9 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         },
       ]);
 
-      const item19Val = mode === 'survey' ? num(values.sds19, 1) : 1;
-      const deathThoughts = mode === 'survey' && item19Val >= 2;
+      const item19Answered = mode === 'survey' && !isMissingValue(values.sds19) && String(values.sds19).toLowerCase() !== 'unanswered';
+      const item19Val = item19Answered ? Math.max(1, Math.min(4, num(values.sds19, 1))) : undefined;
+      const deathThoughts = item19Val !== undefined && item19Val >= 1;
 
       return {
         score: index,
@@ -2661,6 +2689,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         details: [
           { label: 'SDS Index', value: `${index} (= raw / 80 × 100)` },
           { label: 'Raw Total', value: `${raw} / 80` },
+          { label: 'Item 19 (death-related endorsement)', value: item19Val !== undefined ? `${item19Val}/4 — endorsed; assess suicide risk independently` : mode === 'survey' ? 'Not answered' : 'Unavailable from direct total' },
           { label: 'Index bands', value: '<50 Normal · 50–59 Mild · 60–69 Moderate · ≥70 Severe' },
           { label: 'Entry mode', value: mode === 'survey' ? '20-item questionnaire' : 'Direct override' },
         ],
@@ -2704,6 +2733,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
   // ─── 24. Zung Anxiety (SAS) ────────────────────────────────────────────────
   {
     id: 'sas-zung-anxiety',
+    ...questionnaireMetadata,
     name: 'Zung Self-Rating Anxiety Scale (SAS)',
     shortName: 'Zung SAS',
     description: 'Zung Self-Rating Anxiety Scale: 20 items (15 forward, 5 reverse scored; raw 20–80, SAS index 25–100), or direct raw total.',
@@ -2927,6 +2957,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
   // ─── 25. Y-BOCS ────────────────────────────────────────────────────────────
   {
     id: 'yale-brown-ocd',
+    ...questionnaireMetadata,
     name: 'Yale–Brown Obsessive Compulsive Scale (Y-BOCS)',
     shortName: 'Y-BOCS',
     description: 'Yale–Brown Obsessive Compulsive Scale: 10 clinician-rated items (5 obsessions + 5 compulsions, 0–40), auto-calculating subscores, or direct total.',
@@ -2945,8 +2976,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         defaultValue: 20,
         helpText: 'Used only if direct override is selected.',
       }),
-      numberInput('obsessions', 'Obsession subtotal (0–20, optional direct)', { min: 0, max: 20, defaultValue: 10, required: false }),
-      numberInput('compulsions', 'Compulsion subtotal (0–20, optional direct)', { min: 0, max: 20, defaultValue: 10, required: false }),
+      numberInput('obsessions', 'Obsession subtotal (0–20, optional direct)', { min: 0, max: 20, required: false }),
+      numberInput('compulsions', 'Compulsion subtotal (0–20, optional direct)', { min: 0, max: 20, required: false }),
       selectInput('ybocs1', '1. Time occupied by obsessive thoughts', [
         { label: '0 — None', value: 0 },
         { label: '1 — Mild (<1 hr/day or occasional intrusion)', value: 1 },
@@ -3021,19 +3052,21 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');
       let score = 0;
-      let obs: number | undefined = 0;
-      let comp: number | undefined = 0;
+      let obs: number | undefined;
+      let comp: number | undefined;
 
       if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.ybocs1 === undefined)) {
-        score = num(values.score, 20);
-        obs = isMissingValue(values.obsessions, true) ? undefined : num(values.obsessions, 0);
-        comp = isMissingValue(values.compulsions, true) ? undefined : num(values.compulsions, 0);
+        score = Math.max(0, Math.min(40, num(values.score, 20)));
+        obs = isMissingValue(values.obsessions, true) ? undefined : Math.max(0, Math.min(20, num(values.obsessions, 0)));
+        comp = isMissingValue(values.compulsions, true) ? undefined : Math.max(0, Math.min(20, num(values.compulsions, 0)));
       } else {
+        obs = 0;
+        comp = 0;
         for (let i = 1; i <= 5; i++) {
-          obs += num(values[`ybocs${i}`], 2);
+          obs += Math.max(0, Math.min(4, num(values[`ybocs${i}`], 2)));
         }
         for (let i = 6; i <= 10; i++) {
-          comp += num(values[`ybocs${i}`], 2);
+          comp += Math.max(0, Math.min(4, num(values[`ybocs${i}`], 2)));
         }
         score = obs + comp;
       }
@@ -3073,8 +3106,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
 
       const details = [
         { label: 'Y-BOCS Total', value: `${score} / 40` },
-        { label: 'Obsession subtotal (items 1–5)', value: obs !== undefined ? `${obs} / 20` : 'Not entered' },
-        { label: 'Compulsion subtotal (items 6–10)', value: comp !== undefined ? `${comp} / 20` : 'Not entered' },
+        { label: 'Obsession subtotal (items 1–5)', value: obs !== undefined ? `${obs} / 20` : 'Unavailable from direct total' },
+        { label: 'Compulsion subtotal (items 6–10)', value: comp !== undefined ? `${comp} / 20` : 'Unavailable from direct total' },
         { label: 'Clinical bands', value: '0–7 Subclinical · 8–15 Mild · 16–23 Mod · 24–31 Severe · 32–40 Extreme' },
         { label: 'Treatment response', value: '≥35% score reduction is standard trial response criterion' },
         { label: 'Entry mode', value: mode === 'survey' ? '10-item clinician rating' : 'Direct override' },

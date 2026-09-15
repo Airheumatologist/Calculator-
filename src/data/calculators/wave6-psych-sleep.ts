@@ -1,10 +1,13 @@
 import type { Calculator } from '../../types/calculator';
 import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
+const questionnaireMetadata = { questionnaire: true as const };
+
 export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 1. PDSS (Panic Disorder Severity Scale) ───────────────────────────────
   {
     id: 'panic-pdss',
+    ...questionnaireMetadata,
     name: 'Panic Disorder Severity Scale (PDSS) Total',
     shortName: 'PDSS',
     description:
@@ -181,6 +184,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 2. LSAS (Liebowitz Social Anxiety Scale) ──────────────────────────────
   {
     id: 'lsas-social',
+    ...questionnaireMetadata,
     name: 'Liebowitz Social Anxiety Scale (LSAS) Total',
     shortName: 'LSAS',
     description:
@@ -491,15 +495,15 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');
-      let fearSum = 0;
-      let avoidSum = 0;
+      let fearSum: number | undefined;
+      let avoidSum: number | undefined;
       let score: number;
 
       if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.fear_1 === undefined)) {
         score = Math.max(0, Math.min(144, num(values.score, 55)));
-        fearSum = Math.round(score / 2);
-        avoidSum = score - fearSum;
       } else {
+        fearSum = 0;
+        avoidSum = 0;
         for (let i = 1; i <= 24; i++) {
           fearSum += num(values[`fear_${i}`], i < 13 ? 1 : 2);
           avoidSum += num(values[`avoid_${i}`], i < 13 ? 1 : 2);
@@ -551,8 +555,8 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         ...r,
         details: [
           { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '24-situation dual matrix' },
-          { label: 'Fear subscale', value: `${fearSum}/72` },
-          { label: 'Avoidance subscale', value: `${avoidSum}/72` },
+          { label: 'Fear subscale', value: fearSum !== undefined ? `${fearSum}/72` : 'Unavailable from direct total' },
+          { label: 'Avoidance subscale', value: avoidSum !== undefined ? `${avoidSum}/72` : 'Unavailable from direct total' },
           { label: 'Common SAD cutoff', value: 'Total ≥30 often suggests social anxiety disorder' },
           { label: 'Bands', value: '<30 none/mild; 30–49 mild; 50–64 mod; 65–79 marked; 80–94 severe; ≥95 very severe' },
         ],
@@ -592,6 +596,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 3. EAT-26 ─────────────────────────────────────────────────────────────
   {
     id: 'eat-26',
+    ...questionnaireMetadata,
     name: 'EAT-26 Eating Attitudes Total',
     shortName: 'EAT-26',
     description:
@@ -945,6 +950,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 4. M-CHAT-R ───────────────────────────────────────────────────────────
   {
     id: 'mchat-r',
+    ...questionnaireMetadata,
     name: 'M-CHAT-R Autism Toddler Score',
     shortName: 'M-CHAT-R',
     description:
@@ -1253,6 +1259,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 5. Vanderbilt ADHD ────────────────────────────────────────────────────
   {
     id: 'vanderbilt-adhd',
+    ...questionnaireMetadata,
     name: 'Vanderbilt ADHD Rating Scale & Criteria',
     shortName: 'Vanderbilt',
     description:
@@ -1271,7 +1278,6 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       selectInput('informant', 'Informant', [
         { label: 'Parent', value: 'parent' },
         { label: 'Teacher', value: 'teacher' },
-        { label: 'Both (use highest symptom counts entered)', value: 'both' },
       ], 'parent'),
       selectInput('inatt_1', '1. Fails to give close attention to details or makes careless mistakes', [
         { label: '0 — Never', value: 0 },
@@ -1575,6 +1581,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 6. CUDIT-R ────────────────────────────────────────────────────────────
   {
     id: 'cudit-r',
+    ...questionnaireMetadata,
     name: 'CUDIT-R Cannabis Use Total',
     shortName: 'CUDIT-R',
     description:
@@ -2104,6 +2111,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 10. painDETECT ────────────────────────────────────────────────────────
   {
     id: 'pain-detect',
+    ...questionnaireMetadata,
     name: 'painDETECT Questionnaire Total',
     shortName: 'painDETECT',
     description:
@@ -2136,9 +2144,9 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         ], i < 3 ? 2 : 1),
       ),
       selectInput('pattern', '8. Pain course pattern diagram', [
-        { label: 'Persistent pain with slight fluctuations (−1 point)', value: -1 },
-        { label: 'Persistent pain with pain attacks (0 points)', value: 0 },
-        { label: 'Pain attacks without pain in between (−1 point)', value: -1 },
+        { label: 'Persistent pain with slight fluctuations (0 points)', value: 0 },
+        { label: 'Persistent pain with pain attacks (−1 point)', value: -1 },
+        { label: 'Pain attacks without pain in between (+1 point)', value: 1 },
         { label: 'Pain attacks with pain in between (+1 point)', value: 1 },
       ], 0),
       selectInput('radiating', '9. Does your pain radiate to other parts of your body?', [
@@ -2336,6 +2344,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 12. BPI interference ──────────────────────────────────────────────────
   {
     id: 'bpi-interference',
+    ...questionnaireMetadata,
     name: 'BPI Pain Interference Average',
     shortName: 'BPI Interference',
     description:
@@ -2538,6 +2547,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 14. Barthel Index ─────────────────────────────────────────────────────
   {
     id: 'barthel-index',
+    ...questionnaireMetadata,
     name: 'Barthel ADL Index Total',
     shortName: 'Barthel',
     description:
@@ -3778,6 +3788,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 24. SNOT-22 ───────────────────────────────────────────────────────────
   {
     id: 'snot-22',
+    ...questionnaireMetadata,
     name: 'SNOT-22 Sinonasal Total',
     shortName: 'SNOT-22',
     description:
@@ -4059,6 +4070,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 25. NOSE scale ────────────────────────────────────────────────────────
   {
     id: 'nose-scale',
+    ...questionnaireMetadata,
     name: 'NOSE Scale (Nasal Obstruction)',
     shortName: 'NOSE',
     description:

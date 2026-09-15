@@ -1,7 +1,9 @@
 import type { Calculator } from '../../types/calculator';
 import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
 
-export const wave5GeneralMiscCalcs: Calculator[] = [
+type AuditedQuestionnaireCalculator = Calculator;
+
+export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
   // ─── 1. Mentzer Index ──────────────────────────────────────────────────────
   {
     id: 'mentzer-index',
@@ -1509,6 +1511,7 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
     tags: ['haq', 'haq-di', 'disability', 'rheumatology', 'function'],
     whenToUse: 'When evaluating functional impairment and physical disability in rheumatoid arthritis, psoriatic arthritis, or other rheumatic conditions.',
     whyUse: 'Gold-standard patient-reported physical function outcome measure in rheumatology trials and treat-to-target clinic care.',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 8-category questionnaire (recommended)', value: 'survey' },
@@ -1679,6 +1682,7 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
     tags: ['basfi', 'ankylosing spondylitis', 'function', 'axspa'],
     whenToUse: 'When evaluating functional impairment and physical limitation in axial spondyloarthritis / ankylosing spondylitis.',
     whyUse: 'Standard function PRO in axSpA alongside BASDAI/ASDAS disease activity measures endorsed by ASAS.',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 10-item functional questionnaire (recommended)', value: 'survey' },
@@ -1782,6 +1786,7 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
     tags: ['mases', 'enthesitis', 'axial spa', 'rheumatology'],
     whenToUse: 'Quantifying enthesitis burden in axSpA / AS clinical care or clinical trials.',
     whyUse: 'Validated 0–13 site count endorsed in SpA research; focuses primarily on axial plus Achilles insertions.',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 13-site examination (recommended)', value: 'survey' },
@@ -2126,6 +2131,7 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
     tags: ['kujala', 'patellofemoral', 'anterior knee pain', 'ortho'],
     whenToUse: 'When evaluating anterior knee pain, patellofemoral pain syndrome (PFPS), or patellar instability.',
     whyUse: 'Widely validated clinician- and patient-reported outcome measure specifically sensitive to patellofemoral disorders.',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 13-item assessment (recommended)', value: 'survey' },
@@ -2143,8 +2149,8 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
       ], 5),
       selectInput('kuj_walking', '3. Walking', [
         { label: '5 - Unlimited', value: 5 },
-        { label: '3 - More than 5 km', value: 3 },
-        { label: '2 - 1 to 5 km', value: 2 },
+        { label: '3 - More than 2 km', value: 3 },
+        { label: '2 - 1 to 2 km', value: 2 },
         { label: '0 - Unable to walk', value: 0 },
       ], 5),
       selectInput('kuj_stairs', '4. Stairs', [
@@ -2306,6 +2312,7 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
     tags: ['lysholm', 'knee', 'acl', 'ligament', 'ortho'],
     whenToUse: 'When evaluating knee ligament, meniscus, or cartilage injury and post-operative recovery.',
     whyUse: 'Classic knee-specific outcome measure for symptoms and function (especially ACL and meniscus injuries).',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 8-domain questionnaire (recommended)', value: 'survey' },

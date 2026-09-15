@@ -22,6 +22,16 @@ export function LiveResult({ result }: { result: CalcResult }) {
         <div className={`risk-badge risk-${result.riskLevel}`}>{result.riskLevel}</div>
       </div>
       <div className="interpretation">{result.interpretation}</div>
+      {result.alerts && result.alerts.length > 0 && (
+        <div className="safety-alerts" role="alert" aria-label="Safety alerts">
+          <strong>Safety alert</strong>
+          <ul>
+            {result.alerts.map((alert) => (
+              <li key={alert}>{alert}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       {result.details && result.details.length > 0 && (
         <ul className="detail-list">
           {result.details.map((d) => (

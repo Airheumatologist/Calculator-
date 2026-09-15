@@ -2054,11 +2054,12 @@ export const wave7HighuseCalcs: Calculator[] = [
     name: 'ISTH-SSC Bleeding Assessment Tool (14 domains)',
     shortName: 'ISTH-SSC BAT',
     description:
-      'Full ISTH-SSC Bleeding Assessment Tool summing 14 domains (0–4 each). Abnormal: ≥4 in adult men, ≥6 in adult women. Distinct from the total-only interpreter `isth-bat`.',
+      'Compatibility registration of the full ISTH-SSC Bleeding Assessment Tool summing 14 domains (0–4 each). Abnormal: ≥4 in adult men, ≥6 in adult women. Use `isth-bat` for the primary registration.',
     category: 'hematology',
     tags: ['isth', 'bat', 'bleeding', 'vwd', 'hemostasis'],
     whenToUse: 'When scoring a mucocutaneous/surgical bleeding history for possible mild bleeding disorder (VWD, platelet function disorder).',
     whyUse: 'Standardized ISTH-SSC BAT domains; this module sums them rather than only interpreting a pre-computed total.',
+    questionnaire: true,
     inputs: [
       selectInput('sex', 'Patient sex (cutoff)', [
         { label: 'Adult male (positive ≥4)', value: 'male' },
@@ -2150,8 +2151,6 @@ export const wave7HighuseCalcs: Calculator[] = [
       ]),
       selectInput('cns', 'CNS bleeding', [
         { label: '0 — Never', value: 0, points: 0, description: 'Never. Official ISTH CNS scoring uses 0, 3, or 4 only' },
-        { label: '1 — Not used officially', value: 1, points: 1, description: 'Not used in official ISTH CNS scoring — choose 0, 3 (subdural), or 4 (intracerebral)' },
-        { label: '2 — Not used officially', value: 2, points: 2, description: 'Not used in official ISTH CNS scoring — choose 0, 3 (subdural), or 4 (intracerebral)' },
         { label: '3 — Subdural, any intervention', value: 3, points: 3, description: 'Subdural hematoma, any intervention' },
         { label: '4 — Intracerebral, any intervention', value: 4, points: 4, description: 'Intracerebral hemorrhage, any intervention' },
       ], undefined, 'Official ISTH-SSC BAT scores CNS as 0 / 3 / 4 only (no 1 or 2).'),
@@ -2252,7 +2251,7 @@ export const wave7HighuseCalcs: Calculator[] = [
       { condition: 'Male score 4 from few 1-point domains', actions: ['Still positive by adult-male cutoff — do not dismiss as “only 1s”'] },
     ],
     pearls: [
-      'Companion calculator `isth-bat` only interprets a pre-summed total; this module scores the 14 domains.',
+      'This compatibility ID remains available for saved links; use `isth-bat` for the primary full 14-domain scorer.',
       'Menorrhagia and postpartum are scored 0 when not applicable (males, nulliparous).',
       'Four domains of 1 in a man already meet the ≥4 abnormal threshold.',
       'CNS is officially 0 / 3 (subdural) / 4 (intracerebral) only — do not use 1 or 2.',

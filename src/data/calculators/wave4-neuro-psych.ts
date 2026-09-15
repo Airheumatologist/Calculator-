@@ -1,6 +1,43 @@
 import type { Calculator } from '../../types/calculator';
 import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
+const questionnaireMetadata = { questionnaire: true as const };
+
+// The validated ZBI-12 is a selected subset of the original ZBI-22, not items 1–12.
+const zbi12OriginalItemNumbers = [2, 3, 5, 6, 9, 10, 11, 12, 17, 19, 20, 21] as const;
+
+const irlsSeverityOptions = [
+  { label: '0 — None', value: 0 },
+  { label: '1 — Mild', value: 1 },
+  { label: '2 — Moderate', value: 2 },
+  { label: '3 — Severe', value: 3 },
+  { label: '4 — Very severe', value: 4 },
+];
+
+const irlsReliefOptions = [
+  { label: '4 — No relief', value: 4 },
+  { label: '3 — Slight relief', value: 3 },
+  { label: '2 — Moderate relief', value: 2 },
+  { label: '1 — Complete or almost complete relief', value: 1 },
+  { label: '0 — No RLS symptoms; question does not apply', value: 0 },
+];
+
+const irlsFrequencyOptions = [
+  { label: '0 — None', value: 0 },
+  { label: '1 — Mild (1 day/week or less)', value: 1 },
+  { label: '2 — Moderate (2–3 days/week)', value: 2 },
+  { label: '3 — Severe (4–5 days/week)', value: 3 },
+  { label: '4 — Very severe (6–7 days/week)', value: 4 },
+];
+
+const irlsDurationOptions = [
+  { label: '0 — None', value: 0 },
+  { label: '1 — Mild (<1 hour per 24 hours)', value: 1 },
+  { label: '2 — Moderate (1–3 hours per 24 hours)', value: 2 },
+  { label: '3 — Severe (3–8 hours per 24 hours)', value: 3 },
+  { label: '4 — Very severe (≥8 hours per 24 hours)', value: 4 },
+];
+
 function gdsReverse(id: string, n: number, question: string) {
   return selectInput(
     id,
@@ -1030,6 +1067,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
 
   {
     id: 'scat5-symptom',
+    ...questionnaireMetadata,
     name: 'SCAT Symptom Severity Score',
     shortName: 'SCAT Symptoms',
     description:
@@ -1825,6 +1863,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
 
   {
     id: 'iqcode',
+    ...questionnaireMetadata,
     name: 'IQCODE (Informant Questionnaire on Cognitive Decline)',
     shortName: 'IQCODE',
     description:
@@ -2274,6 +2313,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'cornell-dementia',
+    ...questionnaireMetadata,
     name: 'Cornell Scale for Depression in Dementia (CSDD)',
     shortName: 'CSDD',
     description: 'Cornell Scale for Depression in Dementia: 19 clinician/caregiver-rated items across 5 domains (0–38), or direct total score.',
@@ -2492,6 +2532,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'zarit-burden',
+    ...questionnaireMetadata,
     name: 'Zarit Burden Interview (Caregiver Strain)',
     shortName: 'ZBI',
     description: 'Zarit Burden Interview (ZBI-12 Short Form, 0–48; or classic ZBI-22 direct total, 0–88) for caregiver burden assessment.',
@@ -2512,86 +2553,86 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         min: 0,
         max: 88,
         defaultValue: 12,
-        helpText: 'Used only if direct override is selected.',
+        helpText: 'Used only if direct override is selected. ZBI-12 accepts 0–48; ZBI-22 accepts 0–88.',
       }),
-      selectInput('z1', '1. Do you feel that because of the time you spend with your relative that you don’t have enough time for yourself?', [
+      selectInput('z1', 'ZBI-22 item 2 (ZBI-12 item 1). Do you feel that because of the time you spend with your relative that you don’t have enough time for yourself?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
       ], 1),
-      selectInput('z2', '2. Do you feel stressed between caring for your relative and trying to meet other responsibilities for your family or work?', [
+      selectInput('z2', 'ZBI-22 item 3 (ZBI-12 item 2). Do you feel stressed between caring for your relative and trying to meet other responsibilities for your family or work?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
       ], 1),
-      selectInput('z3', '3. Do you feel angry when you are around your relative?', [
+      selectInput('z3', 'ZBI-22 item 5 (ZBI-12 item 3). Do you feel angry when you are around your relative?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
       ], 1),
-      selectInput('z4', '4. Do you feel that your relative currently affects your relationship with other family members or friends in a negative way?', [
+      selectInput('z4', 'ZBI-22 item 6 (ZBI-12 item 4). Do you feel that your relative currently affects your relationship with other family members or friends in a negative way?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
       ], 1),
-      selectInput('z5', '5. Do you feel strained when you are around your relative?', [
+      selectInput('z5', 'ZBI-22 item 9 (ZBI-12 item 5). Do you feel strained when you are around your relative?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
       ], 1),
-      selectInput('z6', '6. Do you feel that your health has suffered because of your involvement with your relative?', [
+      selectInput('z6', 'ZBI-22 item 10 (ZBI-12 item 6). Do you feel that your health has suffered because of your involvement with your relative?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
       ], 1),
-      selectInput('z7', '7. Do you feel that you don’t have as much privacy as you would like because of your relative?', [
+      selectInput('z7', 'ZBI-22 item 11 (ZBI-12 item 7). Do you feel that you don’t have as much privacy as you would like because of your relative?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
       ], 1),
-      selectInput('z8', '8. Do you feel that your social life has suffered because you are caring for your relative?', [
+      selectInput('z8', 'ZBI-22 item 12 (ZBI-12 item 8). Do you feel that your social life has suffered because you are caring for your relative?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
       ], 1),
-      selectInput('z9', '9. Do you feel you have lost control of your life since your relative’s illness?', [
+      selectInput('z9', 'ZBI-22 item 17 (ZBI-12 item 9). Do you feel you have lost control of your life since your relative’s illness?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
       ], 1),
-      selectInput('z10', '10. Do you feel uncertain about what to do about your relative?', [
+      selectInput('z10', 'ZBI-22 item 19 (ZBI-12 item 10). Do you feel uncertain about what to do about your relative?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Rarely', value: 1 },
+        { label: '2 — Sometimes', value: 2 },
+        { label: '3 — Quite frequently', value: 3 },
+        { label: '4 — Nearly always', value: 4 },
+      ], 0),
+      selectInput('z11', 'ZBI-22 item 20 (ZBI-12 item 11). Do you feel you should be doing more for your relative?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
       ], 1),
-      selectInput('z11', '11. Do you feel you should be doing more for your relative?', [
-        { label: '0 — Never', value: 0 },
-        { label: '1 — Rarely', value: 1 },
-        { label: '2 — Sometimes', value: 2 },
-        { label: '3 — Quite frequently', value: 3 },
-        { label: '4 — Nearly always', value: 4 },
-      ], 1),
-      selectInput('z12', '12. Do you feel you could do a better job in caring for your relative?', [
+      selectInput('z12', 'ZBI-22 item 21 (ZBI-12 item 12). Do you feel you could do a better job in caring for your relative?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
@@ -2602,15 +2643,19 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');
       const form = String(values.form ?? 'z12');
+      const maxScore = form === 'z22' ? 88 : 48;
       let score = 0;
 
       if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.z1 === undefined)) {
-        score = num(values.score, 12);
+        score = Math.max(0, Math.min(maxScore, num(values.score, 12)));
       } else {
-        for (let i = 1; i <= 12; i++) {
-          score += num(values[`z${i}`], 1);
+        for (let i = 0; i < zbi12OriginalItemNumbers.length; i++) {
+          score += Math.max(0, Math.min(4, num(values[`z${i + 1}`], i === 9 ? 0 : 1)));
         }
       }
+
+      const item19Val = mode === 'survey' ? Math.max(0, Math.min(4, num(values.z10, 0))) : undefined;
+      const item19Flag = item19Val !== undefined && item19Val > 0;
 
       if (mode === 'direct' && form === 'z22') {
         const r = riskFromThresholds(score, [
@@ -2647,6 +2692,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
             { label: 'Form', value: 'ZBI-22 Classic' },
             { label: 'Total score', value: `${score} / 88` },
             { label: 'Entry mode', value: 'Direct override' },
+            { label: 'ZBI-22 item 19', value: 'Unavailable from direct total' },
           ],
         };
       }
@@ -2680,8 +2726,13 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
           { label: 'Form', value: 'ZBI-12 Short Form' },
           { label: 'Total score', value: `${score} / 48` },
           { label: 'High burden threshold', value: 'Score ≥17 indicates high burden' },
+          { label: 'Validated ZBI-12 subset', value: zbi12OriginalItemNumbers.join(', ') + ' (original ZBI-22 item numbers)' },
+          { label: 'ZBI-22 item 19', value: item19Val !== undefined ? `${item19Val}/4` : 'Unavailable from direct total' },
           { label: 'Entry mode', value: mode === 'survey' ? '12-item questionnaire' : 'Direct override' },
         ],
+        alerts: item19Flag ? [
+          'ZBI-22 item 19 (included as ZBI-12 item 10) is endorsed. Assess caregiver distress, overwhelm, and safety independently rather than relying on the burden total.',
+        ] : undefined,
       };
     },
     evidence: {
@@ -2724,6 +2775,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'psqi',
+    ...questionnaireMetadata,
     name: 'Pittsburgh Sleep Quality Index (PSQI)',
     shortName: 'PSQI',
     description: 'Pittsburgh Sleep Quality Index: 7 component scores (0–3 each, global 0–21) evaluating past-month sleep quality, or direct global score.',
@@ -2748,11 +2800,17 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '2 — Fairly bad', value: 2 },
         { label: '3 — Very bad', value: 3 }
       ]),
-      selectInput('comp2_latency', 'Component 2: Sleep latency', [
-        { label: '0 — Latency ≤15 min & ≤1 disturbance/week', value: 0 },
-        { label: '1 — Latency 16–30 min or 1–2 disturbances/week', value: 1 },
-        { label: '2 — Latency 31–60 min or 1–2 disturbances/week', value: 2 },
-        { label: '3 — Latency >60 min or ≥3 disturbances/week', value: 3 }
+      selectInput('comp2_latency', 'PSQI Q2: Minutes to fall asleep (latency score)', [
+        { label: '0 — ≤15 minutes', value: 0 },
+        { label: '1 — 16–30 minutes', value: 1 },
+        { label: '2 — 31–60 minutes', value: 2 },
+        { label: '3 — >60 minutes', value: 3 }
+      ]),
+      selectInput('comp2_q5a', 'PSQI Q5a: Trouble getting to sleep within 30 minutes', [
+        { label: '0 — Not during the past month', value: 0 },
+        { label: '1 — Less than once a week', value: 1 },
+        { label: '2 — Once or twice a week', value: 2 },
+        { label: '3 — Three or more times a week', value: 3 },
       ]),
       selectInput('comp3_duration', 'Component 3: Sleep duration', [
         { label: '0 — >7 hours sleep per night', value: 0 },
@@ -2789,17 +2847,22 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       const mode = String(values.entryMode ?? 'survey');
       let score = 0;
       let c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0, c7 = 0;
+      let c2Latency = 0;
+      let c2Q5a = 0;
 
       if (mode === 'direct' || (values.global !== undefined && values.entryMode === undefined && values.comp1_quality === undefined)) {
-        score = num(values.global, 5);
+        score = Math.max(0, Math.min(21, num(values.global, 5)));
       } else {
-        c1 = num(values.comp1_quality, 0);
-        c2 = num(values.comp2_latency, 1);
-        c3 = num(values.comp3_duration, 1);
-        c4 = num(values.comp4_efficiency, 0);
-        c5 = num(values.comp5_disturbances, 1);
-        c6 = num(values.comp6_medication, 0);
-        c7 = num(values.comp7_dysfunction, 1);
+        c1 = Math.max(0, Math.min(3, num(values.comp1_quality, 0)));
+        c2Latency = Math.max(0, Math.min(3, num(values.comp2_latency, 0)));
+        c2Q5a = Math.max(0, Math.min(3, num(values.comp2_q5a, 0)));
+        const c2Raw = c2Latency + c2Q5a;
+        c2 = c2Raw === 0 ? 0 : c2Raw <= 2 ? 1 : c2Raw <= 4 ? 2 : 3;
+        c3 = Math.max(0, Math.min(3, num(values.comp3_duration, 1)));
+        c4 = Math.max(0, Math.min(3, num(values.comp4_efficiency, 0)));
+        c5 = Math.max(0, Math.min(3, num(values.comp5_disturbances, 1)));
+        c6 = Math.max(0, Math.min(3, num(values.comp6_medication, 0)));
+        c7 = Math.max(0, Math.min(3, num(values.comp7_dysfunction, 1)));
         score = c1 + c2 + c3 + c4 + c5 + c6 + c7;
       }
 
@@ -2831,7 +2894,8 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       ];
 
       if (mode === 'survey') {
-        details.push({ label: 'C1: Quality / C2: Latency', value: `${c1} / ${c2}` });
+        details.push({ label: 'C1: Quality / C2: Latency component', value: `${c1} / ${c2}` });
+        details.push({ label: 'C2 inputs (Q2 latency + Q5a trouble)', value: `${c2Latency} + ${c2Q5a} → ${c2}` });
         details.push({ label: 'C3: Duration / C4: Efficiency', value: `${c3} / ${c4}` });
         details.push({ label: 'C5: Disturbance / C6: Meds / C7: Daytime', value: `${c5} / ${c6} / ${c7}` });
       }
@@ -2876,6 +2940,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'restless-irlssg',
+    ...questionnaireMetadata,
     name: 'IRLSSG Restless Legs Severity Scale (IRLS)',
     shortName: 'IRLS',
     description: 'International Restless Legs Syndrome Study Group rating scale: 10 items (0–4 each, total 0–40), or direct total score.',
@@ -2894,86 +2959,26 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         defaultValue: 15,
         helpText: 'Used only if direct override is selected.',
       }),
-      selectInput('irls1', '1. Overall discomfort in legs/arms due to RLS', [
-        { label: '0 — None / Never', value: 0 },
-        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
-        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
-        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
-        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
-      ], 1),
-      selectInput('irls2', '2. Need to move arms/legs because of RLS', [
-        { label: '0 — None / Never', value: 0 },
-        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
-        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
-        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
-        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
-      ], 1),
-      selectInput('irls3', '3. Relief of arm/leg discomfort from moving around', [
-        { label: '0 — None / Never', value: 0 },
-        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
-        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
-        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
-        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
-      ], 1),
-      selectInput('irls4', '4. Sleep disturbance due to RLS symptoms', [
-        { label: '0 — None / Never', value: 0 },
-        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
-        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
-        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
-        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
-      ], 1),
-      selectInput('irls5', '5. Daytime tiredness or sleepiness due to RLS', [
-        { label: '0 — None / Never', value: 0 },
-        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
-        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
-        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
-        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
-      ], 1),
-      selectInput('irls6', '6. Overall severity of RLS over the past week', [
-        { label: '0 — None / Never', value: 0 },
-        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
-        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
-        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
-        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
-      ], 1),
-      selectInput('irls7', '7. How often did RLS symptoms occur?', [
-        { label: '0 — None / Never', value: 0 },
-        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
-        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
-        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
-        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
-      ], 1),
-      selectInput('irls8', '8. Average duration of RLS symptoms on typical day', [
-        { label: '0 — None / Never', value: 0 },
-        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
-        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
-        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
-        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
-      ], 1),
-      selectInput('irls9', '9. Impact on daily activities (family, work, social)', [
-        { label: '0 — None / Never', value: 0 },
-        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
-        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
-        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
-        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
-      ], 1),
-      selectInput('irls10', '10. Mood disturbance from RLS (depressed, irritable, anxious)', [
-        { label: '0 — None / Never', value: 0 },
-        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
-        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
-        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
-        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
-      ], 1),
+      selectInput('irls1', '1. Overall discomfort in legs/arms due to RLS', irlsSeverityOptions, 1),
+      selectInput('irls2', '2. Need to move arms/legs because of RLS', irlsSeverityOptions, 1),
+      selectInput('irls3', '3. Relief of arm/leg discomfort from moving around (reverse-scored anchors)', irlsReliefOptions, 1),
+      selectInput('irls4', '4. Sleep disturbance due to RLS symptoms', irlsSeverityOptions, 1),
+      selectInput('irls5', '5. Daytime tiredness or sleepiness due to RLS', irlsSeverityOptions, 1),
+      selectInput('irls6', '6. Overall severity of RLS over the past week', irlsSeverityOptions, 1),
+      selectInput('irls7', '7. How often did RLS symptoms occur?', irlsFrequencyOptions, 1),
+      selectInput('irls8', '8. Average duration of RLS symptoms on typical day', irlsDurationOptions, 1),
+      selectInput('irls9', '9. Impact on daily activities (family, work, social)', irlsSeverityOptions, 1),
+      selectInput('irls10', '10. Mood disturbance from RLS (depressed, irritable, anxious)', irlsSeverityOptions, 1),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');
       let score = 0;
 
       if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.irls1 === undefined)) {
-        score = num(values.score, 15);
+        score = Math.max(0, Math.min(40, num(values.score, 15)));
       } else {
         for (let i = 1; i <= 10; i++) {
-          score += num(values[`irls${i}`], 1);
+          score += Math.max(0, Math.min(4, num(values[`irls${i}`], 1)));
         }
       }
 

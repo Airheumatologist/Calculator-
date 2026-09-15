@@ -1587,6 +1587,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
     tags: ['ulcerative colitis', 'mayo', 'endoscopy', 'ibd', 'mucosal healing', 'disease activity'],
     whenToUse: 'When evaluating UC disease activity across symptoms, endoscopy, and clinical impression.',
     whyUse: 'Gold standard 4-component index (0–12) for UC severity stratification, treatment response, and trial endpoints.',
+    questionnaire: true,
     inputs: [
       selectInput(
         'stool',
@@ -1650,7 +1651,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
       let label = 'Remission';
       let interpretation = `Full Mayo score ${fullScore}/12 (Endoscopic subscore ${endo}): consistent with clinical and endoscopic remission (0–2 with no individual subscore >1).`;
 
-      if (fullScore <= 2 && stool <= 1 && bleed === 0 && endo <= 1) {
+      if (fullScore <= 2 && stool <= 1 && bleed === 0 && endo <= 1 && pga <= 1) {
         riskLevel = 'normal';
         label = 'Clinical & Endoscopic Remission (0–2)';
         interpretation = `Full Mayo score ${fullScore}/12 (Endoscopic subscore ${endo}): clinical and endoscopic remission. Supports maintenance therapy and treat-to-target mucosal healing.`;
@@ -2094,11 +2095,12 @@ export const wave5NephroGiCalcs: Calculator[] = [
     tags: ['ses-cd', 'crohn', 'endoscopy', 'ibd', 'mucosal healing', 'colonoscopy'],
     whenToUse: 'During or after ileocolonoscopy to assess mucosal inflammation and evaluate endoscopic healing in Crohn disease.',
     whyUse: 'Validated standard endoscopic score for Crohn disease; categorizes activity into remission, mild, moderate, and severe.',
+    questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry mode', [
         { label: 'Score 5 anatomical segments (20 items)', value: 'survey' },
         { label: 'Enter precomputed SES-CD total', value: 'direct' },
-      ], 'survey'),
+      ], 'survey', 'The official total is 0–56: the stenosis subtotal is capped at 11 because a non-passable stenosis prevents assessment of more proximal segments.'),
       numberInput('directTotal', 'Precomputed SES-CD total', {
         min: 0,
         max: 56,
@@ -2244,16 +2246,27 @@ export const wave5NephroGiCalcs: Calculator[] = [
       let transSubtotal = 0;
       let leftSubtotal = 0;
       let rectumSubtotal = 0;
+      let stenosisSubtotal = 0;
 
       if (mode === 'direct') {
-        score = num(values.directTotal, 8);
+        score = Math.max(0, Math.min(56, Math.round(num(values.directTotal, 8))));
       } else {
         ileumSubtotal = num(values.ileum_ulcers, 0) + num(values.ileum_ulcerSurface, 0) + num(values.ileum_affectedSurface, 0) + num(values.ileum_stenosis, 0);
         rightSubtotal = num(values.right_ulcers, 0) + num(values.right_ulcerSurface, 0) + num(values.right_affectedSurface, 0) + num(values.right_stenosis, 0);
         transSubtotal = num(values.trans_ulcers, 0) + num(values.trans_ulcerSurface, 0) + num(values.trans_affectedSurface, 0) + num(values.trans_stenosis, 0);
         leftSubtotal = num(values.left_ulcers, 0) + num(values.left_ulcerSurface, 0) + num(values.left_affectedSurface, 0) + num(values.left_stenosis, 0);
         rectumSubtotal = num(values.rectum_ulcers, 0) + num(values.rectum_ulcerSurface, 0) + num(values.rectum_affectedSurface, 0) + num(values.rectum_stenosis, 0);
-        score = ileumSubtotal + rightSubtotal + transSubtotal + leftSubtotal + rectumSubtotal;
+        const stenosisScores = [
+          num(values.ileum_stenosis, 0),
+          num(values.right_stenosis, 0),
+          num(values.trans_stenosis, 0),
+          num(values.left_stenosis, 0),
+          num(values.rectum_stenosis, 0),
+        ];
+        const stenosisSubtotalRaw = stenosisScores.reduce((sum, value) => sum + value, 0);
+        stenosisSubtotal = Math.min(11, stenosisSubtotalRaw);
+        const rawScore = ileumSubtotal + rightSubtotal + transSubtotal + leftSubtotal + rectumSubtotal;
+        score = Math.max(0, Math.min(56, rawScore - stenosisSubtotalRaw + stenosisSubtotal));
       }
 
       const r = riskFromThresholds(score, [
@@ -2295,6 +2308,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
           { label: 'Transverse Colon subtotal', value: `${transSubtotal} / 12` },
           { label: 'Left Colon subtotal', value: `${leftSubtotal} / 12` },
           { label: 'Rectum subtotal', value: `${rectumSubtotal} / 12` },
+          { label: 'Stenosis subtotal (capped)', value: `${stenosisSubtotal} / 11` },
         );
       }
 
@@ -2307,8 +2321,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'SES-CD evaluates 5 anatomical segments (terminal ileum, right colon, transverse colon, left colon, rectum) across 4 endoscopic parameters (ulcer size 0–3, ulcerated surface 0–3, affected surface 0–3, stenosis 0–3) for a total of 0–56. Standard strata: 0–2 remission, 3–6 mild, 7–15 moderate, ≥16 severe.',
-      formula: 'SES-CD = Σ (Ulcer Size + Ulcerated Surface + Affected Surface + Stenosis) across 5 segments',
+        'SES-CD evaluates 5 anatomical segments (terminal ileum, right colon, transverse colon, left colon, rectum) across 4 endoscopic parameters (ulcer size 0–3, ulcerated surface 0–3, affected surface 0–3, stenosis 0–3). The stenosis subtotal is capped at 11, giving the official total range 0–56. Standard strata: 0–2 remission, 3–6 mild, 7–15 moderate, ≥16 severe.',
+      formula: 'SES-CD = Σ (Ulcer Size + Ulcerated Surface + Affected Surface) across 5 segments + min(11, Σ stenosis scores)',
       validation: 'Daperno et al.; widely used in Crohn trials and practice.',
       references: [
         {
@@ -2325,8 +2339,9 @@ export const wave5NephroGiCalcs: Calculator[] = [
       { condition: 'SES-CD ≤2', actions: ['Maintain regimen', 'Surveillance per risk'] },
     ],
     pearls: [
-      'This tool interprets a precomputed total — it does not score individual segments.',
+      'Interactive mode scores individual segments; direct mode accepts a precomputed total for compatibility.',
       'Official items (Daperno 2004): ulcers by size, % ulcerated surface, % affected surface, and stenosis passability — scored in ileum, right, transverse, left colon, and rectum.',
+      'The official total is 0–56: cap the summed stenosis component at 11 because a non-passable stenosis prevents assessment of more proximal segments.',
     ],
   },
 

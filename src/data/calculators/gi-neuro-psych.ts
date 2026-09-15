@@ -125,18 +125,18 @@ export const giNeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'meld',
-    name: 'MELD Score',
-    shortName: 'MELD',
-    description: 'Model for End-Stage Liver Disease — 3-month mortality risk.',
+    name: 'Original MELD Score (Historical)',
+    shortName: 'Original MELD',
+    description: 'Historical four-variable Model for End-Stage Liver Disease score for legacy literature and comparison; it is not the current OPTN allocation formula.',
     category: 'gastroenterology',
     tags: ['cirrhosis', 'transplant', 'meld'],
-    whenToUse: 'Liver transplant prioritization and cirrhosis prognosis.',
-    whyUse: 'Objective lab-based score used by transplant systems (often MELD-Na).',
+    whenToUse: 'When reproducing the original MELD model in historical studies or comparing legacy prognostic scores; use MELD 3.0 for current OPTN allocation.',
+    whyUse: 'The original MELD model is the historical foundation for later MELD-Na and MELD 3.0 models, but its four-variable formula should not be treated as current allocation policy.',
     inputs: [
-      numberInput('bili', 'Bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 2.0, helpText: 'Total bilirubin in mg/dL. OPTN floors values <1.0 at 1.0.' }),
-      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, defaultValue: 1.5, helpText: 'OPTN floors INR <1.0 at 1.0.' }),
-      numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0, helpText: 'mg/dL. OPTN floors <1.0 at 1.0 and caps at 4.0; dialysis ≥2× in the past week (or 24 h CVVHD) sets Cr to 4.0.' }),
-      yesNo('dialysis', 'Dialysis ≥2 times in past week (or 24h CVVHD)', null, 'Sets creatinine to 4.0 mg/dL per OPTN MELD rules (does not add a fixed point total)'),
+      numberInput('bili', 'Bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 2.0, helpText: 'Total bilirubin in mg/dL; this historical implementation floors values below 1.0.' }),
+      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, defaultValue: 1.5, helpText: 'This historical implementation floors INR below 1.0.' }),
+      numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0, helpText: 'Historical MELD handling: floor at 1.0, cap at 4.0; dialysis ≥2× in the past week (or 24 h CVVHD) sets Cr to 4.0.' }),
+      yesNo('dialysis', 'Dialysis ≥2 times in past week (or 24h CVVHD)', null, 'Historical MELD handling sets creatinine to 4.0 mg/dL; this is not the current MELD 3.0 creatinine rule.'),
     ],
     calculate(values) {
       let bili = Math.max(num(values.bili, 2), 1);
@@ -155,128 +155,149 @@ export const giNeuroPsychCalcs: Calculator[] = [
       return { score, ...r };
     },
     evidence: {
-      summary: 'MELD = 10×[0.957×ln(Cr)+0.378×ln(bili)+1.12×ln(INR)+0.643], capped 6–40.',
-      validation: 'Predicts waitlist mortality; foundation of allocation systems.',
+      summary: 'Original four-variable MELD = 10×[0.957×ln(Cr)+0.378×ln(bili)+1.12×ln(INR)+0.643], capped 6–40.',
+      validation: 'Historical prognostic model; not the current OPTN allocation formula, which is MELD 3.0.',
       references: [{ title: 'A model to predict survival in patients with end-stage liver disease', citation: 'Kamath PS et al. Hepatology. 2001', year: 2001, pmid: '11172350',
           doi: '10.1053/jhep.2001.22172', }],
     },
     nextSteps: [
-      { condition: 'MELD ≥15', actions: ['Transplant center referral if candidate', 'Manage complications of cirrhosis'] },
+      { condition: 'Historical MELD ≥15', actions: ['Use the current MELD 3.0 calculator for allocation assessment', 'Manage complications of cirrhosis'] },
     ],
   },
   {
     id: 'meld-na',
-    name: 'MELD-Na Score (Model for End-Stage Liver Disease)',
-    shortName: 'MELD-Na',
-    description: 'Calculates MELD and MELD-Na incorporating bilirubin, creatinine, INR, sodium, and dialysis for waitlist mortality and transplant allocation.',
+    name: 'MELD 3.0 (OPTN)',
+    shortName: 'MELD 3.0',
+    description: 'Current OPTN Model for End-Stage Liver Disease (MELD 3.0) score using bilirubin, sodium, INR, albumin, creatinine, age at registration, sex, and dialysis status.',
     category: 'gastroenterology',
-    tags: ['cirrhosis', 'transplant', 'sodium', 'meld', 'hepatology', 'liver failure'],
-    whenToUse: 'Adult patients (≥12 years) with end-stage liver disease or cirrhosis being evaluated for prognosis, decompensation, or liver transplantation.',
-    whyUse: 'Standard OPTN/UNOS allocation score; hyponatremia substantially refines mortality prediction in decompensated cirrhosis beyond baseline MELD.',
+    tags: ['cirrhosis', 'transplant', 'sodium', 'meld', 'meld-3.0', 'hepatology', 'liver failure'],
+    whenToUse: 'Candidates age 12 years or older being assessed with the current OPTN liver-allocation model; use age at waitlist registration to select the adult versus adolescent formula.',
+    whyUse: 'Current OPTN allocation model, implemented July 13, 2023, incorporating sex, albumin, sodium, bilirubin, INR, and creatinine interactions to estimate medical urgency.',
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        labs: ['age', 'sex', 'bili', 'inr', 'albumin', 'creat', 'na', 'dialysis'],
+        direct: ['directMeld'],
+      },
+    },
     inputs: [
       selectInput('entryMode', 'Input mode', [
-        { label: 'Primary laboratory values (bilirubin, INR, Cr, Na, dialysis)', value: 'labs' },
-        { label: 'Enter precomputed MELD score + sodium', value: 'direct' },
+        { label: 'Primary OPTN laboratory values', value: 'labs' },
+        { label: 'Enter precomputed MELD 3.0 score', value: 'direct' },
       ], 'labs'),
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 1.5, helpText: 'Minimum value of 1.0 mg/dL used per OPTN rules.' }),
-      numberInput('inr', 'INR', { min: 0.8, max: 15, step: 0.01, defaultValue: 1.2, helpText: 'Minimum value of 1.0 used per OPTN rules.' }),
-      numberInput('creat', 'Serum creatinine', { unit: 'mg/dL', min: 0.4, max: 20, step: 0.1, defaultValue: 1.2, helpText: 'Capped at 4.0 mg/dL (or automatically set to 4.0 if dialyzed ≥2 times in prior 7 days).' }),
-      numberInput('na', 'Serum sodium', { unit: 'mEq/L', min: 100, max: 160, step: 1, defaultValue: 135, helpText: 'Bounded to 125–137 mEq/L for MELD-Na calculation.' }),
-      yesNo('dialysis', 'Hemodialysis or CVVH ≥2 times in prior 7 days (or 24h of SLED)', 0, 'If yes, creatinine is automatically set to 4.0 mg/dL per UNOS policy.'),
-      numberInput('directMeld', 'Precomputed MELD score (6–40)', { min: 6, max: 40, defaultValue: 15, helpText: 'Only used when "Enter precomputed MELD score" is selected.' }),
-      numberInput('directNa', 'Precomputed serum sodium (mEq/L)', { unit: 'mEq/L', min: 120, max: 150, defaultValue: 135, helpText: 'Only used when "Enter precomputed MELD score" is selected.' }),
+      numberInput('age', 'Age at waitlist registration', { unit: 'years', min: 12, max: 120, step: 1, defaultValue: 55, helpText: 'Use age at registration: adult formula at ≥18 years; adolescent formula at 12–17 years.' }),
+      selectInput('sex', 'Sex for MELD 3.0 calculation', [
+        { label: 'Male', value: 'male' },
+        { label: 'Female (+1.33 adult points)', value: 'female' },
+      ], 'male', 'OPTN applies the 1.33-point sex term to adult women and to both sexes in candidates aged 12–17.'),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 1.5, helpText: 'Values below 1.0 mg/dL are set to 1.0 per OPTN policy.' }),
+      numberInput('inr', 'INR', { min: 0.8, max: 15, step: 0.01, defaultValue: 1.2, helpText: 'Values below 1.0 are set to 1.0 per OPTN policy.' }),
+      numberInput('albumin', 'Serum albumin', { unit: 'g/dL', min: 0.1, max: 6, step: 0.1, defaultValue: 3.0, helpText: 'Bounded to 1.5–3.5 g/dL per OPTN policy.' }),
+      numberInput('creat', 'Serum creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.2, helpText: 'Values below 1.0 are set to 1.0; values above 3.0 are set to 3.0. Dialysis also sets creatinine to 3.0.' }),
+      numberInput('na', 'Serum sodium', { unit: 'mEq/L', min: 100, max: 160, step: 1, defaultValue: 135, helpText: 'Bounded to 125–137 mEq/L per OPTN policy.' }),
+      yesNo('dialysis', 'Dialysis ≥2 times or ≥24h CVVHD within prior 7 days', 0, 'If yes, serum creatinine is set to 3.0 mg/dL. OPTN policy specifies dialysis twice or 24 hours of CVVHD; CVVH/SLED are not interchangeable terms here.'),
+      numberInput('directMeld', 'Precomputed MELD 3.0 score (6–40)', { min: 6, max: 40, defaultValue: 15, helpText: 'Only used when "Enter precomputed MELD 3.0 score" is selected; do not apply a second sodium adjustment.' }),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'labs');
+      const age = Math.max(12, Math.min(120, Math.round(num(values.age, 55))));
+      const sex = String(values.sex ?? 'male');
+      const adult = age >= 18;
       let meld = 15;
-      let serumNa = 135;
       let rawMeld = 15;
+      let serumNa = 135;
       let effCr = 1.0;
       let effBili = 1.0;
       let effInr = 1.0;
+      let effAlbumin = 3.5;
       const dial = bool(values.dialysis);
 
       if (mode === 'labs') {
         effBili = Math.max(1.0, num(values.bili, 1.0));
         effInr = Math.max(1.0, num(values.inr, 1.0));
-        effCr = dial ? 4.0 : Math.min(4.0, Math.max(1.0, num(values.creat, 1.0)));
-        serumNa = num(values.na, 135);
+        effCr = dial ? 3.0 : Math.min(3.0, Math.max(1.0, num(values.creat, 1.0)));
+        serumNa = Math.max(125, Math.min(137, num(values.na, 135)));
+        effAlbumin = Math.max(1.5, Math.min(3.5, num(values.albumin, 3.5)));
 
-        rawMeld = 9.57 * Math.log(effCr) + 3.78 * Math.log(effBili) + 11.2 * Math.log(effInr) + 6.43;
+        const sexAdjustment = adult ? (sex === 'female' ? 1.33 : 0) : 1.33;
+        const ageConstant = adult ? 6 : 7.33;
+        rawMeld = sexAdjustment +
+          4.56 * Math.log(effBili) +
+          0.82 * (137 - serumNa) -
+          0.24 * (137 - serumNa) * Math.log(effBili) +
+          9.09 * Math.log(effInr) +
+          11.14 * Math.log(effCr) +
+          1.85 * (3.5 - effAlbumin) -
+          1.83 * (3.5 - effAlbumin) * Math.log(effCr) +
+          ageConstant;
         meld = Math.max(6, Math.min(40, Math.round(rawMeld)));
       } else {
         meld = Math.max(6, Math.min(40, Math.round(num(values.directMeld, 15))));
-        serumNa = num(values.directNa, 135);
+        rawMeld = meld;
       }
 
-      // OPTN MELD-Na adjustment: Na bounded between 125 and 137
-      const boundedNa = Math.max(125, Math.min(137, serumNa));
-      let meldNa = meld;
-      if (meld > 11) {
-        meldNa = Math.round(meld + 1.32 * (137 - boundedNa) - 0.033 * meld * (137 - boundedNa));
-        meldNa = Math.max(6, Math.min(40, meldNa));
-      }
-
-      let riskLevel: 'low' | 'moderate' | 'high' | 'critical' = 'low';
-      let interpretation = '';
-      if (meldNa >= 35) {
-        riskLevel = 'critical';
-        interpretation = `MELD-Na ${meldNa} (Baseline MELD ${meld}): critical waitlist priority (estimated 3-month mortality >70–80%). Urgent liver transplantation evaluation and ICU care.`;
-      } else if (meldNa >= 25) {
-        riskLevel = 'critical';
-        interpretation = `MELD-Na ${meldNa} (Baseline MELD ${meld}): very high mortality risk (~50% 3-month mortality). High transplant waitlist priority; aggressive complication surveillance.`;
-      } else if (meldNa >= 20) {
-        riskLevel = 'high';
-        interpretation = `MELD-Na ${meldNa} (Baseline MELD ${meld}): high risk (~20% 3-month mortality). Liver transplantation listing standardly pursued.`;
-      } else if (meldNa >= 15) {
-        riskLevel = 'moderate';
-        interpretation = `MELD-Na ${meldNa} (Baseline MELD ${meld}): intermediate risk (~6% 3-month mortality). Consider liver transplantation referral threshold (MELD ≥15).`;
-      } else {
-        riskLevel = 'low';
-        interpretation = `MELD-Na ${meldNa} (Baseline MELD ${meld}): low short-term mortality risk (<2–3% 3-month mortality). Outpatient hepatology management and routine monitoring.`;
-      }
+      const r = riskFromThresholds(meld, [
+        { max: 14, level: 'low', label: 'Lower allocation score (6–14)', interpretation: `MELD 3.0 ${meld}: lower position on the current OPTN 6–40 allocation scale; this educational band is not a standalone mortality estimate.` },
+        { max: 19, level: 'moderate', label: 'Intermediate allocation score (15–19)', interpretation: `MELD 3.0 ${meld}: intermediate position on the current OPTN allocation scale; review transplant-center candidacy and complications.` },
+        { max: 24, level: 'high', label: 'High allocation score (20–24)', interpretation: `MELD 3.0 ${meld}: high medical-urgency score on the current OPTN allocation scale; coordinate hepatology/transplant care.` },
+        { max: 34, level: 'critical', label: 'Very high allocation score (25–34)', interpretation: `MELD 3.0 ${meld}: very high medical-urgency score; urgent transplant-center management is appropriate when clinically eligible.` },
+        { max: 40, level: 'critical', label: 'Highest allocation score (35–40)', interpretation: `MELD 3.0 ${meld}: at the upper end of the current OPTN allocation scale; urgent transplant-center and critical-care assessment are appropriate when indicated.` },
+      ]);
 
       const details = [
-        { label: 'MELD-Na Score', value: `${meldNa}` },
-        { label: 'Baseline MELD', value: `${meld}` },
-        { label: 'Serum Sodium used', value: `${serumNa} mEq/L (bounded: ${boundedNa})` },
-        { label: 'Calculation Mode', value: mode === 'labs' ? 'Primary Laboratory Values' : 'Precomputed MELD Override' },
+        { label: 'MELD 3.0 Score', value: `${meld}` },
+        { label: 'Age band', value: adult ? 'Adult (≥18 years at registration)' : 'Adolescent (12–17 years at registration)' },
+        { label: 'Sex term', value: adult ? (sex === 'female' ? '+1.33 points' : 'Not applied') : '+1.33 points (all adolescents)' },
+        { label: 'Calculation Mode', value: mode === 'labs' ? 'Primary OPTN Laboratory Values' : 'Precomputed MELD 3.0 Override' },
       ];
 
       if (mode === 'labs') {
         details.push(
-          { label: 'Effective Creatinine', value: `${effCr} mg/dL ${dial ? '(dialyzed)' : ''}` },
+          { label: 'Effective Sodium', value: `${serumNa} mEq/L` },
+          { label: 'Effective Albumin', value: `${effAlbumin} g/dL` },
+          { label: 'Effective Creatinine', value: `${effCr} mg/dL ${dial ? '(dialysis rule applied)' : ''}` },
           { label: 'Effective Bilirubin', value: `${effBili} mg/dL` },
           { label: 'Effective INR', value: `${effInr}` },
+          { label: 'Unrounded formula result', value: `${round(rawMeld, 2)}` },
         );
       }
 
       return {
-        score: meldNa,
-        label: 'MELD-Na',
-        interpretation,
-        riskLevel,
+        score: meld,
+        unit: 'points (6–40)',
+        ...r,
         details,
       };
     },
     evidence: {
       summary:
-        'OPTN/UNOS MELD-Na: MELD = 9.57×ln(Cr) + 3.78×ln(Bili) + 11.2×ln(INR) + 6.43 (rounded, 6–40). When MELD >11, MELD-Na = MELD + 1.32×(137−Na) − 0.033×MELD×(137−Na) with Na bounded 125–137 mEq/L.',
-      formula: 'MELD-Na = MELD + 1.32×(137−Na) − 0.033×MELD×(137−Na) if MELD > 11',
-      validation: 'Kim et al. NEJM 2008; standard allocation model across the United States.',
+        'Current OPTN MELD 3.0 for adults (≥18 at registration) = 1.33 if female + 4.56×ln(bilirubin) + 0.82×(137−sodium) − 0.24×(137−sodium)×ln(bilirubin) + 9.09×ln(INR) + 11.14×ln(creatinine) + 1.85×(3.5−albumin) − 1.83×(3.5−albumin)×ln(creatinine) + 6. For ages 12–17, both sexes receive the 1.33-point term and the constant is 7.33. Values are bounded per OPTN policy, then rounded to the nearest whole number and capped at 6–40.',
+      formula: 'MELD 3.0 = sex term + 4.56×ln(Bili) + 0.82×(137−Na) − 0.24×(137−Na)×ln(Bili) + 9.09×ln(INR) + 11.14×ln(Cr) + 1.85×(3.5−Alb) − 1.83×(3.5−Alb)×ln(Cr) + age-band constant',
+      validation: 'Current OPTN Policy 9.1.D; implemented July 13, 2023. This calculator is an educational aid and does not replace the official OPTN system.',
       references: [
         {
-          title: 'Hyponatremia and mortality among patients on the liver-transplant waiting list',
-          citation: 'Kim WR et al. N Engl J Med. 2008',
-          year: 2008,
-          pmid: '18768945',
-          doi: '10.1056/NEJMoa0801209',
+          title: 'OPTN Policies — Policy 9.1.D MELD Score',
+          citation: 'Organ Procurement and Transplantation Network; effective December 10, 2025',
+          year: 2025,
+          url: 'https://optn.transplant.hrsa.gov/media/eavh5bf3/optn_policies.pdf',
+        },
+        {
+          title: 'MELD 3.0: The Model for End-Stage Liver Disease Updated for the Modern Era',
+          citation: 'Kim WR et al. Gastroenterology. 2021',
+          year: 2021,
+          doi: '10.1053/j.gastro.2021.08.050',
         },
       ],
     },
     nextSteps: [
-      { condition: 'MELD-Na ≥15', actions: ['Referral to liver transplant center', 'Screen for varices and HCC', 'Manage ascites / sodium cautiously'] },
-      { condition: 'MELD-Na ≥25', actions: ['Urgent transplant listing review', 'ICU / hepatology admission if acute decompensation', 'Infection / SBP screen'] },
+      { condition: 'MELD 3.0 ≥15', actions: ['Referral to liver transplant center when appropriate', 'Screen for varices and HCC', 'Manage complications of cirrhosis'] },
+      { condition: 'MELD 3.0 ≥25', actions: ['Urgent transplant-center review', 'ICU / hepatology admission if acute decompensation', 'Infection / SBP screen'] },
+    ],
+    pearls: [
+      'This replaces the historical MELD-Na sodium adjustment; do not apply the old MELD-Na formula to a MELD 3.0 score.',
+      'OPTN policy floors bilirubin, INR, and creatinine at 1.0; caps creatinine at 3.0 (or sets it to 3.0 for the specified dialysis criteria), bounds sodium to 125–137, and bounds albumin to 1.5–3.5.',
     ],
   },
   {

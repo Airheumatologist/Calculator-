@@ -223,6 +223,15 @@ export const wave3GiHepCalcs: Calculator[] = [
     tags: ['aclf', 'cirrhosis', 'clif', 'icu', 'prognosis', 'liver failure', 'hepatology'],
     whenToUse: 'Hospitalized patients with cirrhosis presenting with acute decompensation and organ failures.',
     whyUse: 'Validated prognostic model by the EASL-CLIF Consortium (CANONIC study); superior to MELD and Child-Pugh for predicting 28-day and 90-day mortality.',
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        domains: ['liver', 'kidney', 'brain', 'coag', 'circ', 'resp', 'age', 'wbc'],
+        direct: ['directClifOfs', 'age', 'wbc'],
+      },
+    },
     inputs: [
       selectInput('entryMode', 'Input method', [
         { label: 'Score 6 CLIF organ failure domains (recommended)', value: 'domains' },
@@ -231,9 +240,9 @@ export const wave3GiHepCalcs: Calculator[] = [
 
       // 6 CLIF Organ Failure Domains
       selectInput('liver', '1. Liver: Total Bilirubin', [
-        { label: '1 pt — Bilirubin <5 mg/dL (<85 µmol/L)', value: 1, points: 1 },
-        { label: '2 pts — Bilirubin 5 to <12 mg/dL (85–204 µmol/L)', value: 2, points: 2 },
-        { label: '3 pts — Bilirubin ≥12 mg/dL (≥204 µmol/L) [Liver Failure]', value: 3, points: 3 },
+        { label: '1 pt — Bilirubin <6 mg/dL (<103 µmol/L)', value: 1, points: 1 },
+        { label: '2 pts — Bilirubin ≥6 to <12 mg/dL (≥103 to <205 µmol/L)', value: 2, points: 2 },
+        { label: '3 pts — Bilirubin ≥12 mg/dL (≥205 µmol/L) [Liver Failure]', value: 3, points: 3 },
       ], 1),
       selectInput('kidney', '2. Kidney: Serum Creatinine', [
         { label: '1 pt — Creatinine <2 mg/dL (<177 µmol/L)', value: 1, points: 1 },
@@ -245,20 +254,20 @@ export const wave3GiHepCalcs: Calculator[] = [
         { label: '2 pts — Grade 1–2 (Mild to moderate encephalopathy)', value: 2, points: 2 },
         { label: '3 pts — Grade 3–4 (Severe encephalopathy / coma) [Brain Failure]', value: 3, points: 3 },
       ], 1),
-      selectInput('coag', '4. Coagulation: INR / Platelets', [
+      selectInput('coag', '4. Coagulation: INR', [
         { label: '1 pt — INR <2.0', value: 1, points: 1 },
         { label: '2 pts — INR 2.0 to <2.5', value: 2, points: 2 },
-        { label: '3 pts — INR ≥2.5 or Platelets ≤20 × 10⁹/L [Coagulation Failure]', value: 3, points: 3 },
+        { label: '3 pts — INR ≥2.5 [Coagulation Failure]', value: 3, points: 3 },
       ], 1),
       selectInput('circ', '5. Circulation: Blood Pressure / Vasopressors', [
         { label: '1 pt — MAP ≥70 mmHg without vasopressors', value: 1, points: 1 },
-        { label: '2 pts — MAP <70 mmHg or on Dopamine ≤5 µg/kg/min or Terlipressin', value: 2, points: 2 },
-        { label: '3 pts — Norepinephrine or Dopamine >5 µg/kg/min [Circulatory Failure]', value: 3, points: 3 },
+        { label: '2 pts — MAP ≤70 mmHg', value: 2, points: 2 },
+        { label: '3 pts — Any vasopressor use [Circulatory Failure]', value: 3, points: 3 },
       ], 1),
       selectInput('resp', '6. Respiration: PaO₂/FiO₂ or SpO₂/FiO₂', [
         { label: '1 pt — PaO₂/FiO₂ >300 or SpO₂/FiO₂ >357', value: 1, points: 1 },
-        { label: '2 pts — PaO₂/FiO₂ 201–300 or SpO₂/FiO₂ 215–357', value: 2, points: 2 },
-        { label: '3 pts — PaO₂/FiO₂ ≤200, SpO₂/FiO₂ ≤214, or Mechanical Ventilation [Respiratory Failure]', value: 3, points: 3 },
+        { label: '2 pts — PaO₂/FiO₂ >200 to ≤300 or SpO₂/FiO₂ >214 to ≤357', value: 2, points: 2 },
+        { label: '3 pts — PaO₂/FiO₂ ≤200 or SpO₂/FiO₂ ≤214 [Respiratory Failure]', value: 3, points: 3 },
       ], 1),
 
       numberInput('directClifOfs', 'Precomputed CLIF-OFs total', {
@@ -293,7 +302,9 @@ export const wave3GiHepCalcs: Calculator[] = [
       const age = num(values.age, 55);
       const wbc = Math.max(num(values.wbc, 8), 0.1);
       // CLIF-C ACLFs = 10 × [0.33×CLIF-OFs + 0.04×Age + 0.63×ln(WBC) − 2]
-      const score = round(10 * (0.33 * ofs + 0.04 * age + 0.63 * Math.log(wbc) - 2), 0);
+      const rawScore = 10 * (0.33 * ofs + 0.04 * age + 0.63 * Math.log(wbc) - 2);
+      // The validated CLIF-C ACLF score is reported on a 0–100 scale.
+      const score = Math.max(0, Math.min(100, round(rawScore, 0)));
 
       const r = riskFromThresholds(score, [
         {
@@ -315,7 +326,7 @@ export const wave3GiHepCalcs: Calculator[] = [
           interpretation: `CLIF-C ACLF score ${score}: high mortality risk (estimated 28-day mortality ~60–75%). Rapid multidisciplinary ICU resuscitation; expedite urgent transplant listing if eligible.`,
         },
         {
-          max: 120,
+          max: 100,
           level: 'critical',
           label: 'Very High Risk / Futility Consideration (Score ≥65)',
           interpretation: `CLIF-C ACLF score ${score}: very high short-term mortality (>80–90% at 28 days). If patient is not a transplant candidate and organ failures persist at 48–72 hours, goals of care and futility discussions are warranted per EASL guidelines.`,
@@ -342,7 +353,7 @@ export const wave3GiHepCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'CLIF-C ACLF = 10×[0.33×CLIF-OFs + 0.04×age + 0.63×ln(WBC) − 2]. Derived in CANONIC study. Evaluates acute-on-chronic liver failure prognosis.',
+      summary: 'CLIF-C ACLF = 10×[0.33×CLIF-OFs + 0.04×age + 0.63×ln(WBC) − 2], reported on the validated 0–100 scale. Derived in CANONIC study. Evaluates acute-on-chronic liver failure prognosis.',
       formula: 'CLIF-C ACLFs = 10 × (0.33×CLIF-OFs + 0.04×Age + 0.63×ln(WBC) − 2)',
       validation: 'CANONIC study / EASL-CLIF consortium; predicts 28-day mortality in ACLF better than MELD in many cohorts.',
       references: [
@@ -361,6 +372,8 @@ export const wave3GiHepCalcs: Calculator[] = [
     pearls: [
       'Requires accurate CLIF-OFs first — do not plug arbitrary organ counts.',
       'WBC is a key inflammatory component of the score.',
+      'The CLIF-C OF coagulation domain uses INR; platelet count is not part of this score.',
+      'Mechanical ventilation alone does not define respiratory failure; use the PaO₂/FiO₂ or SpO₂/FiO₂ thresholds. Ventilation for hepatic encephalopathy is counted under cerebral failure in the original framework.',
     ],
   },
 
@@ -2088,6 +2101,7 @@ export const wave3GiHepCalcs: Calculator[] = [
     tags: ['gerd', 'gerdq', 'reflux', 'questionnaire', 'symptoms'],
     whenToUse: 'Primary care or GI clinic assessment of suspected GERD and monitoring symptom control.',
     whyUse: 'Structured 6-item score; ≥8 suggests GERD and may support empiric PPI trial in typical patients.',
+    questionnaire: true,
     inputs: [
       selectInput('heartburn', 'Heartburn frequency (past 7 days)', [
         { label: '0 days (0)', value: 0 },

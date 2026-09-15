@@ -1,3 +1,5 @@
+import type { CalcInput, Calculator, QuestionnaireMetadata } from '../types/calculator';
+
 export function num(v: number | string | boolean | null | undefined, fallback = 0): number {
   if (v === null || v === undefined || v === '') return fallback;
   if (typeof v === 'boolean') return v ? 1 : 0;
@@ -122,6 +124,127 @@ export type MissingRequiredInput = {
   id: string;
   label: string;
 };
+
+type CalculatorQuestionnaireShape = Pick<Calculator, 'inputs' | 'isQuestionnaire' | 'questionnaire'>;
+type CalculatorValue = number | string | boolean | null | undefined;
+type QuestionnaireValues = Record<string, CalculatorValue>;
+
+const QUESTIONNAIRE_MODE_VALUES = new Set(['survey', 'questionnaire', 'checkboxes', 'regions', 'items', 'itemized']);
+const DIRECT_MODE_VALUES = new Set(['direct', 'override', 'precomputed']);
+
+function metadataFor(calc: CalculatorQuestionnaireShape): QuestionnaireMetadata | undefined {
+  return calc.questionnaire && typeof calc.questionnaire === 'object' ? calc.questionnaire : undefined;
+}
+
+function optionValueIs(value: string | number | boolean, candidates: Set<string>): boolean {
+  return typeof value === 'string' && candidates.has(value.toLowerCase());
+}
+
+function isQuestionnaireModeInput(input: CalcInput): boolean {
+  if (!input.options || input.options.length === 0) return false;
+  const hasDirectMode = input.options.some((option) => optionValueIs(option.value, DIRECT_MODE_VALUES));
+  const hasQuestionnaireMode = input.options.some((option) => optionValueIs(option.value, QUESTIONNAIRE_MODE_VALUES));
+  return hasDirectMode && hasQuestionnaireMode;
+}
+
+function isDirectModeValue(
+  modeInput: CalcInput,
+  value: CalculatorValue,
+  metadata?: QuestionnaireMetadata
+): boolean {
+  if (metadata?.directModeValues?.some((candidate) => candidate === value)) return true;
+  if (typeof value !== 'string') return false;
+  if (!modeInput.options?.some((option) => option.value === value)) return false;
+  return DIRECT_MODE_VALUES.has(value.toLowerCase());
+}
+
+/** Whether a calculator is explicitly or conventionally marked as an interactive questionnaire. */
+export function isQuestionnaireCalculator(calc: CalculatorQuestionnaireShape): boolean {
+  if (typeof calc.isQuestionnaire === 'boolean') return calc.isQuestionnaire;
+  if (typeof calc.questionnaire === 'boolean') return calc.questionnaire;
+  if (calc.questionnaire) return true;
+  return calc.inputs.some(isQuestionnaireModeInput);
+}
+
+/** Find the branch selector for a questionnaire, if it has one. */
+export function getQuestionnaireModeInput(calc: CalculatorQuestionnaireShape): CalcInput | undefined {
+  const configuredId = metadataFor(calc)?.modeInputId;
+  if (configuredId) return calc.inputs.find((input) => input.id === configuredId);
+  return calc.inputs.find(isQuestionnaireModeInput);
+}
+
+function isDirectOverrideInput(input: CalcInput): boolean {
+  const id = input.id.toLowerCase();
+  const text = `${input.id} ${input.label}`.toLowerCase();
+  return (
+    id.startsWith('direct') ||
+    /\b(direct|override|precomputed)\b/.test(text) ||
+    /\b(score|total|raw)\b.*\b(if|entry|input)\b/.test(text)
+  );
+}
+
+/**
+ * Inputs that can affect the current questionnaire branch. Hidden direct-entry
+ * fields are excluded from the survey branch so stale or invalid values there
+ * cannot block the active calculation.
+ */
+export function getActiveQuestionnaireInputs(
+  calc: CalculatorQuestionnaireShape,
+  values: QuestionnaireValues
+): CalcInput[] {
+  if (!isQuestionnaireCalculator(calc)) return calc.inputs;
+
+  const modeInput = getQuestionnaireModeInput(calc);
+  if (!modeInput) return calc.inputs;
+
+  const metadata = metadataFor(calc);
+  const modeValue = values[modeInput.id];
+  const modeKey = modeValue === null || modeValue === undefined ? undefined : String(modeValue);
+  const configuredIds = modeKey ? metadata?.activeInputIdsByMode?.[modeKey] : undefined;
+  if (configuredIds) {
+    const activeIds = new Set(configuredIds);
+    return calc.inputs.filter((input) => activeIds.has(input.id));
+  }
+
+  if (isDirectModeValue(modeInput, modeValue, metadata)) {
+    const directIds = metadata?.directInputIds ?? calc.inputs.filter(isDirectOverrideInput).map((input) => input.id);
+    if (directIds.length > 0) {
+      const activeIds = new Set(directIds);
+      return calc.inputs.filter((input) => activeIds.has(input.id));
+    }
+    // A malformed direct branch should fail closed rather than silently
+    // calculating from a default. The missing-input gate will explain what is
+    // still required to the user.
+    return calc.inputs.filter((input) => input.id !== modeInput.id);
+  }
+
+  return calc.inputs.filter((input) => input.id !== modeInput.id && !isDirectOverrideInput(input));
+}
+
+/** Required/unanswered fields for both marked and inferred questionnaires. */
+export function getMissingQuestionnaireInputs(
+  calc: CalculatorQuestionnaireShape,
+  values: QuestionnaireValues
+): MissingRequiredInput[] {
+  if (!isQuestionnaireCalculator(calc)) return getMissingRequiredInputs(calc.inputs, values);
+
+  const missing: MissingRequiredInput[] = [];
+  const modeInput = getQuestionnaireModeInput(calc);
+  if (modeInput && isMissingValue(values[modeInput.id], modeInput.type === 'number')) {
+    missing.push({ id: modeInput.id, label: modeInput.label });
+  }
+
+  for (const input of getActiveQuestionnaireInputs(calc, values)) {
+    // Questionnaire/select/boolean inputs have historically omitted required:
+    // true. In a questionnaire, every active item is required unless the data
+    // explicitly opts out. This still preserves optional number fields.
+    if (input.required === false) continue;
+    if (isMissingValue(values[input.id], input.type === 'number')) {
+      missing.push({ id: input.id, label: input.label });
+    }
+  }
+  return missing;
+}
 
 /**
  * `null`, `undefined`, `''` and non-finite numbers count as "not entered".

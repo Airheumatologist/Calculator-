@@ -6,10 +6,13 @@ import { LiveResult } from '../components/LiveResult';
 import { EvidencePanel } from '../components/EvidencePanel';
 import { NextStepsPanel } from '../components/NextStepsPanel';
 import {
-  getMissingRequiredInputs,
+  getActiveQuestionnaireInputs,
+  getMissingQuestionnaireInputs,
+  getQuestionnaireModeInput,
   getRangeViolations,
   getStepViolations,
   incompleteResult,
+  isQuestionnaireCalculator,
   rangeBlockedResult,
   stepBlockedResult,
 } from '../utils/helpers';
@@ -17,7 +20,17 @@ import {
 function initialValues(calc: ReturnType<typeof getCalculator>) {
   const values: Record<string, number | string | boolean | null> = {};
   if (!calc) return values;
+  const isQuestionnaire = isQuestionnaireCalculator(calc);
+  const modeInput = isQuestionnaire ? getQuestionnaireModeInput(calc) : undefined;
   for (const input of calc.inputs) {
+    if (isQuestionnaire && input.id !== modeInput?.id) {
+      // Defaults are useful for calculators that intentionally start with a
+      // representative clinical value, but they silently answer questionnaire
+      // items. Keep only the branch selector preselected; all active answers
+      // must come from the user.
+      values[input.id] = null;
+      continue;
+    }
     if (input.defaultValue !== undefined) {
       values[input.id] = input.defaultValue;
     } else if (input.type === 'boolean') {
@@ -36,28 +49,42 @@ export function CalculatorPage() {
   const calcId = id ?? '';
   const calc = getCalculator(calcId);
   const [formState, setFormState] = useState(() => ({ calcId, values: initialValues(calc) }));
+  const [selectedOptionIndices, setSelectedOptionIndices] = useState<Record<string, number>>({});
   const [tab, setTab] = useState<'evidence' | 'next'>('next');
 
   let values = formState.values;
   if (formState.calcId !== calcId) {
     values = initialValues(calc);
     setFormState({ calcId, values });
+    setSelectedOptionIndices({});
     setTab('next');
   }
 
+  const activeInputs = useMemo(
+    () => (calc ? getActiveQuestionnaireInputs(calc, values) : []),
+    [calc, values]
+  );
+
+  const activeFormInputIds = useMemo(() => {
+    const ids = new Set(activeInputs.map((input) => input.id));
+    const modeInput = calc ? getQuestionnaireModeInput(calc) : undefined;
+    if (modeInput) ids.add(modeInput.id);
+    return [...ids];
+  }, [calc, activeInputs]);
+
   const missingRequired = useMemo(
-    () => (calc ? getMissingRequiredInputs(calc.inputs, values) : []),
+    () => (calc ? getMissingQuestionnaireInputs(calc, values) : []),
     [calc, values]
   );
 
   const rangeViolations = useMemo(
-    () => (calc ? getRangeViolations(calc.inputs, values) : []),
-    [calc, values]
+    () => (calc ? getRangeViolations(activeInputs, values) : []),
+    [calc, activeInputs, values]
   );
 
   const stepViolations = useMemo(
-    () => (calc ? getStepViolations(calc.inputs, values) : []),
-    [calc, values]
+    () => (calc ? getStepViolations(activeInputs, values) : []),
+    [calc, activeInputs, values]
   );
 
   const result = useMemo(() => {
@@ -116,13 +143,22 @@ export function CalculatorPage() {
         <CalculatorForm
           inputs={calc.inputs}
           values={values}
-          onChange={(inputId, value) =>
+          activeInputIds={activeFormInputIds}
+          missingInputIds={missingRequired.map((input) => input.id)}
+          selectedOptionIndices={selectedOptionIndices}
+          onChange={(inputId, value, optionIndex) => {
             setFormState((prev) => ({
               calcId: prev.calcId,
               values: { ...prev.values, [inputId]: value },
-            }))
-          }
-          onReset={() => setFormState({ calcId, values: initialValues(calc) })}
+            }));
+            if (optionIndex !== undefined) {
+              setSelectedOptionIndices((prev) => ({ ...prev, [inputId]: optionIndex }));
+            }
+          }}
+          onReset={() => {
+            setFormState({ calcId, values: initialValues(calc) });
+            setSelectedOptionIndices({});
+          }}
         />
         <LiveResult result={result} />
       </div>

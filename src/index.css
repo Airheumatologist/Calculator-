@@ -629,6 +629,30 @@ a {
   color: #333;
 }
 
+.safety-alerts {
+  margin: 0 1rem 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #fca5a5;
+  border-left: 4px solid var(--danger);
+  border-radius: var(--radius-sm);
+  background: #fef2f2;
+  color: #7f1d1d;
+  font-size: 0.84rem;
+}
+
+.safety-alerts strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.72rem;
+}
+
+.safety-alerts ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
 .detail-list,
 .reco-list,
 .ref-list,

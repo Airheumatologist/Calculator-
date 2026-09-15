@@ -32,6 +32,8 @@ export interface CalcResult {
   riskLevel: RiskLevel;
   details?: { label: string; value: string }[];
   recommendations?: string[];
+  /** Urgent safety notifications raised by the calculator's answers. */
+  alerts?: string[];
 }
 
 export interface EvidenceRef {
@@ -51,6 +53,17 @@ export interface NextStep {
   actions: string[];
 }
 
+export interface QuestionnaireMetadata {
+  /** Input that selects the questionnaire/direct-entry branch, when present. */
+  modeInputId?: string;
+  /** Values of the mode input that select a direct/precomputed branch. */
+  directModeValues?: (string | number | boolean)[];
+  /** Explicit direct-entry fields when their labels are not self-describing. */
+  directInputIds?: string[];
+  /** Exact active fields for a mode, keyed by String(modeValue). */
+  activeInputIdsByMode?: Record<string, string[]>;
+}
+
 export interface Calculator {
   id: string;
   name: string;
@@ -62,6 +75,10 @@ export interface Calculator {
   whyUse: string;
   inputs: CalcInput[];
   calculate: (values: Record<string, number | string | boolean | null>) => CalcResult;
+  /** Marks an assessment whose item answers must be explicitly entered. */
+  isQuestionnaire?: boolean;
+  /** Optional branch metadata; presence also marks the calculator as a questionnaire. */
+  questionnaire?: QuestionnaireMetadata | boolean;
   evidence: {
     summary: string;
     formula?: string;

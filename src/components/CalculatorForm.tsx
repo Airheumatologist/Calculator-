@@ -13,8 +13,14 @@ type Values = Record<string, number | string | boolean | null>;
 interface Props {
   inputs: CalcInput[];
   values: Values;
-  onChange: (id: string, value: number | string | boolean | null) => void;
+  onChange: (id: string, value: number | string | boolean | null, optionIndex?: number) => void;
   onReset: () => void;
+  /** IDs that are relevant to the currently selected questionnaire branch. */
+  activeInputIds?: string[];
+  /** Active inputs currently missing an explicit answer. */
+  missingInputIds?: string[];
+  /** Keeps duplicate-valued options visually distinct without changing values. */
+  selectedOptionIndices?: Record<string, number>;
 }
 
 function numberFieldError(
@@ -41,7 +47,10 @@ interface OptionGroupProps {
   labelledBy: string;
   options: { key: string; label: string; description?: string; points?: number; value: CalcOption['value'] }[];
   selectedIndex: number;
-  onSelect: (value: CalcOption['value']) => void;
+  onSelect: (value: CalcOption['value'], index: number) => void;
+  describedBy?: string;
+  invalid?: boolean;
+  required?: boolean;
 }
 
 /**
@@ -50,7 +59,16 @@ interface OptionGroupProps {
  * toggle buttons cannot express. Native <button> elements are kept so
  * Enter/Space still activate, and arrow keys move selection like real radios.
  */
-function OptionGroup({ className, labelledBy, options, selectedIndex, onSelect }: OptionGroupProps) {
+function OptionGroup({
+  className,
+  labelledBy,
+  options,
+  selectedIndex,
+  onSelect,
+  describedBy,
+  invalid,
+  required,
+}: OptionGroupProps) {
   const focusIndex = selectedIndex >= 0 ? selectedIndex : 0;
 
   function handleKeyDown(e: KeyboardEvent<HTMLDivElement>) {
@@ -61,13 +79,21 @@ function OptionGroup({ className, labelledBy, options, selectedIndex, onSelect }
     e.preventDefault();
     const next =
       (focusIndex + (forward ? 1 : -1) + options.length) % options.length;
-    onSelect(options[next].value);
+    onSelect(options[next].value, next);
     const buttons = e.currentTarget.querySelectorAll<HTMLButtonElement>('[role="radio"]');
     buttons[next]?.focus();
   }
 
   return (
-    <div className={className} role="radiogroup" aria-labelledby={labelledBy} onKeyDown={handleKeyDown}>
+    <div
+      className={className}
+      role="radiogroup"
+      aria-labelledby={labelledBy}
+      aria-describedby={describedBy || undefined}
+      aria-invalid={invalid || undefined}
+      aria-required={required || undefined}
+      onKeyDown={handleKeyDown}
+    >
       {options.map((opt, i) => {
         const selected = i === selectedIndex;
         return (
@@ -78,7 +104,7 @@ function OptionGroup({ className, labelledBy, options, selectedIndex, onSelect }
             aria-checked={selected}
             tabIndex={i === focusIndex ? 0 : -1}
             className={`option-btn ${selected ? 'selected' : ''}`}
-            onClick={() => onSelect(opt.value)}
+            onClick={() => onSelect(opt.value, i)}
           >
             <span className="option-radio" />
             <span className="option-text">
@@ -97,7 +123,15 @@ function OptionGroup({ className, labelledBy, options, selectedIndex, onSelect }
   );
 }
 
-export function CalculatorForm({ inputs, values, onChange, onReset }: Props) {
+export function CalculatorForm({
+  inputs,
+  values,
+  onChange,
+  onReset,
+  activeInputIds,
+  missingInputIds,
+  selectedOptionIndices,
+}: Props) {
   return (
     <div className="panel">
       <div className="panel-header">
@@ -109,9 +143,13 @@ export function CalculatorForm({ inputs, values, onChange, onReset }: Props) {
       <div className="panel-body">
         {inputs.map((input) => {
           const value = values[input.id] ?? null;
-          const fieldError = input.type === 'number' ? numberFieldError(input, value) : null;
-          const incomplete =
-            input.type === 'number' && !fieldError && input.required === true && isMissingValue(value, true);
+          const isActive = activeInputIds ? activeInputIds.includes(input.id) : true;
+          const fieldError = isActive && input.type === 'number' ? numberFieldError(input, value) : null;
+          const incomplete = isActive && !fieldError && (
+            missingInputIds
+              ? missingInputIds.includes(input.id)
+              : input.required === true && isMissingValue(value, input.type === 'number')
+          );
 
           const labelId = domId(input.id, 'label');
           const fieldId = domId(input.id, 'field');
@@ -155,7 +193,7 @@ export function CalculatorForm({ inputs, values, onChange, onReset }: Props) {
                       max={input.max}
                       step={input.step ?? 1}
                       placeholder={input.placeholder}
-                      required={input.required}
+                      required={input.required || incomplete}
                       aria-invalid={fieldError ? true : incomplete ? true : undefined}
                       aria-describedby={describedBy || undefined}
                       onChange={(e) => {
@@ -182,8 +220,21 @@ export function CalculatorForm({ inputs, values, onChange, onReset }: Props) {
                 <OptionGroup
                   className="bool-toggle"
                   labelledBy={labelId}
-                  selectedIndex={value === true ? 1 : value === false ? 0 : -1}
-                  onSelect={(v) => onChange(input.id, v as boolean)}
+                  describedBy={describedBy}
+                  invalid={Boolean(fieldError || incomplete)}
+                  required={Boolean(input.required === true || incomplete)}
+                  selectedIndex={(() => {
+                    const preferred = selectedOptionIndices?.[input.id];
+                    const options = [false, true];
+                    return preferred !== undefined && options[preferred] === value
+                      ? preferred
+                      : value === true
+                        ? 1
+                        : value === false
+                          ? 0
+                          : -1;
+                  })()}
+                  onSelect={(v, index) => onChange(input.id, v as boolean, index)}
                   options={[false, true].map((val) => {
                     const opt = input.options?.find((o) => o.value === val);
                     return {
@@ -200,8 +251,16 @@ export function CalculatorForm({ inputs, values, onChange, onReset }: Props) {
                 <OptionGroup
                   className="option-list"
                   labelledBy={labelId}
-                  selectedIndex={input.options.findIndex((o) => o.value === value)}
-                  onSelect={(v) => onChange(input.id, v as number | string | boolean)}
+                  describedBy={describedBy}
+                  invalid={Boolean(fieldError || incomplete)}
+                  required={Boolean(input.required === true || incomplete)}
+                  selectedIndex={(() => {
+                    const preferred = selectedOptionIndices?.[input.id];
+                    return preferred !== undefined && input.options?.[preferred]?.value === value
+                      ? preferred
+                      : input.options.findIndex((o) => o.value === value);
+                  })()}
+                  onSelect={(v, index) => onChange(input.id, v as number | string | boolean, index)}
                   options={input.options.map((opt, i) => ({
                     key: `${input.id}-${i}`,
                     label: opt.label,
@@ -210,6 +269,11 @@ export function CalculatorForm({ inputs, values, onChange, onReset }: Props) {
                     value: opt.value,
                   }))}
                 />
+              )}
+              {incomplete && input.type !== 'number' && (
+                <p className="input-hint-required" id={errorId}>
+                  Required
+                </p>
               )}
             </div>
           );
