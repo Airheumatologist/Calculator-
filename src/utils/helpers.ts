@@ -32,6 +32,9 @@ export function riskFromThresholds(
   score: number,
   thresholds: { max: number; level: RiskLevel; label: string; interpretation: string }[]
 ): { riskLevel: RiskLevel; label: string; interpretation: string } {
+  if (!thresholds || thresholds.length === 0) {
+    return { riskLevel: 'info', label: '—', interpretation: '' };
+  }
   for (const t of thresholds) {
     if (score <= t.max) {
       return { riskLevel: t.level, label: t.label, interpretation: t.interpretation };

@@ -57,6 +57,7 @@ function OptionGroup({ className, labelledBy, options, selectedIndex, onSelect }
     const forward = ARROW_NEXT.includes(e.key);
     const backward = ARROW_PREV.includes(e.key);
     if (!forward && !backward) return;
+    if (options.length === 0) return;
     e.preventDefault();
     const next =
       (focusIndex + (forward ? 1 : -1) + options.length) % options.length;

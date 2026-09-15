@@ -381,7 +381,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
 
       const recurrent = bool(values.recurrent);
       const pastT1 = duration >= t1;
-      const pastT2 = type === 'absence' ? duration >= 30 : duration >= t2;
+      const pastT2 = type !== 'absence' && duration >= t2;
 
       let riskLevel: 'low' | 'moderate' | 'high' | 'critical' = 'low';
       let label = 'Below t1 — treat aggressively if ongoing';
@@ -1087,7 +1087,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         } else {
           label = 'Dementia range (HS+)';
           riskLevel = 'high';
-          interpretation = 'SLUMS 1–20 (≥HS): dementia range — comprehensive workup and safety assessment.';
+          interpretation = 'SLUMS ≤20 (≥HS): dementia range — comprehensive workup and safety assessment.';
         }
       } else if (score >= 25) {
         label = 'Normal (<HS)';

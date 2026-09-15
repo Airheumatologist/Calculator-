@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const missingEmergencyCalcs: Calculator[] = [
   {
@@ -227,8 +227,24 @@ export const missingEmergencyCalcs: Calculator[] = [
     calculate(values) {
       const items =
         (bool(values.dvtSigns) ? 1 : 0) + (bool(values.hemoptysis) ? 1 : 0) + (bool(values.peLikely) ? 1 : 0);
-      const ddimer = num(values.ddimer, 0);
       const threshold = items === 0 ? 1000 : 500;
+
+      if (isMissingValue(values.ddimer, true)) {
+        return {
+          score: items,
+          label: 'Enter D-dimer to evaluate',
+          interpretation: `${items} YEARS item(s) present (threshold ${threshold} ng/mL). Enter quantitative D-dimer (FEU ng/mL) to determine whether PE is excluded or CTPA is indicated.`,
+          riskLevel: 'info' as const,
+          details: [
+            { label: 'YEARS items', value: String(items) },
+            { label: 'Required threshold', value: `${threshold} ng/mL` },
+            { label: 'D-dimer', value: 'Not entered' },
+          ],
+          recommendations: ['Obtain high-sensitivity D-dimer (FEU)', 'If D-dimer unavailable and clinical suspicion persists, proceed to CTPA'],
+        };
+      }
+
+      const ddimer = num(values.ddimer, 0);
       const excluded = ddimer < threshold;
 
       if (excluded) {

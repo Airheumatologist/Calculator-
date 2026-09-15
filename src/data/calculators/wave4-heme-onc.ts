@@ -1372,6 +1372,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Adult solid-tumor patients with febrile neutropenia who appear clinically stable at presentation (not for unstable patients or most hematologic malignancies).',
     whyUse: 'Helps identify who remains high-risk for complications despite apparent stability; complements MASCC.',
     inputs: [
+      yesNo('scopeConfirmed', 'Solid tumor with confirmed stable febrile neutropenia', null, 'Target population: adult solid tumor receiving chemo with confirmed FN (fever ≥38.0°C and ANC <1000/µL) and clinically stable (no shock/organ failure).'),
       yesNo('ecog', 'ECOG performance status ≥ 2', 2, 'ECOG 2 = ambulatory, all self-care, unable to work, up and about >50% of waking hours. 0 = fully active; 1 = strenuous activity limited but light work OK; 3 = limited self-care, in bed/chair >50% of waking hours; 4 = completely disabled.'),
       yesNo('copd', 'COPD', 1, 'COPD on chronic treatment — not remote childhood asthma.'),
       yesNo('cvd', 'Chronic cardiovascular disease', 1, 'Documented CHF, ischemic heart disease, or arrhythmia. Hypertension alone does not count.'),
@@ -1380,6 +1381,16 @@ export const wave4HemeOncCalcs: Calculator[] = [
       yesNo('hyperglycemia', 'Stress-induced hyperglycemia', 2, 'e.g., glucose ≥121 mg/dL without prior diabetes in validation context'),
     ],
     calculate(values) {
+      if (!bool(values.scopeConfirmed)) {
+        return {
+          score: '—',
+          label: 'Target criteria required',
+          interpretation:
+            'CISNE is validated only in adult patients with solid tumors and confirmed febrile neutropenia who appear clinically stable at presentation (not for hematologic malignancies or unstable patients). Confirm target population before scoring.',
+          riskLevel: 'info' as const,
+          details: [{ label: 'Prerequisite', value: 'Confirmed stable FN in solid tumor' }],
+        };
+      }
       const score =
         (bool(values.ecog) ? 2 : 0) +
         (bool(values.copd) ? 1 : 0) +

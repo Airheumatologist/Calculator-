@@ -1849,6 +1849,9 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       let riskLevel: 'info' | 'normal' | 'moderate' | 'high' | 'critical' = 'info';
       let label = 'Estimated PaO₂ (×5 rule)';
       if (measured > 0) {
+        if (fio2 <= 0 || expected <= 0) {
+          return { score: '—', label: 'Invalid FiO₂', interpretation: 'FiO₂ must be > 0.', riskLevel: 'info' as const };
+        }
         const ratio = round(measured / expected, 2);
         const pf = round(measured / (fio2 / 100), 0);
         if (measured < lowBand * 0.7) {

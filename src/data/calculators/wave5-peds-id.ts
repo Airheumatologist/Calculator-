@@ -468,21 +468,26 @@ export const wave5PedsIdCalcs: Calculator[] = [
       const route = String(values.route ?? 'oral');
       const oralAge = round(age / 2 + 12, 1);
       const oralWt = wtProvided ? round(wt / 2 + 6, 1) : null;
-      const oral = oralAge;
+      const isInfant = age < 1 || (wtProvided && wt < 10);
+      const oral = isInfant && oralWt != null ? oralWt : oralAge;
       const depth = route === 'nasal' ? round(oral + 2.5, 1) : oral;
+
+      const infantNote = isInfant
+        ? oralWt != null
+          ? ' In infants (<1 year or <10 kg), weight-based depth (wt/2 + 6) is reported as primary to mitigate right mainstem bronchus intubation risk.'
+          : ' CAUTION: Classic age/2 + 12 overestimates depth in infants (<1 year); enter weight or use length/Broselow tape.'
+        : '';
+
       return {
         score: depth,
         unit: 'cm',
         label: `${route === 'nasal' ? 'Nasal' : 'Oral'} depth ≈ ${depth} cm`,
-        interpretation: `Age-based oral depth ≈ age/2 + 12 = ${oralAge} cm at lips. ${
-          oralWt != null ? `Weight-based alternative ≈ wt/2 + 6 = ${oralWt} cm. ` : 'Weight not entered, so the weight-based alternative was not calculated. '
-        }${
-          route === 'nasal' ? `Nasal estimate ≈ ${depth} cm (oral + ~2.5). ` : ''
-        }Confirm bilateral breath sounds, ETCO₂, and chest rise; adjust for mainstem intubation risk.`,
-        riskLevel: 'info',
+        interpretation: `Estimated oral depth: ${oral} cm at lips.${infantNote} Confirm bilateral breath sounds, ETCO₂, and chest rise; adjust for mainstem intubation risk.`,
+        riskLevel: isInfant && oralWt == null ? ('moderate' as const) : ('info' as const),
         details: [
-          { label: 'Age formula', value: `${oralAge} cm` },
-          { label: 'Weight formula', value: oralWt != null ? `${oralWt} cm` : 'Not calculated — weight not entered' },
+          { label: 'Calculation basis', value: isInfant && oralWt != null ? 'Weight-based (infant preferred)' : 'Age formula' },
+          { label: 'Age formula', value: `${oralAge} cm${age < 1 ? ' (overestimates <1 yr)' : ''}` },
+          { label: 'Weight formula', value: oralWt != null ? `${oralWt} cm` : 'Not entered' },
           { label: 'Reported', value: `${depth} cm (${route})` },
         ],
         recommendations: [

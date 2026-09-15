@@ -57,7 +57,7 @@ export const extraCalcs: Calculator[] = [
         (bool(values.fever) ? 1 : 0) +
         (bool(values.vascular) ? 1 : 0) +
         (bool(values.immuno) ? 1 : 0) +
-        (bool(values.microMinor) ? 1 : 0);
+        (bool(values.microMinor) && !bool(values.bloodCx) ? 1 : 0);
       let label = 'Rejected';
       let interpretation = 'Does not meet possible/definite criteria by this simplified count.';
       let riskLevel: 'low' | 'moderate' | 'high' = 'low';
@@ -419,7 +419,11 @@ export const extraCalcs: Calculator[] = [
       let riskLevel: 'normal' | 'moderate' | 'high' | 'critical' = 'normal';
       let label = 'Normal QTc';
       let interpretation = 'Fridericia QTc within typical range for many adults.';
-      if (qtc >= 500) {
+      if (qtc < 350) {
+        riskLevel = 'moderate';
+        label = 'Short QTc';
+        interpretation = `QTc ${qtc} ms: short QTc (<350 ms). Consider short QT syndrome workup if persistent, or hypercalcemia/digitalis effect.`;
+      } else if (qtc >= 500) {
         riskLevel = 'critical';
         label = 'Markedly prolonged';
         interpretation = 'QTc ≥500 ms: high TdP risk.';

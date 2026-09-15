@@ -350,6 +350,7 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Adults with fever and neutropenia to risk-stratify complications.',
     whyUse: 'Score ≥21 predicts lower risk of serious medical complications and may support oral/step-down care.',
     inputs: [
+      yesNo('fnConfirmed', 'Confirmed febrile neutropenia (fever ≥38.0°C + ANC <1000/µL)', null, 'Prerequisite: temperature ≥38.3°C (or ≥38.0°C sustained) and ANC <500/µL (or <1000/µL and falling). MASCC is invalid without confirmed FN.'),
       selectInput('burden', 'Burden of illness (symptoms)', [
         { label: 'No or mild symptoms (5)', value: 5, description: 'Looks well aside from fever/chills, self-caring' },
         { label: 'Moderate symptoms (3)', value: 3, description: 'Significant symptoms but not critically ill' },
@@ -363,6 +364,15 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       yesNo('age', 'Age < 60 years', 2, 'Yes = age <60. Age ≥60 scores 0 on this item.'),
     ],
     calculate(values) {
+      if (!bool(values.fnConfirmed)) {
+        return {
+          score: '—',
+          label: 'Prerequisite not met',
+          interpretation: 'MASCC risk index is exclusively validated for patients with confirmed febrile neutropenia (fever ≥38.0°C and ANC <1000/µL). Confirm fever and neutropenia before assessing risk for outpatient management.',
+          riskLevel: 'info' as const,
+          details: [{ label: 'Status', value: 'Confirmed febrile neutropenia required' }],
+        };
+      }
       const score =
         num(values.burden) +
         (bool(values.noHypotension) ? 5 : 0) +
@@ -418,18 +428,21 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       yesNo('tender', 'Tender anterior cervical nodes', 1, 'Tender anterior cervical lymphadenopathy (not posterior-only).'),
       yesNo('exudate', 'Tonsillar swelling or exudate', 1, 'Tonsillar swelling and/or exudate on exam.'),
       selectInput('age', 'Age group', [
+        { label: '< 3 years (0 — testing rarely indicated)', value: 'under_3' },
         { label: '3–14 years (+1)', value: 1 },
         { label: '15–44 years (0)', value: 0 },
         { label: '≥ 45 years (−1)', value: -1 },
-      ]),
+      ], 1),
     ],
     calculate(values) {
+      const isUnder3 = values.age === 'under_3';
+      const agePts = isUnder3 ? 0 : num(values.age);
       const raw =
         (bool(values.fever) ? 1 : 0) +
         (bool(values.noCough) ? 1 : 0) +
         (bool(values.tender) ? 1 : 0) +
         (bool(values.exudate) ? 1 : 0) +
-        num(values.age);
+        agePts;
       // McIsaac is often reported as raw total including −1; risk bands use observed range −1 to 5
       const r = riskFromThresholds(raw, [
         {
@@ -457,9 +470,13 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
           interpretation: 'Higher GAS probability. Test and treat positives; some settings empiric Rx if follow-up limited.',
         },
       ]);
+      const interpretation = isUnder3
+        ? `Child <3 years: GAS pharyngitis and acute rheumatic fever are rare in this age group; testing (RADT/culture) and empiric antibiotics are not routinely recommended by IDSA guidelines unless specific risk factors (e.g. sibling with GAS). ${r.interpretation}`
+        : r.interpretation;
       return {
         score: raw,
         ...r,
+        interpretation,
         details: [{ label: 'Components', value: 'Fever, no cough, tender nodes, exudate, age (−1 to +1)' }],
       };
     },

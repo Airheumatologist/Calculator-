@@ -1353,28 +1353,44 @@ export const wave4EmIdCalcs: Calculator[] = [
     ],
     calculate(values) {
       const age = num(values.age, 65);
-      const dd = num(values.ddimer, 0);
       const pretest = String(values.pretest ?? 'low');
       const conventional = 500;
       const threshold = age > 50 ? age * 10 : conventional;
-      const belowAge = dd < threshold;
-      const belowConv = dd < conventional;
 
       if (pretest === 'high') {
+        const dd = num(values.ddimer, 0);
         return {
           score: round(threshold, 0),
           unit: 'µg/L FEU cutoff',
           label: 'High pretest — image, do not exclude with D-dimer',
-          interpretation: `Age-adjusted cutoff would be ${threshold} µg/L FEU, but high pretest probability requires definitive imaging regardless of D-dimer (${dd} µg/L).`,
+          interpretation: `Age-adjusted cutoff would be ${threshold} µg/L FEU, but high pretest probability requires definitive imaging regardless of D-dimer (${isMissingValue(values.ddimer, true) ? 'not entered' : `${dd} µg/L`}).`,
           riskLevel: 'high' as const,
           details: [
-            { label: 'Measured D-dimer', value: `${dd} µg/L FEU` },
+            { label: 'Measured D-dimer', value: isMissingValue(values.ddimer, true) ? 'Not entered' : `${dd} µg/L FEU` },
             { label: 'Conventional cutoff', value: `${conventional}` },
             { label: 'Age-adjusted cutoff', value: String(threshold) },
           ],
           recommendations: ['Proceed to CTPA/V-Q or duplex as indicated'],
         };
       }
+
+      if (isMissingValue(values.ddimer, true)) {
+        return {
+          score: round(threshold, 0),
+          unit: 'µg/L FEU cutoff',
+          label: 'Enter measured D-dimer',
+          interpretation: `Age-adjusted cutoff is ${threshold} µg/L FEU (conventional 500 µg/L). Enter the measured D-dimer level to determine whether VTE is excluded.`,
+          riskLevel: 'info' as const,
+          details: [
+            { label: 'Age-adjusted cutoff', value: `${threshold} µg/L FEU` },
+            { label: 'Measured D-dimer', value: 'Not entered' },
+          ],
+        };
+      }
+
+      const dd = num(values.ddimer, 0);
+      const belowAge = dd < threshold;
+      const belowConv = dd < conventional;
 
       if (belowAge) {
         return {

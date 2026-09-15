@@ -13,7 +13,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whyUse: 'Still used in many FDA drug labels despite CKD-EPI for staging.',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 60 }),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 20, max: 300, defaultValue: 70, helpText: 'Original Cockcroft–Gault uses actual body weight; many pharmacies substitute IBW or AdjBW in obesity.' }),
+      numberInput('weight', 'Weight', { unit: 'kg', min: 20, max: 300, defaultValue: 70, helpText: 'Enter weight in kg, not lb. Original Cockcroft–Gault uses actual body weight; many pharmacies substitute IBW or AdjBW in obesity.' }),
       numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.0, helpText: 'mg/dL (divide µmol/L by 88.4).' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 1 },
@@ -25,6 +25,9 @@ export const nephrologyEndoCalcs: Calculator[] = [
       const wt = num(values.weight, 70);
       const scr = num(values.scr, 1);
       const sex = num(values.sex, 1);
+      if (scr <= 0) {
+        return { score: '—', label: 'Invalid creatinine', interpretation: 'Serum creatinine must be > 0.', riskLevel: 'info' as const };
+      }
       const crcl = round(((140 - age) * wt * sex) / (72 * scr), 1);
       const r = riskFromThresholds(crcl, [
         { max: 29, level: 'high', label: 'Severely reduced', interpretation: 'CrCl <30: major dose adjustments / avoid nephrotoxic drugs.' },
@@ -64,6 +67,9 @@ export const nephrologyEndoCalcs: Calculator[] = [
     ],
     calculate(values) {
       const scr = num(values.scr, 1);
+      if (scr <= 0) {
+        return { score: '—', label: 'Invalid creatinine', interpretation: 'Serum creatinine must be > 0.', riskLevel: 'info' as const };
+      }
       const age = num(values.age, 50);
       const female = values.sex === 'F';
       const kappa = female ? 0.7 : 0.9;
@@ -722,7 +728,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whyUse: 'Mosteller is simple and widely accepted.',
     inputs: [
       numberInput('height', 'Height', { unit: 'cm', min: 50, max: 250, defaultValue: 170, helpText: 'Centimetres. Mosteller BSA = √([Ht(cm)×Wt(kg)]/3600).' }),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 10, max: 400, defaultValue: 70 }),
+      numberInput('weight', 'Weight', { unit: 'kg', min: 10, max: 400, defaultValue: 70, helpText: 'Enter weight in kg, not lb.' }),
     ],
     calculate(values) {
       const h = num(values.height, 170);

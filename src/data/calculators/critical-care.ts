@@ -603,9 +603,10 @@ export const criticalCareCalcs: Calculator[] = [
       selectInput('rr', 'RR category (/min)', [
         { label: '12–24 (0)', value: 0 },
         { label: '10–11 or 25–34 (1)', value: 1 },
-        { label: '6–9 or 35–49 (3)', value: 3 },
+        { label: '6–9 (2)', value: 2 },
+        { label: '35–49 (3)', value: 3 },
         { label: '≤5 or ≥50 (4)', value: 4 },
-      ], 0, 'Respiratory rate in breaths/min (or ventilator rate). Worst in first 24 h.'),
+      ], 0, 'Respiratory rate in breaths/min (or ventilator rate). Worst in first 24 h. (6–9 = 2 pts; 35–49 = 3 pts).'),
       selectInput('na', 'Sodium (mEq/L)', [
         { label: '130–149 (0)', value: 0 },
         { label: '150–154 (1)', value: 1 },
@@ -630,9 +631,9 @@ export const criticalCareCalcs: Calculator[] = [
       selectInput('hct', 'Hematocrit (%)', [
         { label: '30–45.9 (0)', value: 0 },
         { label: '46–49.9 (1)', value: 1 },
-        { label: '20–29.9 or ≥50 (2)', value: 2 },
-        { label: '<20 (4)', value: 4 },
-      ], 0, 'Hematocrit in percent. Worst in first 24 h.'),
+        { label: '20–29.9 or 50–59.9 (2)', value: 2 },
+        { label: '<20 or ≥60 (4)', value: 4 },
+      ], 0, 'Hematocrit in percent. Worst in first 24 h. (50–59.9% = 2 pts; <20% or ≥60% = 4 pts).'),
       selectInput('wbc', 'WBC (×10³/µL)', [
         { label: '3–14.9 (0)', value: 0 },
         { label: '15–19.9 (1)', value: 1 },

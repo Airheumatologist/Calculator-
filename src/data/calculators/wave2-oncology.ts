@@ -478,8 +478,8 @@ export const wave2OncologyCalcs: Calculator[] = [
         helpText: 'Leave 0 to compute Mosteller BSA from height/weight',
         required: false,
       }),
-      numberInput('height', 'Height', { unit: 'cm', min: 0, max: 250, step: 0.1, defaultValue: 170 }),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 0, max: 300, step: 0.1, defaultValue: 70 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 30, max: 250, step: 0.1, defaultValue: 170 }),
+      numberInput('weight', 'Weight', { unit: 'kg', min: 10, max: 300, step: 0.1, defaultValue: 70 }),
       numberInput('pctDose', 'Percent of full dose', {
         unit: '%',
         min: 1,
@@ -695,7 +695,7 @@ export const wave2OncologyCalcs: Calculator[] = [
         { label: '1 — Restricted in strenuous activity; ambulatory, light/sedentary work OK', value: 1, description: 'Restricted in physically strenuous activity but ambulatory and able to do light or sedentary work' },
         { label: '2 — Ambulatory, all self-care; unable to work; up >50% of waking hours', value: 2, description: 'Capable of all self-care but unable to carry out any work activities; up and about more than 50% of waking hours' },
         { label: '≥3 — Limited self-care or worse; bed/chair >50% of waking hours', value: 3, description: 'Capable of only limited self-care, confined to bed or chair more than 50% of waking hours, or completely disabled' },
-      ]),
+      ], 0, 'Note: Per BCLC 2022, only cancer-related PS 1–2 upstages early/intermediate tumor burden to BCLC C. If PS impairment is due to non-malignant comorbidities, staging follows tumor extent.'),
       selectInput('liver', 'Liver function', [
         { label: 'Child-Pugh A (well compensated)', value: 'A', description: 'Child-Pugh 5–6 points' },
         { label: 'Child-Pugh B', value: 'B', description: 'Child-Pugh 7–9 points' },
@@ -733,13 +733,25 @@ export const wave2OncologyCalcs: Calculator[] = [
 
       // Stage C: advanced tumor (vascular invasion / EHD) or cancer-related PS 1–2 with preserved liver function
       if (tumor === 'advanced' || ps === 1 || ps === 2) {
+        const isComorbidityCandidate = tumor !== 'advanced';
         return {
           score: 'C',
           label: 'BCLC stage C (advanced)',
-          interpretation:
-            'Advanced HCC: portal invasion/extrahepatic disease and/or PS 1–2 with Child-Pugh A–B. Systemic therapy (IO combinations or TKIs per guidelines) is typical backbone.',
+          interpretation: isComorbidityCandidate
+            ? 'BCLC C if PS 1–2 is cancer-related (vascular invasion/EHD absent). IMPORTANT: Per BCLC 2022, if PS 1–2 is entirely due to non-cancer comorbidities, stage by tumor burden (candidate for curative ablation, resection, or transplant).'
+            : 'Advanced HCC: portal invasion/extrahepatic disease and/or PS 1–2 with Child-Pugh A–B. Systemic therapy (IO combinations or TKIs per guidelines) is typical backbone.',
           riskLevel: 'high',
-          recommendations: ['Systemic therapy evaluation', 'Clinical trial options', 'Supportive care concurrent'],
+          details: [
+            {
+              label: 'BCLC 2022 PS note',
+              value: isComorbidityCandidate
+                ? 'Only cancer-related PS upstages to C; if comorbidity-driven, stage follows tumor burden.'
+                : 'Advanced tumor burden',
+            },
+          ],
+          recommendations: isComorbidityCandidate
+            ? ['Clarify if PS 1–2 is cancer-related vs comorbidity', 'If comorbidity only, evaluate for stage-appropriate curative/locoregional therapy', 'Multidisciplinary tumor board review']
+            : ['Systemic therapy evaluation', 'Clinical trial options', 'Supportive care concurrent'],
         };
       }
 

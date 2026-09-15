@@ -458,10 +458,11 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     calculate(values) {
       const g = num(values.glucose, 100);
       const i = num(values.insulin, 10);
-      if (g <= 0 || i <= 0) {
-        return { score: '—', label: 'Invalid inputs', interpretation: 'Glucose and insulin must be >0.', riskLevel: 'info' };
+      const denom = Math.log10(i) + Math.log10(g);
+      if (g <= 0 || i <= 0 || !Number.isFinite(denom) || Math.abs(denom) < 1e-9) {
+        return { score: '—', label: 'Invalid inputs', interpretation: 'Glucose and insulin must be >0 and produce a valid non-zero denominator.', riskLevel: 'info' };
       }
-      const quicki = round(1 / (Math.log10(i) + Math.log10(g)), 3);
+      const quicki = round(1 / denom, 3);
       const r = riskFromThresholds(quicki, [
         { max: 0.3, level: 'high', label: 'Suggests insulin resistance', interpretation: 'QUICKI ≤0.30 often used as a rough IR threshold (lab/population dependent).' },
         { max: 0.33, level: 'moderate', label: 'Borderline sensitivity', interpretation: 'Intermediate QUICKI — correlate clinically.' },
@@ -837,6 +838,14 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       const uk = num(values.uk, 20);
       const pcr = num(values.pcr, 1);
       const ucr = num(values.ucr, 100);
+      if (pk <= 0 || ucr <= 0) {
+        return {
+          score: '—',
+          label: 'Invalid inputs',
+          interpretation: 'Plasma potassium and urine creatinine must be greater than 0 to calculate fractional excretion.',
+          riskLevel: 'info' as const,
+        };
+      }
       const fek = round(((uk * pcr) / (pk * ucr)) * 100, 2);
       let label = 'Indeterminate / context-dependent';
       let interpretation = 'Interpret FEK with volume status, acid-base, and whether hypokalemia or hyperkalemia is present.';

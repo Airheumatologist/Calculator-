@@ -538,7 +538,7 @@ export const wave3PedsObCalcs: Calculator[] = [
         helpText: '1 = multiple seizures in the first 12 h of life; 0 = none or a single seizure. Official SNAP-II item is multiple seizures (yes/no) in that 12 h window.',
       }),
       numberInput('uop', 'Urine output', { unit: 'mL/kg/h', min: 0, max: 5, step: 0.1, defaultValue: 1, helpText: 'Urine output over the first 12 hours of life (mL/kg/h).' }),
-      numberInput('birthWeight', 'Birth weight', { unit: 'g', min: 300, max: 6000, defaultValue: 1500 }),
+      numberInput('birthWeight', 'Birth weight', { unit: 'g', min: 300, max: 8000, defaultValue: 1500 }),
       numberInput('sga', 'SGA (birth weight <3rd–5th %ile)', { min: 0, max: 1, defaultValue: 0, helpText: '1 = yes, 0 = no. Official SNAPPE-II SGA is <3rd percentile.' }),
       numberInput('apgar5', '5-minute Apgar', { min: 0, max: 10, defaultValue: 7, helpText: 'Official SNAPPE-II adds points if 5-minute Apgar <7. Enter the 5-minute score (0–10).' }),
     ],
@@ -2617,6 +2617,22 @@ export const wave3PedsObCalcs: Calculator[] = [
         { label: 'End-organ', value: endOrg ? 'Yes' : 'No' },
         { label: 'Postpartum resolution by 12 weeks', value: resolved ? 'Yes' : 'No / not known' },
       ];
+
+      if (severe && !after20 && !chronic) {
+        return {
+          score: 'Severe HTN',
+          label: 'Severe-range BP — urgent treatment required',
+          interpretation:
+            'Severe-range blood pressure (≥160/110 confirmed) requires urgent antihypertensive treatment (within 30–60 min per ACOG) and maternal/fetal monitoring regardless of gestational timing. Confirm gestational age and prior history to finalize classification (gestational HTN vs chronic HTN vs preeclampsia).',
+          riskLevel: 'critical',
+          details: ghtnDetails,
+          recommendations: [
+            'Initiate acute antihypertensive therapy (IV labetalol, hydralazine, or oral nifedipine)',
+            'Evaluate for preeclampsia with severe features (proteinuria, labs, symptoms)',
+            'Continuous fetal and maternal monitoring',
+          ],
+        };
+      }
 
       if (!after20 && !chronic) {
         return {

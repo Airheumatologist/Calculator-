@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 /** Logistic CDF; clamps extreme logits so exp() cannot overflow to Infinity. */
 function logistic(z: number): number {
@@ -565,7 +565,7 @@ export const wave7BedsideCalcs: Calculator[] = [
       if (fever) minors.push('fever');
       if (vascular) minors.push('vascular');
       if (immuno) minors.push('immunologic');
-      if (microMinor) minors.push('microbiology-minor');
+      if (microMinor && !microMajor) minors.push('microbiology-minor');
       const major = majors.length;
       const minor = minors.length;
       const definiteClinical = major >= 2 || (major >= 1 && minor >= 3) || minor >= 5;
@@ -1589,14 +1589,29 @@ export const wave7BedsideCalcs: Calculator[] = [
     ],
     calculate(values) {
       const age = num(values.age, 70);
-      const ddimer = num(values.ddimer, 600);
       const assay = str(values.assay, 'feu');
       const conventional = assay === 'ddu' ? 250 : 500;
       const ageAdj = assay === 'ddu' ? age * 5 : age * 10;
       const threshold = age >= 50 ? ageAdj : conventional;
+      const unit = assay === 'ddu' ? 'µg/L DDU' : 'µg/L FEU';
+
+      if (isMissingValue(values.ddimer, true)) {
+        return {
+          score: threshold,
+          unit,
+          label: 'Enter measured D-dimer',
+          interpretation: `The ${age >= 50 ? 'age-adjusted' : 'conventional'} cutoff is ${threshold} ${unit} (conventional ${conventional} ${unit}). Enter the patient's measured D-dimer to determine whether VTE is excluded. Note: D-dimer exclusion requires non-high pretest probability.`,
+          riskLevel: 'info' as const,
+          details: [
+            { label: 'Calculated threshold', value: `${threshold} ${unit}` },
+            { label: 'Measured D-dimer', value: 'Not entered' },
+          ],
+        };
+      }
+
+      const ddimer = num(values.ddimer, 600);
       const ratio = threshold > 0 ? ddimer / threshold : 0;
       const positive = ddimer >= threshold;
-      const unit = assay === 'ddu' ? 'µg/L DDU' : 'µg/L FEU';
       return {
         score: threshold,
         unit,

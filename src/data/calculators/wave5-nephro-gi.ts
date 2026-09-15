@@ -498,8 +498,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
         interpretation,
         riskLevel,
         details: [
-          { label: 'UPCR', value: `${ratioGG} g/g` },
-          { label: 'UPCR', value: `${ratioMgG} mg/g` },
+          { label: 'UPCR (g/g)', value: `${ratioGG} g/g` },
+          { label: 'UPCR (mg/g)', value: `${ratioMgG} mg/g` },
           { label: 'Approx. daily protein', value: `≈ ${ratioGG} g/day (rule of thumb)` },
         ],
       };

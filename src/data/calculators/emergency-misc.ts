@@ -266,7 +266,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     whenToUse: 'Adults/children with major burns needing formal resuscitation.',
     whyUse: 'Classic crystalloid estimate; give half in first 8 hours from injury time.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', min: 5, max: 200, defaultValue: 70 }),
+      numberInput('weight', 'Weight', { unit: 'kg', min: 5, max: 200, defaultValue: 70, helpText: 'Enter weight in kg, not lb.' }),
       numberInput('tbsa', 'TBSA burned (2nd + 3rd degree)', { unit: '%', min: 1, max: 100, defaultValue: 20, helpText: 'Exclude first-degree/superficial burns. Use Rule of Nines, Lund-Browder, or palm ≈1% of the patient’s palm including fingers.' }),
     ],
     calculate(values) {
@@ -478,9 +478,37 @@ export const emergencyMiscCalcs: Calculator[] = [
       numberInput('refDay', 'Reference day', { min: 1, max: 31, defaultValue: 23 }),
     ],
     calculate(values) {
-      const lmp = new Date(num(values.lmpYear), num(values.lmpMonth) - 1, num(values.lmpDay));
-      const ref = new Date(num(values.refYear), num(values.refMonth) - 1, num(values.refDay));
+      const ly = num(values.lmpYear);
+      const lm = num(values.lmpMonth);
+      const ld = num(values.lmpDay);
+      const ry = num(values.refYear);
+      const rm = num(values.refMonth);
+      const rd = num(values.refDay);
+
+      const lmp = new Date(ly, lm - 1, ld);
+      const ref = new Date(ry, rm - 1, rd);
+
+      const validLmp = lmp.getFullYear() === ly && lmp.getMonth() === lm - 1 && lmp.getDate() === ld;
+      const validRef = ref.getFullYear() === ry && ref.getMonth() === rm - 1 && ref.getDate() === rd;
+
+      if (!validLmp || !validRef) {
+        return {
+          score: '—',
+          label: 'Invalid date entered',
+          interpretation: 'Please check the entered dates (day of month is invalid for the specified month/year).',
+          riskLevel: 'info' as const,
+        };
+      }
+
       const days = Math.round((ref.getTime() - lmp.getTime()) / 86400000);
+      if (days < 0) {
+        return {
+          score: '—',
+          label: 'Reference date precedes LMP',
+          interpretation: 'Reference date cannot be earlier than the first day of the last menstrual period (LMP).',
+          riskLevel: 'info' as const,
+        };
+      }
       const weeks = Math.floor(days / 7);
       const rem = days % 7;
       const edd = new Date(lmp);

@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 function cloglogCalibrate(uncal: number, scale1: number, scale2: number): number {
   const u = Math.min(0.9999, Math.max(1e-8, uncal));
@@ -400,6 +400,15 @@ export const wave7PreventionCalcs: Calculator[] = [
         defaultValue: 4,
         helpText: 'Total cholesterol − HDL. If lipids are in mg/dL, divide by 38.67.',
       }),
+      numberInput('hdl', 'HDL cholesterol (optional)', {
+        unit: 'mmol/L',
+        min: 0.5,
+        max: 3.5,
+        step: 0.1,
+        defaultValue: 1.4,
+        helpText: 'Optional. Enables precise HDL-dependent risk adjustment (divide mg/dL by 38.67). Defaults to 1.4 mmol/L cohort median if blank.',
+        required: false,
+      }),
       selectInput('region', 'European risk region', REGION_OPTIONS, 'mod'),
     ],
     calculate(values) {
@@ -409,8 +418,8 @@ export const wave7PreventionCalcs: Calculator[] = [
       const sbp = num(values.sbp, 140);
       const nonhdl = num(values.nonhdl, 4);
       const region = parseRegion(values.region);
-      const tchol = nonhdl + 1.4;
-      const hdl = 1.4;
+      const hdl = !isMissingValue(values.hdl, true) ? num(values.hdl, 1.4) : 1.4;
+      const tchol = nonhdl + hdl;
       const diabetes = 0;
       const cage = age - 73;
       const csbp = sbp - 150;
@@ -471,7 +480,8 @@ export const wave7PreventionCalcs: Calculator[] = [
         ...r,
         details: [
           { label: 'Region', value: region },
-          { label: 'Non-HDL used as TC − 1.4 mmol/L (HDL centred)', value: `${round(nonhdl, 1)} mmol/L` },
+          { label: 'HDL cholesterol', value: !isMissingValue(values.hdl, true) ? `${round(hdl, 1)} mmol/L` : '1.4 mmol/L (assumed cohort median)' },
+          { label: 'Total cholesterol', value: `${round(tchol, 1)} mmol/L` },
           { label: 'Uncalibrated risk', value: `${round(100 * uncal, 1)}%` },
         ],
         recommendations:
@@ -979,7 +989,7 @@ export const wave7PreventionCalcs: Calculator[] = [
         0.406 * cevd +
         0.283 * pad +
         0.0229 * years +
-        0.22 * Math.log(nonhdl) +
+        0.22 * Math.log(Math.max(0.1, nonhdl)) +
         -0.0532 * egfr +
         0.000686 * egfr * egfr +
         0.139 * Math.log(1 + Math.max(hscrp, 0));

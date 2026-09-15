@@ -22,6 +22,9 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     ],
     calculate(values) {
       const scr = num(values.scr, 1);
+      if (scr <= 0) {
+        return { score: '—', label: 'Invalid creatinine', interpretation: 'Serum creatinine must be > 0.', riskLevel: 'info' as const };
+      }
       const age = num(values.age, 50);
       const female = str(values.sex, 'F') === 'F';
       const kappa = female ? 0.7 : 0.9;

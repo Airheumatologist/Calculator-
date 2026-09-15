@@ -339,7 +339,7 @@ export const cardiologyCalcs: Calculator[] = [
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 65 }),
       numberInput('hr', 'Heart rate', { unit: 'bpm', min: 20, max: 250, defaultValue: 80 }),
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, defaultValue: 130 }),
-      numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.0 }),
+      numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.0, helpText: 'mg/dL (divide µmol/L by 88.4).' }),
       selectInput('killip', 'Killip class', [
         { label: 'I — No HF (0)', value: 0, points: 0, description: 'No rales, no S3, no JVD' },
         { label: 'II — Rales / JVD (20)', value: 20, points: 20, description: 'S3 and/or rales occupying less than half the lung fields and/or JVD' },
@@ -1108,25 +1108,31 @@ export const cardiologyCalcs: Calculator[] = [
       yesNo('tender', 'Tender anterior cervical lymphadenopathy', 1, 'Palpate the anterior cervical chain; Yes if nodes are enlarged and tender (not posterior-chain or nontender).'),
       yesNo('exudate', 'Tonsillar exudate or swelling', 1, 'Exudate or swelling of the tonsils on oropharynx exam (not isolated pharyngeal erythema).'),
       selectInput('age', 'Age (McIsaac modification)', [
+        { label: '< 3 years (0 — testing rarely indicated)', value: 'under_3' },
         { label: '3–14 years (+1)', value: 1 },
         { label: '15–44 years (0)', value: 0 },
         { label: '≥ 45 years (−1)', value: -1 },
-      ]),
+      ], 1),
     ],
     calculate(values) {
+      const isUnder3 = values.age === 'under_3';
+      const agePts = isUnder3 ? 0 : num(values.age);
       const score =
         (bool(values.fever) ? 1 : 0) +
         (bool(values.noCough) ? 1 : 0) +
         (bool(values.tender) ? 1 : 0) +
         (bool(values.exudate) ? 1 : 0) +
-        num(values.age);
+        agePts;
       const clamped = Math.max(0, score);
       const r = riskFromThresholds(clamped, [
         { max: 1, level: 'low', label: 'Low risk (≤1)', interpretation: 'Strep unlikely (~1–10%). No testing or antibiotics generally needed.' },
         { max: 3, level: 'moderate', label: 'Intermediate (2–3)', interpretation: 'Consider rapid antigen test or throat culture; treat if positive.' },
         { max: 5, level: 'high', label: 'High (4–5)', interpretation: 'Higher strep probability (~50%+). Test and/or empiric treatment per local practice.' },
       ]);
-      return { score, ...r };
+      const interpretation = isUnder3
+        ? `Child <3 years: GAS pharyngitis is rare in this age group; testing (RADT/culture) and empiric antibiotics are rarely indicated per IDSA guidelines unless specific risk factors (e.g. sibling with GAS). ${r.interpretation}`
+        : r.interpretation;
+      return { score, ...r, interpretation };
     },
     evidence: {
       summary: 'Centor criteria with McIsaac age adjustment estimate group A strep probability.',

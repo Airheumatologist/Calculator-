@@ -247,10 +247,10 @@ export const missingPedsObToxCalcs: Calculator[] = [
         { label: 'African American', value: 'aa' },
         { label: 'Hispanic', value: 'hispanic' },
       ]),
-      yesNo('priorVaginal', 'Any prior vaginal delivery', 5),
-      yesNo('priorVbac', 'Prior VBAC (successful)', 4),
-      yesNo('recurringIndication', 'Recurring indication for cesarean (arrest / CPD / FTP)', -7),
-      yesNo('induction', 'Induction of labor (vs spontaneous)', -4),
+      yesNo('priorVaginal', 'Any prior vaginal delivery', null),
+      yesNo('priorVbac', 'Prior VBAC (successful)', null),
+      yesNo('recurringIndication', 'Recurring indication for cesarean (arrest / CPD / FTP)', null),
+      yesNo('induction', 'Induction of labor (vs spontaneous)', null),
     ],
     calculate(values) {
       // Educational simplification inspired by Grobman logistic predictors (not the full NICHD calculator).
@@ -656,6 +656,14 @@ export const missingPedsObToxCalcs: Calculator[] = [
       const hours = num(values.hours, 2);
       const beta = num(values.beta, 15); // mg/dL/h
       const alcoholGrams = drinks * 14;
+      if (wt <= 0 || rFactor <= 0) {
+        return {
+          score: '—',
+          label: 'Invalid inputs',
+          interpretation: 'Weight and distribution factor must be > 0.',
+          riskLevel: 'info' as const,
+        };
+      }
       // concentration g/L = A/(r*W); mg/dL = (A/(r*W))*100
       const peak = (alcoholGrams / (rFactor * wt)) * 100;
       const etoh = round(Math.max(0, peak - beta * hours), 0);
@@ -808,7 +816,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
     inputs: [
       numberInput('cp', 'Target concentration (Cp)', { unit: 'mg/L', min: 0.01, max: 500, step: 0.1, defaultValue: 20, helpText: 'Keep units consistent: mg/L × L/kg × kg = mg. µg/mL is numerically equal to mg/L.' }),
       numberInput('vd', 'Volume of distribution (Vd)', { unit: 'L/kg', min: 0.05, max: 20, step: 0.05, defaultValue: 0.7 }),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 1, max: 300, step: 0.1, defaultValue: 70 }),
+      numberInput('weight', 'Weight', { unit: 'kg', min: 1, max: 300, step: 0.1, defaultValue: 70, helpText: 'Enter weight in kg, not lb.' }),
       selectInput('bioavailability', 'Bioavailability (F)', [
         { label: 'IV (F = 1)', value: 1 },
         { label: 'Oral F = 0.8', value: 0.8 },
@@ -860,7 +868,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whyUse: 'Prevents unit errors when programming pumps.',
     inputs: [
       numberInput('dose', 'Desired dose', { unit: 'mcg/kg/min', min: 0.01, max: 200, step: 0.01, defaultValue: 5 }),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 1, max: 300, step: 0.1, defaultValue: 70 }),
+      numberInput('weight', 'Weight', { unit: 'kg', min: 1, max: 300, step: 0.1, defaultValue: 70, helpText: 'Enter weight in kg, not lb.' }),
       numberInput('concentration', 'Drug concentration', { unit: 'mcg/mL', min: 0.1, max: 100000, defaultValue: 1600, helpText: '1 mg/mL = 1000 mcg/mL — unit mismatches are a common serious error. Confirm the bag label.' }),
     ],
     calculate(values) {

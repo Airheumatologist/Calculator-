@@ -370,12 +370,11 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         'face',
         'Facial palsy',
         [
-          { label: 'Normal / absent (0)', value: 0, description: 'Symmetrical smile / show teeth' },
-          { label: 'Mild (1)', value: 1, description: 'Minor paralysis (flattened nasolabial fold or asymmetric smile)' },
-          { label: 'Moderate to severe (2)', value: 2, description: 'Partial or complete paralysis of lower (or upper and lower) face' },
+          { label: 'Normal or minor paralysis (0)', value: 0, description: 'Symmetrical smile or minor flattening of nasolabial fold' },
+          { label: 'Partial or complete paralysis (1)', value: 1, description: 'Obvious asymmetry; partial or total paralysis of lower face' },
         ],
         0,
-        'Ask to show teeth or smile (NIHSS face mapping).',
+        'Ask patient to show teeth or smile (Lima 2016: 0 = normal/minor, 1 = partial/complete).',
       ),
       selectInput(
         'arm',
@@ -448,7 +447,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'FAST-ED (0–9): Facial 0–2, Arm 0–2, Speech 0–2, Eye deviation 0–2, Denial/neglect 0–2. Score ≥4 frequently used to predict LVO.',
+        'FAST-ED (0–9): Facial 0–1, Arm 0–2, Speech 0–2, Eye deviation 0–2, Denial/neglect 0–2. Score ≥4 frequently used to predict LVO.',
       formula: 'F+A+S+E+D (0–9)',
       validation: 'Validated against CTA-defined LVO; comparable performance to other EMS LVO scales.',
       references: [
@@ -627,7 +626,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
 
       if (!cta) {
         return {
-          score,
+          score: '—',
           label: 'CTA not available',
           riskLevel: 'info' as const,
           interpretation: `Clinical expansion-risk features: ${clinical}. Obtain CTA if expansion risk stratification or underlying vascular lesion evaluation is needed (and patient is a candidate). Spot sign cannot be scored without CTA.`,

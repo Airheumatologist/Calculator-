@@ -12,8 +12,8 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'End-stage liver disease prognosis when INR is unreliable (warfarin, DOAC, DIC) or unavailable.',
     whyUse: 'Retains bilirubin and creatinine prognostic information without coagulation; educational alternative to full MELD/MELD-Na.',
     inputs: [
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 2.0 }),
-      numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0 }),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 2.0, helpText: 'mg/dL (divide µmol/L by 17.1).' }),
+      numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0, helpText: 'mg/dL (divide µmol/L by 88.4).' }),
       yesNo('dialysis', 'Dialysis ≥2 times in past week (or continuous RRT)', null, 'Sets creatinine to 4.0 mg/dL (does not add a fixed point total). Same dialysis rule as OPTN MELD.'),
     ],
     calculate(values) {
@@ -411,9 +411,9 @@ export const wave3GiHepCalcs: Calculator[] = [
     whyUse: 'Continuous score with low/intermediate/high 90-day mortality strata.',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 50 }),
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 10 }),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 10, helpText: 'mg/dL (divide µmol/L by 17.1).' }),
       numberInput('inr', 'INR', { min: 0.8, max: 10, step: 0.1, defaultValue: 1.8 }),
-      numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0 }),
+      numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0, helpText: 'mg/dL (divide µmol/L by 88.4).' }),
     ],
     calculate(values) {
       const age = num(values.age, 50);
