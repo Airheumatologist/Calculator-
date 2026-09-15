@@ -1360,13 +1360,13 @@ export const wave7BedsideCalcs: Calculator[] = [
       const p = round(logistic(z), 3);
       const r = riskFromThresholds(p, [
         {
-          max: 0.25,
+          max: 0.2509,
           level: 'low',
           label: 'Rule-out cirrhosis (<0.251)',
           interpretation: `Agile 4 ${p}: below 0.251 — cirrhosis is unlikely.`,
         },
         {
-          max: 0.564,
+          max: 0.5649,
           level: 'moderate',
           label: 'Indeterminate (0.251–0.565)',
           interpretation: `Agile 4 ${p}: grey zone for F4. Additional imaging, endoscopy risk tools, or biopsy as indicated.`,

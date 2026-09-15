@@ -20,7 +20,7 @@ export const missingGiLiverCalcs: Calculator[] = [
       const pt = num(values.pt, 18);
       const control = num(values.ptControl, 12);
       const bili = num(values.bili, 8);
-      const df = round(4.6 * (pt - control) + bili, 1);
+      const df = round(4.6 * Math.max(0, pt - control) + bili, 1);
       if (df >= 32) {
         return {
           score: df,
@@ -80,21 +80,21 @@ export const missingGiLiverCalcs: Calculator[] = [
       const fib4 = round((age * ast) / (plt * Math.sqrt(alt)), 2);
       const r = riskFromThresholds(fib4, [
         {
-          max: 1.29,
+          max: 1.299,
           level: 'low',
-          label: 'Low probability advanced fibrosis',
+          label: 'Low probability advanced fibrosis (<1.3)',
           interpretation: 'FIB-4 <1.3: advanced fibrosis unlikely in many NAFLD algorithms (age-adjusted cutoffs may apply). Routine specialty referral often deferred.',
         },
         {
           max: 2.66,
           level: 'moderate',
-          label: 'Indeterminate',
+          label: 'Indeterminate (1.3–2.66)',
           interpretation: 'Indeterminate range — consider elastography, enhanced liver fibrosis tests, or hepatology referral per pathway.',
         },
         {
           max: 1000,
           level: 'high',
-          label: 'High probability advanced fibrosis',
+          label: 'High probability advanced fibrosis (≥2.67)',
           interpretation: 'FIB-4 ≥2.67: higher likelihood of advanced fibrosis/cirrhosis — hepatology evaluation, HCC/variceal screening if cirrhosis suspected.',
         },
       ]);
@@ -240,7 +240,7 @@ export const missingGiLiverCalcs: Calculator[] = [
       numberInput('bili0', 'Bilirubin day 0', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 12 }),
       numberInput('bili7', 'Bilirubin day 7', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 10 }),
       numberInput('pt', 'Prothrombin time', { unit: 'sec', min: 8, max: 120, step: 0.1, defaultValue: 20, helpText: 'PT in seconds (Louvet model), not INR. Same-day as the day-0/7 bilirubin pair as specified in the original paper (typically day 0).' }),
-      yesNo('renal', 'Renal insufficiency (Cr >1.3 mg/dL or renal support at day 0)', 0.023000000000000007),
+      yesNo('renal', 'Renal insufficiency (Cr >1.3 mg/dL or renal support at day 0)', null),
     ],
     calculate(values) {
       const age = num(values.age, 50);
@@ -901,7 +901,7 @@ export const missingGiLiverCalcs: Calculator[] = [
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 50 }),
       numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 70, step: 0.1, defaultValue: 32 }),
-      yesNo('ifg', 'Impaired fasting glucose or diabetes', 1.1300000000000001, 'Yes if known diabetes or IFG. Original Angulo NFS: fasting glucose ≥110 mg/dL (6.1 mmol/L). ADA later IFG ≥100 mg/dL — use the local definition; diabetes always Yes.'),
+      yesNo('ifg', 'Impaired fasting glucose or diabetes', null, 'Yes if known diabetes or IFG. Original Angulo NFS: fasting glucose ≥110 mg/dL (6.1 mmol/L). ADA later IFG ≥100 mg/dL — use the local definition; diabetes always Yes.'),
       numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, defaultValue: 45 }),
       numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 2000, defaultValue: 50 }),
       numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 1000, defaultValue: 220 }),
@@ -972,7 +972,7 @@ export const missingGiLiverCalcs: Calculator[] = [
       numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 40, step: 0.1, defaultValue: 1.5 }),
       numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, defaultValue: 80 }),
       numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, defaultValue: 3.8 }),
-      yesNo('variceal', 'History of variceal bleeding', 1.24, 'Any prior esophageal or gastric variceal bleed (not just varices on imaging).'),
+      yesNo('variceal', 'History of variceal bleeding', null, 'Any prior esophageal or gastric variceal bleed (not just varices on imaging).'),
     ],
     calculate(values) {
       const age = num(values.age, 40);

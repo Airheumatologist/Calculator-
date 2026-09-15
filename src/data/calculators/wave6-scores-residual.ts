@@ -1094,48 +1094,48 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     inputs: [
       // Category 1 — snoring (positive if ≥2 points)
       selectInput('snore', 'Do you snore?', [
-        { label: 'No (0)', value: 0 },
-        { label: 'Yes (1)', value: 1 },
-        { label: 'Do not know (0)', value: 0 },
+        { label: 'No (0)', value: 'no' },
+        { label: 'Yes (1)', value: 'yes' },
+        { label: 'Do not know (0)', value: 'unknown' },
       ], undefined, 'Category 1 (snoring/apneas) is positive if ≥2 points from the next five items (snore, loudness, frequency, bothered others, quit breathing).'),
       selectInput('snoreLoud', 'Snoring loudness', [
-        { label: 'N/A or slightly louder than breathing (0)', value: 0 },
-        { label: 'As loud as talking (0)', value: 0 },
-        { label: 'Louder than talking (1)', value: 1 },
-        { label: 'Very loud — heard in adjacent rooms (1)', value: 1 },
+        { label: 'N/A or slightly louder than breathing (0)', value: 'slightly' },
+        { label: 'As loud as talking (0)', value: 'talking' },
+        { label: 'Louder than talking (1)', value: 'louder-than-talking' },
+        { label: 'Very loud — heard in adjacent rooms (1)', value: 'adjacent-room' },
       ]),
       selectInput('snoreFreq', 'Snoring frequency', [
-        { label: 'Never / nearly never (0)', value: 0 },
-        { label: '1–2 times/month (0)', value: 0 },
-        { label: '1–2 times/week (0)', value: 0 },
-        { label: '3–4 times/week (1)', value: 1 },
-        { label: 'Nearly every day (1)', value: 1 },
+        { label: 'Never / nearly never (0)', value: 'never' },
+        { label: '1–2 times/month (0)', value: 'monthly-1-2' },
+        { label: '1–2 times/week (0)', value: 'weekly-1-2' },
+        { label: '3–4 times/week (1)', value: 'weekly-3-4' },
+        { label: 'Nearly every day (1)', value: 'daily' },
       ]),
       selectInput('bothers', 'Has snoring bothered others?', [
         { label: 'No (0)', value: 0 },
         { label: 'Yes (1)', value: 1 },
       ]),
       selectInput('quitBreath', 'Anyone noticed you quit breathing in sleep?', [
-        { label: 'Never / nearly never (0)', value: 0 },
-        { label: '1–2×/month (0)', value: 0 },
-        { label: '1–2×/week (0)', value: 0 },
-        { label: '3–4×/week (1)', value: 1 },
-        { label: 'Nearly every day (1)', value: 1 },
+        { label: 'Never / nearly never (0)', value: 'never' },
+        { label: '1–2×/month (0)', value: 'monthly-1-2' },
+        { label: '1–2×/week (0)', value: 'weekly-1-2' },
+        { label: '3–4×/week (1)', value: 'weekly-3-4' },
+        { label: 'Nearly every day (1)', value: 'daily' },
       ]),
       // Category 2 — sleepiness
       selectInput('tiredWake', 'Tired/fatigued after sleep?', [
-        { label: 'Never / nearly never (0)', value: 0 },
-        { label: '1–2×/month (0)', value: 0 },
-        { label: '1–2×/week (0)', value: 0 },
-        { label: '3–4×/week (1)', value: 1 },
-        { label: 'Nearly every day (1)', value: 1 },
+        { label: 'Never / nearly never (0)', value: 'never' },
+        { label: '1–2×/month (0)', value: 'monthly-1-2' },
+        { label: '1–2×/week (0)', value: 'weekly-1-2' },
+        { label: '3–4×/week (1)', value: 'weekly-3-4' },
+        { label: 'Nearly every day (1)', value: 'daily' },
       ], undefined, 'Category 2 (daytime sleepiness) is positive if ≥2 points from the next three items (tired after sleep, tired during wake, fallen asleep driving).'),
       selectInput('tiredDay', 'Tired/fatigued during wake time?', [
-        { label: 'Never / nearly never (0)', value: 0 },
-        { label: '1–2×/month (0)', value: 0 },
-        { label: '1–2×/week (0)', value: 0 },
-        { label: '3–4×/week (1)', value: 1 },
-        { label: 'Nearly every day (1)', value: 1 },
+        { label: 'Never / nearly never (0)', value: 'never' },
+        { label: '1–2×/month (0)', value: 'monthly-1-2' },
+        { label: '1–2×/week (0)', value: 'weekly-1-2' },
+        { label: '3–4×/week (1)', value: 'weekly-3-4' },
+        { label: 'Nearly every day (1)', value: 'daily' },
       ]),
       selectInput('nodrive', 'Fallen asleep while driving?', [
         { label: 'Never (0)', value: 0 },
@@ -1146,13 +1146,29 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
       numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 12, max: 80, step: 0.1, defaultValue: 32, helpText: 'Category 3 is positive if BMI >30 kg/m² or diagnosed/treated hypertension.' }),
     ],
     calculate(values) {
+      const snorePoints: Record<string, number> = { no: 0, yes: 1, unknown: 0 };
+      const loudPoints: Record<string, number> = {
+        slightly: 0,
+        talking: 0,
+        'louder-than-talking': 1,
+        'adjacent-room': 1,
+      };
+      const frequencyPoints: Record<string, number> = {
+        never: 0,
+        'monthly-1-2': 0,
+        'weekly-1-2': 0,
+        'weekly-3-4': 1,
+        daily: 1,
+      };
+      const points = (value: number | string | boolean | null, mapping: Record<string, number>) =>
+        mapping[String(value)] ?? num(value);
       const cat1 =
-        num(values.snore) +
-        num(values.snoreLoud) +
-        num(values.snoreFreq) +
+        points(values.snore, snorePoints) +
+        points(values.snoreLoud, loudPoints) +
+        points(values.snoreFreq, frequencyPoints) +
         num(values.bothers) +
-        num(values.quitBreath);
-      const cat2 = num(values.tiredWake) + num(values.tiredDay) + num(values.nodrive);
+        points(values.quitBreath, frequencyPoints);
+      const cat2 = points(values.tiredWake, frequencyPoints) + points(values.tiredDay, frequencyPoints) + num(values.nodrive);
       const bmi = num(values.bmi, 32);
       const cat3pts = (bool(values.htn) ? 1 : 0) + (bmi > 30 ? 1 : 0);
       const cat1Pos = cat1 >= 2;

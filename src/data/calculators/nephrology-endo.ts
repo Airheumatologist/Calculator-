@@ -177,6 +177,9 @@ export const nephrologyEndoCalcs: Calculator[] = [
       const una = num(values.una, 20);
       const pcr = num(values.pcr, 2);
       const ucr = num(values.ucr, 100);
+      if (pna <= 0 || ucr <= 0) {
+        return { score: '—', unit: '%', label: 'Invalid denominator', interpretation: 'Plasma Na and urine creatinine must both be greater than 0 to calculate FENa.', riskLevel: 'info' };
+      }
       const fena = round(((una * pcr) / (pna * ucr)) * 100, 2);
       let label = 'Indeterminate';
       let interpretation = 'FENa 1–2%: indeterminate; integrate clinical context.';
@@ -223,6 +226,9 @@ export const nephrologyEndoCalcs: Calculator[] = [
       const uurea = num(values.uurea, 200);
       const pcr = num(values.pcr, 2);
       const ucr = num(values.ucr, 100);
+      if (purea <= 0 || ucr <= 0) {
+        return { score: '—', unit: '%', label: 'Invalid denominator', interpretation: 'Plasma urea and urine creatinine must both be greater than 0 to calculate FeUrea.', riskLevel: 'info' };
+      }
       const fe = round(((uurea * pcr) / (purea * ucr)) * 100, 1);
       if (fe < 35) {
         return { score: fe, unit: '%', label: 'Suggests prerenal', interpretation: 'FeUrea <35% favors prerenal azotemia.', riskLevel: 'low' };
@@ -268,7 +274,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
         ? 'High AG: consider MUDPILES/GOLDMARK (methanol, uremia, DKA, paraldehyde/phenformin, iron/INH, lactic, ethylene glycol, salicylates).'
         : 'Normal AG metabolic acidosis if low HCO₃: diarrhea, RTA, saline, etc.';
       return {
-        score: ag,
+        score: albMissing ? ag : agCorr,
         unit: 'mEq/L',
         label: elevated ? 'Elevated anion gap' : 'Normal anion gap',
         interpretation: albMissing
@@ -339,13 +345,13 @@ export const nephrologyEndoCalcs: Calculator[] = [
       selectInput('factor', 'Correction factor', [
         { label: '1.6 per 100 mg/dL (classic)', value: 1.6, description: 'Katz 1973: add 1.6 mEq/L for every 100 mg/dL glucose above 100.' },
         { label: '2.4 per 100 mg/dL (Hillier)', value: 2.4, description: 'Hillier 1999: add 2.4 mEq/L for every 100 mg/dL glucose above 100 — often used in marked hyperglycemia.' },
-      ], undefined, 'Adds factor × (glucose − 100)/100 mEq/L. Classic Katz 1.6; Hillier 2.4 for marked hyperglycemia.'),
+      ], undefined, 'Adds factor × max(glucose − 100, 0)/100 mEq/L; correction applies only above 100 mg/dL. Classic Katz 1.6; Hillier 2.4 for marked hyperglycemia.'),
     ],
     calculate(values) {
       const na = num(values.na, 130);
       const glu = num(values.glu, 400);
       const factor = num(values.factor, 1.6);
-      const corr = round(na + factor * ((glu - 100) / 100), 1);
+      const corr = round(na + factor * (Math.max(0, glu - 100) / 100), 1);
       return {
         score: corr,
         unit: 'mEq/L',
@@ -534,7 +540,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
       const na = num(values.na, 155);
       const goal = num(values.goalNa, 140);
       const f = num(values.tbw, 0.5);
-      const deficit = round(f * wt * ((na / goal) - 1), 1);
+      const deficit = round(Math.max(0, f * wt * ((na / goal) - 1)), 1);
       return {
         score: deficit,
         unit: 'L',
@@ -571,7 +577,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
       const wt = num(values.weight, 70);
       const hco3 = num(values.hco3, 10);
       const goal = num(values.goal, 15);
-      const deficit = round(0.5 * wt * (goal - hco3), 0);
+      const deficit = round(Math.max(0, 0.5 * wt * (goal - hco3)), 0);
       return {
         score: deficit,
         unit: 'mEq',
@@ -849,6 +855,15 @@ export const nephrologyEndoCalcs: Calculator[] = [
       const tc = num(values.tc, 200);
       const hdl = num(values.hdl, 50);
       const tg = num(values.tg, 150);
+      if (tc <= hdl) {
+        return {
+          score: '—',
+          unit: 'mg/dL',
+          label: 'Invalid cholesterol inputs',
+          interpretation: 'Total cholesterol must be greater than HDL-C to calculate LDL-C.',
+          riskLevel: 'info',
+        };
+      }
       if (tg >= 400) {
         return {
           score: '—',

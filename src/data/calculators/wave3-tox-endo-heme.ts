@@ -1652,10 +1652,10 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
     whyUse: 'Standardizes lexicon and biopsy thresholds by TR level and size.',
     inputs: [
       selectInput('composition', 'Composition', [
-        { label: 'Cystic / completely cystic (0)', value: 0, description: 'No solid component' },
-        { label: 'Spongiform (0)', value: 0, description: '≥50% tiny cystic spaces (sponge-like). If spongiform, do not add other category points (TR1).' },
-        { label: 'Mixed cystic/solid (1)', value: 1, description: 'Both cystic and solid components; solid portion is scored for other features' },
-        { label: 'Solid / almost completely solid (2)', value: 2, description: 'Solid or nearly solid. If composition cannot be determined because of calcification, assign 2.' },
+        { label: 'Cystic / completely cystic (0)', value: 'cystic', description: 'No solid component' },
+        { label: 'Spongiform (0)', value: 'spongiform', description: '≥50% tiny cystic spaces (sponge-like). If spongiform, do not add other category points (TR1).' },
+        { label: 'Mixed cystic/solid (1)', value: 'mixed', description: 'Both cystic and solid components; solid portion is scored for other features' },
+        { label: 'Solid / almost completely solid (2)', value: 'solid', description: 'Solid or nearly solid. If composition cannot be determined because of calcification, assign 2.' },
       ], undefined, 'If composition cannot be determined because of calcium, assign solid (2). Spongiform (>50% tiny cysts) is TR1 — do not add other categories.'),
       selectInput('echogenicity', 'Echogenicity', [
         { label: 'Anechoic (0)', value: 0, description: 'Cystic fluid, no internal echoes' },
@@ -1668,10 +1668,10 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         { label: 'Taller-than-wide (3)', value: 3, description: 'AP > transverse on the axial (transverse) image; measure height parallel to the ultrasound beam' },
       ], undefined, 'Taller-than-wide = AP > transverse on the axial image (beam-parallel height), not on the sagittal view.'),
       selectInput('margin', 'Margin', [
-        { label: 'Smooth (0)', value: 0, description: 'Uninterrupted, well-defined curvilinear edge' },
-        { label: 'Ill-defined (0)', value: 0, description: 'Cannot distinguish the margin from parenchyma; still 0 points' },
-        { label: 'Lobulated / irregular (2)', value: 2, description: 'Protrusions or jagged edges into parenchyma' },
-        { label: 'Extra-thyroidal extension (3)', value: 3, description: 'Clear invasion of adjacent structures (not just abutment of the capsule)' },
+        { label: 'Smooth (0)', value: 'smooth', description: 'Uninterrupted, well-defined curvilinear edge' },
+        { label: 'Ill-defined (0)', value: 'ill-defined', description: 'Cannot distinguish the margin from parenchyma; still 0 points' },
+        { label: 'Lobulated / irregular (2)', value: 'lobulated-irregular', description: 'Protrusions or jagged edges into parenchyma' },
+        { label: 'Extra-thyroidal extension (3)', value: 'extra-thyroidal-extension', description: 'Clear invasion of adjacent structures (not just abutment of the capsule)' },
       ], undefined, 'Ill-defined still scores 0. Extra-thyroidal extension requires clear invasion, not capsule abutment alone.'),
       selectInput('foci', 'Echogenic foci (choose highest / sum per ACR if multiple types)', [
         { label: 'None or large comet-tail (0)', value: 0, description: 'No foci, or large comet-tail ≥1 mm V-shaped artifact in cystic components (colloid)' },
@@ -1682,11 +1682,40 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       numberInput('size', 'Largest diameter', { unit: 'cm', min: 0.1, max: 10, step: 0.1, defaultValue: 1.5 }),
     ],
     calculate(values) {
+      const compositionPoints: Record<string, number> = {
+        cystic: 0,
+        spongiform: 0,
+        mixed: 1,
+        solid: 2,
+      };
+      const marginPoints: Record<string, number> = {
+        smooth: 0,
+        'ill-defined': 0,
+        'lobulated-irregular': 2,
+        'extra-thyroidal-extension': 3,
+      };
+      const composition = String(values.composition);
+      if (composition === 'cystic' || composition === 'spongiform') {
+        const compositionLabel = composition === 'cystic' ? 'fully cystic' : 'spongiform';
+        return {
+          score: 0,
+          unit: 'points',
+          label: 'TR1 (0 pts)',
+          interpretation: `ACR TI-RADS TR1: ${compositionLabel} nodule. This benign composition overrides the other domains; no routine FNA or ultrasound follow-up is recommended by ACR TI-RADS.`,
+          riskLevel: 'normal' as const,
+          details: [
+            { label: 'TR level', value: 'TR1' },
+            { label: 'Composition', value: compositionLabel },
+            { label: 'FNA / follow guidance', value: 'No routine FNA or follow-up' },
+          ],
+        };
+      }
+
       const points =
-        num(values.composition, 0) +
+        (compositionPoints[composition] ?? num(values.composition, 0)) +
         num(values.echogenicity, 0) +
         num(values.shape, 0) +
-        num(values.margin, 0) +
+        (marginPoints[String(values.margin)] ?? num(values.margin, 0)) +
         num(values.foci, 0);
       const size = num(values.size, 1.5);
 

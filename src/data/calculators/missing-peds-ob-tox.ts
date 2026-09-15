@@ -165,9 +165,9 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Well-appearing febrile infants 0–90 days when applying Step-by-Step risk stratification.',
     whyUse: 'Identifies infants at low risk of invasive bacterial infection who may avoid LP/admission in validated pathways.',
     inputs: [
-      yesNo('illAppearing', 'Ill-appearing / clinical suspicion of severe infection', 1, 'Ill/toxic on Pediatric Assessment Triangle (appearance, work of breathing, circulation) or clinician suspicion of invasive infection — not a well, playful infant.'),
+      yesNo('illAppearing', 'Ill-appearing / clinical suspicion of severe infection', null, 'Ill/toxic on Pediatric Assessment Triangle (appearance, work of breathing, circulation) or clinician suspicion of invasive infection — not a well, playful infant.'),
       numberInput('ageDays', 'Age', { unit: 'days', min: 0, max: 90, defaultValue: 40, helpText: 'Age ≤21 days automatically fails the low-risk pathway.' }),
-      yesNo('leukocyturia', 'Leukocyturia (positive UA / dipstick LE or nitrite per local def.)', 1, 'LE or nitrite positive on dipstick (or lab UA per local definition).'),
+      yesNo('leukocyturia', 'Leukocyturia (positive UA / dipstick LE or nitrite per local def.)', null, 'LE or nitrite positive on dipstick (or lab UA per local definition).'),
       numberInput('pct', 'Procalcitonin', { unit: 'ng/mL', min: 0, max: 100, step: 0.01, defaultValue: 0.2, helpText: 'Fails low-risk if PCT ≥0.5 ng/mL (applied automatically).' }),
       numberInput('crp', 'CRP', { unit: 'mg/L', min: 0, max: 400, defaultValue: 10, helpText: 'Fails low-risk if CRP >20 mg/L (applied automatically).' }),
       numberInput('anc', 'Absolute neutrophil count', { unit: '×10³/µL', min: 0, max: 50, step: 0.1, defaultValue: 4, helpText: 'Fails low-risk if ANC >10 ×10³/µL (applied automatically).' }),
@@ -339,15 +339,15 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Suspected preeclampsia after 20 weeks gestation (or postpartum).',
     whyUse: 'Structures diagnostic criteria including atypical presentations without proteinuria.',
     inputs: [
-      yesNo('bp140', 'BP ≥140/90 mmHg on ≥2 occasions ≥4 h apart (after 20 weeks)', 1, 'SBP ≥140 or DBP ≥90 on two occasions ≥4 hours apart after 20 weeks. Severe-range BP is a separate item.'),
-      yesNo('bp160', 'Severe-range BP ≥160/110 mmHg (confirmed)', 1, 'SBP ≥160 or DBP ≥110 confirmed within ~15 minutes; do not wait 4 hours to treat.'),
-      yesNo('proteinuria', 'Proteinuria (≥300 mg/24h, PCR ≥0.3, or dipstick 2+ if others unavailable)', 1, 'ACOG: ≥300 mg/24 h, protein/creatinine ratio ≥0.3, or dipstick 2+ only if quantitative methods unavailable.'),
-      yesNo('platelets', 'Platelets <100,000/µL', 1, 'Severe-feature criterion: platelet count <100 ×10³/µL.'),
-      yesNo('creatinine', 'Serum creatinine >1.1 mg/dL or doubling without other renal disease', 1, 'Severe-feature: Cr >1.1 mg/dL or doubling of baseline in the absence of other renal disease.'),
-      yesNo('lfts', 'LFTs ≥2× upper limit of normal', 1, 'AST or ALT ≥2× this lab’s ULN (severe feature).'),
-      yesNo('pulmEdema', 'Pulmonary edema', 1, 'Clinical or radiographic pulmonary edema — a severe feature.'),
-      yesNo('neuro', 'New cerebral or visual symptoms (e.g., severe headache, scotomata)', 1, 'New-onset severe headache unresponsive to usual analgesics, or visual symptoms (scotomata, photopsia, blindness) — severe features.'),
-      yesNo('epigastric', 'Severe persistent RUQ / epigastric pain (not explained otherwise)', 1, 'Severe persistent right-upper-quadrant or epigastric pain not accounted for by another diagnosis — severe feature even if LFTs are not yet 2× ULN.'),
+      yesNo('bp140', 'BP ≥140/90 mmHg on ≥2 occasions ≥4 h apart (after 20 weeks)', null, 'SBP ≥140 or DBP ≥90 on two occasions ≥4 hours apart after 20 weeks. Severe-range BP is a separate item.'),
+      yesNo('bp160', 'Severe-range BP ≥160/110 mmHg (confirmed)', null, 'SBP ≥160 or DBP ≥110 confirmed within ~15 minutes; do not wait 4 hours to treat.'),
+      yesNo('proteinuria', 'Proteinuria (≥300 mg/24h, PCR ≥0.3, or dipstick 2+ if others unavailable)', null, 'ACOG: ≥300 mg/24 h, protein/creatinine ratio ≥0.3, or dipstick 2+ only if quantitative methods unavailable.'),
+      yesNo('platelets', 'Platelets <100,000/µL', null, 'Severe-feature criterion: platelet count <100 ×10³/µL.'),
+      yesNo('creatinine', 'Serum creatinine >1.1 mg/dL or doubling without other renal disease', null, 'Severe-feature: Cr >1.1 mg/dL or doubling of baseline in the absence of other renal disease.'),
+      yesNo('lfts', 'LFTs ≥2× upper limit of normal', null, 'AST or ALT ≥2× this lab’s ULN (severe feature).'),
+      yesNo('pulmEdema', 'Pulmonary edema', null, 'Clinical or radiographic pulmonary edema — a severe feature.'),
+      yesNo('neuro', 'New cerebral or visual symptoms (e.g., severe headache, scotomata)', null, 'New-onset severe headache unresponsive to usual analgesics, or visual symptoms (scotomata, photopsia, blindness) — severe features.'),
+      yesNo('epigastric', 'Severe persistent RUQ / epigastric pain (not explained otherwise)', null, 'Severe persistent right-upper-quadrant or epigastric pain not accounted for by another diagnosis — severe feature even if LFTs are not yet 2× ULN.'),
     ],
     calculate(values) {
       const htn = bool(values.bp140) || bool(values.bp160);
@@ -706,7 +706,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
     inputs: [
       numberInput('hours', 'Time since acute ingestion', { unit: 'hours', min: 4, max: 24, step: 0.5, defaultValue: 4, helpText: 'Nomogram starts at 4 hours after a single acute ingestion. Levels before 4 h cannot be plotted.' }),
       numberInput('level', 'Acetaminophen level', { unit: 'µg/mL (mcg/mL)', min: 0, max: 500, defaultValue: 150, helpText: 'Same as mcg/mL. Treatment (150) line starts at 150 µg/mL at 4 h and halves about every 4 h.' }),
-      yesNo('chronicOrUnknown', 'Chronic, staggered, or unknown time (not nomogram-eligible)'),
+      yesNo('chronicOrUnknown', 'Chronic, staggered, or unknown time (not nomogram-eligible)', null),
     ],
     calculate(values) {
       if (bool(values.chronicOrUnknown)) {
@@ -918,6 +918,14 @@ export const missingPedsObToxCalcs: Calculator[] = [
       const retic = num(values.retic, 2);
       const hct = num(values.hct, 30);
       const normalHct = num(values.normalHct, 45);
+      if (normalHct <= 0) {
+        return {
+          score: '—',
+          label: 'Invalid normal Hct',
+          interpretation: 'Normal Hct reference must be greater than 0% to calculate corrected reticulocyte count and RPI.',
+          riskLevel: 'info' as const,
+        };
+      }
       const corrected = round(retic * (hct / normalHct), 2);
 
       let maturation = 1.0;
@@ -1056,17 +1064,23 @@ export const missingPedsObToxCalcs: Calculator[] = [
       numberInput('na', 'Current serum Na', { unit: 'mEq/L', min: 90, max: 140, defaultValue: 120 }),
       numberInput('goalNa', 'Desired Na', { unit: 'mEq/L', min: 120, max: 140, defaultValue: 130 }),
       selectInput('tbw', 'TBW fraction', [
-        { label: 'Young men (0.6)', value: 0.6 },
-        { label: 'Young women / elderly men (0.5)', value: 0.5 },
-        { label: 'Elderly women (0.45)', value: 0.45 },
-        { label: 'Children approx (0.6)', value: 0.6 },
-      ]),
+        { label: 'Young men (0.6)', value: 'young-men' },
+        { label: 'Young women / elderly men (0.5)', value: 'young-women-elderly-men' },
+        { label: 'Elderly women (0.45)', value: 'elderly-women' },
+        { label: 'Children approx (0.6)', value: 'children' },
+      ], 'young-men'),
     ],
     calculate(values) {
       const wt = num(values.weight, 70);
       const na = num(values.na, 120);
       const goal = num(values.goalNa, 130);
-      const f = num(values.tbw, 0.5);
+      const tbwFractions: Record<string, number> = {
+        'young-men': 0.6,
+        'young-women-elderly-men': 0.5,
+        'elderly-women': 0.45,
+        children: 0.6,
+      };
+      const f = tbwFractions[String(values.tbw)] ?? num(values.tbw, 0.5);
       const deficit = round(f * wt * (goal - na), 0);
 
       if (goal <= na) {
@@ -1433,8 +1447,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
         (bool(values.myoclonic) ? 3 : 0) +
         (bool(values.convulsions) ? 5 : 0) +
         (bool(values.sweating) ? 1 : 0) +
-        (bool(values.feverLow) ? 1 : 0) +
-        (bool(values.feverHigh) ? 2 : 0) +
+        (bool(values.feverHigh) ? 2 : bool(values.feverLow) ? 1 : 0) +
         (bool(values.yawning) ? 1 : 0) +
         (bool(values.mottling) ? 1 : 0) +
         (bool(values.nasalStuff) ? 1 : 0) +

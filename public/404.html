@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MedCalc</title>
+    <script>
+      // GitHub Pages serves this file for deep links. Move the path into the
+      // hash expected by the app's HashRouter, preserving a project-site base.
+      (function redirectToHashRoute() {
+        var parts = window.location.pathname.split('/').filter(Boolean);
+        var base = '/';
+        if (parts.length && parts[0] !== 'calc') {
+          base = '/' + parts.shift() + '/';
+        }
+        var route = parts.join('/');
+        var query = window.location.search;
+        window.location.replace(base + '#/' + route + query);
+      })();
+    </script>
+  </head>
+  <body>
+    <p>Loading MedCalc…</p>
+  </body>
+</html>

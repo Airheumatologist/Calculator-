@@ -1574,7 +1574,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       numberInput('temp', 'Temperature (most abnormal, °C)', { unit: '°C', min: 30, max: 43, step: 0.1, defaultValue: 37.5, helpText: 'Most abnormal first-day temperature. Educational map: 35–38.9 = 0; 33–34.9 or 39–39.9 = 2; <33 or ≥40 = 4.' }),
       numberInput('uop', 'Urine output (24 h)', { unit: 'mL', min: 0, max: 10000, defaultValue: 1200, helpText: '24-hour urine output. Educational map: ≥1000 mL = 0; 500–999 = 2; 100–499 = 5; <100 = 8.' }),
       yesNo('vent', 'Mechanical ventilation (day 1)', 9, 'Day-1 invasive mechanical ventilation (intubated or tracheostomy on a ventilator).'),
-      yesNo('elective', 'Elective surgery admission', -2, 'Scheduled (elective) surgical ICU admission. Emergency/non-elective admissions do not get this credit (the educational map adds burden if No).'),
+      yesNo('emergency', 'Emergency admission', 2, 'Emergency/non-elective ICU admission. Elective surgical admissions do not receive this burden point.'),
       yesNo('cancer', 'Pre-ICU hospital length of stay prolonged / cancer context (educational flag)', 2, 'Educational flag — not official OASIS. Official OASIS uses continuous pre-ICU length of stay (hours/days) and does not have a cancer item.'),
     ],
     calculate(values) {
@@ -1620,7 +1620,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       else if (uop < 1000) pts += 2;
 
       if (bool(values.vent)) pts += 9;
-      if (!bool(values.elective)) pts += 2; // emergency/non-elective burden
+      if (bool(values.emergency)) pts += 2; // emergency/non-elective burden
       if (bool(values.cancer)) pts += 2;
 
       const r = riskFromThresholds(pts, [
@@ -1718,7 +1718,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         { label: 'Other ICU', value: 7 },
         { label: 'Ward / other', value: 8 },
       ]),
-      yesNo('vasoactive', 'Vasoactive drugs before ICU', null, 'Vasopressors or inotropes before ICU admission (Box I).'),
+      yesNo('vasoactive', 'Vasoactive drugs before ICU', 3, 'Vasopressors or inotropes before ICU admission (Box I).'),
       selectInput('admission', 'ICU admission type', [
         { label: 'Planned / elective', value: 0 },
         { label: 'Unplanned / emergency', value: 3 },

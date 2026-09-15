@@ -1215,11 +1215,11 @@ export const wave5NephroGiCalcs: Calculator[] = [
     id: 'ammonium',
     name: 'Urine Ammonium Estimate from Osmolal Gap',
     shortName: 'U-NH₄ Est.',
-    description: 'Estimates urinary ammonium from urine osmolal gap (UOG) in metabolic acidosis workup.',
+    description: 'Estimates urinary ammonium from urine osmolal gap (UOG) in metabolic acidosis workup using the teaching approximation max(UOG/2, 0).',
     category: 'nephrology',
     tags: ['ammonium', 'nh4', 'urine osmolal gap', 'rta', 'nagma'],
     whenToUse: 'NAGMA: estimate renal NH₄⁺ excretion when direct NH₄ assay is unavailable.',
-    whyUse: 'High estimated NH₄⁺ favors extrarenal HCO₃ loss; low NH₄⁺ favors RTA or impaired ammoniagenesis.',
+    whyUse: 'High estimated NH₄⁺ favors extrarenal HCO₃ loss; low NH₄⁺ favors RTA or impaired ammoniagenesis. The teaching estimate is max(UOG/2, 0), not the full UOG.',
     inputs: [
       numberInput('uosm', 'Measured urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1200, defaultValue: 400 }),
       numberInput('una', 'Urine Na', { unit: 'mEq/L', min: 1, max: 300, defaultValue: 40 }),
@@ -1235,23 +1235,23 @@ export const wave5NephroGiCalcs: Calculator[] = [
       const uglu = num(values.uglu, 0);
       const calc = round(2 * (una + uk) + uurea / 2.8 + uglu / 18, 1);
       const uog = round(uosm - calc, 1);
-      // Teaching: NH4+ concentration roughly approximates UOG (mEq/L ≈ mOsm/kg gap)
-      const nh4 = Math.max(uog, 0);
+      // Teaching estimate: NH4+ concentration is approximated as half the UOG, floored at zero.
+      const nh4 = Math.max(uog / 2, 0);
       let label = 'Indeterminate NH₄ estimate';
       let riskLevel: 'info' | 'low' | 'moderate' | 'high' = 'info';
       let interpretation = '';
       if (uog >= 100) {
         label = 'High estimated NH₄⁺ (adequate response)';
         riskLevel = 'low';
-        interpretation = `UOG ${uog} mOsm/kg → estimated urine NH₄⁺ roughly ~${round(nh4, 0)} mEq/L range. Suggests robust ammoniagenesis (e.g., diarrhea) rather than classic distal RTA.`;
+        interpretation = `UOG ${uog} mOsm/kg → estimated urine NH₄⁺ roughly ~${round(nh4, 0)} mEq/L (max[UOG/2, 0] teaching estimate). Suggests robust ammoniagenesis (e.g., diarrhea) rather than classic distal RTA.`;
       } else if (uog <= 40) {
         label = 'Low estimated NH₄⁺';
         riskLevel = 'moderate';
-        interpretation = `UOG ${uog} → low estimated NH₄⁺. Suggests impaired renal NH₄⁺ excretion (RTA, hypoaldosteronism, advanced CKD). Confirm clinically.`;
+        interpretation = `UOG ${uog} mOsm/kg → estimated urine NH₄⁺ ~${round(nh4, 0)} mEq/L (max[UOG/2, 0] teaching estimate), a low value. Suggests impaired renal NH₄⁺ excretion (RTA, hypoaldosteronism, advanced CKD). Confirm clinically.`;
       } else {
         label = 'Intermediate UOG / NH₄ estimate';
         riskLevel = 'info';
-        interpretation = `UOG ${uog} mOsm/kg — intermediate. Integrate urine AG, K⁺, urine pH, and clinical picture; other osmoles can confound.`;
+        interpretation = `UOG ${uog} mOsm/kg → estimated urine NH₄⁺ ~${round(nh4, 0)} mEq/L (max[UOG/2, 0] teaching estimate), intermediate. Integrate urine AG, K⁺, urine pH, and clinical picture; other osmoles can confound.`;
       }
       return {
         score: round(nh4, 0),
@@ -1262,13 +1262,13 @@ export const wave5NephroGiCalcs: Calculator[] = [
         details: [
           { label: 'Urine osmolal gap', value: `${uog} mOsm/kg` },
           { label: 'Calculated Uosm', value: `${calc} mOsm/kg` },
-          { label: 'Estimated NH₄⁺', value: `~${round(nh4, 0)} mEq/L (≈ UOG teaching rule)` },
+          { label: 'Estimated NH₄⁺', value: `~${round(nh4, 0)} mEq/L (≈ max[UOG/2, 0])` },
         ],
       };
     },
     evidence: {
-      summary: 'UOG = Uosm_meas − [2(UNa+UK) + UUN/2.8 + Uglu/18]. Urine NH₄⁺ is often approximated by the UOG in teaching (not exact stoichiometry).',
-      formula: 'NH₄⁺ ≈ UOG; UOG = Uosm − (2(UNa+UK) + UUN/2.8 + Uglu/18)',
+      summary: 'UOG = Uosm_meas − [2(UNa+UK) + UUN/2.8 + Uglu/18]. A teaching approximation estimates urine NH₄⁺ as max(UOG/2, 0); direct measurement is preferred.',
+      formula: 'NH₄⁺ ≈ max(UOG/2, 0); UOG = Uosm − (2(UNa+UK) + UUN/2.8 + Uglu/18)',
       validation: 'Standard adjunct when direct NH₄ unavailable; confounded by other unmeasured osmoles.',
       references: [
         {
@@ -1281,8 +1281,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Low NH₄ estimate + NAGMA', actions: ['RTA workup', 'Med review (CAI, amphotericin, lithium, ifosfamide)', 'Check serum K'] },
-      { condition: 'High NH₄ estimate + NAGMA', actions: ['Seek GI HCO₃ loss', 'Volume repletion'] },
+      { condition: 'UOG ≤40 (estimated NH₄⁺ ≤20) + NAGMA', actions: ['RTA workup', 'Med review (CAI, amphotericin, lithium, ifosfamide)', 'Check serum K'] },
+      { condition: 'UOG ≥100 (estimated NH₄⁺ ≥50) + NAGMA', actions: ['Seek GI HCO₃ loss', 'Volume repletion'] },
     ],
     pearls: ['Direct urine NH₄ measurement is ideal when available.', 'Ketoanion salts and toxins can inflate UOG independent of NH₄⁺.'],
   },
@@ -1292,19 +1292,19 @@ export const wave5NephroGiCalcs: Calculator[] = [
     id: 'hyperkalemia-ecg',
     name: 'Hyperkalemia ECG Changes (Severity Checklist)',
     shortName: 'HyperK ECG',
-    description: 'Checklist of ECG manifestations of hyperkalemia to support urgency of treatment (not a substitute for K⁺ value and clinical context).',
+    description: 'Ordinal checklist of ECG manifestations of hyperkalemia to support urgency of treatment (not a substitute for K⁺ value and clinical context). The result reports the highest selected severity, not an additive point total.',
     category: 'nephrology',
     tags: ['hyperkalemia', 'ecg', 'potassium', 'emergency', 'peaked t'],
     whenToUse: 'Known or suspected hyperkalemia — triage membrane-stabilization urgency from ECG features.',
-    whyUse: 'ECG changes mark increased risk of arrhythmia; guide calcium, shift, and removal therapies.',
+    whyUse: 'ECG changes mark increased risk of arrhythmia; guide calcium, shift, and removal therapies. Multiple findings are handled as an ordinal severity tier using the highest selected feature, not by summing points.',
     inputs: [
       numberInput('k', 'Serum K⁺ (if known)', { unit: 'mEq/L', min: 2, max: 12, step: 0.1, defaultValue: 6.2, required: false, helpText: 'Optional. ECG can be normal at dangerous K⁺ — treat the number and trajectory even if no ECG flags.' }),
-      yesNo('peakedT', 'Peaked T waves', 1, 'Tall, peaked, narrow T waves (often precordial). Early change; not required for treatment if K is high.'),
-      yesNo('prProlong', 'PR prolongation / flattened P', 2, 'Lengthening PR and/or P waves that flatten or widen as atrial conduction slows.'),
-      yesNo('lossP', 'Loss of P waves', 3, 'P waves absent (sinoventricular rhythm); QRS often still narrow at this stage.'),
-      yesNo('wideQrs', 'QRS widening', 4, 'QRS wider than the patient’s baseline (treat as high-risk even if not a bundle-branch block pattern).'),
-      yesNo('sine', 'Sine-wave pattern', 5, 'Sine-wave: merging QRS and T into a wide, undulating tracing — pre-arrest. Immediate IV calcium.'),
-      yesNo('bradyVf', 'Severe bradyarrhythmia / VT/VF / arrest', 6, 'Slow wide complex, VT/VF, or cardiac arrest attributed to hyperkalemia.'),
+      yesNo('peakedT', 'Peaked T waves', null, 'Tall, peaked, narrow T waves (often precordial). Early change; not required for treatment if K is high. This ordinal checklist uses the highest selected severity, not additive points.'),
+      yesNo('prProlong', 'PR prolongation / flattened P', null, 'Lengthening PR and/or P waves that flatten or widen as atrial conduction slows.'),
+      yesNo('lossP', 'Loss of P waves', null, 'P waves absent (sinoventricular rhythm); QRS often still narrow at this stage.'),
+      yesNo('wideQrs', 'QRS widening', null, 'QRS wider than the patient’s baseline (treat as high-risk even if not a bundle-branch block pattern).'),
+      yesNo('sine', 'Sine-wave pattern', null, 'Sine-wave: merging QRS and T into a wide, undulating tracing — pre-arrest. Immediate IV calcium.'),
+      yesNo('bradyVf', 'Severe bradyarrhythmia / VT/VF / arrest', null, 'Slow wide complex, VT/VF, or cardiac arrest attributed to hyperkalemia.'),
     ],
     calculate(values) {
       const kProvided = !isMissingValue(values.k, true);
@@ -1365,12 +1365,13 @@ export const wave5NephroGiCalcs: Calculator[] = [
         details: [
           { label: 'ECG features selected', value: String(count) },
           { label: 'Serum K', value: kProvided ? `${k} mEq/L` : 'Not entered' },
-          { label: 'Tier', value: '0 none → 1 T peaks → 2–3 atrial → 4 wide QRS → 5–6 sine/arrest' },
+          { label: 'Tier', value: '0 none → 1 peaked T → 2 PR/P → 3 loss P → 4 wide QRS → 5 sine → 6 brady/VT/VF/arrest (highest selected; not additive)' },
         ],
       };
     },
     evidence: {
       summary: 'Classic progression: peaked T → PR/P changes → loss of P → QRS widening → sine wave → VF/asystole. Progression is not strictly linear; ECG may be unchanged at high K.',
+      formula: 'Ordinal tier = highest-severity selected ECG feature (0–6); selected features are not added together.',
       validation: 'Clinical teaching tool; decisions integrate absolute K, chronicity, and ECG.',
       references: [
         {

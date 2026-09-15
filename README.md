@@ -97,7 +97,7 @@ npm run lint      # oxlint
 │                    ┌──────────────────────────┐                          │
 │                    │  Calculator Registry     │                          │
 │                    │  src/data/calculators/   │                          │
-│                    │  (918 Calculator defs)   │                          │
+│                    │  (1004 Calculator defs)  │                          │
 │                    └──────────────────────────┘                          │
 │                                                                          │
 └──────────────────────────────────────────────────────────────────────────┘
@@ -234,7 +234,7 @@ Calculator
      + wave2-* … wave7-* (36 modules)
                          │
                          ▼
-              calculators: Calculator[]   (1003 tools)
+              calculators: Calculator[]   (1004 tools)
                          │
          ┌───────────────┼────────────────┐
          ▼               ▼                ▼

@@ -1439,8 +1439,8 @@ export const wave3PedsObCalcs: Calculator[] = [
     inputs: [
       numberInput('baselineCr', 'Baseline creatinine', { unit: 'mg/dL', min: 0.1, max: 10, step: 0.01, defaultValue: 0.4, helpText: 'Prior nadir or documented baseline from the relevant window — not an unrelated historical value.' }),
       numberInput('currentCr', 'Current creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.01, defaultValue: 0.6, helpText: 'KDIGO Stage 1: ≥0.3 mg/dL rise within 48 h, or ≥1.5× baseline within 7 days. Use a creatinine from that window as baseline/current. A 0.3 rise over weeks is not AKI.' }),
-      yesNo('dialysis', 'Renal replacement therapy initiated', 3, 'Any RRT (HD, PD, CRRT) for this AKI episode is KDIGO Stage 3 regardless of creatinine.'),
-      yesNo('egfr35', 'eGFR <35 mL/min/1.73m² (for patients <18 y) — stage 3 criterion', 3, 'Pediatric KDIGO Stage 3 criterion: eGFR <35 in patients <18 years. Adult Stage 3 also includes Cr ≥4.0 mg/dL (applied automatically from current Cr).'),
+      yesNo('dialysis', 'Renal replacement therapy initiated', null, 'Any RRT (HD, PD, CRRT) for this AKI episode is KDIGO Stage 3 regardless of creatinine; this is an override gate, not an additive point item.'),
+      yesNo('egfr35', 'eGFR <35 mL/min/1.73m² (for patients <18 y) — stage 3 criterion', null, 'Pediatric KDIGO Stage 3 criterion: eGFR <35 in patients <18 years. Adult Stage 3 also includes Cr ≥4.0 mg/dL (applied automatically from current Cr). This is an override gate, not an additive point item.'),
     ],
     calculate(values) {
       const base = num(values.baselineCr, 0.4);
@@ -1609,19 +1609,20 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'Children with blunt torso trauma when deciding need for abdominal CT.',
     whyUse: 'Identifies very low-risk children who may avoid CT radiation if no predictors present.',
     inputs: [
-      yesNo('abdominalWall', 'Evidence of abdominal wall trauma / seat-belt or handlebar injury or abdominal tenderness', 1, 'Yes if ANY: abdominal wall trauma, seat-belt sign, handlebar mark, OR abdominal tenderness (Holmes treats wall trauma and tenderness as separate predictors; either fails very-low-risk).'),
-      yesNo('peritoneal', 'Peritoneal irritation (rebound, guarding, rigidity)', 1, 'Not one of the published 7-variable Holmes predictors — extra clinical flag.'),
+      yesNo('abdominalWall', 'Evidence of abdominal wall trauma / seat-belt or handlebar injury', 1, 'Published predictor: abdominal wall trauma, including a seat-belt or handlebar sign. Abdominal tenderness is a separate predictor below.'),
+      yesNo('abdominalTenderness', 'Abdominal tenderness', 1, 'Published predictor: tenderness on abdominal examination, separate from abdominal-wall trauma.'),
+      yesNo('peritoneal', 'Peritoneal irritation (rebound, guarding, rigidity)', null, 'Not one of the published 7-variable Holmes predictors — document as an extra clinical modifier, but do not count it in the PECARN predictor total.'),
       yesNo('thoracic', 'Thoracic wall trauma', 1, 'Chest wall trauma (contusion, crepitus, or seat-belt sign on the thorax).'),
       yesNo('complainsPain', 'Complains of abdominal pain', 1, 'Child verbalizes abdominal pain, or a preverbal child has clear abdominal pain behavior.'),
       yesNo('decreasedBreath', 'Decreased breath sounds', 1, 'Asymmetric or decreased breath sounds on auscultation.'),
       yesNo('vomiting', 'Vomiting', 1, 'Vomiting after the injury (not lifetime or unrelated vomiting).'),
       yesNo('gcsLow', 'GCS ≤13 or altered mentation', 1, 'GCS ≤13 (rule uses GCS <14). GCS 14–15 is the low-risk mental-status band.'),
-      yesNo('distracting', 'Distracting painful injury (optional clinical judgment)', 0, 'Not in the published 7-variable rule — extra clinical flag.'),
+      yesNo('distracting', 'Distracting painful injury (optional clinical judgment)', null, 'Not in the published 7-variable rule — extra clinical modifier, not part of the PECARN predictor count.'),
     ],
     calculate(values) {
       const predictors = [
-        { k: 'abdominalWall', l: 'Abdominal wall trauma / seat belt / tenderness' },
-        { k: 'peritoneal', l: 'Peritoneal signs' },
+        { k: 'abdominalWall', l: 'Abdominal wall trauma / seat belt' },
+        { k: 'abdominalTenderness', l: 'Abdominal tenderness' },
         { k: 'thoracic', l: 'Thoracic wall trauma' },
         { k: 'complainsPain', l: 'Abdominal pain' },
         { k: 'decreasedBreath', l: 'Decreased breath sounds' },
@@ -1630,18 +1631,25 @@ export const wave3PedsObCalcs: Calculator[] = [
       ];
       const present = predictors.filter((p) => bool(values[p.k])).map((p) => p.l);
       const n = present.length;
-      const lowRisk = n === 0 && !bool(values.distracting);
+      const peritoneal = bool(values.peritoneal);
+      const distracting = bool(values.distracting);
+      const lowRisk = n === 0 && !distracting && !peritoneal;
+      const modifiers = [
+        peritoneal ? 'Peritoneal signs' : null,
+        distracting ? 'Distracting injury' : null,
+      ].filter(Boolean) as string[];
 
       return {
         score: n,
         label: lowRisk ? 'Very low risk pattern' : 'Not very low risk',
         interpretation: lowRisk
           ? 'No listed PECARN-style predictors: very low risk of clinically important intra-abdominal injury in derivation/validation cohorts — CT often unnecessary if reliable exam and observation feasible. Clinical judgment still required.'
-          : `Predictor(s) present: ${present.join('; ') || 'clinical concern'}. Not in very-low-risk group — consider labs, observation, or CT per clinical suspicion and institutional pathway.`,
-        riskLevel: lowRisk ? 'low' : n >= 2 || bool(values.peritoneal) || bool(values.gcsLow) ? 'high' : 'moderate',
+          : `${present.length ? `Published predictor(s) present: ${present.join('; ')}.` : 'No published PECARN predictors selected.'}${modifiers.length ? ` Clinical modifier(s): ${modifiers.join('; ')}.` : ''} Not in very-low-risk group — consider labs, observation, or CT per clinical suspicion and institutional pathway.`,
+        riskLevel: lowRisk ? 'low' : n >= 2 || peritoneal || bool(values.gcsLow) ? 'high' : 'moderate',
         details: [
           { label: 'Positive predictors', value: present.length ? present.join(', ') : 'None' },
           { label: 'Count', value: String(n) },
+          { label: 'Clinical modifiers (not counted)', value: modifiers.length ? modifiers.join(', ') : 'None' },
         ],
         recommendations: lowRisk
           ? ['Consider observation without CT', 'Return precautions / serial exams', 'Shared decision-making']
@@ -1650,8 +1658,8 @@ export const wave3PedsObCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'PECARN blunt abdominal trauma rules identify children at very low risk of clinically important IAI when history/exam predictors are absent; presence of predictors does not mandate CT but raises concern.',
-      formula: 'Very low risk if no rule predictors; otherwise not very low risk',
+        'PECARN blunt abdominal trauma rules identify children at very low risk of clinically important IAI when the published 7 history/exam predictors are absent; peritoneal irritation and distracting injury are clinical modifiers here, not counted predictors.',
+      formula: 'Very low risk if no published 7 predictors and no clinical modifiers; otherwise not very low risk',
       validation: 'Multicenter PECARN networks; apply only to appropriate blunt trauma populations.',
       references: [
         {
@@ -1668,7 +1676,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       { condition: 'Predictors present', actions: ['Serial exam', 'AST/ALT, CBC often used', 'CT if high concern'] },
     ],
     pearls: [
-      'This is a simplified educational checklist — use full published rule variables as implemented locally.',
+      'This is a simplified educational checklist — the published abdominal-wall-trauma and abdominal-tenderness predictors are represented separately here; peritoneal signs are documented but not counted.',
       'Laboratory prediction rules (e.g., AST) may complement history/exam.',
     ],
   },
@@ -2630,6 +2638,29 @@ export const wave3PedsObCalcs: Calculator[] = [
         };
       }
 
+      if (chronic && after20 && (protein || endOrg)) {
+        return {
+          score: severe || endOrg ? 'Superimposed preeclampsia ± severe features' : 'Superimposed preeclampsia',
+          label: 'Superimposed preeclampsia pattern',
+          interpretation:
+            'Chronic hypertension with new proteinuria and/or end-organ criteria after 20 weeks indicates superimposed preeclampsia. Manage as preeclampsia, with severe-feature pathways when severe-range BP or end-organ criteria are present.',
+          riskLevel: 'high',
+          details: ghtnDetails,
+        };
+      }
+
+      if (chronic && after20 && !protein && !endOrg) {
+        return {
+          score: 'Chronic HTN (no superimposed PE criteria)',
+          label: severe ? 'Chronic HTN with severe-range BP' : 'Chronic hypertension — no superimposed PE criteria',
+          interpretation: severe
+            ? 'Chronic hypertension with severe-range BP requires urgent treatment and evaluation; no proteinuria/end-organ criteria are selected here to diagnose superimposed preeclampsia.'
+            : 'Known chronic hypertension after 20 weeks without new proteinuria or end-organ criteria; continue surveillance for superimposed preeclampsia.',
+          riskLevel: severe ? 'high' : 'moderate',
+          details: ghtnDetails,
+        };
+      }
+
       if (after20 && (protein || endOrg)) {
         return {
           score: severe || endOrg ? 'Preeclampsia ± severe features' : 'Preeclampsia',
@@ -2676,6 +2707,7 @@ export const wave3PedsObCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'Gestational HTN', actions: ['Serial BP and labs', 'Fetal monitoring per GA', 'Precautions for severe features'] },
+      { condition: 'Superimposed preeclampsia', actions: ['Use preeclampsia/severe-feature pathway', 'Urgent obstetric evaluation', 'Maternal and fetal surveillance'] },
       { condition: 'Preeclampsia pattern', actions: ['Use full preeclampsia pathway'] },
     ],
     pearls: [

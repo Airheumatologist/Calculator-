@@ -9,10 +9,12 @@ function essdaiDomain(
   maxLevel: 2 | 3,
   helpText?: string,
   descriptions?: string[],
+  levels?: number[],
 ) {
   const names = ['No activity', 'Low', 'Moderate', 'High'];
   const options = [];
-  for (let level = 0; level <= maxLevel; level++) {
+  const offeredLevels = levels ?? Array.from({ length: maxLevel + 1 }, (_, level) => level);
+  for (const level of offeredLevels) {
     options.push({
       label: `${names[level]} (level ${level} × wt ${weight} = ${weight * level})`,
       value: level,
@@ -196,10 +198,10 @@ const ESSDAI_DOMAINS: {
     label: 'Central nervous system',
     weight: 5,
     maxLevel: 3,
-    helpText: 'Official ESSDAI has no level-1 (Low) CNS item — leave Low unused unless a local convention requires it. Score current CNS activity, not damage.',
+    helpText: 'Official ESSDAI CNS levels are 0, 2, and 3; there is no level-1 (Low) CNS item. Score current CNS activity, not damage.',
     descriptions: [
       'No currently active CNS involvement.',
-      'Not used on the official ESSDAI (no level-1 CNS). Prefer No activity unless a local convention requires Low.',
+      'Not offered on the official ESSDAI (there is no level-1 CNS category).',
       'Moderately active CNS (cranial nerve of central origin, optic neuritis, or isolated MS-like syndrome).',
       'Highly active CNS (seizures, stroke, lymphocytic meningitis, psychosis, encephalitis, or more severe MS-like disease).',
     ],
@@ -953,7 +955,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         9 * myositis +
         6 * serositis +
         9 * hemolytic;
-      const score = round(raw, 2);
+      const score = round(Math.max(0, raw), 2);
       const r = riskFromThresholds(score, [
         {
           max: 2.08,
@@ -1540,11 +1542,22 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     whenToUse: 'Systemic activity scoring in primary Sjögren disease for clinic, trials, and biologic eligibility.',
     whyUse: 'EULAR consensus activity index; MCII is a decrease ≥3 points. High activity ≥14.',
     inputs: ESSDAI_DOMAINS.map((d) =>
-      essdaiDomain(d.id, `${d.label} (weight ${d.weight})`, d.weight, d.maxLevel, d.helpText, d.descriptions),
+      essdaiDomain(
+        d.id,
+        `${d.label} (weight ${d.weight})`,
+        d.weight,
+        d.maxLevel,
+        d.helpText,
+        d.descriptions,
+        d.id === 'cns' ? [0, 2, 3] : undefined,
+      ),
     ),
     calculate(values) {
       const rows = ESSDAI_DOMAINS.map((d) => {
-        const level = num(values[d.id], 0);
+        const rawLevel = num(values[d.id], 0);
+        // Older saved values may contain the former phantom CNS level 1;
+        // normalize it to the official no-activity level rather than score it.
+        const level = d.id === 'cns' && rawLevel === 1 ? 0 : rawLevel;
         const pts = d.weight * level;
         return { ...d, level, pts };
       });
@@ -1581,7 +1594,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Domain score = activity level (0–2 or 0–3) × weight. Weights: constitutional 3 (0–2), lymphadenopathy 4 (0–3), glandular 2 (0–2), articular 2 (0–3), cutaneous 3 (0–3), pulmonary 5 (0–3), renal 5 (0–3), muscular 6 (0–3), PNS 5 (0–3), CNS 5 (0–3), haematological 2 (0–3), biological 1 (0–2). Total 0–123. Low <5, moderate 5–13, high ≥14.',
+        'Domain score = activity level (0–2 or 0–3) × weight. Weights: constitutional 3 (0–2), lymphadenopathy 4 (0–3), glandular 2 (0–2), articular 2 (0–3), cutaneous 3 (0–3), pulmonary 5 (0–3), renal 5 (0–3), muscular 6 (0–3), PNS 5 (0–3), CNS 5 (levels 0, 2, 3), haematological 2 (0–3), biological 1 (0–2). Total 0–123. Low <5, moderate 5–13, high ≥14.',
       formula: 'ESSDAI = Σ (level × weight)',
       validation: 'Seror / EULAR 2010; user guide 2015 with domain definitions.',
       references: [
@@ -1769,7 +1782,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
           { label: 'Idiopathic NSIP (−2)', value: 'nsip', points: -2, description: 'Idiopathic nonspecific interstitial pneumonia — subtract 2.' },
           { label: 'CTD-ILD (−2)', value: 'ctd', points: -2, description: 'Connective-tissue-disease–associated ILD — subtract 2.' },
         ],
-        'ctd',
+        'ipf',
         'Subtype points are added to GAP (sex/age/FVC/DLCO). Negative totals stay in stage I.',
       ),
       selectInput(
@@ -1816,7 +1829,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
       ),
     ],
     calculate(values) {
-      const ildSubtype = str(values.ildSubtype, 'ctd');
+      const ildSubtype = str(values.ildSubtype, 'ipf');
       const sex = num(values.sex, 0);
       const ageBand = num(values.ageBand, 0);
       const fvc = num(values.fvc, 0);

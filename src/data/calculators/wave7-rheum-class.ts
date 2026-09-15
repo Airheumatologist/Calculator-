@@ -178,13 +178,6 @@ const IIM_PATH: Opt[] = [
   { label: 'Without muscle biopsy (threshold ≥5.5)', value: 'without', description: 'Use published without-biopsy weights; probable IIM if score ≥5.5 (definite ≥7.5)' },
   { label: 'With muscle biopsy (threshold ≥6.7)', value: 'with', description: 'Use published with-biopsy weights; probable IIM if score ≥6.7 (definite ≥8.7). Biopsy items score only on this path' },
 ];
-const IIM_SKIN: Opt[] = [
-  { label: 'None', value: 'none' },
-  { label: "Gottron's papules", value: 'gottron-papules', description: 'Erythematous to violaceous papules over DIP/PIP/MCP extensor surfaces' },
-  { label: "Gottron's sign", value: 'gottron-sign', description: 'Macular erythema over knuckles/elbows/knees without papules' },
-  { label: 'Heliotrope rash', value: 'heliotrope', description: 'Violaceous periorbital rash ± edema' },
-];
-
 const APS_VTE: Opt[] = [
   { label: 'None', value: 'none', points: 0 },
   { label: 'Provoked VTE (high-risk VTE profile)', value: 'provoked', points: 1, description: 'VTE with a major transient risk factor (surgery with GA >30 min, hospital bedbound ≥3 days, cesarean, major trauma/fracture)' },
@@ -221,8 +214,8 @@ const APS_LAC: Opt[] = [
 ];
 const APS_ACL_IGG: Opt[] = [
   { label: 'None / negative', value: 'none', points: 0 },
-  { label: 'Moderate-titer IgG aCL', value: 'moderate', points: 3, description: 'ELISA ~40–79 U (or lab 99th percentile band)' },
-  { label: 'High-titer IgG aCL', value: 'high', points: 5, description: 'ELISA ≥80 U (or lab high-titer / >99th percentile high band)' },
+  { label: 'Moderate-titer IgG aCL (4)', value: 'moderate', points: 4, description: 'ELISA ~40–79 U (or lab 99th percentile band); the solid-phase domain is 4 when either IgG assay is moderate.' },
+  { label: 'High-titer IgG aCL (5 alone; 7 if both IgG assays high)', value: 'high', points: 5, description: 'ELISA ≥80 U (or lab high-titer / >99th percentile high band). If both aCL IgG and anti-β2GPI IgG are high, the combined solid-phase cluster is 7.' },
 ];
 const APS_ACL_IGM: Opt[] = [
   { label: 'None / negative', value: 'none', points: 0 },
@@ -230,8 +223,8 @@ const APS_ACL_IGM: Opt[] = [
 ];
 const APS_B2_IGG: Opt[] = [
   { label: 'None / negative', value: 'none', points: 0 },
-  { label: 'Moderate-titer IgG anti-β2GPI', value: 'moderate', points: 3, description: 'ELISA ~40–79 U (or lab 99th percentile band)' },
-  { label: 'High-titer IgG anti-β2GPI', value: 'high', points: 5, description: 'ELISA ≥80 U (or lab high-titer / >99th percentile high band)' },
+  { label: 'Moderate-titer IgG anti-β2GPI (4)', value: 'moderate', points: 4, description: 'ELISA ~40–79 U (or lab 99th percentile band); the solid-phase domain is 4 when either IgG assay is moderate.' },
+  { label: 'High-titer IgG anti-β2GPI (5 alone; 7 if both IgG assays high)', value: 'high', points: 5, description: 'ELISA ≥80 U (or lab high-titer / >99th percentile high band). If both aCL IgG and anti-β2GPI IgG are high, the combined solid-phase cluster is 7.' },
 ];
 const APS_B2_IGM: Opt[] = [
   { label: 'None / negative', value: 'none', points: 0 },
@@ -1482,14 +1475,14 @@ export const wave7RheumClassCalcs: Calculator[] = [
       if (bool(values.typicalRash)) minorList.push('typical rash');
       if (bool(values.leukocytosis)) minorList.push('leukocytosis ≥10k');
       return classResult(
-        major,
+        `${major}.${minor}`,
         classified,
         'AOSD (Fautrel)',
         classified
           ? `${major} major + ${minor} minor meets ≥4 major or 3 major + 2 minor. Minors: ${minorList.join(', ') || 'none'}.`
           : `${major} major + ${minor} minor. Requires ≥4 major or 3 major + 2 minor. Minors: ${minorList.join(', ') || 'none'}.`,
         [
-          { label: 'Major count (score)', value: String(major) },
+          { label: 'Major.minor score', value: `${major}.${minor}` },
           { label: 'Minor count', value: String(minor) },
           { label: 'Minors present', value: minorList.join(', ') || 'none' },
           { label: 'Spiking fever ≥39°C', value: bool(values.spikeFever) ? 'Yes' : 'No' },
@@ -1521,7 +1514,7 @@ export const wave7RheumClassCalcs: Calculator[] = [
     nextSteps: classSteps('AOSD'),
     pearls: classPearls([
       'Glycosylated ferritin ≤20% is the distinctive Fautrel item and is not in Yamaguchi.',
-      'Score displayed is the major-criteria count; minor count is listed in details because it can change classification at 3 majors.',
+      'The result displays major.minor counts so the two minor criteria remain visible; classification still uses ≥4 major or 3 major + 2 minor.',
     ]),
   },
 
@@ -1531,7 +1524,7 @@ export const wave7RheumClassCalcs: Calculator[] = [
     name: '2017 EULAR/ACR Idiopathic Inflammatory Myopathy Classification',
     shortName: 'EULAR/ACR IIM',
     description:
-      '2017 EULAR/ACR IIM probability-score classification using published item weights. Probable IIM if ≥5.5 without biopsy or ≥6.7 with biopsy. Skin uses the highest cutaneous lesion (simplified).',
+      '2017 EULAR/ACR IIM probability-score classification using published item weights. Probable IIM if ≥5.5 without biopsy or ≥6.7 with biopsy. Gottron papules, Gottron sign, and heliotrope rash are independently additive.',
     category: 'rheumatology',
     tags: ['myositis', 'iim', 'dermatomyositis', 'jo1', 'classification'],
     whenToUse: 'Suspected idiopathic inflammatory myopathy when classifying for research (no better alternative explanation).',
@@ -1547,7 +1540,9 @@ export const wave7RheumClassCalcs: Calculator[] = [
         'On exam, neck flexion is weaker than neck extension (MRC or equivalent).'),
       yesNo('proxGtDist', 'In the legs, proximal muscles relatively weaker than distal', null,
         'Hip/thigh weakness greater than ankle/foot weakness on exam.'),
-      selectInput('skin', 'Highest skin manifestation', IIM_SKIN, 'none', 'Published weights are additive across lesions; this tool uses the single highest lesion. Gottron papules = papules over knuckle extensors; Gottron sign = macular erythema over knuckles/elbows/knees; heliotrope = violaceous periorbital rash ± edema.'),
+      yesNo('gottronPapules', "Gottron's papules", null, "Erythematous-to-violaceous papules over DIP/PIP/MCP extensor surfaces. This manifestation is scored independently of Gottron's sign and heliotrope rash."),
+      yesNo('gottronSign', "Gottron's sign", null, "Macular erythema over knuckles, elbows, or knees without papules. This manifestation is scored independently of Gottron's papules and heliotrope rash."),
+      yesNo('heliotrope', 'Heliotrope rash', null, 'Violaceous periorbital rash ± edema. This manifestation is scored independently of Gottron’s papules and sign.'),
       yesNo('dysphagia', 'Dysphagia or esophageal dysmotility', null,
         'Swallowing difficulty or documented esophageal dysmotility attributed to myositis.'),
       yesNo('jo1', 'Anti-Jo-1 (anti-histidyl-tRNA synthetase) positive', null,
@@ -1565,7 +1560,12 @@ export const wave7RheumClassCalcs: Calculator[] = [
     calculate(values) {
       const withBx = str(values.path) === 'with';
       const age = str(values.ageOnset, 'lt18');
-      const skin = str(values.skin, 'none');
+      // Keep old saved single-select answers meaningful while allowing the
+      // three current skin manifestations to be scored independently.
+      const legacySkin = str(values.skin);
+      const gottronPapules = bool(values.gottronPapules) || legacySkin === 'gottron-papules';
+      const gottronSign = bool(values.gottronSign) || legacySkin === 'gottron-sign';
+      const heliotrope = bool(values.heliotrope) || legacySkin === 'heliotrope';
       let score = 0;
       if (age === '18-39') score += withBx ? 1.5 : 1.3;
       else if (age === 'ge40') score += withBx ? 2.2 : 2.1;
@@ -1573,9 +1573,9 @@ export const wave7RheumClassCalcs: Calculator[] = [
       if (bool(values.proxLE)) score += withBx ? 0.5 : 0.8;
       if (bool(values.neckFlex)) score += withBx ? 1.6 : 1.9;
       if (bool(values.proxGtDist)) score += withBx ? 1.2 : 0.9;
-      if (skin === 'heliotrope') score += withBx ? 3.2 : 3.1;
-      else if (skin === 'gottron-papules') score += withBx ? 2.7 : 2.1;
-      else if (skin === 'gottron-sign') score += withBx ? 3.7 : 3.3;
+      if (gottronPapules) score += withBx ? 2.7 : 2.1;
+      if (gottronSign) score += withBx ? 3.7 : 3.3;
+      if (heliotrope) score += withBx ? 3.2 : 3.1;
       if (bool(values.dysphagia)) score += withBx ? 0.6 : 0.7;
       if (bool(values.jo1)) score += withBx ? 3.8 : 3.9;
       if (bool(values.enzymes)) score += withBx ? 1.4 : 1.3;
@@ -1603,7 +1603,9 @@ export const wave7RheumClassCalcs: Calculator[] = [
           { label: 'Proximal LE weakness', value: bool(values.proxLE) ? 'Yes' : 'No' },
           { label: 'Neck flexors weaker than extensors', value: bool(values.neckFlex) ? 'Yes' : 'No' },
           { label: 'Proximal > distal leg weakness', value: bool(values.proxGtDist) ? 'Yes' : 'No' },
-          { label: 'Skin (highest)', value: lab(IIM_SKIN, values.skin) },
+          { label: "Gottron's papules", value: gottronPapules ? 'Yes (scored)' : 'No' },
+          { label: "Gottron's sign", value: gottronSign ? 'Yes (scored)' : 'No' },
+          { label: 'Heliotrope rash', value: heliotrope ? 'Yes (scored)' : 'No' },
           { label: 'Dysphagia', value: bool(values.dysphagia) ? 'Yes' : 'No' },
           { label: 'Anti-Jo-1', value: bool(values.jo1) ? 'Yes' : 'No' },
           { label: 'Elevated muscle enzymes', value: bool(values.enzymes) ? 'Yes' : 'No' },
@@ -1616,7 +1618,7 @@ export const wave7RheumClassCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        '2017 EULAR/ACR IIM: weighted items for age, weakness pattern, skin, dysphagia, anti-Jo-1, muscle enzymes, and (if performed) biopsy features. Probable IIM (recommended minimum) is score ≥5.5 without biopsy or ≥6.7 with biopsy; definite IIM is ≥7.5 / ≥8.7. This tool scores the highest skin lesion rather than adding overlapping rashes.',
+        '2017 EULAR/ACR IIM: weighted items for age, weakness pattern, Gottron papules, Gottron sign, heliotrope rash, dysphagia, anti-Jo-1, muscle enzymes, and (if performed) biopsy features. Probable IIM (recommended minimum) is score ≥5.5 without biopsy or ≥6.7 with biopsy; definite IIM is ≥7.5 / ≥8.7. The three characteristic skin manifestations are independently additive.',
       formula: 'Sum of Lundberg 2017 Table 2 weights (path-specific); classify if ≥5.5 (no biopsy) or ≥6.7 (biopsy)',
       validation: 'Lundberg et al. 2017; probable-IIM cut-off sensitivity/specificity 87%/82% without biopsy and 93%/88% with biopsy.',
       references: [
@@ -1642,7 +1644,7 @@ export const wave7RheumClassCalcs: Calculator[] = [
     name: '2023 ACR/EULAR Antiphospholipid Syndrome Classification',
     shortName: 'ACR/EULAR APS',
     description:
-      '2023 ACR/EULAR APS classification. Classify if ≥3 clinical points AND ≥3 laboratory points. Lab isotypes are additive in this simplified bedside helper (published solid-phase domain uses the single highest cluster).',
+      '2023 ACR/EULAR APS classification. Classify if ≥3 clinical points AND ≥3 laboratory points. The solid-phase lab domain uses the published aCL/anti-β2GPI cluster weights rather than adding each assay independently.',
     category: 'rheumatology',
     tags: ['aps', 'antiphospholipid', 'lupus anticoagulant', 'classification'],
     whenToUse: 'aPL-associated clinical events when classifying APS for research.',
@@ -1674,7 +1676,12 @@ export const wave7RheumClassCalcs: Calculator[] = [
       const aclM = pts(APS_ACL_IGM, values.aclIgm);
       const b2g = pts(APS_B2_IGG, values.b2Igg);
       const b2m = pts(APS_B2_IGM, values.b2Igm);
-      const labScore = lac + aclG + aclM + b2g + b2m;
+      const bothHighIgG = values.aclIgg === 'high' && values.b2Igg === 'high';
+      const anyHighIgG = values.aclIgg === 'high' || values.b2Igg === 'high';
+      const anyModerateIgG = values.aclIgg === 'moderate' || values.b2Igg === 'moderate';
+      const anyIgM = values.aclIgm === 'positive' || values.b2Igm === 'positive';
+      const solidPhase = bothHighIgG ? 7 : anyHighIgG ? 5 : anyModerateIgG ? 4 : anyIgM ? 1 : 0;
+      const labScore = lac + solidPhase;
       const score = clinical + labScore;
       const classified = clinical >= 3 && labScore >= 3;
       return classResult(
@@ -1687,6 +1694,7 @@ export const wave7RheumClassCalcs: Calculator[] = [
         [
           { label: 'Clinical points', value: String(clinical) },
           { label: 'Laboratory points', value: String(labScore) },
+          { label: 'Solid-phase highest cluster', value: `${solidPhase}${bothHighIgG ? ' (both IgG assays high)' : ''}` },
           { label: 'VTE', value: `${lab(APS_VTE, values.vte)} (${vte})` },
           { label: 'Arterial thrombosis', value: `${lab(APS_ART, values.arterial)} (${art})` },
           { label: 'Microvascular', value: `${lab(APS_MICRO, values.microvascular)} (${micro})` },
@@ -1703,8 +1711,8 @@ export const wave7RheumClassCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        '2023 ACR/EULAR APS: entry of ≥1 clinical and ≥1 lab criterion within 3 years, then additive weighted domains. Classify if ≥3 clinical AND ≥3 laboratory points. This helper adds solid-phase isotypes (published criteria take the single highest solid-phase cluster, so combined IgG aCL + IgG β2GPI may be over-counted here). Moderate ELISA 40–79 units; high ≥80 units.',
-      formula: 'Clinical sum (highest per clinical domain) + laboratory sum; classify if clinical ≥3 AND lab ≥3',
+        '2023 ACR/EULAR APS: entry of ≥1 clinical and ≥1 lab criterion within 3 years, then additive weighted domains. Classify if ≥3 clinical AND ≥3 laboratory points. The laboratory score adds LAC to one solid-phase aCL/anti-β2GPI cluster: IgM positivity 1, moderate IgG 4, high IgG in one assay 5, or high IgG in both assays 7. Moderate ELISA 40–79 units; high ≥80 units.',
+      formula: 'Clinical sum (highest per clinical domain) + LAC + clustered solid-phase score (IgM 1; moderate IgG 4; one high IgG 5; both high IgG 7); classify if clinical ≥3 AND lab ≥3',
       validation: 'Barbhaiya et al. 2023; validation specificity 99% vs 86% for Sydney criteria, sensitivity 84% vs 99%.',
       references: [
         {

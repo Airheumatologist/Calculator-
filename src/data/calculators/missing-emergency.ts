@@ -803,7 +803,7 @@ export const missingEmergencyCalcs: Calculator[] = [
     whenToUse: 'Multi-casualty / disaster scenes using START adult triage logic.',
     whyUse: 'Rapid categorization into Minor, Delayed, Immediate, or Expectant/Deceased to prioritize resources.',
     inputs: [
-      yesNo('canWalk', 'Able to walk (ambulatory / “walking wounded”)', -1, 'If the patient can walk to you (or is directed to walk) → START Minor (Green) and stop. Do not score breathing/perfusion/mental on walkers in classic START.'),
+      yesNo('canWalk', 'Able to walk (ambulatory / “walking wounded”)', null, 'If the patient can walk to you (or is directed to walk) → START Minor (Green) and stop. Do not score breathing/perfusion/mental on walkers in classic START.'),
       selectInput(
         'breathing',
         'Spontaneous breathing',

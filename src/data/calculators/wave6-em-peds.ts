@@ -880,7 +880,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         { label: 'Proximal humerus', value: 'hum' },
         { label: 'Distal femur (peds option)', value: 'fem' },
       ]),
-      yesNo('contraindications', 'Local infection, fracture, prior IO same bone, or osteogenesis imperfecta concern', -15),
+      yesNo('contraindications', 'Local infection, fracture, prior IO same bone, or osteogenesis imperfecta concern', null),
     ],
     calculate(values) {
       const band = String(values.ageBand ?? 'pink');
@@ -1980,7 +1980,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
       ], undefined, 'Eclampsia = seizure with preeclampsia. Prophylaxis = preeclampsia with severe features (not isolated gestational HTN without severe features). Delivery is definitive therapy after stabilization.'),
       selectInput('regimen', 'Regimen style', [
         { label: 'IV Zuspan-style (4–6 g load + 1–2 g/h)', value: 'iv', description: 'Preferred in high-resource settings: IV load then continuous infusion' },
-        { label: 'IM Pritchard-style (educational overview)', value: 'im', description: 'Classic 4 g IV + 10 g IM load, then 5 g IM q4h if reflexes and RR adequate' },
+        { label: 'IM Pritchard-style (educational overview)', value: 'im', description: 'Classic 4 g IV + 10 g IM load (14 g total), then 5 g IM q4h if reflexes and RR adequate; IV load/maintenance choices below are ignored' },
       ]),
       selectInput('load', 'IV loading dose choice', [
         { label: '4 g IV over 15–20 min', value: 4, description: 'Common load; infuse over 15–20 minutes (not a push)' },
@@ -1990,29 +1990,26 @@ export const wave6EmPedsCalcs: Calculator[] = [
         { label: '1 g/h', value: 1, description: 'Lower maintenance; typical if renal impairment/oliguria' },
         { label: '2 g/h', value: 2, description: 'Common US maintenance when urine output and reflexes are adequate' },
       ]),
-      yesNo('renalImpair', 'Significant renal impairment / oliguria', 0, 'Oliguria <30 mL/h for >2 h, or significant AKI/elevated creatinine — reduce maintenance (this tool caps at 1 g/h).'),
+      yesNo('renalImpair', 'Significant renal impairment / oliguria', null, 'Oliguria <30 mL/h for >2 h, or significant AKI/elevated creatinine — reduce IV maintenance (this tool caps at 1 g/h). This IV-only adjustment is ignored for the fixed-dose IM Pritchard branch.'),
       numberInput('weightKg', 'Weight (optional, for context)', { unit: 'kg', min: 40, max: 200, defaultValue: 80, required: false }),
     ],
     calculate(values) {
       const ind = String(values.indication ?? 'prophylaxis');
       const regimen = String(values.regimen ?? 'iv');
-      const load = num(values.load, 6);
-      let maint = num(values.maintenance, 2);
-      if (bool(values.renalImpair)) maint = Math.min(maint, 1);
       const wtMissing = isMissingValue(values.weightKg, true);
       const wt = wtMissing ? null : num(values.weightKg, 80);
-      const weightContext =
-        wt != null
-          ? `Load ≈${round((load * 1000) / wt, 0)} mg/kg, maintenance ≈${round((maint * 1000) / wt, 0)} mg/kg/h at ${wt} kg`
-          : 'Weight not entered, so no mg/kg context shown';
       if (regimen === 'im') {
+        const initialLoad = 14;
+        const imMaintenance = 5;
         return {
-          score: load,
+          score: initialLoad,
           unit: 'g load',
-          label: 'Pritchard-style IM overview (educational)',
-          interpretation: `Classic Pritchard: 4 g IV + 10 g IM load (5 g each buttock), then 5 g IM every 4 h in alternate buttocks if reflexes present and RR adequate. Prefer IV regimens in high-resource settings. Indication: ${ind}. Monitor for toxicity (loss of reflexes, respiratory depression); calcium gluconate at bedside.`,
+          label: 'Pritchard-style IM overview — 14 g initial load',
+          interpretation: `Classic Pritchard: 4 g IV + 10 g IM initial load (5 g each buttock; 14 g total), then ${imMaintenance} g IM every 4 h in alternate buttocks if reflexes present and RR adequate. Prefer IV regimens in high-resource settings. Indication: ${ind}. IV load/maintenance and renal-adjustment inputs are not used in this IM branch. Monitor for toxicity (loss of reflexes, respiratory depression); calcium gluconate at bedside.`,
           riskLevel: ind === 'eclampsia' ? 'critical' : 'high',
           details: [
+            { label: 'Initial load', value: '4 g IV + 10 g IM = 14 g total' },
+            { label: 'Maintenance', value: '5 g IM q4h in alternate buttocks' },
             {
               label: 'Weight-based context',
               value:
@@ -2028,6 +2025,13 @@ export const wave6EmPedsCalcs: Calculator[] = [
           ],
         };
       }
+      const load = num(values.load, 6);
+      let maint = num(values.maintenance, 2);
+      if (bool(values.renalImpair)) maint = Math.min(maint, 1);
+      const weightContext =
+        wt != null
+          ? `Load ≈${round((load * 1000) / wt, 0)} mg/kg, maintenance ≈${round((maint * 1000) / wt, 0)} mg/kg/h at ${wt} kg`
+          : 'Weight not entered, so no mg/kg context shown';
       return {
         score: load,
         unit: 'g load',
@@ -2051,8 +2055,8 @@ export const wave6EmPedsCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Magnesium sulfate is first-line for eclamptic seizures and prophylaxis in severe preeclampsia (Magpie trial and ACOG guidance). IV regimens common in the US; IM Pritchard used globally.',
-      formula: 'Load 4–6 g IV + maintain 1–2 g/h (adjust for renal function)',
+        'Magnesium sulfate is first-line for eclamptic seizures and prophylaxis in severe preeclampsia (Magpie trial and ACOG guidance). IV regimens are common in the US; the Pritchard IM regimen is a fixed 4 g IV + 10 g IM (14 g total) initial load followed by 5 g IM q4h.',
+      formula: 'IV: load 4–6 g + maintain 1–2 g/h (adjust for renal function); Pritchard IM: 4 g IV + 10 g IM = 14 g initial load, then 5 g IM q4h',
       validation: 'Robust RCT/guideline support for MgSO₄ superiority over other anticonvulsants in eclampsia.',
       references: [
         {

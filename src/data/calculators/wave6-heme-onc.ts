@@ -25,13 +25,13 @@ export const wave6HemeOncCalcs: Calculator[] = [
       ], undefined, 'Compare the peak platelet count after heparin started with the nadir of the current fall.'),
       // points omitted: pathway-conditional (only one timing arm applies)
       selectInput('timingTypical', 'Timing of fall — typical-onset pathway', [
-        { label: 'N/A (using rapid-onset pathway)', value: 0 },
-        { label: '<4 days after heparin', value: -2 },
-        { label: 'Day 4 after heparin', value: 2 },
-        { label: 'Days 5–10 after heparin', value: 3 },
-        { label: 'Days 11–14 after heparin', value: 2 },
-        { label: '>14 days after heparin', value: -1 },
-      ], 3, 'Use when typical onset selected (no heparin in prior ~100 days). Days counted from start of the current heparin course.'),
+        { label: 'N/A (using rapid-onset pathway)', value: 'na-rapid' },
+        { label: '<4 days after heparin', value: 'lt4' },
+        { label: 'Day 4 after heparin', value: 'day4' },
+        { label: 'Days 5–10 after heparin', value: 'days5-10' },
+        { label: 'Days 11–14 after heparin', value: 'days11-14' },
+        { label: '>14 days after heparin', value: 'gt14' },
+      ], 'days5-10', 'Use when typical onset selected (no heparin in prior ~100 days). Days counted from start of the current heparin course.'),
       selectInput('timingRapid', 'Timing of fall — rapid-onset pathway', [
         { label: 'N/A (using typical-onset pathway)', value: 0 },
         { label: 'Fall <48 h after re-exposure', value: 2 },
@@ -60,8 +60,18 @@ export const wave6HemeOncCalcs: Calculator[] = [
     calculate(values) {
       const onset = String(values.onsetType ?? 'typical');
       const pltFall = num(values.pltFall, 3);
+      const timingTypicalPoints: Record<string, number> = {
+        'na-rapid': 0,
+        lt4: -2,
+        day4: 2,
+        'days5-10': 3,
+        'days11-14': 2,
+        gt14: -1,
+      };
       const timing =
-        onset === 'rapid' ? num(values.timingRapid, 0) : num(values.timingTypical, 3);
+        onset === 'rapid'
+          ? num(values.timingRapid, 0)
+          : timingTypicalPoints[String(values.timingTypical)] ?? num(values.timingTypical, 3);
       const nadir = num(values.nadir, 2);
       const thrombosis = num(values.thrombosis, 0);
       const skin = bool(values.skinNecrosis) ? 3 : 0;

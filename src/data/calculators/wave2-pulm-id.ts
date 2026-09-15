@@ -246,55 +246,48 @@ export const wave2PulmIdCalcs: Calculator[] = [
       yesNo('multilobar', 'Multilobar infiltrate (+5)', 5),
       yesNo('lymphopenia', 'Lymphopenia ≤ 0.8 × 10⁹/L (+4)', 4),
       yesNo('bacterial', 'Bacterial coinfection (+4)', 4, 'Yes if proven (blood or respiratory culture with a bacterial pathogen) or a typical bacterial presentation with supporting labs. Do not tick for viral pneumonia alone.'),
-      yesNo('smoking', 'Smoking history (active or former) (+3)', 3),
+      selectInput('smoking', 'Smoking status', [
+        { label: 'Never smoker (0)', value: 'never', description: 'No current or former smoking history.' },
+        { label: 'Former smoker (+2)', value: 'former', description: 'Previously smoked but no longer smokes.' },
+        { label: 'Current smoker (+3)', value: 'current', description: 'Currently smokes combustible or electronic tobacco products.' },
+      ], 'never', 'MuLBSTA assigns 0 to never, 2 to former, and 3 to current smoking status.'),
       yesNo('htn', 'Hypertension (+2)', 2),
       yesNo('age60', 'Age ≥ 60 years (+2)', 2),
     ],
     calculate(values) {
+      const smokingPoints: Record<string, number> = { never: 0, former: 2, current: 3 };
       const pts: [string, number][] = [
         ['multilobar', 5],
         ['lymphopenia', 4],
         ['bacterial', 4],
-        ['smoking', 3],
         ['htn', 2],
         ['age60', 2],
       ];
-      const score = pts.reduce((s, [k, p]) => s + (bool(values[k]) ? p : 0), 0);
+      const score = pts.reduce((s, [k, p]) => s + (bool(values[k]) ? p : 0), 0) +
+        (smokingPoints[String(values.smoking)] ?? 0);
       const r = riskFromThresholds(score, [
         {
-          max: 6,
-          level: 'low',
-          label: 'Low risk (0–6)',
-          interpretation: `MuLBSTA ${score}: lower 90-day mortality risk group in derivation cohorts. Standard viral pneumonia care.`,
-        },
-        {
-          max: 9,
-          level: 'moderate',
-          label: 'Moderate risk (7–9)',
-          interpretation: `MuLBSTA ${score}: intermediate mortality risk. Closer monitoring; treat coinfection if present.`,
-        },
-        {
           max: 11,
-          level: 'high',
-          label: 'High risk (10–11)',
-          interpretation: `MuLBSTA ${score}: high mortality risk. Consider higher-level care and early supportive therapy.`,
+          level: 'low',
+          label: 'Lower risk (<12)',
+          interpretation: `MuLBSTA ${score}: lower 90-day mortality risk group (<12) in derivation cohorts. Standard viral pneumonia care with clinical monitoring.`,
         },
         {
           max: 22,
-          level: 'critical',
-          label: 'Very high risk (12–22)',
-          interpretation: `MuLBSTA ${score}: very high mortality risk. Aggressive support; evaluate for ICU and complications.`,
+          level: 'high',
+          label: 'Higher risk (≥12)',
+          interpretation: `MuLBSTA ${score}: higher 90-day mortality risk group (≥12) in derivation cohorts. Consider higher-level care and early supportive therapy.`,
         },
       ]);
       return {
         score,
         ...r,
-        details: [{ label: 'Max score', value: '20 (5+4+4+3+2+2)' }],
+        details: [{ label: 'Max score', value: '20 (5+4+4+3+2+2; current smoking = 3)' }],
       };
     },
     evidence: {
       summary: 'MuLBSTA predicts mortality in viral pneumonia using multilobar disease, lymphopenia, bacterial coinfection, smoking, hypertension, and age ≥60.',
-      formula: 'Multilobar 5 + lymphopenia 4 + bacterial coinfection 4 + smoking 3 + HTN 2 + age≥60: 2',
+      formula: 'Multilobar 5 + lymphopenia 4 + bacterial coinfection 4 + current smoking 3 (former 2, never 0) + HTN 2 + age≥60: 2',
       validation: 'Derived in viral pneumonia cohorts; used as risk adjunct (not a stand-alone disposition rule).',
       references: [
         {
@@ -305,7 +298,7 @@ export const wave2PulmIdCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Score 0–11', actions: ['Supportive care', 'Antivirals when indicated', 'Ward care per overall status'] },
+      { condition: 'Score <12', actions: ['Supportive care', 'Antivirals when indicated', 'Ward care per overall status'] },
       { condition: 'Score ≥12', actions: ['Consider step-up monitoring or ICU', 'Cover bacterial coinfection if suspected', 'Serial labs and gas exchange'] },
     ],
   },
@@ -532,6 +525,14 @@ export const wave2PulmIdCalcs: Calculator[] = [
       const fio2 = num(values.fio2, 0.6);
       const map = num(values.map, 15);
       const pao2 = num(values.pao2, 60);
+      if (fio2 <= 0) {
+        return {
+          score: '—',
+          label: 'Invalid FiO₂',
+          interpretation: 'FiO₂ must be > 0 (enter as a fraction such as 0.60) to calculate oxygenation index.',
+          riskLevel: 'info',
+        };
+      }
       if (pao2 <= 0) {
         return {
           score: '—',

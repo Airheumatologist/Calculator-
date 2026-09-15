@@ -256,11 +256,11 @@ export const criticalCareCalcs: Calculator[] = [
     whyUse: 'Standardized track-and-trigger system (NHS).',
     inputs: [
       selectInput('rr', 'Respiratory rate (/min)', [
-        { label: '≤8 (3)', value: 3 },
-        { label: '9–11 (1)', value: 1 },
-        { label: '12–20 (0)', value: 0 },
-        { label: '21–24 (2)', value: 2 },
-        { label: '≥25 (3)', value: 3 },
+        { label: '≤8 (3)', value: 'rr_le_8' },
+        { label: '9–11 (1)', value: 'rr_9_11' },
+        { label: '12–20 (0)', value: 'rr_12_20' },
+        { label: '21–24 (2)', value: 'rr_21_24' },
+        { label: '≥25 (3)', value: 'rr_ge_25' },
       ], undefined, 'Breaths per minute. A single parameter scoring 3 is itself an urgent-review trigger in NEWS2.'),
       selectInput('spo2', 'SpO₂ Scale 1 (%)', [
         { label: '≥96 (0)', value: 0 },
@@ -270,26 +270,26 @@ export const criticalCareCalcs: Calculator[] = [
       ], 0, 'Scale 1 target 94–98%. For confirmed hypercapnic respiratory failure with a prescribed 88–92% target, RCP Scale 2 applies — not implemented in this tool (do not use these bins for Scale 2 patients).'),
       yesNo('o2air', 'On supplemental oxygen', 2, 'Yes if any supplemental O₂ (nasal cannula, mask, HFNC, or ventilator). Room air = No. NEWS2 adds +2 for oxygen.'),
       selectInput('temp', 'Temperature °C', [
-        { label: '≤35.0 (3)', value: 3 },
-        { label: '35.1–36.0 (1)', value: 1 },
-        { label: '36.1–38.0 (0)', value: 0 },
-        { label: '38.1–39.0 (1)', value: 1 },
-        { label: '≥39.1 (2)', value: 2 },
+        { label: '≤35.0 (3)', value: 'temp_le_35' },
+        { label: '35.1–36.0 (1)', value: 'temp_35_1_36' },
+        { label: '36.1–38.0 (0)', value: 'temp_36_1_38' },
+        { label: '38.1–39.0 (1)', value: 'temp_38_1_39' },
+        { label: '≥39.1 (2)', value: 'temp_ge_39_1' },
       ]),
       selectInput('sbp', 'Systolic BP (mmHg)', [
-        { label: '≤90 (3)', value: 3 },
-        { label: '91–100 (2)', value: 2 },
-        { label: '101–110 (1)', value: 1 },
-        { label: '111–219 (0)', value: 0 },
-        { label: '≥220 (3)', value: 3 },
+        { label: '≤90 (3)', value: 'sbp_le_90' },
+        { label: '91–100 (2)', value: 'sbp_91_100' },
+        { label: '101–110 (1)', value: 'sbp_101_110' },
+        { label: '111–219 (0)', value: 'sbp_111_219' },
+        { label: '≥220 (3)', value: 'sbp_ge_220' },
       ]),
       selectInput('hr', 'Heart rate (bpm)', [
-        { label: '≤40 (3)', value: 3 },
-        { label: '41–50 (1)', value: 1 },
-        { label: '51–90 (0)', value: 0 },
-        { label: '91–110 (1)', value: 1 },
-        { label: '111–130 (2)', value: 2 },
-        { label: '≥131 (3)', value: 3 },
+        { label: '≤40 (3)', value: 'hr_le_40' },
+        { label: '41–50 (1)', value: 'hr_41_50' },
+        { label: '51–90 (0)', value: 'hr_51_90' },
+        { label: '91–110 (1)', value: 'hr_91_110' },
+        { label: '111–130 (2)', value: 'hr_111_130' },
+        { label: '≥131 (3)', value: 'hr_ge_131' },
       ]),
       selectInput('conscious', 'Consciousness (ACVPU)', [
         { label: 'Alert (A) (0)', value: 0, description: 'Alert — eyes open, interacting' },
@@ -297,20 +297,55 @@ export const criticalCareCalcs: Calculator[] = [
       ], 0, 'NEWS2 uses ACVPU. New confusion (C) scores 3 even if the patient still appears “alert” by old AVPU. V = any response to spoken voice; P = pain only (trapezius/nail-bed); U = none.'),
     ],
     calculate(values) {
+      const rrPoints: Record<string, number> = {
+        rr_le_8: 3,
+        rr_9_11: 1,
+        rr_12_20: 0,
+        rr_21_24: 2,
+        rr_ge_25: 3,
+      };
+      const tempPoints: Record<string, number> = {
+        temp_le_35: 3,
+        temp_35_1_36: 1,
+        temp_36_1_38: 0,
+        temp_38_1_39: 1,
+        temp_ge_39_1: 2,
+      };
+      const sbpPoints: Record<string, number> = {
+        sbp_le_90: 3,
+        sbp_91_100: 2,
+        sbp_101_110: 1,
+        sbp_111_219: 0,
+        sbp_ge_220: 3,
+      };
+      const hrPoints: Record<string, number> = {
+        hr_le_40: 3,
+        hr_41_50: 1,
+        hr_51_90: 0,
+        hr_91_110: 1,
+        hr_111_130: 2,
+        hr_ge_131: 3,
+      };
+      const rr = rrPoints[String(values.rr)] ?? num(values.rr);
+      const temp = tempPoints[String(values.temp)] ?? num(values.temp);
+      const sbp = sbpPoints[String(values.sbp)] ?? num(values.sbp);
+      const hr = hrPoints[String(values.hr)] ?? num(values.hr);
+      const spo2 = num(values.spo2);
+      const conscious = num(values.conscious);
       const score =
-        num(values.rr) +
-        num(values.spo2) +
+        rr +
+        spo2 +
         (bool(values.o2air) ? 2 : 0) +
-        num(values.temp) +
-        num(values.sbp) +
-        num(values.hr) +
-        num(values.conscious);
+        temp +
+        sbp +
+        hr +
+        conscious;
       let r = riskFromThresholds(score, [
         { max: 4, level: 'low', label: 'Low (0–4)', interpretation: 'Continue routine monitoring (unless single parameter = 3).' },
         { max: 6, level: 'moderate', label: 'Low–medium (5–6)', interpretation: 'Urgent ward-based response; increase monitoring frequency.' },
         { max: 20, level: 'high', label: 'High (≥7)', interpretation: 'Emergency response / critical care review.' },
       ]);
-      const singleThree = [values.rr, values.spo2, values.temp, values.sbp, values.hr, values.conscious].some(v => num(v) === 3);
+      const singleThree = [rr, spo2, temp, sbp, hr, conscious].some(v => v === 3);
       if (singleThree && score <= 4) {
         r = { ...r, riskLevel: 'moderate', label: 'Low–medium (single parameter = 3)', interpretation: 'NEWS2: any single parameter scoring 3 is an urgent-review trigger even when the total is 0–4.' };
       }
@@ -338,31 +373,31 @@ export const criticalCareCalcs: Calculator[] = [
     whyUse: 'Predecessor/alternative to NEWS used in many hospitals.',
     inputs: [
       selectInput('sbp', 'SBP (mmHg)', [
-        { label: '≤70 (3)', value: 3 },
-        { label: '71–80 (2)', value: 2 },
-        { label: '81–100 (1)', value: 1 },
-        { label: '101–199 (0)', value: 0 },
-        { label: '≥200 (2)', value: 2 },
+        { label: '≤70 (3)', value: 'sbp_le_70' },
+        { label: '71–80 (2)', value: 'sbp_71_80' },
+        { label: '81–100 (1)', value: 'sbp_81_100' },
+        { label: '101–199 (0)', value: 'sbp_101_199' },
+        { label: '≥200 (2)', value: 'sbp_ge_200' },
       ], undefined, 'Systolic BP in mmHg (Subbe MEWS).'),
       selectInput('hr', 'Heart rate (bpm)', [
-        { label: '≤40 (2)', value: 2 },
-        { label: '41–50 (1)', value: 1 },
-        { label: '51–100 (0)', value: 0 },
-        { label: '101–110 (1)', value: 1 },
-        { label: '111–129 (2)', value: 2 },
-        { label: '≥130 (3)', value: 3 },
+        { label: '≤40 (2)', value: 'hr_le_40' },
+        { label: '41–50 (1)', value: 'hr_41_50' },
+        { label: '51–100 (0)', value: 'hr_51_100' },
+        { label: '101–110 (1)', value: 'hr_101_110' },
+        { label: '111–129 (2)', value: 'hr_111_129' },
+        { label: '≥130 (3)', value: 'hr_ge_130' },
       ], undefined, 'Heart rate in beats/min.'),
       selectInput('rr', 'Respiratory rate (/min)', [
-        { label: '<9 (2)', value: 2 },
-        { label: '9–14 (0)', value: 0 },
-        { label: '15–20 (1)', value: 1 },
-        { label: '21–29 (2)', value: 2 },
-        { label: '≥30 (3)', value: 3 },
+        { label: '<9 (2)', value: 'rr_lt_9' },
+        { label: '9–14 (0)', value: 'rr_9_14' },
+        { label: '15–20 (1)', value: 'rr_15_20' },
+        { label: '21–29 (2)', value: 'rr_21_29' },
+        { label: '≥30 (3)', value: 'rr_ge_30' },
       ], undefined, 'Breaths per minute.'),
       selectInput('temp', 'Temperature (°C)', [
-        { label: '<35 (2)', value: 2 },
-        { label: '35–38.4 (0)', value: 0 },
-        { label: '≥38.5 (2)', value: 2 },
+        { label: '<35 (2)', value: 'temp_lt_35' },
+        { label: '35–38.4 (0)', value: 'temp_35_38_4' },
+        { label: '≥38.5 (2)', value: 'temp_ge_38_5' },
       ], undefined, 'Core temperature in °C, not °F.'),
       selectInput('avpu', 'AVPU', [
         { label: 'Alert (0)', value: 0, description: 'Eyes open, interacting' },
@@ -372,7 +407,38 @@ export const criticalCareCalcs: Calculator[] = [
       ], 0, 'A = alert; V = voice; P = pain only; U = unresponsive.'),
     ],
     calculate(values) {
-      const score = num(values.sbp) + num(values.hr) + num(values.rr) + num(values.temp) + num(values.avpu);
+      const sbpPoints: Record<string, number> = {
+        sbp_le_70: 3,
+        sbp_71_80: 2,
+        sbp_81_100: 1,
+        sbp_101_199: 0,
+        sbp_ge_200: 2,
+      };
+      const hrPoints: Record<string, number> = {
+        hr_le_40: 2,
+        hr_41_50: 1,
+        hr_51_100: 0,
+        hr_101_110: 1,
+        hr_111_129: 2,
+        hr_ge_130: 3,
+      };
+      const rrPoints: Record<string, number> = {
+        rr_lt_9: 2,
+        rr_9_14: 0,
+        rr_15_20: 1,
+        rr_21_29: 2,
+        rr_ge_30: 3,
+      };
+      const tempPoints: Record<string, number> = {
+        temp_lt_35: 2,
+        temp_35_38_4: 0,
+        temp_ge_38_5: 2,
+      };
+      const sbp = sbpPoints[String(values.sbp)] ?? num(values.sbp);
+      const hr = hrPoints[String(values.hr)] ?? num(values.hr);
+      const rr = rrPoints[String(values.rr)] ?? num(values.rr);
+      const temp = tempPoints[String(values.temp)] ?? num(values.temp);
+      const score = sbp + hr + rr + temp + num(values.avpu);
       const r = riskFromThresholds(score, [
         { max: 2, level: 'low', label: 'Low', interpretation: 'Continue routine monitoring.' },
         { max: 4, level: 'moderate', label: 'Intermediate', interpretation: 'Increase frequency of observations; notify nurse in charge.' },
@@ -555,12 +621,12 @@ export const criticalCareCalcs: Calculator[] = [
         { label: '6.0–6.9 (3)', value: 3 },
       ], 0, 'Serum potassium in mEq/L. Worst in first 24 h. Pick the matching band (6.0–6.9 is 3 points; ≥7 is 4).'),
       selectInput('cr', 'Creatinine (acute)', [
-        { label: '0.6–1.4 (0)', value: 0 },
-        { label: '1.5–1.9 (2)', value: 2 },
-        { label: '2.0–3.4 (3)', value: 3 },
-        { label: '≥3.5 (4)', value: 4 },
-        { label: '<0.6 (2)', value: 2 },
-      ], 0, 'Worst creatinine in the first 24 h (mg/dL). Official APACHE II doubles these points when acute renal failure is present; this educational tool does not double.'),
+        { label: '0.6–1.4 (0)', value: 'cr_0_6_1_4' },
+        { label: '1.5–1.9 (2)', value: 'cr_1_5_1_9' },
+        { label: '2.0–3.4 (3)', value: 'cr_2_0_3_4' },
+        { label: '≥3.5 (4)', value: 'cr_ge_3_5' },
+        { label: '<0.6 (2)', value: 'cr_lt_0_6' },
+      ], 'cr_0_6_1_4', 'Worst creatinine in the first 24 h (mg/dL). Official APACHE II doubles these points when acute renal failure is present; this educational tool does not double.'),
       selectInput('hct', 'Hematocrit (%)', [
         { label: '30–45.9 (0)', value: 0 },
         { label: '46–49.9 (1)', value: 1 },
@@ -589,6 +655,13 @@ export const criticalCareCalcs: Calculator[] = [
       else if (age >= 45) agePts = 2;
       const gcs = Math.min(15, Math.max(3, num(values.gcs, 15)));
       const gcsPts = 15 - gcs;
+      const crPoints: Record<string, number> = {
+        cr_0_6_1_4: 0,
+        cr_1_5_1_9: 2,
+        cr_2_0_3_4: 3,
+        cr_ge_3_5: 4,
+        cr_lt_0_6: 2,
+      };
       // Chronic health: 0 if no chronic disease; else +2 elective postop or +5 non-op/emergency (not both)
       const chronicPts = bool(values.chronic) ? num(values.admitType, 5) : 0;
       const score =
@@ -599,7 +672,7 @@ export const criticalCareCalcs: Calculator[] = [
         num(values.rr) +
         num(values.na) +
         num(values.k) +
-        num(values.cr) +
+        (crPoints[String(values.cr)] ?? num(values.cr)) +
         num(values.hct) +
         num(values.wbc) +
         chronicPts;
@@ -749,6 +822,15 @@ export const criticalCareCalcs: Calculator[] = [
     calculate(values) {
       const pao2 = num(values.pao2, 80);
       const fio2 = num(values.fio2, 0.5);
+      if (fio2 <= 0) {
+        return {
+          score: '—',
+          unit: 'mmHg',
+          label: 'Invalid FiO₂',
+          interpretation: 'FiO₂ must be greater than 0 (enter a fraction such as 0.50) to calculate the P/F ratio.',
+          riskLevel: 'info',
+        };
+      }
       const pf = round(pao2 / fio2, 0);
       const r = riskFromThresholds(pf, [
         { max: 100, level: 'critical', label: 'Severe ARDS range (≤100)', interpretation: 'If ARDS criteria met: severe. Consider prone positioning, NM blockade, ECMO evaluation.' },

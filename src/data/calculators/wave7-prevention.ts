@@ -100,12 +100,12 @@ function score2Core(
 export const wave7PreventionCalcs: Calculator[] = [
   {
     id: 'cha2ds2-va',
-    name: 'CHA₂DS₂-VA Score (ESC 2024, sexless)',
+    name: 'CHA₂DS₂-VA Score (Preferred — ESC 2024)',
     shortName: 'CHA₂DS₂-VA',
     description:
-      'ESC 2024 sexless stroke-risk score for non-valvular atrial fibrillation. Same points as CHA₂DS₂-VASc without female sex (max 8).',
+      'Preferred ESC 2024 sexless stroke-risk score for non-valvular atrial fibrillation. Same points as CHA₂DS₂-VASc without female sex (max 8).',
     category: 'cardiology',
-    tags: ['afib', 'stroke', 'anticoagulation', 'esc 2024', 'cha2ds2-va'],
+    tags: ['afib', 'stroke', 'anticoagulation', 'esc 2024', 'cha2ds2-va', 'preferred'],
     whenToUse:
       'Adults with non-valvular atrial fibrillation to estimate thromboembolic risk and guide oral anticoagulation (ESC 2024 prefers this sexless score over CHA₂DS₂-VASc).',
     whyUse:
@@ -202,6 +202,178 @@ export const wave7PreventionCalcs: Calculator[] = [
       'This is a risk-stratification score, not a diagnosis of stroke risk or an automatic prescription.',
       'ESC 2024 prefers CHA₂DS₂-VA; CHA₂DS₂-VASc remains widely used in AHA/ACC pathways — do not mix thresholds across scores.',
       'Do not use for moderate–severe mitral stenosis or mechanical valves (those require VKA regardless of score).',
+    ],
+  },
+
+  {
+    id: 'score2-cvd',
+    name: 'SCORE2 (10-year CVD risk, age 40–69)',
+    shortName: 'SCORE2',
+    description:
+      'ESC SCORE2 10-year fatal + nonfatal cardiovascular disease risk for adults aged 40–69 without diabetes or established ASCVD, recalibrated to four European risk regions.',
+    category: 'cardiology',
+    tags: ['score2-cvd', 'score2', 'prevention', 'europe', 'cvd risk'],
+    whenToUse:
+      'Apparently healthy adults aged 40–69 without diabetes or established ASCVD, for 10-year fatal and nonfatal CVD risk discussion (ESC 2021 prevention).',
+    whyUse:
+      'Uses the validated SCORE2 coefficients with separate total- and HDL-cholesterol terms and region-specific recalibration; use SCORE2-Diabetes, SCORE2-OP, or secondary-prevention tools when those pathways apply.',
+    inputs: [
+      numberInput('age', 'Age', { unit: 'years', min: 40, max: 69, defaultValue: 55, helpText: 'SCORE2 is validated for ages 40–69. Use SCORE2-OP at age ≥70.' }),
+      selectInput('sex', 'Sex', SEX_MF),
+      yesNo('smoker', 'Current smoker', null, 'Current tobacco smoking. Former smokers are scored as non-smokers.'),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, defaultValue: 140, helpText: 'Office systolic BP, treated or untreated.' }),
+      numberInput('totalChol', 'Total cholesterol', {
+        unit: 'mmol/L',
+        min: 2,
+        max: 12,
+        step: 0.1,
+        defaultValue: 5.5,
+        helpText: 'If reported in mg/dL, divide by 38.67. This is the total-cholesterol term in the published equation.',
+      }),
+      numberInput('hdl', 'HDL cholesterol', {
+        unit: 'mmol/L',
+        min: 0.5,
+        max: 3.5,
+        step: 0.1,
+        defaultValue: 1.3,
+        helpText: 'If reported in mg/dL, divide by 38.67. This is the independent HDL term in the published equation.',
+      }),
+      selectInput('region', 'European risk region', REGION_OPTIONS, 'mod'),
+      yesNo('diabetes', 'Diabetes mellitus', null, 'SCORE2 is not intended for diabetes; use SCORE2-Diabetes instead.'),
+      yesNo('ascvd', 'Established ASCVD', null, 'Prior myocardial infarction, stroke/TIA, peripheral arterial disease, or other established ASCVD follows a secondary-prevention pathway.'),
+    ],
+    calculate(values) {
+      const age = num(values.age, 55);
+      const diabetes = bool(values.diabetes);
+      const ascvd = bool(values.ascvd);
+      if (age < 40 || age > 69) {
+        return {
+          score: '—',
+          label: 'Age outside SCORE2 range',
+          interpretation: 'SCORE2 is validated for adults aged 40–69. Use SCORE2-OP at age ≥70 and an age-appropriate pathway below 40.',
+          riskLevel: 'info' as const,
+          details: [{ label: 'Age entered', value: `${age} years` }],
+        };
+      }
+      if (diabetes || ascvd) {
+        return {
+          score: '—',
+          label: diabetes ? 'Use SCORE2-Diabetes' : 'Use secondary-prevention risk pathway',
+          interpretation: diabetes
+            ? 'SCORE2 is not intended for diabetes. Use SCORE2-Diabetes (or the applicable diabetes guideline pathway).'
+            : 'SCORE2 is for primary prevention. Established ASCVD requires a secondary-prevention risk and treatment pathway.',
+          riskLevel: 'info' as const,
+          details: [
+            { label: 'Diabetes', value: diabetes ? 'Yes' : 'No' },
+            { label: 'Established ASCVD', value: ascvd ? 'Yes' : 'No' },
+          ],
+        };
+      }
+
+      const male = str(values.sex) === 'male';
+      const smoker = bool(values.smoker) ? 1 : 0;
+      const sbp = num(values.sbp, 140);
+      const tchol = num(values.totalChol, 5.5);
+      const hdl = num(values.hdl, 1.3);
+      if (tchol <= hdl || hdl <= 0) {
+        return {
+          score: '—',
+          label: 'Invalid lipid values',
+          interpretation: 'Total cholesterol must be greater than HDL cholesterol, and HDL must be positive, for SCORE2.',
+          riskLevel: 'info' as const,
+          details: [
+            { label: 'Total cholesterol', value: `${tchol} mmol/L` },
+            { label: 'HDL cholesterol', value: `${hdl} mmol/L` },
+          ],
+        };
+      }
+      const region = parseRegion(values.region);
+      const pct = score2Core(age, male, smoker, sbp, tchol, hdl, region);
+      const risk = age < 50
+        ? riskFromThresholds(pct, [
+            {
+              max: 2.49,
+              level: 'low',
+              label: 'Lower risk (<2.5% at age <50)',
+              interpretation: `SCORE2 10-year fatal+nonfatal CVD risk ${pct}% (age <50 band). Lifestyle focus; confirm with official ESC HeartScore/SCORE2.`,
+            },
+            {
+              max: 7.49,
+              level: 'high',
+              label: 'High risk (2.5–<7.5% at age <50)',
+              interpretation: `SCORE2 ${pct}%. High-risk band for age <50. Discuss BP, lipids, and smoking; confirm on official SCORE2.`,
+            },
+            {
+              max: 100,
+              level: 'critical',
+              label: 'Very high risk (≥7.5% at age <50)',
+              interpretation: `SCORE2 ${pct}%. Very high predicted risk for age <50. Intensive prevention after official SCORE2 confirmation.`,
+            },
+          ])
+        : riskFromThresholds(pct, [
+            {
+              max: 4.99,
+              level: 'low',
+              label: 'Lower risk (<5% at age 50–69)',
+              interpretation: `SCORE2 10-year fatal+nonfatal CVD risk ${pct}%. Lower-risk band for age 50–69. Lifestyle; confirm with official SCORE2.`,
+            },
+            {
+              max: 9.99,
+              level: 'high',
+              label: 'High risk (5–<10% at age 50–69)',
+              interpretation: `SCORE2 ${pct}%. High-risk band for age 50–69. Discuss statin/BP prevention after official SCORE2 confirmation.`,
+            },
+            {
+              max: 100,
+              level: 'critical',
+              label: 'Very high risk (≥10% at age 50–69)',
+              interpretation: `SCORE2 ${pct}%. Very high predicted 10-year CVD risk. Intensive multifactorial prevention after official SCORE2 confirmation.`,
+            },
+          ]);
+      return {
+        score: pct,
+        unit: '% / 10y',
+        ...risk,
+        details: [
+          { label: 'Age', value: `${age} years` },
+          { label: 'Sex', value: male ? 'Male' : 'Female' },
+          { label: 'Current smoker', value: smoker ? 'Yes' : 'No' },
+          { label: 'Systolic BP', value: `${round(sbp, 0)} mmHg` },
+          { label: 'Total cholesterol', value: `${round(tchol, 1)} mmol/L` },
+          { label: 'HDL cholesterol', value: `${round(hdl, 1)} mmol/L` },
+          { label: 'Region', value: region },
+        ],
+        recommendations:
+          pct >= (age < 50 ? 2.5 : 5)
+            ? ['Confirm with official ESC SCORE2/HeartScore', 'Address BP, lipids, smoking, and lifestyle', 'Use shared decision-making for preventive therapy']
+            : ['Lifestyle optimization', 'Reassess when risk factors change', 'Confirm with official SCORE2 if treatment is being considered'],
+      };
+    },
+    evidence: {
+      summary:
+        'SCORE2 estimates 10-year fatal and nonfatal CVD risk in apparently healthy people aged 40–69 using age, smoking, systolic BP, total cholesterol, and HDL cholesterol, with sex-specific coefficients and recalibration to four European risk regions.',
+      formula:
+        'score2Core(age, sex, smoking, SBP, total cholesterol, HDL cholesterol, region): published sex-specific linear predictor and baseline survival followed by region-specific cloglog recalibration.',
+      validation:
+        'European SCORE2 working group derivation and external validation; confirm with the official ESC HeartScore/SCORE2 calculator before clinical decisions.',
+      references: [
+        {
+          title: 'SCORE2 risk prediction algorithms: new models to estimate 10-year risk of cardiovascular disease in Europe',
+          citation: 'SCORE2 Working Group and ESC CRC. Eur Heart J. 2021',
+          year: 2021,
+          pmid: '34120177',
+          doi: '10.1093/eurheartj/ehab309',
+        },
+      ],
+    },
+    nextSteps: [
+      { condition: 'High or very high age-specific risk band', actions: ['Confirm on official ESC SCORE2/HeartScore', 'Discuss statin and BP treatment thresholds', 'Address smoking and other modifiable risk factors'] },
+      { condition: 'Lower risk band', actions: ['Lifestyle optimization', 'Reassess after major risk-factor changes', 'Repeat risk discussion periodically'] },
+    ],
+    pearls: [
+      'Use the separate total-cholesterol and HDL inputs; substituting non-HDL with a fixed HDL is not the standalone SCORE2 equation.',
+      'Use SCORE2-Diabetes for type 2 diabetes, SCORE2-OP from age 70, and secondary-prevention tools for established ASCVD.',
+      'This calculator is educational; final decisions should use the official ESC calculator and clinical context.',
     ],
   },
 

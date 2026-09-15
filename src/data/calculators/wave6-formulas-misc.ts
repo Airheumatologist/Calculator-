@@ -956,20 +956,31 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     whyUse: 'Avoids mix-ups between NS (154), LR (~130), half-NS (77), and hypertonic saline.',
     inputs: [
       selectInput('fluid', 'IV fluid', [
-        { label: '0.9% NaCl (NS) — 154 mEq/L', value: 154 },
-        { label: '0.45% NaCl (½ NS) — 77 mEq/L', value: 77 },
-        { label: '0.225% NaCl (¼ NS) — 34 mEq/L', value: 34 },
-        { label: 'Lactated Ringer’s — ~130 mEq/L', value: 130 },
-        { label: 'Plasma-Lyte / Normosol-R — ~140 mEq/L', value: 140 },
-        { label: '3% NaCl — 513 mEq/L', value: 513 },
-        { label: 'D5W — 0 mEq/L', value: 0 },
-        { label: 'D5 ½ NS — 77 mEq/L', value: 77 },
-        { label: 'D5 NS — 154 mEq/L', value: 154 },
-      ]),
+        { label: '0.9% NaCl (NS) — 154 mEq/L', value: 'ns' },
+        { label: '0.45% NaCl (½ NS) — 77 mEq/L', value: 'half-ns' },
+        { label: '0.225% NaCl (¼ NS) — 34 mEq/L', value: 'quarter-ns' },
+        { label: 'Lactated Ringer’s — ~130 mEq/L', value: 'lr' },
+        { label: 'Plasma-Lyte / Normosol-R — ~140 mEq/L', value: 'plasma-lyte' },
+        { label: '3% NaCl — 513 mEq/L', value: 'three-percent-ns' },
+        { label: 'D5W — 0 mEq/L', value: 'd5w' },
+        { label: 'D5 ½ NS — 77 mEq/L', value: 'd5-half-ns' },
+        { label: 'D5 NS — 154 mEq/L', value: 'd5-ns' },
+      ], 'ns'),
       numberInput('volume', 'Volume', { unit: 'mL', min: 1, max: 5000, step: 10, defaultValue: 1000 }),
     ],
     calculate(values) {
-      const naPerL = num(values.fluid, 154);
+      const sodiumByFluid: Record<string, number> = {
+        ns: 154,
+        'half-ns': 77,
+        'quarter-ns': 34,
+        lr: 130,
+        'plasma-lyte': 140,
+        'three-percent-ns': 513,
+        d5w: 0,
+        'd5-half-ns': 77,
+        'd5-ns': 154,
+      };
+      const naPerL = sodiumByFluid[String(values.fluid)] ?? num(values.fluid, 154);
       const volMl = num(values.volume, 1000);
       const meq = round((naPerL * volMl) / 1000, 1);
       const tonic =

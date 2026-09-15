@@ -42,6 +42,15 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       const tc = num(values.tc, 200);
       const hdl = num(values.hdl, 50);
       const tg = num(values.tg, 150);
+      if (tc <= hdl) {
+        return {
+          score: '—',
+          unit: 'mg/dL',
+          label: 'Invalid cholesterol inputs',
+          interpretation: 'Total cholesterol must be greater than HDL-C to calculate LDL-C.',
+          riskLevel: 'info',
+        };
+      }
       if (tg > 800) {
         return {
           score: '—',
@@ -111,6 +120,15 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       const tc = num(values.tc, 200);
       const hdl = num(values.hdl, 50);
       const tg = num(values.tg, 150);
+      if (tc <= hdl) {
+        return {
+          score: '—',
+          unit: 'mg/dL',
+          label: 'Invalid cholesterol inputs',
+          interpretation: 'Total cholesterol must be greater than HDL-C to calculate LDL-C.',
+          riskLevel: 'info',
+        };
+      }
       const nonHdl = tc - hdl;
       if (tg >= 400) {
         return {
@@ -176,6 +194,15 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     calculate(values) {
       const tc = num(values.tc, 200);
       const hdl = num(values.hdl, 50);
+      if (tc <= hdl) {
+        return {
+          score: '—',
+          unit: 'mg/dL',
+          label: 'Invalid cholesterol inputs',
+          interpretation: 'Total cholesterol must be greater than HDL-C to calculate non-HDL-C.',
+          riskLevel: 'info',
+        };
+      }
       const nonHdl = round(tc - hdl, 0);
       const r = riskFromThresholds(nonHdl, [
         { max: 99, level: 'normal', label: 'Very low / intensive goal range', interpretation: 'Non-HDL <100 aligns with very aggressive LDL goals (e.g., LDL <70).' },
@@ -326,6 +353,15 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     calculate(values) {
       const tg = num(values.tg, 150);
       const glu = num(values.glucose, 100);
+      if (tg <= 0 || glu <= 0) {
+        return {
+          score: '—',
+          unit: 'index',
+          label: 'Invalid inputs',
+          interpretation: 'Triglycerides and fasting glucose must both be greater than 0 to calculate TyG.',
+          riskLevel: 'info',
+        };
+      }
       const tyg = round(Math.log(tg * glu / 2), 2);
       const r = riskFromThresholds(tyg, [
         { max: 8.0, level: 'normal', label: 'Lower TyG', interpretation: 'Lower TyG suggests relatively better insulin sensitivity (cutoffs population-dependent).' },
@@ -926,6 +962,9 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     calculate(values) {
       const hco3 = num(values.hco3, 24);
       const pco2 = num(values.pco2, 40);
+      if (hco3 <= 0) {
+        return { score: '—', unit: 'pH', label: 'Invalid HCO₃', interpretation: 'HCO₃ must be greater than 0 to calculate Henderson-Hasselbalch pH.', riskLevel: 'info' };
+      }
       const dissolved = 0.0307 * pco2;
       if (dissolved <= 0) {
         return { score: '—', label: 'Invalid PCO₂', interpretation: 'PCO₂ must be >0.', riskLevel: 'info' };
@@ -1034,6 +1073,19 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       const nHco3 = num(values.normalHco3, 24);
       const dAg = ag - nAg;
       const dHco3 = nHco3 - hco3;
+      if (dAg <= 0) {
+        return {
+          score: '—',
+          unit: 'ratio',
+          label: 'No elevated anion gap',
+          interpretation: 'Delta ratio is intended for an elevated anion gap. AG is not above the selected normal value; evaluate for normal-gap acidosis or another process instead.',
+          riskLevel: 'info',
+          details: [
+            { label: 'ΔAG', value: String(round(dAg, 1)) },
+            { label: 'ΔHCO₃', value: String(round(dHco3, 1)) },
+          ],
+        };
+      }
       if (dHco3 <= 0) {
         return {
           score: '—',

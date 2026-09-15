@@ -809,9 +809,9 @@ export const missingCardioPulmCalcs: Calculator[] = [
           interpretation: `Duke treadmill score ${score}: high risk. Annual CV mortality often ≥5% in classic strata; consider angiography.`,
         },
         {
-          max: 4,
+          max: 4.9,
           level: 'moderate',
-          label: 'Intermediate risk (−10 to +4)',
+          label: 'Intermediate risk (−10 to +4.9)',
           interpretation: `Duke treadmill score ${score}: intermediate risk. Further risk stratification (imaging, CTA, cath) based on symptoms and clinical context.`,
         },
         {
@@ -874,6 +874,15 @@ export const missingCardioPulmCalcs: Calculator[] = [
       const peep = bool(values.peep);
       const pao2 = num(values.pao2, 80);
       const fio2 = num(values.fio2, 0.5);
+      if (fio2 <= 0) {
+        return {
+          score: '—',
+          unit: 'P/F mmHg',
+          label: 'Invalid FiO₂',
+          interpretation: 'FiO₂ must be greater than 0 (enter as a fraction, for example 0.21–1.0).',
+          riskLevel: 'info',
+        };
+      }
       const pf = fio2 > 0 ? round(pao2 / fio2, 0) : 0;
 
       const criteriaMet = timing && imaging && origin && peep && pf <= 300;

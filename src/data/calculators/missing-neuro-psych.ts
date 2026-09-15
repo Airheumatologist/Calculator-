@@ -1482,8 +1482,8 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         'Official C-SSRS screener wording; typical ideation window is the past month.'),
       yesNo('siPlanIntent', '5. Active suicidal ideation with specific plan and intent', null,
         'Official C-SSRS screener wording; typical ideation window is the past month.'),
-      yesNo('behavior', 'Suicidal behavior (actual/aborted/interrupted attempt or preparatory acts) in past 3 months', 0,
-        'Past 3 months. Use official C-SSRS behavior definitions on the licensed screener card.'),
+      yesNo('behavior', 'Suicidal behavior (actual/aborted/interrupted attempt or preparatory acts) in past 3 months', null,
+        'Past 3 months. Use official C-SSRS behavior definitions on the licensed screener card. This is an independent risk override, not an additive point item.'),
     ],
     calculate(values) {
       const wish = bool(values.wishDead);

@@ -536,27 +536,33 @@ export const wave5PedsIdCalcs: Calculator[] = [
     calculate(values) {
       const w = num(values.weight, 15);
       const mode = String(values.shock ?? 'both');
-      const first = round(2 * w, 0);
-      const next = round(4 * w, 0);
-      // Adult ceiling often considered ~200–360 J depending on device; educational cap note
-      const firstCapped = Math.min(first, 200);
-      const nextCapped = Math.min(next, 360);
+      const firstRequested = round(2 * w, 0);
+      const nextRequested = round(4 * w, 0);
+      // Adult/device ceilings vary; use conservative educational ceilings and surface when applied.
+      const firstMax = 200;
+      const nextMax = 360;
+      const first = Math.min(firstRequested, firstMax);
+      const next = Math.min(nextRequested, nextMax);
+      const firstCapped = firstRequested > first;
+      const nextCapped = nextRequested > next;
       let score = mode === 'next' ? next : first;
-      let label = mode === 'next' ? `Subsequent ≈ ${next} J` : `First ≈ ${first} J`;
+      let label = mode === 'next'
+        ? `Subsequent ${next} J${nextCapped ? ` (capped at ${nextMax} J adult/device maximum)` : ''}`
+        : `First ${first} J${firstCapped ? ` (capped at ${firstMax} J adult/device maximum)` : ''}`;
       if (mode === 'both') {
         score = first;
-        label = `First ${first} J · Next ${next} J`;
+        label = `First ${first} J · Next ${next} J${firstCapped || nextCapped ? ' (adult/device cap applied)' : ''}`;
       }
       return {
         score,
         unit: 'J',
         label,
-        interpretation: `For ${w} kg: first defibrillation ≈ 2 J/kg = ${first} J; subsequent ≈ 4 J/kg = ${next} J (PALS). Device max and pad size matter; adolescents approaching adult size may use adult doses. Approximate device-limited values: first ≤~${firstCapped} J teaching note, subsequent ≤~${nextCapped} J.`,
+        interpretation: `For ${w} kg: first defibrillation is 2 J/kg = ${firstRequested} J${firstCapped ? `, capped at ${firstMax} J by the adult/device maximum` : ''}; subsequent is 4 J/kg = ${nextRequested} J${nextCapped ? `, capped at ${nextMax} J by the adult/device maximum` : ''}. The displayed dose${firstCapped || nextCapped ? ' reflects that cap' : ''}; verify the defibrillator manufacturer maximum and local PALS protocol.`,
         riskLevel: 'critical',
         details: [
           { label: 'Weight', value: `${w} kg` },
-          { label: 'First (2 J/kg)', value: `${first} J` },
-          { label: 'Subsequent (4 J/kg)', value: `${next} J` },
+          { label: 'First (2 J/kg)', value: `${first} J${firstCapped ? ` (requested ${firstRequested} J; capped at ${firstMax} J)` : ''}` },
+          { label: 'Subsequent (4 J/kg)', value: `${next} J${nextCapped ? ` (requested ${nextRequested} J; capped at ${nextMax} J)` : ''}` },
         ],
         recommendations: [
           'Minimize interruptions in CPR',
@@ -603,7 +609,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
       numberInput('weight', 'Weight', { unit: 'kg', min: 1, max: 100, step: 0.1, defaultValue: 15 }),
       selectInput('route', 'Route / concentration context', [
         { label: 'IV/IO — 1:10,000 (0.1 mg/mL) standard arrest', value: 'iv' },
-        { label: 'ET tube — higher volume teaching note (less preferred)', value: 'et' },
+        { label: 'ET tube — deprecated (not in current AHA PALS arrest algorithm)', value: 'et', description: 'Current AHA PALS arrest algorithm omits an endotracheal epinephrine dose; select IV/IO.' },
       ]),
     ],
     calculate(values) {
@@ -612,17 +618,24 @@ export const wave5PedsIdCalcs: Calculator[] = [
       // IV/IO: 0.01 mg/kg = 0.1 mL/kg of 1:10,000; max single dose often 1 mg
       const mg = round(Math.min(0.01 * w, 1), 3);
       const ml101000 = round(Math.min(0.1 * w, 10), 2);
-      // ET historical teaching ~0.1 mg/kg (10×) — educational only, IV/IO preferred
-      const etMg = round(0.1 * w, 2);
-      const score = route === 'et' ? etMg : mg;
+      if (route === 'et') {
+        return {
+          score: '—',
+          unit: 'mg',
+          label: 'ET epinephrine not supported by current AHA PALS algorithm',
+          interpretation: 'Current AHA PALS pediatric arrest algorithms omit an endotracheal epinephrine dose. Use IV/IO epinephrine 0.01 mg/kg (0.1 mL/kg of 1:10,000), capped at 1 mg per dose; select IV/IO and follow local protocol.',
+          riskLevel: 'info',
+          details: [
+            { label: 'Route selected', value: 'ET (deprecated)' },
+            { label: 'Safe alternative', value: `IV/IO ${mg} mg = ${ml101000} mL of 1:10,000` },
+          ],
+        };
+      }
       return {
-        score,
+        score: mg,
         unit: 'mg',
-        label: route === 'et' ? `ET teaching ≈ ${etMg} mg` : `IV/IO ${mg} mg`,
-        interpretation:
-          route === 'et'
-            ? `Endotracheal epinephrine is less reliable. Historical teaching ~0.1 mg/kg ≈ ${etMg} mg (diluted); prefer IV/IO 0.01 mg/kg = ${mg} mg (${ml101000} mL of 1:10,000) every 3–5 min. Adult max single IV dose typically 1 mg.`
-            : `IV/IO epinephrine 0.01 mg/kg = ${mg} mg = ${ml101000} mL of 1:10,000 (0.1 mg/mL), every 3–5 minutes during arrest. Single-dose cap educationally ~1 mg (10 mL of 1:10,000).`,
+        label: `IV/IO ${mg} mg`,
+        interpretation: `IV/IO epinephrine 0.01 mg/kg = ${mg} mg = ${ml101000} mL of 1:10,000 (0.1 mg/mL), every 3–5 minutes during arrest. Single-dose cap is 1 mg (10 mL of 1:10,000); verify concentration and local PALS protocol.`,
         riskLevel: 'critical',
         details: [
           { label: 'Weight', value: `${w} kg` },
@@ -631,7 +644,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
           { label: 'Concentration', value: '1:10,000 = 0.1 mg/mL' },
         ],
         recommendations: [
-          'Prefer IV/IO over ET route',
+          'Use IV/IO under the current AHA/AAP pediatric cardiac arrest algorithm; ET dosing is not included',
           'Do not confuse 1:1,000 (IM anaphylaxis) with 1:10,000 (IV arrest)',
           'Flush after each dose',
         ],
@@ -640,11 +653,17 @@ export const wave5PedsIdCalcs: Calculator[] = [
     evidence: {
       summary: 'PALS cardiac arrest epinephrine: 0.01 mg/kg IV/IO (0.1 mL/kg of 1:10,000) q3–5 min; max 1 mg/dose typical.',
       formula: 'mg = 0.01 × kg; mL (1:10,000) = 0.1 × kg',
-      validation: 'AHA PALS 2020 pediatric advanced life support recommendations.',
+      validation: 'The current 2025 AHA/AAP Pediatric Cardiac Arrest Algorithm specifies IV/IO epinephrine and omits an endotracheal dose; the 2020 AHA PALS paper is retained only as historical/supporting context.',
       references: [
         {
-          title: '2020 AHA Guidelines for CPR and ECC — Pediatric Basic and Advanced Life Support',
-          citation: 'Topjian AA et al. Circulation. 2020',
+          title: '2025 AHA/AAP Pediatric Cardiac Arrest Algorithm',
+          citation: 'American Heart Association and American Academy of Pediatrics. Pediatric Cardiac Arrest Algorithm. 2025',
+          year: 2025,
+          url: 'https://cpr.heart.org/-/media/CPR-Files/CPR-Guidelines-Files/2025-Algorithms/Algorithm-PALS-CA-250123.pdf',
+        },
+        {
+          title: '2020 AHA Guidelines for CPR and ECC — Pediatric Basic and Advanced Life Support (historical/supporting)',
+          citation: 'Topjian AA et al. Circulation. 2020 (historical/supporting)',
           year: 2020,
           pmid: '33081526',
           doi: '10.1161/CIR.0000000000000901',
@@ -685,21 +704,26 @@ export const wave5PedsIdCalcs: Calculator[] = [
     calculate(values) {
       const w = num(values.weight, 15);
       const dose = num(values.dose, 20);
+      const fluid = String(values.fluid ?? 'crystalloid');
+      const fluidLabel = fluid === 'blood' ? 'blood products' : 'isotonic crystalloid';
       const vol10 = round(10 * w, 0);
       const vol20 = round(20 * w, 0);
-      const score = dose === 10 ? vol10 : dose === 20 ? vol20 : vol20;
-      const label =
-        dose === 0 ? `10 mL/kg = ${vol10} mL · 20 mL/kg = ${vol20} mL` : `${dose} mL/kg = ${score} mL`;
+      const both = dose !== 10 && dose !== 20;
+      const selectedVolume = dose === 10 ? vol10 : vol20;
+      const score: number | string = both ? `${vol10} / ${vol20}` : selectedVolume;
+      const label = both
+        ? `${fluidLabel}: 10 mL/kg = ${vol10} mL · 20 mL/kg = ${vol20} mL`
+        : `${fluidLabel}: ${dose} mL/kg = ${selectedVolume} mL`;
       return {
         score,
         unit: 'mL',
         label,
-        interpretation: `For ${w} kg: 10 mL/kg = ${vol10} mL; 20 mL/kg = ${vol20} mL of isotonic crystalloid. Reassess perfusion after each bolus. Use smaller/titratable boluses in cardiogenic shock, severe anemia, or fluid overload risk. DKA and some neurosurgical contexts follow specific protocols.`,
+        interpretation: `For ${w} kg: 10 mL/kg = ${vol10} mL; 20 mL/kg = ${vol20} mL of ${fluidLabel}.${both ? ' Both reference volumes are shown; choose one according to the clinical indication.' : ''} Reassess perfusion after each bolus. Use smaller/titratable boluses in cardiogenic shock, severe anemia, or fluid overload risk. DKA and some neurosurgical contexts follow specific protocols.`,
         riskLevel: 'info',
         details: [
           { label: '10 mL/kg', value: `${vol10} mL` },
           { label: '20 mL/kg', value: `${vol20} mL` },
-          { label: 'Fluid', value: String(values.fluid ?? 'crystalloid') },
+          { label: 'Fluid', value: fluidLabel },
         ],
         recommendations: [
           'Reassess HR, pulses, CRT, mentation, urine after each bolus',

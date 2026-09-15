@@ -1816,28 +1816,28 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
         'Use the highest serum urate, ideally off urate-lowering therapy. Urate can be normal during a flare — do not use a flare-only low value if a higher off-treatment value exists.',
       ),
       selectInput('synovial', 'Synovial fluid MSU microscopy by trained examiner (if performed)', [
-        { label: 'Not done', value: 0 },
-        { label: 'Negative', value: -2 },
-        { label: 'Positive (use MSU sufficient above)', value: 0 },
+        { label: 'Not done', value: 'not-done' },
+        { label: 'Negative', value: 'negative' },
+        { label: 'Positive (use MSU sufficient above)', value: 'positive' },
       ]),
       selectInput(
         'imaging',
         'Imaging: urate deposition (DECT/US double contour) in symptomatic region OR gouty erosion',
         [
-          { label: 'Neither', value: 0 },
+          { label: 'Neither', value: 'neither' },
           {
             label: 'Urate deposition imaging positive',
-            value: 4,
+            value: 'urate-deposition',
             description: 'US double-contour or DECT urate in a symptomatic (ever) joint/bursa',
           },
           {
             label: 'Gout-related erosion on X-ray',
-            value: 4,
+            value: 'gout-erosion',
             description: 'Plain-film cortical break with sclerotic margin and overhanging edge; exclude DIP OA erosions',
           },
           {
             label: 'Both deposition + erosion',
-            value: 8,
+            value: 'both',
             description: 'Both US/DECT urate deposition and typical gouty erosion (not DIP OA)',
           },
         ],
@@ -1849,8 +1849,15 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
       const timePts = num(values.timeCourse, 0);
       const tophusPts = num(values.tophus, 0);
       const suaPts = num(values.sua, 0);
-      const synovialPts = num(values.synovial, 0);
-      const imagingPts = num(values.imaging, 0);
+      const synovialPoints: Record<string, number> = { 'not-done': 0, negative: -2, positive: 0 };
+      const imagingPoints: Record<string, number> = {
+        neither: 0,
+        'urate-deposition': 4,
+        'gout-erosion': 4,
+        both: 8,
+      };
+      const synovialPts = synovialPoints[String(values.synovial)] ?? num(values.synovial, 0);
+      const imagingPts = imagingPoints[String(values.imaging)] ?? num(values.imaging, 0);
       const additive =
         patternPts + charPts + timePts + tophusPts + suaPts + synovialPts + imagingPts;
       const domainDetails = (scored: boolean) => [

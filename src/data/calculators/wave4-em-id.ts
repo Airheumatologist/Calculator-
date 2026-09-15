@@ -2054,8 +2054,8 @@ export const wave4EmIdCalcs: Calculator[] = [
     whyUse: 'de Winter pattern is an occlusion MI equivalent — activate reperfusion without waiting for classic STEMI.',
     inputs: [
       yesNo('symptoms', 'Symptoms of acute coronary occlusion (chest pain / equivalent)', 1),
-      yesNo('upslopeStd', '1–3 mm upsloping ST depression at J point in precordials (V1–V6)', 0),
-      yesNo('tallT', 'Tall, peaked, symmetric T waves in the same precordial leads', 0, 'Tall, positive, symmetric T waves in the same leads as the upsloping STD (T waves continue from the depressed J point — not hyperkalemia’s narrow peaked T).'),
+      yesNo('upslopeStd', '1–3 mm upsloping ST depression at J point in precordials (V1–V6)', null),
+      yesNo('tallT', 'Tall, peaked, symmetric T waves in the same precordial leads', null, 'Tall, positive, symmetric T waves in the same leads as the upsloping STD (T waves continue from the depressed J point — not hyperkalemia’s narrow peaked T).'),
       yesNo('slightSteavr', 'Slight ST elevation in aVR (0.5–1 mm) often present', 1),
       yesNo('noOvertSte', 'No frank STEMI criteria in precordial leads', 1, 'Precordial STE does not meet conventional STEMI millimetre criteria (e.g. ≥1 mm in two contiguous leads; V2–V3 ≥2 mm men ≥40, ≥2.5 mm men <40, ≥1.5 mm women).'),
       yesNo('dynamic', 'Pattern recognized in ACS time window (acute presentation)', 1),

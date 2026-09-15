@@ -2355,7 +2355,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       const pp = sbp - dbp;
       if (pp < 0) {
         return {
-          score: pp,
+          score: 0,
           unit: 'mmHg',
           label: 'Invalid (DBP > SBP)',
           interpretation: 'Check measurement entry — diastolic cannot exceed systolic.',

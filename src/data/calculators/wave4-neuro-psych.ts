@@ -2291,17 +2291,17 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       yesNo(
         'trauma',
         'Lifetime trauma exposure criterion (required before scoring symptoms)',
-        0,
+        null,
         'NCPTSD gate — Sometimes things happen that are unusually frightening, horrible, or traumatic (serious accident/fire, physical or sexual assault, disaster, war, seeing someone killed/seriously injured, or a loved one dying by homicide/suicide). Have you ever experienced this kind of event?',
       ),
-      yesNo('q1', '1. In the past month: nightmares or unwanted thoughts of the event(s)', 0),
-      yesNo('q2', '2. In the past month: tried hard not to think about it or avoided situations that remind you', 0),
-      yesNo('q3', '3. In the past month: been constantly on guard, watchful, or easily startled', 0),
-      yesNo('q4', '4. In the past month: felt numb or detached from people, activities, or surroundings', 0),
+      yesNo('q1', '1. In the past month: nightmares or unwanted thoughts of the event(s)', 1),
+      yesNo('q2', '2. In the past month: tried hard not to think about it or avoided situations that remind you', 1),
+      yesNo('q3', '3. In the past month: been constantly on guard, watchful, or easily startled', 1),
+      yesNo('q4', '4. In the past month: felt numb or detached from people, activities, or surroundings', 1),
       yesNo(
         'q5',
         '5. In the past month: felt guilty or unable to stop blaming yourself or others for the event(s) or problems they caused',
-        0,
+        1,
       ),
     ],
     calculate(values) {

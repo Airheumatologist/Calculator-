@@ -374,9 +374,9 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: 'Intermediate', value: 'intermediate', description: 'e.g. inguinal hernia, varicose veins, tonsillectomy' },
         { label: 'Major / complex', value: 'major', description: 'e.g. colectomy, arthroplasty, TAH, thyroidectomy' },
       ], 'minor', 'AXA-PPP-style examples: minor = EUA/abscess/cast; intermediate = inguinal hernia, varicose veins, tonsillectomy; major/complex = colectomy, arthroplasty, TAH, thyroidectomy.'),
-      yesNo('highRiskSpecialty', 'High-risk specialty (GI, thoracic, vascular)', 0.17000000000000004,
+      yesNo('highRiskSpecialty', 'High-risk specialty (GI, thoracic, vascular)', null,
         'SORT high-risk specialties: gastrointestinal, thoracic, or vascular surgery. Not ortho, gyn, breast, ENT, or plastics.'),
-      yesNo('cancer', 'Surgery for cancer', 0.11,
+      yesNo('cancer', 'Surgery for cancer', null,
         'The operation is being performed for a malignant diagnosis (not incidental/history of remote treated cancer).'),
       numberInput('age', 'Age', { unit: 'years', min: 16, max: 110, step: 1, defaultValue: 65 }),
     ],
@@ -628,10 +628,10 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: 'Elevated (>1.5 mg/dL)', value: 1, description: 'Serum creatinine >1.5 mg/dL (≈ >133 µmol/L)' },
       ], undefined, 'Gupta MICA uses 1.5 mg/dL as the creatinine cut. 1.5 mg/dL ≈ 133 µmol/L.'),
       selectInput('procedure', 'Procedure type risk group', [
-        { label: 'Low (e.g., breast, endocrine, minor)', value: 0 },
-        { label: 'Intermediate (e.g., ortho, spine, gyn)', value: 1 },
-        { label: 'High (e.g., aortic, thoracic, major vascular)', value: 2 },
-        { label: 'Intraperitoneal / major abdominal', value: 2 },
+        { label: 'Low (e.g., breast, endocrine, minor)', value: 'low' },
+        { label: 'Intermediate (e.g., ortho, spine, gyn)', value: 'intermediate' },
+        { label: 'High (e.g., aortic, thoracic, major vascular)', value: 'high' },
+        { label: 'Intraperitoneal / major abdominal', value: 'intraperitoneal' },
       ]),
     ],
     calculate(values) {
@@ -642,7 +642,8 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
       const asa = num(values.asa, 2);
       logit += (asa - 1) * 0.75;
       if (num(values.creatinine) === 1) logit += 0.61;
-      logit += num(values.procedure) * 0.7;
+      const procedurePoints: Record<string, number> = { low: 0, intermediate: 1, high: 2, intraperitoneal: 2 };
+      logit += (procedurePoints[String(values.procedure)] ?? num(values.procedure)) * 0.7;
       const risk = round((1 / (1 + Math.exp(-logit))) * 100, 2);
       const r = riskFromThresholds(risk, [
         {

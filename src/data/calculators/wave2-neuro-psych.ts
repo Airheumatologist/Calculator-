@@ -361,7 +361,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         defaultValue: 5,
         helpText: 'Time of ongoing seizure activity or incomplete recovery between seizures',
       }),
-      yesNo('recurrent', 'Seizures recur without recovery between (operational SE if past t1)', 0, 'Yes if seizures repeat without recovery of consciousness between them — counts as operational SE once duration (or the cluster) is past t1 for that seizure type.'),
+      yesNo('recurrent', 'Seizures recur without recovery between', null, 'Yes if seizures repeat without recovery of consciousness between them. Use the total ongoing/cluster duration below; recurrence alone does not bypass the seizure-type-specific t1 threshold.'),
     ],
     calculate(values) {
       const type = String(values.type || 'tc');
@@ -379,14 +379,15 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         typeLabel = 'Absence';
       }
 
-      const pastT1 = duration >= t1 || bool(values.recurrent);
+      const recurrent = bool(values.recurrent);
+      const pastT1 = duration >= t1;
       const pastT2 = type === 'absence' ? duration >= 30 : duration >= t2;
 
       let riskLevel: 'low' | 'moderate' | 'high' | 'critical' = 'low';
       let label = 'Below t1 — treat aggressively if ongoing';
       let interpretation = `Duration ${duration} min for ${typeLabel}. Operational t1=${t1} min (SE diagnosis / time when treatment should usually be started). t2=${
         type === 'absence' ? 'less well defined' : `${t2} min`
-      } (long-term consequence risk rises).`;
+      } (long-term consequence risk rises).${recurrent ? ' Recurrent activity without recovery is noted, but this tool compares the total cluster duration with t1; recurrence alone does not bypass t1.' : ''}`;
 
       if (pastT2) {
         riskLevel = 'critical';

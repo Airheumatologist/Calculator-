@@ -43,12 +43,13 @@ export function riskFromThresholds(
 
 /**
  * Boolean Yes/No input. Pass `pointsYes` for UI point badges (default 1).
- * Pass `null` to omit points metadata (formula flags / pathway switches that
- * change score non-linearly and should not show "+N" chips).
+ * Pass `null` or `0` to omit points metadata (formula flags / pathway switches
+ * that change score non-linearly, or contextual gates that should not show a
+ * misleading "+0" chip).
  */
 export function yesNo(id: string, label: string, pointsYes: number | null = 1, helpText?: string) {
   const options =
-    pointsYes === null
+    pointsYes === null || pointsYes === 0
       ? [
           { label: 'No', value: false as const },
           { label: 'Yes', value: true as const },

@@ -1425,7 +1425,7 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
         helpText: 'RTS = 0.9368·GCSc + 0.7326·SBPc + 0.2908·RRc',
       }),
       numberInput('iss', 'ISS', { min: 0, max: 75, step: 1, defaultValue: 9 }),
-      yesNo('age55', 'Age ≥55 years', -28.9),
+      yesNo('age55', 'Age ≥55 years', null),
     ],
     calculate(values) {
       const rts = num(values.rts, 7.84);

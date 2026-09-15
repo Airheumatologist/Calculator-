@@ -4,11 +4,11 @@ import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds }
 export const cardiologyCalcs: Calculator[] = [
   {
     id: 'cha2ds2-vasc',
-    name: 'CHA₂DS₂-VASc Score',
+    name: 'CHA₂DS₂-VASc Score (Legacy)',
     shortName: 'CHA₂DS₂-VASc',
-    description: 'Estimates stroke risk in patients with non-valvular atrial fibrillation to guide anticoagulation.',
+    description: 'Legacy, widely used stroke-risk score for non-valvular atrial fibrillation; includes female sex as a risk modifier.',
     category: 'cardiology',
-    tags: ['afib', 'stroke', 'anticoagulation', 'af'],
+    tags: ['afib', 'stroke', 'anticoagulation', 'af', 'legacy'],
     whenToUse: 'Patients with non-valvular atrial fibrillation to assess annual stroke risk and need for anticoagulation.',
     whyUse: 'Widely validated; AHA/ACC guideline-recommended for stroke risk stratification in nonvalvular AF (ESC 2024 prefers CHA₂DS₂-VA).',
     inputs: [
@@ -36,6 +36,8 @@ export const cardiologyCalcs: Calculator[] = [
         (bool(values.stroke) ? 2 : 0) +
         (bool(values.vascular) ? 1 : 0) +
         num(values.sex);
+      const isFemale = num(values.sex) === 1;
+      const nonSexScore = score - (isFemale ? 1 : 0);
       const riskMap: Record<number, string> = {
         0: '0%',
         1: '1.3%',
@@ -51,12 +53,12 @@ export const cardiologyCalcs: Calculator[] = [
       const annual = riskMap[Math.min(score, 9)] ?? '>15%';
       let riskLevel: 'low' | 'moderate' | 'high' = 'low';
       let label = 'Low risk';
-      let interpretation = 'Low stroke risk. Anticoagulation generally not recommended (especially men with score 0).';
-      if (score === 1) {
+      let interpretation = 'Low stroke risk based on non-sex risk factors. Anticoagulation generally not recommended; female sex alone does not usually mandate OAC.';
+      if (nonSexScore === 1) {
         riskLevel = 'moderate';
         label = 'Low–moderate risk';
-        interpretation = 'Consider anticoagulation based on sex and shared decision-making (women with score 1 from sex alone often do not need OAC).';
-      } else if (score >= 2) {
+        interpretation = `CHA₂DS₂-VASc total ${score} (non-sex score ${nonSexScore}): consider anticoagulation based on shared decision-making and patient factors.`;
+      } else if (nonSexScore >= 2) {
         riskLevel = 'high';
         label = 'Elevated risk';
         interpretation = `Elevated annual stroke risk (~${annual}). Oral anticoagulation is generally recommended unless contraindicated.`;
@@ -67,13 +69,16 @@ export const cardiologyCalcs: Calculator[] = [
         interpretation,
         riskLevel,
         details: [
+          { label: 'Non-sex risk score', value: String(nonSexScore) },
           { label: 'Annual stroke risk (approx.)', value: annual },
           { label: 'Max score', value: '9' },
         ],
         recommendations:
-          score >= 2
+          nonSexScore >= 2
             ? ['Recommend oral anticoagulation (DOAC preferred over warfarin in most patients)', 'Assess bleeding risk (e.g., HAS-BLED)', 'Discuss fall risk, adherence, and preferences']
-            : ['Reassess if new risk factors develop', 'Address modifiable cardiovascular risks'],
+            : nonSexScore === 1
+              ? ['Consider oral anticoagulation with shared decision-making', 'Assess bleeding risk (e.g., HAS-BLED)', 'Address modifiable cardiovascular risks']
+              : ['Reassess if new risk factors develop', 'Address modifiable cardiovascular risks'],
       };
     },
     evidence: {
@@ -559,27 +564,13 @@ export const cardiologyCalcs: Calculator[] = [
       });
       if (bool(values.alt)) score -= 2;
       const r = riskFromThresholds(score, [
-        { max: 0, level: 'low', label: 'DVT unlikely (≤0)', interpretation: 'Low probability. Negative D-dimer can exclude DVT.' },
-        { max: 1, level: 'moderate', label: 'Moderate (1–2 in some tiers)', interpretation: 'Intermediate probability. D-dimer or ultrasound based on pathway.' },
-        { max: 20, level: 'high', label: 'DVT likely (≥2 two-tier)', interpretation: 'Higher probability. Proceed to duplex ultrasound.' },
+        { max: 1, level: 'low', label: 'DVT unlikely (≤1)', interpretation: 'Two-tier Wells DVT score ≤1: DVT unlikely. A negative high-sensitivity D-dimer can exclude DVT in the appropriate pathway.' },
+        { max: 20, level: 'high', label: 'DVT likely (≥2)', interpretation: 'Two-tier Wells DVT score ≥2: DVT likely. Proceed to duplex ultrasound.' },
       ]);
-      // fix moderate band: score 1
-      let label = r.label;
-      let interpretation = r.interpretation;
-      let riskLevel = r.riskLevel;
-      if (score <= 0) {
-        label = 'DVT unlikely';
-        interpretation = 'Two-tier unlikely. Use high-sensitivity D-dimer; if negative, DVT excluded.';
-        riskLevel = 'low';
-      } else {
-        label = 'DVT likely';
-        interpretation = 'Two-tier likely (score ≥1). Obtain duplex ultrasound.';
-        riskLevel = score >= 3 ? 'high' : 'moderate';
-      }
-      return { score, label, interpretation, riskLevel };
+      return { score, ...r };
     },
     evidence: {
-      summary: 'Wells DVT criteria stratify pretest probability; two-tier version (unlikely ≤0, likely ≥1) is commonly used with D-dimer.',
+      summary: 'Wells DVT criteria stratify pretest probability; the two-tier version classifies scores ≤1 as unlikely and scores ≥2 as likely for use with D-dimer and ultrasound pathways.',
       validation: 'Extensively validated outpatient DVT diagnostic algorithm.',
       references: [
         { title: 'Value of assessment of pretest probability of DVT in clinical management', citation: 'Wells PS et al. Lancet. 1997', year: 1997, pmid: '9428249',
@@ -589,8 +580,8 @@ export const cardiologyCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Unlikely + neg D-dimer', actions: ['No ultrasound needed', 'Reassess if symptoms worsen'] },
-      { condition: 'Likely or pos D-dimer', actions: ['Lower extremity duplex US', 'If positive, start anticoagulation if no contraindication'] },
+      { condition: 'Unlikely (≤1) + neg D-dimer', actions: ['No ultrasound needed', 'Reassess if symptoms worsen'] },
+      { condition: 'Likely (≥2) or positive D-dimer', actions: ['Lower extremity duplex US', 'If positive, start anticoagulation if no contraindication'] },
     ],
   },
   {
@@ -876,6 +867,16 @@ export const cardiologyCalcs: Calculator[] = [
     calculate(values) {
       const sbp = num(values.sbp, 120);
       const dbp = num(values.dbp, 80);
+      if (sbp < dbp) {
+        return {
+          score: '—',
+          unit: 'mmHg',
+          label: 'Invalid BP entry',
+          interpretation: 'Systolic BP must be greater than or equal to diastolic BP.',
+          riskLevel: 'info',
+          details: [{ label: 'Formula', value: 'DBP + (SBP−DBP)/3' }],
+        };
+      }
       const map = round(dbp + (sbp - dbp) / 3, 0);
       const r = riskFromThresholds(map, [
         { max: 64, level: 'critical', label: 'Low MAP', interpretation: 'MAP <65 often associated with inadequate organ perfusion in shock; treat underlying cause and support BP.' },
@@ -912,6 +913,16 @@ export const cardiologyCalcs: Calculator[] = [
     calculate(values) {
       const qt = num(values.qt, 400);
       const hr = num(values.hr, 70);
+      if (hr <= 0) {
+        return {
+          score: '—',
+          unit: 'ms',
+          label: 'Invalid heart rate',
+          interpretation: 'Heart rate must be greater than 0 bpm to calculate QTc.',
+          riskLevel: 'info',
+          details: [{ label: 'Formula', value: 'QT / √RR' }],
+        };
+      }
       const rr = 60 / hr;
       const qtc = round(qt / Math.sqrt(rr), 0);
       let riskLevel: 'normal' | 'moderate' | 'high' | 'critical' = 'normal';
@@ -958,7 +969,7 @@ export const cardiologyCalcs: Calculator[] = [
   },
   {
     id: 'ascvd-risk',
-    name: 'ASCVD 10-Year Risk (Pooled Cohort, simplified)',
+    name: 'ASCVD 10-Year Risk (Pooled Cohort)',
     shortName: 'ASCVD Risk',
     description: 'Estimates 10-year risk of atherosclerotic cardiovascular disease for statin decision-making.',
     category: 'cardiology',
@@ -978,27 +989,85 @@ export const cardiologyCalcs: Calculator[] = [
       numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 100, max: 400, defaultValue: 200 }),
       numberInput('hdl', 'HDL-C', { unit: 'mg/dL', min: 20, max: 120, defaultValue: 50 }),
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, defaultValue: 130 }),
-      yesNo('txHtn', 'On antihypertensive treatment', 0),
-      yesNo('dm', 'Diabetes', 0),
-      yesNo('smoker', 'Current smoker', 0),
+      yesNo('txHtn', 'On antihypertensive treatment', null),
+      yesNo('dm', 'Diabetes', null),
+      yesNo('smoker', 'Current smoker', null),
     ],
     calculate(values) {
-      // Educational simplified logistic-style approximation (not official PCE coefficients)
       const age = num(values.age, 55);
       const tc = num(values.tc, 200);
       const hdl = num(values.hdl, 50);
       const sbp = num(values.sbp, 130);
-      let lp = -7.5;
-      lp += (age - 55) * 0.07;
-      lp += (tc - 200) * 0.008;
-      lp += (50 - hdl) * 0.03;
-      lp += (sbp - 120) * 0.02;
-      if (values.sex === 'M') lp += 0.6;
-      if (values.race === 'AA') lp += 0.25;
-      if (bool(values.txHtn)) lp += 0.35;
-      if (bool(values.dm)) lp += 0.7;
-      if (bool(values.smoker)) lp += 0.65;
-      const risk = round(100 / (1 + Math.exp(-lp)), 1);
+      const lnAge = Math.log(age);
+      const lnTc = Math.log(tc);
+      const lnHdl = Math.log(hdl);
+      const lnSbp = Math.log(sbp);
+      const smoker = bool(values.smoker) ? 1 : 0;
+      const diabetes = bool(values.dm) ? 1 : 0;
+      const treated = bool(values.txHtn);
+      const isFemale = values.sex === 'F';
+      const isBlack = values.race === 'AA';
+
+      // Official 2013 ACC/AHA Pooled Cohort Equations (natural-log Cox models).
+      let sum: number;
+      let mean: number;
+      let baselineSurvival: number;
+      if (isFemale && isBlack) {
+        const sbpCoefficient = treated ? 29.291 : 27.820;
+        const ageSbpCoefficient = treated ? -6.432 : -6.087;
+        sum =
+          17.114 * lnAge +
+          0.940 * lnTc -
+          18.920 * lnHdl +
+          4.475 * lnAge * lnHdl +
+          sbpCoefficient * lnSbp +
+          ageSbpCoefficient * lnAge * lnSbp +
+          0.691 * smoker +
+          0.874 * diabetes;
+        mean = 86.61;
+        baselineSurvival = 0.9533;
+      } else if (isFemale) {
+        const sbpCoefficient = treated ? 2.019 : 1.957;
+        sum =
+          -29.799 * lnAge +
+          4.884 * lnAge ** 2 +
+          13.540 * lnTc -
+          3.114 * lnAge * lnTc -
+          13.578 * lnHdl +
+          3.149 * lnAge * lnHdl +
+          sbpCoefficient * lnSbp +
+          7.574 * smoker -
+          1.665 * lnAge * smoker +
+          0.661 * diabetes;
+        mean = -29.18;
+        baselineSurvival = 0.9665;
+      } else if (isBlack) {
+        sum =
+          2.469 * lnAge +
+          0.302 * lnTc -
+          0.307 * lnHdl +
+          (treated ? 1.916 : 1.809) * lnSbp +
+          0.549 * smoker +
+          0.645 * diabetes;
+        mean = 19.54;
+        baselineSurvival = 0.8954;
+      } else {
+        const sbpCoefficient = treated ? 1.797 : 1.764;
+        sum =
+          12.344 * lnAge +
+          11.853 * lnTc -
+          2.664 * lnAge * lnTc -
+          7.990 * lnHdl +
+          1.769 * lnAge * lnHdl +
+          sbpCoefficient * lnSbp +
+          7.837 * smoker -
+          1.795 * lnAge * smoker +
+          0.658 * diabetes;
+        mean = 61.18;
+        baselineSurvival = 0.9144;
+      }
+
+      const risk = round(100 * (1 - baselineSurvival ** Math.exp(sum - mean)), 1);
       const r = riskFromThresholds(risk, [
         { max: 4.9, level: 'low', label: 'Low risk (<5%)', interpretation: 'Emphasize lifestyle. Statin generally not indicated solely for risk unless LDL very high or other indications.' },
         { max: 7.4, level: 'moderate', label: 'Borderline (5–7.4%)', interpretation: 'Risk enhancers and CAC score may refine statin decision.' },
@@ -1009,12 +1078,12 @@ export const cardiologyCalcs: Calculator[] = [
         score: risk,
         unit: '%',
         ...r,
-        details: [{ label: 'Note', value: 'Simplified educational estimate — use official PCE calculator for clinical decisions' }],
+        details: [{ label: 'Model', value: `2013 ACC/AHA PCE (${isBlack ? 'Black' : 'White/Other'} ${isFemale ? 'female' : 'male'})` }],
       };
     },
     evidence: {
       summary: 'ACC/AHA Pooled Cohort Equations estimate 10-year risk of nonfatal MI, CHD death, and stroke.',
-      formula: 'Race- and sex-specific Cox models (simplified approximation shown here)',
+      formula: 'Official 2013 ACC/AHA race- and sex-specific Cox Pooled Cohort Equations: risk = 100 × (1 − S₀^exp(sum − mean))',
       validation: 'Derived from multiple community cohorts; recalibrated in some populations.',
       references: [{ title: '2013 ACC/AHA Guideline on Assessment of Cardiovascular Risk', citation: 'Goff DC et al. Circulation. 2014', year: 2014, pmid: '24222018',
           doi: '10.1161/01.cir.0000437741.48606.98', }],

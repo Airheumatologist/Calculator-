@@ -568,7 +568,7 @@ export const wave2OncologyCalcs: Calculator[] = [
         defaultValue: 70,
         helpText: 'Many protocols cap GFR at 125 mL/min for Calvert',
       }),
-      yesNo('capGfr', 'Cap GFR at 125 mL/min (FDA/common practice)', 0),
+      { ...yesNo('capGfr', 'Cap GFR at 125 mL/min (FDA/common practice)', null), defaultValue: true },
     ],
     calculate(values) {
       const auc = num(values.auc, 5);
@@ -1310,11 +1310,11 @@ export const wave2OncologyCalcs: Calculator[] = [
         { label: '<12 years (higher risk)', value: 2, description: 'Menarche before age 12 (Gail higher-risk band)' },
       ]),
       selectInput('firstBirth', 'Age at first live birth', [
-        { label: 'Nulliparous', value: 2, description: 'Never had a live birth' },
-        { label: '<20 years', value: 0, description: 'First live birth before age 20 (lowest band)' },
-        { label: '20–24 years', value: 1, description: 'First live birth at age 20–24' },
-        { label: '25–29 years', value: 2, description: 'First live birth at age 25–29 (same educational weight as nulliparous in this tally)' },
-        { label: '≥30 years', value: 3, description: 'First live birth at age 30 or later' },
+        { label: 'Nulliparous', value: 'nulliparous', description: 'Never had a live birth' },
+        { label: '<20 years', value: 'lt20', description: 'First live birth before age 20 (lowest band)' },
+        { label: '20–24 years', value: '20-24', description: 'First live birth at age 20–24' },
+        { label: '25–29 years', value: '25-29', description: 'First live birth at age 25–29 (same educational weight as nulliparous in this tally)' },
+        { label: '≥30 years', value: 'ge30', description: 'First live birth at age 30 or later' },
       ]),
       selectInput(
         'biopsies',
@@ -1363,10 +1363,19 @@ export const wave2OncologyCalcs: Calculator[] = [
         aian: 'American Indian / Alaska Native',
       };
 
+      const firstBirthPoints: Record<string, number> = {
+        nulliparous: 2,
+        lt20: 0,
+        '20-24': 1,
+        '25-29': 2,
+        ge30: 3,
+      };
+      const firstBirthPts = firstBirthPoints[String(values.firstBirth)] ?? num(values.firstBirth);
+
       const score =
         agePts +
         num(values.menarche) +
-        num(values.firstBirth) +
+        firstBirthPts +
         num(values.biopsies) +
         (bool(values.atypia) ? 2 : 0) +
         num(values.relatives) * 2;

@@ -14,7 +14,7 @@ export const wave3GiHepCalcs: Calculator[] = [
     inputs: [
       numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 2.0 }),
       numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0 }),
-      yesNo('dialysis', 'Dialysis ≥2 times in past week (or continuous RRT)', 17, 'Sets creatinine to 4.0 mg/dL (does not add a fixed point total). Same dialysis rule as OPTN MELD.'),
+      yesNo('dialysis', 'Dialysis ≥2 times in past week (or continuous RRT)', null, 'Sets creatinine to 4.0 mg/dL (does not add a fixed point total). Same dialysis rule as OPTN MELD.'),
     ],
     calculate(values) {
       let bili = Math.max(num(values.bili, 2), 1);
@@ -76,8 +76,8 @@ export const wave3GiHepCalcs: Calculator[] = [
       numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 3.0 }),
       numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, defaultValue: 1.5 }),
       numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, defaultValue: 3.0 }),
-      yesNo('ageUnder1', 'Age < 1 year', 4),
-      yesNo('growthFailure', 'Growth failure (<2 SD height or weight for age)', 7, 'Yes if height or weight is more than 2 standard deviations below the age- and sex-specific mean (CDC/WHO charts).'),
+      yesNo('ageUnder1', 'Age < 1 year', null),
+      yesNo('growthFailure', 'Growth failure (<2 SD height or weight for age)', null, 'Yes if height or weight is more than 2 standard deviations below the age- and sex-specific mean (CDC/WHO charts).'),
     ],
     calculate(values) {
       // OPTN-style floors: bilirubin, INR, and albumin values <1.0 are set to 1.0
@@ -1496,8 +1496,8 @@ export const wave3GiHepCalcs: Calculator[] = [
         };
       }
       const avoidEndoscopy = lsm < 20 && plt > 150;
-      // Expanded Baveno VI: LSM ≤25 and plt >110 (optional educational note)
-      const expandedAvoid = lsm <= 25 && plt > 110;
+      // Expanded Baveno VI: LSM <25 and plt >110 (optional educational note)
+      const expandedAvoid = lsm < 25 && plt > 110;
       if (avoidEndoscopy) {
         return {
           score: 'Avoid EGD',
@@ -1516,7 +1516,7 @@ export const wave3GiHepCalcs: Calculator[] = [
         score: 'EGD recommended',
         label: 'Does not meet Baveno VI avoidance criteria',
         interpretation: expandedAvoid
-          ? 'Fails original Baveno VI but may meet Expanded Baveno VI (LSM ≤25 and plt >110) used in some pathways — center-dependent. Original Baveno still favors endoscopy when LSM ≥20 or plt ≤150.'
+          ? 'Fails original Baveno VI but may meet Expanded Baveno VI (LSM <25 and plt >110) used in some pathways — center-dependent. Original Baveno still favors endoscopy when LSM ≥20 or plt ≤150.'
           : 'LSM ≥20 kPa or platelets ≤150×10⁹/L — proceed with screening endoscopy for varices needing treatment (or use spleen stiffness / other validated non-invasive rules if available).',
         riskLevel: 'moderate',
         details: [
@@ -1528,7 +1528,7 @@ export const wave3GiHepCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Baveno VI: patients with cACLD and LSM <20 kPa + platelets >150 can avoid screening endoscopy. Expanded Baveno VI: LSM ≤25 + platelets >110.',
+      summary: 'Baveno VI: patients with cACLD and LSM <20 kPa + platelets >150 can avoid screening endoscopy. Expanded Baveno VI: LSM <25 + platelets >110.',
       formula: 'Avoid EGD if LSM <20 AND plt >150 (compensated cACLD)',
       validation: 'Multiple validations; miss rate for varices needing treatment very low with original criteria.',
       references: [
@@ -1956,8 +1956,9 @@ export const wave3GiHepCalcs: Calculator[] = [
       let bili = num(values.bili, 8);
       const unit = String(values.biliUnit ?? 'mg');
       if (unit === 'umol') bili = bili / 17.1;
-      const prolong = round(pt - control, 1);
-      const df = round(4.6 * (pt - control) + bili, 1);
+      const ptDifference = Math.max(0, pt - control);
+      const prolong = round(ptDifference, 1);
+      const df = round(4.6 * ptDifference + bili, 1);
       const inrProvided = !isMissingValue(values.inr, true);
       const inr = num(values.inr, 0);
       // Rough educational INR-based variant sometimes seen: 4.6×(INR-based proxy) — NOT recommended as equivalent

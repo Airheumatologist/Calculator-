@@ -480,7 +480,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         undefined,
         'Consecutive hours, preferably Foley; mL/kg/h using current weight.',
       ),
-      yesNo('rrt', 'Receiving RRT for AKI', 3, 'Any RRT initiated for this AKI episode forces AKIN stage 3.'),
+      yesNo('rrt', 'Receiving RRT for AKI', null, 'Any RRT initiated for this AKI episode forces AKIN stage 3.'),
     ],
     calculate(values) {
       let stage = Math.max(num(values.crStage, 0), num(values.uoStage, 0));
@@ -751,7 +751,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       yesNo(
         'onDiuretic',
         'Recent loop/thiazide diuretic',
-        9.9,
+        null,
         'Yes if loop or thiazide during this AKI episode — typically within ~6–24 h for loops (natriuresis still active), not a remote home dose from days ago. When yes, interpret FeUrea primarily (prerenal <35%, ATN >50%).',
       ),
     ],
@@ -763,8 +763,17 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       const purea = num(values.purea, 40);
       const uurea = num(values.uurea, 200);
       const onDiuretic = bool(values.onDiuretic);
-      const fena = pna > 0 && ucr > 0 ? round(((una * pcr) / (pna * ucr)) * 100, 2) : 0;
-      const feurea = purea > 0 && ucr > 0 ? round(((uurea * pcr) / (purea * ucr)) * 100, 1) : 0;
+      if (pna <= 0 || ucr <= 0 || purea <= 0) {
+        return {
+          score: '—',
+          unit: '%',
+          label: 'Invalid denominator',
+          interpretation: 'PNa, UCr, and plasma urea must all be greater than 0 to calculate FENa and FeUrea.',
+          riskLevel: 'info',
+        };
+      }
+      const fena = round(((una * pcr) / (pna * ucr)) * 100, 2);
+      const feurea = round(((uurea * pcr) / (purea * ucr)) * 100, 1);
 
       let feureaLabel = 'Indeterminate FeUrea';
       let feureaNote = 'FeUrea 35–50%: indeterminate.';
@@ -1627,6 +1636,9 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       const vent = str(values.vent, 'sb');
       if (dmax <= 0) {
         return { score: '—', label: 'Invalid diameters', interpretation: 'Dmax must be >0.', riskLevel: 'info' };
+      }
+      if (dmin > dmax) {
+        return { score: '—', label: 'Invalid diameters', interpretation: 'Dmin cannot exceed Dmax.', riskLevel: 'info' };
       }
       // Standard collapsibility: (Dmax−Dmin)/Dmax×100
       const ci = round(((dmax - dmin) / dmax) * 100, 0);

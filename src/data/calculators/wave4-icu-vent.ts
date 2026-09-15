@@ -1061,11 +1061,11 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whyUse: 'Standardized aggregate score for acute illness severity and escalation.',
     inputs: [
       selectInput('rr', 'Respiratory rate', [
-        { label: '≤8 (3)', value: 3 },
-        { label: '9–11 (1)', value: 1 },
-        { label: '12–20 (0)', value: 0 },
-        { label: '21–24 (2)', value: 2 },
-        { label: '≥25 (3)', value: 3 },
+        { label: '≤8 (3)', value: 'le8' },
+        { label: '9–11 (1)', value: '9-11' },
+        { label: '12–20 (0)', value: '12-20' },
+        { label: '21–24 (2)', value: '21-24' },
+        { label: '≥25 (3)', value: 'ge25' },
       ], undefined, 'Count RR for a full 60 seconds. Pick the matching original NEWS band (breaths/min).'),
       selectInput('spo2', 'SpO₂ (%)', [
         { label: '≤91 (3)', value: 3 },
@@ -1075,26 +1075,26 @@ export const wave4IcuVentCalcs: Calculator[] = [
       ], undefined, 'Original NEWS single SpO2 scale (not NEWS2 Scale 2). Use the current pulse-ox reading.'),
       yesNo('o2', 'Any supplemental oxygen', 2, 'Score 2 if any supplemental O2 (nasal cannula, mask, NIV, or ventilator). Original NEWS uses a single SpO2 scale plus this O2 item — not NEWS2 Scale 2 for hypercapnia.'),
       selectInput('temp', 'Temperature °C', [
-        { label: '≤35.0 (3)', value: 3 },
-        { label: '35.1–36.0 (1)', value: 1 },
-        { label: '36.1–38.0 (0)', value: 0 },
-        { label: '38.1–39.0 (1)', value: 1 },
-        { label: '≥39.1 (2)', value: 2 },
+        { label: '≤35.0 (3)', value: 'le35' },
+        { label: '35.1–36.0 (1)', value: '35-1-36' },
+        { label: '36.1–38.0 (0)', value: '36-1-38' },
+        { label: '38.1–39.0 (1)', value: '38-1-39' },
+        { label: '≥39.1 (2)', value: 'ge39-1' },
       ]),
       selectInput('sbp', 'Systolic BP', [
-        { label: '≤90 (3)', value: 3 },
-        { label: '91–100 (2)', value: 2 },
-        { label: '101–110 (1)', value: 1 },
-        { label: '111–219 (0)', value: 0 },
-        { label: '≥220 (3)', value: 3 },
+        { label: '≤90 (3)', value: 'le90' },
+        { label: '91–100 (2)', value: '91-100' },
+        { label: '101–110 (1)', value: '101-110' },
+        { label: '111–219 (0)', value: '111-219' },
+        { label: '≥220 (3)', value: 'ge220' },
       ]),
       selectInput('hr', 'Heart rate', [
-        { label: '≤40 (3)', value: 3 },
-        { label: '41–50 (1)', value: 1 },
-        { label: '51–90 (0)', value: 0 },
-        { label: '91–110 (1)', value: 1 },
-        { label: '111–130 (2)', value: 2 },
-        { label: '≥131 (3)', value: 3 },
+        { label: '≤40 (3)', value: 'le40' },
+        { label: '41–50 (1)', value: '41-50' },
+        { label: '51–90 (0)', value: '51-90' },
+        { label: '91–110 (1)', value: '91-110' },
+        { label: '111–130 (2)', value: '111-130' },
+        { label: '≥131 (3)', value: 'ge131' },
       ]),
       selectInput('conscious', 'Consciousness (AVPU)', [
         { label: 'Alert (0)', value: 0, description: 'A — eyes open, converses spontaneously' },
@@ -1102,13 +1102,44 @@ export const wave4IcuVentCalcs: Calculator[] = [
       ], 0, 'AVPU: Alert, Voice, Pain, Unresponsive. Score 3 for any of V, P, or U.'),
     ],
     calculate(values) {
+      const rrPoints: Record<string, number> = {
+        le8: 3,
+        '9-11': 1,
+        '12-20': 0,
+        '21-24': 2,
+        ge25: 3,
+      };
+      const tempPoints: Record<string, number> = {
+        le35: 3,
+        '35-1-36': 1,
+        '36-1-38': 0,
+        '38-1-39': 1,
+        'ge39-1': 2,
+      };
+      const sbpPoints: Record<string, number> = {
+        le90: 3,
+        '91-100': 2,
+        '101-110': 1,
+        '111-219': 0,
+        ge220: 3,
+      };
+      const hrPoints: Record<string, number> = {
+        le40: 3,
+        '41-50': 1,
+        '51-90': 0,
+        '91-110': 1,
+        '111-130': 2,
+        ge131: 3,
+      };
+      const points = (value: number | string | boolean | null, mapping: Record<string, number>) =>
+        mapping[String(value)] ?? num(value);
       const components = [
-        num(values.rr),
+        points(values.rr, rrPoints),
         num(values.spo2),
         bool(values.o2) ? 2 : 0,
-        num(values.temp),
-        num(values.sbp),
-        num(values.hr),
+        points(values.temp, tempPoints),
+        points(values.sbp, sbpPoints),
+        points(values.hr, hrPoints),
         num(values.conscious),
       ];
       const score = components.reduce((a, b) => a + b, 0);
@@ -2196,22 +2227,22 @@ export const wave4IcuVentCalcs: Calculator[] = [
         { label: 'Below average — BMI <20 (3)', value: 3 },
       ], 0, 'Score from the official Waterlow card (Judy Waterlow, copyrighted). BMI bands are operational mappings of build.'),
       selectInput('skin', 'Skin type / visual risk areas', [
-        { label: 'Healthy (0)', value: 0, description: 'Intact, normal color and turgor; no dry, thin, edematous, or clammy skin' },
-        { label: 'Tissue paper / dry (1)', value: 1, description: 'Thin fragile “tissue-paper” skin and/or dry skin over pressure areas' },
-        { label: 'Edematous / clammy (1)', value: 1, description: 'Pitting edema or clammy/moist pyrexial skin over pressure areas' },
-        { label: 'Discolored grade 1 (2)', value: 2, description: 'Intact skin with non-blanching redness (grade/stage 1 pressure damage) at a risk area' },
-        { label: 'Broken spots grade 2+ (3)', value: 3, description: 'Broken skin: blister, abrasion, or ulcer — partial-thickness or deeper (grade/stage 2–4)' },
-      ], 0, 'Score from the official Waterlow card (Judy Waterlow, copyrighted). Grade 1 = intact non-blanching erythema; grade 2+ = broken skin. Official card may add multiple skin descriptors — this tool scores the highest one only. Score from the official card for audit-critical work.'),
+        { label: 'Healthy (0)', value: 'healthy', description: 'Intact, normal color and turgor; no dry, thin, edematous, or clammy skin' },
+        { label: 'Tissue paper / dry (1)', value: 'tissue-paper-dry', description: 'Thin fragile “tissue-paper” skin and/or dry skin over pressure areas' },
+        { label: 'Edematous / clammy (1)', value: 'edematous-clammy', description: 'Pitting edema or clammy/moist pyrexial skin over pressure areas' },
+        { label: 'Discolored grade 1 (2)', value: 'discolored-grade1', description: 'Intact skin with non-blanching redness (grade/stage 1 pressure damage) at a risk area' },
+        { label: 'Broken spots grade 2+ (3)', value: 'broken-grade2-plus', description: 'Broken skin: blister, abrasion, or ulcer — partial-thickness or deeper (grade/stage 2–4)' },
+      ], 'healthy', 'Score from the official Waterlow card (Judy Waterlow, copyrighted). Grade 1 = intact non-blanching erythema; grade 2+ = broken skin. Official card may add multiple skin descriptors — this tool scores the highest one only. Score from the official card for audit-critical work.'),
       selectInput('sexAge', 'Sex and age (combined points)', [
-        { label: 'Male only — age not added (1)', value: 1, description: 'Official sex = 1 for male. Prefer a combined row below so age is included.' },
-        { label: 'Female only — age not added (2)', value: 2, description: 'Official sex = 2 for female. Also equals Male 14–49 combined (1+1). Prefer a combined row if age known.' },
-        { label: 'Age 14–49, sex not added (1)', value: 1, description: 'Official age 14–49 = 1. Combined should be Male 2 / Female 3 — this row under-scores.' },
-        { label: 'Male 50–64 combined (3)', value: 3, description: 'Male 1 + age 2 = 3. Female 50–64 official = 4 (use next row).' },
-        { label: 'Male 65–74 or Female 50–64 combined (4)', value: 4, description: 'Male 65–74 = 1+3=4; Female 50–64 = 2+2=4.' },
-        { label: 'Male 75–80 or Female 65–74 combined (5)', value: 5, description: 'Male 75–80 = 1+4=5; Female 65–74 = 2+3=5.' },
-        { label: 'Male 81+ or Female 75–80 combined (6)', value: 6, description: 'Male 81+ = 1+5=6; Female 75–80 = 2+4=6.' },
-        { label: 'Female 81+ combined (7)', value: 7, description: 'Female 2 + age 81+ (5) = 7. Official sex/age maximum.' },
-      ], 1, 'Official Waterlow adds sex (M 1 / F 2) plus age (14–49:1, 50–64:2, 65–74:3, 75–80:4, 81+:5). Pick the combined total. Female 81+ = 7. Male/Female-only rows omit age and under-score. Card copyright Judy Waterlow.'),
+        { label: 'Male only — age not added (1)', value: 'male-only', description: 'Official sex = 1 for male. Prefer a combined row below so age is included.' },
+        { label: 'Female only — age not added (2)', value: 'female-only', description: 'Official sex = 2 for female. Also equals Male 14–49 combined (1+1). Prefer a combined row if age known.' },
+        { label: 'Age 14–49, sex not added (1)', value: 'age14-49', description: 'Official age 14–49 = 1. Combined should be Male 2 / Female 3 — this row under-scores.' },
+        { label: 'Male 50–64 combined (3)', value: 'male50-64', description: 'Male 1 + age 2 = 3. Female 50–64 official = 4 (use next row).' },
+        { label: 'Male 65–74 or Female 50–64 combined (4)', value: 'male65-74-female50-64', description: 'Male 65–74 = 1+3=4; Female 50–64 = 2+2=4.' },
+        { label: 'Male 75–80 or Female 65–74 combined (5)', value: 'male75-80-female65-74', description: 'Male 75–80 = 1+4=5; Female 65–74 = 2+3=5.' },
+        { label: 'Male 81+ or Female 75–80 combined (6)', value: 'male81-plus-female75-80', description: 'Male 81+ = 1+5=6; Female 75–80 = 2+4=6.' },
+        { label: 'Female 81+ combined (7)', value: 'female81-plus', description: 'Female 2 + age 81+ (5) = 7. Official sex/age maximum.' },
+      ], 'male-only', 'Official Waterlow adds sex (M 1 / F 2) plus age (14–49:1, 50–64:2, 65–74:3, 75–80:4, 81+:5). Pick the combined total. Female 81+ = 7. Male/Female-only rows omit age and under-score. Card copyright Judy Waterlow.'),
       selectInput('continence', 'Continence', [
         { label: 'Complete / catheterized (0)', value: 0, description: 'Fully continent, or urine diverted by catheter with continent stool' },
         { label: 'Occasional incontinence (1)', value: 1, description: 'Occasional urine or stool incontinence (not every episode)' },
@@ -2233,41 +2264,75 @@ export const wave4IcuVentCalcs: Calculator[] = [
         { label: 'NBM / anorexic (3)', value: 3, description: 'Nil by mouth, or anorexic with negligible intake' },
       ], 0, 'Score from the official Waterlow card. NBM/anorexic is the highest nutrition item (3).'),
       selectInput('tissue', 'Tissue malnutrition special risks (highest applicable)', [
-        { label: 'None (0)', value: 0, description: 'No listed tissue-malnutrition special risk' },
-        { label: 'Terminal cachexia (8)', value: 8 },
-        { label: 'Multiple organ failure (8)', value: 8 },
-        { label: 'Single organ failure heart/kidney/liver (5)', value: 5 },
-        { label: 'Peripheral vascular disease (5)', value: 5 },
-        { label: 'Anemia Hb <8 (2)', value: 2 },
-        { label: 'Smoking (1)', value: 1 },
-      ], 0, 'Pick the single highest applicable special-risk item. Official card may stack some items — this tool is highest-one-only.'),
+        { label: 'None (0)', value: 'none', description: 'No listed tissue-malnutrition special risk' },
+        { label: 'Terminal cachexia (8)', value: 'terminal-cachexia' },
+        { label: 'Multiple organ failure (8)', value: 'multiple-organ-failure' },
+        { label: 'Single organ failure heart/kidney/liver (5)', value: 'single-organ-failure' },
+        { label: 'Peripheral vascular disease (5)', value: 'pvd' },
+        { label: 'Anemia Hb <8 (2)', value: 'anemia' },
+        { label: 'Smoking (1)', value: 'smoking' },
+      ], 'none', 'Pick the single highest applicable special-risk item. Official card may stack some items — this tool is highest-one-only.'),
       selectInput('neuro', 'Neurological deficit (highest)', [
         { label: 'None (0)', value: 0, description: 'No diabetes, MS, CVA, motor/sensory deficit, or paraplegia' },
         { label: 'Diabetes / MS / CVA / motor-sensory (4–6 typical) — use 5', value: 5, description: 'Moderate neurologic deficit (typical 5). Official range 4–6 by severity; this control does not offer 4.' },
         { label: 'Paraplegia (5–6)', value: 6, description: 'Complete motor/sensory deficit / paraplegia (6)' },
       ], 0, 'Official Waterlow neuro is 4–6 for diabetes/MS/CVA/motor-sensory/paraplegia — pick 4 mild / 5 moderate / 6 complete. This control only offers 5 or 6.'),
       selectInput('surgery', 'Major surgery / trauma', [
-        { label: 'None (0)', value: 0, description: 'No recent major surgery or trauma' },
-        { label: 'Orthopedic / spinal (below waist / spinal) (5)', value: 5, description: 'Orthopedic surgery below the waist, or spinal surgery/injury' },
-        { label: 'On table >2 h (5)', value: 5, description: 'Any operation with theatre time >2 hours (and ≤6 h)' },
-        { label: 'On table >6 h (8)', value: 8, description: 'Theatre time >6 hours — highest surgery item' },
-      ], 0, 'Score from the official Waterlow card. Pick the single highest applicable surgery/trauma item (this tool does not stack).'),
+        { label: 'None (0)', value: 'none', description: 'No recent major surgery or trauma' },
+        { label: 'Orthopedic / spinal (below waist / spinal) (5)', value: 'orthopedic-spinal', description: 'Orthopedic surgery below the waist, or spinal surgery/injury' },
+        { label: 'On table >2 h (5)', value: 'table-over2h', description: 'Any operation with theatre time >2 hours (and ≤6 h)' },
+        { label: 'On table >6 h (8)', value: 'table-over6h', description: 'Theatre time >6 hours — highest surgery item' },
+      ], 'none', 'Score from the official Waterlow card. Pick the single highest applicable surgery/trauma item (this tool does not stack).'),
       selectInput('meds', 'Medications (steroids, cytotoxics, anti-inflammatory high dose)', [
         { label: 'No (0)', value: 0, description: 'Not on high-dose steroids, cytotoxics, or high-dose anti-inflammatories' },
         { label: 'Yes (4)', value: 4, description: 'On high-dose steroids, cytotoxic chemotherapy, or high-dose anti-inflammatory drugs' },
       ], 0, 'Score 4 if any of: high-dose steroids, cytotoxics, or high-dose anti-inflammatories. Score from the official Waterlow card.'),
     ],
     calculate(values) {
+      const skinPoints: Record<string, number> = {
+        healthy: 0,
+        'tissue-paper-dry': 1,
+        'edematous-clammy': 1,
+        'discolored-grade1': 2,
+        'broken-grade2-plus': 3,
+      };
+      const sexAgePoints: Record<string, number> = {
+        'male-only': 1,
+        'female-only': 2,
+        'age14-49': 1,
+        'male50-64': 3,
+        'male65-74-female50-64': 4,
+        'male75-80-female65-74': 5,
+        'male81-plus-female75-80': 6,
+        'female81-plus': 7,
+      };
+      const tissuePoints: Record<string, number> = {
+        none: 0,
+        'terminal-cachexia': 8,
+        'multiple-organ-failure': 8,
+        'single-organ-failure': 5,
+        pvd: 5,
+        anemia: 2,
+        smoking: 1,
+      };
+      const surgeryPoints: Record<string, number> = {
+        none: 0,
+        'orthopedic-spinal': 5,
+        'table-over2h': 5,
+        'table-over6h': 8,
+      };
+      const points = (value: number | string | boolean | null, mapping: Record<string, number>) =>
+        mapping[String(value)] ?? num(value);
       const score =
         num(values.build) +
-        num(values.skin) +
-        num(values.sexAge) +
+        points(values.skin, skinPoints) +
+        points(values.sexAge, sexAgePoints) +
         num(values.continence) +
         num(values.mobility) +
         num(values.appetite) +
-        num(values.tissue) +
+        points(values.tissue, tissuePoints) +
         num(values.neuro) +
-        num(values.surgery) +
+        points(values.surgery, surgeryPoints) +
         num(values.meds);
       const r = riskFromThresholds(score, [
         {
@@ -2450,11 +2515,11 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whyUse: 'Rapid validated screen that triggers care pathways (food-first, dietitian, monitoring).',
     inputs: [
       selectInput('bmi', 'BMI score', [
-        { label: 'BMI >20 (0) (>30 obese still scores 0 for MUST BMI step)', value: 0, description: 'Includes overweight/obese BMI >30, which still scores 0 on this step' },
-        { label: 'BMI 18.5–20 (1)', value: 1 },
-        { label: 'BMI <18.5 (2)', value: 2 },
-        { label: 'BMI unknown — alternatives used; this choice scores 0 pending clinical estimate', value: 0, description: 'Do not assume unknown = 0. Estimate height from ulna length (BAPEN); MUAC <23.5 cm suggests BMI <20 (at least 1 if also clinically thin). MUAC is not a standalone MUST point.' },
-      ], 0, 'Obese BMI >30 still scores 0 on the BMI step. If BMI unmeasurable, estimate height from ulna length (BAPEN table); MUAC <23.5 cm suggests BMI <20. BAPEN: MUAC is not a standalone MUST point — do not assume unknown = 0. MUST is BAPEN copyright (free non-commercial).'),
+        { label: 'BMI >20 (0) (>30 obese still scores 0 for MUST BMI step)', value: 'bmi-over20', description: 'Includes overweight/obese BMI >30, which still scores 0 on this step' },
+        { label: 'BMI 18.5–20 (1)', value: 'bmi-18-5-20' },
+        { label: 'BMI <18.5 (2)', value: 'bmi-under18-5' },
+        { label: 'BMI unknown — alternatives used; this choice scores 0 pending clinical estimate', value: 'bmi-unknown', description: 'Do not assume unknown = 0. Estimate height from ulna length (BAPEN); MUAC <23.5 cm suggests BMI <20 (at least 1 if also clinically thin). MUAC is not a standalone MUST point.' },
+      ], 'bmi-over20', 'Obese BMI >30 still scores 0 on the BMI step. If BMI unmeasurable, estimate height from ulna length (BAPEN table); MUAC <23.5 cm suggests BMI <20. BAPEN: MUAC is not a standalone MUST point — do not assume unknown = 0. MUST is BAPEN copyright (free non-commercial).'),
       selectInput('wtLoss', 'Unplanned weight loss in past 3–6 months', [
         { label: '<5% (0)', value: 0, description: 'Unplanned loss <5% of usual weight over 3–6 months' },
         { label: '5–10% (1)', value: 1, description: 'Unplanned loss 5–10% of usual weight over 3–6 months' },
@@ -2474,7 +2539,13 @@ export const wave4IcuVentCalcs: Calculator[] = [
       ], 0, 'Score 2 only if BOTH: (1) acutely ill AND (2) likely no nutritional intake for >5 days. Illness alone without starvation risk is 0.'),
     ],
     calculate(values) {
-      const score = num(values.bmi) + num(values.wtLoss) + num(values.acute);
+      const bmiPoints: Record<string, number> = {
+        'bmi-over20': 0,
+        'bmi-18-5-20': 1,
+        'bmi-under18-5': 2,
+        'bmi-unknown': 0,
+      };
+      const score = (bmiPoints[String(values.bmi)] ?? num(values.bmi)) + num(values.wtLoss) + num(values.acute);
       let riskLevel: 'low' | 'moderate' | 'high' = 'low';
       let label = '';
       let interpretation = '';

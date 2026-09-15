@@ -404,6 +404,16 @@ export const extraCalcs: Calculator[] = [
     calculate(values) {
       const qt = num(values.qt, 400);
       const hr = num(values.hr, 70);
+      if (hr <= 0) {
+        return {
+          score: '—',
+          unit: 'ms',
+          label: 'Invalid heart rate',
+          interpretation: 'Heart rate must be greater than 0 bpm to calculate QTc.',
+          riskLevel: 'info',
+          details: [{ label: 'Formula', value: 'QT / ∛RR' }],
+        };
+      }
       const rr = 60 / hr;
       const qtc = round(qt / Math.cbrt(rr), 0);
       let riskLevel: 'normal' | 'moderate' | 'high' | 'critical' = 'normal';

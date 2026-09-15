@@ -876,10 +876,11 @@ export const emergencyMiscCalcs: Calculator[] = [
       yesNo('stroke', 'Acute spinal cord injury / stroke <1 mo (5)', 5),
     ],
     calculate(values) {
-      // Note: age options should be mutually exclusive in practice
-      let score = 0;
+      // Age and surgery-duration tiers are mutually exclusive on the Caprini form.
+      const agePoints = bool(values.age75) ? 3 : bool(values.age61) ? 2 : bool(values.age41) ? 1 : 0;
+      const surgeryPoints = bool(values.majorSurg) ? 2 : bool(values.minorSurg) ? 1 : 0;
+      let score = agePoints + surgeryPoints;
       const items: [string, number][] = [
-        ['age41', 1], ['age61', 2], ['age75', 3], ['minorSurg', 1], ['majorSurg', 2],
         ['bmi25', 1], ['swollenLegs', 1], ['varicose', 1], ['pregnancy', 1], ['historyIbd', 1],
         ['priorVte', 3], ['familyVte', 3], ['thrombophilia', 3], ['cancer', 2], ['bedrest', 1],
         ['hip', 5], ['hipFracture', 5], ['stroke', 5],
@@ -1067,28 +1068,37 @@ export const emergencyMiscCalcs: Calculator[] = [
       // From classic equivalents: HC 20 = cortisone 25 = pred 5 = methylpred/triamcinolone 4 = dex/beta 0.75 mg.
       // potency = 20 / equivalent_dose_mg  →  dex/beta = 20/0.75 ≈ 26.667 (not the rounded "25" used in some tables).
       selectInput('from', 'From steroid', [
-        { label: 'Hydrocortisone', value: 1 },
-        { label: 'Cortisone', value: 0.8 },
-        { label: 'Prednisone / Prednisolone', value: 4 },
-        { label: 'Methylprednisolone', value: 5 },
-        { label: 'Triamcinolone', value: 5 },
-        { label: 'Dexamethasone', value: 20 / 0.75 },
-        { label: 'Betamethasone', value: 20 / 0.75 },
+        { label: 'Hydrocortisone', value: 'hydrocortisone' },
+        { label: 'Cortisone', value: 'cortisone' },
+        { label: 'Prednisone / Prednisolone', value: 'prednisone' },
+        { label: 'Methylprednisolone', value: 'methylprednisolone' },
+        { label: 'Triamcinolone', value: 'triamcinolone' },
+        { label: 'Dexamethasone', value: 'dexamethasone' },
+        { label: 'Betamethasone', value: 'betamethasone' },
       ]),
       selectInput('to', 'To steroid', [
-        { label: 'Hydrocortisone', value: 1 },
-        { label: 'Cortisone', value: 0.8 },
-        { label: 'Prednisone / Prednisolone', value: 4 },
-        { label: 'Methylprednisolone', value: 5 },
-        { label: 'Triamcinolone', value: 5 },
-        { label: 'Dexamethasone', value: 20 / 0.75 },
-        { label: 'Betamethasone', value: 20 / 0.75 },
+        { label: 'Hydrocortisone', value: 'hydrocortisone' },
+        { label: 'Cortisone', value: 'cortisone' },
+        { label: 'Prednisone / Prednisolone', value: 'prednisone' },
+        { label: 'Methylprednisolone', value: 'methylprednisolone' },
+        { label: 'Triamcinolone', value: 'triamcinolone' },
+        { label: 'Dexamethasone', value: 'dexamethasone' },
+        { label: 'Betamethasone', value: 'betamethasone' },
       ]),
     ],
     calculate(values) {
       const dose = num(values.dose, 20);
-      const from = num(values.from, 4);
-      const to = num(values.to, 1);
+      const potency: Record<string, number> = {
+        hydrocortisone: 1,
+        cortisone: 0.8,
+        prednisone: 4,
+        methylprednisolone: 5,
+        triamcinolone: 5,
+        dexamethasone: 20 / 0.75,
+        betamethasone: 20 / 0.75,
+      };
+      const from = potency[String(values.from)] ?? num(values.from, 4);
+      const to = potency[String(values.to)] ?? num(values.to, 1);
       // dose_to = dose_from * (potency_from / potency_to)
       const converted = round(dose * (from / to), 1);
       return {
@@ -1120,21 +1130,33 @@ export const emergencyMiscCalcs: Calculator[] = [
       numberInput('dose', 'Dose per administration', { unit: 'mg', min: 0, max: 1000, step: 0.5, defaultValue: 10, helpText: 'Oral mg per dose for tablets/liquids. For fentanyl patch enter patch strength in mcg/h and set doses/day = 1 (CDC MME/day = mcg/h × 2.4). Do not use this tool to switch opioids.' }),
       numberInput('freq', 'Doses per day', { min: 1, max: 24, defaultValue: 3, helpText: 'For fentanyl patch, set to 1 (the 2.4 factor already converts mcg/h → MME/day).' }),
       selectInput('opioid', 'Opioid', [
-        { label: 'Morphine', value: 1 },
-        { label: 'Hydrocodone', value: 1 },
-        { label: 'Oxycodone', value: 1.5 },
-        { label: 'Oxymorphone', value: 3 },
-        { label: 'Hydromorphone', value: 4 },
-        { label: 'Codeine', value: 0.15 },
-        { label: 'Tramadol', value: 0.1 },
-        { label: 'Tapentadol', value: 0.4 },
-        { label: 'Fentanyl patch (mcg/hr → special)', value: 2.4, description: 'Enter patch mcg/h as the dose and set doses/day = 1. CDC MME/day = mcg/h × 2.4.' },
-        { label: 'Methadone (complex — approx 4–12)', value: 4, description: 'CDC methadone MME is dose-stratified (4/8/10/12); this tool uses 4 as a lower-bound approximation — verify the CDC table.' },
+        { label: 'Morphine', value: 'morphine' },
+        { label: 'Hydrocodone', value: 'hydrocodone' },
+        { label: 'Oxycodone', value: 'oxycodone' },
+        { label: 'Oxymorphone', value: 'oxymorphone' },
+        { label: 'Hydromorphone', value: 'hydromorphone' },
+        { label: 'Codeine', value: 'codeine' },
+        { label: 'Tramadol', value: 'tramadol' },
+        { label: 'Tapentadol', value: 'tapentadol' },
+        { label: 'Fentanyl patch (mcg/hr → special)', value: 'fentanyl_patch', description: 'Enter patch mcg/h as the dose and set doses/day = 1. CDC MME/day = mcg/h × 2.4.' },
+        { label: 'Methadone (complex — approx 4–12)', value: 'methadone', description: 'CDC methadone MME is dose-stratified (4/8/10/12); this tool uses 4 as a lower-bound approximation — verify the CDC table.' },
       ]),
     ],
     calculate(values) {
       const daily = num(values.dose, 10) * num(values.freq, 3);
-      const factor = num(values.opioid, 1);
+      const conversionFactors: Record<string, number> = {
+        morphine: 1,
+        hydrocodone: 1,
+        oxycodone: 1.5,
+        oxymorphone: 3,
+        hydromorphone: 4,
+        codeine: 0.15,
+        tramadol: 0.1,
+        tapentadol: 0.4,
+        fentanyl_patch: 2.4,
+        methadone: 4,
+      };
+      const factor = conversionFactors[String(values.opioid)] ?? num(values.opioid, 1);
       const mme = round(daily * factor, 1);
       const r = riskFromThresholds(mme, [
         { max: 49, level: 'moderate', label: 'Lower CDC threshold band', interpretation: 'Still risk of OD; use caution, naloxone co-prescribing as appropriate.' },
@@ -1212,6 +1234,15 @@ export const emergencyMiscCalcs: Calculator[] = [
     calculate(values) {
       const iron = num(values.iron, 60);
       const tibc = num(values.tibc, 300);
+      if (tibc <= 0) {
+        return {
+          score: '—',
+          unit: '%',
+          label: 'Invalid TIBC',
+          interpretation: 'TIBC must be greater than 0 to calculate transferrin saturation.',
+          riskLevel: 'info',
+        };
+      }
       const tsat = round((iron / tibc) * 100, 1);
       const r = riskFromThresholds(tsat, [
         { max: 15, level: 'moderate', label: 'Low TSAT', interpretation: 'TSAT <15–20% supports iron deficiency (with ferritin).' },
