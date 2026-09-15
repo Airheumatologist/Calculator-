@@ -166,41 +166,118 @@ export const giNeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'meld-na',
-    name: 'MELD-Na Score',
+    name: 'MELD-Na Score (Model for End-Stage Liver Disease)',
     shortName: 'MELD-Na',
-    description: 'MELD incorporating sodium for improved waitlist mortality prediction.',
+    description: 'Calculates MELD and MELD-Na incorporating bilirubin, creatinine, INR, sodium, and dialysis for waitlist mortality and transplant allocation.',
     category: 'gastroenterology',
-    tags: ['cirrhosis', 'transplant', 'sodium'],
-    whenToUse: 'Liver allocation / prognosis with hyponatremia.',
-    whyUse: 'Hyponatremia adds prognostic information beyond MELD.',
+    tags: ['cirrhosis', 'transplant', 'sodium', 'meld', 'hepatology', 'liver failure'],
+    whenToUse: 'Adult patients (≥12 years) with end-stage liver disease or cirrhosis being evaluated for prognosis, decompensation, or liver transplantation.',
+    whyUse: 'Standard OPTN/UNOS allocation score; hyponatremia substantially refines mortality prediction in decompensated cirrhosis beyond baseline MELD.',
     inputs: [
-      numberInput('meld', 'MELD score', { min: 6, max: 40, defaultValue: 15, helpText: 'Enter the lab MELD (6–40). OPTN sodium adjustment applies only when MELD >11.' }),
-      numberInput('na', 'Serum sodium', { unit: 'mEq/L', min: 120, max: 150, defaultValue: 135, helpText: 'OPTN bounds Na to 125–137 for the adjustment' }),
+      selectInput('entryMode', 'Input mode', [
+        { label: 'Primary laboratory values (bilirubin, INR, Cr, Na, dialysis)', value: 'labs' },
+        { label: 'Enter precomputed MELD score + sodium', value: 'direct' },
+      ], 'labs'),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 1.5, helpText: 'Minimum value of 1.0 mg/dL used per OPTN rules.' }),
+      numberInput('inr', 'INR', { min: 0.8, max: 15, step: 0.01, defaultValue: 1.2, helpText: 'Minimum value of 1.0 used per OPTN rules.' }),
+      numberInput('creat', 'Serum creatinine', { unit: 'mg/dL', min: 0.4, max: 20, step: 0.1, defaultValue: 1.2, helpText: 'Capped at 4.0 mg/dL (or automatically set to 4.0 if dialyzed ≥2 times in prior 7 days).' }),
+      numberInput('na', 'Serum sodium', { unit: 'mEq/L', min: 100, max: 160, step: 1, defaultValue: 135, helpText: 'Bounded to 125–137 mEq/L for MELD-Na calculation.' }),
+      yesNo('dialysis', 'Hemodialysis or CVVH ≥2 times in prior 7 days (or 24h of SLED)', 0, 'If yes, creatinine is automatically set to 4.0 mg/dL per UNOS policy.'),
+      numberInput('directMeld', 'Precomputed MELD score (6–40)', { min: 6, max: 40, defaultValue: 15, helpText: 'Only used when "Enter precomputed MELD score" is selected.' }),
+      numberInput('directNa', 'Precomputed serum sodium (mEq/L)', { unit: 'mEq/L', min: 120, max: 150, defaultValue: 135, helpText: 'Only used when "Enter precomputed MELD score" is selected.' }),
     ],
     calculate(values) {
-      let meld = num(values.meld, 15);
-      let na = num(values.na, 135);
-      // OPTN MELD-Na: Na bounded 125–137 (not 140) with reference Na 137
-      na = Math.max(125, Math.min(137, na));
+      const mode = String(values.entryMode ?? 'labs');
+      let meld = 15;
+      let serumNa = 135;
+      let rawMeld = 15;
+      let effCr = 1.0;
+      let effBili = 1.0;
+      let effInr = 1.0;
+      const dial = bool(values.dialysis);
+
+      if (mode === 'labs') {
+        effBili = Math.max(1.0, num(values.bili, 1.0));
+        effInr = Math.max(1.0, num(values.inr, 1.0));
+        effCr = dial ? 4.0 : Math.min(4.0, Math.max(1.0, num(values.creat, 1.0)));
+        serumNa = num(values.na, 135);
+
+        rawMeld = 9.57 * Math.log(effCr) + 3.78 * Math.log(effBili) + 11.2 * Math.log(effInr) + 6.43;
+        meld = Math.max(6, Math.min(40, Math.round(rawMeld)));
+      } else {
+        meld = Math.max(6, Math.min(40, Math.round(num(values.directMeld, 15))));
+        serumNa = num(values.directNa, 135);
+      }
+
+      // OPTN MELD-Na adjustment: Na bounded between 125 and 137
+      const boundedNa = Math.max(125, Math.min(137, serumNa));
       let meldNa = meld;
       if (meld > 11) {
-        meldNa = round(meld + 1.32 * (137 - na) - 0.033 * meld * (137 - na), 0);
+        meldNa = Math.round(meld + 1.32 * (137 - boundedNa) - 0.033 * meld * (137 - boundedNa));
+        meldNa = Math.max(6, Math.min(40, meldNa));
       }
-      meldNa = Math.max(6, Math.min(40, meldNa));
+
+      let riskLevel: 'low' | 'moderate' | 'high' | 'critical' = 'low';
+      let interpretation = '';
+      if (meldNa >= 35) {
+        riskLevel = 'critical';
+        interpretation = `MELD-Na ${meldNa} (Baseline MELD ${meld}): critical waitlist priority (estimated 3-month mortality >70–80%). Urgent liver transplantation evaluation and ICU care.`;
+      } else if (meldNa >= 25) {
+        riskLevel = 'critical';
+        interpretation = `MELD-Na ${meldNa} (Baseline MELD ${meld}): very high mortality risk (~50% 3-month mortality). High transplant waitlist priority; aggressive complication surveillance.`;
+      } else if (meldNa >= 20) {
+        riskLevel = 'high';
+        interpretation = `MELD-Na ${meldNa} (Baseline MELD ${meld}): high risk (~20% 3-month mortality). Liver transplantation listing standardly pursued.`;
+      } else if (meldNa >= 15) {
+        riskLevel = 'moderate';
+        interpretation = `MELD-Na ${meldNa} (Baseline MELD ${meld}): intermediate risk (~6% 3-month mortality). Consider liver transplantation referral threshold (MELD ≥15).`;
+      } else {
+        riskLevel = 'low';
+        interpretation = `MELD-Na ${meldNa} (Baseline MELD ${meld}): low short-term mortality risk (<2–3% 3-month mortality). Outpatient hepatology management and routine monitoring.`;
+      }
+
+      const details = [
+        { label: 'MELD-Na Score', value: `${meldNa}` },
+        { label: 'Baseline MELD', value: `${meld}` },
+        { label: 'Serum Sodium used', value: `${serumNa} mEq/L (bounded: ${boundedNa})` },
+        { label: 'Calculation Mode', value: mode === 'labs' ? 'Primary Laboratory Values' : 'Precomputed MELD Override' },
+      ];
+
+      if (mode === 'labs') {
+        details.push(
+          { label: 'Effective Creatinine', value: `${effCr} mg/dL ${dial ? '(dialyzed)' : ''}` },
+          { label: 'Effective Bilirubin', value: `${effBili} mg/dL` },
+          { label: 'Effective INR', value: `${effInr}` },
+        );
+      }
+
       return {
         score: meldNa,
         label: 'MELD-Na',
-        interpretation: 'OPTN-style MELD-Na (Na capped 125–137). Higher score → higher waitlist priority/mortality risk.',
-        riskLevel: meldNa >= 30 ? 'critical' : meldNa >= 20 ? 'high' : meldNa >= 15 ? 'moderate' : 'low',
+        interpretation,
+        riskLevel,
+        details,
       };
     },
     evidence: {
-      summary: 'OPTN MELD-Na = MELD + 1.32×(137−Na) − 0.033×MELD×(137−Na) when MELD >11; Na bounded 125–137.',
-      validation: 'Improved waitlist mortality prediction vs MELD alone; used in US liver allocation.',
-      references: [{ title: 'Hyponatremia and mortality among patients on the liver-transplant waiting list', citation: 'Kim WR et al. N Engl J Med. 2008', year: 2008, pmid: '18768945',
-          doi: '10.1056/NEJMoa0801209', }],
+      summary:
+        'OPTN/UNOS MELD-Na: MELD = 9.57×ln(Cr) + 3.78×ln(Bili) + 11.2×ln(INR) + 6.43 (rounded, 6–40). When MELD >11, MELD-Na = MELD + 1.32×(137−Na) − 0.033×MELD×(137−Na) with Na bounded 125–137 mEq/L.',
+      formula: 'MELD-Na = MELD + 1.32×(137−Na) − 0.033×MELD×(137−Na) if MELD > 11',
+      validation: 'Kim et al. NEJM 2008; standard allocation model across the United States.',
+      references: [
+        {
+          title: 'Hyponatremia and mortality among patients on the liver-transplant waiting list',
+          citation: 'Kim WR et al. N Engl J Med. 2008',
+          year: 2008,
+          pmid: '18768945',
+          doi: '10.1056/NEJMoa0801209',
+        },
+      ],
     },
-    nextSteps: [{ condition: 'Elevated', actions: ['Transplant evaluation', 'Careful sodium correction'] }],
+    nextSteps: [
+      { condition: 'MELD-Na ≥15', actions: ['Referral to liver transplant center', 'Screen for varices and HCC', 'Manage ascites / sodium cautiously'] },
+      { condition: 'MELD-Na ≥25', actions: ['Urgent transplant listing review', 'ICU / hepatology admission if acute decompensation', 'Infection / SBP screen'] },
+    ],
   },
   {
     id: 'glasgow-blatchford',

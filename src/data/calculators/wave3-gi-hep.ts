@@ -216,62 +216,133 @@ export const wave3GiHepCalcs: Calculator[] = [
 
   {
     id: 'clif-c-aclf',
-    name: 'CLIF-C ACLF Score (Simplified)',
+    name: 'CLIF-C ACLF Score (Acute-on-Chronic Liver Failure)',
     shortName: 'CLIF-C ACLF',
-    description: 'Educational CLIF Consortium ACLF score from organ-failure sum, age, and WBC.',
+    description: 'Calculates the EASL-CLIF Consortium ACLF score and 28-day mortality risk from 6 organ failure domains, age, and WBC.',
     category: 'gastroenterology',
-    tags: ['aclf', 'cirrhosis', 'clif', 'icu', 'prognosis'],
-    whenToUse: 'Hospitalized cirrhosis with acute-on-chronic liver failure for mortality risk estimate.',
-    whyUse: 'Prognostic score for ACLF severity; complements CLIF-OF/CLIF-SOFA organ grading.',
+    tags: ['aclf', 'cirrhosis', 'clif', 'icu', 'prognosis', 'liver failure', 'hepatology'],
+    whenToUse: 'Hospitalized patients with cirrhosis presenting with acute decompensation and organ failures.',
+    whyUse: 'Validated prognostic model by the EASL-CLIF Consortium (CANONIC study); superior to MELD and Child-Pugh for predicting 28-day and 90-day mortality.',
     inputs: [
-      numberInput('clifOfs', 'CLIF organ failure score (CLIF-OFs sum)', {
+      selectInput('entryMode', 'Input method', [
+        { label: 'Score 6 CLIF organ failure domains (recommended)', value: 'domains' },
+        { label: 'Enter precomputed CLIF-OFs total (6–18)', value: 'direct' },
+      ], 'domains'),
+
+      // 6 CLIF Organ Failure Domains
+      selectInput('liver', '1. Liver: Total Bilirubin', [
+        { label: '1 pt — Bilirubin <5 mg/dL (<85 µmol/L)', value: 1, points: 1 },
+        { label: '2 pts — Bilirubin 5 to <12 mg/dL (85–204 µmol/L)', value: 2, points: 2 },
+        { label: '3 pts — Bilirubin ≥12 mg/dL (≥204 µmol/L) [Liver Failure]', value: 3, points: 3 },
+      ], 1),
+      selectInput('kidney', '2. Kidney: Serum Creatinine', [
+        { label: '1 pt — Creatinine <2 mg/dL (<177 µmol/L)', value: 1, points: 1 },
+        { label: '2 pts — Creatinine 2 to <3.5 mg/dL (177–309 µmol/L)', value: 2, points: 2 },
+        { label: '3 pts — Creatinine ≥3.5 mg/dL or Renal Replacement Therapy [Kidney Failure]', value: 3, points: 3 },
+      ], 1),
+      selectInput('brain', '3. Brain: Hepatic Encephalopathy (West Haven)', [
+        { label: '1 pt — Grade 0 (No encephalopathy)', value: 1, points: 1 },
+        { label: '2 pts — Grade 1–2 (Mild to moderate encephalopathy)', value: 2, points: 2 },
+        { label: '3 pts — Grade 3–4 (Severe encephalopathy / coma) [Brain Failure]', value: 3, points: 3 },
+      ], 1),
+      selectInput('coag', '4. Coagulation: INR / Platelets', [
+        { label: '1 pt — INR <2.0', value: 1, points: 1 },
+        { label: '2 pts — INR 2.0 to <2.5', value: 2, points: 2 },
+        { label: '3 pts — INR ≥2.5 or Platelets ≤20 × 10⁹/L [Coagulation Failure]', value: 3, points: 3 },
+      ], 1),
+      selectInput('circ', '5. Circulation: Blood Pressure / Vasopressors', [
+        { label: '1 pt — MAP ≥70 mmHg without vasopressors', value: 1, points: 1 },
+        { label: '2 pts — MAP <70 mmHg or on Dopamine ≤5 µg/kg/min or Terlipressin', value: 2, points: 2 },
+        { label: '3 pts — Norepinephrine or Dopamine >5 µg/kg/min [Circulatory Failure]', value: 3, points: 3 },
+      ], 1),
+      selectInput('resp', '6. Respiration: PaO₂/FiO₂ or SpO₂/FiO₂', [
+        { label: '1 pt — PaO₂/FiO₂ >300 or SpO₂/FiO₂ >357', value: 1, points: 1 },
+        { label: '2 pts — PaO₂/FiO₂ 201–300 or SpO₂/FiO₂ 215–357', value: 2, points: 2 },
+        { label: '3 pts — PaO₂/FiO₂ ≤200, SpO₂/FiO₂ ≤214, or Mechanical Ventilation [Respiratory Failure]', value: 3, points: 3 },
+      ], 1),
+
+      numberInput('directClifOfs', 'Precomputed CLIF-OFs total', {
         min: 6,
         max: 18,
         step: 1,
         defaultValue: 8,
-        helpText: 'Sum of 6 organ scores (each typically 1–3); use CLIF-SOFA tool if needed',
+        helpText: 'Only used when "Enter precomputed CLIF-OFs total" is selected.',
       }),
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 55 }),
-      numberInput('wbc', 'White blood cell count', { unit: '×10⁹/L', min: 0.5, max: 100, step: 0.1, defaultValue: 8 }),
+      numberInput('wbc', 'White blood cell count', { unit: '×10⁹/L', min: 0.5, max: 100, step: 0.1, defaultValue: 8.0 }),
     ],
     calculate(values) {
-      const ofs = num(values.clifOfs, 8);
+      const mode = String(values.entryMode ?? 'domains');
+      let ofs = 8;
+      let failedOrganCount = 0;
+
+      if (mode === 'domains') {
+        const l = num(values.liver, 1);
+        const k = num(values.kidney, 1);
+        const b = num(values.brain, 1);
+        const co = num(values.coag, 1);
+        const ci = num(values.circ, 1);
+        const r = num(values.resp, 1);
+
+        ofs = l + k + b + co + ci + r;
+        failedOrganCount = [l, k, b, co, ci, r].filter((score) => score === 3).length;
+      } else {
+        ofs = Math.max(6, Math.min(18, num(values.directClifOfs, 8)));
+      }
+
       const age = num(values.age, 55);
       const wbc = Math.max(num(values.wbc, 8), 0.1);
       // CLIF-C ACLFs = 10 × [0.33×CLIF-OFs + 0.04×Age + 0.63×ln(WBC) − 2]
       const score = round(10 * (0.33 * ofs + 0.04 * age + 0.63 * Math.log(wbc) - 2), 0);
+
       const r = riskFromThresholds(score, [
         {
           max: 39,
           level: 'moderate',
-          label: 'Lower ACLF mortality band',
-          interpretation: 'Lower CLIF-C ACLF — still high illness severity vs compensated cirrhosis; supportive care and reverse triggers.',
+          label: 'Low Risk (Score ≤39)',
+          interpretation: `CLIF-C ACLF score ${score}: lower mortality stratum (estimated 28-day mortality ~5–10%). Step-down care often feasible; continue identifying and treating precipitants.`,
         },
         {
           max: 49,
           level: 'high',
-          label: 'Intermediate–high risk',
-          interpretation: 'Intermediate CLIF-C ACLF — substantial 28-day mortality in derivation cohorts; ICU-capable care often appropriate.',
+          label: 'Intermediate Risk (Score 40–49)',
+          interpretation: `CLIF-C ACLF score ${score}: intermediate mortality stratum (estimated 28-day mortality ~30–40%). Requires intensive monitoring / ICU level care and early evaluation for liver transplantation.`,
         },
         {
-          max: 100,
+          max: 64,
           level: 'critical',
-          label: 'Very high risk',
-          interpretation: 'High CLIF-C ACLF — very high short-term mortality; goals of care and transplant futility discussions as relevant.',
+          label: 'High Risk (Score 50–64)',
+          interpretation: `CLIF-C ACLF score ${score}: high mortality risk (estimated 28-day mortality ~60–75%). Rapid multidisciplinary ICU resuscitation; expedite urgent transplant listing if eligible.`,
+        },
+        {
+          max: 120,
+          level: 'critical',
+          label: 'Very High Risk / Futility Consideration (Score ≥65)',
+          interpretation: `CLIF-C ACLF score ${score}: very high short-term mortality (>80–90% at 28 days). If patient is not a transplant candidate and organ failures persist at 48–72 hours, goals of care and futility discussions are warranted per EASL guidelines.`,
         },
       ]);
+
+      const details = [
+        { label: 'CLIF-C ACLF Score', value: `${score}` },
+        { label: 'CLIF-OFs (Organ Failure score)', value: `${ofs} / 18` },
+        { label: 'Age', value: `${age} years` },
+        { label: 'WBC count', value: `${wbc} ×10⁹/L` },
+        { label: 'Scoring Mode', value: mode === 'domains' ? '6 Organ Failure Domains' : 'Precomputed CLIF-OFs' },
+      ];
+
+      if (mode === 'domains') {
+        details.push({ label: 'Definite Organ Failures (3 pts)', value: `${failedOrganCount} of 6 organs` });
+      }
+
       return {
         score,
         unit: 'points',
         ...r,
-        details: [
-          { label: 'CLIF-OFs', value: String(ofs) },
-          { label: 'WBC', value: `${wbc} ×10⁹/L` },
-        ],
+        details,
       };
     },
     evidence: {
-      summary: 'CLIF-C ACLF = 10×[0.33×CLIF-OFs + 0.04×age + 0.63×ln(WBC) − 2]. Educational implementation — confirm organ grades with CLIF definitions.',
+      summary: 'CLIF-C ACLF = 10×[0.33×CLIF-OFs + 0.04×age + 0.63×ln(WBC) − 2]. Derived in CANONIC study. Evaluates acute-on-chronic liver failure prognosis.',
       formula: 'CLIF-C ACLFs = 10 × (0.33×CLIF-OFs + 0.04×Age + 0.63×ln(WBC) − 2)',
       validation: 'CANONIC study / EASL-CLIF consortium; predicts 28-day mortality in ACLF better than MELD in many cohorts.',
       references: [

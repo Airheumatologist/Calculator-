@@ -2496,82 +2496,156 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
 
   {
     id: 'gleason-grade-group',
-    name: 'Gleason Grade Group',
+    name: 'Gleason Grade Group (Prostate Cancer)',
     shortName: 'Grade Group',
     description:
-      'ISUP/WHO Grade Groups 1–5 mapped from Gleason scores for prostate cancer prognosis.',
+      'Calculates ISUP/WHO Grade Groups (1–5) from primary and secondary Gleason architectural patterns for prostate cancer prognosis and risk stratification.',
     category: 'oncology',
     tags: ['gleason', 'grade group', 'prostate cancer', 'isup', 'pathology'],
     whenToUse:
-      'Interpreting prostate biopsy or prostatectomy Gleason scores in modern Grade Group terms.',
+      'Interpreting prostate biopsy or radical prostatectomy pathology reports in modern Grade Group terms.',
     whyUse:
-      'Grade Groups improve communication (e.g., 3+4=7 vs 4+3=7 are different groups).',
+      'ISUP Grade Groups improve risk stratification and clinical communication (e.g., Gleason 3+4=7 is Grade Group 2, whereas 4+3=7 is Grade Group 3).',
     inputs: [
-      selectInput('gleason', 'Gleason score (primary + secondary)', [
-        { label: '≤6 (3+3 or less)', value: '6', description: 'Grade Group 1 — most favorable histology' },
-        { label: '3+4=7', value: '3+4', description: 'Grade Group 2 — pattern 3 dominant, some pattern 4' },
-        { label: '4+3=7', value: '4+3', description: 'Grade Group 3 — pattern 4 dominant, some pattern 3' },
-        { label: '8 (4+4, 3+5, 5+3)', value: '8', description: 'Grade Group 4 — Gleason 8' },
-        { label: '9–10 (4+5, 5+4, 5+5)', value: '9', description: 'Grade Group 5 — Gleason 9–10' },
-      ], undefined, 'ISUP/WHO Grade Groups: 1 = ≤6; 2 = 3+4=7; 3 = 4+3=7; 4 = 8; 5 = 9–10. 3+4 and 4+3 are different groups.'),
+      selectInput('entryMode', 'Input method', [
+        { label: 'Primary + Secondary Gleason patterns (recommended)', value: 'patterns' },
+        { label: 'Direct Gleason score / Grade Group category', value: 'direct' },
+      ], 'patterns'),
+      selectInput('primaryPattern', 'Primary (most predominant) architectural pattern', [
+        { label: 'Pattern 3 — well-formed discrete individual glands', value: 3, points: 3 },
+        { label: 'Pattern 4 — fused, ill-defined, or cribriform glands', value: 4, points: 4 },
+        { label: 'Pattern 5 — solid sheets, cords, single cells, or comedonecrosis', value: 5, points: 5 },
+      ], 3),
+      selectInput('secondaryPattern', 'Secondary (second most predominant) pattern', [
+        { label: 'Pattern 3 — well-formed discrete individual glands', value: 3, points: 3 },
+        { label: 'Pattern 4 — fused, ill-defined, or cribriform glands', value: 4, points: 4 },
+        { label: 'Pattern 5 — solid sheets, cords, single cells, or comedonecrosis', value: 5, points: 5 },
+      ], 3),
+      selectInput('tertiaryPattern', 'Tertiary pattern (if identified on biopsy or prostatectomy)', [
+        { label: 'None / Not present', value: 0 },
+        { label: 'Pattern 4 tertiary (minor component <5%)', value: 4 },
+        { label: 'Pattern 5 tertiary (minor high-grade component <5%)', value: 5 },
+      ], 0),
+      selectInput('directGleason', 'Direct Gleason category', [
+        { label: 'Grade Group 1: Gleason ≤6 (3+3)', value: '6' },
+        { label: 'Grade Group 2: Gleason 3+4=7', value: '3+4' },
+        { label: 'Grade Group 3: Gleason 4+3=7', value: '4+3' },
+        { label: 'Grade Group 4: Gleason 8 (4+4, 3+5, 5+3)', value: '8' },
+        { label: 'Grade Group 5: Gleason 9–10 (4+5, 5+4, 5+5)', value: '9' },
+      ], '6'),
     ],
     calculate(values) {
-      const g = String(values.gleason ?? '6');
-      const map: Record<
-        string,
-        { group: number; gleason: string; label: string; interpretation: string; riskLevel: 'low' | 'moderate' | 'high' | 'critical' }
-      > = {
-        '6': {
-          group: 1,
-          gleason: '≤6',
-          label: 'Grade Group 1',
-          interpretation:
-            'Grade Group 1 (Gleason ≤6): most favorable histology. Often eligible for active surveillance if other criteria met (volume, PSA, MRI, life expectancy).',
-          riskLevel: 'low',
-        },
-        '3+4': {
-          group: 2,
-          gleason: '3+4=7',
-          label: 'Grade Group 2',
-          interpretation:
-            'Grade Group 2 (3+4=7): favorable intermediate risk histology in many systems. Treatment vs surveillance individualized by volume of pattern 4, PSA, and MRI.',
-          riskLevel: 'moderate',
-        },
-        '4+3': {
-          group: 3,
-          gleason: '4+3=7',
-          label: 'Grade Group 3',
-          interpretation:
-            'Grade Group 3 (4+3=7): unfavorable intermediate risk histology — definitive therapy commonly recommended (surgery or radiation ± ADT per risk).',
-          riskLevel: 'moderate',
-        },
-        '8': {
-          group: 4,
-          gleason: '8',
-          label: 'Grade Group 4',
-          interpretation:
-            'Grade Group 4 (Gleason 8): high-risk disease — staging imaging as indicated; multimodal therapy discussion (RP, RT+ADT, systemic options).',
-          riskLevel: 'high',
-        },
-        '9': {
-          group: 5,
-          gleason: '9–10',
-          label: 'Grade Group 5',
-          interpretation:
-            'Grade Group 5 (Gleason 9–10): highest grade — thorough staging; combination local + systemic therapy per guidelines and goals of care.',
-          riskLevel: 'critical',
-        },
-      };
-      const m = map[g] ?? map['6'];
+      const mode = String(values.entryMode ?? 'patterns');
+      let group = 1;
+      let gleasonStr = '3+3=6';
+      let riskLevel: 'low' | 'moderate' | 'high' | 'critical' = 'low';
+      let label = 'Grade Group 1';
+      let interpretation = '';
+
+      if (mode === 'patterns') {
+        const p = num(values.primaryPattern, 3);
+        const s = num(values.secondaryPattern, 3);
+        const sum = p + s;
+        gleasonStr = `${p}+${s}=${sum}`;
+
+        if (p === 3 && s === 3) {
+          group = 1;
+          label = 'Grade Group 1';
+          riskLevel = 'low';
+          interpretation = 'Grade Group 1 (Gleason 3+3=6): most favorable histology. Typically eligible for active surveillance if low tumor volume, low PSA, and favorable life expectancy.';
+        } else if (p === 3 && s === 4) {
+          group = 2;
+          label = 'Grade Group 2';
+          riskLevel = 'moderate';
+          interpretation = 'Grade Group 2 (Gleason 3+4=7): favorable intermediate-risk histology. Active surveillance vs definitive therapy (radical prostatectomy or RT) individualized based on cribriform morphology, PSA, and MRI.';
+        } else if (p === 4 && s === 3) {
+          group = 3;
+          label = 'Grade Group 3';
+          riskLevel = 'moderate';
+          interpretation = 'Grade Group 3 (Gleason 4+3=7): unfavorable intermediate-risk histology. Definitive local therapy (radical prostatectomy or radiation + short-course ADT) standardly recommended.';
+        } else if (sum === 8) {
+          group = 4;
+          label = 'Grade Group 4';
+          riskLevel = 'high';
+          interpretation = 'Grade Group 4 (Gleason 8: 4+4, 3+5, or 5+3): high-risk prostate cancer. Requires systemic staging (CT/bone scan or PSMA PET); multimodal therapy (RP with pelvic lymphadenectomy or RT + long-term ADT).';
+        } else {
+          group = 5;
+          label = 'Grade Group 5';
+          riskLevel = 'critical';
+          interpretation = 'Grade Group 5 (Gleason 9–10: 4+5, 5+4, 5+5): highest risk histology with substantial risk of occult nodal or distant micrometastases. Intensive multimodal therapy indicated.';
+        }
+      } else {
+        const g = String(values.directGleason ?? '6');
+        const map: Record<
+          string,
+          { group: number; gleason: string; label: string; interpretation: string; riskLevel: 'low' | 'moderate' | 'high' | 'critical' }
+        > = {
+          '6': {
+            group: 1,
+            gleason: '≤6 (3+3)',
+            label: 'Grade Group 1',
+            interpretation: 'Grade Group 1 (Gleason ≤6): most favorable histology. Often eligible for active surveillance if clinical volume criteria met.',
+            riskLevel: 'low',
+          },
+          '3+4': {
+            group: 2,
+            gleason: '3+4=7',
+            label: 'Grade Group 2',
+            interpretation: 'Grade Group 2 (3+4=7): favorable intermediate-risk histology. Decision between active surveillance and definitive treatment depends on percent pattern 4, PSA, and MRI.',
+            riskLevel: 'moderate',
+          },
+          '4+3': {
+            group: 3,
+            gleason: '4+3=7',
+            label: 'Grade Group 3',
+            interpretation: 'Grade Group 3 (4+3=7): unfavorable intermediate-risk histology. Definitive therapy commonly recommended.',
+            riskLevel: 'moderate',
+          },
+          '8': {
+            group: 4,
+            gleason: '8 (4+4, 3+5, 5+3)',
+            label: 'Grade Group 4',
+            interpretation: 'Grade Group 4 (Gleason 8): high-risk disease. Staging imaging and multimodal therapy evaluation indicated.',
+            riskLevel: 'high',
+          },
+          '9': {
+            group: 5,
+            gleason: '9–10 (4+5, 5+4, 5+5)',
+            label: 'Grade Group 5',
+            interpretation: 'Grade Group 5 (Gleason 9–10): highest grade cancer. Comprehensive systemic staging (e.g. PSMA PET) and multimodal therapy.',
+            riskLevel: 'critical',
+          },
+        };
+        const m = map[g] ?? map['6'];
+        group = m.group;
+        gleasonStr = m.gleason;
+        label = m.label;
+        interpretation = m.interpretation;
+        riskLevel = m.riskLevel;
+      }
+
+      const tert = num(values.tertiaryPattern, 0);
+      if (tert === 5 && group < 4) {
+        interpretation += ' [Alert: Presence of tertiary pattern 5 confers significantly higher risk of biochemical recurrence and adverse pathology, shifting clinical management toward more aggressive therapy.]';
+      }
+
+      const details = [
+        { label: 'ISUP Grade Group', value: `Grade Group ${group} (of 5)` },
+        { label: 'Gleason Architecture', value: gleasonStr },
+        { label: 'Input Mode', value: mode === 'patterns' ? 'Primary + Secondary Patterns' : 'Direct Category' },
+      ];
+
+      if (tert > 0) {
+        details.push({ label: 'Tertiary Pattern', value: `Pattern ${tert} identified` });
+      }
+
       return {
-        score: m.group,
-        label: m.label,
-        interpretation: m.interpretation,
-        riskLevel: m.riskLevel,
-        details: [
-          { label: 'Gleason', value: m.gleason },
-          { label: 'Grade Group', value: String(m.group) },
-        ],
+        score: group,
+        unit: 'Grade Group (1–5)',
+        label,
+        interpretation,
+        riskLevel,
+        details,
       };
     },
     evidence: {

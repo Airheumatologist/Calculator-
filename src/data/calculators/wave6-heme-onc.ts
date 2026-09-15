@@ -256,7 +256,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
     id: 'sic-score',
     name: 'SIC Score (Sepsis-Induced Coagulopathy)',
     shortName: 'SIC',
-    description: 'ISTH sepsis-induced coagulopathy score for early septic coagulopathy before overt DIC.',
+    description: 'Calculates the ISTH Sepsis-Induced Coagulopathy score from INR, platelets, and 4 SOFA organ domains.',
     category: 'hematology',
     tags: ['sic', 'sepsis', 'dic', 'coagulopathy', 'isth'],
     whenToUse: 'Patients with sepsis/infection plus organ dysfunction when screening for sepsis-induced coagulopathy.',
@@ -266,24 +266,67 @@ export const wave6HemeOncCalcs: Calculator[] = [
         { label: '≤1.2 (0 pts)', value: 0, points: 0 },
         { label: '>1.2 to ≤1.4 (1 pt)', value: 1, points: 1 },
         { label: '>1.4 (2 pts)', value: 2, points: 2 },
-      ]),
+      ], 0),
       selectInput('platelets', 'Platelet count (×10⁹/L)', [
         { label: '≥150 (0 pts)', value: 0, points: 0 },
         { label: '100 to <150 (1 pt)', value: 1, points: 1 },
         { label: '<100 (2 pts)', value: 2, points: 2 },
-      ]),
-      selectInput('sofa', 'Total SOFA (respiratory + CV + hepatic + renal only)', [
-        { label: '0 (0 pts)', value: 0, points: 0, description: 'All four allowed domains score 0.' },
-        { label: '1 (1 pt)', value: 1, points: 1, description: 'Four-domain SOFA sum = 1.' },
-        { label: '≥2 (2 pts)', value: 2, points: 2, description: 'Four-domain SOFA sum ≥2 (SIC caps this item at 2).' },
-      ], 0, 'Sum of 4 SOFA domains only (exclude CNS and coagulation). Condensed 0–4 tables: Resp PaO2/FiO2 ≥400 = 0, <400 = 1, <300 = 2, <200 + vent = 3, <100 + vent = 4. CV MAP ≥70 = 0, MAP <70 = 1, dopamine ≤5 or any dobutamine = 2, dopamine >5 or epi/norepi ≤0.1 = 3, dopamine >15 or epi/norepi >0.1 = 4 (catecholamine doses µg/kg/min). Hepatic bilirubin <1.2 / 1.2–1.9 / 2.0–5.9 / 6.0–11.9 / >12 mg/dL = 0–4. Renal creatinine <1.2 / 1.2–1.9 / 2.0–3.4 / 3.5–4.9 or UO <500 mL/d / Cr >5.0 or UO <200 mL/d = 0–4. Then map the four-domain sum to 0 / 1 / ≥2 here.'),
+      ], 0),
+      selectInput('sofaMode', 'SOFA assessment mode', [
+        { label: 'Score 4 individual organ systems (respiratory, CV, hepatic, renal)', value: 'organs' },
+        { label: 'Enter precomputed 4-domain SOFA sum', value: 'direct' },
+      ], 'organs'),
+      selectInput('directSofa', 'Precomputed 4-domain SOFA sum', [
+        { label: '0 (0 pts)', value: 0, points: 0, description: 'All 4 allowed domains score 0' },
+        { label: '1 (1 pt)', value: 1, points: 1, description: 'Four-domain SOFA sum = 1' },
+        { label: '≥2 (2 pts)', value: 2, points: 2, description: 'Four-domain SOFA sum ≥2 (SIC caps at 2)' },
+      ], 0),
+
+      // 4 Individual Organ Systems (excluding CNS & Coagulation per ISTH SIC criteria)
+      selectInput('respSofa', 'Respiratory (PaO₂/FiO₂ ratio)', [
+        { label: 'PaO₂/FiO₂ ≥400 (0 pts)', value: 0, points: 0 },
+        { label: 'PaO₂/FiO₂ <400 (1 pt)', value: 1, points: 1 },
+        { label: 'PaO₂/FiO₂ <300 (2 pts)', value: 2, points: 2 },
+        { label: 'PaO₂/FiO₂ <200 with mechanical ventilation (3 pts)', value: 3, points: 3 },
+        { label: 'PaO₂/FiO₂ <100 with mechanical ventilation (4 pts)', value: 4, points: 4 },
+      ], 0),
+      selectInput('cvSofa', 'Cardiovascular (MAP & vasopressors)', [
+        { label: 'MAP ≥70 mmHg (0 pts)', value: 0, points: 0 },
+        { label: 'MAP <70 mmHg (1 pt)', value: 1, points: 1 },
+        { label: 'Dopamine ≤5 µg/kg/min or any Dobutamine (2 pts)', value: 2, points: 2 },
+        { label: 'Dopamine >5 or Epinephrine/Norepinephrine ≤0.1 µg/kg/min (3 pts)', value: 3, points: 3 },
+        { label: 'Dopamine >15 or Epinephrine/Norepinephrine >0.1 µg/kg/min (4 pts)', value: 4, points: 4 },
+      ], 0),
+      selectInput('hepSofa', 'Hepatic (Total Bilirubin)', [
+        { label: '<1.2 mg/dL [<20 µmol/L] (0 pts)', value: 0, points: 0 },
+        { label: '1.2–1.9 mg/dL [20–32 µmol/L] (1 pt)', value: 1, points: 1 },
+        { label: '2.0–5.9 mg/dL [33–101 µmol/L] (2 pts)', value: 2, points: 2 },
+        { label: '6.0–11.9 mg/dL [102–204 µmol/L] (3 pts)', value: 3, points: 3 },
+        { label: '≥12.0 mg/dL [≥204 µmol/L] (4 pts)', value: 4, points: 4 },
+      ], 0),
+      selectInput('renalSofa', 'Renal (Serum Creatinine)', [
+        { label: '<1.2 mg/dL [<110 µmol/L] (0 pts)', value: 0, points: 0 },
+        { label: '1.2–1.9 mg/dL [110–170 µmol/L] (1 pt)', value: 1, points: 1 },
+        { label: '2.0–3.4 mg/dL [171–299 µmol/L] (2 pts)', value: 2, points: 2 },
+        { label: '3.5–4.9 mg/dL [300–440 µmol/L] or urine output <500 mL/d (3 pts)', value: 3, points: 3 },
+        { label: '≥5.0 mg/dL [>440 µmol/L] or urine output <200 mL/d (4 pts)', value: 4, points: 4 },
+      ], 0),
     ],
     calculate(values) {
       const inr = num(values.inr);
       const plt = num(values.platelets);
-      const sofa = num(values.sofa);
       const coagSub = inr + plt;
-      const score = coagSub + sofa;
+
+      let rawSofaSum = 0;
+      let sofaPts = 0;
+      if (values.sofaMode === 'direct') {
+        sofaPts = num(values.directSofa, 0);
+      } else {
+        rawSofaSum = num(values.respSofa, 0) + num(values.cvSofa, 0) + num(values.hepSofa, 0) + num(values.renalSofa, 0);
+        sofaPts = rawSofaSum === 0 ? 0 : rawSofaSum === 1 ? 1 : 2;
+      }
+
+      const score = coagSub + sofaPts;
       // Iba 2017: total ≥4 AND PT+platelet points exceeding 2 (i.e. ≥3)
       const positive = score >= 4 && coagSub > 2;
 
@@ -291,35 +334,38 @@ export const wave6HemeOncCalcs: Calculator[] = [
         return {
           score,
           label: 'SIC positive',
-          interpretation: `SIC score ${score}/6 with platelet+INR subscore ${coagSub}. Meets sepsis-induced coagulopathy criteria. Treat sepsis aggressively; monitor for progression to overt DIC; anticoagulation strategies remain protocol/trial-dependent.`,
+          interpretation: `SIC score ${score}/6 with platelet+INR subscore ${coagSub}. Meets sepsis-induced coagulopathy criteria. Treat sepsis aggressively; monitor for progression to overt DIC; evaluate anticoagulation per protocols.`,
           riskLevel: 'high',
           details: [
             { label: 'SIC total', value: `${score} / 6` },
-            { label: 'Platelet + INR points', value: String(coagSub) },
-            { label: 'SOFA points (4 domains)', value: String(sofa) },
+            { label: 'Platelet + INR points', value: `${coagSub} / 4 (exceeds 2: YES)` },
+            { label: 'SOFA component points', value: `${sofaPts} / 2` },
+            { label: 'SOFA assessment mode', value: values.sofaMode === 'direct' ? 'Direct SOFA Sum' : `4 Organ Systems (Raw sum: ${rawSofaSum})` },
           ],
         };
       }
       if (score >= 4 && coagSub <= 2) {
         return {
           score,
-          label: 'Not SIC (total ≥4 but coag subscore ≤2)',
-          interpretation: `Total ${score} but platelet+INR subscore is ${coagSub} (must exceed 2). SIC diagnosis requires total ≥4 and coag subscore ≥3. Reassess coags and sepsis course.`,
+          label: 'Not SIC (coag subscore ≤2)',
+          interpretation: `Total ${score}/6 but platelet+INR subscore is ${coagSub} (must exceed 2). SIC requires total ≥4 AND coag subscore ≥3.`,
           riskLevel: 'moderate',
           details: [
             { label: 'SIC total', value: `${score} / 6` },
-            { label: 'Platelet + INR points', value: String(coagSub) },
+            { label: 'Platelet + INR points', value: `${coagSub} / 4 (exceeds 2: NO)` },
+            { label: 'SOFA component points', value: `${sofaPts} / 2` },
           ],
         };
       }
       return {
         score,
         label: 'SIC negative',
-        interpretation: `SIC score ${score}/6 (coag subscore ${coagSub}). Does not meet SIC. Continue sepsis care; repeat if platelets fall or INR rises.`,
+        interpretation: `SIC score ${score}/6 (coag subscore ${coagSub}). Does not meet sepsis-induced coagulopathy criteria. Continue sepsis management and repeat labs if clinical deterioration occurs.`,
         riskLevel: 'low',
         details: [
           { label: 'SIC total', value: `${score} / 6` },
-          { label: 'Platelet + INR points', value: String(coagSub) },
+          { label: 'Platelet + INR points', value: `${coagSub} / 4` },
+          { label: 'SOFA component points', value: `${sofaPts} / 2` },
         ],
       };
     },
@@ -358,33 +404,152 @@ export const wave6HemeOncCalcs: Calculator[] = [
   // ─── 4. ISTH BAT ──────────────────────────────────────────────────────────
   {
     id: 'isth-bat',
-    name: 'ISTH-BAT Total Interpretation',
+    name: 'ISTH-BAT (Bleeding Assessment Tool)',
     shortName: 'ISTH-BAT',
     description:
-      'Interprets a completed ISTH Bleeding Assessment Tool total score by sex/age normal cutoffs (does not re-score each domain).',
+      'Calculates and interprets the official ISTH-SSC Bleeding Assessment Tool across 14 mucocutaneous and surgical bleeding domains.',
     category: 'hematology',
-    tags: ['isth-bat', 'bleeding score', 'vwd', 'mucocutaneous', 'hemostasis'],
-    whenToUse: 'After completing ISTH-BAT questionnaire when deciding if the bleeding history is abnormal.',
-    whyUse: 'Standardized abnormal cutoffs: adult men ≥4, adult women ≥6, children ≥3.',
+    tags: ['isth-bat', 'bleeding score', 'vwd', 'mucocutaneous', 'hemostasis', 'platelet disorder'],
+    whenToUse: 'When evaluating a bleeding history for suspected inherited bleeding disorder (e.g. Von Willebrand disease, platelet function defects).',
+    whyUse: 'Standardized international bleeding score; abnormal cutoff: adult men ≥4, adult women ≥6, children <18y ≥3.',
     inputs: [
-      selectInput('cohort', 'Patient cohort', [
-        { label: 'Adult male', value: 'male' },
-        { label: 'Adult female', value: 'female' },
-        { label: 'Child (<18 years)', value: 'child' },
-      ]),
-      numberInput('total', 'ISTH-BAT total score', {
+      selectInput('entryMode', 'Scoring method', [
+        { label: 'Score 14 bleeding domains', value: 'survey' },
+        { label: 'Enter precomputed ISTH-BAT total', value: 'direct' },
+      ], 'survey'),
+      selectInput('cohort', 'Patient cohort & cutoff', [
+        { label: 'Adult male (abnormal ≥4)', value: 'male' },
+        { label: 'Adult female (abnormal ≥6)', value: 'female' },
+        { label: 'Child <18 years (abnormal ≥3)', value: 'child' },
+      ], 'male'),
+      numberInput('directTotal', 'Precomputed ISTH-BAT total score', {
         min: 0,
         max: 56,
         step: 1,
         defaultValue: 2,
-        helpText: 'Sum of domain scores from the completed official ISTH-BAT form (each domain 0–4; max 56). Do not rescore domains from this screen.',
+        helpText: 'Only used when "Enter precomputed ISTH-BAT total" is selected.',
       }),
+
+      // 14 Validated ISTH Domains
+      selectInput('epistaxis', '1. Epistaxis (nosebleeds)', [
+        { label: '0 — None or trivial (≤5 episodes/year)', value: 0, points: 0 },
+        { label: '1 — Frequent (>5/year) or prolonged (>10 min)', value: 1, points: 1 },
+        { label: '2 — Consultation only (medical evaluation sought)', value: 2, points: 2 },
+        { label: '3 — Packing, cautery, or antifibrinolytics', value: 3, points: 3 },
+        { label: '4 — Blood transfusion, factor replacement, or DDAVP', value: 4, points: 4 },
+      ], 0),
+      selectInput('cutaneous', '2. Cutaneous (bruising / purpura)', [
+        { label: '0 — None or trivial', value: 0, points: 0 },
+        { label: '1 — ≥5 bruises (>1 cm) in exposed areas', value: 1, points: 1 },
+        { label: '2 — Consultation only', value: 2, points: 2 },
+        { label: '3 — Extensive bruising without trauma', value: 3, points: 3 },
+        { label: '4 — Spontaneous hematoma requiring transfusion/admission', value: 4, points: 4 },
+      ], 0),
+      selectInput('minorWounds', '3. Bleeding from minor wounds', [
+        { label: '0 — None or trivial (≤5 episodes/year, <10 min)', value: 0, points: 0 },
+        { label: '1 — Frequent (>5/year) or prolonged (>10 min)', value: 1, points: 1 },
+        { label: '2 — Consultation only', value: 2, points: 2 },
+        { label: '3 — Surgical hemostasis required', value: 3, points: 3 },
+        { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
+      ], 0),
+      selectInput('oralCavity', '4. Oral cavity bleeding', [
+        { label: '0 — None or trivial', value: 0, points: 0 },
+        { label: '1 — Gum bleeding or bites to lips/tongue', value: 1, points: 1 },
+        { label: '2 — Consultation only', value: 2, points: 2 },
+        { label: '3 — Surgical hemostasis or antifibrinolytics', value: 3, points: 3 },
+        { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
+      ], 0),
+      selectInput('gi', '5. Gastrointestinal bleeding', [
+        { label: '0 — None or trivial', value: 0, points: 0 },
+        { label: '1 — Spontaneous bleeding not from ulcer/PHTN/hemorrhoids', value: 1, points: 1 },
+        { label: '2 — Consultation only', value: 2, points: 2 },
+        { label: '3 — Surgical/endoscopic hemostasis or antifibrinolytic', value: 3, points: 3 },
+        { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
+      ], 0),
+      selectInput('hematuria', '6. Hematuria', [
+        { label: '0 — None or trivial', value: 0, points: 0 },
+        { label: '1 — Macroscopic hematuria present', value: 1, points: 1 },
+        { label: '2 — Consultation only', value: 2, points: 2 },
+        { label: '3 — Surgical hemostasis or iron replacement', value: 3, points: 3 },
+        { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
+      ], 0),
+      selectInput('toothExtraction', '7. Tooth extraction bleeding', [
+        { label: '0 — None / not applicable / no bleeding in extractions', value: 0, points: 0 },
+        { label: '1 — Reported in <25% of extractions, no intervention', value: 1, points: 1 },
+        { label: '2 — Reported in >25% of extractions, no intervention', value: 2, points: 2 },
+        { label: '3 — Resuturing, packing, or antifibrinolytics', value: 3, points: 3 },
+        { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
+      ], 0),
+      selectInput('surgery', '8. Surgical bleeding', [
+        { label: '0 — None / not applicable / no surgical challenges', value: 0, points: 0 },
+        { label: '1 — Reported in <25% of surgeries, no intervention', value: 1, points: 1 },
+        { label: '2 — Reported in >25% of surgeries, no intervention', value: 2, points: 2 },
+        { label: '3 — Surgical re-exploration, packing, or antifibrinolytic', value: 3, points: 3 },
+        { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
+      ], 0),
+      selectInput('menorrhagia', '9. Menorrhagia (females only)', [
+        { label: '0 — None / male / normal menses', value: 0, points: 0 },
+        { label: '1 — Clots or pad changing >every 2h or PBAC >100', value: 1, points: 1 },
+        { label: '2 — Consultation only', value: 2, points: 2 },
+        { label: '3 — Antifibrinolytics, hormones, or iron therapy', value: 3, points: 3 },
+        { label: '4 — D&C, endometrial ablation, transfusion, or DDAVP', value: 4, points: 4 },
+      ], 0),
+      selectInput('postpartum', '10. Postpartum hemorrhage (females only)', [
+        { label: '0 — None / male / no deliveries with PPH', value: 0, points: 0 },
+        { label: '1 — Lochia >6 weeks or hematoma without intervention', value: 1, points: 1 },
+        { label: '2 — Consultation only', value: 2, points: 2 },
+        { label: '3 — Uterine packing, uterotonics, or antifibrinolytic', value: 3, points: 3 },
+        { label: '4 — Blood transfusion, surgical embolization, or DDAVP', value: 4, points: 4 },
+      ], 0),
+      selectInput('muscleHematoma', '11. Muscle hematoma', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Post-trauma, no medical intervention', value: 1, points: 1 },
+        { label: '2 — Consultation only', value: 2, points: 2 },
+        { label: '3 — Surgical evacuation or compression management', value: 3, points: 3 },
+        { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
+      ], 0),
+      selectInput('hemarthrosis', '12. Hemarthrosis (joint bleeding)', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Post-trauma, no medical intervention', value: 1, points: 1 },
+        { label: '2 — Consultation only', value: 2, points: 2 },
+        { label: '3 — Arthrocentesis or joint immobilization', value: 3, points: 3 },
+        { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
+      ], 0),
+      selectInput('cns', '13. Central nervous system bleeding', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Subdural/epidural after major head trauma', value: 1, points: 1 },
+        { label: '2 — Consultation only', value: 2, points: 2 },
+        { label: '3 — Neurosurgical intervention', value: 3, points: 3 },
+        { label: '4 — Transfusion, factor replacement, or DDAVP', value: 4, points: 4 },
+      ], 0),
+      selectInput('other', '14. Other bleeding manifestations', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Present (e.g., umbilical cord, subconjunctival)', value: 1, points: 1 },
+        { label: '2 — Consultation only', value: 2, points: 2 },
+        { label: '3 — Medical or surgical intervention required', value: 3, points: 3 },
+        { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
+      ], 0),
     ],
     calculate(values) {
       const cohort = String(values.cohort ?? 'male');
-      const total = num(values.total, 0);
-      const cut =
-        cohort === 'female' ? 6 : cohort === 'child' ? 3 : 4;
+      const mode = String(values.entryMode ?? 'survey');
+      let total = 0;
+
+      if (mode === 'direct') {
+        total = num(values.directTotal, 2);
+      } else {
+        const domains = [
+          values.epistaxis, values.cutaneous, values.minorWounds, values.oralCavity,
+          values.gi, values.hematuria, values.toothExtraction, values.surgery,
+          values.menorrhagia, values.postpartum, values.muscleHematoma,
+          values.hemarthrosis, values.cns, values.other,
+        ];
+        for (const d of domains) {
+          total += num(d, 0);
+        }
+      }
+
+      const cut = cohort === 'female' ? 6 : cohort === 'child' ? 3 : 4;
       const normalMax = cut - 1;
       const abnormal = total >= cut;
 
@@ -392,36 +557,42 @@ export const wave6HemeOncCalcs: Calculator[] = [
         return {
           score: total,
           label: 'Abnormal bleeding score',
-          interpretation: `ISTH-BAT total ${total} is ≥ ${cut} for this cohort (normal range 0–${normalMax}). Increased likelihood of an underlying mild bleeding disorder (e.g., VWD, platelet function disorder)—pursue directed hemostasis labs per specialist pathways. Score alone is not a diagnosis.`,
+          interpretation: `ISTH-BAT total ${total}/56 is abnormal (≥${cut} for ${cohort}; normal range 0–${normalMax}). Significantly elevated likelihood of an inherited bleeding disorder (VWD, platelet function disorder, factor deficiency). Hematology referral and diagnostic hemostasis panel recommended.`,
           riskLevel: 'high',
           details: [
-            { label: 'Cohort', value: cohort },
-            { label: 'Abnormal cutoff', value: `≥${cut}` },
-            { label: 'Reported normal range', value: `0–${normalMax}` },
+            { label: 'ISTH-BAT Total Score', value: `${total} / 56` },
+            { label: 'Cohort', value: cohort === 'female' ? 'Adult Female' : cohort === 'child' ? 'Pediatric (<18y)' : 'Adult Male' },
+            { label: 'Abnormal Cutoff', value: `≥${cut}` },
+            { label: 'Reported Normal Range', value: `0–${normalMax}` },
+            { label: 'Scoring Mode', value: mode === 'direct' ? 'Direct Total Entry' : '14-Domain Survey' },
           ],
           recommendations: [
-            'CBC, smear, PT/aPTT, fibrinogen',
-            'VWF antigen/activity ± multimer if indicated',
-            'Consider PFA/platelet aggregation with hematology',
-            'Detailed procedure/family bleeding history',
+            'CBC, peripheral smear, PT/INR, aPTT, fibrinogen',
+            'Von Willebrand panel: VWF antigen, VWF activity, Factor VIII ± multimer analysis',
+            'Consider platelet aggregation studies / PFA-100 with hematology guidance',
+            'Avoid antiplatelet agents and NSAIDs pending definitive evaluation',
           ],
         };
       }
+
       return {
         score: total,
         label: 'Within reported normal range',
-        interpretation: `ISTH-BAT total ${total} is within the reported normal range (0–${normalMax}) for this cohort. A low score makes a clinically significant inherited bleeding disorder less likely but does not exclude it if history is concerning or before major hemostatic challenge.`,
+        interpretation: `ISTH-BAT total ${total}/56 is within the normal bleeding range (0–${normalMax}) for ${cohort}. A normal score reduces the probability of a moderate-to-severe inherited bleeding disorder, but does not exclude mild disease if the patient has had few historical hemostatic challenges (surgeries, extractions).`,
         riskLevel: 'low',
         details: [
-          { label: 'Cohort', value: cohort },
-          { label: 'Abnormal cutoff', value: `≥${cut}` },
+          { label: 'ISTH-BAT Total Score', value: `${total} / 56` },
+          { label: 'Cohort', value: cohort === 'female' ? 'Adult Female' : cohort === 'child' ? 'Pediatric (<18y)' : 'Adult Male' },
+          { label: 'Abnormal Cutoff', value: `≥${cut}` },
+          { label: 'Reported Normal Range', value: `0–${normalMax}` },
+          { label: 'Scoring Mode', value: mode === 'direct' ? 'Direct Total Entry' : '14-Domain Survey' },
         ],
       };
     },
     evidence: {
       summary:
-        'ISTH-BAT sums 0–4 points across mucocutaneous/surgical bleeding domains (max 56). Abnormal: adult males ≥4, adult females ≥6, children ≥3 (Elbatarny et al.).',
-      formula: 'Interpret user-entered total vs sex/age cutoff',
+        'ISTH Bleeding Assessment Tool (BAT) scores 14 bleeding domains (each 0–4; max 56). Published normal thresholds from the Merging Project (Elbatarny et al.): adult men <4 (abnormal ≥4), adult women <6 (abnormal ≥6), children <3 (abnormal ≥3).',
+      formula: 'ISTH-BAT = Σ 14 bleeding domain scores (0–56)',
       validation: 'ISTH-SSC BAT; normal ranges from international reference cohorts.',
       references: [
         {

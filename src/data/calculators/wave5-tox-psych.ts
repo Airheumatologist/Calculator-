@@ -2092,63 +2092,138 @@ export const wave5ToxPsychCalcs: Calculator[] = [
   // ─── 20. PHQ-A ─────────────────────────────────────────────────────────────
   {
     id: 'phq-a',
-    name: 'PHQ-A (Adolescent) Total Interpretation',
+    name: 'PHQ-A (Adolescent Depression Screen)',
     shortName: 'PHQ-A',
-    description: 'Interprets PHQ-A / PHQ-9 modified for adolescents total score (0–27) for depression severity.',
+    description:
+      'Patient Health Questionnaire Modified for Adolescents (PHQ-A): 9 DSM-based depressive symptom items (0–27) with auto-summing and suicide safety alert, or direct total.',
     category: 'psychiatry',
     tags: ['phq-a', 'depression', 'adolescent', 'screening', 'pediatrics'],
-    whenToUse: 'After administering PHQ-A / adolescent PHQ-9; enter total score for severity bands.',
-    whyUse: 'Standard severity interpretation supports treatment intensity and safety assessment in teens.',
+    whenToUse: 'Depression screening and treatment monitoring in adolescents aged 11–17 in pediatric or adolescent clinics.',
+    whyUse: 'Validated adolescent adaptation of the PHQ-9 (incorporating irritability); established severity bands guide clinical interventions.',
     inputs: [
-      numberInput('score', 'PHQ-A total (0–27)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Complete 9-item PHQ-A questionnaire', value: 'survey' },
+        { label: 'Direct total score override', value: 'direct' },
+      ]),
+      numberInput('score', 'PHQ-A total (0–27, direct mode)', {
         min: 0,
         max: 27,
         defaultValue: 12,
-        helpText: 'Score from the official PHQ-A / adolescent PHQ-9 (past 2 weeks). Each of 9 items: 0=not at all, 1=several days, 2=more than half the days, 3=nearly every day. Item 9 is suicide ideation — always review.',
+        helpText: 'Used only if direct override is selected.',
       }),
-      yesNo('item9', 'Item 9 positive (thoughts of self-harm / better off dead)', 0),
+      yesNo('item9', 'Item 9 positive (thoughts of self-harm / better off dead — direct mode)', 0),
+      selectInput('phqa1', '1. Feeling down, depressed, irritable, or hopeless?', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — Several days', value: 1 },
+        { label: '2 — More than half the days', value: 2 },
+        { label: '3 — Nearly every day', value: 3 },
+      ]),
+      selectInput('phqa2', '2. Little interest or pleasure in doing things?', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — Several days', value: 1 },
+        { label: '2 — More than half the days', value: 2 },
+        { label: '3 — Nearly every day', value: 3 },
+      ]),
+      selectInput('phqa3', '3. Trouble falling asleep, staying asleep, or sleeping too much?', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — Several days', value: 1 },
+        { label: '2 — More than half the days', value: 2 },
+        { label: '3 — Nearly every day', value: 3 },
+      ]),
+      selectInput('phqa4', '4. Feeling tired, or having little energy?', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — Several days', value: 1 },
+        { label: '2 — More than half the days', value: 2 },
+        { label: '3 — Nearly every day', value: 3 },
+      ]),
+      selectInput('phqa5', '5. Poor appetite, weight loss, or overeating?', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — Several days', value: 1 },
+        { label: '2 — More than half the days', value: 2 },
+        { label: '3 — Nearly every day', value: 3 },
+      ]),
+      selectInput('phqa6', '6. Feeling bad about yourself — or that you are a failure or have let yourself or your family down?', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — Several days', value: 1 },
+        { label: '2 — More than half the days', value: 2 },
+        { label: '3 — Nearly every day', value: 3 },
+      ]),
+      selectInput('phqa7', '7. Trouble concentrating on things like school work, reading, or watching TV?', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — Several days', value: 1 },
+        { label: '2 — More than half the days', value: 2 },
+        { label: '3 — Nearly every day', value: 3 },
+      ]),
+      selectInput('phqa8', '8. Moving or speaking so slowly that other people could have noticed? Or the opposite — being so fidgety or restless that you have been moving around a lot more than usual?', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — Several days', value: 1 },
+        { label: '2 — More than half the days', value: 2 },
+        { label: '3 — Nearly every day', value: 3 },
+      ]),
+      selectInput('phqa9', '9. Thoughts that you would be better off dead, or of hurting yourself in some way?', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — Several days', value: 1 },
+        { label: '2 — More than half the days', value: 2 },
+        { label: '3 — Nearly every day', value: 3 },
+      ]),
     ],
     calculate(values) {
-      const score = num(values.score, 12);
-      const item9 = bool(values.item9);
+      const mode = String(values.entryMode ?? 'survey');
+      let score = 0;
+      let i9Val = 0;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.phqa1 === undefined)) {
+        score = num(values.score, 12);
+        if (bool(values.item9)) i9Val = 1;
+      } else {
+        for (let i = 1; i <= 9; i++) {
+          const v = num(values[`phqa${i}`], 0);
+          score += v;
+          if (i === 9) i9Val = v;
+        }
+      }
+
+      const item9Flag = i9Val > 0;
       const r = riskFromThresholds(score, [
         {
           max: 4,
           level: 'normal',
-          label: 'None–minimal depression',
-          interpretation: 'PHQ-A 0–4: none to minimal depressive symptoms. Routine support; rescreen as indicated.',
+          label: 'None–minimal depression (0–4)',
+          interpretation: 'PHQ-A 0–4: none to minimal depressive symptoms. Routine emotional wellness support; re-screen annually or as indicated.',
         },
         {
           max: 9,
           level: 'low',
-          label: 'Mild depression',
-          interpretation: 'PHQ-A 5–9: mild symptoms — supportive care, therapy consideration, follow-up.',
+          label: 'Mild depression (5–9)',
+          interpretation: 'PHQ-A 5–9: mild depressive symptoms. Psychoeducation, supportive counseling, sleep/exercise hygiene, and watchful waiting with re-assessment in 4–6 weeks.',
         },
         {
           max: 14,
           level: 'moderate',
-          label: 'Moderate depression',
-          interpretation: 'PHQ-A 10–14: moderate depression range — active treatment planning (therapy ± medication).',
+          label: 'Moderate depression (10–14)',
+          interpretation: 'PHQ-A 10–14: moderate depression range. Initiate evidence-based psychotherapy (CBT, IPT-A); assess psychosocial stressors and discuss pharmacotherapy (e.g. fluoxetine) if symptoms persist.',
         },
         {
           max: 19,
           level: 'high',
-          label: 'Moderately severe depression',
-          interpretation: 'PHQ-A 15–19: moderately severe — prompt treatment; close follow-up.',
+          label: 'Moderately severe depression (15–19)',
+          interpretation: 'PHQ-A 15–19: moderately severe depression. Combined psychotherapy and antidepressant medication consultation; close interval follow-up (weekly to biweekly).',
         },
         {
           max: 27,
           level: 'critical',
-          label: 'Severe depression',
-          interpretation: 'PHQ-A 20–27: severe symptoms — intensive treatment; evaluate safety and higher level of care needs.',
+          label: 'Severe depression (20–27)',
+          interpretation: 'PHQ-A 20–27: severe depression. Immediate mental health specialist referral, safety planning, close caregiver supervision, and evaluation for intensive outpatient or inpatient stabilization.',
         },
       ]);
+
       let { riskLevel, label, interpretation } = r;
-      if (item9) {
+      if (item9Flag) {
         riskLevel = 'critical';
-        interpretation += ' Item 9 positive: perform full suicide risk assessment immediately (intent, plan, means, protective factors) regardless of total score.';
-        label += ' + item 9 positive';
+        label += ' + Self-Harm / Suicide Alert';
+        interpretation += ' CRITICAL SAFETY ALERT: Item 9 is positive (score ' + i9Val + '/3). Perform an immediate youth suicide risk assessment (intent, plan, access to lethal means) and enact a safety plan before discharge.';
       }
+
       return {
         score,
         unit: '/27',
@@ -2156,16 +2231,21 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         interpretation,
         riskLevel,
         details: [
-          { label: 'Bands', value: '0–4 min; 5–9 mild; 10–14 mod; 15–19 mod-sev; 20–27 severe' },
-          { label: 'Item 9', value: item9 ? 'Positive' : 'Negative / not flagged' },
+          { label: 'Total score', value: `${score} / 27` },
+          { label: 'Item 9 (Suicide/Self-harm)', value: item9Flag ? `Positive (${i9Val}/3)` : 'Negative (0/3)' },
+          { label: 'Severity bands', value: '0–4 Minimal · 5–9 Mild · 10–14 Moderate · 15–19 Mod-Severe · 20–27 Severe' },
+          { label: 'Entry mode', value: mode === 'survey' ? '9-item questionnaire' : 'Direct override' },
         ],
+        alerts: item9Flag ? [
+          'Item 9 endorsed: Active thoughts of suicide or self-harm. Immediate clinician safety assessment required.'
+        ] : undefined,
       };
     },
     evidence: {
       summary:
-        'PHQ-A adapts PHQ-9 for adolescents. Totals 0–27 with same severity bands commonly used as PHQ-9. Always act on suicidal ideation items.',
-      formula: 'Enter total 0–27',
-      validation: 'Validated adolescent depression screening instrument family.',
+        'PHQ-A (Patient Health Questionnaire Modified for Adolescents): 9 items scored 0–3 based on DSM criteria for major depressive disorder over the past 2 weeks (total 0–27). Score ≥10 has 89.5% sensitivity and 77.5% specificity for adolescent MDD.',
+      formula: 'Sum of 9 items (each 0–3, total 0–27)',
+      validation: 'Johnson JG et al. Validated in adolescent primary care and mental health clinics; endorsed by AAP Guidelines for Adolescent Depression in Primary Care (GLAD-PC).',
       references: [
         {
           title: 'The Patient Health Questionnaire for Adolescents: validation of an instrument for the assessment of mental disorders among adolescent primary care patients',
@@ -2174,17 +2254,36 @@ export const wave5ToxPsychCalcs: Calculator[] = [
           pmid: '11869927',
           doi: '10.1016/s1054-139x(01)00333-0',
         },
+        {
+          title: 'Guidelines for Adolescent Depression in Primary Care (GLAD-PC): Part I. Practice Preparation, Identification, Assessment, and Initial Management',
+          citation: 'Zuckerbrot RA et al. Pediatrics. 2018',
+          year: 2018,
+          pmid: '29483200',
+          doi: '10.1542/peds.2017-4081',
+        },
       ],
     },
     nextSteps: [
       {
-        condition: 'Score ≥10 or item 9 positive',
-        actions: ['Safety assessment', 'Involve caregivers as appropriate', 'Evidence-based therapy', 'Consider SSRI with close monitoring', 'Urgent care if acute risk'],
+        condition: 'Item 9 positive or score ≥15',
+        actions: [
+          'Immediate comprehensive suicide risk assessment (ASQ or C-SSRS)',
+          'Safety plan involving parents/caregivers; secure all firearms, medications, and sharps',
+          'Urgent referral to child & adolescent psychiatry or crisis services if acute danger',
+        ],
+      },
+      {
+        condition: 'PHQ-A score 10–14',
+        actions: [
+          'First-line evidence-based youth psychotherapy (CBT or Interpersonal Psychotherapy for Adolescents)',
+          'Engage family in supportive environment and healthy lifestyle routines',
+          'Consider FDA-approved adolescent antidepressant (e.g. fluoxetine) if therapy unavailable or refractory',
+        ],
       },
     ],
     pearls: [
-      'Screening score ≠ diagnosis — confirm DSM criteria and differential.',
-      'Black-box monitoring for antidepressants in youth still requires close follow-up.',
+      'In adolescents, depression often presents as irritability, academic decline, or social withdrawal rather than overt sadness.',
+      'Black-box warning: monitor closely for emergence of agitation or suicidal thoughts during antidepressant initiation.',
     ],
   },
 
@@ -2372,67 +2471,209 @@ export const wave5ToxPsychCalcs: Calculator[] = [
   // ─── 23. Zung SDS ──────────────────────────────────────────────────────────
   {
     id: 'sds-zung',
-    name: 'Zung Self-Rating Depression Scale',
+    name: 'Zung Self-Rating Depression Scale (SDS)',
     shortName: 'Zung SDS',
-    description: 'Interprets Zung SDS raw total (20–80) or index for depression severity bands.',
+    description: 'Zung Self-Rating Depression Scale: 20 items (10 forward, 10 reverse scored; raw 20–80, SDS index 25–100), or direct raw score.',
     category: 'psychiatry',
     tags: ['zung', 'sds', 'depression', 'self-rating'],
-    whenToUse: 'After patient completes Zung SDS; enter raw total score.',
-    whyUse: 'Classic self-report depression scale with established severity index bands.',
+    whenToUse: 'Quantitative self-report screening and tracking of depressive symptoms in adults.',
+    whyUse: 'Historic, widely published 20-item instrument covering affective, physiological, and psychological aspects of depression.',
     inputs: [
-      numberInput('score', 'Zung SDS raw total (20–80)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Complete 20-item SDS questionnaire', value: 'survey' },
+        { label: 'Direct raw score override', value: 'direct' },
+      ]),
+      numberInput('score', 'Zung SDS raw total (20–80, direct mode)', {
         min: 20,
         max: 80,
-        defaultValue: 50,
-        helpText: '20 items scored 1–4; half reverse-scored per the official instrument. Enter the raw total from the completed form (do not paste item stems).',
+        defaultValue: 38,
+        helpText: 'Used only if direct override is selected.',
       }),
+      selectInput('sds1', '1. I feel down-hearted and blue', [
+        { label: 'A little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sds2', '2. Morning is when I feel the best (reversed)', [
+        { label: 'A little of the time (4 pts - reversed)', value: 4 },
+        { label: 'Some of the time (3 pts - reversed)', value: 3 },
+        { label: 'Good part of the time (2 pts - reversed)', value: 2 },
+        { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
+      ]),
+      selectInput('sds3', '3. I have crying spells or feel like it', [
+        { label: 'A little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sds4', '4. I have trouble sleeping at night', [
+        { label: 'A little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sds5', '5. I eat as much as I used to (reversed)', [
+        { label: 'A little of the time (4 pts - reversed)', value: 4 },
+        { label: 'Some of the time (3 pts - reversed)', value: 3 },
+        { label: 'Good part of the time (2 pts - reversed)', value: 2 },
+        { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
+      ]),
+      selectInput('sds6', '6. I still enjoy sex / intimacy (reversed)', [
+        { label: 'A little of the time (4 pts - reversed)', value: 4 },
+        { label: 'Some of the time (3 pts - reversed)', value: 3 },
+        { label: 'Good part of the time (2 pts - reversed)', value: 2 },
+        { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
+      ]),
+      selectInput('sds7', '7. I notice that I am losing weight', [
+        { label: 'A little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sds8', '8. I have trouble with constipation', [
+        { label: 'A little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sds9', '9. My heart beats faster than usual', [
+        { label: 'A little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sds10', '10. I get tired for no reason', [
+        { label: 'A little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sds11', '11. My mind is as clear as it used to be (reversed)', [
+        { label: 'A little of the time (4 pts - reversed)', value: 4 },
+        { label: 'Some of the time (3 pts - reversed)', value: 3 },
+        { label: 'Good part of the time (2 pts - reversed)', value: 2 },
+        { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
+      ]),
+      selectInput('sds12', '12. I find it easy to do the things I used to (reversed)', [
+        { label: 'A little of the time (4 pts - reversed)', value: 4 },
+        { label: 'Some of the time (3 pts - reversed)', value: 3 },
+        { label: 'Good part of the time (2 pts - reversed)', value: 2 },
+        { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
+      ]),
+      selectInput('sds13', '13. I am restless and cannot keep still', [
+        { label: 'A little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sds14', '14. I feel hopeful about the future (reversed)', [
+        { label: 'A little of the time (4 pts - reversed)', value: 4 },
+        { label: 'Some of the time (3 pts - reversed)', value: 3 },
+        { label: 'Good part of the time (2 pts - reversed)', value: 2 },
+        { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
+      ]),
+      selectInput('sds15', '15. I am more irritable than usual', [
+        { label: 'A little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sds16', '16. I find it easy to make decisions (reversed)', [
+        { label: 'A little of the time (4 pts - reversed)', value: 4 },
+        { label: 'Some of the time (3 pts - reversed)', value: 3 },
+        { label: 'Good part of the time (2 pts - reversed)', value: 2 },
+        { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
+      ]),
+      selectInput('sds17', '17. I feel that I am useful and needed (reversed)', [
+        { label: 'A little of the time (4 pts - reversed)', value: 4 },
+        { label: 'Some of the time (3 pts - reversed)', value: 3 },
+        { label: 'Good part of the time (2 pts - reversed)', value: 2 },
+        { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
+      ]),
+      selectInput('sds18', '18. My life is pretty full (reversed)', [
+        { label: 'A little of the time (4 pts - reversed)', value: 4 },
+        { label: 'Some of the time (3 pts - reversed)', value: 3 },
+        { label: 'Good part of the time (2 pts - reversed)', value: 2 },
+        { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
+      ]),
+      selectInput('sds19', '19. I feel that others would be better off if I were dead', [
+        { label: 'A little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sds20', '20. I still enjoy the things I used to do (reversed)', [
+        { label: 'A little of the time (4 pts - reversed)', value: 4 },
+        { label: 'Some of the time (3 pts - reversed)', value: 3 },
+        { label: 'Good part of the time (2 pts - reversed)', value: 2 },
+        { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
+      ]),
     ],
     calculate(values) {
-      const raw = num(values.score, 50);
-      // Classic Zung cutoffs apply to SDS index = (raw/80)×100, not raw total
+      const mode = String(values.entryMode ?? 'survey');
+      let raw = 0;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.sds1 === undefined)) {
+        raw = num(values.score, 38);
+      } else {
+        for (let i = 1; i <= 20; i++) {
+          raw += num(values[`sds${i}`], 2);
+        }
+      }
+
+      // Classic Zung SDS index = (raw / 80) * 100
       const index = round((raw / 80) * 100, 0);
       const r = riskFromThresholds(index, [
         {
           max: 49,
           level: 'normal',
-          label: 'Normal range (index)',
-          interpretation: `SDS index ${index} (raw ${raw}). Within normal range on classic Zung index bands (<50). Not a standalone diagnosis.`,
+          label: 'Normal / Non-depressed (Index <50)',
+          interpretation: `SDS index ${index} (raw ${raw}/80). Within normal mood range on standard Zung index thresholds (<50).`,
         },
         {
           max: 59,
           level: 'low',
-          label: 'Mild depression range',
-          interpretation: `SDS index ${index} (raw ${raw}). Mild depression range (index 50–59). Clinical interview and functional assessment indicated.`,
+          label: 'Mild to moderate depression (Index 50–59)',
+          interpretation: `SDS index ${index} (raw ${raw}/80). Mild to moderate depression range (index 50–59). Clinical diagnostic interview and supportive interventions indicated.`,
         },
         {
           max: 69,
           level: 'moderate',
-          label: 'Moderate depression range',
-          interpretation: `SDS index ${index} (raw ${raw}). Moderate depression range (index 60–69). Active treatment recommended; assess safety.`,
+          label: 'Moderate to marked depression (Index 60–69)',
+          interpretation: `SDS index ${index} (raw ${raw}/80). Moderate to marked depression (index 60–69). Active evidence-based psychotherapy and/or antidepressant pharmacotherapy indicated.`,
         },
         {
           max: 100,
-          level: 'high',
-          label: 'Severe depression range',
-          interpretation: `SDS index ${index} (raw ${raw}). Severe range (index ≥70). Intensive treatment and suicide risk assessment.`,
+          level: 'critical',
+          label: 'Severe / extreme depression (Index ≥70)',
+          interpretation: `SDS index ${index} (raw ${raw}/80). Severe depression range (index ≥70). Urgent psychiatric evaluation, safety and suicide risk assessment, and close monitoring.`,
         },
       ]);
+
+      const item19Val = mode === 'survey' ? num(values.sds19, 1) : 1;
+      const deathThoughts = mode === 'survey' && item19Val >= 2;
+
       return {
         score: index,
         unit: 'SDS index',
         ...r,
         details: [
-          { label: 'Raw total', value: String(raw) },
-          { label: 'SDS index', value: `${index} (= raw/80 × 100)` },
-          { label: 'Classic index bands', value: '<50 normal; 50–59 mild; 60–69 moderate; ≥70 severe' },
+          { label: 'SDS Index', value: `${index} (= raw / 80 × 100)` },
+          { label: 'Raw Total', value: `${raw} / 80` },
+          { label: 'Index bands', value: '<50 Normal · 50–59 Mild · 60–69 Moderate · ≥70 Severe' },
+          { label: 'Entry mode', value: mode === 'survey' ? '20-item questionnaire' : 'Direct override' },
         ],
+        alerts: deathThoughts ? [
+          'Item 19 endorsed (thoughts that others would be better off if dead): Full suicide risk assessment recommended.'
+        ] : undefined,
       };
     },
     evidence: {
       summary:
-        'Zung SDS: 20 items (1–4), raw 20–80. SDS index = (raw/80)×100. Classic severity bands use the index: <50 normal, 50–59 mild, 60–69 moderate, ≥70 severe.',
-      formula: 'Enter raw total; index = raw/80 × 100',
-      validation: 'Historic self-rating scale; cutoffs vary slightly by population.',
+        'Zung Self-Rating Depression Scale (SDS): 20 questions scored 1–4 across 4 response categories (a little, some, good part, most/all of the time). Half the items are positively phrased and reverse-scored. Raw score ranges 20–80; the SDS index is (raw / 80) × 100.',
+      formula: 'Raw sum of 20 items (20–80); SDS Index = (Raw / 80) × 100',
+      validation: 'Zung WWK. Extensively validated historical depression rating instrument across medical and psychiatric populations.',
       references: [
         {
           title: 'A self-rating depression scale',
@@ -2445,11 +2686,19 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     },
     nextSteps: [
       {
-        condition: 'Index ≥50 (raw ≥40 classic)',
-        actions: ['Diagnostic interview', 'Safety assessment', 'Therapy ± antidepressants', 'Follow serial scores'],
+        condition: 'SDS Index ≥50',
+        actions: [
+          'Clinical diagnostic interview for Major Depressive Disorder',
+          'Evaluate for co-occurring anxiety, substance use, or medical comorbidities',
+          'Screen suicide risk and create safety contingency plan',
+          'Initiate evidence-based CBT or pharmacotherapy',
+        ],
       },
     ],
-    pearls: ['Ensure reverse-scored items were applied correctly before entering total.', 'Language/culture can affect norms.'],
+    pearls: [
+      'Contains 8 somatic/physiological items; scores can be artificially inflated in medically ill or geriatric populations.',
+      'Always verify reverse-scored items are answered correctly.',
+    ],
   },
 
   // ─── 24. Zung Anxiety (SAS) ────────────────────────────────────────────────
@@ -2457,46 +2706,180 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     id: 'sas-zung-anxiety',
     name: 'Zung Self-Rating Anxiety Scale (SAS)',
     shortName: 'Zung SAS',
-    description: 'Interprets Zung SAS raw total (20–80) for anxiety severity bands.',
+    description: 'Zung Self-Rating Anxiety Scale: 20 items (15 forward, 5 reverse scored; raw 20–80, SAS index 25–100), or direct raw total.',
     category: 'psychiatry',
     tags: ['zung', 'sas', 'anxiety', 'self-rating'],
-    whenToUse: 'After patient completes Zung SAS; enter raw total.',
-    whyUse: 'Companion to Zung SDS for self-rated anxiety severity tracking.',
+    whenToUse: 'Self-administered screening and severity assessment of clinical anxiety symptoms.',
+    whyUse: 'Captures both psychic and prominent autonomic/somatic manifestations of anxiety (palpitations, trembling, hyperventilation).',
     inputs: [
-      numberInput('score', 'Zung SAS raw total (20–80)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Complete 20-item SAS questionnaire', value: 'survey' },
+        { label: 'Direct raw total override', value: 'direct' },
+      ]),
+      numberInput('score', 'Zung SAS raw total (20–80, direct mode)', {
         min: 20,
         max: 80,
-        defaultValue: 45,
-        helpText: '20 items scored 1–4 with reverse scoring per the official form. Enter the raw total (do not paste item stems).',
+        defaultValue: 35,
+        helpText: 'Used only if direct override is selected.',
       }),
+      selectInput('sas1', '1. I feel more nervous and anxious than usual', [
+        { label: 'None or a little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sas2', '2. I feel afraid for no reason at all', [
+        { label: 'None or a little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sas3', '3. I get upset easily or feel panicky', [
+        { label: 'None or a little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sas4', '4. I feel like I am falling apart and going to pieces', [
+        { label: 'None or a little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sas5', '5. I feel that everything is all right and nothing bad will happen (reversed)', [
+        { label: 'None or a little of the time (4 pts - reversed)', value: 4 },
+        { label: 'Some of the time (3 pts - reversed)', value: 3 },
+        { label: 'Good part of the time (2 pts - reversed)', value: 2 },
+        { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
+      ]),
+      selectInput('sas6', '6. My arms and legs shake and tremble', [
+        { label: 'None or a little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sas7', '7. I am bothered by headaches, neck and back pains', [
+        { label: 'None or a little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sas8', '8. I feel weak and get tired easily', [
+        { label: 'None or a little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sas9', '9. I feel calm and can sit still easily (reversed)', [
+        { label: 'None or a little of the time (4 pts - reversed)', value: 4 },
+        { label: 'Some of the time (3 pts - reversed)', value: 3 },
+        { label: 'Good part of the time (2 pts - reversed)', value: 2 },
+        { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
+      ]),
+      selectInput('sas10', '10. I can feel my heart beating fast', [
+        { label: 'None or a little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sas11', '11. I am bothered by dizzy spells', [
+        { label: 'None or a little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sas12', '12. I have fainting spells or feel like it', [
+        { label: 'None or a little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sas13', '13. I can breathe in and out easily (reversed)', [
+        { label: 'None or a little of the time (4 pts - reversed)', value: 4 },
+        { label: 'Some of the time (3 pts - reversed)', value: 3 },
+        { label: 'Good part of the time (2 pts - reversed)', value: 2 },
+        { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
+      ]),
+      selectInput('sas14', '14. I get feelings of numbness and tingling in my fingers/toes', [
+        { label: 'None or a little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sas15', '15. I am bothered by stomachaches or indigestion', [
+        { label: 'None or a little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sas16', '16. I have to empty my bladder often', [
+        { label: 'None or a little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sas17', '17. My hands are usually warm and dry (reversed)', [
+        { label: 'None or a little of the time (4 pts - reversed)', value: 4 },
+        { label: 'Some of the time (3 pts - reversed)', value: 3 },
+        { label: 'Good part of the time (2 pts - reversed)', value: 2 },
+        { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
+      ]),
+      selectInput('sas18', '18. My face gets hot and blushes', [
+        { label: 'None or a little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
+      selectInput('sas19', '19. I fall asleep easily and get a good night’s rest (reversed)', [
+        { label: 'None or a little of the time (4 pts - reversed)', value: 4 },
+        { label: 'Some of the time (3 pts - reversed)', value: 3 },
+        { label: 'Good part of the time (2 pts - reversed)', value: 2 },
+        { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
+      ]),
+      selectInput('sas20', '20. I have nightmares', [
+        { label: 'None or a little of the time (1 pt)', value: 1 },
+        { label: 'Some of the time (2 pts)', value: 2 },
+        { label: 'Good part of the time (3 pts)', value: 3 },
+        { label: 'Most or all of the time (4 pts)', value: 4 },
+      ]),
     ],
     calculate(values) {
-      const raw = num(values.score, 45);
+      const mode = String(values.entryMode ?? 'survey');
+      let raw = 0;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.sas1 === undefined)) {
+        raw = num(values.score, 35);
+      } else {
+        for (let i = 1; i <= 20; i++) {
+          raw += num(values[`sas${i}`], 1);
+        }
+      }
+
       const index = round((raw / 80) * 100, 0);
       const r = riskFromThresholds(raw, [
         {
           max: 44,
           level: 'normal',
-          label: 'Normal anxiety range',
-          interpretation: `Raw ${raw} (index ≈${index}). Within normal range on common Zung SAS bands (raw <45).`,
+          label: 'Normal / Below anxiety cutoff (Raw <45)',
+          interpretation: `Raw ${raw}/80 (SAS index ≈${index}). Within normal anxiety range on standard Zung SAS bands (raw <45, index <56).`,
         },
         {
           max: 59,
           level: 'low',
-          label: 'Mild–moderate anxiety range',
-          interpretation: `Raw ${raw} (index ≈${index}). Mild to moderate anxiety band (raw 45–59). Consider CBT, further diagnosis (GAD, panic, PTSD, etc.).`,
+          label: 'Mild to moderate anxiety (Raw 45–59)',
+          interpretation: `Raw ${raw}/80 (SAS index ≈${index}). Mild to moderate anxiety level. Consider cognitive-behavioral therapy, relaxation training, and lifestyle evaluation.`,
         },
         {
           max: 74,
           level: 'moderate',
-          label: 'Marked / severe anxiety range',
-          interpretation: `Raw ${raw} (index ≈${index}). Marked to severe anxiety symptoms (raw 60–74). Active treatment indicated.`,
+          label: 'Marked to severe anxiety (Raw 60–74)',
+          interpretation: `Raw ${raw}/80 (SAS index ≈${index}). Marked to severe anxiety symptoms. Diagnostic clarification (GAD, panic disorder, agoraphobia) and active pharmacotherapy/psychotherapy indicated.`,
         },
         {
           max: 80,
-          level: 'high',
-          label: 'Most extreme anxiety range',
-          interpretation: `Raw ${raw} (index ≈${index}). Extreme range (raw ≥75). Intensive treatment; assess for panic, impairment, and substance use.`,
+          level: 'critical',
+          label: 'Extreme anxiety level (Raw ≥75)',
+          interpretation: `Raw ${raw}/80 (SAS index ≈${index}). Extreme anxiety state. Comprehensive psychiatric care, crisis stabilization, and rule out panic disorder or acute distress.`,
         },
       ]);
       return {
@@ -2504,16 +2887,18 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         unit: 'raw',
         ...r,
         details: [
-          { label: 'SAS index', value: String(index) },
-          { label: 'Common raw bands', value: '<45 normal; 45–59 mild–mod; 60–74 marked; ≥75 extreme' },
+          { label: 'Raw Total', value: `${raw} / 80` },
+          { label: 'SAS Index', value: `${index} (= raw / 80 × 100)` },
+          { label: 'Raw severity bands', value: '<45 Normal · 45–59 Mild–Mod · 60–74 Marked–Sev · ≥75 Extreme' },
+          { label: 'Entry mode', value: mode === 'survey' ? '20-item questionnaire' : 'Direct override' },
         ],
       };
     },
     evidence: {
       summary:
-        'Zung SAS: 20 items, raw 20–80. Common interpretation: <45 normal, 45–59 mild–moderate, 60–74 marked–severe, ≥75 extreme. Index = (raw/80)×100.',
-      formula: 'Enter raw total 20–80',
-      validation: 'Classic self-rating anxiety scale; cutoffs educational.',
+        'Zung Self-Rating Anxiety Scale (SAS): 20 items assessing affective and somatic symptoms of anxiety (each 1–4; 5 items reverse-scored). Raw score 20–80; SAS Index = (Raw / 80) × 100. Raw cutoff <45 reflects normal, 45–59 mild–moderate, 60–74 marked–severe, and ≥75 extreme.',
+      formula: 'Sum of 20 items (raw 20–80); SAS Index = (Raw / 80) × 100',
+      validation: 'Zung WWK. Widely employed in psychopharmacology and clinical trials for quantifying subjective anxiety severity.',
       references: [
         {
           title: 'A rating instrument for anxiety disorders',
@@ -2527,10 +2912,16 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     nextSteps: [
       {
         condition: 'Raw ≥45',
-        actions: ['Diagnostic clarification', 'CBT / exposure-based therapy', 'Consider SSRI/SNRI', 'Rule out medical mimics'],
+        actions: [
+          'Diagnostic evaluation for Generalized Anxiety Disorder, Panic Disorder, or Phobias',
+          'Rule out medical precipitants (hyperthyroidism, arrhythmia, caffeine/stimulants, withdrawal)',
+          'First-line CBT (exposure, cognitive restructuring) ± SSRI/SNRI pharmacotherapy',
+        ],
       },
     ],
-    pearls: ['Somatic items may elevate scores in medical illness — interpret in context.'],
+    pearls: [
+      'Heavily weights autonomic and somatic symptoms of anxiety; differentiate from primary cardiopulmonary or endocrine disease.',
+    ],
   },
 
   // ─── 25. Y-BOCS ────────────────────────────────────────────────────────────
@@ -2538,91 +2929,200 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     id: 'yale-brown-ocd',
     name: 'Yale–Brown Obsessive Compulsive Scale (Y-BOCS)',
     shortName: 'Y-BOCS',
-    description: 'Interprets Y-BOCS total (0–40) for OCD severity after clinician administration.',
+    description: 'Yale–Brown Obsessive Compulsive Scale: 10 clinician-rated items (5 obsessions + 5 compulsions, 0–40), auto-calculating subscores, or direct total.',
     category: 'psychiatry',
     tags: ['ybocs', 'ocd', 'obsessive', 'compulsive', 'severity'],
-    whenToUse: 'Enter total Y-BOCS (obsessions 0–20 + compulsions 0–20) for severity banding.',
-    whyUse: 'Gold-standard OCD severity measure for baseline and treatment response.',
+    whenToUse: 'Gold-standard assessment of obsessive-compulsive disorder symptom severity and treatment response in adults.',
+    whyUse: 'Assesses core dimensions (time, interference, distress, resistance, control) separately for obsessions (0–20) and compulsions (0–20); treatment response defined as ≥35% score reduction.',
     inputs: [
-      numberInput('score', 'Y-BOCS total (0–40)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Complete 10-item Y-BOCS interview', value: 'survey' },
+        { label: 'Direct total score override', value: 'direct' },
+      ]),
+      numberInput('score', 'Y-BOCS total (0–40, direct mode)', {
         min: 0,
         max: 40,
         defaultValue: 20,
-        helpText: 'Score from the official clinician-administered Y-BOCS form (do not guess items). 5 obsession + 5 compulsion items, each 0–4 (time, interference, distress, resistance, control). Total 0–40.',
+        helpText: 'Used only if direct override is selected.',
       }),
-      numberInput('obsessions', 'Obsession subtotal (optional)', { min: 0, max: 20, defaultValue: 10, required: false }),
-      numberInput('compulsions', 'Compulsion subtotal (optional)', { min: 0, max: 20, defaultValue: 10, required: false }),
+      numberInput('obsessions', 'Obsession subtotal (0–20, optional direct)', { min: 0, max: 20, defaultValue: 10, required: false }),
+      numberInput('compulsions', 'Compulsion subtotal (0–20, optional direct)', { min: 0, max: 20, defaultValue: 10, required: false }),
+      selectInput('ybocs1', '1. Time occupied by obsessive thoughts', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Mild (<1 hr/day or occasional intrusion)', value: 1 },
+        { label: '2 — Moderate (1–3 hrs/day or frequent intrusion)', value: 2 },
+        { label: '3 — Severe (3–8 hrs/day or very frequent intrusion)', value: 3 },
+        { label: '4 — Extreme (>8 hrs/day or near constant intrusion)', value: 4 }
+      ]),
+      selectInput('ybocs2', '2. Interference due to obsessive thoughts', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Mild (slight interference with activities)', value: 1 },
+        { label: '2 — Moderate (definite impairment of performance)', value: 2 },
+        { label: '3 — Severe (substantial impairment of activities)', value: 3 },
+        { label: '4 — Extreme (incapacitating)', value: 4 }
+      ]),
+      selectInput('ybocs3', '3. Distress associated with obsessive thoughts', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Mild (infrequent and not disturbing)', value: 1 },
+        { label: '2 — Moderate (frequent and disturbing, but manageable)', value: 2 },
+        { label: '3 — Severe (very frequent and very disturbing)', value: 3 },
+        { label: '4 — Extreme (near constant and disabling distress)', value: 4 }
+      ]),
+      selectInput('ybocs4', '4. Resistance against obsessions', [
+        { label: '0 — Always makes an effort to resist (or minimal obsessions)', value: 0 },
+        { label: '1 — Tries to resist most of the time', value: 1 },
+        { label: '2 — Makes some effort to resist', value: 2 },
+        { label: '3 — Yields to all obsessions with reluctance', value: 3 },
+        { label: '4 — Completely and willingly yields to all obsessions', value: 4 }
+      ]),
+      selectInput('ybocs5', '5. Degree of control over obsessive thoughts', [
+        { label: '0 — Complete control', value: 0 },
+        { label: '1 — Much control (usually able to stop or divert)', value: 1 },
+        { label: '2 — Moderate control (sometimes able to stop or divert)', value: 2 },
+        { label: '3 — Little control (rarely successful in stopping)', value: 3 },
+        { label: '4 — No control (completely involuntary)', value: 4 }
+      ]),
+      selectInput('ybocs6', '6. Time spent performing compulsive behaviors', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Mild (<1 hr/day or occasional compulsions)', value: 1 },
+        { label: '2 — Moderate (1–3 hrs/day or frequent compulsions)', value: 2 },
+        { label: '3 — Severe (3–8 hrs/day or very frequent compulsions)', value: 3 },
+        { label: '4 — Extreme (>8 hrs/day or near constant compulsions)', value: 4 }
+      ]),
+      selectInput('ybocs7', '7. Interference due to compulsive behaviors', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Mild (slight interference with activities)', value: 1 },
+        { label: '2 — Moderate (definite impairment of performance)', value: 2 },
+        { label: '3 — Severe (substantial impairment of activities)', value: 3 },
+        { label: '4 — Extreme (incapacitating)', value: 4 }
+      ]),
+      selectInput('ybocs8', '8. Distress associated with compulsive behaviors / if prevented', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Mild (slight anxiety if compulsions prevented)', value: 1 },
+        { label: '2 — Moderate (manageable anxiety if compulsions prevented)', value: 2 },
+        { label: '3 — Severe (prominent and very disturbing anxiety)', value: 3 },
+        { label: '4 — Extreme (incapacitating anxiety if compulsions prevented)', value: 4 }
+      ]),
+      selectInput('ybocs9', '9. Resistance against compulsions', [
+        { label: '0 — Always makes an effort to resist (or minimal compulsions)', value: 0 },
+        { label: '1 — Tries to resist most of the time', value: 1 },
+        { label: '2 — Makes some effort to resist', value: 2 },
+        { label: '3 — Yields to almost all compulsions with reluctance', value: 3 },
+        { label: '4 — Completely and willingly yields to all compulsions', value: 4 }
+      ]),
+      selectInput('ybocs10', '10. Degree of control over compulsive behavior', [
+        { label: '0 — Complete control', value: 0 },
+        { label: '1 — Much control (experienced pressure but able to control)', value: 1 },
+        { label: '2 — Moderate control (can control only with difficulty)', value: 2 },
+        { label: '3 — Little control (must be carried to completion)', value: 3 },
+        { label: '4 — No control (completely involuntary and overpowering)', value: 4 }
+      ]),
     ],
     calculate(values) {
-      const score = num(values.score, 20);
+      const mode = String(values.entryMode ?? 'survey');
+      let score = 0;
+      let obs: number | undefined = 0;
+      let comp: number | undefined = 0;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.ybocs1 === undefined)) {
+        score = num(values.score, 20);
+        obs = isMissingValue(values.obsessions, true) ? undefined : num(values.obsessions, 0);
+        comp = isMissingValue(values.compulsions, true) ? undefined : num(values.compulsions, 0);
+      } else {
+        for (let i = 1; i <= 5; i++) {
+          obs += num(values[`ybocs${i}`], 2);
+        }
+        for (let i = 6; i <= 10; i++) {
+          comp += num(values[`ybocs${i}`], 2);
+        }
+        score = obs + comp;
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 7,
           level: 'normal',
-          label: 'Subclinical',
-          interpretation: 'Y-BOCS 0–7: subclinical OCD symptoms.',
+          label: 'Subclinical OCD (0–7)',
+          interpretation: 'Y-BOCS 0–7: subclinical symptoms or remission range. Clinical monitoring; continue relapse prevention strategies if previously treated.',
         },
         {
           max: 15,
           level: 'low',
-          label: 'Mild OCD',
-          interpretation: 'Y-BOCS 8–15: mild OCD — CBT with ERP first-line; consider meds if preferred/unavailable ERP.',
+          label: 'Mild OCD (8–15)',
+          interpretation: 'Y-BOCS 8–15: mild OCD symptoms. Exposure and Response Prevention (ERP) is first-line psychotherapy; consider SSRI if ERP unavailable or per patient preference.',
         },
         {
           max: 23,
           level: 'moderate',
-          label: 'Moderate OCD',
-          interpretation: 'Y-BOCS 16–23: moderate OCD — ERP ± SSRI at OCD doses; specialty care if available.',
+          label: 'Moderate OCD (16–23)',
+          interpretation: 'Y-BOCS 16–23: moderate OCD. Structured ERP psychotherapy ± high-dose SSRI pharmacotherapy (e.g. fluoxetine 60–80 mg, sertraline 200 mg) recommended.',
         },
         {
           max: 31,
           level: 'high',
-          label: 'Severe OCD',
-          interpretation: 'Y-BOCS 24–31: severe OCD — combined ERP + SSRI; consider augmentation strategies if partial response.',
+          label: 'Severe OCD (24–31)',
+          interpretation: 'Y-BOCS 24–31: severe OCD. Combined high-intensity ERP plus high-dose SSRI; assess insight and screen for comorbid depression or suicidal ideation; consider augmentation strategies (aripiprazole, risperidone).',
         },
         {
           max: 40,
           level: 'critical',
-          label: 'Extreme OCD',
-          interpretation: 'Y-BOCS 32–40: extreme OCD — intensive treatment (high-intensity ERP, meds, possible higher level of care).',
+          label: 'Extreme OCD (32–40)',
+          interpretation: 'Y-BOCS 32–40: extreme/disabling OCD. Specialized intensive outpatient or residential OCD program; multidisciplinary consultation and caregiver support.',
         },
       ]);
+
+      const details = [
+        { label: 'Y-BOCS Total', value: `${score} / 40` },
+        { label: 'Obsession subtotal (items 1–5)', value: obs !== undefined ? `${obs} / 20` : 'Not entered' },
+        { label: 'Compulsion subtotal (items 6–10)', value: comp !== undefined ? `${comp} / 20` : 'Not entered' },
+        { label: 'Clinical bands', value: '0–7 Subclinical · 8–15 Mild · 16–23 Mod · 24–31 Severe · 32–40 Extreme' },
+        { label: 'Treatment response', value: '≥35% score reduction is standard trial response criterion' },
+        { label: 'Entry mode', value: mode === 'survey' ? '10-item clinician rating' : 'Direct override' },
+      ];
+
       return {
         score,
         unit: '/40',
         ...r,
-        details: [
-          { label: 'Obsession subtotal', value: isMissingValue(values.obsessions, true) ? 'Not entered' : String(num(values.obsessions, 0)) },
-          { label: 'Compulsion subtotal', value: isMissingValue(values.compulsions, true) ? 'Not entered' : String(num(values.compulsions, 0)) },
-          { label: 'Common bands', value: '0–7 subclinical; 8–15 mild; 16–23 mod; 24–31 severe; 32–40 extreme' },
-          { label: 'Response (trials)', value: 'Often ≥35% reduction; remission often ≤12–14' },
-        ],
+        details,
       };
     },
     evidence: {
       summary:
-        'Y-BOCS total 0–40 (obsessions + compulsions). Severity: 0–7 subclinical, 8–15 mild, 16–23 moderate, 24–31 severe, 32–40 extreme (commonly cited bands).',
-      formula: 'Enter total 0–40',
-      validation: 'Gold-standard clinician-rated OCD severity scale.',
+        'Yale–Brown Obsessive Compulsive Scale (Y-BOCS): 10-item clinician-rated instrument assessing time spent, interference, distress, resistance, and degree of control for obsessions (items 1–5, 0–20) and compulsions (items 6–10, 0–20). Total score 0–40.',
+      formula: 'Obsession Subtotal (0–20) + Compulsion Subtotal (0–20) = Total (0–40)',
+      validation: 'Goodman WK et al. Recognized internationally as the definitive outcome measure for clinical trials and treatment monitoring in OCD.',
       references: [
         {
-          title: 'The Yale–Brown Obsessive Compulsive Scale',
+          title: 'The Yale–Brown Obsessive Compulsive Scale. I. Development, use, and reliability',
           citation: 'Goodman WK et al. Arch Gen Psychiatry. 1989',
           year: 1989,
           pmid: '2684084',
           doi: '10.1001/archpsyc.1989.01810110048007',
+        },
+        {
+          title: 'The Yale–Brown Obsessive Compulsive Scale. II. Validity',
+          citation: 'Goodman WK et al. Arch Gen Psychiatry. 1989',
+          year: 1989,
+          pmid: '2510699',
+          doi: '10.1001/archpsyc.1989.01810110054008',
         },
       ],
     },
     nextSteps: [
       {
         condition: 'Y-BOCS ≥16',
-        actions: ['ERP-based CBT', 'SSRI at OCD dosing (often higher than depression)', 'Assess insight, tic-related, safety'],
+        actions: [
+          'First-line Exposure and Response Prevention (ERP) with qualified CBT therapist',
+          'Optimize SSRI dosing (OCD therapeutic doses often higher than MDD doses: e.g. sertraline up to 200mg, fluoxetine up to 80mg)',
+          'Allow adequate trial duration: 8–12 weeks at maximum tolerated dose before deeming trial ineffective',
+          'Assess degree of insight (overvalued ideas) and tic-related comorbidities',
+        ],
       },
     ],
     pearls: [
-      'Y-BOCS measures severity, not symptom checklist content (use Y-BOCS symptom checklist separately).',
-      'Avoid routine benzodiazepines as primary OCD therapy.',
+      'Focuses on severity rather than specific symptom content (use Y-BOCS Symptom Checklist to survey specific obsessions/compulsions).',
+      'Benzodiazepines are generally not effective for core OCD obsessions and should be avoided as primary therapy.',
     ],
   },
 ];

@@ -1047,72 +1047,154 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'slums',
-    name: 'SLUMS Cognitive Score',
+    name: 'SLUMS Cognitive Examination',
     shortName: 'SLUMS',
-    description: 'Saint Louis University Mental Status exam total interpreter (0–30) with education-adjusted bands.',
+    description: 'Saint Louis University Mental Status (SLUMS) 11-item cognitive exam (0–30) with education-adjusted cutoffs.',
     category: 'neurology',
     tags: ['cognition', 'dementia', 'slums', 'mci'],
-    whenToUse: 'Interpret an already-administered SLUMS total for MCI vs dementia ranges.',
-    whyUse: 'Free, sensitive cognitive screen with education-specific cutoffs used widely in VA/geriatrics.',
+    whenToUse: 'Cognitive screening for Mild Cognitive Impairment (MCI) or dementia in older adults; 11 items or direct total.',
+    whyUse: 'Public-domain, highly sensitive MMSE alternative with education-stratified cutoffs (≥HS vs <HS).',
     inputs: [
-      numberInput('score', 'SLUMS total score', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive 11-item examination', value: 'survey' },
+        { label: 'Direct score override', value: 'direct' },
+      ], 'survey'),
+      selectInput('education', 'Education level', [
+        { label: 'High school graduate or higher (≥HS)', value: 'hs' },
+        { label: 'Less than high school (<HS)', value: 'less' },
+      ], 'hs'),
+      selectInput('q1_day', '1. What day of the week is it?', [
+        { label: '0 — Incorrect', value: 0 },
+        { label: '1 — Correct', value: 1 },
+      ], 1),
+      selectInput('q2_year', '2. What is the year?', [
+        { label: '0 — Incorrect', value: 0 },
+        { label: '1 — Correct', value: 1 },
+      ], 1),
+      selectInput('q3_state', '3. What state are we in?', [
+        { label: '0 — Incorrect', value: 0 },
+        { label: '1 — Correct', value: 1 },
+      ], 1),
+      selectInput('q4_attention', '4. Attention ($100 minus $3 five times)', [
+        { label: '0 — 0 or 1 subtraction correct', value: 0 },
+        { label: '1 — 2 or 3 subtractions correct', value: 1 },
+        { label: '2 — 4 subtractions correct', value: 2 },
+        { label: '3 — All 5 correct (97, 94, 91, 88, 85)', value: 3 },
+      ], 3),
+      selectInput('q5_fluency', '5. Animal naming fluency in 1 minute', [
+        { label: '0 — 0 to 4 animals', value: 0 },
+        { label: '1 — 5 to 9 animals', value: 1 },
+        { label: '2 — 10 to 14 animals', value: 2 },
+        { label: '3 — 15 or more animals', value: 3 },
+      ], 3),
+      selectInput('q6_recall', '6. Delayed recall of 5 objects (Apple, Pen, Tie, House, Car)', [
+        { label: '0 — None recalled', value: 0 },
+        { label: '1 — 1 object recalled', value: 1 },
+        { label: '2 — 2 objects recalled', value: 2 },
+        { label: '3 — 3 objects recalled', value: 3 },
+        { label: '4 — 4 objects recalled', value: 4 },
+        { label: '5 — All 5 objects recalled', value: 5 },
+      ], 4),
+      selectInput('q7_backward', '7. Number sequence backward (e.g. 642 -> 246; 8537 -> 7358)', [
+        { label: '0 — Neither correct', value: 0 },
+        { label: '1 — One sequence correct', value: 1 },
+        { label: '2 — Both sequences correct', value: 2 },
+      ], 2),
+      selectInput('q8_clock', '8. Clock drawing (set time to ten to eleven: 10:50)', [
+        { label: '0 — Clock incorrect', value: 0 },
+        { label: '2 — Hour numbers placed correctly only', value: 2 },
+        { label: '2b — Hands placed correctly only (2 pts)', value: 2 },
+        { label: '4 — Hour numbers AND hands placed correctly (4 pts)', value: 4 },
+      ], 4),
+      selectInput('q9_shapes', '9. Visual recognition: select largest geometric triangle', [
+        { label: '0 — Incorrect', value: 0 },
+        { label: '1 — Correct', value: 1 },
+      ], 1),
+      selectInput('q10_figures', '10. Shape discrimination: number of figures inside shape', [
+        { label: '0 — Incorrect', value: 0 },
+        { label: '1 — Correct', value: 1 },
+      ], 1),
+      selectInput('q11_story', '11. Story recall (Jill was a successful stockbroker... 4 questions, 2 points each)', [
+        { label: '0 — 0 questions correct', value: 0 },
+        { label: '2 — 1 question correct', value: 2 },
+        { label: '4 — 2 questions correct', value: 4 },
+        { label: '6 — 3 questions correct', value: 6 },
+        { label: '8 — All 4 questions correct (work, money loss, state, return to work)', value: 8 },
+      ], 8),
+      numberInput('score', 'Direct SLUMS total score override (0–30)', {
         min: 0,
         max: 30,
         defaultValue: 27,
-        helpText:
-          'Administer the official SLU/VA SLUMS form (free for clinical use), then enter the 0–30 total. Items: (1) day of week 0–1; (2) year 0–1; (3) state 0–1; (4) $100 minus $3 five times (attention) 0–3; (5) 1-minute animal naming 0–3 (0 = 0–4 animals, 1 = 5–9, 2 = 10–14, 3 = ≥15); (6) delayed recall of five objects named at registration 0–5; (7) digits backward 0–2; (8) clock: hour markers 2, time (ten to eleven) 2; (9) triangle in square / size 0–1; (10) story: Jill/Jack paragraph questions 0–8. Do not reprint a pirated worksheet — use the official PDF.',
+        helpText: 'Enter official SLUMS total (0–30).',
       }),
-      selectInput('education', 'Education', [
-        { label: 'High school graduate or higher', value: 'hs' },
-        { label: 'Less than high school', value: 'less' },
-      ]),
     ],
     calculate(values) {
-      const score = num(values.score, 27);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.q1_day === undefined)) {
+        score = Math.max(0, Math.min(30, num(values.score, 27)));
+      } else {
+        score =
+          num(values.q1_day, 1) +
+          num(values.q2_year, 1) +
+          num(values.q3_state, 1) +
+          num(values.q4_attention, 3) +
+          num(values.q5_fluency, 3) +
+          num(values.q6_recall, 4) +
+          num(values.q7_backward, 2) +
+          num(values.q8_clock, 4) +
+          num(values.q9_shapes, 1) +
+          num(values.q10_figures, 1) +
+          num(values.q11_story, 4);
+      }
+
       const hs = String(values.education || 'hs') === 'hs';
-      // HS+: normal 27–30, MNCD 21–26, dementia 1–20
-      // <HS: normal 25–30, MNCD 20–24, dementia 1–19
       let label: string;
       let riskLevel: 'normal' | 'moderate' | 'high';
       let interpretation: string;
+
       if (hs) {
         if (score >= 27) {
           label = 'Normal (HS+)';
           riskLevel = 'normal';
-          interpretation = 'SLUMS 27–30 with ≥HS education: normal range on this screen.';
+          interpretation = `SLUMS ${score}/30 with ≥HS education: normal cognitive performance range.`;
         } else if (score >= 21) {
-          label = 'MNCD / MCI range (HS+)';
+          label = 'MCI / MNCD range (HS+)';
           riskLevel = 'moderate';
-          interpretation = 'SLUMS 21–26 (≥HS): mild neurocognitive disorder range — further evaluation for MCI.';
+          interpretation = `SLUMS ${score}/30 (≥HS): mild neurocognitive disorder (MCI) range — comprehensive diagnostic evaluation recommended.`;
         } else {
           label = 'Dementia range (HS+)';
           riskLevel = 'high';
-          interpretation = 'SLUMS ≤20 (≥HS): dementia range — comprehensive workup and safety assessment.';
+          interpretation = `SLUMS ${score}/30 (≥HS): dementia range — formal workup, reversible causes (B12, TSH, MRI), and safety review.`;
         }
       } else if (score >= 25) {
         label = 'Normal (<HS)';
         riskLevel = 'normal';
-        interpretation = 'SLUMS 25–30 with <HS education: normal range on this screen.';
+        interpretation = `SLUMS ${score}/30 with <HS education: normal cognitive performance range.`;
       } else if (score >= 20) {
-        label = 'MNCD / MCI range (<HS)';
+        label = 'MCI / MNCD range (<HS)';
         riskLevel = 'moderate';
-        interpretation = 'SLUMS 20–24 (<HS): mild neurocognitive disorder range.';
+        interpretation = `SLUMS ${score}/30 (<HS): mild neurocognitive disorder (MCI) range.`;
       } else {
         label = 'Dementia range (<HS)';
         riskLevel = 'high';
-        interpretation = 'SLUMS ≤19 (<HS): dementia range — full evaluation.';
+        interpretation = `SLUMS ${score}/30 (<HS): dementia range — comprehensive cognitive workup.`;
       }
+
       return {
         score,
+        unit: '/30',
         label,
         interpretation,
         riskLevel,
         details: [
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '11-item interactive exam' },
           {
             label: 'Education cutoffs used',
             value: hs
-              ? 'HS+: normal 27–30; MNCD 21–26; dementia ≤20'
-              : '<HS: normal 25–30; MNCD 20–24; dementia ≤19',
+              ? 'HS+: normal 27–30; MCI 21–26; dementia ≤20'
+              : '<HS: normal 25–30; MCI 20–24; dementia ≤19',
           },
         ],
       };
@@ -1120,8 +1202,8 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
     evidence: {
       summary:
         'SLUMS scores 0–30. Education-adjusted: ≥HS education normal 27–30, MNCD 21–26, dementia ≤20; <HS normal 25–30, MNCD 20–24, dementia ≤19.',
-      formula: 'Enter total 0–30; apply education band',
-      validation: 'Developed/validated at SLU; sensitive for MCI compared with MMSE in some cohorts.',
+      formula: 'Sum of 11 items (0–30); apply education band',
+      validation: 'Developed/validated at Saint Louis University / VA; public domain MMSE replacement.',
       references: [
         {
           title: 'The Saint Louis University Mental Status (SLUMS) Examination',
@@ -1132,20 +1214,19 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
     },
     nextSteps: [
       {
-        condition: 'MNCD or dementia range',
+        condition: 'MCI or dementia range',
         actions: [
           'History from informant (ADL/IADL)',
           'Labs: B12, TSH, metabolic panel',
-          'Imaging as indicated',
+          'Neuroimaging (brain MRI without contrast)',
           'Medication review; depression screen',
         ],
       },
     ],
     pearls: [
       'Always adjust interpretation for education (HS+ vs <HS).',
-      'SLUMS is free for clinical use (Saint Louis University / VA). Use the official examination PDF; this tool interprets the total.',
-      'Clock command on SLUMS is ten to eleven (not Mini-Cog 11:10). Animal naming is 1 minute.',
-      'Not a substitute for neuropsychological testing.',
+      'SLUMS is public domain and free for clinical use without licensing fees.',
+      'Clock command on SLUMS is ten to eleven (10:50). Animal naming is 1 minute.',
     ],
   },
   {
@@ -1229,60 +1310,185 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
     id: 'madrs',
     name: 'MADRS Depression Score',
     shortName: 'MADRS',
-    description: 'Montgomery–Åsberg Depression Rating Scale total interpreter (0–60).',
+    description: 'Montgomery–Åsberg Depression Rating Scale 10-item clinician rating (0–60).',
     category: 'psychiatry',
     tags: ['depression', 'madrs', 'severity', 'rating scale'],
-    whenToUse: 'Clinician-rated depression severity monitoring (enter total after MADRS administration).',
-    whyUse: 'Sensitive to change in antidepressant trials; standard severity bands for treatment response.',
+    whenToUse: 'Clinician-rated depression severity monitoring and response tracking; 10 items or direct total.',
+    whyUse: 'Sensitive to change in antidepressant trials; gold standard for treatment response.',
     inputs: [
-      numberInput('score', 'MADRS total (0–60)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive 10-item clinician rating', value: 'survey' },
+        { label: 'Direct score override', value: 'direct' },
+      ], 'survey'),
+      selectInput('madrs1', '1. Apparent sadness (observed despondency and gloom)', [
+        { label: '0 — No sadness', value: 0 },
+        { label: '1 — Occasional sadness', value: 1 },
+        { label: '2 — Looks dispirited but does brighten up without difficulty', value: 2 },
+        { label: '3 — Sadness between mild and moderate', value: 3 },
+        { label: '4 — Appears sad and unhappy most of the time', value: 4 },
+        { label: '5 — Extreme persistent gloom', value: 5 },
+        { label: '6 — Looks miserable all the time; extremely despondent', value: 6 },
+      ], 2),
+      selectInput('madrs2', '2. Reported sadness (verbalized depressed mood/hopelessness)', [
+        { label: '0 — Occasional sadness in keeping with circumstances', value: 0 },
+        { label: '1 — Slight sadness', value: 1 },
+        { label: '2 — Sad or low, but brightens up without difficulty', value: 2 },
+        { label: '3 — Moderately low', value: 3 },
+        { label: '4 — Pervasive feelings of sadness or gloominess', value: 4 },
+        { label: '5 — Intense pervasive despondency', value: 5 },
+        { label: '6 — Continuous and unvarying sadness, despair, or despondency', value: 6 },
+      ], 2),
+      selectInput('madrs3', '3. Inner tension (edginess, inner panic, ill-defined dread)', [
+        { label: '0 — Placid; only fleeting inner tension', value: 0 },
+        { label: '1 — Slight inner restlessness', value: 1 },
+        { label: '2 — Occasional feelings of edginess and ill-defined discomfort', value: 2 },
+        { label: '3 — Noticeable tension', value: 3 },
+        { label: '4 — Continuous feelings of inner tension or intermittent panic', value: 4 },
+        { label: '5 — Severe unrelenting panic/tension', value: 5 },
+        { label: '6 — Unrelenting dread or agony; overwhelming panic', value: 6 },
+      ], 2),
+      selectInput('madrs4', '4. Reduced sleep (shortened duration or depth of sleep)', [
+        { label: '0 — Sleeps as usual', value: 0 },
+        { label: '1 — Slight difficulty sleeping', value: 1 },
+        { label: '2 — Slight reduction in sleep (e.g. <1 hour lost)', value: 2 },
+        { label: '3 — Moderate reduction', value: 3 },
+        { label: '4 — Sleep reduced or broken by at least 2 hours', value: 4 },
+        { label: '5 — Marked insomnia', value: 5 },
+        { label: '6 — Less than 2 or 3 hours of sleep', value: 6 },
+      ], 2),
+      selectInput('madrs5', '5. Reduced appetite (loss of desire for food)', [
+        { label: '0 — Normal or increased appetite', value: 0 },
+        { label: '1 — Slightly reduced', value: 1 },
+        { label: '2 — Slightly reduced appetite; food tastes bland', value: 2 },
+        { label: '3 — Noticeable loss of appetite', value: 3 },
+        { label: '4 — No appetite; food is tasteless; must force self to eat', value: 4 },
+        { label: '5 — Profound anorexia', value: 5 },
+        { label: '6 — Needs persuasion or persuasion to eat; profound anorexia', value: 6 },
+      ], 1),
+      selectInput('madrs6', '6. Concentration difficulties (trouble collecting thoughts)', [
+        { label: '0 — No difficulties in concentrating', value: 0 },
+        { label: '1 — Slight difficulty', value: 1 },
+        { label: '2 — Occasional difficulties in collecting thoughts', value: 2 },
+        { label: '3 — Noticeable difficulty reading or conversing', value: 3 },
+        { label: '4 — Difficulties concentrating and sustaining attention', value: 4 },
+        { label: '5 — Severe cognitive slowing', value: 5 },
+        { label: '6 — Unable to read or converse without great difficulty', value: 6 },
+      ], 2),
+      selectInput('madrs7', '7. Lassitude (difficulty getting started / slowness initiating)', [
+        { label: '0 — Hardly any difficulty starting activities', value: 0 },
+        { label: '1 — Slight hesitation', value: 1 },
+        { label: '2 — Difficulties in starting activities', value: 2 },
+        { label: '3 — Substantial inertia', value: 3 },
+        { label: '4 — Difficulties in starting simple routine activities (slow)', value: 4 },
+        { label: '5 — Marked motor and mental inertia', value: 5 },
+        { label: '6 — Complete lassitude; unable to do anything without help', value: 6 },
+      ], 2),
+      selectInput('madrs8', '8. Inability to feel (loss of interest, emotional blunting)', [
+        { label: '0 — Normal interest in surroundings and people', value: 0 },
+        { label: '1 — Slight reduction in emotional reactivity', value: 1 },
+        { label: '2 — Reduced ability to enjoy usual interests', value: 2 },
+        { label: '3 — Noticeable emotional detachment', value: 3 },
+        { label: '4 — Loss of interest in surroundings; loss of feelings for friends/relatives', value: 4 },
+        { label: '5 — Profound numbness', value: 5 },
+        { label: '6 — Total emotional paralysis; unable to feel anger, grief, or pleasure', value: 6 },
+      ], 2),
+      selectInput('madrs9', '9. Pessimistic thoughts (guilt, inferiority, remorse, ruin)', [
+        { label: '0 — No pessimistic thoughts', value: 0 },
+        { label: '1 — Fleeting self-doubt', value: 1 },
+        { label: '2 — Fluctuating ideas of failure, self-reproach, or inferiority', value: 2 },
+        { label: '3 — Recurrent self-blame', value: 3 },
+        { label: '4 — Persistent self-accusations or definite realistic pessimism', value: 4 },
+        { label: '5 — Near-delusional guilt', value: 5 },
+        { label: '6 — Delusions of ruin, remorse, or unpardonable sin', value: 6 },
+      ], 1),
+      selectInput('madrs10', '10. Suicidal thoughts (feeling life is not worth living, plans)', [
+        { label: '0 — Enjoys life or takes it as it comes', value: 0 },
+        { label: '1 — Weary of life; fleeting thoughts', value: 1 },
+        { label: '2 — Weary of life; only fleeting suicidal thoughts', value: 2 },
+        { label: '3 — Recurrent passive thoughts that life is not worth living', value: 3 },
+        { label: '4 — Probably better off dead; suicidal thoughts are common (no plan)', value: 4 },
+        { label: '5 — Active preparations or explicit suicidal plan', value: 5 },
+        { label: '6 — Explicit plans for suicide when opportunity arises; active preparations', value: 6 },
+      ], 1),
+      numberInput('score', 'Direct MADRS total override (0–60)', {
         min: 0,
         max: 60,
         defaultValue: 20,
-        helpText: '10 items scored 0–6 each. Score from the official MADRS form; enter the already-administered 0–60 total. Apparent sadness and reported sadness are separate items. Typical window is the past week.',
+        helpText: 'Enter official MADRS 10-item total (0–60).',
       }),
     ],
     calculate(values) {
-      const score = num(values.score, 20);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.madrs1 === undefined)) {
+        score = Math.max(0, Math.min(60, num(values.score, 20)));
+      } else {
+        score =
+          num(values.madrs1, 2) +
+          num(values.madrs2, 2) +
+          num(values.madrs3, 2) +
+          num(values.madrs4, 2) +
+          num(values.madrs5, 1) +
+          num(values.madrs6, 2) +
+          num(values.madrs7, 2) +
+          num(values.madrs8, 2) +
+          num(values.madrs9, 1) +
+          num(values.madrs10, 1);
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 6,
           level: 'normal',
           label: 'Recovered / absent symptoms',
-          interpretation: 'MADRS 0–6: symptoms absent or recovered range in many studies.',
+          interpretation: `MADRS ${score}/60: symptoms absent or recovered range in clinical trials.`,
         },
         {
           max: 19,
           level: 'low',
           label: 'Mild depression',
-          interpretation: 'MADRS 7–19: mild depressive symptoms — psychotherapy ± meds based on function and history.',
+          interpretation: `MADRS ${score}/60: mild depressive symptoms — psychotherapy ± pharmacotherapy based on history.`,
         },
         {
           max: 34,
           level: 'moderate',
           label: 'Moderate depression',
-          interpretation: 'MADRS 20–34: moderate depression — active treatment indicated; monitor response.',
+          interpretation: `MADRS ${score}/60: moderate depression — active treatment indicated; monitor longitudinal response.`,
         },
         {
           max: 60,
           level: 'high',
           label: 'Severe depression',
-          interpretation: 'MADRS ≥35: severe depression — intensive treatment; assess psychosis, suicidality, need for higher level of care.',
+          interpretation: `MADRS ${score}/60: severe depression — intensive treatment; urgent safety/suicide assessment; consider higher level of care.`,
         },
       ]);
+
+      const suicideItem = num(values.madrs10, 0);
+      let { riskLevel, label, interpretation } = r;
+      if (suicideItem >= 4) {
+        riskLevel = 'critical';
+        label += ' (High Suicide Risk Flag)';
+        interpretation += ' CRITICAL SAFETY ALERT: Item 10 rated ≥4 indicates frequent suicidal ideation or active planning. Perform emergency safety assessment.';
+      }
+
       return {
         score,
-        ...r,
+        unit: '/60',
+        label,
+        interpretation,
+        riskLevel,
         details: [
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '10-item clinician rating' },
           { label: 'Common bands', value: '0–6 recovered; 7–19 mild; 20–34 moderate; ≥35 severe' },
-          { label: 'Response / remission (trials)', value: 'Often ≥50% reduction = response; ≤10 (sometimes ≤6) = remission' },
+          { label: 'Response / remission (trials)', value: 'Often ≥50% reduction = response; ≤10 (or ≤6) = remission' },
         ],
       };
     },
     evidence: {
       summary:
-        'MADRS: 10 clinician-rated items (0–6), total 0–60. Common severity: 0–6 recovered, 7–19 mild, 20–34 moderate, ≥35 severe (bands vary slightly by study).',
-      formula: 'Enter total 0–60',
+        'MADRS: 10 clinician-rated items (0–6), total 0–60. Common severity: 0–6 recovered, 7–19 mild, 20–34 moderate, ≥35 severe. Highly sensitive to antidepressant change.',
+      formula: 'Sum of 10 items (0–6 each) = 0–60',
       validation: 'Widely used in antidepressant RCTs; good sensitivity to change.',
       references: [
         {
@@ -1298,79 +1504,216 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         actions: ['Safety/suicide assessment', 'Antidepressant and/or evidence-based psychotherapy', 'Follow serial MADRS'],
       },
     ],
-    pearls: ['Not a diagnostic interview by itself.', 'Apparent sadness and reported sadness are separate items.'],
+    pearls: [
+      'Apparent sadness and reported sadness are distinct items.',
+      'Item 10 (suicidality) must be reviewed independently for urgent clinical safety.',
+    ],
   },
+
   {
     id: 'ham-d',
     name: 'HAM-D Depression Score',
     shortName: 'HAM-D',
-    description: 'Hamilton Depression Rating Scale total interpreter (typically 17-item, enter total).',
+    description: 'Hamilton Depression Rating Scale (HAM-D 17) 17-item clinician interview and total (0–52).',
     category: 'psychiatry',
     tags: ['depression', 'hamilton', 'ham-d', 'hdrs'],
-    whenToUse: 'Interpret clinician-administered HAM-D/HDRS total for severity monitoring.',
-    whyUse: 'Classic depression severity scale in research and specialty care.',
+    whenToUse: 'Clinician-administered depression severity and treatment response monitoring; 17 items or direct score.',
+    whyUse: 'Classic gold standard depression rating scale in psychiatry research and clinical trials.',
     inputs: [
-      numberInput('score', 'HAM-D total', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive 17-item rating (HAM-D 17)', value: 'survey' },
+        { label: 'Direct score override', value: 'direct' },
+      ], 'survey'),
+      selectInput('hamd1', '1. Depressed mood (sadness, hopelessness, helplessness, worthless)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Indicated only on questioning', value: 1 },
+        { label: '2 — Spontaneously reported verbally', value: 2 },
+        { label: '3 — Communicated non-verbally (facial expression, posture, weeping)', value: 3 },
+        { label: '4 — Patient reports virtually only these feeling states in speech and behavior', value: 4 },
+      ], 2),
+      selectInput('hamd2', '2. Feelings of guilt', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Self-reproach, feels he/she has let people down', value: 1 },
+        { label: '2 — Ideas of guilt or rumination over past errors or sinful deeds', value: 2 },
+        { label: '3 — Present illness is a punishment; delusions of guilt', value: 3 },
+        { label: '4 — Hears accusatory or denunciatory voices and/or experiences visual hallucinations of guilt', value: 4 },
+      ], 1),
+      selectInput('hamd3', '3. Suicide', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Feels life is not worth living', value: 1 },
+        { label: '2 — Wishes he/she were dead or any thoughts of possible death to self', value: 2 },
+        { label: '3 — Suicidal ideas or gesture', value: 3 },
+        { label: '4 — Attempts at suicide (any serious attempt rates 4)', value: 4 },
+      ], 1),
+      selectInput('hamd4', '4. Insomnia early (difficulty falling asleep)', [
+        { label: '0 — No difficulty falling asleep', value: 0 },
+        { label: '1 — Complains of occasional difficulty (more than 30 minutes)', value: 1 },
+        { label: '2 — Nightly difficulty falling asleep', value: 2 },
+      ], 1),
+      selectInput('hamd5', '5. Insomnia middle (waking during the night)', [
+        { label: '0 — No difficulty', value: 0 },
+        { label: '1 — Complains of being restless and disturbed during the night', value: 1 },
+        { label: '2 — Waking during the night; any getting out of bed rates 2 (except to void)', value: 2 },
+      ], 1),
+      selectInput('hamd6', '6. Insomnia late (waking in early morning)', [
+        { label: '0 — No difficulty', value: 0 },
+        { label: '1 — Waking in early hours of morning but goes back to sleep', value: 1 },
+        { label: '2 — Unable to fall asleep again if he/she gets out of bed', value: 2 },
+      ], 1),
+      selectInput('hamd7', '7. Work and activities', [
+        { label: '0 — No difficulty', value: 0 },
+        { label: '1 — Thoughts and feelings of incapacity, fatigue or weakness related to activities', value: 1 },
+        { label: '2 — Loss of interest in activity, hobbies, or work (directly or indirectly)', value: 2 },
+        { label: '3 — Decrease in actual time spent in activities or decrease in productivity', value: 3 },
+        { label: '4 — Stopped working because of present illness', value: 4 },
+      ], 2),
+      selectInput('hamd8', '8. Retardation (slowness of thought and speech; impaired concentration; motor activity)', [
+        { label: '0 — Normal speech and thought', value: 0 },
+        { label: '1 — Slight slowness at interview', value: 1 },
+        { label: '2 — Obvious slowness at interview', value: 2 },
+        { label: '3 — Interview difficult', value: 3 },
+        { label: '4 — Complete stupor', value: 4 },
+      ], 1),
+      selectInput('hamd9', '9. Agitation', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Fidgetiness', value: 1 },
+        { label: '2 — Playing with hands, hair, etc.', value: 2 },
+        { label: '3 — Moving about, can not sit still', value: 3 },
+        { label: '4 — Hand-wringing, nail-biting, hair-pulling, biting of lips', value: 4 },
+      ], 1),
+      selectInput('hamd10', '10. Anxiety (psychic)', [
+        { label: '0 — No difficulty', value: 0 },
+        { label: '1 — Subjective tension and irritability', value: 1 },
+        { label: '2 — Worrying about minor matters', value: 2 },
+        { label: '3 — Apprehensive attitude apparent in face or speech', value: 3 },
+        { label: '4 — Fears expressed without questioning', value: 4 },
+      ], 2),
+      selectInput('hamd11', '11. Anxiety (somatic)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild (GI, CV, respiratory, urinary, sweating)', value: 1 },
+        { label: '2 — Moderate', value: 2 },
+        { label: '3 — Severe', value: 3 },
+        { label: '4 — Incapacitating', value: 4 },
+      ], 1),
+      selectInput('hamd12', '12. Somatic symptoms (gastrointestinal)', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Loss of appetite but eating without staff urging; heavy feeling in abdomen', value: 1 },
+        { label: '2 — Difficulty eating without urging; requests or requires laxatives or medication for bowels', value: 2 },
+      ], 1),
+      selectInput('hamd13', '13. Somatic symptoms (general)', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Heaviness in limbs, back or head; backaches, headache, muscle aches; loss of energy', value: 1 },
+        { label: '2 — Any clear-cut symptom rates 2', value: 2 },
+      ], 1),
+      selectInput('hamd14', '14. Genital symptoms (loss of libido, menstrual disturbances)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ], 1),
+      selectInput('hamd15', '15. Hypochondriasis', [
+        { label: '0 — Not present', value: 0 },
+        { label: '1 — Self-absorption (bodily)', value: 1 },
+        { label: '2 — Preoccupation with health', value: 2 },
+        { label: '3 — Frequent complaints, requests for help, etc.', value: 3 },
+        { label: '4 — Hypochondriacal delusions', value: 4 },
+      ], 0),
+      selectInput('hamd16', '16. Loss of weight', [
+        { label: '0 — No weight loss', value: 0 },
+        { label: '1 — Probable weight loss associated with present illness (or >1 lb/wk)', value: 1 },
+        { label: '2 — Definite weight loss (or >2 lb/wk)', value: 2 },
+      ], 0),
+      selectInput('hamd17', '17. Insight', [
+        { label: '0 — Acknowledges being depressed and ill', value: 0 },
+        { label: '1 — Acknowledges illness but attributes cause to bad food, climate, overwork, virus, etc.', value: 1 },
+        { label: '2 — Denies being ill at all', value: 2 },
+      ], 0),
+      numberInput('score', 'Direct HAM-D total override (0–52)', {
         min: 0,
         max: 52,
         defaultValue: 12,
-        helpText:
-          '17-item HDRS total (typical range 0–52). Score from the official Hamilton form — this is not a reprint of SIGH-D or other structured interviews. Paraphrased 17 items (use official anchors; do not invent 0–4 wording from this list): (1) depressed mood 0–4; (2) guilt 0–4; (3) suicide 0–4 — treat as a clinical safety item, not only a point; (4–6) insomnia early/middle/late 0–2 each; (7) work and activities 0–4; (8) retardation 0–4; (9) agitation 0–4; (10) psychic anxiety 0–4; (11) somatic anxiety 0–4; (12) GI somatic 0–2; (13) general somatic 0–2; (14) genital symptoms 0–2; (15) hypochondriasis 0–4; (16) weight loss 0–2; (17) insight 0–2. Version field is context only.',
+        helpText: 'Enter official 17-item HDRS total (0–52).',
       }),
       selectInput('version', 'Version (for context)', [
-        { label: '17-item (most common)', value: '17' },
+        { label: '17-item (standard)', value: '17' },
         { label: '21-item', value: '21' },
         { label: 'Other / unspecified', value: 'other' },
-      ]),
+      ], '17'),
     ],
     calculate(values) {
-      const score = num(values.score, 12);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.hamd1 === undefined)) {
+        score = Math.max(0, Math.min(52, num(values.score, 12)));
+      } else {
+        score =
+          num(values.hamd1, 2) +
+          num(values.hamd2, 1) +
+          num(values.hamd3, 1) +
+          num(values.hamd4, 1) +
+          num(values.hamd5, 1) +
+          num(values.hamd6, 1) +
+          num(values.hamd7, 2) +
+          num(values.hamd8, 1) +
+          num(values.hamd9, 1) +
+          num(values.hamd10, 2) +
+          num(values.hamd11, 1) +
+          num(values.hamd12, 1) +
+          num(values.hamd13, 1) +
+          num(values.hamd14, 1) +
+          num(values.hamd15, 0) +
+          num(values.hamd16, 0) +
+          num(values.hamd17, 0);
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 7,
           level: 'normal',
           label: 'Normal / remission range',
-          interpretation: 'HAM-D ≤7: normal or remission range on 17-item scale for many protocols.',
+          interpretation: `HAM-D ${score}/52: normal or remission range on 17-item scale.`,
         },
         {
           max: 13,
           level: 'low',
           label: 'Mild depression',
-          interpretation: 'HAM-D 8–13: mild depressive symptoms.',
+          interpretation: `HAM-D ${score}/52: mild depressive symptoms.`,
         },
         {
           max: 18,
           level: 'moderate',
           label: 'Moderate depression',
-          interpretation: 'HAM-D 14–18: moderate depression — treatment indicated.',
+          interpretation: `HAM-D ${score}/52: moderate depression — active treatment indicated.`,
         },
         {
           max: 22,
           level: 'high',
           label: 'Severe depression',
-          interpretation: 'HAM-D 19–22: severe depression — active multimodal treatment; safety assessment.',
+          interpretation: `HAM-D ${score}/52: severe depression — active multimodal treatment; safety assessment.`,
         },
         {
           max: 52,
           level: 'critical',
           label: 'Very severe depression',
-          interpretation: 'HAM-D ≥23: very severe — consider higher level of care, psychosis screen, suicide risk.',
+          interpretation: `HAM-D ${score}/52: very severe — consider higher level of care, psychosis screen, suicide risk.`,
         },
       ]);
       return {
         score,
+        unit: '/52',
         ...r,
         details: [
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '17-item rating' },
           { label: 'Version noted', value: String(values.version || '17') },
-          { label: '17-item bands (common)', value: '≤7 normal; 8–13 mild; 14–18 moderate; 19–22 severe; ≥23 very severe' },
+          { label: '17-item bands', value: '≤7 normal; 8–13 mild; 14–18 moderate; 19–22 severe; ≥23 very severe' },
         ],
       };
     },
     evidence: {
       summary:
-        'Hamilton Depression Rating Scale (HDRS/HAM-D). Common 17-item severity: ≤7 normal, 8–13 mild, 14–18 moderate, 19–22 severe, ≥23 very severe (APA/handbook conventions vary slightly).',
-      formula: 'Enter administered total',
-      validation: 'Historic gold-standard clinician depression scale; MADRS often preferred for sensitivity to change.',
+        'Hamilton Depression Rating Scale (HAM-D 17): 17 clinician items (8 items 0–4; 9 items 0–2). Total 0–52. Published in 1960; public domain.',
+      formula: 'Sum of 17 items (0–52)',
+      validation: 'Historic gold-standard clinician depression scale; public domain.',
       references: [
         {
           title: 'A rating scale for depression',
@@ -1385,67 +1728,118 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         actions: ['Diagnostic confirmation', 'Treatment initiation/escalation', 'Safety planning'],
       },
     ],
-    pearls: ['Heavy somatic item loading — interpret cautiously in medical illness.', 'Specify which HAM-D version was used.'],
+    pearls: ['Heavy somatic item loading — interpret cautiously in physical illness.', 'Public domain scale.'],
   },
+
   {
     id: 'ham-a',
     name: 'HAM-A Anxiety Score',
     shortName: 'HAM-A',
-    description: 'Hamilton Anxiety Rating Scale total interpreter (0–56).',
+    description: 'Hamilton Anxiety Rating Scale (HAM-A) 14-item clinician interview and total (0–56).',
     category: 'psychiatry',
     tags: ['anxiety', 'hamilton', 'ham-a', 'severity'],
-    whenToUse: 'Clinician-rated anxiety severity after HAM-A administration.',
-    whyUse: 'Classic anxiety severity scale for monitoring treatment response.',
+    whenToUse: 'Clinician-rated anxiety severity after HAM-A administration; 14 items or direct total.',
+    whyUse: 'Classic gold standard anxiety severity scale for monitoring psychic and somatic anxiety.',
     inputs: [
-      numberInput('score', 'HAM-A total (0–56)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive 14-item clinician interview', value: 'survey' },
+        { label: 'Direct score override', value: 'direct' },
+      ], 'survey'),
+      ...[
+        '1. Anxious mood (worries, anticipation of the worst, fearful anticipation, irritability)',
+        '2. Tension (feelings of tension, fatigability, startle response, moved to tears easily, trembling)',
+        '3. Fears (of dark, strangers, being left alone, animals, traffic, crowds)',
+        '4. Insomnia (difficulty falling asleep, broken sleep, unrefreshing sleep, fatigue on waking)',
+        '5. Intellectual / cognitive (difficulty in concentration, poor memory)',
+        '6. Depressed mood (loss of interest, lack of pleasure in hobbies, depression, early waking)',
+        '7. Somatic: muscular (pains and aches, twitching, stiffness, myoclonic jerks, teeth grinding)',
+        '8. Somatic: sensory (tinnitus, blurring of vision, hot and cold flushes, weakness, prickling)',
+        '9. Cardiovascular symptoms (tachycardia, palpitations, pain in chest, throbbing of vessels)',
+        '10. Respiratory symptoms (pressure or constriction in chest, choking feelings, sighing, dyspnea)',
+        '11. Gastrointestinal symptoms (dysphagia, wind, dyspepsia, abdominal pain, nausea, vomiting, loose bowels)',
+        '12. Genitourinary symptoms (frequency, urgency, amenorrhea, menorrhagia, loss of libido, premature ejaculation)',
+        '13. Autonomic symptoms (dry mouth, flushing, pallor, sweating, giddiness, tension headache)',
+        '14. Behavior at interview (fidgeting, restlessness, tremor of hands, furrowed brow, strained face, sighing)',
+      ].map((title, i) =>
+        selectInput(`hama_${i + 1}`, title, [
+          { label: '0 — Not present', value: 0 },
+          { label: '1 — Mild', value: 1 },
+          { label: '2 — Moderate', value: 2 },
+          { label: '3 — Severe', value: 3 },
+          { label: '4 — Very severe (incapacitating)', value: 4 },
+        ], i < 6 ? 2 : 1),
+      ),
+      numberInput('score', 'Direct HAM-A total override (0–56)', {
         min: 0,
         max: 56,
         defaultValue: 18,
-        helpText:
-          '14 items scored 0–4 (total 0–56). Use the official Hamilton 1959 form for 0–4 anchors — do not treat this as a SIGH-A reprint. Rate the past few days. Item titles: (1) anxious mood; (2) tension; (3) fears; (4) insomnia; (5) intellectual/cognitive; (6) depressed mood; (7) somatic muscular; (8) somatic sensory; (9) cardiovascular symptoms; (10) respiratory; (11) GI; (12) genitourinary; (13) autonomic; (14) behavior at interview (observed, not only reported). On the official card 0 = none and 4 = very severe/incapacitating.',
+        helpText: 'Enter official HAM-A 14-item total (0–56).',
       }),
     ],
     calculate(values) {
-      const score = num(values.score, 18);
+      const mode = String(values.entryMode ?? 'survey');
+      let psychic = 0;
+      let somatic = 0;
+      let score: number;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.hama_1 === undefined)) {
+        score = Math.max(0, Math.min(56, num(values.score, 18)));
+        psychic = Math.round(score / 2);
+        somatic = score - psychic;
+      } else {
+        for (let i = 1; i <= 6; i++) {
+          psychic += num(values[`hama_${i}`], 2);
+        }
+        psychic += num(values.hama_14, 1);
+        for (let i = 7; i <= 13; i++) {
+          somatic += num(values[`hama_${i}`], 1);
+        }
+        score = psychic + somatic;
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 17,
           level: 'low',
           label: 'Mild anxiety',
-          interpretation: 'HAM-A ≤17: mild anxiety severity range.',
+          interpretation: `HAM-A ${score}/56: mild anxiety severity range.`,
         },
         {
           max: 24,
           level: 'moderate',
           label: 'Mild to moderate anxiety',
-          interpretation: 'HAM-A 18–24: mild to moderate anxiety — consider therapy ± medication.',
+          interpretation: `HAM-A ${score}/56: mild to moderate anxiety — consider CBT ± pharmacotherapy.`,
         },
         {
           max: 30,
           level: 'high',
           label: 'Moderate to severe anxiety',
-          interpretation: 'HAM-A 25–30: moderate to severe anxiety — active treatment recommended.',
+          interpretation: `HAM-A ${score}/56: moderate to severe anxiety — active treatment recommended.`,
         },
         {
           max: 56,
           level: 'critical',
           label: 'Severe anxiety',
-          interpretation: 'HAM-A >30: severe anxiety — intensive management; rule out medical contributors.',
+          interpretation: `HAM-A ${score}/56: severe anxiety — intensive management; rule out secondary medical contributors.`,
         },
       ]);
       return {
         score,
+        unit: '/56',
         ...r,
         details: [
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '14-item clinician interview' },
+          { label: 'Psychic anxiety subscore (items 1–6, 14)', value: `${psychic}/28` },
+          { label: 'Somatic anxiety subscore (items 7–13)', value: `${somatic}/28` },
           { label: 'Common bands', value: '≤17 mild; 18–24 mild–moderate; 25–30 moderate–severe; >30 severe' },
         ],
       };
     },
     evidence: {
       summary:
-        'HAM-A: 14 items (0–4), total 0–56. Common cutoffs: ≤17 mild, 18–24 mild–moderate, 25–30 moderate–severe, >30 severe.',
-      formula: 'Enter total 0–56',
-      validation: 'Longstanding clinician anxiety scale used in anxiolytic trials.',
+        'HAM-A: 14 items (0–4), total 0–56. Psychic subscale = items 1–6, 14 (0–28). Somatic subscale = items 7–13 (0–28). Published in 1959; public domain.',
+      formula: 'Sum of 14 items (0–4 each) = 0–56',
+      validation: 'Longstanding clinician anxiety scale used across psychiatric research.',
       references: [
         {
           title: 'The assessment of anxiety states by rating',
@@ -1460,8 +1854,12 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         actions: ['CBT / SSRI-SNRI as appropriate', 'Assess for panic, GAD, PTSD, substance use', 'Limit chronic benzo when possible'],
       },
     ],
-    pearls: ['Somatic items may elevate scores in medical disease.', 'GAD-7 is a practical patient-report alternative for screening.'],
+    pearls: [
+      'Items 1–6 and 14 measure psychic anxiety; items 7–13 measure somatic anxiety.',
+      'Public domain instrument with no licensing restrictions.',
+    ],
   },
+
   {
     id: 'bai',
     name: 'Beck Anxiety Inventory (BAI)',
@@ -1611,61 +2009,162 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
     id: 'ymrs',
     name: 'Young Mania Rating Scale (YMRS)',
     shortName: 'YMRS',
-    description: 'Young Mania Rating Scale total interpreter (0–60) for manic symptom severity.',
+    description: 'Young Mania Rating Scale 11-item clinician interview (0–60) for manic symptom severity.',
     category: 'psychiatry',
     tags: ['mania', 'bipolar', 'ymrs', 'rating scale'],
-    whenToUse: 'Clinician-rated mania severity after YMRS administration (enter total).',
-    whyUse: 'Standard mania severity outcome in bipolar research and inpatient monitoring.',
+    whenToUse: 'Clinician-rated mania severity after YMRS administration; 11 items or direct score.',
+    whyUse: 'Standard mania severity outcome in bipolar research and clinical practice (items 5, 6, 8, 9 double-weighted).',
     inputs: [
-      numberInput('score', 'YMRS total (0–60)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive 11-item clinician interview', value: 'survey' },
+        { label: 'Direct score override', value: 'direct' },
+      ], 'survey'),
+      selectInput('ymrs1', '1. Elevated mood', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mildly or possibly increased on questioning', value: 1 },
+        { label: '2 — Definite subjective elevation; optimistic, self-confident; cheerful', value: 2 },
+        { label: '3 — Elevated, inappropriate to content; humorous', value: 3 },
+        { label: '4 — Euphoric; inappropriate laughter; singing', value: 4 },
+      ], 1),
+      selectInput('ymrs2', '2. Increased motor activity-energy', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Subjectively increased', value: 1 },
+        { label: '2 — Animated; gestures increased', value: 2 },
+        { label: '3 — Excessive energy; hyperactive at times; restless (can be calmed)', value: 3 },
+        { label: '4 — Motor excitement; continuous hyperactivity (cannot be calmed)', value: 4 },
+      ], 1),
+      selectInput('ymrs3', '3. Sexual interest', [
+        { label: '0 — Normal; not increased', value: 0 },
+        { label: '1 — Mildly or possibly increased', value: 1 },
+        { label: '2 — Definite subjective increase on questioning', value: 2 },
+        { label: '3 — Spontaneous sexual content; elaborates on sexual matters; hypersexual by report', value: 3 },
+        { label: '4 — Overt sexual acts (toward patients, staff, or interviewer)', value: 4 },
+      ], 1),
+      selectInput('ymrs4', '4. Sleep', [
+        { label: '0 — Reports no decrease in sleep', value: 0 },
+        { label: '1 — Sleeping less than normal amount by up to one hour', value: 1 },
+        { label: '2 — Sleeping less than normal by more than one hour', value: 2 },
+        { label: '3 — Reports decreased need for sleep', value: 3 },
+        { label: '4 — Denies need for sleep', value: 4 },
+      ], 1),
+      selectInput('ymrs5', '5. Irritability (double weighted)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '2 — Subjectively increased', value: 2 },
+        { label: '4 — Irritable at times during interview; recent episodes of anger/annoyance', value: 4 },
+        { label: '6 — Frequently irritable during interview; short, curt throughout', value: 6 },
+        { label: '8 — Hostile, uncooperative; interview impossible', value: 8 },
+      ], 2),
+      selectInput('ymrs6', '6. Speech: rate and amount (double weighted)', [
+        { label: '0 — No increase', value: 0 },
+        { label: '2 — Feels talkative', value: 2 },
+        { label: '4 — Increased rate or amount at times, verbose at times', value: 4 },
+        { label: '6 — Push; consistently increased rate and amount; difficult to interrupt', value: 6 },
+        { label: '8 — Pressured; uninterruptible, continuous speech', value: 8 },
+      ], 2),
+      selectInput('ymrs7', '7. Language-thought disorder', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Circumstantiality; mild distractibility; quick thoughts', value: 1 },
+        { label: '2 — Distractible; loses goal of thought; changes topics frequently; racing thoughts', value: 2 },
+        { label: '3 — Flight of ideas; tangentiability; difficult to follow; rhyming/echolalia', value: 3 },
+        { label: '4 — Incoherent; communication impossible', value: 4 },
+      ], 1),
+      selectInput('ymrs8', '8. Content (double weighted)', [
+        { label: '0 — Normal', value: 0 },
+        { label: '2 — Questionable plans, new interests', value: 2 },
+        { label: '4 — Special projects; hyper-religious', value: 4 },
+        { label: '6 — Grandiose or paranoid ideas; ideas of reference', value: 6 },
+        { label: '8 — Delusions; hallucinations', value: 8 },
+      ], 2),
+      selectInput('ymrs9', '9. Disruptive-aggressive behavior (double weighted)', [
+        { label: '0 — Normal, cooperative', value: 0 },
+        { label: '2 — Sarcastic; loud at times, guarded', value: 2 },
+        { label: '4 — Demanding; treats interviewer curtly; shouts at times', value: 4 },
+        { label: '6 — Threatens interviewer; shouting; interview difficult', value: 6 },
+        { label: '8 — Assaultive; destructive; interview impossible', value: 8 },
+      ], 0),
+      selectInput('ymrs10', '10. Appearance', [
+        { label: '0 — Appropriate dress and grooming', value: 0 },
+        { label: '1 — Slightly untidy or disheveled', value: 1 },
+        { label: '2 — Poorly groomed; moderately disheveled; overdressed', value: 2 },
+        { label: '3 — Disheveled; partly undressed; bizarre garish makeup', value: 3 },
+        { label: '4 — Completely unkempt; decorated; bizarre clothing', value: 4 },
+      ], 0),
+      selectInput('ymrs11', '11. Insight', [
+        { label: '0 — Present; admits illness; agrees with need for treatment', value: 0 },
+        { label: '1 — Admits illness but denies need for medication', value: 1 },
+        { label: '2 — Admits behavior change, but denies illness', value: 2 },
+        { label: '3 — Admits possible behavior change, denies illness completely', value: 3 },
+        { label: '4 — Denies any behavior change or illness', value: 4 },
+      ], 1),
+      numberInput('score', 'Direct YMRS total override (0–60)', {
         min: 0,
         max: 60,
         defaultValue: 12,
-        helpText:
-          '11 clinician items; total 0–60. Use the official Young 1978 form for anchors (BJP/RCP) — do not reprint the card here. Based on interview plus observation over the past 48 hours unless the form specifies otherwise. Keep official 0–4 vs 0–8 weighting: (1) elevated mood 0–4; (2) increased motor activity/energy 0–4; (3) sexual interest 0–4; (4) sleep 0–4; (5) irritability 0–8 (double-weighted); (6) speech rate/amount 0–8; (7) language–thought disorder 0–4; (8) content 0–8; (9) disruptive–aggressive behavior 0–8; (10) appearance 0–4; (11) insight 0–4.',
+        helpText: 'Enter official YMRS 11-item total (0–60). Items 5, 6, 8, 9 are double-weighted (0, 2, 4, 6, 8).',
       }),
     ],
     calculate(values) {
-      const score = num(values.score, 12);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.ymrs1 === undefined)) {
+        score = Math.max(0, Math.min(60, num(values.score, 12)));
+      } else {
+        score =
+          num(values.ymrs1, 1) +
+          num(values.ymrs2, 1) +
+          num(values.ymrs3, 1) +
+          num(values.ymrs4, 1) +
+          num(values.ymrs5, 2) +
+          num(values.ymrs6, 2) +
+          num(values.ymrs7, 1) +
+          num(values.ymrs8, 2) +
+          num(values.ymrs9, 0) +
+          num(values.ymrs10, 0) +
+          num(values.ymrs11, 1);
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 12,
           level: 'low',
           label: 'Euthymia / minimal mania',
-          interpretation: 'YMRS ≤12: often used as remission / minimal manic symptoms range in trials (cutoffs vary; ≤7–12 common).',
+          interpretation: `YMRS ${score}/60: euthymia or minimal mania symptoms (often remission in trials).`,
         },
         {
           max: 19,
           level: 'moderate',
           label: 'Mild mania / hypomania range',
-          interpretation: 'YMRS 13–19: mild manic symptoms / hypomania range — close follow-up, optimize mood stabilizer.',
+          interpretation: `YMRS ${score}/60: mild manic symptoms / hypomania range — optimize mood stabilization; monitor sleep.`,
         },
         {
           max: 25,
           level: 'high',
           label: 'Moderate mania',
-          interpretation: 'YMRS 20–25: moderate mania — active treatment; assess insight, sleep, and risk behaviors.',
+          interpretation: `YMRS ${score}/60: moderate mania — active antimanic treatment indicated; assess insight and safety.`,
         },
         {
           max: 60,
           level: 'critical',
           label: 'Severe mania',
-          interpretation: 'YMRS ≥26: severe mania — consider hospitalization, safety, antimanic regimen, rule out mixed features/psychosis.',
+          interpretation: `YMRS ${score}/60: severe mania — acute stabilization; consider inpatient hospitalization and antipsychotic/mood stabilizer escalation.`,
         },
       ]);
       return {
         score,
+        unit: '/60',
         ...r,
         details: [
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '11-item clinician rating' },
+          { label: 'Double-weighted items', value: 'Irritability (5), Speech (6), Content (8), Aggression (9)' },
           { label: 'Pragmatic bands', value: '≤12 minimal/remission; 13–19 mild; 20–25 moderate; ≥26 severe' },
-          { label: 'Response (trials)', value: 'Often ≥50% reduction from baseline' },
         ],
       };
     },
     evidence: {
       summary:
-        'YMRS: 11 clinician items (some scored 0–8), total 0–60. Severity bands vary; ≤12 often remission, higher scores indicate increasing mania severity.',
-      formula: 'Enter total 0–60',
+        'YMRS: 11 clinician items (items 5, 6, 8, 9 scored 0, 2, 4, 6, 8; others 0–4), total 0–60. Open clinical scale published in 1978.',
+      formula: 'Sum of 11 items (4 double-weighted) = 0–60',
       validation: 'Standard mania rating scale (Young et al.) used across bipolar trials.',
       references: [
         {
@@ -1678,16 +2177,15 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
     nextSteps: [
       {
         condition: 'YMRS ≥13',
-        actions: [
-          'Mood stabilizer / antimanic optimization',
-          'Sleep restoration',
-          'Substance and medical workup',
-          'Safety and hospitalization threshold assessment',
-        ],
+        actions: ['Mood stabilizer review / titration', 'Atypical antipsychotic as indicated', 'Sleep restoration', 'Safety and impulse control review'],
       },
     ],
-    pearls: ['Irritability and disruptive-aggressive items are double-weighted.', 'Not a diagnostic tool for bipolar disorder alone.'],
+    pearls: [
+      'Four items are double-weighted (0, 2, 4, 6, 8): irritability, speech rate/amount, thought content, and disruptive behavior.',
+      'Can be completed based on clinical interview and 48-hour observation.',
+    ],
   },
+
   {
     id: 'panss-simp',
     name: 'PANSS Total (Simplified Bands)',
@@ -2194,51 +2692,121 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
     id: 'isi-insomnia',
     name: 'Insomnia Severity Index (ISI)',
     shortName: 'ISI',
-    description: 'Insomnia Severity Index total interpreter (0–28) for insomnia symptom severity.',
+    description: 'Insomnia Severity Index (ISI) 7-item questionnaire and total (0–28) for insomnia severity.',
     category: 'psychiatry',
     tags: ['insomnia', 'sleep', 'isi', 'screening'],
-    whenToUse: 'Quantify insomnia severity and treatment response (enter total after ISI).',
+    whenToUse: 'Quantify insomnia symptom severity and monitor treatment response; 7 items or direct score.',
     whyUse: 'Brief validated insomnia severity scale used in clinic and CBT-I research.',
     inputs: [
-      numberInput('score', 'ISI total (0–28)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive 7-item questionnaire', value: 'survey' },
+        { label: 'Direct score override', value: 'direct' },
+      ], 'survey'),
+      selectInput('isi1', '1. Difficulty falling asleep', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Mild', value: 1 },
+        { label: '2 — Moderate', value: 2 },
+        { label: '3 — Severe', value: 3 },
+        { label: '4 — Very severe', value: 4 },
+      ], 2),
+      selectInput('isi2', '2. Difficulty staying asleep', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Mild', value: 1 },
+        { label: '2 — Moderate', value: 2 },
+        { label: '3 — Severe', value: 3 },
+        { label: '4 — Very severe', value: 4 },
+      ], 2),
+      selectInput('isi3', '3. Problems waking up too early', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Mild', value: 1 },
+        { label: '2 — Moderate', value: 2 },
+        { label: '3 — Severe', value: 3 },
+        { label: '4 — Very severe', value: 4 },
+      ], 2),
+      selectInput('isi4', '4. Satisfaction with current sleep pattern', [
+        { label: '0 — Very satisfied', value: 0 },
+        { label: '1 — Satisfied', value: 1 },
+        { label: '2 — Moderately satisfied', value: 2 },
+        { label: '3 — Dissatisfied', value: 3 },
+        { label: '4 — Very dissatisfied', value: 4 },
+      ], 2),
+      selectInput('isi5', '5. Noticeability of sleep problem to others in terms of impairing quality of life', [
+        { label: '0 — Not at all noticeable', value: 0 },
+        { label: '1 — Barely noticeable', value: 1 },
+        { label: '2 — Somewhat noticeable', value: 2 },
+        { label: '3 — Much noticeable', value: 3 },
+        { label: '4 — Very much noticeable', value: 4 },
+      ], 1),
+      selectInput('isi6', '6. Worried / distressed about current sleep problems', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little', value: 1 },
+        { label: '2 — Somewhat', value: 2 },
+        { label: '3 — Much', value: 3 },
+        { label: '4 — Very much', value: 4 },
+      ], 2),
+      selectInput('isi7', '7. Interference with daily functioning (e.g. daytime fatigue, ability to function at work/chores)', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little', value: 1 },
+        { label: '2 — Somewhat', value: 2 },
+        { label: '3 — Much', value: 3 },
+        { label: '4 — Very much', value: 4 },
+      ], 1),
+      numberInput('score', 'Direct ISI total override (0–28)', {
         min: 0,
         max: 28,
         defaultValue: 12,
-        helpText: '7 items scored 0–4 over the past 2 weeks. Score from the official ISI form (Morin); enter the already-administered 0–28 total. Domains: difficulty falling asleep, staying asleep, early waking, satisfaction, interference, noticeability, distress.',
+        helpText: 'Enter official ISI total (0–28).',
       }),
     ],
     calculate(values) {
-      const score = num(values.score, 12);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.isi1 === undefined)) {
+        score = Math.max(0, Math.min(28, num(values.score, 12)));
+      } else {
+        score =
+          num(values.isi1, 2) +
+          num(values.isi2, 2) +
+          num(values.isi3, 2) +
+          num(values.isi4, 2) +
+          num(values.isi5, 1) +
+          num(values.isi6, 2) +
+          num(values.isi7, 1);
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 7,
           level: 'normal',
           label: 'No clinically significant insomnia',
-          interpretation: 'ISI 0–7: no clinically significant insomnia.',
+          interpretation: `ISI ${score}/28: no clinically significant insomnia.`,
         },
         {
           max: 14,
           level: 'low',
           label: 'Subthreshold insomnia',
-          interpretation: 'ISI 8–14: subthreshold insomnia — sleep hygiene and monitor; CBT-I if persistent bother.',
+          interpretation: `ISI ${score}/28: subthreshold insomnia — sleep hygiene and monitor; consider CBT-I if persistent bother.`,
         },
         {
           max: 21,
           level: 'moderate',
           label: 'Moderate clinical insomnia',
-          interpretation: 'ISI 15–21: moderate clinical insomnia — CBT-I first-line; evaluate contributing meds/conditions.',
+          interpretation: `ISI ${score}/28: moderate clinical insomnia — CBT-I first-line; evaluate contributing meds/conditions.`,
         },
         {
           max: 28,
           level: 'high',
           label: 'Severe clinical insomnia',
-          interpretation: 'ISI 22–28: severe clinical insomnia — structured treatment; screen mood, substances, OSA, RLS.',
+          interpretation: `ISI ${score}/28: severe clinical insomnia — structured treatment; screen mood, substances, OSA, RLS.`,
         },
       ]);
       return {
         score,
+        unit: '/28',
         ...r,
         details: [
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '7-item questionnaire' },
           { label: 'Bands', value: '0–7 none; 8–14 subthreshold; 15–21 moderate; 22–28 severe' },
         ],
       };
@@ -2246,7 +2814,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
     evidence: {
       summary:
         'ISI: 7 items (0–4), total 0–28. Bands: 0–7 no clinically significant insomnia, 8–14 subthreshold, 15–21 moderate, 22–28 severe.',
-      formula: 'Enter total 0–28',
+      formula: 'Sum of 7 items (0–4 each) = 0–28',
       validation: 'Validated insomnia severity measure (Morin et al.); sensitive to treatment change.',
       references: [
         {
@@ -2269,67 +2837,240 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
     ],
     pearls: ['CBT-I is first-line for chronic insomnia.', 'Epworth measures sleepiness, not insomnia severity.'],
   },
+
   {
     id: 'pcl5',
-    name: 'PCL-5 PTSD Checklist',
+    name: 'PCL-5 PTSD Checklist for DSM-5',
     shortName: 'PCL-5',
-    description: 'PTSD Checklist for DSM-5 total score interpreter (0–80).',
+    description: 'PTSD Checklist for DSM-5 (PCL-5) 20-item survey, total severity score (0–80), and DSM-5 cluster algorithm.',
     category: 'psychiatry',
     tags: ['ptsd', 'trauma', 'pcl-5', 'screening'],
-    whenToUse: 'Interpret PCL-5 total after patient completes the 20-item DSM-5 PTSD checklist.',
-    whyUse: 'Standard DSM-5-aligned PTSD severity and screening measure for monitoring and provisional detection.',
+    whenToUse: 'PTSD screening, provisional diagnosis, and symptom severity monitoring; 20 items or direct total.',
+    whyUse: 'Gold standard public domain PTSD checklist from National Center for PTSD (VA). Aligns with DSM-5 criteria B–E.',
     inputs: [
-      numberInput('score', 'PCL-5 total (0–80)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive 20-item questionnaire', value: 'survey' },
+        { label: 'Direct score override', value: 'direct' },
+      ], 'survey'),
+      selectInput('pcl_1', '1. Repeated, disturbing, and unwanted memories of the stressful experience', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 2),
+      selectInput('pcl_2', '2. Repeated, disturbing dreams of the stressful experience', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 2),
+      selectInput('pcl_3', '3. Suddenly feeling or acting as if the stressful experience were actually happening again', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 2),
+      selectInput('pcl_4', '4. Feeling very upset when something reminded you of the stressful experience', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 2),
+      selectInput('pcl_5', '5. Having strong physical reactions when something reminded you of the stressful experience (e.g., heart pounding, trouble breathing)', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 2),
+      selectInput('pcl_6', '6. Avoiding memories, thoughts, or feelings related to the stressful experience', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 2),
+      selectInput('pcl_7', '7. Avoiding external reminders (e.g. people, places, conversations, activities, objects, or situations)', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 2),
+      selectInput('pcl_8', '8. Trouble remembering important parts of the stressful experience', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 2),
+      selectInput('pcl_9', '9. Having strong negative beliefs about yourself, other people, or the world', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 1),
+      selectInput('pcl_10', '10. Blaming yourself or someone else for the stressful experience or what happened after it', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 1),
+      selectInput('pcl_11', '11. Having strong negative feelings such as fear, horror, anger, guilt, or shame', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 1),
+      selectInput('pcl_12', '12. Loss of interest in activities that you used to enjoy', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 1),
+      selectInput('pcl_13', '13. Feeling distant or cut off from other people', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 1),
+      selectInput('pcl_14', '14. Trouble experiencing positive feelings (e.g. being unable to feel happiness or love)', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 1),
+      selectInput('pcl_15', '15. Irritable behavior, angry outbursts, or acting aggressively', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 1),
+      selectInput('pcl_16', '16. Taking too many risks or doing things that could cause you harm', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 1),
+      selectInput('pcl_17', '17. Being “superalert” or watchful or on guard', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 1),
+      selectInput('pcl_18', '18. Feeling jumpy or easily startled', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 1),
+      selectInput('pcl_19', '19. Having difficulty concentrating', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 1),
+      selectInput('pcl_20', '20. Trouble falling or staying asleep', [
+        { label: '0 — Not at all', value: 0 },
+        { label: '1 — A little bit', value: 1 },
+        { label: '2 — Moderately (symptom endorsed)', value: 2 },
+        { label: '3 — Quite a bit (symptom endorsed)', value: 3 },
+        { label: '4 — Extremely (symptom endorsed)', value: 4 },
+      ], 1),
+      numberInput('score', 'Direct PCL-5 total override (0–80)', {
         min: 0,
         max: 80,
         defaultValue: 30,
-        helpText:
-          'PCL-5 is public domain (NCPTSD). Rate how much you have been bothered in the PAST MONTH. Each item 0 Not at all / 1 A little bit / 2 Moderately / 3 Quite a bit / 4 Extremely. Sum the 20 items (0–80) and enter the total. Stems: (1) Repeated, disturbing, unwanted memories of the stressful experience; (2) Repeated, disturbing dreams of it; (3) Suddenly feeling or acting as if it were happening again (reliving); (4) Feeling very upset when something reminded you of it; (5) Strong physical reactions when reminded (heart pounding, trouble breathing, sweating); (6) Avoiding memories, thoughts, or feelings related to it; (7) Avoiding external reminders (people, places, conversations, activities, objects, situations); (8) Trouble remembering important parts of it; (9) Strong negative beliefs about yourself, other people, or the world (e.g. I am bad, no one can be trusted, the world is completely dangerous); (10) Blaming yourself or someone else for the experience or what happened after; (11) Strong negative feelings such as fear, horror, anger, guilt, or shame; (12) Loss of interest in activities you used to enjoy; (13) Feeling distant or cut off from other people; (14) Trouble experiencing positive feelings (unable to feel happiness or have loving feelings); (15) Irritable behavior, angry outbursts, or acting aggressively; (16) Taking too many risks or doing things that could cause you harm; (17) Being “superalert” or watchful or on guard; (18) Feeling jumpy or easily startled; (19) Having difficulty concentrating; (20) Trouble falling or staying asleep. Cluster scoring (item ≥2): ≥1 B (1–5), ≥1 C (6–7), ≥2 D (8–14), ≥2 E (15–20) approximates provisional PTSD vs total cutoff ~31–33.',
+        helpText: 'Enter official PCL-5 total (0–80).',
       }),
     ],
     calculate(values) {
-      const score = num(values.score, 30);
-      // Common provisional PTSD cutoffs ~31–33; severity bands pragmatic
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+      let clusterB = 0; // intrusion: items 1–5
+      let clusterC = 0; // avoidance: items 6–7
+      let clusterD = 0; // negative cognitions: items 8–14
+      let clusterE = 0; // arousal: items 15–20
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.pcl_1 === undefined)) {
+        score = Math.max(0, Math.min(80, num(values.score, 30)));
+      } else {
+        score = 0;
+        for (let i = 1; i <= 20; i++) {
+          const val = num(values[`pcl_${i}`], 1);
+          score += val;
+          if (val >= 2) {
+            if (i <= 5) clusterB += 1;
+            else if (i <= 7) clusterC += 1;
+            else if (i <= 14) clusterD += 1;
+            else clusterE += 1;
+          }
+        }
+      }
+
+      const meetsAlgorithm = clusterB >= 1 && clusterC >= 1 && clusterD >= 2 && clusterE >= 2;
+
       const r = riskFromThresholds(score, [
         {
           max: 20,
           level: 'low',
           label: 'Lower symptom range',
-          interpretation: 'PCL-5 in a lower range — provisional PTSD less likely, but clinical interview still needed if trauma-related impairment is present.',
+          interpretation: `PCL-5 ${score}/80: in lower range — provisional PTSD less likely. Clinical interview still needed if trauma-related impairment exists.`,
         },
         {
           max: 30,
           level: 'moderate',
           label: 'Subthreshold / intermediate',
-          interpretation: 'Intermediate symptoms — may not meet common provisional cutoffs (~31–33) but can still warrant trauma-focused assessment.',
+          interpretation: `PCL-5 ${score}/80: intermediate symptoms — subthreshold to common provisional cutoffs (~31–33); trauma-focused assessment may still be indicated.`,
         },
         {
           max: 49,
           level: 'high',
           label: 'Above common provisional cutoff',
-          interpretation: 'PCL-5 ≥31 (using common 31–33 cutoffs): provisional PTSD screen positive — diagnostic interview (e.g., CAPS-5) and safety assessment.',
+          interpretation: `PCL-5 ${score}/80: exceeds provisional PTSD cutoff (≥31–33) — structured diagnostic interview (e.g. CAPS-5) and safety evaluation recommended.`,
         },
         {
           max: 80,
           level: 'critical',
-          label: 'High / severe PTSD symptom burden',
-          interpretation: 'High PCL-5 total — substantial PTSD symptom burden; prioritize trauma-focused therapy access, comorbidity, and risk (suicide, substance use).',
+          label: 'Severe PTSD symptom burden',
+          interpretation: `PCL-5 ${score}/80: marked/severe PTSD symptom burden — prioritize access to trauma-focused psychotherapy (PE, CPT, EMDR), comorbidity, and safety.`,
         },
       ]);
+
       return {
         score,
+        unit: '/80',
         ...r,
         details: [
-          { label: 'Common provisional cutoff', value: '≥31 to ≥33 (setting-dependent)' },
-          { label: 'Range', value: '0–80 (20 items × 0–4)' },
-          { label: 'DSM-5 clusters', value: 'B intrusion, C avoidance, D cognition/mood, E arousal' },
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '20-item DSM-5 questionnaire' },
+          { label: 'Provisional cutoff (total)', value: score >= 31 ? '≥31 (Met ✓)' : '<31 (Not met)' },
+          { label: 'DSM-5 Cluster criteria', value: mode === 'survey' ? (meetsAlgorithm ? 'Criteria met (≥1 B, ≥1 C, ≥2 D, ≥2 E ✓)' : 'Incomplete') : 'Available via survey mode' },
+          { label: 'Intrusions (Cluster B, ≥1 req)', value: mode === 'survey' ? `${clusterB}/5` : 'N/A' },
+          { label: 'Avoidance (Cluster C, ≥1 req)', value: mode === 'survey' ? `${clusterC}/2` : 'N/A' },
+          { label: 'Negative mood (Cluster D, ≥2 req)', value: mode === 'survey' ? `${clusterD}/7` : 'N/A' },
+          { label: 'Arousal (Cluster E, ≥2 req)', value: mode === 'survey' ? `${clusterE}/6` : 'N/A' },
         ],
       };
     },
     evidence: {
       summary:
-        'PCL-5: 20 DSM-5 PTSD symptoms rated 0–4 (total 0–80). Provisional PTSD often suggested at totals ≥31–33; alternative scoring requires ≥1 B, ≥1 C, ≥2 D, ≥2 E items rated ≥2 plus impairment.',
-      formula: 'Enter total 0–80',
+        'PCL-5: 20 DSM-5 PTSD symptoms rated 0–4 (total 0–80). Public domain instrument developed by the National Center for PTSD (US VA). Cutoff 31–33 indicates provisional PTSD; cluster algorithm: ≥1 B, ≥1 C, ≥2 D, ≥2 E items rated ≥2.',
+      formula: 'Sum of 20 items (0–4 each) = 0–80',
       validation: 'National Center for PTSD recommended measure; strong psychometrics vs CAPS-5.',
       references: [
         {
@@ -2351,8 +3092,8 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       },
     ],
     pearls: [
-      'Cutoff varies by population; 31–33 common for provisional diagnosis.',
-      'Cluster-based item rules improve diagnostic approximation vs total alone.',
+      'PCL-5 is in the public domain with zero copyright restrictions.',
+      'A symptom is clinically endorsed if rated ≥2 (Moderately).',
     ],
   },
 ];

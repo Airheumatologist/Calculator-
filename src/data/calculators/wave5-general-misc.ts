@@ -1502,25 +1502,112 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
   // ─── 19. HAQ-DI ────────────────────────────────────────────────────────────
   {
     id: 'haq-di',
-    name: 'HAQ-DI (Total Interpretation)',
+    name: 'HAQ-DI (Health Assessment Questionnaire Disability Index)',
     shortName: 'HAQ-DI',
-    description: 'Interprets a precomputed Health Assessment Questionnaire Disability Index total (0–3).',
+    description: 'Scores and interprets the Health Assessment Questionnaire Disability Index (HAQ-DI) across 8 functional activity categories with assistive device adjustments (0–3).',
     category: 'rheumatology',
     tags: ['haq', 'haq-di', 'disability', 'rheumatology', 'function'],
-    whenToUse: 'When HAQ-DI has been scored from the 8 categories and an interpretation band is needed.',
-    whyUse: 'Standard patient-reported physical function measure in RA and other rheumatic diseases.',
+    whenToUse: 'When evaluating functional impairment and physical disability in rheumatoid arthritis, psoriatic arthritis, or other rheumatic conditions.',
+    whyUse: 'Gold-standard patient-reported physical function outcome measure in rheumatology trials and treat-to-target clinic care.',
     inputs: [
-      numberInput('total', 'HAQ-DI total', {
+      selectInput('entryMode', 'Entry Mode', [
+        { label: 'Interactive 8-category questionnaire (recommended)', value: 'survey' },
+        { label: 'Direct HAQ-DI score override (0–3)', value: 'direct' },
+      ], 'survey'),
+      // Category 1: Dressing & Grooming
+      selectInput('haq_c1', '1. Dressing & Grooming (dressing self, shoelaces, buttons, shampooing hair)', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 1),
+      yesNo('haq_c1_aid', 'Do you use aids/devices (button hook, zipper pull) or need help dressing?'),
+      // Category 2: Arising
+      selectInput('haq_c2', '2. Arising (standing up from armless straight chair, getting in and out of bed)', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 1),
+      yesNo('haq_c2_aid', 'Do you use aids/devices (built-up chair) or need help arising?'),
+      // Category 3: Eating
+      selectInput('haq_c3', '3. Eating (cutting meat, lifting full cup/glass to mouth, opening milk carton)', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 0),
+      yesNo('haq_c3_aid', 'Do you use specially adapted utensils or need help eating?'),
+      // Category 4: Walking
+      selectInput('haq_c4', '4. Walking (walking outdoors on flat ground, climbing up 5 steps)', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 1),
+      yesNo('haq_c4_aid', 'Do you use a cane, crutches, walker, or need help walking?'),
+      // Category 5: Hygiene
+      selectInput('haq_c5', '5. Hygiene (washing and drying entire body, taking tub bath, getting on/off toilet)', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 1),
+      yesNo('haq_c5_aid', 'Do you use a raised toilet seat, bathtub seat, long-handled sponge, or need help?'),
+      // Category 6: Reach
+      selectInput('haq_c6', '6. Reach (reaching and getting down a 5 lb object from above head, bending down to floor)', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 1),
+      yesNo('haq_c6_aid', 'Do you use long-handled reacher appliances or need help reaching?'),
+      // Category 7: Grip
+      selectInput('haq_c7', '7. Grip (opening car doors, opening previously opened jars, turning faucets)', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 1),
+      yesNo('haq_c7_aid', 'Do you use jar openers, adapted door handles, or need help gripping?'),
+      // Category 8: Activities
+      selectInput('haq_c8', '8. Activities (running errands and shopping, getting in/out of car, chores/vacuuming)', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 2),
+      yesNo('haq_c8_aid', 'Do you need help with chores, vacuuming, or shopping?'),
+      numberInput('total', 'Direct HAQ-DI total override (0–3)', {
         min: 0,
         max: 3,
         step: 0.125,
         defaultValue: 1,
-        helpText:
-          'Enter the total from the official HAQ-DI form (mean of 8 categories, 0–3; aids/devices may raise a category per instrument rules). Do not reconstruct items from memory.',
+        helpText: 'Used if Direct score override mode is selected.',
       }),
     ],
     calculate(values) {
-      const score = round(num(values.total, 0), 3);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+      let catScores: number[] = [];
+
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.haq_c1 === undefined)) {
+        score = round(num(values.total, 0), 3);
+      } else {
+        const c1 = bool(values.haq_c1_aid) ? Math.max(num(values.haq_c1, 0), 2) : num(values.haq_c1, 0);
+        const c2 = bool(values.haq_c2_aid) ? Math.max(num(values.haq_c2, 0), 2) : num(values.haq_c2, 0);
+        const c3 = bool(values.haq_c3_aid) ? Math.max(num(values.haq_c3, 0), 2) : num(values.haq_c3, 0);
+        const c4 = bool(values.haq_c4_aid) ? Math.max(num(values.haq_c4, 0), 2) : num(values.haq_c4, 0);
+        const c5 = bool(values.haq_c5_aid) ? Math.max(num(values.haq_c5, 0), 2) : num(values.haq_c5, 0);
+        const c6 = bool(values.haq_c6_aid) ? Math.max(num(values.haq_c6, 0), 2) : num(values.haq_c6, 0);
+        const c7 = bool(values.haq_c7_aid) ? Math.max(num(values.haq_c7, 0), 2) : num(values.haq_c7, 0);
+        const c8 = bool(values.haq_c8_aid) ? Math.max(num(values.haq_c8, 0), 2) : num(values.haq_c8, 0);
+
+        catScores = [c1, c2, c3, c4, c5, c6, c7, c8];
+        const sum = catScores.reduce((a, b) => a + b, 0);
+        score = round(sum / 8, 3);
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 0.99,
@@ -1541,20 +1628,27 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
           interpretation: `HAQ-DI ${score}: severe disability. Multidisciplinary support; reassess disease activity, damage, and social supports.`,
         },
       ]);
+      const details: { label: string; value: string }[] = [
+        { label: 'MCID (approx)', value: '~0.22–0.25 often cited in RA' },
+        { label: 'Range', value: '0.00 (no disability) – 3.00 (severe)' },
+      ];
+      if (mode === 'survey' || catScores.length > 0) {
+        details.unshift({
+          label: 'Category scores (with aids)',
+          value: catScores.join(', '),
+        });
+      }
       return {
         score,
         unit: '0–3',
         ...r,
-        details: [
-          { label: 'MCID (approx)', value: '~0.22–0.25 often cited in RA' },
-          { label: 'Range', value: '0 (no disability) – 3 (severe)' },
-        ],
+        details,
       };
     },
     evidence: {
       summary:
-        'HAQ-DI averages difficulty (0–3) across 8 activity categories; higher = worse function. Mild <1, moderate 1–2, severe >2 are common educational bands.',
-      formula: 'User-entered HAQ-DI total (0–3)',
+        'HAQ-DI averages difficulty (0–3) across 8 activity categories; higher = worse function. Scoring rule: use of aids/devices or personal assistance elevates that category to minimum of 2. Mild <1, moderate 1–2, severe >2 are common educational bands.',
+      formula: 'HAQ-DI = (Sum of 8 adjusted category scores) / 8',
       validation: 'Fries et al. original HAQ; widely used PRO in rheumatology trials.',
       references: [
         {
@@ -1570,7 +1664,7 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
       { condition: 'HAQ-DI ≥1', actions: ['PT/OT referral', 'Treat active inflammatory disease', 'Assess work/ADL needs'] },
     ],
     pearls: [
-      'Scoring rules for aids/devices matter — use the instrument manual.',
+      'Scoring rules for aids/devices matter — use of device or help automatically raises that category to ≥2.',
       'HAQ is relatively insensitive to change at low disability levels (floor effects less of an issue than ceiling).',
     ],
   },
@@ -1578,25 +1672,57 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
   // ─── 20. BASFI ─────────────────────────────────────────────────────────────
   {
     id: 'basfi',
-    name: 'BASFI (Total Interpretation)',
+    name: 'BASFI (Bath Ankylosing Spondylitis Functional Index)',
     shortName: 'BASFI',
-    description: 'Interprets a precomputed Bath Ankylosing Spondylitis Functional Index total (0–10).',
+    description: 'Scores and interprets the Bath Ankylosing Spondylitis Functional Index (0–10) across 10 functional activity items.',
     category: 'rheumatology',
     tags: ['basfi', 'ankylosing spondylitis', 'function', 'axspa'],
-    whenToUse: 'When BASFI questionnaire mean has been calculated and functional severity banding is needed.',
-    whyUse: 'Standard function PRO in axSpA alongside BASDAI/ASDAS activity measures.',
+    whenToUse: 'When evaluating functional impairment and physical limitation in axial spondyloarthritis / ankylosing spondylitis.',
+    whyUse: 'Standard function PRO in axSpA alongside BASDAI/ASDAS disease activity measures endorsed by ASAS.',
     inputs: [
-      numberInput('total', 'BASFI total (mean of 10 items)', {
+      selectInput('entryMode', 'Entry Mode', [
+        { label: 'Interactive 10-item functional questionnaire (recommended)', value: 'survey' },
+        { label: 'Direct BASFI mean override (0–10)', value: 'direct' },
+      ], 'survey'),
+      numberInput('basfi_q1', '1. Putting on socks or tights without help or aids', { min: 0, max: 10, step: 0.5, defaultValue: 4, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q2', '2. Bending forward from waist to pick up pen from floor without aid', { min: 0, max: 10, step: 0.5, defaultValue: 4, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q3', '3. Reaching up to a high shelf without help or aids', { min: 0, max: 10, step: 0.5, defaultValue: 3, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q4', '4. Getting up out of armless dining room chair without using hands/help', { min: 0, max: 10, step: 0.5, defaultValue: 4, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q5', '5. Getting up off the floor without help from lying on your back', { min: 0, max: 10, step: 0.5, defaultValue: 5, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q6', '6. Standing unsupported for 10 minutes without discomfort', { min: 0, max: 10, step: 0.5, defaultValue: 4, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q7', '7. Climbing 12–14 steps without using a handrail or walking aid', { min: 0, max: 10, step: 0.5, defaultValue: 3, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q8', '8. Looking over your shoulder without turning your body', { min: 0, max: 10, step: 0.5, defaultValue: 5, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q9', '9. Doing physically demanding activities (e.g. physio exercises, gardening, sports)', { min: 0, max: 10, step: 0.5, defaultValue: 5, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q10', '10. Doing a full day\'s activities (at home or at work)', { min: 0, max: 10, step: 0.5, defaultValue: 4, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('total', 'Direct BASFI total (mean of 10 items)', {
         min: 0,
         max: 10,
         step: 0.1,
         defaultValue: 4,
-        helpText:
-          'Enter the mean from the official BASFI form (10 items, 0–10 VAS each, past-week function). Do not reconstruct items from memory.',
+        helpText: 'Used if Direct score override mode is selected. Mean 0–10.',
       }),
     ],
     calculate(values) {
-      const score = round(num(values.total, 0), 1);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.basfi_q1 === undefined)) {
+        score = round(num(values.total, 0), 1);
+      } else {
+        const sum =
+          num(values.basfi_q1, 4) +
+          num(values.basfi_q2, 4) +
+          num(values.basfi_q3, 3) +
+          num(values.basfi_q4, 4) +
+          num(values.basfi_q5, 5) +
+          num(values.basfi_q6, 4) +
+          num(values.basfi_q7, 3) +
+          num(values.basfi_q8, 5) +
+          num(values.basfi_q9, 5) +
+          num(values.basfi_q10, 4);
+        score = round(sum / 10, 1);
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 3.9,
@@ -1621,12 +1747,15 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
         score,
         unit: '0–10',
         ...r,
-        details: [{ label: 'Instrument', value: 'Mean of 10 BASFI items' }],
+        details: [
+          { label: 'Score formula', value: 'Mean of 10 NRS/VAS items (0 easy – 10 impossible)' },
+          { label: 'Direction', value: 'Higher = worse functional limitation' },
+        ],
       };
     },
     evidence: {
       summary: 'BASFI is the mean of 10 function items (0–10). Higher scores indicate worse function in AS/axSpA.',
-      formula: 'User-entered BASFI mean (0–10)',
+      formula: 'BASFI = (Sum of 10 items) / 10',
       validation: 'Calin et al. 1994; standard axSpA functional outcome.',
       references: [
         {
@@ -1648,22 +1777,51 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
     id: 'mases',
     name: 'MASES (Enthesitis Score)',
     shortName: 'MASES',
-    description: 'Maastricht Ankylosing Spondylitis Enthesitis Score total (0–13 sites).',
+    description: 'Scores and interprets the Maastricht Ankylosing Spondylitis Enthesitis Score (0–13 sites).',
     category: 'rheumatology',
     tags: ['mases', 'enthesitis', 'axial spa', 'rheumatology'],
-    whenToUse: 'Quantifying enthesitis burden in axSpA / AS clinical care or trials.',
-    whyUse: 'Simple 0–13 site count endorsed in SpA research; mainly axial plus selected peripheral sites (e.g., Achilles).',
+    whenToUse: 'Quantifying enthesitis burden in axSpA / AS clinical care or clinical trials.',
+    whyUse: 'Validated 0–13 site count endorsed in SpA research; focuses primarily on axial plus Achilles insertions.',
     inputs: [
-      numberInput('total', 'MASES total (tender sites)', {
+      selectInput('entryMode', 'Entry Mode', [
+        { label: 'Interactive 13-site examination (recommended)', value: 'survey' },
+        { label: 'Direct tender site count override (0–13)', value: 'direct' },
+      ], 'survey'),
+      yesNo('mases_r1cc', 'Right 1st costochondral joint tenderness'),
+      yesNo('mases_l1cc', 'Left 1st costochondral joint tenderness'),
+      yesNo('mases_r7cc', 'Right 7th costochondral joint tenderness'),
+      yesNo('mases_l7cc', 'Left 7th costochondral joint tenderness'),
+      yesNo('mases_rasis', 'Right Anterior Superior Iliac Spine (ASIS) tenderness'),
+      yesNo('mases_lasis', 'Left Anterior Superior Iliac Spine (ASIS) tenderness'),
+      yesNo('mases_rpsis', 'Right Posterior Superior Iliac Spine (PSIS) tenderness'),
+      yesNo('mases_lpsis', 'Left Posterior Superior Iliac Spine (PSIS) tenderness'),
+      yesNo('mases_rcrest', 'Right Iliac Crest tenderness'),
+      yesNo('mases_lcrest', 'Left Iliac Crest tenderness'),
+      yesNo('mases_l5spin', '5th Lumbar (L5) spinous process tenderness'),
+      yesNo('mases_rachilles', 'Right Achilles tendon insertion tenderness'),
+      yesNo('mases_lachilles', 'Left Achilles tendon insertion tenderness'),
+      numberInput('total', 'Direct MASES total (tender sites override)', {
         min: 0,
         max: 13,
         defaultValue: 2,
-        helpText:
-          'Press each site; score 1 if tender. 13 sites: R+L 1st costochondral, R+L 7th costochondral, R+L ASIS, R+L PSIS, R+L iliac crests, L5 spinous process, R+L Achilles insertions. Do not count other entheses (SPARCC uses different sites).',
+        helpText: 'Used if Direct score override mode is selected.',
       }),
     ],
     calculate(values) {
-      const score = Math.round(num(values.total, 0));
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.mases_r1cc === undefined)) {
+        score = Math.round(num(values.total, 0));
+      } else {
+        const siteKeys = [
+          'mases_r1cc', 'mases_l1cc', 'mases_r7cc', 'mases_l7cc',
+          'mases_rasis', 'mases_lasis', 'mases_rpsis', 'mases_lpsis',
+          'mases_rcrest', 'mases_lcrest', 'mases_l5spin',
+          'mases_rachilles', 'mases_lachilles',
+        ];
+        score = siteKeys.reduce((acc, k) => acc + (bool(values[k]) ? 1 : 0), 0);
+      }
       const clamped = Math.max(0, Math.min(13, score));
       const r = riskFromThresholds(clamped, [
         {
@@ -1696,17 +1854,17 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
         unit: 'sites / 13',
         ...r,
         details: [
-          { label: 'Maximum', value: '13 sites' },
+          { label: 'Tender sites', value: `${clamped} / 13 sites` },
           {
-            label: 'Sites (reference)',
-            value: '1st costochondral (bilat), 7th costochondral (bilat), iliac crests, PSIS, L5 spinous, Achilles (bilat), etc.',
+            label: 'Sites assessed',
+            value: '1st CC (bilat), 7th CC (bilat), ASIS (bilat), PSIS (bilat), Iliac crests (bilat), L5 spinous, Achilles (bilat)',
           },
         ],
       };
     },
     evidence: {
       summary: 'MASES counts tenderness at 13 entheseal sites (0–13). Developed for AS enthesitis quantification.',
-      formula: 'Sum of tender MASES sites (user-entered total)',
+      formula: 'Sum of tender MASES sites (0–13)',
       validation: 'Heuft-Dorenbosch et al.; used in SpA RCTs as enthesitis endpoint.',
       references: [
         {
@@ -1961,24 +2119,128 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
   // ─── 23. Kujala score ──────────────────────────────────────────────────────
   {
     id: 'kujala-score',
-    name: 'Kujala Patellofemoral Score (Total)',
+    name: 'Kujala Patellofemoral Score',
     shortName: 'Kujala',
-    description: 'Interprets a precomputed Kujala anterior knee pain (patellofemoral) score (0–100).',
+    description: 'Scores and interprets the Kujala Anterior Knee Pain Scale (0–100) across 13 patellofemoral symptom and function items.',
     category: 'orthopedics',
     tags: ['kujala', 'patellofemoral', 'anterior knee pain', 'ortho'],
-    whenToUse: 'When the 13-item Kujala questionnaire has been scored and severity/function banding is needed.',
-    whyUse: 'Widely used PRO for patellofemoral pain and instability outcomes.',
+    whenToUse: 'When evaluating anterior knee pain, patellofemoral pain syndrome (PFPS), or patellar instability.',
+    whyUse: 'Widely validated clinician- and patient-reported outcome measure specifically sensitive to patellofemoral disorders.',
     inputs: [
-      numberInput('total', 'Kujala total score', {
+      selectInput('entryMode', 'Entry Mode', [
+        { label: 'Interactive 13-item assessment (recommended)', value: 'survey' },
+        { label: 'Direct Kujala score override (0–100)', value: 'direct' },
+      ], 'survey'),
+      selectInput('kuj_limp', '1. Limp', [
+        { label: '5 - None', value: 5 },
+        { label: '3 - Slight or periodical', value: 3 },
+        { label: '0 - Constant', value: 0 },
+      ], 5),
+      selectInput('kuj_support', '2. Support / Weight-bearing', [
+        { label: '5 - Full support without pain', value: 5 },
+        { label: '3 - Painful', value: 3 },
+        { label: '0 - Unable to bear weight', value: 0 },
+      ], 5),
+      selectInput('kuj_walking', '3. Walking', [
+        { label: '5 - Unlimited', value: 5 },
+        { label: '3 - More than 5 km', value: 3 },
+        { label: '2 - 1 to 5 km', value: 2 },
+        { label: '0 - Unable to walk', value: 0 },
+      ], 5),
+      selectInput('kuj_stairs', '4. Stairs', [
+        { label: '10 - No difficulty', value: 10 },
+        { label: '8 - Slight pain when descending', value: 8 },
+        { label: '5 - Pain both descending and ascending', value: 5 },
+        { label: '0 - Unable to use stairs', value: 0 },
+      ], 8),
+      selectInput('kuj_squatting', '5. Squatting', [
+        { label: '5 - No difficulty', value: 5 },
+        { label: '4 - Repeated squatting painful', value: 4 },
+        { label: '3 - Painful each time', value: 3 },
+        { label: '2 - Possible with partial weight', value: 2 },
+        { label: '0 - Unable to squat', value: 0 },
+      ], 4),
+      selectInput('kuj_running', '6. Running', [
+        { label: '10 - No difficulty', value: 10 },
+        { label: '8 - Pain after more than 2 km', value: 8 },
+        { label: '6 - Slight pain from beginning', value: 6 },
+        { label: '3 - Severe pain', value: 3 },
+        { label: '0 - Unable to run', value: 0 },
+      ], 8),
+      selectInput('kuj_jumping', '7. Jumping', [
+        { label: '10 - No difficulty', value: 10 },
+        { label: '7 - Slight difficulty', value: 7 },
+        { label: '2 - Constant pain', value: 2 },
+        { label: '0 - Unable to jump', value: 0 },
+      ], 7),
+      selectInput('kuj_sitting', '8. Prolonged sitting with knees flexed ("movie-theater sign")', [
+        { label: '10 - No difficulty', value: 10 },
+        { label: '8 - Pain after exercise', value: 8 },
+        { label: '6 - Constant pain', value: 6 },
+        { label: '4 - Pain forces extension of legs', value: 4 },
+        { label: '0 - Unable to sit with knees bent', value: 0 },
+      ], 8),
+      selectInput('kuj_pain', '9. Pain', [
+        { label: '10 - None', value: 10 },
+        { label: '8 - Slight and occasional', value: 8 },
+        { label: '6 - Interferes with sleep', value: 6 },
+        { label: '3 - Occasionally severe', value: 3 },
+        { label: '0 - Constant and severe', value: 0 },
+      ], 8),
+      selectInput('kuj_swelling', '10. Swelling', [
+        { label: '10 - None', value: 10 },
+        { label: '8 - After severe exertion', value: 8 },
+        { label: '6 - After daily activities', value: 6 },
+        { label: '4 - Every evening', value: 4 },
+        { label: '0 - Constant', value: 0 },
+      ], 10),
+      selectInput('kuj_subluxation', '11. Abnormal painful kneecap (patellar) movements (subluxations)', [
+        { label: '10 - None', value: 10 },
+        { label: '6 - Occasionally in sports activities', value: 6 },
+        { label: '4 - Occasionally in daily activities', value: 4 },
+        { label: '2 - At least one documented dislocation', value: 2 },
+        { label: '0 - More than two dislocations', value: 0 },
+      ], 10),
+      selectInput('kuj_atrophy', '12. Atrophy of thigh', [
+        { label: '5 - None', value: 5 },
+        { label: '3 - Slight (1–2 cm difference)', value: 3 },
+        { label: '0 - Severe (>2 cm difference)', value: 0 },
+      ], 5),
+      selectInput('kuj_flexion', '13. Flexion deficiency', [
+        { label: '5 - None', value: 5 },
+        { label: '3 - Slight (5–15° loss)', value: 3 },
+        { label: '0 - Severe (>15° loss)', value: 0 },
+      ], 5),
+      numberInput('total', 'Direct Kujala total score override (0–100)', {
         min: 0,
         max: 100,
         defaultValue: 70,
-        helpText:
-          'Enter the total from the official 13-item Kujala form (0–100; 100 = no symptoms/limitation). Do not reconstruct items from memory.',
+        helpText: 'Used if Direct score override mode is selected.',
       }),
     ],
     calculate(values) {
-      const score = Math.round(num(values.total, 0));
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.kuj_limp === undefined)) {
+        score = Math.round(num(values.total, 0));
+      } else {
+        score =
+          num(values.kuj_limp, 5) +
+          num(values.kuj_support, 5) +
+          num(values.kuj_walking, 5) +
+          num(values.kuj_stairs, 8) +
+          num(values.kuj_squatting, 4) +
+          num(values.kuj_running, 8) +
+          num(values.kuj_jumping, 7) +
+          num(values.kuj_sitting, 8) +
+          num(values.kuj_pain, 8) +
+          num(values.kuj_swelling, 10) +
+          num(values.kuj_subluxation, 10) +
+          num(values.kuj_atrophy, 5) +
+          num(values.kuj_flexion, 5);
+      }
+
       // Higher is better
       const r =
         score >= 90
@@ -2009,14 +2271,14 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
         unit: '/100',
         ...r,
         details: [
-          { label: 'Direction', value: 'Higher = better' },
-          { label: 'Items', value: '13 (limp, support, walking, stairs, squatting, running, jumping, prolonged sitting, pain, swelling, atrophy, flexion deficiency, patellar subluxation)' },
+          { label: 'Direction', value: 'Higher = better function (0–100 scale)' },
+          { label: 'Items', value: '13 patellofemoral items' },
         ],
       };
     },
     evidence: {
       summary: 'Kujala AKPS: 0–100 score from 13 items; higher scores indicate better patellofemoral function.',
-      formula: 'User-entered total (0–100)',
+      formula: 'Sum of 13 weighted items (0–100)',
       validation: 'Kujala et al. 1993; validated in PF pain and patellar instability populations.',
       references: [
         {
@@ -2037,24 +2299,94 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
   // ─── 24. Lysholm knee score ────────────────────────────────────────────────
   {
     id: 'lysholm-knee',
-    name: 'Lysholm Knee Score (Total)',
+    name: 'Lysholm Knee Score',
     shortName: 'Lysholm',
-    description: 'Interprets a precomputed Lysholm knee scoring scale total (0–100).',
+    description: 'Scores and interprets the Lysholm knee score (0–100) across 8 symptom and functional domains.',
     category: 'orthopedics',
     tags: ['lysholm', 'knee', 'acl', 'ligament', 'ortho'],
-    whenToUse: 'When Lysholm questionnaire items have been summed after knee injury or surgery (e.g., ACL).',
-    whyUse: 'Classic knee-specific outcome measure for symptoms and function (especially ligamentous injury).',
+    whenToUse: 'When evaluating knee ligament, meniscus, or cartilage injury and post-operative recovery.',
+    whyUse: 'Classic knee-specific outcome measure for symptoms and function (especially ACL and meniscus injuries).',
     inputs: [
-      numberInput('total', 'Lysholm total', {
+      selectInput('entryMode', 'Entry Mode', [
+        { label: 'Interactive 8-domain questionnaire (recommended)', value: 'survey' },
+        { label: 'Direct Lysholm score override (0–100)', value: 'direct' },
+      ], 'survey'),
+      selectInput('lys_limp', '1. Limp', [
+        { label: '5 - None', value: 5 },
+        { label: '3 - Slight or periodical', value: 3 },
+        { label: '0 - Severe and constant', value: 0 },
+      ], 5),
+      selectInput('lys_support', '2. Support / Walking aid', [
+        { label: '5 - None', value: 5 },
+        { label: '2 - Stick or crutch', value: 2 },
+        { label: '0 - Weight-bearing impossible', value: 0 },
+      ], 5),
+      selectInput('lys_locking', '3. Locking', [
+        { label: '15 - No locking and no catching sensations', value: 15 },
+        { label: '10 - Catching sensations but no locking', value: 10 },
+        { label: '6 - Locking occasionally', value: 6 },
+        { label: '2 - Locking frequently', value: 2 },
+        { label: '0 - Locked joint on examination', value: 0 },
+      ], 15),
+      selectInput('lys_instability', '4. Instability (giving way)', [
+        { label: '25 - Never gives way', value: 25 },
+        { label: '20 - Rarely during athletics or other severe exertion', value: 20 },
+        { label: '15 - Frequently during athletics or severe exertion (unable to participate)', value: 15 },
+        { label: '10 - Occasionally in daily activities', value: 10 },
+        { label: '5 - Often in daily activities', value: 5 },
+        { label: '0 - Every step', value: 0 },
+      ], 20),
+      selectInput('lys_pain', '5. Pain', [
+        { label: '25 - None', value: 25 },
+        { label: '20 - Inconstant and slight during severe exertion', value: 20 },
+        { label: '15 - Marked during severe exertion', value: 15 },
+        { label: '10 - Marked on or after walking more than 2 km', value: 10 },
+        { label: '5 - Marked on or after walking less than 2 km', value: 5 },
+        { label: '0 - Constant and severe', value: 0 },
+      ], 20),
+      selectInput('lys_swelling', '6. Swelling', [
+        { label: '10 - None', value: 10 },
+        { label: '6 - On severe exertion', value: 6 },
+        { label: '2 - On ordinary exertion', value: 2 },
+        { label: '0 - Constant', value: 0 },
+      ], 6),
+      selectInput('lys_stairs', '7. Stair climbing', [
+        { label: '10 - No problems', value: 10 },
+        { label: '6 - Slightly impaired', value: 6 },
+        { label: '2 - One step at a time', value: 2 },
+        { label: '0 - Impossible', value: 0 },
+      ], 6),
+      selectInput('lys_squatting', '8. Squatting', [
+        { label: '5 - No problems', value: 5 },
+        { label: '4 - Slightly impaired', value: 4 },
+        { label: '2 - Not beyond 90 degrees', value: 2 },
+        { label: '0 - Impossible', value: 0 },
+      ], 4),
+      numberInput('total', 'Direct Lysholm total override (0–100)', {
         min: 0,
         max: 100,
         defaultValue: 75,
-        helpText:
-          'Enter the total from the official 8-domain Lysholm form (0–100; 100 = no symptoms). Do not reconstruct items from memory.',
+        helpText: 'Used if Direct score override mode is selected.',
       }),
     ],
     calculate(values) {
-      const score = Math.round(num(values.total, 0));
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.lys_limp === undefined)) {
+        score = Math.round(num(values.total, 0));
+      } else {
+        score =
+          num(values.lys_limp, 5) +
+          num(values.lys_support, 5) +
+          num(values.lys_locking, 15) +
+          num(values.lys_instability, 20) +
+          num(values.lys_pain, 20) +
+          num(values.lys_swelling, 6) +
+          num(values.lys_stairs, 6) +
+          num(values.lys_squatting, 4);
+      }
+
       const r =
         score >= 95
           ? {
@@ -2084,15 +2416,15 @@ export const wave5GeneralMiscCalcs: Calculator[] = [
         unit: '/100',
         ...r,
         details: [
-          { label: 'Direction', value: 'Higher = better' },
-          { label: 'Domains', value: 'Limp, support, locking, instability, pain, swelling, stair climbing, squatting' },
+          { label: 'Direction', value: 'Higher = better (0–100 scale)' },
+          { label: 'Domains', value: 'Limp (5), Support (5), Locking (15), Instability (25), Pain (25), Swelling (10), Stairs (10), Squatting (5)' },
         ],
       };
     },
     evidence: {
       summary:
         'Lysholm score 0–100 (higher better). Common bands: excellent ≥95, good 84–94, fair 65–83, poor <65.',
-      formula: 'User-entered Lysholm total',
+      formula: 'Sum of 8 weighted domain scores (0–100)',
       validation: 'Lysholm & Gillquist 1982; extensively used in ACL and sports knee literature.',
       references: [
         {

@@ -1577,75 +1577,116 @@ export const wave5NephroGiCalcs: Calculator[] = [
     ],
   },
 
-  // 19. Mayo endoscopic score UC
+  // 19. Mayo score UC (Full & Endoscopic)
   {
     id: 'mayo-score-uc',
-    name: 'Mayo Endoscopic Score (Ulcerative Colitis)',
-    shortName: 'Mayo Endo',
-    description: 'Mayo endoscopic subscore for ulcerative colitis mucosal appearance (0–3).',
+    name: 'Mayo Score for Ulcerative Colitis (Full & Endoscopic)',
+    shortName: 'Mayo UC',
+    description: 'Full Schroeder Mayo Score (0–12) and Mayo Endoscopic Subscore (0–3) for evaluating ulcerative colitis disease activity.',
     category: 'gastroenterology',
-    tags: ['ulcerative colitis', 'mayo', 'endoscopy', 'ibd', 'mucosal healing'],
-    whenToUse: 'Colonoscopy/sigmoidoscopy grading of UC inflammatory activity.',
-    whyUse: 'Standard endoscopic endpoint in trials and treat-to-target strategies (0–1 often “endoscopic improvement”).',
+    tags: ['ulcerative colitis', 'mayo', 'endoscopy', 'ibd', 'mucosal healing', 'disease activity'],
+    whenToUse: 'When evaluating UC disease activity across symptoms, endoscopy, and clinical impression.',
+    whyUse: 'Gold standard 4-component index (0–12) for UC severity stratification, treatment response, and trial endpoints.',
     inputs: [
       selectInput(
-        'endo',
-        'Endoscopic findings (Mayo endoscopic subscore)',
+        'stool',
+        'Stool frequency',
         [
-          {
-            label: '0 — Normal or inactive disease',
-            value: 0,
-            description: 'Normal mucosa or inactive disease: intact vascular pattern, no erythema, no friability, no erosions or ulcers',
-          },
-          {
-            label: '1 — Mild (erythema, decreased vascular pattern, mild friability)',
-            value: 1,
-            description: 'Mild: erythema, decreased vascular pattern, and/or mild friability (bleeds only with light touch). No erosions or spontaneous bleeding',
-          },
-          {
-            label: '2 — Moderate (marked erythema, absent vascular pattern, friability, erosions)',
-            value: 2,
-            description: 'Moderate: marked erythema, absent vascular pattern, friability, and/or erosions. No ulcers or spontaneous bleeding',
-          },
-          {
-            label: '3 — Severe (spontaneous bleeding, ulceration)',
-            value: 3,
-            description: 'Severe: spontaneous bleeding and/or ulceration (mucosal defects with excavated base)',
-          },
+          { label: '0 — Normal number of stools', value: 0, points: 0, description: 'Normal number of stools per day for this patient when in remission' },
+          { label: '1 — 1–2 stools/day more than normal', value: 1, points: 1, description: '1–2 stools/day above patient’s baseline' },
+          { label: '2 — 3–4 stools/day more than normal', value: 2, points: 2, description: '3–4 stools/day above patient’s baseline' },
+          { label: '3 — ≥5 stools/day more than normal', value: 3, points: 3, description: '5 or more stools/day above patient’s baseline' },
         ],
         0,
-        'Score the most severely involved colorectal segment on the current exam (Schroeder 1987 Mayo endoscopic subscore). Original Mayo 1 includes mild friability; some trial “modified Mayo” scales move any friability to ≥2 — this tool uses original descriptors.',
+        'Relative to this patient’s baseline frequency when well.',
+      ),
+      selectInput(
+        'bleed',
+        'Rectal bleeding',
+        [
+          { label: '0 — None', value: 0, points: 0, description: 'No blood seen in stool' },
+          { label: '1 — Streaks of blood with stool less than half the time', value: 1, points: 1, description: 'Blood streaks in <50% of bowel movements' },
+          { label: '2 — Obvious blood with stool most of the time', value: 2, points: 2, description: 'Obvious blood in ≥50% of bowel movements' },
+          { label: '3 — Blood alone passes', value: 3, points: 3, description: 'Passage of blood alone without stool' },
+        ],
+        0,
+        'Most severe bleeding reported over the prior 3 days.',
+      ),
+      selectInput(
+        'endo',
+        'Endoscopic mucosal appearance (Mayo endoscopic subscore)',
+        [
+          { label: '0 — Normal or inactive disease', value: 0, points: 0, description: 'Normal mucosa or inactive disease: intact vascular pattern, no erythema, no friability, no erosions or ulcers' },
+          { label: '1 — Mild (erythema, decreased vascular pattern, mild friability)', value: 1, points: 1, description: 'Mild erythema, decreased vascular pattern, mild friability. No erosions or spontaneous bleeding' },
+          { label: '2 — Moderate (marked erythema, absent vascular pattern, friability, erosions)', value: 2, points: 2, description: 'Moderate erythema, absent vascular pattern, friability, erosions. No ulcers or spontaneous bleeding' },
+          { label: '3 — Severe (spontaneous bleeding, ulceration)', value: 3, points: 3, description: 'Spontaneous bleeding and/or ulceration (mucosal defects with excavated base)' },
+        ],
+        0,
+        'Score the most severely involved segment on current endoscopy.',
+      ),
+      selectInput(
+        'pga',
+        'Physician global assessment (PGA)',
+        [
+          { label: '0 — Normal', value: 0, points: 0, description: 'Asymptomatic and quiescent disease' },
+          { label: '1 — Mild disease', value: 1, points: 1, description: 'Mild overall activity incorporating symptoms and physical findings' },
+          { label: '2 — Moderate disease', value: 2, points: 2, description: 'Moderate overall activity' },
+          { label: '3 — Severe disease', value: 3, points: 3, description: 'Severe activity; patient markedly symptomatic' },
+        ],
+        0,
+        'Global assessment reflecting daily symptom burden, physical exam, and general well-being.',
       ),
     ],
     calculate(values) {
-      const score = num(values.endo, 0);
-      const map: Record<number, { label: string; riskLevel: 'normal' | 'low' | 'moderate' | 'high'; interpretation: string }> = {
-        0: {
-          label: 'Score 0 — Inactive / normal',
-          riskLevel: 'normal',
-          interpretation: 'Mayo endoscopic 0: normal or inactive mucosa. Consistent with endoscopic remission.',
-        },
-        1: {
-          label: 'Score 1 — Mild',
-          riskLevel: 'low',
-          interpretation: 'Mayo endoscopic 1: mild activity. Often grouped with 0 as endoscopic improvement in trials; clinical context still matters.',
-        },
-        2: {
-          label: 'Score 2 — Moderate',
-          riskLevel: 'moderate',
-          interpretation: 'Mayo endoscopic 2: moderate endoscopic activity — typically warrants therapy optimization.',
-        },
-        3: {
-          label: 'Score 3 — Severe',
-          riskLevel: 'high',
-          interpretation: 'Mayo endoscopic 3: severe activity with ulceration/spontaneous bleeding — escalate therapy; rule out infection (C. diff, CMV) when appropriate.',
-        },
+      const stool = num(values.stool, 0);
+      const bleed = num(values.bleed, 0);
+      const endo = num(values.endo, 0);
+      const pga = num(values.pga, 0);
+
+      const fullScore = stool + bleed + endo + pga;
+      const partialScore = stool + bleed + pga;
+
+      let riskLevel: 'normal' | 'low' | 'moderate' | 'high' = 'normal';
+      let label = 'Remission';
+      let interpretation = `Full Mayo score ${fullScore}/12 (Endoscopic subscore ${endo}): consistent with clinical and endoscopic remission (0–2 with no individual subscore >1).`;
+
+      if (fullScore <= 2 && stool <= 1 && bleed === 0 && endo <= 1) {
+        riskLevel = 'normal';
+        label = 'Clinical & Endoscopic Remission (0–2)';
+        interpretation = `Full Mayo score ${fullScore}/12 (Endoscopic subscore ${endo}): clinical and endoscopic remission. Supports maintenance therapy and treat-to-target mucosal healing.`;
+      } else if (fullScore <= 5) {
+        riskLevel = 'low';
+        label = 'Mild Disease Activity (3–5)';
+        interpretation = `Full Mayo score ${fullScore}/12 (Endoscopic subscore ${endo}): mild UC activity. Consider optimizing 5-ASA or topical therapies; monitor inflammatory biomarkers.`;
+      } else if (fullScore <= 10) {
+        riskLevel = 'moderate';
+        label = 'Moderate Disease Activity (6–10)';
+        interpretation = `Full Mayo score ${fullScore}/12 (Endoscopic subscore ${endo}): moderate UC activity. Frequently requires corticosteroid induction or escalation to biologic / targeted small-molecule therapy.`;
+      } else {
+        riskLevel = 'high';
+        label = 'Severe Disease Activity (11–12)';
+        interpretation = `Full Mayo score ${fullScore}/12 (Endoscopic subscore ${endo}): severe UC activity. High risk of treatment failure and colectomy; urgent specialist evaluation, inpatient admission if toxic signs present.`;
+      }
+
+      return {
+        score: fullScore,
+        unit: 'points (0–12)',
+        riskLevel,
+        label,
+        interpretation,
+        details: [
+          { label: 'Full Mayo Score', value: `${fullScore} / 12` },
+          { label: 'Mayo Endoscopic Subscore (MES)', value: `${endo} / 3` },
+          { label: 'Partial Mayo Score (non-invasive)', value: `${partialScore} / 9` },
+          { label: 'Stool Frequency subscore', value: `${stool} / 3` },
+          { label: 'Rectal Bleeding subscore', value: `${bleed} / 3` },
+          { label: 'Physician Global Assessment', value: `${pga} / 3` },
+        ],
       };
-      const m = map[score] ?? map[0];
-      return { score, unit: 'points', ...m };
     },
     evidence: {
-      summary: 'Mayo endoscopic subscore 0–3 based on mucosal appearance. Component of full Mayo score with stool frequency, bleeding, and PGA.',
+      summary:
+        'Schroeder Mayo Score for Ulcerative Colitis combines 4 subscores (stool frequency 0–3, rectal bleeding 0–3, endoscopic mucosal appearance 0–3, and physician global assessment 0–3) for a 0–12 total. Remission is defined as ≤2 with no subscore >1. Mild: 3–5, Moderate: 6–10, Severe: 11–12.',
       validation: 'Widely used in UC trials; central reading reduces variability.',
       references: [
         {
@@ -2043,67 +2084,231 @@ export const wave5NephroGiCalcs: Calculator[] = [
     pearls: ['Symptoms may dissociate from objective inflammation — treat-to-target still needs biomarkers/scopes.'],
   },
 
-  // 23. SES-CD interpretation
+  // 23. SES-CD (Simple Endoscopic Score for Crohn Disease)
   {
     id: 'ses-cd',
     name: 'SES-CD (Simple Endoscopic Score for Crohn Disease)',
     shortName: 'SES-CD',
-    description: 'Interprets a total Simple Endoscopic Score for Crohn Disease (enter summed score from endoscopy).',
+    description: 'Calculates and interprets the Simple Endoscopic Score for Crohn Disease (0–56) across 5 bowel segments and 4 endoscopic variables.',
     category: 'gastroenterology',
-    tags: ['ses-cd', 'crohn', 'endoscopy', 'ibd', 'mucosal healing'],
-    whenToUse: 'After ileocolonoscopy when SES-CD has been scored by segment.',
-    whyUse: 'Standard endoscopic activity metric for Crohn; guides mucosal healing targets.',
+    tags: ['ses-cd', 'crohn', 'endoscopy', 'ibd', 'mucosal healing', 'colonoscopy'],
+    whenToUse: 'During or after ileocolonoscopy to assess mucosal inflammation and evaluate endoscopic healing in Crohn disease.',
+    whyUse: 'Validated standard endoscopic score for Crohn disease; categorizes activity into remission, mild, moderate, and severe.',
     inputs: [
-      numberInput('total', 'Total SES-CD', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Score 5 anatomical segments (20 items)', value: 'survey' },
+        { label: 'Enter precomputed SES-CD total', value: 'direct' },
+      ], 'survey'),
+      numberInput('directTotal', 'Precomputed SES-CD total', {
         min: 0,
         max: 56,
         defaultValue: 8,
-        helpText:
-          'Sum 5 segments (ileum, right colon, transverse, left colon, rectum) × 4 items (each 0–3). Ulcers: 0 none; 1 aphthous 0.1–0.5 cm; 2 large 0.5–2 cm; 3 very large >2 cm. Ulcerated surface: 0 none; 1 <10%; 2 10–30%; 3 >30%. Affected surface: 0 none; 1 <50%; 2 50–75%; 3 >75%. Stenosis: 0 none; 1 single passable; 2 multiple passable; 3 cannot pass. Enter the precomputed total (max 56).',
+        helpText: 'Only used when "Enter precomputed SES-CD total" is selected.',
       }),
+
+      // Segment 1: Terminal Ileum
+      selectInput('ileum_ulcers', 'Ileum: Size of ulcers', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Aphthous ulcers (0.1–0.5 cm)', value: 1, points: 1 },
+        { label: '2 — Large ulcers (0.5–2.0 cm)', value: 2, points: 2 },
+        { label: '3 — Very large ulcers (>2.0 cm)', value: 3, points: 3 },
+      ], 0),
+      selectInput('ileum_ulcerSurface', 'Ileum: Ulcerated surface', [
+        { label: '0 — None (0%)', value: 0, points: 0 },
+        { label: '1 — <10% of segment surface', value: 1, points: 1 },
+        { label: '2 — 10%–30% of segment surface', value: 2, points: 2 },
+        { label: '3 — >30% of segment surface', value: 3, points: 3 },
+      ], 0),
+      selectInput('ileum_affectedSurface', 'Ileum: Affected surface', [
+        { label: '0 — Unaffected (0%)', value: 0, points: 0 },
+        { label: '1 — <50% of segment surface', value: 1, points: 1 },
+        { label: '2 — 50%–75% of segment surface', value: 2, points: 2 },
+        { label: '3 — >75% of segment surface', value: 3, points: 3 },
+      ], 0),
+      selectInput('ileum_stenosis', 'Ileum: Presence of narrowings / stenosis', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Single passable stenosis', value: 1, points: 1 },
+        { label: '2 — Multiple passable stenoses', value: 2, points: 2 },
+        { label: '3 — Cannot be passed (non-passable stenosis)', value: 3, points: 3 },
+      ], 0),
+
+      // Segment 2: Right Colon
+      selectInput('right_ulcers', 'Right Colon: Size of ulcers', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Aphthous ulcers (0.1–0.5 cm)', value: 1, points: 1 },
+        { label: '2 — Large ulcers (0.5–2.0 cm)', value: 2, points: 2 },
+        { label: '3 — Very large ulcers (>2.0 cm)', value: 3, points: 3 },
+      ], 0),
+      selectInput('right_ulcerSurface', 'Right Colon: Ulcerated surface', [
+        { label: '0 — None (0%)', value: 0, points: 0 },
+        { label: '1 — <10% of segment surface', value: 1, points: 1 },
+        { label: '2 — 10%–30% of segment surface', value: 2, points: 2 },
+        { label: '3 — >30% of segment surface', value: 3, points: 3 },
+      ], 0),
+      selectInput('right_affectedSurface', 'Right Colon: Affected surface', [
+        { label: '0 — Unaffected (0%)', value: 0, points: 0 },
+        { label: '1 — <50% of segment surface', value: 1, points: 1 },
+        { label: '2 — 50%–75% of segment surface', value: 2, points: 2 },
+        { label: '3 — >75% of segment surface', value: 3, points: 3 },
+      ], 0),
+      selectInput('right_stenosis', 'Right Colon: Presence of narrowings / stenosis', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Single passable stenosis', value: 1, points: 1 },
+        { label: '2 — Multiple passable stenoses', value: 2, points: 2 },
+        { label: '3 — Cannot be passed (non-passable stenosis)', value: 3, points: 3 },
+      ], 0),
+
+      // Segment 3: Transverse Colon
+      selectInput('trans_ulcers', 'Transverse Colon: Size of ulcers', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Aphthous ulcers (0.1–0.5 cm)', value: 1, points: 1 },
+        { label: '2 — Large ulcers (0.5–2.0 cm)', value: 2, points: 2 },
+        { label: '3 — Very large ulcers (>2.0 cm)', value: 3, points: 3 },
+      ], 0),
+      selectInput('trans_ulcerSurface', 'Transverse Colon: Ulcerated surface', [
+        { label: '0 — None (0%)', value: 0, points: 0 },
+        { label: '1 — <10% of segment surface', value: 1, points: 1 },
+        { label: '2 — 10%–30% of segment surface', value: 2, points: 2 },
+        { label: '3 — >30% of segment surface', value: 3, points: 3 },
+      ], 0),
+      selectInput('trans_affectedSurface', 'Transverse Colon: Affected surface', [
+        { label: '0 — Unaffected (0%)', value: 0, points: 0 },
+        { label: '1 — <50% of segment surface', value: 1, points: 1 },
+        { label: '2 — 50%–75% of segment surface', value: 2, points: 2 },
+        { label: '3 — >75% of segment surface', value: 3, points: 3 },
+      ], 0),
+      selectInput('trans_stenosis', 'Transverse Colon: Presence of narrowings / stenosis', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Single passable stenosis', value: 1, points: 1 },
+        { label: '2 — Multiple passable stenoses', value: 2, points: 2 },
+        { label: '3 — Cannot be passed (non-passable stenosis)', value: 3, points: 3 },
+      ], 0),
+
+      // Segment 4: Left Colon
+      selectInput('left_ulcers', 'Left Colon: Size of ulcers', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Aphthous ulcers (0.1–0.5 cm)', value: 1, points: 1 },
+        { label: '2 — Large ulcers (0.5–2.0 cm)', value: 2, points: 2 },
+        { label: '3 — Very large ulcers (>2.0 cm)', value: 3, points: 3 },
+      ], 0),
+      selectInput('left_ulcerSurface', 'Left Colon: Ulcerated surface', [
+        { label: '0 — None (0%)', value: 0, points: 0 },
+        { label: '1 — <10% of segment surface', value: 1, points: 1 },
+        { label: '2 — 10%–30% of segment surface', value: 2, points: 2 },
+        { label: '3 — >30% of segment surface', value: 3, points: 3 },
+      ], 0),
+      selectInput('left_affectedSurface', 'Left Colon: Affected surface', [
+        { label: '0 — Unaffected (0%)', value: 0, points: 0 },
+        { label: '1 — <50% of segment surface', value: 1, points: 1 },
+        { label: '2 — 50%–75% of segment surface', value: 2, points: 2 },
+        { label: '3 — >75% of segment surface', value: 3, points: 3 },
+      ], 0),
+      selectInput('left_stenosis', 'Left Colon: Presence of narrowings / stenosis', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Single passable stenosis', value: 1, points: 1 },
+        { label: '2 — Multiple passable stenoses', value: 2, points: 2 },
+        { label: '3 — Cannot be passed (non-passable stenosis)', value: 3, points: 3 },
+      ], 0),
+
+      // Segment 5: Rectum
+      selectInput('rectum_ulcers', 'Rectum: Size of ulcers', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Aphthous ulcers (0.1–0.5 cm)', value: 1, points: 1 },
+        { label: '2 — Large ulcers (0.5–2.0 cm)', value: 2, points: 2 },
+        { label: '3 — Very large ulcers (>2.0 cm)', value: 3, points: 3 },
+      ], 0),
+      selectInput('rectum_ulcerSurface', 'Rectum: Ulcerated surface', [
+        { label: '0 — None (0%)', value: 0, points: 0 },
+        { label: '1 — <10% of segment surface', value: 1, points: 1 },
+        { label: '2 — 10%–30% of segment surface', value: 2, points: 2 },
+        { label: '3 — >30% of segment surface', value: 3, points: 3 },
+      ], 0),
+      selectInput('rectum_affectedSurface', 'Rectum: Affected surface', [
+        { label: '0 — Unaffected (0%)', value: 0, points: 0 },
+        { label: '1 — <50% of segment surface', value: 1, points: 1 },
+        { label: '2 — 50%–75% of segment surface', value: 2, points: 2 },
+        { label: '3 — >75% of segment surface', value: 3, points: 3 },
+      ], 0),
+      selectInput('rectum_stenosis', 'Rectum: Presence of narrowings / stenosis', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Single passable stenosis', value: 1, points: 1 },
+        { label: '2 — Multiple passable stenoses', value: 2, points: 2 },
+        { label: '3 — Cannot be passed (non-passable stenosis)', value: 3, points: 3 },
+      ], 0),
     ],
     calculate(values) {
-      const score = num(values.total, 8);
+      const mode = String(values.entryMode ?? 'survey');
+      let score = 0;
+      let ileumSubtotal = 0;
+      let rightSubtotal = 0;
+      let transSubtotal = 0;
+      let leftSubtotal = 0;
+      let rectumSubtotal = 0;
+
+      if (mode === 'direct') {
+        score = num(values.directTotal, 8);
+      } else {
+        ileumSubtotal = num(values.ileum_ulcers, 0) + num(values.ileum_ulcerSurface, 0) + num(values.ileum_affectedSurface, 0) + num(values.ileum_stenosis, 0);
+        rightSubtotal = num(values.right_ulcers, 0) + num(values.right_ulcerSurface, 0) + num(values.right_affectedSurface, 0) + num(values.right_stenosis, 0);
+        transSubtotal = num(values.trans_ulcers, 0) + num(values.trans_ulcerSurface, 0) + num(values.trans_affectedSurface, 0) + num(values.trans_stenosis, 0);
+        leftSubtotal = num(values.left_ulcers, 0) + num(values.left_ulcerSurface, 0) + num(values.left_affectedSurface, 0) + num(values.left_stenosis, 0);
+        rectumSubtotal = num(values.rectum_ulcers, 0) + num(values.rectum_ulcerSurface, 0) + num(values.rectum_affectedSurface, 0) + num(values.rectum_stenosis, 0);
+        score = ileumSubtotal + rightSubtotal + transSubtotal + leftSubtotal + rectumSubtotal;
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 2,
           level: 'normal',
-          label: 'Remission (0–2)',
-          interpretation: `SES-CD ${score}: endoscopic remission range (commonly 0–2). Supports deep remission strategies when combined with clinical/biomarker remission.`,
+          label: 'Inactive / Remission (0–2)',
+          interpretation: `SES-CD ${score}/56: endoscopic remission range (0–2). Supports mucosal healing goals.`,
         },
         {
           max: 6,
           level: 'low',
-          label: 'Mild (3–6)',
-          interpretation: `SES-CD ${score}: mild endoscopic activity.`,
+          label: 'Mild endoscopic activity (3–6)',
+          interpretation: `SES-CD ${score}/56: mild endoscopic inflammation.`,
         },
         {
           max: 15,
           level: 'moderate',
-          label: 'Moderate (7–15)',
-          interpretation: `SES-CD ${score}: moderate endoscopic activity — typically warrants therapy optimization.`,
+          label: 'Moderate endoscopic activity (7–15)',
+          interpretation: `SES-CD ${score}/56: moderate endoscopic activity — typically warrants therapy optimization or escalation.`,
         },
         {
           max: 56,
           level: 'high',
-          label: 'Severe (≥16)',
-          interpretation: `SES-CD ${score}: severe endoscopic activity — escalate management; assess complications and nutrition.`,
+          label: 'Severe endoscopic activity (≥16)',
+          interpretation: `SES-CD ${score}/56: severe endoscopic activity — escalate medical therapy; evaluate for deep ulcerations or stricturing complications.`,
         },
       ]);
+
+      const details = [
+        { label: 'Total SES-CD', value: `${score} / 56` },
+        { label: 'Scoring Mode', value: mode === 'direct' ? 'Direct Total Entry' : 'Interactive 5-Segment Survey' },
+      ];
+
+      if (mode !== 'direct') {
+        details.push(
+          { label: 'Terminal Ileum subtotal', value: `${ileumSubtotal} / 12` },
+          { label: 'Right Colon subtotal', value: `${rightSubtotal} / 12` },
+          { label: 'Transverse Colon subtotal', value: `${transSubtotal} / 12` },
+          { label: 'Left Colon subtotal', value: `${leftSubtotal} / 12` },
+          { label: 'Rectum subtotal', value: `${rectumSubtotal} / 12` },
+        );
+      }
+
       return {
         score,
-        unit: 'points',
+        unit: 'points (0–56)',
         ...r,
-        details: [
-          { label: 'Remission', value: '0–2' },
-          { label: 'Mild / moderate / severe', value: '3–6 / 7–15 / ≥16' },
-        ],
+        details,
       };
     },
     evidence: {
       summary:
-        'SES-CD scores 5 ileocolonic segments for ulcer size, ulcerated surface, affected surface, and stenosis (0–3 each). Total interpretation bands commonly: 0–2 remission, 3–6 mild, 7–15 moderate, ≥16 severe.',
-      formula: 'Enter total SES-CD from endoscopic scoring sheet',
+        'SES-CD evaluates 5 anatomical segments (terminal ileum, right colon, transverse colon, left colon, rectum) across 4 endoscopic parameters (ulcer size 0–3, ulcerated surface 0–3, affected surface 0–3, stenosis 0–3) for a total of 0–56. Standard strata: 0–2 remission, 3–6 mild, 7–15 moderate, ≥16 severe.',
+      formula: 'SES-CD = Σ (Ulcer Size + Ulcerated Surface + Affected Surface + Stenosis) across 5 segments',
       validation: 'Daperno et al.; widely used in Crohn trials and practice.',
       references: [
         {

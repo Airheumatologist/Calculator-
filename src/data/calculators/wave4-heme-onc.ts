@@ -1795,75 +1795,132 @@ export const wave4HemeOncCalcs: Calculator[] = [
     pearls: ['ASDAS includes CRP/ESR and may better track inflammatory activity.', 'Morning stiffness duration is mapped onto 0–10, not raw hours in the sum.'],
   },
 
-  // ─── 23. SLEDAI-2K total interpretation ────────────────────────────────────
+  // 23. SLEDAI-2K (Systemic Lupus Erythematosus Disease Activity Index 2000)
   {
     id: 'sle-dai',
-    name: 'SLEDAI-2K (Total Interpretation)',
+    name: 'SLEDAI-2K (Lupus Disease Activity Index 2000)',
     shortName: 'SLEDAI-2K',
-    description: 'Interprets a precomputed SLEDAI-2K total score into common disease-activity bands.',
+    description: 'Assesses systemic lupus erythematosus disease activity across 24 clinical and laboratory descriptors over the prior 10–30 days.',
     category: 'rheumatology',
-    tags: ['sledai', 'sle', 'lupus', 'disease activity'],
-    whenToUse: 'When SLEDAI-2K has been scored from the 24 descriptors and a total needs band interpretation.',
-    whyUse: 'Standard lupus activity index used in trials and clinics; this helper maps totals to severity strata.',
+    tags: ['sledai', 'sle', 'lupus', 'disease activity', 'autoimmune', 'rheumatology'],
+    whenToUse: 'When evaluating SLE disease activity at diagnosis or monitoring response to immunosuppressive and biologic therapies.',
+    whyUse: 'Globally validated 24-descriptor instrument; foundational for defining clinical response, low disease activity (LLDAS), and remission (DORIS).',
     inputs: [
-      numberInput('total', 'SLEDAI-2K total score', {
+      selectInput('entryMode', 'Scoring method', [
+        { label: 'Complete 24-descriptor checklist', value: 'survey' },
+        { label: 'Enter precomputed SLEDAI-2K total (0–105)', value: 'direct' },
+      ], 'survey'),
+      numberInput('directTotal', 'Precomputed SLEDAI-2K total', {
         min: 0,
         max: 105,
         defaultValue: 6,
-        helpText: 'Enter the total from the official SLEDAI-2K form (24 weighted descriptors over the prior 10–30 days). Do not score descriptors here.',
+        helpText: 'Only used when "Enter precomputed SLEDAI-2K total" is selected.',
       }),
+
+      // Weight 8 Descriptors (Central Nervous System & Vascular)
+      yesNo('seizure', 'Seizure (recent onset past 10–30 days, exclude metabolic/drugs)', 8),
+      yesNo('psychosis', 'Psychosis (severe disturbance in ability to function, hallucinations/delusions)', 8),
+      yesNo('organicBrain', 'Organic brain syndrome (altered mental function, impaired memory/orientation)', 8),
+      yesNo('visual', 'Visual disturbance (retinal cytoid bodies, optic neuritis, retinal hemorrhage)', 8),
+      yesNo('cranialNerve', 'Cranial nerve disorder (new sensory or motor cranial neuropathy)', 8),
+      yesNo('lupusHeadache', 'Lupus headache (severe persistent headache, unresponsive to narcotics)', 8),
+      yesNo('cva', 'Cerebrovascular accident (new stroke or transient ischemic attack)', 8),
+      yesNo('vasculitis', 'Vasculitis (ulceration, gangrene, tender periungual infarcts, splinter hemorrhages)', 8),
+
+      // Weight 4 Descriptors (Musculoskeletal & Renal)
+      yesNo('arthritis', 'Arthritis (>2 joints with pain and signs of inflammation: swelling/effusion)', 4),
+      yesNo('myositis', 'Myositis (proximal muscle weakness/ache with elevated CPK/aldolase or EMG)', 4),
+      yesNo('urinaryCasts', 'Urinary casts (granular or red blood cell casts)', 4),
+      yesNo('hematuria', 'Hematuria (>5 red blood cells/hpf, exclude stone, infection, menses)', 4),
+      yesNo('proteinuria', 'Proteinuria (>0.5 g/24h new onset or recent increase)', 4),
+      yesNo('pyuria', 'Pyuria (>5 white blood cells/hpf, exclude infection)', 4),
+
+      // Weight 2 Descriptors (Mucocutaneous, Serosal & Immunologic)
+      yesNo('rash', 'New or recurrent inflammatory lupus rash (malar, maculopapular)', 2),
+      yesNo('alopecia', 'Alopecia (new abnormal patchy or diffuse hair loss)', 2),
+      yesNo('mucosalUlcers', 'Mucosal ulcers (oral or nasal ulcerations)', 2),
+      yesNo('pleurisy', 'Pleurisy (pleuritic chest pain with pleural rub, effusion, or thickening)', 2),
+      yesNo('pericarditis', 'Pericarditis (pericardial pain with rub, effusion, or ECG confirmation)', 2),
+      yesNo('lowComplement', 'Low complement (decreased C3 or C4 below lower limit of laboratory normal)', 2),
+      yesNo('antiDna', 'Increased DNA binding (>25% binding by Farr assay or above laboratory reference)', 2),
+
+      // Weight 1 Descriptors (Constitutional & Hematologic)
+      yesNo('fever', 'Fever (>38°C / 100.4°F, excluding infectious cause)', 1),
+      yesNo('thrombocytopenia', 'Thrombocytopenia (<100 × 10⁹/L platelets, exclude drug-induced)', 1),
+      yesNo('leukopenia', 'Leukopenia (<3.0 × 10⁹/L white blood cells, exclude drug-induced)', 1),
     ],
     calculate(values) {
-      const score = num(values.total, 0);
+      const mode = String(values.entryMode ?? 'survey');
+      let score = 0;
+      let activeCount = 0;
+
+      if (mode === 'direct') {
+        score = num(values.directTotal, 6);
+      } else {
+        const w8 = [values.seizure, values.psychosis, values.organicBrain, values.visual, values.cranialNerve, values.lupusHeadache, values.cva, values.vasculitis];
+        const w4 = [values.arthritis, values.myositis, values.urinaryCasts, values.hematuria, values.proteinuria, values.pyuria];
+        const w2 = [values.rash, values.alopecia, values.mucosalUlcers, values.pleurisy, values.pericarditis, values.lowComplement, values.antiDna];
+        const w1 = [values.fever, values.thrombocytopenia, values.leukopenia];
+
+        for (const item of w8) { if (bool(item)) { score += 8; activeCount++; } }
+        for (const item of w4) { if (bool(item)) { score += 4; activeCount++; } }
+        for (const item of w2) { if (bool(item)) { score += 2; activeCount++; } }
+        for (const item of w1) { if (bool(item)) { score += 1; activeCount++; } }
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 0,
           level: 'normal',
-          label: 'No activity (0)',
-          interpretation: 'SLEDAI-2K 0: no scored activity. Clinical surveillance and damage indices (SDI) may still be relevant.',
+          label: 'No disease activity (0)',
+          interpretation: 'SLEDAI-2K 0: no active inflammatory disease descriptors recorded. Compatible with clinical remission if maintenance glucocorticoids are low/tapered.',
         },
         {
           max: 5,
           level: 'low',
-          label: 'Mild activity (1–5)',
-          interpretation: `SLEDAI-2K ${score}: mild activity band (common educational cut). Adjust background therapy and monitor organ-specific signs.`,
+          label: 'Mild disease activity (1–5)',
+          interpretation: `SLEDAI-2K ${score}: mild disease activity. May qualify for Lupus Low Disease Activity State (LLDAS ≤4) depending on glucocorticoid dose and PGA.`,
         },
         {
           max: 10,
           level: 'moderate',
-          label: 'Moderate activity (6–10)',
-          interpretation: `SLEDAI-2K ${score}: moderate activity. Consider treatment intensification and close laboratory follow-up.`,
+          label: 'Moderate disease activity (6–10)',
+          interpretation: `SLEDAI-2K ${score}: moderate lupus activity. Re-evaluate organ involvement; consider optimizing antimalarials and escalating immunosuppressive therapy.`,
         },
         {
           max: 19,
           level: 'high',
-          label: 'High activity (11–19)',
-          interpretation: `SLEDAI-2K ${score}: high activity. Often warrants substantial therapy change; evaluate major organ involvement carefully.`,
+          label: 'High disease activity (11–19)',
+          interpretation: `SLEDAI-2K ${score}: high lupus activity. Usually reflects significant major organ involvement (renal, serositis, hematologic, or neurological). Substantial treatment intensification required.`,
         },
         {
-          max: 200,
+          max: 105,
           level: 'critical',
-          label: 'Very high activity (≥20)',
-          interpretation: `SLEDAI-2K ${score}: very high activity. Urgent rheumatology/inpatient pathways as indicated by organ systems.`,
+          label: 'Very high disease activity (≥20)',
+          interpretation: `SLEDAI-2K ${score}: very high/severe lupus activity flare. Urgent rheumatology/inpatient evaluation, pulse glucocorticoids, and aggressive induction immunosuppression indicated.`,
         },
       ]);
+
+      const details = [
+        { label: 'SLEDAI-2K Score', value: `${score} / 105` },
+        { label: 'Scoring Mode', value: mode === 'direct' ? 'Direct Total Entry' : '24-Descriptor Checklist' },
+      ];
+
+      if (mode !== 'direct') {
+        details.push({ label: 'Active Descriptors', value: `${activeCount} of 24` });
+      }
+
       return {
         score,
+        unit: 'points (0–105)',
         ...r,
-        details: [
-          { label: 'Note', value: 'Bands are widely used educationally; trial definitions may differ' },
-          { label: 'Max theoretical', value: '105' },
-        ],
-        recommendations: [
-          'Rescore only active descriptors present in the prior 10–30 days per instrument rules',
-          'Pair with PGA and organ-specific tools (e.g., renal)',
-        ],
+        details,
       };
     },
     evidence: {
       summary:
-        'SLEDAI-2K sums weighted clinical/lab descriptors. Common bands: 0 none; 1–5 mild; 6–10 moderate; 11–19 high; ≥20 very high (educational).',
-      formula: 'User-entered total of weighted SLEDAI-2K items',
+        'SLEDAI-2K scores 24 defined descriptors across 4 weight tiers (8, 4, 2, and 1 point) based on manifestation presence over the preceding 10–30 days. Validated cutoffs: 0 (no activity), 1–5 (mild), 6–10 (moderate), 11–19 (high), ≥20 (very high).',
+      formula: 'SLEDAI-2K = Σ (Weight × Descriptor)',
       validation: 'Gladman et al. updates to SLEDAI; widely used in SLE RCTs.',
       references: [
         {
@@ -1884,67 +1941,240 @@ export const wave4HemeOncCalcs: Calculator[] = [
     ],
   },
 
-  // ─── 24. PASI total interpretation ─────────────────────────────────────────
+  // 24. PASI (Psoriasis Area and Severity Index)
   {
     id: 'pasi',
-    name: 'PASI (Total Interpretation)',
+    name: 'PASI (Psoriasis Area and Severity Index)',
     shortName: 'PASI',
-    description: 'Interprets a precomputed Psoriasis Area and Severity Index total into mild/moderate/severe bands.',
+    description: 'Calculates and interprets the Psoriasis Area and Severity Index (0–72) across 4 anatomical regions (head, upper limbs, trunk, lower limbs).',
     category: 'dermatology',
-    tags: ['pasi', 'psoriasis', 'dermatology', 'severity'],
-    whenToUse: 'When PASI has been calculated from region scores and a severity band is needed for documentation or systemic therapy discussions.',
-    whyUse: 'PASI is the standard psoriasis severity composite in trials (PASI-75/90 responses).',
+    tags: ['pasi', 'psoriasis', 'dermatology', 'severity', 'plaque psoriasis'],
+    whenToUse: 'When evaluating plaque psoriasis severity, baseline assessment before systemic/biologic therapy, and monitoring treatment response (PASI-75/90/100).',
+    whyUse: 'Gold standard composite severity index required by clinical guidelines and clinical trials for moderate-to-severe plaque psoriasis.',
     inputs: [
-      numberInput('total', 'PASI total', {
+      selectInput('entryMode', 'Scoring method', [
+        { label: 'Score 4 anatomical regions', value: 'survey' },
+        { label: 'Enter precomputed PASI total (0–72)', value: 'direct' },
+      ], 'survey'),
+      numberInput('directTotal', 'Precomputed PASI total', {
         min: 0,
         max: 72,
         step: 0.1,
         defaultValue: 8,
-        helpText: 'Enter the total from the official PASI worksheet (0–72). Do not compute regional erythema/induration/scale here.',
+        helpText: 'Only used when "Enter precomputed PASI total" is selected.',
       }),
+
+      // Head & Neck (weight 0.1, 10% BSA)
+      selectInput('head_area', 'Head & Neck: Area involvement score', [
+        { label: '0 — 0% (No involvement)', value: 0, points: 0 },
+        { label: '1 — <10% of head surface', value: 1, points: 1 },
+        { label: '2 — 10%–29% of head surface', value: 2, points: 2 },
+        { label: '3 — 30%–49% of head surface', value: 3, points: 3 },
+        { label: '4 — 50%–69% of head surface', value: 4, points: 4 },
+        { label: '5 — 70%–89% of head surface', value: 5, points: 5 },
+        { label: '6 — 90%–100% of head surface', value: 6, points: 6 },
+      ], 0),
+      selectInput('head_erythema', 'Head & Neck: Erythema (redness)', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Slight / light pink', value: 1, points: 1 },
+        { label: '2 — Moderate / red', value: 2, points: 2 },
+        { label: '3 — Severe / very red', value: 3, points: 3 },
+        { label: '4 — Very severe / extreme red', value: 4, points: 4 },
+      ], 0),
+      selectInput('head_induration', 'Head & Neck: Induration (thickness)', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Slight / barely palpable', value: 1, points: 1 },
+        { label: '2 — Moderate / distinct plaque elevation', value: 2, points: 2 },
+        { label: '3 — Severe / marked elevation with rounded edges', value: 3, points: 3 },
+        { label: '4 — Very severe / maximal plaque thickness', value: 4, points: 4 },
+      ], 0),
+      selectInput('head_desquamation', 'Head & Neck: Desquamation (scaling)', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Slight / fine partial scaling', value: 1, points: 1 },
+        { label: '2 — Moderate / coarse scaling over majority of lesion', value: 2, points: 2 },
+        { label: '3 — Severe / thick tenacious scales covering lesions', value: 3, points: 3 },
+        { label: '4 — Very severe / very thick dense scaling across all lesions', value: 4, points: 4 },
+      ], 0),
+
+      // Upper Limbs (weight 0.2, 20% BSA)
+      selectInput('upper_area', 'Upper Limbs: Area involvement score', [
+        { label: '0 — 0% (No involvement)', value: 0, points: 0 },
+        { label: '1 — <10% of upper limb surface', value: 1, points: 1 },
+        { label: '2 — 10%–29% of upper limb surface', value: 2, points: 2 },
+        { label: '3 — 30%–49% of upper limb surface', value: 3, points: 3 },
+        { label: '4 — 50%–69% of upper limb surface', value: 4, points: 4 },
+        { label: '5 — 70%–89% of upper limb surface', value: 5, points: 5 },
+        { label: '6 — 90%–100% of upper limb surface', value: 6, points: 6 },
+      ], 0),
+      selectInput('upper_erythema', 'Upper Limbs: Erythema (redness)', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Slight / light pink', value: 1, points: 1 },
+        { label: '2 — Moderate / red', value: 2, points: 2 },
+        { label: '3 — Severe / very red', value: 3, points: 3 },
+        { label: '4 — Very severe / extreme red', value: 4, points: 4 },
+      ], 0),
+      selectInput('upper_induration', 'Upper Limbs: Induration (thickness)', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Slight / barely palpable', value: 1, points: 1 },
+        { label: '2 — Moderate / distinct plaque elevation', value: 2, points: 2 },
+        { label: '3 — Severe / marked elevation with rounded edges', value: 3, points: 3 },
+        { label: '4 — Very severe / maximal plaque thickness', value: 4, points: 4 },
+      ], 0),
+      selectInput('upper_desquamation', 'Upper Limbs: Desquamation (scaling)', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Slight / fine partial scaling', value: 1, points: 1 },
+        { label: '2 — Moderate / coarse scaling over majority of lesion', value: 2, points: 2 },
+        { label: '3 — Severe / thick tenacious scales covering lesions', value: 3, points: 3 },
+        { label: '4 — Very severe / very thick dense scaling across all lesions', value: 4, points: 4 },
+      ], 0),
+
+      // Trunk (weight 0.3, 30% BSA)
+      selectInput('trunk_area', 'Trunk: Area involvement score', [
+        { label: '0 — 0% (No involvement)', value: 0, points: 0 },
+        { label: '1 — <10% of trunk surface', value: 1, points: 1 },
+        { label: '2 — 10%–29% of trunk surface', value: 2, points: 2 },
+        { label: '3 — 30%–49% of trunk surface', value: 3, points: 3 },
+        { label: '4 — 50%–69% of trunk surface', value: 4, points: 4 },
+        { label: '5 — 70%–89% of trunk surface', value: 5, points: 5 },
+        { label: '6 — 90%–100% of trunk surface', value: 6, points: 6 },
+      ], 0),
+      selectInput('trunk_erythema', 'Trunk: Erythema (redness)', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Slight / light pink', value: 1, points: 1 },
+        { label: '2 — Moderate / red', value: 2, points: 2 },
+        { label: '3 — Severe / very red', value: 3, points: 3 },
+        { label: '4 — Very severe / extreme red', value: 4, points: 4 },
+      ], 0),
+      selectInput('trunk_induration', 'Trunk: Induration (thickness)', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Slight / barely palpable', value: 1, points: 1 },
+        { label: '2 — Moderate / distinct plaque elevation', value: 2, points: 2 },
+        { label: '3 — Severe / marked elevation with rounded edges', value: 3, points: 3 },
+        { label: '4 — Very severe / maximal plaque thickness', value: 4, points: 4 },
+      ], 0),
+      selectInput('trunk_desquamation', 'Trunk: Desquamation (scaling)', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Slight / fine partial scaling', value: 1, points: 1 },
+        { label: '2 — Moderate / coarse scaling over majority of lesion', value: 2, points: 2 },
+        { label: '3 — Severe / thick tenacious scales covering lesions', value: 3, points: 3 },
+        { label: '4 — Very severe / very thick dense scaling across all lesions', value: 4, points: 4 },
+      ], 0),
+
+      // Lower Limbs (weight 0.4, 40% BSA)
+      selectInput('lower_area', 'Lower Limbs: Area involvement score', [
+        { label: '0 — 0% (No involvement)', value: 0, points: 0 },
+        { label: '1 — <10% of lower limb surface', value: 1, points: 1 },
+        { label: '2 — 10%–29% of lower limb surface', value: 2, points: 2 },
+        { label: '3 — 30%–49% of lower limb surface', value: 3, points: 3 },
+        { label: '4 — 50%–69% of lower limb surface', value: 4, points: 4 },
+        { label: '5 — 70%–89% of lower limb surface', value: 5, points: 5 },
+        { label: '6 — 90%–100% of lower limb surface', value: 6, points: 6 },
+      ], 0),
+      selectInput('lower_erythema', 'Lower Limbs: Erythema (redness)', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Slight / light pink', value: 1, points: 1 },
+        { label: '2 — Moderate / red', value: 2, points: 2 },
+        { label: '3 — Severe / very red', value: 3, points: 3 },
+        { label: '4 — Very severe / extreme red', value: 4, points: 4 },
+      ], 0),
+      selectInput('lower_induration', 'Lower Limbs: Induration (thickness)', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Slight / barely palpable', value: 1, points: 1 },
+        { label: '2 — Moderate / distinct plaque elevation', value: 2, points: 2 },
+        { label: '3 — Severe / marked elevation with rounded edges', value: 3, points: 3 },
+        { label: '4 — Very severe / maximal plaque thickness', value: 4, points: 4 },
+      ], 0),
+      selectInput('lower_desquamation', 'Lower Limbs: Desquamation (scaling)', [
+        { label: '0 — None', value: 0, points: 0 },
+        { label: '1 — Slight / fine partial scaling', value: 1, points: 1 },
+        { label: '2 — Moderate / coarse scaling over majority of lesion', value: 2, points: 2 },
+        { label: '3 — Severe / thick tenacious scales covering lesions', value: 3, points: 3 },
+        { label: '4 — Very severe / very thick dense scaling across all lesions', value: 4, points: 4 },
+      ], 0),
     ],
     calculate(values) {
-      const score = round(num(values.total, 0), 1);
+      const mode = String(values.entryMode ?? 'survey');
+      let score = 0;
+      let headSub = 0;
+      let upperSub = 0;
+      let trunkSub = 0;
+      let lowerSub = 0;
+
+      if (mode === 'direct') {
+        score = round(num(values.directTotal, 8), 1);
+      } else {
+        const hArea = num(values.head_area, 0);
+        const hSigns = num(values.head_erythema, 0) + num(values.head_induration, 0) + num(values.head_desquamation, 0);
+        headSub = round(0.1 * hSigns * hArea, 1);
+
+        const uArea = num(values.upper_area, 0);
+        const uSigns = num(values.upper_erythema, 0) + num(values.upper_induration, 0) + num(values.upper_desquamation, 0);
+        upperSub = round(0.2 * uSigns * uArea, 1);
+
+        const tArea = num(values.trunk_area, 0);
+        const tSigns = num(values.trunk_erythema, 0) + num(values.trunk_induration, 0) + num(values.trunk_desquamation, 0);
+        trunkSub = round(0.3 * tSigns * tArea, 1);
+
+        const lArea = num(values.lower_area, 0);
+        const lSigns = num(values.lower_erythema, 0) + num(values.lower_induration, 0) + num(values.lower_desquamation, 0);
+        lowerSub = round(0.4 * lSigns * lArea, 1);
+
+        score = round(headSub + upperSub + trunkSub + lowerSub, 1);
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 0,
           level: 'normal',
-          label: 'Clear (0)',
-          interpretation: 'PASI 0: clear. Continue maintenance plan if on systemic therapy.',
+          label: 'Clear / Complete Remission (0)',
+          interpretation: 'PASI 0: completely clear skin without active psoriatic plaques. Corresponds to complete clearance (PASI-100 response).',
         },
         {
           max: 4.9,
           level: 'low',
-          label: 'Mild (<5)',
-          interpretation: `PASI ${score}: mild range for many classifications. Topicals often first-line; consider BSA, DLQI, special sites (face/genitals/palms).`,
+          label: 'Mild psoriasis (<5)',
+          interpretation: `PASI ${score}/72: mild plaque psoriasis. Often managed with topical corticosteroids, vitamin D analogues, and emollients; monitor quality of life (DLQI).`,
         },
         {
           max: 10,
           level: 'moderate',
-          label: 'Moderate (5–10)',
-          interpretation: `PASI ${score}: moderate severity band. Phototherapy or systemic/biologic therapy may be appropriate with impact on quality of life.`,
+          label: 'Moderate psoriasis (5–10)',
+          interpretation: `PASI ${score}/72: moderate plaque psoriasis. Candidate for targeted phototherapy (NB-UVB), conventional oral systemics (methotrexate, apremilast), or biologic therapies if refractory or significant disability.`,
         },
         {
           max: 72,
           level: 'high',
-          label: 'Severe (>10)',
-          interpretation: `PASI ${score}: severe range commonly used in pathways/trials. Systemic or biologic therapy frequently indicated; screen for PsA.`,
+          label: 'Severe psoriasis (>10)',
+          interpretation: `PASI ${score}/72: severe plaque psoriasis. Strong indication for advanced biologic therapy (anti-TNF, anti-IL-17, anti-IL-23) or systemic agents; screen for comorbid psoriatic arthritis and cardiometabolic risks.`,
         },
       ]);
+
+      const details = [
+        { label: 'PASI Score', value: `${score} / 72.0` },
+        { label: 'Scoring Mode', value: mode === 'direct' ? 'Direct Total Entry' : '4-Region Form' },
+      ];
+
+      if (mode !== 'direct') {
+        details.push(
+          { label: 'Head & Neck subscore (weight 0.1)', value: `${headSub}` },
+          { label: 'Upper Limbs subscore (weight 0.2)', value: `${upperSub}` },
+          { label: 'Trunk subscore (weight 0.3)', value: `${trunkSub}` },
+          { label: 'Lower Limbs subscore (weight 0.4)', value: `${lowerSub}` },
+        );
+      }
+
       return {
         score,
+        unit: 'points (0–72)',
         ...r,
-        details: [
-          { label: 'Theoretical maximum', value: '72' },
-          { label: 'Response metrics', value: 'PASI-75 / PASI-90 used in trials' },
-        ],
+        details,
       };
     },
     evidence: {
       summary:
-        'PASI combines erythema, induration, and desquamation with area weighting across four body regions (0–72). Educational bands often mild <5, moderate 5–10, severe >10.',
-      formula: 'User-entered PASI total (0–72)',
-      validation: 'Fredriksson & Pettersson 1978; gold-standard trial endpoint.',
+        'PASI evaluates plaque erythema (0–4), induration (0–4), and desquamation (0–4) multiplied by area score (0–6) across four body regions: head/neck (0.1), upper limbs (0.2), trunk (0.3), and lower limbs (0.4). Total range is 0.0 to 72.0. Mild: <5, Moderate: 5–10, Severe: >10.',
+      formula: 'PASI = 0.1(Eh+Ih+Dh)Ah + 0.2(Eu+Iu+Du)Au + 0.3(Et+It+Dt)At + 0.4(El+Il+Dl)Al',
+      validation: 'Fredriksson & Pettersson 1978; worldwide benchmark endpoint for plaque psoriasis.',
       references: [
         {
           title: 'Severe psoriasis—oral therapy with a new retinoid',

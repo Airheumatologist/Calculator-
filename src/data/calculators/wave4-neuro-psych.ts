@@ -1033,28 +1033,249 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     name: 'SCAT Symptom Severity Score',
     shortName: 'SCAT Symptoms',
     description:
-      'Enter SCAT5/SCAT6 symptom evaluation totals: number of symptoms (0–22) and severity score (0–132).',
+      'SCAT5/SCAT6 concussion symptom checklist: 22 symptoms rated 0–6 (none to severe), auto-summing symptom count (0–22) and severity score (0–132), or direct total.',
     category: 'neurology',
     tags: ['concussion', 'scat5', 'scat6', 'sports', 'symptom'],
-    whenToUse: 'Sideline or clinic concussion assessment after administering the SCAT symptom checklist.',
-    whyUse: 'Quantifies symptom burden for baseline comparison and serial recovery tracking within multimodal concussion assessment.',
+    whenToUse: 'Sideline or acute/post-acute concussion assessment; athlete/patient completes 22 symptom items or enter totals.',
+    whyUse: 'Quantifies symptom burden for baseline comparison, return-to-play monitoring, and serial recovery tracking.',
     inputs: [
-      numberInput('numSymptoms', 'Number of symptoms endorsed (0–22)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Complete 22-item symptom checklist', value: 'survey' },
+        { label: 'Direct totals override', value: 'direct' },
+      ]),
+      numberInput('numSymptoms', 'Number of symptoms endorsed (0–22, direct mode)', {
         min: 0,
         max: 22,
         defaultValue: 0,
-        helpText: 'How they feel now (SCAT5/SCAT6 symptom evaluation). 22 symptoms. Enter the count from the official form — do not administer items here.',
+        helpText: 'Used only if direct override is selected.',
       }),
-      numberInput('severity', 'Symptom severity sum (0–132)', {
+      numberInput('severity', 'Symptom severity sum (0–132, direct mode)', {
         min: 0,
         max: 132,
         defaultValue: 0,
-        helpText: 'Each of 22 symptoms rated 0–6 (none → severe). Sum 0–132 from the official SCAT form.',
+        helpText: 'Used only if direct override is selected.',
       }),
+      selectInput('headache', 'Headache', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('pressure_head', 'Pressure in head', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('neck_pain', 'Neck pain', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('nausea_vomiting', 'Nausea or vomiting', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('dizziness', 'Dizziness', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('blurred_vision', 'Blurred vision', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('balance_problems', 'Balance problems', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('sensitivity_light', 'Sensitivity to light', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('sensitivity_noise', 'Sensitivity to noise', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('feeling_slowed', 'Feeling slowed down', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('feeling_fog', 'Feeling like in a fog', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('dont_feel_right', 'Don\'t feel right', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('diff_concentrating', 'Difficulty concentrating', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('diff_remembering', 'Difficulty remembering', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('fatigue_low_energy', 'Fatigue or low energy', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('confusion', 'Confusion', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('drowsiness', 'Drowsiness', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('more_emotional', 'More emotional', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('irritability', 'Irritability', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('sadness', 'Sadness', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('nervous_anxious', 'Nervous or anxious', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
+      selectInput('trouble_falling_asleep', 'Trouble falling asleep', [
+        { label: '0 — None', value: 0 },
+        { label: '1 — Very mild', value: 1 },
+        { label: '2 — Mild', value: 2 },
+        { label: '3 — Moderate', value: 3 },
+        { label: '4 — Moderate-severe', value: 4 },
+        { label: '5 — Severe', value: 5 },
+        { label: '6 — Very severe', value: 6 },
+      ]),
     ],
     calculate(values) {
-      const n = num(values.numSymptoms);
-      const sev = num(values.severity);
+      const mode = String(values.entryMode ?? 'survey');
+      let n = 0;
+      let sev = 0;
+
+      if (mode === 'direct' || (values.severity !== undefined && values.entryMode === undefined && values.headache === undefined)) {
+        n = num(values.numSymptoms, 0);
+        sev = num(values.severity, 0);
+      } else {
+        const symptomKeys = [
+          'headache', 'pressure_head', 'neck_pain', 'nausea_vomiting', 'dizziness', 'blurred_vision',
+          'balance_problems', 'sensitivity_light', 'sensitivity_noise', 'feeling_slowed', 'feeling_fog',
+          'dont_feel_right', 'diff_concentrating', 'diff_remembering', 'fatigue_low_energy', 'confusion',
+          'drowsiness', 'more_emotional', 'irritability', 'sadness', 'nervous_anxious', 'trouble_falling_asleep'
+        ];
+        for (const key of symptomKeys) {
+          const val = num(values[key], 0);
+          sev += val;
+          if (val > 0) n += 1;
+        }
+      }
+
       const r = riskFromThresholds(sev, [
         {
           max: 0,
@@ -1066,19 +1287,19 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
           max: 20,
           level: 'moderate',
           label: 'Mild symptom burden',
-          interpretation: `Severity ${sev}/132 across ${n} symptoms — mild burden. Relative rest, graded activity, and serial SCAT symptom tracking.`,
+          interpretation: `Severity ${sev}/132 across ${n} symptoms — mild burden. Relative rest (24–48h), graded return to learn/play, and serial SCAT symptom tracking.`,
         },
         {
           max: 50,
           level: 'high',
           label: 'Moderate symptom burden',
-          interpretation: `Severity ${sev}/132 across ${n} symptoms — moderate burden. Structured concussion management; consider academic/work adjustments.`,
+          interpretation: `Severity ${sev}/132 across ${n} symptoms — moderate burden. Multidisciplinary concussion management; academic/work modifications recommended.`,
         },
         {
           max: 132,
           level: 'critical',
           label: 'High symptom burden',
-          interpretation: `Severity ${sev}/132 across ${n} symptoms — high burden. Closer follow-up; red-flag screen (worsening headache, vomiting, focal neuro signs, prolonged LOC).`,
+          interpretation: `Severity ${sev}/132 across ${n} symptoms — high burden. Close medical surveillance; red-flag screen (worsening headache, persistent vomiting, focal neurological signs, seizures, neck pain).`,
         },
       ]);
       return {
@@ -1087,14 +1308,16 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         ...r,
         details: [
           { label: 'Symptoms endorsed', value: `${n} / 22` },
-          { label: 'Mean per endorsed (approx)', value: n > 0 ? String(round(sev / n, 1)) : '—' },
+          { label: 'Severity total', value: `${sev} / 132` },
+          { label: 'Mean per endorsed', value: n > 0 ? String(round(sev / n, 1)) : '—' },
+          { label: 'Entry mode', value: mode === 'survey' ? '22-item checklist' : 'Direct override' },
         ],
       };
     },
     evidence: {
       summary:
-        'SCAT symptom evaluation: 22 symptoms each 0–6 (none → severe), yielding symptom count 0–22 and severity 0–132. Used in SCAT5/SCAT6 multimodal concussion tools.',
-      formula: 'Enter clinician/athlete-administered totals',
+        'SCAT5 / SCAT6 symptom evaluation: 22 symptoms each rated 0–6 (none → severe), yielding symptom count (0–22) and symptom severity score (0–132). Embedded in international consensus Concussion in Sport Group guidelines.',
+      formula: 'Sum of 22 items (each 0–6) = Severity (0–132); Count of items > 0 = Symptoms endorsed (0–22)',
       validation: 'Embedded in consensus sports concussion tools (Concussion in Sport Group); track change from baseline when available.',
       references: [
         {
@@ -1108,27 +1331,30 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
           title: 'Sport concussion assessment tool 6 (SCAT6)',
           citation: 'Echemendia RJ et al. Br J Sports Med. 2023',
           year: 2023,
-          pmid: '37316203',
+          pmid: '37316287',
           doi: '10.1136/bjsports-2023-107036',
         },
       ],
     },
     nextSteps: [
       {
-        condition: 'Any concussion diagnosis',
+        condition: 'Red flag symptoms (focal neuro deficit, worsening headache, repeated emesis, seizures)',
+        actions: ['Immediate emergency neuroimaging / emergency department evaluation'],
+      },
+      {
+        condition: 'Symptom severity > 0',
         actions: [
-          'Remove from play same day if concussion suspected',
-          'Graduated return-to-learn then return-to-play',
-          'Reassess if symptoms worsen',
+          'Initial relative rest 24–48 hours, then sub-symptom threshold aerobic exercise',
+          'Graduated Return-to-Learn followed by Graduated Return-to-Sport protocol',
+          'Avoid same-day return to contact sports',
         ],
       },
     ],
     pearls: [
-      'Compare to individual baseline when available.',
-      'Symptom scores are subjective — integrate with exam and cognitive testing.',
+      'Asymptomatic does not alone clear an athlete; cognitive and postural testing must normalize.',
+      'Baseline SCAT scores (preseason) significantly aid individual comparison.',
     ],
   },
-
   {
     id: 'concussion-return',
     name: 'Graduated Return-to-Play (Concussion)',
@@ -1599,72 +1825,201 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
 
   {
     id: 'iqcode',
-    name: 'IQCODE (Informant Cognitive Decline)',
+    name: 'IQCODE (Informant Questionnaire on Cognitive Decline)',
     shortName: 'IQCODE',
     description:
-      'Informant Questionnaire on Cognitive Decline in the Elderly — enter average item score (1–5).',
+      'Informant Questionnaire on Cognitive Decline in the Elderly (Short 16-item Form, 1–5 scale, average 1.0–5.0), with direct average override.',
     category: 'neurology',
     tags: ['iqcode', 'dementia', 'informant', 'screening', 'geriatrics'],
-    whenToUse: 'When an informant rates change in cognition over ~10 years and average IQCODE is available.',
-    whyUse: 'Useful when patient testing is limited; captures longitudinal decline better than a single cross-sectional screen.',
+    whenToUse: 'When an informant/caregiver rates change in cognitive performance over the past 10 years.',
+    whyUse: 'Unaffected by premorbid education/language barriers; highly sensitive for detecting progressive cognitive decline.',
     inputs: [
-      numberInput('average', 'IQCODE average score (1.0–5.0)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Complete 16-item Short IQCODE questionnaire', value: 'survey' },
+        { label: 'Direct average score override', value: 'direct' },
+      ]),
+      numberInput('average', 'IQCODE average score (1.0–5.0, direct mode)', {
         min: 1,
         max: 5,
-        step: 0.1,
+        step: 0.01,
         defaultValue: 3.0,
-        helpText: 'Mean of items (short 16-item or full 26-item). Rate CHANGE vs ~10 years ago; 3 = no change, 1 much improved, 5 much worse. Prefer a reliable informant.',
+        helpText: 'Used only if direct override is selected. Mean of items: 1 much improved, 3 no change, 5 much worse.',
       }),
-      selectInput('form', 'Form used', [
+      selectInput('form', 'Form used (if direct override)', [
         { label: 'Short IQCODE (16 items)', value: 'short' },
         { label: 'Full IQCODE (26 items)', value: 'full' },
         { label: 'Not specified', value: 'na' },
       ]),
+      selectInput('iq1', '1. Recognizing faces of family and friends', [
+        { label: '1 — Much improved', value: 1 },
+        { label: '2 — A bit improved', value: 2 },
+        { label: '3 — Not much change', value: 3 },
+        { label: '4 — A bit worse', value: 4 },
+        { label: '5 — Much worse', value: 5 },
+      ], 2),
+      selectInput('iq2', '2. Remembering names of family and friends', [
+        { label: '1 — Much improved', value: 1 },
+        { label: '2 — A bit improved', value: 2 },
+        { label: '3 — Not much change', value: 3 },
+        { label: '4 — A bit worse', value: 4 },
+        { label: '5 — Much worse', value: 5 },
+      ], 2),
+      selectInput('iq3', '3. Remembering things about family and friends (e.g. occupations, birthdays)', [
+        { label: '1 — Much improved', value: 1 },
+        { label: '2 — A bit improved', value: 2 },
+        { label: '3 — Not much change', value: 3 },
+        { label: '4 — A bit worse', value: 4 },
+        { label: '5 — Much worse', value: 5 },
+      ], 2),
+      selectInput('iq4', '4. Remembering things that have happened recently', [
+        { label: '1 — Much improved', value: 1 },
+        { label: '2 — A bit improved', value: 2 },
+        { label: '3 — Not much change', value: 3 },
+        { label: '4 — A bit worse', value: 4 },
+        { label: '5 — Much worse', value: 5 },
+      ], 2),
+      selectInput('iq5', '5. Recalling conversations a few days later', [
+        { label: '1 — Much improved', value: 1 },
+        { label: '2 — A bit improved', value: 2 },
+        { label: '3 — Not much change', value: 3 },
+        { label: '4 — A bit worse', value: 4 },
+        { label: '5 — Much worse', value: 5 },
+      ], 2),
+      selectInput('iq6', '6. Forgetting what he/she wanted to say in the middle of a conversation', [
+        { label: '1 — Much improved', value: 1 },
+        { label: '2 — A bit improved', value: 2 },
+        { label: '3 — Not much change', value: 3 },
+        { label: '4 — A bit worse', value: 4 },
+        { label: '5 — Much worse', value: 5 },
+      ], 2),
+      selectInput('iq7', '7. Remembering his/her address and telephone number', [
+        { label: '1 — Much improved', value: 1 },
+        { label: '2 — A bit improved', value: 2 },
+        { label: '3 — Not much change', value: 3 },
+        { label: '4 — A bit worse', value: 4 },
+        { label: '5 — Much worse', value: 5 },
+      ], 2),
+      selectInput('iq8', '8. Remembering what day and month it is', [
+        { label: '1 — Much improved', value: 1 },
+        { label: '2 — A bit improved', value: 2 },
+        { label: '3 — Not much change', value: 3 },
+        { label: '4 — A bit worse', value: 4 },
+        { label: '5 — Much worse', value: 5 },
+      ], 2),
+      selectInput('iq9', '9. Remembering where things are usually kept', [
+        { label: '1 — Much improved', value: 1 },
+        { label: '2 — A bit improved', value: 2 },
+        { label: '3 — Not much change', value: 3 },
+        { label: '4 — A bit worse', value: 4 },
+        { label: '5 — Much worse', value: 5 },
+      ], 2),
+      selectInput('iq10', '10. Knowing where to find things that have been put in an unusual place', [
+        { label: '1 — Much improved', value: 1 },
+        { label: '2 — A bit improved', value: 2 },
+        { label: '3 — Not much change', value: 3 },
+        { label: '4 — A bit worse', value: 4 },
+        { label: '5 — Much worse', value: 5 },
+      ], 2),
+      selectInput('iq11', '11. Knowing how to work familiar gadgets and appliances (e.g. TV, stove)', [
+        { label: '1 — Much improved', value: 1 },
+        { label: '2 — A bit improved', value: 2 },
+        { label: '3 — Not much change', value: 3 },
+        { label: '4 — A bit worse', value: 4 },
+        { label: '5 — Much worse', value: 5 },
+      ], 2),
+      selectInput('iq12', '12. Learning to use a new gadget or appliance around the house', [
+        { label: '1 — Much improved', value: 1 },
+        { label: '2 — A bit improved', value: 2 },
+        { label: '3 — Not much change', value: 3 },
+        { label: '4 — A bit worse', value: 4 },
+        { label: '5 — Much worse', value: 5 },
+      ], 2),
+      selectInput('iq13', '13. Learning new things in general', [
+        { label: '1 — Much improved', value: 1 },
+        { label: '2 — A bit improved', value: 2 },
+        { label: '3 — Not much change', value: 3 },
+        { label: '4 — A bit worse', value: 4 },
+        { label: '5 — Much worse', value: 5 },
+      ], 2),
+      selectInput('iq14', '14. Following a story in a book or on television', [
+        { label: '1 — Much improved', value: 1 },
+        { label: '2 — A bit improved', value: 2 },
+        { label: '3 — Not much change', value: 3 },
+        { label: '4 — A bit worse', value: 4 },
+        { label: '5 — Much worse', value: 5 },
+      ], 2),
+      selectInput('iq15', '15. Making decisions on everyday matters (e.g. what to wear, meals)', [
+        { label: '1 — Much improved', value: 1 },
+        { label: '2 — A bit improved', value: 2 },
+        { label: '3 — Not much change', value: 3 },
+        { label: '4 — A bit worse', value: 4 },
+        { label: '5 — Much worse', value: 5 },
+      ], 2),
+      selectInput('iq16', '16. Handling financial matters (e.g. banking, shopping change)', [
+        { label: '1 — Much improved', value: 1 },
+        { label: '2 — A bit improved', value: 2 },
+        { label: '3 — Not much change', value: 3 },
+        { label: '4 — A bit worse', value: 4 },
+        { label: '5 — Much worse', value: 5 },
+      ], 2),
     ],
     calculate(values) {
-      const avg = num(values.average, 3);
+      const mode = String(values.entryMode ?? 'survey');
+      let avg = 3.0;
+
+      if (mode === 'direct' || (values.average !== undefined && values.entryMode === undefined && values.iq1 === undefined)) {
+        avg = num(values.average, 3.0);
+      } else {
+        let total = 0;
+        for (let i = 1; i <= 16; i++) {
+          total += num(values[`iq${i}`], 3);
+        }
+        avg = round(total / 16, 2);
+      }
+
       const r = riskFromThresholds(avg, [
         {
           max: 3.0,
           level: 'low',
           label: 'No informant-reported decline',
-          interpretation: `IQCODE average ${avg}: at or below “no change” anchor (3.0). Significant decline less likely by informant report — still correlate with exam.`,
+          interpretation: `IQCODE average ${avg}: at or below “no change” anchor (3.0). Significant progressive decline unlikely by informant report.`,
         },
         {
           max: 3.3,
           level: 'moderate',
           label: 'Borderline / mild change',
-          interpretation: `IQCODE ${avg}: mild elevation. Below many dementia cutoffs (~3.3–3.4+) but may reflect early change — follow and test patient directly.`,
+          interpretation: `IQCODE average ${avg}: mild elevation below common dementia thresholds (~3.3–3.4) — correlate with direct cognitive evaluation (e.g. SLUMS/MoCA).`,
         },
         {
           max: 3.6,
           level: 'high',
-          label: 'Screen positive range (common cutoffs)',
-          interpretation: `IQCODE ${avg}: at/above common cutoffs (often ≥3.3 or ≥3.44) suggesting cognitive decline — pursue dementia evaluation.`,
+          label: 'Screen-positive for cognitive decline',
+          interpretation: `IQCODE average ${avg}: exceeds validated cutoffs (≥3.3 to 3.44) indicating clinically meaningful cognitive decline. Diagnostic evaluation for MCI / early dementia indicated.`,
         },
         {
           max: 5.0,
           level: 'critical',
-          label: 'Marked informant-reported decline',
-          interpretation: `IQCODE ${avg}: substantial reported decline across everyday cognitive tasks. High likelihood of major cognitive disorder — comprehensive workup and safety planning.`,
+          label: 'Substantial cognitive decline',
+          interpretation: `IQCODE average ${avg}: substantial decline across multiple functional domains. High likelihood of moderate–severe dementia; safety, medication oversight, and caregiver support required.`,
         },
       ]);
       return {
-        score: round(avg, 2),
-        unit: 'avg',
+        score: avg,
+        unit: 'avg (1–5)',
         ...r,
         details: [
-          { label: 'Scale', value: '1 much improved · 3 no change · 5 much worse' },
-          { label: 'Form', value: String(values.form ?? 'na') },
-          { label: 'Common cutoffs', value: '≥3.3 to ≥3.44 (setting-dependent)' },
+          { label: 'Mean score', value: `${avg} / 5.0` },
+          { label: 'Scale anchor', value: '1=Much improved · 3=No change · 5=Much worse' },
+          { label: 'Cutoff benchmark', value: '≥3.31–3.44 screens positive for dementia' },
+          { label: 'Entry mode', value: mode === 'survey' ? '16-item Short Form' : `Direct override (${String(values.form ?? 'short')})` },
         ],
       };
     },
     evidence: {
       summary:
-        'IQCODE: informant rates change over 10 years on everyday cognitive items (1–5). Average ≥~3.3–3.44 often used to screen for dementia; short 16-item form widely used.',
-      formula: 'Mean of item scores (enter average)',
-      validation: 'Extensively validated informant tool across cultures and care settings.',
+        'Informant Questionnaire on Cognitive Decline in the Elderly (IQCODE): assesses cognitive and functional changes over ~10 years rated by a close relative/informant on a 1–5 scale. Mean ≥3.31–3.44 provides high sensitivity/specificity for dementia.',
+      formula: 'Sum of 16 items / 16 (or enter mean directly)',
+      validation: 'Jorm AF. Validated across diverse international cohorts, independent of premorbid education or language fluency.',
       references: [
         {
           title: 'The Informant Questionnaire on Cognitive Decline in the Elderly (IQCODE): socio-demographic correlates, reliability, validity and some norms',
@@ -1673,20 +2028,31 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
           pmid: '2594878',
           doi: '10.1017/s0033291700005742',
         },
+        {
+          title: 'The Short Form of the Informant Questionnaire on Cognitive Decline in the Elderly (Short IQCODE): development and cross-validation',
+          citation: 'Jorm AF. Psychol Med. 1994',
+          year: 1994,
+          pmid: '8008892',
+          doi: '10.1017/s0033291700027379',
+        },
       ],
     },
     nextSteps: [
       {
-        condition: 'Average ≥3.3',
-        actions: ['Cognitive testing (MoCA/ACE-III)', 'Labs/imaging as indicated', 'Driver/safety assessment', 'Caregiver support'],
+        condition: 'IQCODE average ≥3.38',
+        actions: [
+          'Direct cognitive testing (SLUMS, MoCA, or neuropsychological battery)',
+          'Assess IADLs and driver safety',
+          'Laboratory workup for reversible causes (TSH, B12, CMP, RPR if indicated)',
+          'Structural brain imaging (MRI or non-contrast CT)',
+        ],
       },
     ],
     pearls: [
-      'Requires a reliable informant who knows the patient over years.',
-      'Depression and sensory impairment can bias ratings.',
+      'Requires an informant who has known the patient well for 5–10 years.',
+      'Unlike direct patient tests, IQCODE is relatively unaffected by education level or pre-existing intelligence.',
     ],
   },
-
   {
     id: 'ad8',
     name: 'AD8 Dementia Screening Interview',
@@ -1908,61 +2274,196 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'cornell-dementia',
-    name: 'Cornell Scale for Depression in Dementia',
+    name: 'Cornell Scale for Depression in Dementia (CSDD)',
     shortName: 'CSDD',
-    description: 'Cornell Scale total interpreter for depression in patients with dementia (0–38).',
+    description: 'Cornell Scale for Depression in Dementia: 19 clinician/caregiver-rated items across 5 domains (0–38), or direct total score.',
     category: 'psychiatry',
     tags: ['cornell', 'depression', 'dementia', 'csdd', 'geriatrics'],
-    whenToUse: 'When depression is suspected in someone with cognitive impairment and CSDD has been rated.',
-    whyUse: 'Uses caregiver + clinician observations; better suited than self-report PHQ when insight/memory is limited.',
+    whenToUse: 'When assessing depressive symptoms in patients with cognitive impairment or dementia.',
+    whyUse: 'Relies on caregiver informant interview and clinical observation; robust when patient insight or recall is impaired.',
     inputs: [
-      numberInput('score', 'Cornell total (0–38)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Complete 19-item clinician rating', value: 'survey' },
+        { label: 'Direct score override', value: 'direct' },
+      ]),
+      numberInput('score', 'Cornell total score (0–38, direct mode)', {
         min: 0,
         max: 38,
         defaultValue: 6,
-        helpText: '19 items rated 0–2 (absent / mild-intermittent / severe) over the prior week; use caregiver + clinician observation. Enter the official CSDD total — do not score items from this screen.',
+        helpText: 'Used only if direct override is selected.',
       }),
+      selectInput('csdd_anxiety', '1. Anxiety (anxious expression, rumination, worrying)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_sadness', '2. Sadness (sad expression, sad voice, tearfulness)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_reactivity', '3. Lack of reactivity to pleasant events', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_irritability', '4. Irritability (short-tempered, easily annoyed)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_agitation', '5. Agitation (restlessness, hand-wringing, pacing)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_retardation', '6. Retardation (slow movement, slow speech, slow reactions)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_somatic', '7. Multiple physical complaints (score 0 if GI only)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_loss_interest', '8. Loss of interest (less involved in usual activities)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_appetite', '9. Appetite loss (eating less than usual)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_weight', '10. Weight loss (severe = >5 lbs in past month)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_energy', '11. Lack of energy (fatigues easily, unable to sustain activity)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_diurnal', '12. Diurnal variation of mood (symptoms worse in morning)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_initial_insomnia', '13. Difficulty falling asleep (later than usual)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_middle_insomnia', '14. Multiple nocturnal awakenings', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_early_awakening', '15. Early morning awakening (earlier than usual)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_suicide', '16. Suicide (feels life not worth living, wishes to die, gestures)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_self_esteem', '17. Poor self-esteem (self-blame, self-depreciation, guilt)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_pessimism', '18. Pessimism (anticipation of the worst)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
+      selectInput('csdd_delusions', '19. Mood-congruent delusions (poverty, illness, guilt)', [
+        { label: '0 — Absent', value: 0 },
+        { label: '1 — Mild or intermittent', value: 1 },
+        { label: '2 — Severe', value: 2 },
+      ]),
     ],
     calculate(values) {
-      const score = num(values.score, 6);
+      const mode = String(values.entryMode ?? 'survey');
+      let score = 0;
+      let suicideItem = 0;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.csdd_anxiety === undefined)) {
+        score = num(values.score, 6);
+      } else {
+        const items = [
+          'csdd_anxiety', 'csdd_sadness', 'csdd_reactivity', 'csdd_irritability',
+          'csdd_agitation', 'csdd_retardation', 'csdd_somatic', 'csdd_loss_interest',
+          'csdd_appetite', 'csdd_weight', 'csdd_energy', 'csdd_diurnal',
+          'csdd_initial_insomnia', 'csdd_middle_insomnia', 'csdd_early_awakening',
+          'csdd_suicide', 'csdd_self_esteem', 'csdd_pessimism', 'csdd_delusions'
+        ];
+        for (const item of items) {
+          score += num(values[item], 0);
+        }
+        suicideItem = num(values.csdd_suicide, 0);
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 5,
           level: 'low',
-          label: 'Below common depression cutoff',
-          interpretation: 'CSDD ≤5: below many screening cutoffs for depression in dementia — monitor and revisit if symptoms evolve.',
+          label: 'Below depression threshold',
+          interpretation: 'CSDD ≤5: no significant depressive symptoms detected. Monitor longitudinally and re-screen if behavioral changes emerge.',
         },
         {
           max: 7,
           level: 'moderate',
-          label: 'Borderline / possible depression',
-          interpretation: 'CSDD 6–7: around provisional cutoffs used in some studies — clinical judgment for treatment trial vs watchful waiting.',
+          label: 'Possible / borderline depression',
+          interpretation: 'CSDD 6–7: borderline depressive symptoms. Clinical evaluation, environmental optimization, and close interval follow-up recommended.',
         },
         {
           max: 11,
           level: 'high',
           label: 'Probable depression',
-          interpretation: 'CSDD ≥8 (common cutoff): suggests significant depressive symptoms in dementia — evaluate safety, environment, pain, and treatment options.',
+          interpretation: 'CSDD 8–11: probable major depressive episode in dementia. Multidisciplinary intervention, environmental/social activation, and consideration of antidepressant therapy.',
         },
         {
           max: 38,
           level: 'critical',
-          label: 'High / severe symptom burden',
-          interpretation: 'CSDD ≥12 often associated with major depression severity band — prioritize comprehensive psychogeriatric management and suicide/agitation risk.',
+          label: 'Definite / severe depression',
+          interpretation: 'CSDD ≥12: definite major depression. Active pharmacotherapy, safety assessment, behavioral management, and caregiver support required.',
         },
       ]);
+
+      const details = [
+        { label: 'Total score', value: `${score} / 38` },
+        { label: 'Depression cutoff', value: 'Score ≥8 = Probable depression; ≥12 = Definite depression' },
+        { label: 'Entry mode', value: mode === 'survey' ? '19-item rating' : 'Direct override' },
+      ];
+
+      if (mode === 'survey' && suicideItem > 0) {
+        details.push({
+          label: 'Suicide flag (Item 16)',
+          value: suicideItem === 2 ? 'SEVERE (Gestures/attempts/active)' : 'MILD (Life not worth living)',
+        });
+      }
+
       return {
         score,
         unit: '/38',
         ...r,
-        details: [{ label: 'Common cutoffs', value: '≥6–8 depression; ≥12 more severe / major' }],
+        details,
+        alerts: (mode === 'survey' && suicideItem > 0) ? [
+          'Suicidal ideation or gesture endorsed on CSDD item 16. Immediate clinical safety assessment required.'
+        ] : undefined,
       };
     },
     evidence: {
       summary:
-        'Cornell Scale for Depression in Dementia: 19 items (0–2) totaling 0–38 based on caregiver interview and clinician signs. Cutoffs around ≥6–8 suggest depression; higher scores indicate greater severity.',
-      formula: 'Enter total 0–38',
-      validation: 'Standard instrument for depression comorbid with dementia in research and specialty clinics.',
+        'Cornell Scale for Depression in Dementia (CSDD): 19 items across 5 domains (mood-related signs, behavioral disturbance, physical signs, cyclic functions, ideational disturbance). Score ≥8 suggests probable depression; ≥12 indicates definite major depression.',
+      formula: 'Sum of 19 items (each 0–2, total 0–38)',
+      validation: 'Alexopoulos GS et al. Validated against DSM criteria in dementia patients, displaying high inter-rater reliability (0.67–0.98) and sensitivity.',
       references: [
         {
           title: 'Cornell Scale for Depression in Dementia',
@@ -1975,100 +2476,200 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     },
     nextSteps: [
       {
-        condition: 'Score ≥8',
+        condition: 'CSDD ≥8',
         actions: [
-          'Rule out delirium, pain, constipation, meds',
-          'Non-pharm interventions first-line when possible',
-          'Consider antidepressant with dementia-appropriate cautions',
-          'Caregiver support',
+          'Rule out underlying medical triggers, infection, or pain exacerbating mood',
+          'Optimize environmental structure, daytime engagement, and pleasant events',
+          'Consider evidence-based pharmacotherapy (e.g. SSRI) while monitoring side effects',
+          'Screen caregiver stress and provide respite resources',
         ],
       },
     ],
     pearls: [
-      'Rate based on the prior week; use both informant and brief patient interview.',
-      'Overlaps with apathy — careful differential.',
+      'Scored based on semi-structured interviews with both caregiver and patient, combined with clinician observation.',
+      'Somatic items can sometimes overlap with medical co-morbidities; emphasize psychological/mood symptoms.',
     ],
   },
-
   {
     id: 'zarit-burden',
-    name: 'Zarit Caregiver Burden (Short Total)',
-    shortName: 'Zarit',
-    description: 'Zarit Burden Interview total interpreter — enter 12-item short form (0–48) or classic 22-item (0–88).',
+    name: 'Zarit Burden Interview (Caregiver Strain)',
+    shortName: 'ZBI',
+    description: 'Zarit Burden Interview (ZBI-12 Short Form, 0–48; or classic ZBI-22 direct total, 0–88) for caregiver burden assessment.',
     category: 'psychiatry',
     tags: ['zarit', 'caregiver', 'burden', 'dementia', 'support'],
-    whenToUse: 'Assessing caregiver strain in dementia or chronic neurologic illness after administering a Zarit form.',
-    whyUse: 'Quantifies burden to trigger support services, respite, and depression screening of caregivers.',
+    whenToUse: 'Assessing caregiver strain, burnout, and depression risk in caregivers of patients with dementia or chronic illness.',
+    whyUse: 'Validates caregiver distress, identifies high-burden thresholds (ZBI-12 ≥17), and triggers respite, counseling, and social support.',
     inputs: [
-      selectInput('form', 'Form', [
-        { label: 'ZBI-12 short (0–48)', value: 'z12' },
-        { label: 'ZBI-22 (0–88)', value: 'z22' },
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Complete 12-item ZBI Short Form questionnaire', value: 'survey' },
+        { label: 'Direct total score override', value: 'direct' },
       ]),
-      numberInput('score', 'Total score', {
+      selectInput('form', 'Form (if direct override)', [
+        { label: 'ZBI-12 short (0–48)', value: 'z12' },
+        { label: 'ZBI-22 classic (0–88)', value: 'z22' },
+      ]),
+      numberInput('score', 'Total score (direct mode)', {
         min: 0,
         max: 88,
-        defaultValue: 10,
-        helpText: 'Enter the total from the official Zarit form (do not administer items here). Each item 0 = never to 4 = nearly always.',
+        defaultValue: 12,
+        helpText: 'Used only if direct override is selected.',
       }),
+      selectInput('z1', '1. Do you feel that because of the time you spend with your relative that you don’t have enough time for yourself?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Rarely', value: 1 },
+        { label: '2 — Sometimes', value: 2 },
+        { label: '3 — Quite frequently', value: 3 },
+        { label: '4 — Nearly always', value: 4 },
+      ], 1),
+      selectInput('z2', '2. Do you feel stressed between caring for your relative and trying to meet other responsibilities for your family or work?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Rarely', value: 1 },
+        { label: '2 — Sometimes', value: 2 },
+        { label: '3 — Quite frequently', value: 3 },
+        { label: '4 — Nearly always', value: 4 },
+      ], 1),
+      selectInput('z3', '3. Do you feel angry when you are around your relative?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Rarely', value: 1 },
+        { label: '2 — Sometimes', value: 2 },
+        { label: '3 — Quite frequently', value: 3 },
+        { label: '4 — Nearly always', value: 4 },
+      ], 1),
+      selectInput('z4', '4. Do you feel that your relative currently affects your relationship with other family members or friends in a negative way?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Rarely', value: 1 },
+        { label: '2 — Sometimes', value: 2 },
+        { label: '3 — Quite frequently', value: 3 },
+        { label: '4 — Nearly always', value: 4 },
+      ], 1),
+      selectInput('z5', '5. Do you feel strained when you are around your relative?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Rarely', value: 1 },
+        { label: '2 — Sometimes', value: 2 },
+        { label: '3 — Quite frequently', value: 3 },
+        { label: '4 — Nearly always', value: 4 },
+      ], 1),
+      selectInput('z6', '6. Do you feel that your health has suffered because of your involvement with your relative?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Rarely', value: 1 },
+        { label: '2 — Sometimes', value: 2 },
+        { label: '3 — Quite frequently', value: 3 },
+        { label: '4 — Nearly always', value: 4 },
+      ], 1),
+      selectInput('z7', '7. Do you feel that you don’t have as much privacy as you would like because of your relative?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Rarely', value: 1 },
+        { label: '2 — Sometimes', value: 2 },
+        { label: '3 — Quite frequently', value: 3 },
+        { label: '4 — Nearly always', value: 4 },
+      ], 1),
+      selectInput('z8', '8. Do you feel that your social life has suffered because you are caring for your relative?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Rarely', value: 1 },
+        { label: '2 — Sometimes', value: 2 },
+        { label: '3 — Quite frequently', value: 3 },
+        { label: '4 — Nearly always', value: 4 },
+      ], 1),
+      selectInput('z9', '9. Do you feel you have lost control of your life since your relative’s illness?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Rarely', value: 1 },
+        { label: '2 — Sometimes', value: 2 },
+        { label: '3 — Quite frequently', value: 3 },
+        { label: '4 — Nearly always', value: 4 },
+      ], 1),
+      selectInput('z10', '10. Do you feel uncertain about what to do about your relative?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Rarely', value: 1 },
+        { label: '2 — Sometimes', value: 2 },
+        { label: '3 — Quite frequently', value: 3 },
+        { label: '4 — Nearly always', value: 4 },
+      ], 1),
+      selectInput('z11', '11. Do you feel you should be doing more for your relative?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Rarely', value: 1 },
+        { label: '2 — Sometimes', value: 2 },
+        { label: '3 — Quite frequently', value: 3 },
+        { label: '4 — Nearly always', value: 4 },
+      ], 1),
+      selectInput('z12', '12. Do you feel you could do a better job in caring for your relative?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Rarely', value: 1 },
+        { label: '2 — Sometimes', value: 2 },
+        { label: '3 — Quite frequently', value: 3 },
+        { label: '4 — Nearly always', value: 4 },
+      ], 1),
     ],
     calculate(values) {
+      const mode = String(values.entryMode ?? 'survey');
       const form = String(values.form ?? 'z12');
-      const score = num(values.score, 10);
+      let score = 0;
 
-      if (form === 'z22') {
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.z1 === undefined)) {
+        score = num(values.score, 12);
+      } else {
+        for (let i = 1; i <= 12; i++) {
+          score += num(values[`z${i}`], 1);
+        }
+      }
+
+      if (mode === 'direct' && form === 'z22') {
         const r = riskFromThresholds(score, [
           {
             max: 20,
             level: 'low',
             label: 'Little or no burden',
-            interpretation: 'ZBI-22 0–20: little or no burden — offer education and preventive supports.',
+            interpretation: 'ZBI-22 0–20: little or no burden — offer anticipatory education and community resource directory.',
           },
           {
             max: 40,
             level: 'moderate',
             label: 'Mild to moderate burden',
-            interpretation: 'ZBI-22 21–40: mild–moderate burden — counseling, skills training, community resources.',
+            interpretation: 'ZBI-22 21–40: mild–moderate burden — stress management, caregiver skill-building, and peer support groups.',
           },
           {
             max: 60,
             level: 'high',
             label: 'Moderate to severe burden',
-            interpretation: 'ZBI-22 41–60: moderate–severe burden — respite, multicomponent caregiver interventions, screen caregiver depression.',
+            interpretation: 'ZBI-22 41–60: moderate–severe burden — arrange formal respite services, social work consultation, and screen caregiver for depression.',
           },
           {
             max: 88,
             level: 'critical',
             label: 'Severe burden',
-            interpretation: 'ZBI-22 61–88: severe burden — urgent support planning, safety for patient/caregiver, mental health referral.',
+            interpretation: 'ZBI-22 61–88: severe caregiver burden — urgent multidisciplinary support plan, safety evaluation, and consideration of adult day care or residential care.',
           },
         ]);
         return {
           score,
           unit: '/88',
           ...r,
-          details: [{ label: 'Form', value: 'ZBI-22' }],
+          details: [
+            { label: 'Form', value: 'ZBI-22 Classic' },
+            { label: 'Total score', value: `${score} / 88` },
+            { label: 'Entry mode', value: 'Direct override' },
+          ],
         };
       }
 
-      // ZBI-12: ≥17 often high burden
+      // ZBI-12 Short Form
       const r = riskFromThresholds(score, [
         {
           max: 9,
           level: 'low',
-          label: 'Lower burden',
-          interpretation: 'ZBI-12 in a lower range — continue routine caregiver education.',
+          label: 'Low burden',
+          interpretation: 'ZBI-12 0–9: low caregiver burden. Routine follow-up and anticipatory guidance.',
         },
         {
           max: 16,
           level: 'moderate',
-          label: 'Intermediate burden',
-          interpretation: 'ZBI-12 intermediate — proactive supports and stress-reduction resources recommended.',
+          label: 'Moderate burden',
+          interpretation: 'ZBI-12 10–16: moderate burden — proactive caregiver support, coping strategies, and local Alzheimer/dementia resources.',
         },
         {
           max: 48,
           level: 'high',
-          label: 'High burden (common cutoff ≥17)',
-          interpretation: 'ZBI-12 ≥17 suggests high caregiver burden in many studies — arrange respite, social work, and caregiver mental health screen.',
+          label: 'High burden (≥17)',
+          interpretation: 'ZBI-12 ≥17: high caregiver burden. Significantly elevated risk for caregiver burnout and clinical depression — mobilize formal respite, family conference, and clinical evaluation.',
         },
       ]);
       return {
@@ -2076,20 +2677,29 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         unit: '/48',
         ...r,
         details: [
-          { label: 'Form', value: 'ZBI-12 short' },
-          { label: 'Common high-burden cutoff', value: '≥17' },
+          { label: 'Form', value: 'ZBI-12 Short Form' },
+          { label: 'Total score', value: `${score} / 48` },
+          { label: 'High burden threshold', value: 'Score ≥17 indicates high burden' },
+          { label: 'Entry mode', value: mode === 'survey' ? '12-item questionnaire' : 'Direct override' },
         ],
       };
     },
     evidence: {
       summary:
-        'Zarit Burden Interview items 0–4. ZBI-22 bands often 0–20 little/none, 21–40 mild–moderate, 41–60 moderate–severe, 61–88 severe. ZBI-12 short form commonly uses ≥17 for high burden.',
-      formula: 'Enter total for selected form',
-      validation: 'Gold-standard caregiver burden measure with multiple validated short forms.',
+        'Zarit Burden Interview (ZBI): evaluates caregiver strain across emotional, physical, social, and financial domains. The 12-item short form (ZBI-12) strongly correlates with the full 22-item version (r = 0.92–0.97), with scores ≥17 identifying high caregiver burden.',
+      formula: 'Sum of 12 items (each 0–4, total 0–48) or full 22-item score (0–88)',
+      validation: 'Bédard M et al. Validated the 12-item short version with exceptional internal consistency (Cronbach alpha 0.88) and predictive validity.',
       references: [
         {
-          title: 'Relatives of the impaired elderly: correlates of feelings of burden (Zarit)',
-          citation: 'Zarit SH et al. Gerontologist. 1980; short-form validations later',
+          title: 'The Zarit Burden Interview: a new short version and screening version',
+          citation: 'Bédard M et al. Gerontologist. 2001',
+          year: 2001,
+          pmid: '11565618',
+          doi: '10.1093/geront/41.5.652',
+        },
+        {
+          title: 'Relatives of the impaired elderly: correlates of feelings of burden',
+          citation: 'Zarit SH et al. Gerontologist. 1980',
           year: 1980,
           pmid: '7203086',
           doi: '10.1093/geront/20.6.649',
@@ -2098,75 +2708,146 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     },
     nextSteps: [
       {
-        condition: 'High burden',
+        condition: 'ZBI-12 ≥17 or ZBI-22 ≥41',
         actions: [
-          'Social work / caregiver support programs',
-          'Respite and adult day services',
-          'Screen caregiver for depression/anxiety',
-          'Advance care planning discussion',
+          'Social work / caregiver support program referral',
+          'In-home respite, adult day services, or companion care',
+          'Screen caregiver for clinical depression (PHQ-9) and anxiety (GAD-7)',
+          'Advance care planning and future care trajectory counseling',
         ],
       },
     ],
     pearls: [
-      'High burden predicts institutionalization and caregiver illness.',
-      'Reassess after service changes or disease progression.',
+      'High caregiver burden is an independent predictor of premature nursing home placement.',
+      'Caregiver depression often remits when structured respite and support services are implemented.',
     ],
   },
-
   {
     id: 'psqi',
-    name: 'PSQI Global Score (Pittsburgh Sleep Quality)',
+    name: 'Pittsburgh Sleep Quality Index (PSQI)',
     shortName: 'PSQI',
-    description: 'Pittsburgh Sleep Quality Index global score interpreter (0–21).',
+    description: 'Pittsburgh Sleep Quality Index: 7 component scores (0–3 each, global 0–21) evaluating past-month sleep quality, or direct global score.',
     category: 'neurology',
     tags: ['psqi', 'sleep', 'insomnia', 'quality'],
-    whenToUse: 'When PSQI has been scored and global sleep quality needs interpretation.',
-    whyUse: 'Standard research/clinical metric of past-month sleep quality; global >5 indicates poor sleep.',
+    whenToUse: 'Comprehensive past-month sleep quality assessment in clinical sleep, psychiatric, or general medical encounters.',
+    whyUse: 'Standard validated metric of sleep quality; global score >5 reliably distinguishes poor from good sleepers (89.6% sensitivity, 86.5% specificity).',
     inputs: [
-      numberInput('global', 'PSQI global score (0–21)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: '7 Component Scores selector', value: 'survey' },
+        { label: 'Direct global score override', value: 'direct' },
+      ]),
+      numberInput('global', 'PSQI global score (0–21, direct mode)', {
         min: 0,
         max: 21,
         defaultValue: 5,
-        helpText: 'Sum of 7 component scores (0–3 each) over the past month. Enter the official PSQI global total — do not score items from this screen.',
+        helpText: 'Used only if direct override is selected.',
       }),
+      selectInput('comp1_quality', 'Component 1: Subjective sleep quality', [
+        { label: '0 — Very good', value: 0 },
+        { label: '1 — Fairly good', value: 1 },
+        { label: '2 — Fairly bad', value: 2 },
+        { label: '3 — Very bad', value: 3 }
+      ]),
+      selectInput('comp2_latency', 'Component 2: Sleep latency', [
+        { label: '0 — Latency ≤15 min & ≤1 disturbance/week', value: 0 },
+        { label: '1 — Latency 16–30 min or 1–2 disturbances/week', value: 1 },
+        { label: '2 — Latency 31–60 min or 1–2 disturbances/week', value: 2 },
+        { label: '3 — Latency >60 min or ≥3 disturbances/week', value: 3 }
+      ]),
+      selectInput('comp3_duration', 'Component 3: Sleep duration', [
+        { label: '0 — >7 hours sleep per night', value: 0 },
+        { label: '1 — 6–7 hours sleep per night', value: 1 },
+        { label: '2 — 5–6 hours sleep per night', value: 2 },
+        { label: '3 — <5 hours sleep per night', value: 3 }
+      ]),
+      selectInput('comp4_efficiency', 'Component 4: Habitual sleep efficiency', [
+        { label: '0 — ≥85% sleep efficiency (hours slept / hours in bed)', value: 0 },
+        { label: '1 — 75–84% sleep efficiency', value: 1 },
+        { label: '2 — 65–74% sleep efficiency', value: 2 },
+        { label: '3 — <65% sleep efficiency', value: 3 }
+      ]),
+      selectInput('comp5_disturbances', 'Component 5: Sleep disturbances', [
+        { label: '0 — No sleep disturbances (wake up, bathroom, cough, snore, cold, hot)', value: 0 },
+        { label: '1 — Mild disturbances (score 1–9 sum)', value: 1 },
+        { label: '2 — Moderate disturbances (score 10–18 sum)', value: 2 },
+        { label: '3 — Severe disturbances (score 19–27 sum)', value: 3 }
+      ]),
+      selectInput('comp6_medication', 'Component 6: Use of sleep medications', [
+        { label: '0 — Not during the past month', value: 0 },
+        { label: '1 — Less than once a week', value: 1 },
+        { label: '2 — Once or twice a week', value: 2 },
+        { label: '3 — Three or more times a week', value: 3 }
+      ]),
+      selectInput('comp7_dysfunction', 'Component 7: Daytime dysfunction', [
+        { label: '0 — No problem staying awake / enthusiasm', value: 0 },
+        { label: '1 — Mild problem staying awake / enthusiasm', value: 1 },
+        { label: '2 — Moderate problem staying awake / enthusiasm', value: 2 },
+        { label: '3 — Severe problem staying awake / enthusiasm', value: 3 }
+      ]),
     ],
     calculate(values) {
-      const score = num(values.global, 5);
+      const mode = String(values.entryMode ?? 'survey');
+      let score = 0;
+      let c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0, c7 = 0;
+
+      if (mode === 'direct' || (values.global !== undefined && values.entryMode === undefined && values.comp1_quality === undefined)) {
+        score = num(values.global, 5);
+      } else {
+        c1 = num(values.comp1_quality, 0);
+        c2 = num(values.comp2_latency, 1);
+        c3 = num(values.comp3_duration, 1);
+        c4 = num(values.comp4_efficiency, 0);
+        c5 = num(values.comp5_disturbances, 1);
+        c6 = num(values.comp6_medication, 0);
+        c7 = num(values.comp7_dysfunction, 1);
+        score = c1 + c2 + c3 + c4 + c5 + c6 + c7;
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 5,
           level: 'low',
-          label: 'Good sleep quality range',
-          interpretation: 'PSQI ≤5: generally classified as good sleep quality. Address residual symptoms if patient still symptomatic.',
+          label: 'Good sleep quality range (≤5)',
+          interpretation: 'PSQI ≤5: indicates good overall sleep quality. Continue sleep hygiene best practices.',
         },
         {
           max: 10,
           level: 'moderate',
-          label: 'Poor sleep quality',
-          interpretation: 'PSQI 6–10: poor sleep quality — evaluate hygiene, insomnia disorder, mood, OSA risk, and substances.',
+          label: 'Poor sleep quality (>5)',
+          interpretation: 'PSQI 6–10: poor sleep quality. Screen for insomnia disorder, circadian disruption, restless legs, and obstructive sleep apnea.',
         },
         {
           max: 21,
           level: 'high',
-          label: 'Markedly poor sleep quality',
-          interpretation: 'PSQI ≥11: markedly impaired sleep quality — comprehensive sleep evaluation; consider CBT-I referral and comorbidity workup.',
+          label: 'Markedly impaired sleep quality (≥11)',
+          interpretation: 'PSQI ≥11: severe sleep disruption. First-line cognitive behavioral therapy for insomnia (CBT-I), formal sleep medicine referral, and review of contributing medical/psychiatric factors.',
         },
       ]);
+
+      const details = [
+        { label: 'Global score', value: `${score} / 21` },
+        { label: 'Diagnostic cutoff', value: '>5 = Poor sleep quality (sensitivity 89.6%, specificity 86.5%)' },
+        { label: 'Entry mode', value: mode === 'survey' ? '7 Component scores' : 'Direct override' },
+      ];
+
+      if (mode === 'survey') {
+        details.push({ label: 'C1: Quality / C2: Latency', value: `${c1} / ${c2}` });
+        details.push({ label: 'C3: Duration / C4: Efficiency', value: `${c3} / ${c4}` });
+        details.push({ label: 'C5: Disturbance / C6: Meds / C7: Daytime', value: `${c5} / ${c6} / ${c7}` });
+      }
+
       return {
         score,
         unit: '/21',
         ...r,
-        details: [
-          { label: 'Components', value: 'Quality, latency, duration, efficiency, disturbance, meds, daytime dysfunction' },
-          { label: 'Classic cutoff', value: '>5 = poor sleeper' },
-        ],
+        details,
       };
     },
     evidence: {
       summary:
-        'PSQI global score sums 7 components (0–3 each) over the past month, range 0–21. Global score >5 distinguishes poor from good sleepers in original validation.',
-      formula: 'Enter global 0–21',
-      validation: 'Buysse et al. widely replicated; used across medical and psychiatric populations.',
+        'Pittsburgh Sleep Quality Index (PSQI): 19 self-rated questions generate 7 component scores (subjective sleep quality, sleep latency, sleep duration, habitual sleep efficiency, sleep disturbances, use of sleep medication, daytime dysfunction), each rated 0–3. The global score ranges 0–21, with >5 distinguishing poor from good sleepers.',
+      formula: 'Sum of 7 component scores (each 0–3, global 0–21)',
+      validation: 'Buysse DJ et al. Gold standard sleep quality instrument across clinical and research settings.',
       references: [
         {
           title: 'The Pittsburgh Sleep Quality Index: a new instrument for psychiatric practice and research',
@@ -2181,76 +2862,169 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       {
         condition: 'PSQI >5',
         actions: [
-          'Sleep diary / history',
-          'Screen OSA (STOP-BANG) and restless legs',
-          'CBT-I for chronic insomnia',
-          'Review caffeine, alcohol, stimulating meds',
+          'Sleep diary tracking bedtime, waketime, and nighttime awakenings for 2 weeks',
+          'Screen OSA with STOP-BANG and assess for restless legs symptoms',
+          'Cognitive Behavioral Therapy for Insomnia (CBT-I) as initial first-line therapy',
+          'Review alcohol, caffeine, nicotine, and stimulating prescription medications',
         ],
       },
     ],
     pearls: [
-      'Global score alone loses component detail useful for targeting therapy.',
-      'Not a substitute for polysomnography when OSA/PLMD suspected.',
+      'Component breakdown directs specific therapy (e.g. high C2/C4 suggests insomnia stimulus control; high C5 suggests OSA/GERD/nocturia).',
+      'Does not replace objective polysomnography when sleep apnea, narcolepsy, or parasomnias are suspected.',
     ],
   },
-
   {
     id: 'restless-irlssg',
-    name: 'IRLS (Restless Legs Severity)',
+    name: 'IRLSSG Restless Legs Severity Scale (IRLS)',
     shortName: 'IRLS',
-    description: 'International Restless Legs Syndrome Study Group rating scale total (0–40).',
+    description: 'International Restless Legs Syndrome Study Group rating scale: 10 items (0–4 each, total 0–40), or direct total score.',
     category: 'neurology',
     tags: ['rls', 'irls', 'restless legs', 'sleep', 'severity'],
-    whenToUse: 'Quantify RLS symptom severity after clinical diagnosis of restless legs syndrome.',
-    whyUse: 'Standard 10-item severity scale for baseline and treatment response.',
+    whenToUse: 'Quantifying symptom severity and monitoring treatment response after clinical confirmation of RLS diagnosis.',
+    whyUse: 'Gold-standard 10-item outcome measure used in clinical practice and pharmaceutical trials with validated severity bands.',
     inputs: [
-      numberInput('score', 'IRLS total (0–40)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Complete 10-item IRLSSG questionnaire', value: 'survey' },
+        { label: 'Direct total score override', value: 'direct' },
+      ]),
+      numberInput('score', 'IRLS total (0–40, direct mode)', {
         min: 0,
         max: 40,
         defaultValue: 15,
-        helpText: 'Official IRLS 10 items × 0–4 (none → very severe), typically over the past week. Enter the total from the official form — do not administer items here.',
+        helpText: 'Used only if direct override is selected.',
       }),
+      selectInput('irls1', '1. Overall discomfort in legs/arms due to RLS', [
+        { label: '0 — None / Never', value: 0 },
+        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
+        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
+        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
+        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
+      ], 1),
+      selectInput('irls2', '2. Need to move arms/legs because of RLS', [
+        { label: '0 — None / Never', value: 0 },
+        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
+        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
+        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
+        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
+      ], 1),
+      selectInput('irls3', '3. Relief of arm/leg discomfort from moving around', [
+        { label: '0 — None / Never', value: 0 },
+        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
+        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
+        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
+        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
+      ], 1),
+      selectInput('irls4', '4. Sleep disturbance due to RLS symptoms', [
+        { label: '0 — None / Never', value: 0 },
+        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
+        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
+        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
+        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
+      ], 1),
+      selectInput('irls5', '5. Daytime tiredness or sleepiness due to RLS', [
+        { label: '0 — None / Never', value: 0 },
+        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
+        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
+        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
+        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
+      ], 1),
+      selectInput('irls6', '6. Overall severity of RLS over the past week', [
+        { label: '0 — None / Never', value: 0 },
+        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
+        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
+        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
+        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
+      ], 1),
+      selectInput('irls7', '7. How often did RLS symptoms occur?', [
+        { label: '0 — None / Never', value: 0 },
+        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
+        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
+        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
+        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
+      ], 1),
+      selectInput('irls8', '8. Average duration of RLS symptoms on typical day', [
+        { label: '0 — None / Never', value: 0 },
+        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
+        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
+        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
+        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
+      ], 1),
+      selectInput('irls9', '9. Impact on daily activities (family, work, social)', [
+        { label: '0 — None / Never', value: 0 },
+        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
+        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
+        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
+        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
+      ], 1),
+      selectInput('irls10', '10. Mood disturbance from RLS (depressed, irritable, anxious)', [
+        { label: '0 — None / Never', value: 0 },
+        { label: '1 — Mild / 1 day/wk / <1 hr', value: 1 },
+        { label: '2 — Moderate / 2–3 days/wk / 1–3 hrs', value: 2 },
+        { label: '3 — Severe / 4–5 days/wk / 3–8 hrs', value: 3 },
+        { label: '4 — Very severe / 6–7 days/wk / ≥8 hrs', value: 4 },
+      ], 1),
     ],
     calculate(values) {
-      const score = num(values.score, 15);
+      const mode = String(values.entryMode ?? 'survey');
+      let score = 0;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.irls1 === undefined)) {
+        score = num(values.score, 15);
+      } else {
+        for (let i = 1; i <= 10; i++) {
+          score += num(values[`irls${i}`], 1);
+        }
+      }
+
       const r = riskFromThresholds(score, [
+        {
+          max: 0,
+          level: 'normal',
+          label: 'No symptoms (0)',
+          interpretation: 'IRLS 0: no restless legs symptoms endorsed in past week.',
+        },
         {
           max: 10,
           level: 'low',
-          label: 'Mild',
-          interpretation: 'IRLS 1–10 (or 0): mild severity — non-pharm measures, check ferritin, sleep hygiene.',
+          label: 'Mild RLS (1–10)',
+          interpretation: 'IRLS 1–10: mild severity. Check serum ferritin and transferrin saturation; lifestyle interventions and sleep hygiene.',
         },
         {
           max: 20,
           level: 'moderate',
-          label: 'Moderate',
-          interpretation: 'IRLS 11–20: moderate RLS — consider iron repletion if ferritin low; pharmacologic therapy if QOL impaired.',
+          label: 'Moderate RLS (11–20)',
+          interpretation: 'IRLS 11–20: moderate severity. Iron replacement if ferritin <75 ng/mL (or transferrin sat <20%); consider first-line pharmacotherapy (alpha-2-delta ligands: gabapentin / pregabalin) if quality of life impaired.',
         },
         {
           max: 30,
           level: 'high',
-          label: 'Severe',
-          interpretation: 'IRLS 21–30: severe — active treatment usually indicated; avoid exacerbating meds (many antihistamines, antipsychotics, antiemetics).',
+          label: 'Severe RLS (21–30)',
+          interpretation: 'IRLS 21–30: severe RLS. Active pharmacotherapy indicated; avoid dopamine receptor antagonists, sedating antihistamines, and serotonergic agents that worsen RLS.',
         },
         {
           max: 40,
           level: 'critical',
-          label: 'Very severe',
-          interpretation: 'IRLS 31–40: very severe — specialty management, review augmentation if on dopaminergic therapy.',
+          label: 'Very severe RLS (31–40)',
+          interpretation: 'IRLS 31–40: very severe RLS. Sleep medicine or neurology consultation; evaluate for dopamine agonist augmentation if treated with pramipexole/ropinirole; IV iron formulation consideration.',
         },
       ]);
       return {
         score,
         unit: '/40',
         ...r,
-        details: [{ label: 'Bands', value: 'Mild 1–10 · Moderate 11–20 · Severe 21–30 · Very severe 31–40' }],
+        details: [
+          { label: 'Total score', value: `${score} / 40` },
+          { label: 'Severity bands', value: '1–10 Mild · 11–20 Mod · 21–30 Severe · 31–40 Very severe' },
+          { label: 'Entry mode', value: mode === 'survey' ? '10-item questionnaire' : 'Direct override' },
+        ],
       };
     },
     evidence: {
       summary:
-        'IRLS (IRLS-S): 10 questions scored 0–4 (total 0–40). Severity: mild 1–10, moderate 11–20, severe 21–30, very severe 31–40.',
-      formula: 'Enter total 0–40',
-      validation: 'IRLS Study Group validated scale for clinical trials and practice.',
+        'International Restless Legs Scale (IRLS): 10 questions scored 0–4 assessing RLS discomfort, motor need to move, relief with movement, sleep disturbance, daytime impact, and frequency/severity over the past week (total 0–40).',
+      formula: 'Sum of 10 items (each 0–4, total 0–40)',
+      validation: 'Walters AS et al. Developed and validated by the International Restless Legs Syndrome Study Group (IRLSSG) with high test-retest reliability and sensitivity to therapeutic change.',
       references: [
         {
           title: 'Validation of the International Restless Legs Syndrome Study Group rating scale for restless legs syndrome',
@@ -2263,20 +3037,20 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     },
     nextSteps: [
       {
-        condition: 'Any clinically significant RLS',
+        condition: 'IRLS ≥11',
         actions: [
-          'Serum ferritin/iron studies (often replete if ferritin ≤75 µg/L; check TSAT)',
-          'Reduce triggers (alcohol, antihistamines)',
-          'Alpha-2-delta ligands or other agents per severity and comorbidities',
+          'Check morning fasting serum ferritin and transferrin saturation (target ferritin >75 µg/L)',
+          'First-line pharmacotherapy: alpha-2-delta ligands (gabapentin, pregabalin, or gabapentin enacarbil) preferred over dopamine agonists due to augmentation risk',
+          'Eliminate exacerbating agents (first-generation antihistamines, metoclopramide, SSRIs/SNRIs if feasible)',
+          'Evaluate for secondary RLS causes (end-stage renal disease, peripheral neuropathy, pregnancy)',
         ],
       },
     ],
     pearls: [
-      'Diagnose RLS clinically (urge to move, rest, evening, relieved by movement) before scoring severity.',
-      'Watch for augmentation on chronic dopaminergic therapy.',
+      'Current AASM/IRLSSG guidelines recommend alpha-2-delta ligands as first-line over dopamine agonists because of high long-term augmentation rates with dopamine agonists.',
+      'Oral iron should be given on an empty stomach or with vitamin C; IV iron considered for severe refractory cases or poor GI absorption.',
     ],
   },
-
   {
     id: 'pc-ptsd',
     name: 'PC-PTSD-5 Screen',

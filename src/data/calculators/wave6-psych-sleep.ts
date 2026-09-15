@@ -12,19 +12,85 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     category: 'psychiatry',
     tags: ['pdss', 'panic', 'anxiety', 'severity', 'psychiatry'],
     whenToUse:
-      'After clinician- or self-rated PDSS administration in patients with panic disorder; enter the total score.',
+      'After clinician- or self-rated PDSS administration in patients with panic disorder; calculate via 7 items or enter total score.',
     whyUse:
       'Brief 7-item scale (0–4 each) quantifies attack frequency, distress, anticipatory anxiety, avoidance, and impairment.',
     inputs: [
-      numberInput('score', 'PDSS total (0–28)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive questionnaire (recommended)', value: 'survey' },
+        { label: 'Direct score override', value: 'direct' },
+      ], 'survey'),
+      selectInput('pdss1', '1. Panic attack frequency', [
+        { label: '0 — No full panic and no limited symptom attacks', value: 0 },
+        { label: '1 — Mild: 1 full panic attack or up to 3 limited symptom attacks', value: 1 },
+        { label: '2 — Moderate: 2–3 full panic attacks or up to 2 limited/day', value: 2 },
+        { label: '3 — Severe: 4–9 full panic attacks or frequent limited attacks', value: 3 },
+        { label: '4 — Extreme: 10 or more full panic attacks or near-continuous limited attacks', value: 4 },
+      ], 1, 'Frequency of full panic and limited symptom episodes over the past week.'),
+      selectInput('pdss2', '2. Distress during panic attacks', [
+        { label: '0 — None: no attacks or not at all distressing', value: 0 },
+        { label: '1 — Mild: mildly distressing (not too unpleasant)', value: 1 },
+        { label: '2 — Moderate: moderately distressing (intense distress, but manageable)', value: 2 },
+        { label: '3 — Severe: severely distressing (extremely unpleasant)', value: 3 },
+        { label: '4 — Extreme: intensely distressing (almost unbearable)', value: 4 },
+      ], 1, 'Average distress experienced during attacks in the past week.'),
+      selectInput('pdss3', '3. Anticipatory anxiety (worry about future attacks)', [
+        { label: '0 — None: no anticipatory worry', value: 0 },
+        { label: '1 — Mild: occasional or mild worry; no interference', value: 1 },
+        { label: '2 — Moderate: frequent worry; noticeable discomfort but can manage', value: 2 },
+        { label: '3 — Severe: continuous or disabling worry; interferes with thoughts', value: 3 },
+        { label: '4 — Extreme: disabling, constant worry; incapacitating', value: 4 },
+      ], 2, 'Fear or dread of when the next panic attack will happen or fear of panic-related consequences.'),
+      selectInput('pdss4', '4. Agoraphobic fear and avoidance', [
+        { label: '0 — None: no fear or avoidance of places/situations', value: 0 },
+        { label: '1 — Mild: occasional fear/avoidance; can enter situations with discomfort or accompaniment', value: 1 },
+        { label: '2 — Moderate: noticeable fear/avoidance; avoids several situations or endures with substantial dread', value: 2 },
+        { label: '3 — Severe: pervasive avoidance; avoids most situations unless accompanied', value: 3 },
+        { label: '4 — Extreme: housebound or near-total avoidance of all public places', value: 4 },
+      ], 2, 'Avoidance of crowded places, transit, enclosed spaces, driving, or open areas due to fear of panic.'),
+      selectInput('pdss5', '5. Interoceptive fear and avoidance (fear of physical sensations)', [
+        { label: '0 — None: no fear or avoidance of body sensations', value: 0 },
+        { label: '1 — Mild: occasional caution with caffeine, exercise, stairs, warm rooms', value: 1 },
+        { label: '2 — Moderate: avoids several activities/sensations (moderate exercise, sudden movement, scary movies)', value: 2 },
+        { label: '3 — Severe: extensive avoidance of many physical activities or physiological sensations', value: 3 },
+        { label: '4 — Extreme: pervasive avoidance of any heart rate elevation, exertion, or temperature changes', value: 4 },
+      ], 1, 'Avoidance of somatic sensations that mimic panic (exercise, sexual activity, sauna, caffeine).'),
+      selectInput('pdss6', '6. Impairment in work or school functioning', [
+        { label: '0 — None: no impairment in occupational or school roles', value: 0 },
+        { label: '1 — Mild: slight interference; work quality intact', value: 1 },
+        { label: '2 — Moderate: definite interference; reduced productivity or frequent breaks', value: 2 },
+        { label: '3 — Severe: marked impairment; substantial missed days or unable to perform major tasks', value: 3 },
+        { label: '4 — Extreme: completely unable to work or attend school due to panic', value: 4 },
+      ], 2, 'Impairment in work duties, school tasks, or household responsibilities.'),
+      selectInput('pdss7', '7. Impairment in social and family life', [
+        { label: '0 — None: no impairment in social or leisure activities', value: 0 },
+        { label: '1 — Mild: slight discomfort in social settings; activities maintained', value: 1 },
+        { label: '2 — Moderate: definite social restriction; attends fewer gatherings or avoids some friends', value: 2 },
+        { label: '3 — Severe: marked social impairment; substantially withdrawn from social connections', value: 3 },
+        { label: '4 — Extreme: completely socially isolated; unable to interact outside immediate caregivers', value: 4 },
+      ], 1, 'Disruption of friendships, social engagements, hobbies, or domestic relationships.'),
+      numberInput('score', 'Direct PDSS total override (0–28)', {
         min: 0,
         max: 28,
         defaultValue: 10,
-        helpText: 'Enter the official PDSS total (7 items × 0–4, none → extreme). Do not reprint copyrighted stems here.',
+        helpText: 'Direct score override (0–28). Used when entry mode is set to direct or when passing precomputed totals.',
       }),
     ],
     calculate(values) {
-      const score = num(values.score, 10);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.pdss1 === undefined)) {
+        score = Math.max(0, Math.min(28, num(values.score, 10)));
+      } else {
+        score =
+          num(values.pdss1, 1) +
+          num(values.pdss2, 1) +
+          num(values.pdss3, 2) +
+          num(values.pdss4, 2) +
+          num(values.pdss5, 1) +
+          num(values.pdss6, 2) +
+          num(values.pdss7, 1);
+      }
       const r = riskFromThresholds(score, [
         {
           max: 1,
@@ -68,6 +134,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         unit: '/28',
         ...r,
         details: [
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : 'Itemized questionnaire' },
           { label: 'Items', value: '7 × 0–4' },
           { label: 'Bands (approx.)', value: '0–1 normal; 2–5 borderline; 6–9 mild; 10–13 mod; 14–16 marked; ≥17 severe' },
           { label: 'Response often cited', value: '≥40% reduction from baseline' },
@@ -82,7 +149,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     evidence: {
       summary:
         'PDSS is a 7-item clinician scale (also self-report variants) summing to 0–28. Severity bands and ≥40% reduction as response are commonly used in research and practice.',
-      formula: 'Enter total of 7 items (each 0–4); range 0–28',
+      formula: 'Sum of 7 items (0–4 each) = 0–28; or enter direct total',
       validation:
         'Validated for panic disorder severity, treatment response, and remission tracking; correlates with CGI and other anxiety measures.',
       references: [
@@ -117,21 +184,329 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     name: 'Liebowitz Social Anxiety Scale (LSAS) Total',
     shortName: 'LSAS',
     description:
-      'Interprets LSAS total (0–144) for social anxiety severity from summed fear and avoidance ratings.',
+      'Interprets LSAS total (0–144) for social anxiety severity from summed fear and avoidance ratings across 24 situations.',
     category: 'psychiatry',
     tags: ['lsas', 'social anxiety', 'sad', 'phobia', 'severity'],
-    whenToUse: 'After LSAS (clinician or self-report) completion; enter combined fear + avoidance total.',
-    whyUse: 'Standard severity metric for social anxiety disorder research and treatment monitoring.',
+    whenToUse: 'Assessment and treatment monitoring for social anxiety disorder; questionnaire or direct score.',
+    whyUse: 'Gold standard severity metric for social anxiety disorder research and treatment monitoring.',
     inputs: [
-      numberInput('score', 'LSAS total (0–144)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive situation survey (24 items)', value: 'survey' },
+        { label: 'Direct score override', value: 'direct' },
+      ], 'survey'),
+      selectInput('fear_1', '1. Telephoning in public — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 1),
+      selectInput('avoid_1', '1. Telephoning in public — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 1),
+      selectInput('fear_2', '2. Participating in small groups — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 1),
+      selectInput('avoid_2', '2. Participating in small groups — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 1),
+      selectInput('fear_3', '3. Eating in public places — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 1),
+      selectInput('avoid_3', '3. Eating in public places — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 1),
+      selectInput('fear_4', '4. Drinking with others in public places — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 1),
+      selectInput('avoid_4', '4. Drinking with others in public places — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 1),
+      selectInput('fear_5', '5. Talking to people in authority — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 1),
+      selectInput('avoid_5', '5. Talking to people in authority — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 1),
+      selectInput('fear_6', '6. Acting, performing or speaking in front of an audience — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 1),
+      selectInput('avoid_6', '6. Acting, performing or speaking in front of an audience — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 1),
+      selectInput('fear_7', '7. Going to a party — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 1),
+      selectInput('avoid_7', '7. Going to a party — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 1),
+      selectInput('fear_8', '8. Working while being observed — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 1),
+      selectInput('avoid_8', '8. Working while being observed — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 1),
+      selectInput('fear_9', '9. Writing while being observed — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 1),
+      selectInput('avoid_9', '9. Writing while being observed — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 1),
+      selectInput('fear_10', '10. Calling someone you do not know very well — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 1),
+      selectInput('avoid_10', '10. Calling someone you do not know very well — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 1),
+      selectInput('fear_11', '11. Talking with people you do not know very well — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 1),
+      selectInput('avoid_11', '11. Talking with people you do not know very well — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 1),
+      selectInput('fear_12', '12. Meeting strangers — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 1),
+      selectInput('avoid_12', '12. Meeting strangers — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 1),
+      selectInput('fear_13', '13. Urinating in a public bathroom — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 2),
+      selectInput('avoid_13', '13. Urinating in a public bathroom — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 2),
+      selectInput('fear_14', '14. Entering a room when others are already seated — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 2),
+      selectInput('avoid_14', '14. Entering a room when others are already seated — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 2),
+      selectInput('fear_15', '15. Being the center of attention — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 2),
+      selectInput('avoid_15', '15. Being the center of attention — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 2),
+      selectInput('fear_16', '16. Speaking up at a meeting — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 2),
+      selectInput('avoid_16', '16. Speaking up at a meeting — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 2),
+      selectInput('fear_17', '17. Taking a written test — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 2),
+      selectInput('avoid_17', '17. Taking a written test — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 2),
+      selectInput('fear_18', '18. Expressing disagreement to people you do not know well — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 2),
+      selectInput('avoid_18', '18. Expressing disagreement to people you do not know well — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 2),
+      selectInput('fear_19', '19. Looking at people you do not know in the eyes — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 2),
+      selectInput('avoid_19', '19. Looking at people you do not know in the eyes — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 2),
+      selectInput('fear_20', '20. Giving a report to a group — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 2),
+      selectInput('avoid_20', '20. Giving a report to a group — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 2),
+      selectInput('fear_21', '21. Trying to make someone\'s acquaintance — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 2),
+      selectInput('avoid_21', '21. Trying to make someone\'s acquaintance — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 2),
+      selectInput('fear_22', '22. Returning goods to a store — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 2),
+      selectInput('avoid_22', '22. Returning goods to a store — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 2),
+      selectInput('fear_23', '23. Giving a party / hosting — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 2),
+      selectInput('avoid_23', '23. Giving a party / hosting — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 2),
+      selectInput('fear_24', '24. Resisting a high-pressure salesperson — Fear/Anxiety', [
+        { label: '0 — None (no fear)', value: 0 },
+        { label: '1 — Mild fear/anxiety', value: 1 },
+        { label: '2 — Moderate fear/anxiety', value: 2 },
+        { label: '3 — Severe fear/anxiety', value: 3 },
+      ], 2),
+      selectInput('avoid_24', '24. Resisting a high-pressure salesperson — Avoidance', [
+        { label: '0 — Never (0% of the time)', value: 0 },
+        { label: '1 — Occasionally (1–33%)', value: 1 },
+        { label: '2 — Often (33–67%)', value: 2 },
+        { label: '3 — Usually (67–100%)', value: 3 },
+      ], 2),
+      numberInput('score', 'Direct LSAS total override (0–144)', {
         min: 0,
         max: 144,
         defaultValue: 55,
-        helpText: 'Enter the official LSAS total: 24 situations × (fear 0–3 + avoidance 0–3). Do not reprint copyrighted stems here.',
+        helpText: 'Direct LSAS total override: 24 situations × (fear 0–3 + avoidance 0–3).',
       }),
     ],
     calculate(values) {
-      const score = num(values.score, 55);
+      const mode = String(values.entryMode ?? 'survey');
+      let fearSum = 0;
+      let avoidSum = 0;
+      let score: number;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.fear_1 === undefined)) {
+        score = Math.max(0, Math.min(144, num(values.score, 55)));
+        fearSum = Math.round(score / 2);
+        avoidSum = score - fearSum;
+      } else {
+        for (let i = 1; i <= 24; i++) {
+          fearSum += num(values[`fear_${i}`], i < 13 ? 1 : 2);
+          avoidSum += num(values[`avoid_${i}`], i < 13 ? 1 : 2);
+        }
+        score = fearSum + avoidSum;
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 29,
@@ -175,7 +550,9 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         unit: '/144',
         ...r,
         details: [
-          { label: 'Structure', value: '24 items × fear + avoidance (each 0–3)' },
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '24-situation dual matrix' },
+          { label: 'Fear subscale', value: `${fearSum}/72` },
+          { label: 'Avoidance subscale', value: `${avoidSum}/72` },
           { label: 'Common SAD cutoff', value: 'Total ≥30 often suggests social anxiety disorder' },
           { label: 'Bands', value: '<30 none/mild; 30–49 mild; 50–64 mod; 65–79 marked; 80–94 severe; ≥95 very severe' },
         ],
@@ -184,7 +561,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     evidence: {
       summary:
         'LSAS rates fear and avoidance across 24 performance/social situations (total 0–144). Widely used severity bands guide interpretation; ≥30 is a common diagnostic screening threshold.',
-      formula: 'Sum fear (0–3) + avoidance (0–3) for 24 situations = 0–144',
+      formula: 'Sum of Fear (0–72) + Avoidance (0–72) across 24 situations = 0–144',
       validation: 'Extensively validated in social anxiety disorder trials; sensitive to treatment change.',
       references: [
         {
@@ -218,24 +595,241 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     name: 'EAT-26 Eating Attitudes Total',
     shortName: 'EAT-26',
     description:
-      'Interprets Eating Attitudes Test-26 total (0–78) as a screening aid for disordered eating attitudes.',
+      'Interprets Eating Attitudes Test-26 total (0–78) and behavioral flags as a screening aid for disordered eating attitudes.',
     category: 'psychiatry',
     tags: ['eat-26', 'eating disorder', 'anorexia', 'bulimia', 'screening'],
-    whenToUse: 'After patient completes EAT-26; enter total for referral-threshold interpretation.',
-    whyUse: 'Widely used eating-disorder attitude screen; total ≥20 commonly prompts clinical evaluation.',
+    whenToUse: 'Screening for eating disorder pathology in adolescents or adults; 26 items or direct score.',
+    whyUse: 'Widely used eating-disorder attitude screen; total ≥20 or positive behavioral items prompt clinical evaluation.',
     inputs: [
-      numberInput('score', 'EAT-26 total (0–78)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive 26-item questionnaire', value: 'survey' },
+        { label: 'Direct score override', value: 'direct' },
+      ], 'survey'),
+      selectInput('eat_1', '1. Am terrified about being overweight', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_2', '2. Avoid eating when I am hungry', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_3', '3. Find myself preoccupied with food', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_4', '4. Have gone on eating binges where I feel that I may not be able to stop', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_5', '5. Cut my food into small pieces', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_6', '6. Aware of the calorie content of foods that I eat', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_7', '7. Particularly avoid food with a high carbohydrate content', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_8', '8. Feel that others would prefer if I ate more', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_9', '9. Vomit after I have eaten', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_10', '10. Feel extremely guilty after eating', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_11', '11. Am preoccupied with a desire to be thinner', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_12', '12. Think about burning up calories when I exercise', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_13', '13. Other people think that I am too thin', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_14', '14. Am preoccupied with the thought of having fat on my body', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_15', '15. Take longer than others to eat my meals', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_16', '16. Avoid foods with sugar in them', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_17', '17. Eat diet foods', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_18', '18. Feel that food controls my life', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_19', '19. Display self-control around food', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_20', '20. Feel that others pressure me to eat', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_21', '21. Give too much time and thought to food', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_22', '22. Feel uncomfortable after eating sweets', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_23', '23. Engage in dieting behavior', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_24', '24. Like my stomach to be empty', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_25', '25. Have the impulse to vomit after meals', [
+        { label: 'Always (3 points)', value: 3 },
+        { label: 'Usually (2 points)', value: 2 },
+        { label: 'Often (1 point)', value: 1 },
+        { label: 'Sometimes (0 points)', value: 0 },
+        { label: 'Rarely (0 points)', value: 0 },
+        { label: 'Never (0 points)', value: 0 },
+      ], 0),
+      selectInput('eat_26', '26. Enjoy trying new rich foods (reverse scored)', [
+        { label: 'Never (3 points)', value: 3 },
+        { label: 'Rarely (2 points)', value: 2 },
+        { label: 'Sometimes (1 point)', value: 1 },
+        { label: 'Often (0 points)', value: 0 },
+        { label: 'Usually (0 points)', value: 0 },
+        { label: 'Always (0 points)', value: 0 },
+      ], 0),
+      yesNo('b1_binge', 'Behavior: Binge eating with sense of loss of control (past 6 months)', 0),
+      yesNo('b2_vomit', 'Behavior: Self-induced vomiting to control weight/shape (past 6 months)', 0),
+      yesNo('b3_meds', 'Behavior: Laxatives, diet pills, or diuretics to control weight/shape (past 6 months)', 0),
+      yesNo('b4_exercise', 'Behavior: Exercised >60 min/day strictly to control weight (past 6 months)', 0),
+      yesNo('b5_weightloss', 'Behavior: Lost 20 lb (9 kg) or more in past 6 months', 0),
+      yesNo(
+        'behaviors',
+        'Behavioral flags override (Yes if any behavioral item is positive)',
+        0,
+        'Legacy toggle: set to Yes if any official behavioral flag is positive.',
+      ),
+      numberInput('score', 'Direct EAT-26 total override (0–78)', {
         min: 0,
         max: 78,
         defaultValue: 18,
-        helpText: 'Enter the official 26-item attitude total (0–78) from the copyrighted form; do not reprint stems here. Standard scoring 0–3 after reverse coding of designated items.',
+        helpText: 'Direct 26-item attitude total override (0–78).',
       }),
-      yesNo(
-        'behaviors',
-        'Behavioral flags present (official EAT-26 behavioral items)',
-        0,
-        'Yes if any official behavioral item is positive — evaluate even if total <20. Official five (past 6 months unless noted): binge with loss of control; vomiting to control weight/shape; laxatives/diet pills/diuretics to control weight/shape; exercise >60 min/day to control weight; lost 20 lb (9 kg) in past 6 months.',
-      ),
       numberInput('bmi', 'BMI (optional context)', {
         min: 10,
         max: 60,
@@ -246,9 +840,27 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       }),
     ],
     calculate(values) {
-      const score = num(values.score, 18);
-      const behaviors = bool(values.behaviors);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.eat_1 === undefined)) {
+        score = Math.max(0, Math.min(78, num(values.score, 18)));
+      } else {
+        score = 0;
+        for (let i = 1; i <= 26; i++) {
+          score += num(values[`eat_${i}`], 0);
+        }
+      }
+
+      const specificBehaviors =
+        bool(values.b1_binge) ||
+        bool(values.b2_vomit) ||
+        bool(values.b3_meds) ||
+        bool(values.b4_exercise) ||
+        bool(values.b5_weightloss);
+      const behaviors = specificBehaviors || bool(values.behaviors);
       const bmi = num(values.bmi, 0);
+
       const r = riskFromThresholds(score, [
         {
           max: 19,
@@ -287,6 +899,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         interpretation,
         riskLevel,
         details: [
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : 'Itemized 26-item survey' },
           { label: 'Common cutoff', value: '≥20 → further evaluation' },
           { label: 'Behavioral flags', value: behaviors ? 'Yes' : 'No / not flagged' },
           { label: 'BMI context', value: bmi > 0 ? String(bmi) : 'Not used' },
@@ -301,7 +914,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     evidence: {
       summary:
         'EAT-26 screens eating attitudes and behaviors. Total ≥20 is a widely used threshold for referral; positive behavioral items also mandate evaluation independent of total.',
-      formula: 'Sum of 26 scored items (0–78)',
+      formula: 'Sum of 26 scored items (0–78; items 1–25 scored 3,2,1,0,0,0; item 26 reversed 0,0,0,1,2,3)',
       validation: 'Derived from EAT-40; extensively used in clinical and nonclinical populations as a screening tool.',
       references: [
         {
@@ -335,21 +948,236 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     name: 'M-CHAT-R Autism Toddler Score',
     shortName: 'M-CHAT-R',
     description:
-      'Interprets Modified Checklist for Autism in Toddlers, Revised (M-CHAT-R) total risk score (0–20).',
+      'Modified Checklist for Autism in Toddlers, Revised (M-CHAT-R) 20-item risk score (0–20). Registers failed at-risk responses for toddlers 16–30 months.',
     category: 'pediatrics',
     tags: ['m-chat-r', 'autism', 'asd', 'toddler', 'screening', 'pediatrics'],
-    whenToUse: 'Primary-care autism screen at ~16–30 months after caregiver M-CHAT-R completion.',
+    whenToUse: 'Primary-care autism screen at ~16–30 months during well-child visits.',
     whyUse: 'Stratifies low / medium / high risk to guide Follow-Up interview vs immediate referral.',
     inputs: [
-      numberInput('score', 'M-CHAT-R total failed items (0–20)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive 20-item checklist', value: 'survey' },
+        { label: 'Direct score override', value: 'direct' },
+      ], 'survey'),
+      selectInput(
+        'mchat_1',
+        '1. If you point at something across the room, does your child look at it?',
+        [
+          { label: 'Yes (typical, 0 points)', value: 0 },
+          { label: 'No (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, No indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_2',
+        '2. Have you ever wondered if your child might be deaf?',
+        [
+          { label: 'No (typical, 0 points)', value: 0 },
+          { label: 'Yes (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, Yes indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_3',
+        '3. Does your child play pretend or make-believe (e.g., pretend to drink from empty cup)?',
+        [
+          { label: 'Yes (typical, 0 points)', value: 0 },
+          { label: 'No (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, No indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_4',
+        '4. Does your child like climbing on things (furniture, playground equipment)?',
+        [
+          { label: 'Yes (typical, 0 points)', value: 0 },
+          { label: 'No (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, No indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_5',
+        '5. Does your child make unusual finger movements near their eyes?',
+        [
+          { label: 'No (typical, 0 points)', value: 0 },
+          { label: 'Yes (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, Yes indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_6',
+        '6. Does your child point with one finger to ask for something or to get help?',
+        [
+          { label: 'Yes (typical, 0 points)', value: 0 },
+          { label: 'No (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, No indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_7',
+        '7. Does your child point with one finger to show you something interesting?',
+        [
+          { label: 'Yes (typical, 0 points)', value: 0 },
+          { label: 'No (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, No indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_8',
+        '8. Is your child interested in other children (watches, smiles, approaches)?',
+        [
+          { label: 'Yes (typical, 0 points)', value: 0 },
+          { label: 'No (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, No indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_9',
+        '9. Does your child show you things by bringing them over to show you?',
+        [
+          { label: 'Yes (typical, 0 points)', value: 0 },
+          { label: 'No (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, No indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_10',
+        '10. Does your child respond when you call their name (looks up, talks, stops what doing)?',
+        [
+          { label: 'Yes (typical, 0 points)', value: 0 },
+          { label: 'No (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, No indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_11',
+        '11. When you smile at your child, does the child smile back at you?',
+        [
+          { label: 'Yes (typical, 0 points)', value: 0 },
+          { label: 'No (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, No indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_12',
+        '12. Does your child get upset by everyday noises (vacuum cleaner, loud music)?',
+        [
+          { label: 'No (typical, 0 points)', value: 0 },
+          { label: 'Yes (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, Yes indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_13',
+        '13. Does your child walk?',
+        [
+          { label: 'Yes (typical, 0 points)', value: 0 },
+          { label: 'No (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, No indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_14',
+        '14. Does your child look you in the eye when you are talking, playing, or dressing them?',
+        [
+          { label: 'Yes (typical, 0 points)', value: 0 },
+          { label: 'No (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, No indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_15',
+        '15. Does your child try to copy what you do (clap, wave, make funny noise)?',
+        [
+          { label: 'Yes (typical, 0 points)', value: 0 },
+          { label: 'No (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, No indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_16',
+        '16. If you turn your head to look at something, does your child look around to see what it is?',
+        [
+          { label: 'Yes (typical, 0 points)', value: 0 },
+          { label: 'No (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, No indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_17',
+        '17. Does your child try to get you to watch them (says "Look" or looks for your reaction)?',
+        [
+          { label: 'Yes (typical, 0 points)', value: 0 },
+          { label: 'No (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, No indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_18',
+        '18. Does your child understand when you tell them to do something (e.g. "put book on chair")?',
+        [
+          { label: 'Yes (typical, 0 points)', value: 0 },
+          { label: 'No (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, No indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_19',
+        '19. If something new happens, does your child look at your face to see how you feel about it?',
+        [
+          { label: 'Yes (typical, 0 points)', value: 0 },
+          { label: 'No (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, No indicates risk (1 point).',
+      ),
+      selectInput(
+        'mchat_20',
+        '20. Does your child like movement activities (being swung or bounced on knees)?',
+        [
+          { label: 'Yes (typical, 0 points)', value: 0 },
+          { label: 'No (at risk, 1 point)', value: 1 },
+        ],
+        0,
+        'For this question, No indicates risk (1 point).',
+      ),
+      numberInput('score', 'Direct M-CHAT-R total failed items override (0–20)', {
         min: 0,
         max: 20,
         defaultValue: 3,
-        helpText: 'Enter the official M-CHAT-R failed-item count (0–20) from the copyrighted form for ages ~16–30 months. Reverse-scored items already applied. Do not reprint stems here.',
+        helpText: 'Direct count of failed items (0–20).',
       }),
     ],
     calculate(values) {
-      const score = num(values.score, 3);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.mchat_1 === undefined)) {
+        score = Math.max(0, Math.min(20, num(values.score, 3)));
+      } else {
+        score = 0;
+        for (let i = 1; i <= 20; i++) {
+          score += num(values[`mchat_${i}`], 0);
+        }
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 2,
@@ -375,6 +1203,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         unit: '/20',
         ...r,
         details: [
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '20-item checklist' },
           { label: 'Low risk', value: '0–2' },
           { label: 'Medium risk', value: '3–7 → M-CHAT-R/F' },
           { label: 'High risk', value: '8–20 → refer' },
@@ -388,8 +1217,8 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'M-CHAT-R is a 20-item toddler ASD screen. Totals 0–2 low risk, 3–7 medium (use Follow-Up), 8–20 high risk (refer). Reduces false positives vs original M-CHAT when Follow-Up is used.',
-      formula: 'Count at-risk items (0–20)',
+        'M-CHAT-R is a 20-item toddler ASD screen. Totals 0–2 low risk, 3–7 medium (use Follow-Up), 8–20 high risk (refer). Reverse scoring applies to questions 2, 5, and 12 (Yes = 1 point).',
+      formula: 'Count at-risk items (0–20); No = 1 for most items, Yes = 1 for items 2, 5, 12',
       validation: 'Validated in primary-care toddler populations; AAP-endorsed screening pathway component.',
       references: [
         {
@@ -416,7 +1245,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       },
     ],
     pearls: [
-      'Critical items historically weighted more; current M-CHAT-R uses total + Follow-Up algorithm.',
+      'Items 2, 5, and 12 are reverse-scored (Yes indicates risk).',
       'Positive screen warrants action — not reassurance alone.',
     ],
   },
@@ -424,45 +1253,234 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 5. Vanderbilt ADHD ────────────────────────────────────────────────────
   {
     id: 'vanderbilt-adhd',
-    name: 'Vanderbilt ADHD Positive Criteria Helper',
+    name: 'Vanderbilt ADHD Rating Scale & Criteria',
     shortName: 'Vanderbilt',
     description:
-      'Educational helper applying NICHQ Vanderbilt symptom-count and performance thresholds for ADHD screening positivity.',
+      'NICHQ Vanderbilt ADHD 18-symptom core rating scale and academic/behavioral performance criteria helper.',
     category: 'pediatrics',
     tags: ['vanderbilt', 'adhd', 'nichq', 'pediatrics', 'inattention', 'hyperactivity'],
     whenToUse:
-      'After parent and/or teacher Vanderbilt forms; enter counts of items rated often/very often and performance problems.',
+      'ADHD assessment in children/adolescents using parent or teacher report; 18 symptoms + performance items or counts.',
     whyUse:
-      'Operationalizes common positivity rules (≥6/9 symptom domain + ≥1 performance item in problem range).',
+      'Operationalizes DSM criteria (≥6/9 inattention or hyperactivity rated Often/Very often + ≥1 performance problem).',
     inputs: [
-      numberInput('inatt', 'Inattention items “Often/Very often” (of 9)', {
-        min: 0,
-        max: 9,
-        defaultValue: 6,
-        helpText: 'Parent items 1–9 or teacher equivalent. Count items marked Often or Very often (not Never/Occasionally). Point to the NICHQ Vanderbilt form rather than reprinting 18 stems.',
-      }),
-      numberInput('hyper', 'Hyperactivity/impulsivity items “Often/Very often” (of 9)', {
-        min: 0,
-        max: 9,
-        defaultValue: 4,
-        helpText: 'Parent items 10–18 or teacher equivalent. Count Often or Very often only (symptom anchors: Never / Occasionally / Often / Very often).',
-      }),
-      numberInput('perf', 'Performance items rated 4 or 5 (problematic)', {
-        min: 0,
-        max: 8,
-        defaultValue: 1,
-        helpText: 'Academic/behavioral performance section (1 Excellent … 4 Somewhat of a problem / 5 Problematic). Count items scored 4 or 5; ≥1 often required for a positive screen.',
-      }),
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive 18-item symptom questionnaire', value: 'survey' },
+        { label: 'Direct symptom count entry', value: 'direct' },
+      ], 'survey'),
       selectInput('informant', 'Informant', [
         { label: 'Parent', value: 'parent' },
         { label: 'Teacher', value: 'teacher' },
         { label: 'Both (use highest symptom counts entered)', value: 'both' },
-      ]),
+      ], 'parent'),
+      selectInput('inatt_1', '1. Fails to give close attention to details or makes careless mistakes', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 2),
+      selectInput('inatt_2', '2. Has difficulty sustaining attention in tasks or play activities', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 2),
+      selectInput('inatt_3', '3. Does not seem to listen when spoken to directly', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 2),
+      selectInput('inatt_4', '4. Does not follow through on instructions and fails to finish schoolwork/chores', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 2),
+      selectInput('inatt_5', '5. Has difficulty organizing tasks and activities', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 2),
+      selectInput('inatt_6', '6. Avoids, dislikes, or is reluctant to engage in tasks requiring sustained mental effort', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 2),
+      selectInput('inatt_7', '7. Loses things necessary for tasks or activities', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 1),
+      selectInput('inatt_8', '8. Is easily distracted by extraneous stimuli', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 1),
+      selectInput('inatt_9', '9. Is forgetful in daily activities', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 1),
+      selectInput('hyper_1', '10. Fidgets with hands or feet or squirms in seat', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 2),
+      selectInput('hyper_2', '11. Leaves seat in classroom or in other situations in which remaining seated is expected', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 2),
+      selectInput('hyper_3', '12. Runs about or climbs excessively in situations in which it is inappropriate', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 2),
+      selectInput('hyper_4', '13. Has difficulty playing or engaging in leisure activities quietly', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 2),
+      selectInput('hyper_5', '14. Is “on the go” or acts as if “driven by a motor”', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 1),
+      selectInput('hyper_6', '15. Talks excessively', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 1),
+      selectInput('hyper_7', '16. Blurts out answers before questions have been completed', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 1),
+      selectInput('hyper_8', '17. Has difficulty awaiting turn', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 1),
+      selectInput('hyper_9', '18. Interrupts or intrudes on others (e.g., butts into conversations or games)', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Occasionally', value: 1 },
+        { label: '2 — Often (positive symptom)', value: 2 },
+        { label: '3 — Very often (positive symptom)', value: 3 },
+      ], 1),
+      selectInput('perf_1', 'P1. Overall school performance', [
+        { label: '1 — Excellent', value: 1 },
+        { label: '2 — Above average', value: 2 },
+        { label: '3 — Average', value: 3 },
+        { label: '4 — Somewhat of a problem (impaired)', value: 4 },
+        { label: '5 — Problematic (impaired)', value: 5 },
+      ], 4),
+      selectInput('perf_2', 'P2. Reading', [
+        { label: '1 — Excellent', value: 1 },
+        { label: '2 — Above average', value: 2 },
+        { label: '3 — Average', value: 3 },
+        { label: '4 — Somewhat of a problem (impaired)', value: 4 },
+        { label: '5 — Problematic (impaired)', value: 5 },
+      ], 3),
+      selectInput('perf_3', 'P3. Writing', [
+        { label: '1 — Excellent', value: 1 },
+        { label: '2 — Above average', value: 2 },
+        { label: '3 — Average', value: 3 },
+        { label: '4 — Somewhat of a problem (impaired)', value: 4 },
+        { label: '5 — Problematic (impaired)', value: 5 },
+      ], 3),
+      selectInput('perf_4', 'P4. Mathematics', [
+        { label: '1 — Excellent', value: 1 },
+        { label: '2 — Above average', value: 2 },
+        { label: '3 — Average', value: 3 },
+        { label: '4 — Somewhat of a problem (impaired)', value: 4 },
+        { label: '5 — Problematic (impaired)', value: 5 },
+      ], 3),
+      selectInput('perf_5', 'P5. Relationship with parents', [
+        { label: '1 — Excellent', value: 1 },
+        { label: '2 — Above average', value: 2 },
+        { label: '3 — Average', value: 3 },
+        { label: '4 — Somewhat of a problem (impaired)', value: 4 },
+        { label: '5 — Problematic (impaired)', value: 5 },
+      ], 3),
+      selectInput('perf_6', 'P6. Relationship with siblings', [
+        { label: '1 — Excellent', value: 1 },
+        { label: '2 — Above average', value: 2 },
+        { label: '3 — Average', value: 3 },
+        { label: '4 — Somewhat of a problem (impaired)', value: 4 },
+        { label: '5 — Problematic (impaired)', value: 5 },
+      ], 3),
+      selectInput('perf_7', 'P7. Relationship with peers', [
+        { label: '1 — Excellent', value: 1 },
+        { label: '2 — Above average', value: 2 },
+        { label: '3 — Average', value: 3 },
+        { label: '4 — Somewhat of a problem (impaired)', value: 4 },
+        { label: '5 — Problematic (impaired)', value: 5 },
+      ], 3),
+      selectInput('perf_8', 'P8. Participation in organized activities', [
+        { label: '1 — Excellent', value: 1 },
+        { label: '2 — Above average', value: 2 },
+        { label: '3 — Average', value: 3 },
+        { label: '4 — Somewhat of a problem (impaired)', value: 4 },
+        { label: '5 — Problematic (impaired)', value: 5 },
+      ], 3),
+      numberInput('inatt', 'Direct Inattention items count “Often/Very often” (0–9)', {
+        min: 0,
+        max: 9,
+        defaultValue: 6,
+        helpText: 'Count of inattention items rated 2 (Often) or 3 (Very often).',
+      }),
+      numberInput('hyper', 'Direct Hyperactivity items count “Often/Very often” (0–9)', {
+        min: 0,
+        max: 9,
+        defaultValue: 4,
+        helpText: 'Count of hyperactivity/impulsivity items rated 2 (Often) or 3 (Very often).',
+      }),
+      numberInput('perf', 'Direct Performance items count rated 4 or 5 (0–8)', {
+        min: 0,
+        max: 8,
+        defaultValue: 1,
+        helpText: 'Count of performance items scored 4 (Somewhat of a problem) or 5 (Problematic).',
+      }),
     ],
     calculate(values) {
-      const inatt = num(values.inatt, 6);
-      const hyper = num(values.hyper, 4);
-      const perf = num(values.perf, 1);
+      const mode = String(values.entryMode ?? 'survey');
+      let inatt: number;
+      let hyper: number;
+      let perf: number;
+
+      if (mode === 'direct' || (values.inatt !== undefined && values.entryMode === undefined && values.inatt_1 === undefined)) {
+        inatt = num(values.inatt, 6);
+        hyper = num(values.hyper, 4);
+        perf = num(values.perf, 1);
+      } else {
+        inatt = 0;
+        for (let i = 1; i <= 9; i++) {
+          if (num(values[`inatt_${i}`], 0) >= 2) inatt += 1;
+        }
+        hyper = 0;
+        for (let i = 1; i <= 9; i++) {
+          if (num(values[`hyper_${i}`], 0) >= 2) hyper += 1;
+        }
+        perf = 0;
+        for (let i = 1; i <= 8; i++) {
+          if (num(values[`perf_${i}`], 3) >= 4) perf += 1;
+        }
+      }
+
       const inattPos = inatt >= 6;
       const hyperPos = hyper >= 6;
       const perfPos = perf >= 1;
@@ -503,6 +1521,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         interpretation,
         riskLevel,
         details: [
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct count entry' : '18-symptom interactive survey' },
           { label: 'Inattention count', value: `${inatt}/9 ${inattPos ? '(≥6 ✓)' : ''}` },
           { label: 'Hyperactivity count', value: `${hyper}/9 ${hyperPos ? '(≥6 ✓)' : ''}` },
           { label: 'Performance problems', value: `${perf} item(s) rated 4–5 ${perfPos ? '(✓)' : ''}` },
@@ -559,21 +1578,95 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     name: 'CUDIT-R Cannabis Use Total',
     shortName: 'CUDIT-R',
     description:
-      'Interprets Cannabis Use Disorders Identification Test – Revised total (0–32) for hazardous use and possible cannabis use disorder.',
+      'Cannabis Use Disorders Identification Test – Revised (CUDIT-R) 8-item questionnaire and total (0–32) for hazardous use and possible cannabis use disorder.',
     category: 'psychiatry',
     tags: ['cudit-r', 'cannabis', 'marijuana', 'substance', 'screening'],
-    whenToUse: 'After CUDIT-R administration in patients using cannabis; enter 8-item total.',
+    whenToUse: 'After CUDIT-R administration in patients using cannabis; 8 items or direct total.',
     whyUse: 'Brief validated screen for hazardous cannabis use and possible DSM cannabis use disorder.',
     inputs: [
-      numberInput('score', 'CUDIT-R total (0–32)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive 8-item questionnaire', value: 'survey' },
+        { label: 'Direct score override', value: 'direct' },
+      ], 'survey'),
+      selectInput('cudit1', '1. How often do you use cannabis?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Monthly or less', value: 1 },
+        { label: '2 — 2–4 times a month', value: 2 },
+        { label: '3 — 2–3 times a week', value: 3 },
+        { label: '4 — 4 or more times a week', value: 4 },
+      ], 2),
+      selectInput('cudit2', '2. How many hours were you “stoned” on a typical day when you had been using cannabis?', [
+        { label: '0 — Less than 1 hour', value: 0 },
+        { label: '1 — 1 or 2 hours', value: 1 },
+        { label: '2 — 3 or 4 hours', value: 2 },
+        { label: '3 — 5 or 6 hours', value: 3 },
+        { label: '4 — 7 or more hours', value: 4 },
+      ], 1),
+      selectInput('cudit3', '3. How often during the past 6 months did you find that you were not able to stop using cannabis once you had started?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Less than monthly', value: 1 },
+        { label: '2 — Monthly', value: 2 },
+        { label: '3 — Weekly', value: 3 },
+        { label: '4 — Daily or almost daily', value: 4 },
+      ], 1),
+      selectInput('cudit4', '4. How often during the past 6 months did you fail to do what was normally expected of you because of using cannabis?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Less than monthly', value: 1 },
+        { label: '2 — Monthly', value: 2 },
+        { label: '3 — Weekly', value: 3 },
+        { label: '4 — Daily or almost daily', value: 4 },
+      ], 1),
+      selectInput('cudit5', '5. How often during the past 6 months have you devoted a great deal of your time to getting, using, or recovering from cannabis?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Less than monthly', value: 1 },
+        { label: '2 — Monthly', value: 2 },
+        { label: '3 — Weekly', value: 3 },
+        { label: '4 — Daily or almost daily', value: 4 },
+      ], 1),
+      selectInput('cudit6', '6. How often during the past 6 months had a problem with your memory or concentration after using cannabis?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Less than monthly', value: 1 },
+        { label: '2 — Monthly', value: 2 },
+        { label: '3 — Weekly', value: 3 },
+        { label: '4 — Daily or almost daily', value: 4 },
+      ], 1),
+      selectInput('cudit7', '7. How often during the past 6 months did you use cannabis in situations that could be physically hazardous (e.g. driving)?', [
+        { label: '0 — Never', value: 0 },
+        { label: '1 — Less than monthly', value: 1 },
+        { label: '2 — Monthly', value: 2 },
+        { label: '3 — Weekly', value: 3 },
+        { label: '4 — Daily or almost daily', value: 4 },
+      ], 1),
+      selectInput('cudit8', '8. Has a relative or friend or doctor or other health worker been concerned about your cannabis use or suggested you cut down?', [
+        { label: '0 — No', value: 0 },
+        { label: '2 — Yes, but not in the past 6 months', value: 2 },
+        { label: '4 — Yes, during the past 6 months', value: 4 },
+      ], 2),
+      numberInput('score', 'Direct CUDIT-R total override (0–32)', {
         min: 0,
         max: 32,
         defaultValue: 10,
-        helpText: 'Enter the official CUDIT-R total (8 items, mixed 0–4 scoring) from the copyrighted form. Do not reprint stems here.',
+        helpText: 'Direct CUDIT-R total (0–32).',
       }),
     ],
     calculate(values) {
-      const score = num(values.score, 10);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.cudit1 === undefined)) {
+        score = Math.max(0, Math.min(32, num(values.score, 10)));
+      } else {
+        score =
+          num(values.cudit1, 2) +
+          num(values.cudit2, 1) +
+          num(values.cudit3, 1) +
+          num(values.cudit4, 1) +
+          num(values.cudit5, 1) +
+          num(values.cudit6, 1) +
+          num(values.cudit7, 1) +
+          num(values.cudit8, 2);
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 7,
@@ -599,6 +1692,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         unit: '/32',
         ...r,
         details: [
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '8-item survey' },
           { label: 'Hazardous cutoff', value: '≥8' },
           { label: 'Possible CUD cutoff', value: '≥12 (commonly cited)' },
           { label: 'Items', value: '8 × 0–4 = 0–32' },
@@ -1010,30 +2104,76 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 10. painDETECT ────────────────────────────────────────────────────────
   {
     id: 'pain-detect',
-    name: 'painDETECT Total',
+    name: 'painDETECT Questionnaire Total',
     shortName: 'painDETECT',
     description:
-      'Interprets painDETECT questionnaire total (−9 to 38) for likelihood of neuropathic pain component.',
+      'painDETECT screening questionnaire total (−1 to 38) for likelihood of neuropathic pain component in chronic pain.',
     category: 'neurology',
     tags: ['paindetect', 'neuropathic pain', 'chronic pain', 'screening'],
-    whenToUse: 'Chronic pain evaluation when a neuropathic component is suspected; enter scored total.',
+    whenToUse: 'Chronic pain evaluation when a neuropathic component is suspected; 9 items or direct total.',
     whyUse: 'Stratifies unlikely / unclear / likely neuropathic pain to guide workup and neuropathic agents.',
     inputs: [
-      numberInput('score', 'painDETECT total (−9 to 38)', {
-        min: -9,
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive 9-item questionnaire', value: 'survey' },
+        { label: 'Direct score override', value: 'direct' },
+      ], 'survey'),
+      ...[
+        '1. Burning sensation (e.g., stinging nettles)',
+        '2. Tingling or prickling sensation (pins and needles)',
+        '3. Pain from light touch (clothing, light touch)',
+        '4. Electric shock-like sudden pain attacks',
+        '5. Pain triggered by cold or heat (bath water)',
+        '6. Numbness in the painful area',
+        '7. Pain triggered by slight pressure (e.g. finger touch)',
+      ].map((title, i) =>
+        selectInput(`sensory_${i + 1}`, title, [
+          { label: '0 — Never', value: 0 },
+          { label: '1 — Hardly noticed', value: 1 },
+          { label: '2 — Slightly', value: 2 },
+          { label: '3 — Moderately', value: 3 },
+          { label: '4 — Strongly', value: 4 },
+          { label: '5 — Very strongly', value: 5 },
+        ], i < 3 ? 2 : 1),
+      ),
+      selectInput('pattern', '8. Pain course pattern diagram', [
+        { label: 'Persistent pain with slight fluctuations (−1 point)', value: -1 },
+        { label: 'Persistent pain with pain attacks (0 points)', value: 0 },
+        { label: 'Pain attacks without pain in between (−1 point)', value: -1 },
+        { label: 'Pain attacks with pain in between (+1 point)', value: 1 },
+      ], 0),
+      selectInput('radiating', '9. Does your pain radiate to other parts of your body?', [
+        { label: 'No (0 points)', value: 0 },
+        { label: 'Yes (+2 points)', value: 2 },
+      ], 2),
+      numberInput('score', 'Direct painDETECT total override (−1 to 38)', {
+        min: -1,
         max: 38,
         defaultValue: 14,
-        helpText: 'Enter the official painDETECT total (−9 to 38) from the copyrighted form (symptom items, radiation, pain-course pattern). Do not reprint stems here.',
+        helpText: 'Direct total: 7 sensory items (0–35) + course pattern (−1 to +1) + radiation (0 or +2). Range −1 to 38.',
       }),
     ],
     calculate(values) {
-      const score = num(values.score, 14);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.sensory_1 === undefined)) {
+        score = Math.max(-1, Math.min(38, num(values.score, 14)));
+      } else {
+        let sensorySum = 0;
+        for (let i = 1; i <= 7; i++) {
+          sensorySum += num(values[`sensory_${i}`], 0);
+        }
+        const pattern = num(values.pattern, 0);
+        const radiating = num(values.radiating, 0);
+        score = sensorySum + pattern + radiating;
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 12,
           level: 'low',
           label: 'Unlikely neuropathic component',
-          interpretation: `painDETECT ${score}: ≤12 — neuropathic pain component unlikely (~<15% probability in original validation). Focus on nociceptive/mechanistic assessment; neuropathic agents less first-line unless clinical picture suggests otherwise.`,
+          interpretation: `painDETECT ${score}: ≤12 — neuropathic pain component unlikely (<15% probability). Focus on nociceptive/mechanistic assessment; neuropathic agents less first-line unless clinical picture suggests otherwise.`,
         },
         {
           max: 18,
@@ -1045,7 +2185,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
           max: 38,
           level: 'high',
           label: 'Likely neuropathic component',
-          interpretation: `painDETECT ${score}: ≥19 — likely neuropathic pain component (~>90% in original work). Consider neuropathic-targeted therapy (e.g., gabapentinoid, SNRI, TCA), cause-directed workup, and multimodal care.`,
+          interpretation: `painDETECT ${score}: ≥19 — likely neuropathic pain component (>90% probability). Consider neuropathic-targeted therapy (e.g., gabapentinoid, SNRI, TCA), cause-directed workup, and multimodal care.`,
         },
       ]);
       return {
@@ -1053,16 +2193,17 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         unit: 'points',
         ...r,
         details: [
-          { label: '≤12', value: 'Neuropathic unlikely' },
-          { label: '13–18', value: 'Unclear' },
-          { label: '≥19', value: 'Neuropathic likely' },
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '9-item questionnaire' },
+          { label: '≤12', value: 'Neuropathic unlikely (<15%)' },
+          { label: '13–18', value: 'Unclear / mixed possible' },
+          { label: '≥19', value: 'Neuropathic likely (>90%)' },
         ],
       };
     },
     evidence: {
       summary:
-        'painDETECT is a patient questionnaire for neuropathic pain features. Totals ≤12 unlikely, 13–18 unclear, ≥19 likely neuropathic component (original validation thresholds).',
-      formula: 'Enter instrument total (−9 to 38)',
+        'painDETECT is a patient questionnaire for neuropathic pain features. Totals ≤12 unlikely, 13–18 unclear, ≥19 likely neuropathic component. Minimum score is −1, maximum is 38.',
+      formula: 'Sum of 7 sensory items (0–35) + pain course (−1 to +1) + radiation (0 or +2) = −1 to 38',
       validation: 'Developed and validated primarily in low back pain populations; used more broadly with clinical judgment.',
       references: [
         {
@@ -1198,18 +2339,39 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     name: 'BPI Pain Interference Average',
     shortName: 'BPI Interference',
     description:
-      'Interprets Brief Pain Inventory interference average (0–10) across seven life domains.',
+      'Brief Pain Inventory interference subscale (0–10) across seven life domains and worst pain context.',
     category: 'general',
     tags: ['bpi', 'brief pain inventory', 'interference', 'cancer pain', 'chronic pain'],
-    whenToUse: 'After BPI interference items completed; enter mean of the 7 interference ratings.',
+    whenToUse: 'Chronic pain or cancer pain follow-up; 7 interference domains or direct mean score.',
     whyUse: 'Standard interference metric in oncology and chronic pain research/practice.',
     inputs: [
-      numberInput('avg', 'BPI interference average (0–10)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive 7-domain interference survey', value: 'survey' },
+        { label: 'Direct average override', value: 'direct' },
+      ], 'survey'),
+      ...[
+        '1. General activity',
+        '2. Mood',
+        '3. Walking ability',
+        '4. Normal work (both outside home and housework)',
+        '5. Relations with other people',
+        '6. Sleep',
+        '7. Enjoyment of life',
+      ].map((title, i) =>
+        numberInput(`bpi_${i + 1}`, `${title} (0–10)`, {
+          min: 0,
+          max: 10,
+          step: 0.5,
+          defaultValue: i === 5 ? 6 : 4,
+          helpText: '0 = Does not interfere; 10 = Completely interferes',
+        }),
+      ),
+      numberInput('avg', 'Direct BPI interference average override (0–10)', {
         min: 0,
         max: 10,
         step: 0.1,
         defaultValue: 4.5,
-        helpText: 'Enter the mean of the official BPI interference items (0 = does not interfere, 10 = completely interferes): general activity, mood, walking ability, normal work, relations with other people, sleep, enjoyment of life. Do not reprint the full copyrighted form.',
+        helpText: 'Mean of the 7 interference ratings (0–10).',
       }),
       numberInput('worst', 'Worst pain in last 24 h (optional)', {
         min: 0,
@@ -1221,7 +2383,19 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       }),
     ],
     calculate(values) {
-      const avg = num(values.avg, 4.5);
+      const mode = String(values.entryMode ?? 'survey');
+      let avg: number;
+
+      if (mode === 'direct' || (values.avg !== undefined && values.entryMode === undefined && values.bpi_1 === undefined)) {
+        avg = num(values.avg, 4.5);
+      } else {
+        let sum = 0;
+        for (let i = 1; i <= 7; i++) {
+          sum += num(values[`bpi_${i}`], 4);
+        }
+        avg = round(sum / 7, 1);
+      }
+
       const worstProvided = !isMissingValue(values.worst, true);
       const worst = num(values.worst, 0);
       const r = riskFromThresholds(avg, [
@@ -1255,9 +2429,10 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         unit: '/10',
         ...r,
         details: [
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '7-domain average' },
           { label: 'Interference average', value: String(avg) },
           { label: 'Worst pain (optional)', value: worstProvided ? String(worst) : 'Not entered' },
-          { label: 'Domains', value: '7 items averaged' },
+          { label: 'Domains', value: '7 items averaged (0–10)' },
         ],
       };
     },
@@ -1366,23 +2541,94 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     name: 'Barthel ADL Index Total',
     shortName: 'Barthel',
     description:
-      'Interprets Barthel Index total (0–100) for activities of daily living independence after stroke or disability.',
+      'Barthel Index of Activities of Daily Living (0–100) for functional independence in rehabilitation, stroke, and geriatrics.',
     category: 'neurology',
     tags: ['barthel', 'adl', 'stroke', 'rehab', 'function'],
-    whenToUse: 'Stroke, geriatric, or rehab assessment when Barthel items have been scored; enter total.',
+    whenToUse: 'Stroke, geriatric, or rehab assessment when evaluating ADL independence; 10 items or direct total.',
     whyUse: 'Simple global ADL score for disability severity, progress, and discharge planning context.',
     inputs: [
-      numberInput('score', 'Barthel Index total (0–100)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive 10-domain ADL questionnaire', value: 'survey' },
+        { label: 'Direct score override', value: 'direct' },
+      ], 'survey'),
+      selectInput('adl_feeding', '1. Feeding', [
+        { label: '0 — Unable / tube fed', value: 0 },
+        { label: '5 — Needs help cutting food, spreading butter, or requires modified diet', value: 5 },
+        { label: '10 — Independent (can feed self food on tray/table)', value: 10 },
+      ], 10),
+      selectInput('adl_bathing', '2. Bathing', [
+        { label: '0 — Dependent (needs assistance or supervision to wash)', value: 0 },
+        { label: '5 — Independent (bathes self completely without anyone present)', value: 5 },
+      ], 5),
+      selectInput('adl_grooming', '3. Grooming', [
+        { label: '0 — Needs help with personal care', value: 0 },
+        { label: '5 — Independent face/hair/teeth/shaving (implements provided)', value: 5 },
+      ], 5),
+      selectInput('adl_dressing', '4. Dressing', [
+        { label: '0 — Dependent', value: 0 },
+        { label: '5 — Needs help (can do about half unaided in reasonable time)', value: 5 },
+        { label: '10 — Independent (puts on, fastens, ties laces, removes all clothes)', value: 10 },
+      ], 5),
+      selectInput('adl_bowels', '5. Bowel control', [
+        { label: '0 — Incontinent (or needs enemas given)', value: 0 },
+        { label: '5 — Occasional accident (less than once per week)', value: 5 },
+        { label: '10 — Continent (no accidents, manages suppositories/enemas if needed)', value: 10 },
+      ], 10),
+      selectInput('adl_bladder', '6. Bladder control', [
+        { label: '0 — Incontinent or catheterized and unable to manage', value: 0 },
+        { label: '5 — Occasional accident (max once per 24 hours)', value: 5 },
+        { label: '10 — Continent (no accidents, manages catheter/urinal if used)', value: 10 },
+      ], 10),
+      selectInput('adl_toilet', '7. Toilet use', [
+        { label: '0 — Dependent', value: 0 },
+        { label: '5 — Needs some help (can do something alone; needs help wiping or clothes)', value: 5 },
+        { label: '10 — Independent (on/off, dressing, wiping, flush)', value: 10 },
+      ], 5),
+      selectInput('adl_transfers', '8. Transfers (bed to chair and back)', [
+        { label: '0 — Unable, no sitting balance (requires mechanical lift)', value: 0 },
+        { label: '5 — Major help (1–2 strong people, can sit)', value: 5 },
+        { label: '10 — Minor help (verbal prompting or physical assistance from 1 person)', value: 10 },
+        { label: '15 — Independent (safely transfers without supervision)', value: 15 },
+      ], 10),
+      selectInput('adl_mobility', '9. Mobility (walking on level surface)', [
+        { label: '0 — Immobile or <50 yards', value: 0 },
+        { label: '5 — Wheelchair independent, including corners, >50 yards', value: 5 },
+        { label: '10 — Walks with help of one person (verbal or physical) >50 yards', value: 10 },
+        { label: '15 — Independent (may use stick, crutches, or frame) >50 yards', value: 15 },
+      ], 10),
+      selectInput('adl_stairs', '10. Stairs', [
+        { label: '0 — Unable', value: 0 },
+        { label: '5 — Needs help (verbal, physical, carrying cane/frame)', value: 5 },
+        { label: '10 — Independent (can carry walking aid if used)', value: 10 },
+      ], 5),
+      numberInput('score', 'Direct Barthel Index total override (0–100)', {
         min: 0,
         max: 100,
         step: 5,
         defaultValue: 60,
-        helpText:
-          'Mahoney/Collin 0–100 (5-point steps). Score each of 10 ADLs then sum: Feeding 0 unable / 5 needs help cutting / 10 independent. Bathing 0 dependent / 5 independent. Grooming 0 needs help / 5 independent (face/hair/teeth/shaving). Dressing 0 dependent / 5 needs help (~half unaided) / 10 independent (buttons, zips, laces). Bowels 0 incontinent or needs enemas / 5 occasional accident / 10 continent. Bladder 0 incontinent or catheterized and unable to manage / 5 occasional accident / 10 continent. Toilet 0 dependent / 5 needs some help / 10 independent (on/off, dressing, wiping). Transfers (bed–chair) 0 unable, no sitting balance / 5 major help (1–2 people) / 10 minor help (verbal or physical) / 15 independent. Mobility 0 immobile or <50 yd / 5 wheelchair independent including corners >50 yd / 10 walks with help of one person >50 yd / 15 independent (may use aid) >50 yd. Stairs 0 unable / 5 needs help / 10 independent. Record what the patient actually does, not what they could do.',
+        helpText: 'Enter official Mahoney/Collin 0–100 total (5-point increments).',
       }),
     ],
     calculate(values) {
-      const score = num(values.score, 60);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.adl_feeding === undefined)) {
+        score = Math.max(0, Math.min(100, num(values.score, 60)));
+      } else {
+        score =
+          num(values.adl_feeding, 10) +
+          num(values.adl_bathing, 5) +
+          num(values.adl_grooming, 5) +
+          num(values.adl_dressing, 5) +
+          num(values.adl_bowels, 10) +
+          num(values.adl_bladder, 10) +
+          num(values.adl_toilet, 5) +
+          num(values.adl_transfers, 10) +
+          num(values.adl_mobility, 10) +
+          num(values.adl_stairs, 5);
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 20,
@@ -1420,6 +2666,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         unit: '/100',
         ...r,
         details: [
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '10-domain ADL survey' },
           { label: '0–20', value: 'Total dependence' },
           { label: '21–60', value: 'Severe dependence' },
           { label: '61–90', value: 'Moderate dependence' },
@@ -1430,9 +2677,9 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Barthel Index sums 10 ADL domains to 0–100 (original 0–20 version also exists; this tool uses the 0–100 scale). Common bands: 0–20 total, 21–60 severe, 61–90 moderate, 91–99 slight dependence, 100 independent.',
-      formula: 'Enter total 0–100',
-      validation: 'Extensively used in stroke research and rehab; ceiling effects in milder disability.',
+        'Barthel Index sums 10 ADL domains to 0–100. Common bands: 0–20 total dependence, 21–60 severe, 61–90 moderate, 91–99 slight, 100 independence.',
+      formula: 'Sum of 10 ADL domains = 0–100',
+      validation: 'Extensively used in stroke research and rehab; public domain instrument.',
       references: [
         {
           title: 'Functional evaluation: the Barthel Index',
@@ -1453,10 +2700,8 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       },
     ],
     pearls: [
-      'Does not capture cognition, communication, or IADLs well — pair with other scales.',
-      '5-point increments are typical on the 0–100 version.',
-      'Administration (Mahoney/Collin): score observed performance over the past 24–48 h (or as specified locally). Use the lower score if performance fluctuates. Do not add new item inputs here — enter the official 0–100 total.',
-      'Transfers and mobility are the only 0/5/10/15 items; bathing and grooming are 0/5 only.',
+      'Transfers and mobility are scored 0/5/10/15; bathing and grooming 0/5 only; other items 0/5/10.',
+      'Record what the patient actually does, not what they could do.',
     ],
   },
 
@@ -2536,21 +3781,212 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     name: 'SNOT-22 Sinonasal Total',
     shortName: 'SNOT-22',
     description:
-      'Interprets Sino-Nasal Outcome Test-22 total (0–110) for chronic rhinosinusitis symptom burden and QoL.',
+      'Sino-Nasal Outcome Test-22 (SNOT-22) 22-item questionnaire and total (0–110) for chronic rhinosinusitis symptom burden and QoL.',
     category: 'otolaryngology',
     tags: ['snot-22', 'sinusitis', 'crs', 'ent', 'quality of life'],
-    whenToUse: 'Chronic rhinosinusitis evaluation and post-medical/surgical treatment monitoring.',
+    whenToUse: 'Chronic rhinosinusitis evaluation and post-medical/surgical treatment monitoring; 22 items or direct score.',
     whyUse: 'Standard CRS patient-reported outcome; tracks response (MCID often ~8–9 points).',
     inputs: [
-      numberInput('score', 'SNOT-22 total (0–110)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive 22-item questionnaire', value: 'survey' },
+        { label: 'Direct score override', value: 'direct' },
+      ], 'survey'),
+      selectInput('snot_1', '1. Need to blow nose', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 2),
+      selectInput('snot_2', '2. Sneezing', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 2),
+      selectInput('snot_3', '3. Runny nose', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 2),
+      selectInput('snot_4', '4. Nasal blockage', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 2),
+      selectInput('snot_5', '5. Loss of smell or taste', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 2),
+      selectInput('snot_6', '6. Cough', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 2),
+      selectInput('snot_7', '7. Post-nasal discharge', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 2),
+      selectInput('snot_8', '8. Thick nasal discharge', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 2),
+      selectInput('snot_9', '9. Ear fullness', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 1),
+      selectInput('snot_10', '10. Dizziness', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 1),
+      selectInput('snot_11', '11. Ear pain', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 1),
+      selectInput('snot_12', '12. Facial pain or pressure', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 1),
+      selectInput('snot_13', '13. Difficulty falling asleep', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 1),
+      selectInput('snot_14', '14. Waking up at night', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 1),
+      selectInput('snot_15', '15. Lack of a good night\'s sleep', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 1),
+      selectInput('snot_16', '16. Waking up tired', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 1),
+      selectInput('snot_17', '17. Fatigue', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 1),
+      selectInput('snot_18', '18. Reduced productivity', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 1),
+      selectInput('snot_19', '19. Reduced concentration', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 1),
+      selectInput('snot_20', '20. Frustrated, restless, or irritable', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 1),
+      selectInput('snot_21', '21. Sad', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 1),
+      selectInput('snot_22', '22. Embarrassed', [
+        { label: '0 — No problem', value: 0 },
+        { label: '1 — Very mild problem', value: 1 },
+        { label: '2 — Mild or slight problem', value: 2 },
+        { label: '3 — Moderate problem', value: 3 },
+        { label: '4 — Severe problem', value: 4 },
+        { label: '5 — Problem as bad as it can be', value: 5 },
+      ], 1),
+      numberInput('score', 'Direct SNOT-22 total override (0–110)', {
         min: 0,
         max: 110,
         defaultValue: 40,
-        helpText: 'Enter the official SNOT-22 total (0–110) from the copyrighted form; do not reprint stems. 22 items × 0–5 (no problem → as bad as it can be), typically over the past 2 weeks.',
+        helpText: 'Enter official SNOT-22 total (0–110): 22 items × 0–5.',
       }),
     ],
     calculate(values) {
-      const score = num(values.score, 40);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.snot_1 === undefined)) {
+        score = Math.max(0, Math.min(110, num(values.score, 40)));
+      } else {
+        score = 0;
+        for (let i = 1; i <= 22; i++) {
+          score += num(values[`snot_${i}`], 1);
+        }
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 20,
@@ -2582,6 +4018,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         unit: '/110',
         ...r,
         details: [
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '22-item survey' },
           { label: 'Items', value: '22 × 0–5' },
           { label: 'MCID (approx.)', value: '≈8.9 points' },
           { label: 'Domains', value: 'Rhinologic, extranasal, ear/facial, psychological, sleep' },
@@ -2625,22 +4062,54 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     name: 'NOSE Scale (Nasal Obstruction)',
     shortName: 'NOSE',
     description:
-      'Nasal Obstruction Symptom Evaluation (NOSE) scale total (0–100) for subjective nasal obstruction severity.',
+      'Nasal Obstruction Symptom Evaluation (NOSE) 5-item scale and total (0–100) for subjective nasal obstruction severity.',
     category: 'otolaryngology',
     tags: ['nose scale', 'nasal obstruction', 'ent', 'septoplasty', 'rhinitis'],
-    whenToUse: 'Quantify nasal blockage symptoms before/after medical therapy or septal/turbinate surgery.',
+    whenToUse: 'Quantify nasal blockage symptoms before/after medical therapy or septal/turbinate surgery; 5 items or raw sum.',
     whyUse: 'Brief validated 5-item scale; standard outcome for functional nasal surgery research.',
     inputs: [
-      numberInput('raw', 'Sum of 5 NOSE items (0–20)', {
+      selectInput('entryMode', 'Entry mode', [
+        { label: 'Interactive 5-item questionnaire', value: 'survey' },
+        { label: 'Direct raw sum entry', value: 'direct' },
+      ], 'survey'),
+      ...[
+        '1. Nasal congestion or stuffiness',
+        '2. Nasal blockage or obstruction',
+        '3. Trouble breathing through my nose',
+        '4. Trouble sleeping',
+        '5. Unable to get enough air through my nose during exercise or exertion',
+      ].map((title, i) =>
+        selectInput(`nose_${i + 1}`, title, [
+          { label: '0 — Not a problem', value: 0 },
+          { label: '1 — Very mild problem', value: 1 },
+          { label: '2 — Moderate problem', value: 2 },
+          { label: '3 — Fairly bad problem', value: 3 },
+          { label: '4 — Severe problem', value: 4 },
+        ], i < 3 ? 3 : 2),
+      ),
+      numberInput('raw', 'Direct raw sum override (0–20)', {
         min: 0,
         max: 20,
         defaultValue: 12,
-        helpText: 'Stewart NOSE, past 1 month. Five items (0 = not a problem, 1 = very mild, 2 = moderate, 3 = fairly bad, 4 = severe): (1) nasal congestion/stuffiness; (2) nasal blockage/obstruction; (3) trouble breathing through my nose; (4) trouble sleeping; (5) unable to get enough air through my nose during exercise. Enter the 0–20 raw sum; scaled score = raw × 5 (0–100).',
+        helpText: 'Sum of 5 NOSE items (0–20). Scaled total = raw × 5 (0–100).',
       }),
     ],
     calculate(values) {
-      const raw = num(values.raw, 12);
-      const score = raw * 5;
+      const mode = String(values.entryMode ?? 'survey');
+      let raw: number;
+
+      if (mode === 'direct' || (values.raw !== undefined && values.entryMode === undefined && values.nose_1 === undefined)) {
+        raw = num(values.raw, 12);
+      } else {
+        raw =
+          num(values.nose_1, 3) +
+          num(values.nose_2, 3) +
+          num(values.nose_3, 3) +
+          num(values.nose_4, 2) +
+          num(values.nose_5, 2);
+      }
+      const score = Math.max(0, Math.min(100, raw * 5));
+
       const r = riskFromThresholds(score, [
         {
           max: 25,
@@ -2672,6 +4141,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         unit: '/100',
         ...r,
         details: [
+          { label: 'Entry mode', value: mode === 'direct' ? 'Direct raw sum' : '5-item survey' },
           { label: 'Raw sum (0–20)', value: String(raw) },
           { label: 'Scaled (raw × 5)', value: String(score) },
           { label: 'Bands', value: '0–25 mild; 26–50 mod; 51–75 severe; 76–100 extreme' },

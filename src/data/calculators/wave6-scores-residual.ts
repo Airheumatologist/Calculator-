@@ -201,22 +201,137 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     id: 'ndi-neck',
     name: 'Neck Disability Index',
     shortName: 'NDI',
-    description: 'Interprets Neck Disability Index percentage (0–100%) for neck pain–related disability.',
+    description: 'Scores and interprets the Neck Disability Index (NDI) percentage (0–100%) across 10 functional sections for neck pain–related disability.',
     category: 'orthopedics',
     tags: ['ndi', 'neck', 'cervical', 'disability', 'spine'],
-    whenToUse: 'When NDI (10 sections) has been administered for neck pain, whiplash, or cervical radiculopathy follow-up.',
-    whyUse: 'Standard neck-specific disability PRO; mirrors Oswestry structure.',
+    whenToUse: 'When evaluating functional impairment and disability in patients with neck pain, whiplash, or cervical radiculopathy.',
+    whyUse: 'Standard neck-specific disability PRO; validated counterpart to the Oswestry Low Back Pain Disability Index.',
     inputs: [
-      numberInput('pct', 'NDI disability %', {
+      selectInput('entryMode', 'Entry Mode', [
+        { label: 'Complete 10-section questionnaire (recommended)', value: 'survey' },
+        { label: 'Direct score override / precomputed %', value: 'direct' },
+      ], 'survey'),
+      selectInput('pain', 'Section 1: Pain Intensity', [
+        { label: 'I have no pain at the moment', value: 0, points: 0 },
+        { label: 'The pain is very mild at the moment', value: 1, points: 1 },
+        { label: 'The pain is moderate at the moment', value: 2, points: 2 },
+        { label: 'The pain is fairly severe at the moment', value: 3, points: 3 },
+        { label: 'The pain is very severe at the moment', value: 4, points: 4 },
+        { label: 'The pain is the worst imaginable at the moment', value: 5, points: 5 },
+      ], 0),
+      selectInput('personalCare', 'Section 2: Personal Care (washing, dressing, etc.)', [
+        { label: 'I can look after myself normally without causing extra pain', value: 0, points: 0 },
+        { label: 'I can look after myself normally but it causes extra pain', value: 1, points: 1 },
+        { label: 'It is painful to look after myself and I am slow and careful', value: 2, points: 2 },
+        { label: 'I need some help but manage most of my personal care', value: 3, points: 3 },
+        { label: 'I need help every day in most aspects of self care', value: 4, points: 4 },
+        { label: 'I do not get dressed, I wash with difficulty and stay in bed', value: 5, points: 5 },
+      ], 0),
+      selectInput('lifting', 'Section 3: Lifting', [
+        { label: 'I can lift heavy weights without extra pain', value: 0, points: 0 },
+        { label: 'I can lift heavy weights but it gives extra pain', value: 1, points: 1 },
+        { label: 'Pain prevents me from lifting heavy weights off the floor, but I can manage if they are conveniently positioned (e.g. on a table)', value: 2, points: 2 },
+        { label: 'Pain prevents me from lifting heavy weights, but I can manage light to medium weights if they are conveniently positioned', value: 3, points: 3 },
+        { label: 'I can only lift very light weights', value: 4, points: 4 },
+        { label: 'I cannot lift or carry anything at all', value: 5, points: 5 },
+      ], 0),
+      selectInput('reading', 'Section 4: Reading', [
+        { label: 'I can read as much as I want with no pain in my neck', value: 0, points: 0 },
+        { label: 'I can read as much as I want with slight pain in my neck', value: 1, points: 1 },
+        { label: 'I can read as much as I want with moderate pain in my neck', value: 2, points: 2 },
+        { label: 'I cannot read as much as I want because of moderate pain in my neck', value: 3, points: 3 },
+        { label: 'I can hardly read at all because of severe pain in my neck', value: 4, points: 4 },
+        { label: 'I cannot read at all', value: 5, points: 5 },
+      ], 0),
+      selectInput('headaches', 'Section 5: Headaches', [
+        { label: 'I have no headaches at all', value: 0, points: 0 },
+        { label: 'I have slight headaches which come infrequently', value: 1, points: 1 },
+        { label: 'I have moderate headaches which come infrequently', value: 2, points: 2 },
+        { label: 'I have moderate headaches which come frequently', value: 3, points: 3 },
+        { label: 'I have severe headaches which come frequently', value: 4, points: 4 },
+        { label: 'I have headaches almost all the time', value: 5, points: 5 },
+      ], 0),
+      selectInput('concentration', 'Section 6: Concentration', [
+        { label: 'I can concentrate fully when I want to with no difficulty', value: 0, points: 0 },
+        { label: 'I can concentrate fully when I want to with slight difficulty', value: 1, points: 1 },
+        { label: 'I have a fair degree of difficulty in concentrating when I want to', value: 2, points: 2 },
+        { label: 'I have a lot of difficulty in concentrating when I want to', value: 3, points: 3 },
+        { label: 'I have a great deal of difficulty in concentrating when I want to', value: 4, points: 4 },
+        { label: 'I cannot concentrate at all', value: 5, points: 5 },
+      ], 0),
+      selectInput('work', 'Section 7: Work', [
+        { label: 'I can do as much work as I want to', value: 0, points: 0 },
+        { label: 'I can only do my usual work, but no more', value: 1, points: 1 },
+        { label: 'I can do most of my usual work, but no more', value: 2, points: 2 },
+        { label: 'I cannot do my usual work', value: 3, points: 3 },
+        { label: 'I can hardly do any work at all', value: 4, points: 4 },
+        { label: 'I cannot do any work at all', value: 5, points: 5 },
+      ], 0),
+      selectInput('driving', 'Section 8: Driving', [
+        { label: 'I can drive my car without any neck pain', value: 0, points: 0 },
+        { label: 'I can drive my car as long as I want with slight pain in my neck', value: 1, points: 1 },
+        { label: 'I can drive my car as long as I want with moderate pain in my neck', value: 2, points: 2 },
+        { label: 'I cannot drive my car as long as I want because of moderate pain in my neck', value: 3, points: 3 },
+        { label: 'I can hardly drive at all because of severe pain in my neck', value: 4, points: 4 },
+        { label: 'I cannot drive my car at all', value: 5, points: 5 },
+        { label: 'Not applicable / omit (does not drive)', value: -1 },
+      ], 0, 'If omitted or not applicable, excluded from numerator and denominator per Fairbank/Vernon rules.'),
+      selectInput('sleeping', 'Section 9: Sleeping', [
+        { label: 'I have no trouble sleeping', value: 0, points: 0 },
+        { label: 'My sleep is slightly disturbed (less than 1 hr sleepless)', value: 1, points: 1 },
+        { label: 'My sleep is mildly disturbed (1–2 hrs sleepless)', value: 2, points: 2 },
+        { label: 'My sleep is moderately disturbed (2–3 hrs sleepless)', value: 3, points: 3 },
+        { label: 'My sleep is greatly disturbed (3–5 hrs sleepless)', value: 4, points: 4 },
+        { label: 'My sleep is completely disturbed (5–7 hrs sleepless)', value: 5, points: 5 },
+      ], 0),
+      selectInput('recreation', 'Section 10: Recreation', [
+        { label: 'I am able to engage in all my recreation activities with no neck pain at all', value: 0, points: 0 },
+        { label: 'I am able to engage in all my recreation activities with some neck pain', value: 1, points: 1 },
+        { label: 'I am able to engage in most, but not all of my usual recreation activities because of neck pain', value: 2, points: 2 },
+        { label: 'I am able to engage in a few of my usual recreation activities because of neck pain', value: 3, points: 3 },
+        { label: 'I can hardly do any recreation activities because of neck pain', value: 4, points: 4 },
+        { label: 'I cannot do any recreation activities at all', value: 5, points: 5 },
+      ], 0),
+      numberInput('pct', 'Direct NDI disability % (override)', {
         min: 0,
         max: 100,
         step: 1,
         defaultValue: 28,
-        helpText: 'NDI % = (sum / (5 × n answered)) × 100; raw total 0–50 is sometimes reported instead',
+        helpText: 'Used only if entry mode is set to Direct Score Override (0–100%).',
       }),
     ],
     calculate(values) {
-      const pct = round(clamp01_100(num(values.pct, 0)), 0);
+      const mode = String(values.entryMode ?? 'survey');
+      let pct: number;
+      let rawScore = 0;
+      let answeredCount = 0;
+
+      if (mode === 'direct' || (values.pct !== undefined && values.entryMode === undefined && values.pain === undefined)) {
+        pct = round(clamp01_100(num(values.pct, 0)), 1);
+      } else {
+        const items = [
+          values.pain,
+          values.personalCare,
+          values.lifting,
+          values.reading,
+          values.headaches,
+          values.concentration,
+          values.work,
+          values.driving,
+          values.sleeping,
+          values.recreation,
+        ];
+        for (const item of items) {
+          const val = num(item, 0);
+          if (val >= 0) {
+            rawScore += val;
+            answeredCount++;
+          }
+        }
+        const maxPossible = 5 * answeredCount;
+        pct = answeredCount > 0 ? round((rawScore / maxPossible) * 100, 1) : 0;
+      }
+
       const r = riskFromThresholds(pct, [
         {
           max: 8,
@@ -249,14 +364,24 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
           interpretation: `NDI ${pct}%: complete/near-complete disability band — intensive support; reassess neurologic status and red flags.`,
         },
       ]);
+      const details: { label: string; value: string }[] = [
+        { label: 'Disability percentage', value: `${pct}%` },
+        { label: 'MCID (approx)', value: '~5–10 raw points / ~10–20% depending on population' },
+      ];
+      if (answeredCount > 0) {
+        details.unshift(
+          { label: 'Raw score', value: `${rawScore} / ${5 * answeredCount}` },
+          { label: 'Answered sections', value: `${answeredCount} / 10` },
+        );
+      } else {
+        details.unshift({ label: 'Raw equivalent (if 10 answered)', value: `${round(pct / 2, 1)} / 50` });
+      }
+
       return {
         score: pct,
         unit: '%',
         ...r,
-        details: [
-          { label: 'Raw equivalent (if 10 answered)', value: `${round(pct / 2, 1)} / 50` },
-          { label: 'MCID (approx)', value: '~5–10 raw points / ~10–20% depending on population' },
-        ],
+        details,
       };
     },
     evidence: {
@@ -284,22 +409,265 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     id: 'dash-upper-limb',
     name: 'DASH Score (Upper Extremity)',
     shortName: 'DASH',
-    description: 'Interprets Disabilities of the Arm, Shoulder and Hand (DASH) total (0–100; higher = worse).',
+    description: 'Scores and interprets Disabilities of the Arm, Shoulder and Hand (DASH) 30-item disability/symptom score (0–100; higher = worse).',
     category: 'orthopedics',
     tags: ['dash', 'upper extremity', 'shoulder', 'hand', 'disability'],
-    whenToUse: 'When the 30-item DASH disability/symptom score has been computed for arm/shoulder/hand conditions.',
+    whenToUse: 'When evaluating disability and symptoms in patients with any musculoskeletal condition of the arm, shoulder, or hand.',
     whyUse: 'Gold-standard region-specific PRO for upper-limb function across diagnoses.',
     inputs: [
-      numberInput('total', 'DASH disability/symptom score', {
+      selectInput('entryMode', 'Entry Mode', [
+        { label: 'Interactive 30-item survey (recommended)', value: 'survey' },
+        { label: 'Direct score override (0–100)', value: 'direct' },
+      ], 'survey'),
+      selectInput('dash_q1', '1. Open a tight or new jar', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q2', '2. Write', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q3', '3. Turn a key', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q4', '4. Prepare a meal', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q5', '5. Push open a heavy door', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q6', '6. Place an object on a shelf above your head', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q7', '7. Do heavy household chores (e.g. wash walls, wash floors)', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q8', '8. Garden or do yard work', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q9', '9. Make a bed', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q10', '10. Carry a shopping bag or briefcase', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q11', '11. Carry a heavy object (over 10 lbs / 5 kg)', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q12', '12. Change a lightbulb overhead', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q13', '13. Wash or blow dry your hair', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q14', '14. Wash your back', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q15', '15. Put on a pullover sweater', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q16', '16. Use a knife to cut food', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q17', '17. Recreational activities requiring little effort (e.g. cards, knitting)', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q18', '18. Recreational activities with force or impact through arm (e.g. tennis, golf, hammer)', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q19', '19. Recreational activities with free arm movement (e.g. swimming, frisbee)', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q20', '20. Manage transportation needs (getting from one place to another)', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q21', '21. Sexual activities', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q22', '22. Extent arm/shoulder/hand interfered with normal social activities with family/friends', [
+        { label: '1 - Not at all', value: 1 },
+        { label: '2 - Slightly', value: 2 },
+        { label: '3 - Moderately', value: 3 },
+        { label: '4 - Quite a bit', value: 4 },
+        { label: '5 - Extremely', value: 5 },
+      ], 1),
+      selectInput('dash_q23', '23. Limited in your work or other regular daily activities', [
+        { label: '1 - Not limited at all', value: 1 },
+        { label: '2 - Slightly limited', value: 2 },
+        { label: '3 - Moderately limited', value: 3 },
+        { label: '4 - Very limited', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('dash_q24', '24. Arm, shoulder or hand pain', [
+        { label: '1 - None', value: 1 },
+        { label: '2 - Mild', value: 2 },
+        { label: '3 - Moderate', value: 3 },
+        { label: '4 - Severe', value: 4 },
+        { label: '5 - Extreme', value: 5 },
+      ], 1),
+      selectInput('dash_q25', '25. Arm, shoulder or hand pain when doing specific activity', [
+        { label: '1 - None', value: 1 },
+        { label: '2 - Mild', value: 2 },
+        { label: '3 - Moderate', value: 3 },
+        { label: '4 - Severe', value: 4 },
+        { label: '5 - Extreme', value: 5 },
+      ], 1),
+      selectInput('dash_q26', '26. Tingling (pins and needles) in your arm, shoulder or hand', [
+        { label: '1 - None', value: 1 },
+        { label: '2 - Mild', value: 2 },
+        { label: '3 - Moderate', value: 3 },
+        { label: '4 - Severe', value: 4 },
+        { label: '5 - Extreme', value: 5 },
+      ], 1),
+      selectInput('dash_q27', '27. Weakness in your arm, shoulder or hand', [
+        { label: '1 - None', value: 1 },
+        { label: '2 - Mild', value: 2 },
+        { label: '3 - Moderate', value: 3 },
+        { label: '4 - Severe', value: 4 },
+        { label: '5 - Extreme', value: 5 },
+      ], 1),
+      selectInput('dash_q28', '28. Stiffness in your arm, shoulder or hand', [
+        { label: '1 - None', value: 1 },
+        { label: '2 - Mild', value: 2 },
+        { label: '3 - Moderate', value: 3 },
+        { label: '4 - Severe', value: 4 },
+        { label: '5 - Extreme', value: 5 },
+      ], 1),
+      selectInput('dash_q29', '29. Difficulty sleeping because of pain in arm, shoulder or hand', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - So much difficulty that I cannot sleep', value: 5 },
+      ], 1),
+      selectInput('dash_q30', '30. Feel less capable, less confident or less useful because of arm/shoulder/hand', [
+        { label: '1 - Strongly disagree', value: 1 },
+        { label: '2 - Disagree', value: 2 },
+        { label: '3 - Neither agree nor disagree', value: 3 },
+        { label: '4 - Agree', value: 4 },
+        { label: '5 - Strongly agree', value: 5 },
+      ], 1),
+      numberInput('total', 'Direct DASH score override (0–100)', {
         min: 0,
         max: 100,
         step: 0.1,
         defaultValue: 35,
-        helpText: 'DASH = ((sum of n responses / n) − 1) × 25; need ≥27 of 30 items',
+        helpText: 'Used if Direct Score Override mode is active. DASH = ((sum of n responses / n) − 1) × 25.',
       }),
     ],
     calculate(values) {
-      const score = round(clamp01_100(num(values.total, 0)), 1);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+      let answeredCount = 0;
+      let rawSum = 0;
+
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.dash_q1 === undefined)) {
+        score = round(clamp01_100(num(values.total, 0)), 1);
+      } else {
+        const qKeys = [
+          'dash_q1', 'dash_q2', 'dash_q3', 'dash_q4', 'dash_q5',
+          'dash_q6', 'dash_q7', 'dash_q8', 'dash_q9', 'dash_q10',
+          'dash_q11', 'dash_q12', 'dash_q13', 'dash_q14', 'dash_q15',
+          'dash_q16', 'dash_q17', 'dash_q18', 'dash_q19', 'dash_q20',
+          'dash_q21', 'dash_q22', 'dash_q23', 'dash_q24', 'dash_q25',
+          'dash_q26', 'dash_q27', 'dash_q28', 'dash_q29', 'dash_q30',
+        ];
+        for (const k of qKeys) {
+          const v = num(values[k], 0);
+          if (v >= 1 && v <= 5) {
+            rawSum += v;
+            answeredCount++;
+          }
+        }
+        if (answeredCount >= 27) {
+          score = round(((rawSum / answeredCount) - 1) * 25, 1);
+        } else {
+          score = round(clamp01_100(num(values.total, 0)), 1);
+        }
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 15,
@@ -326,14 +694,21 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
           interpretation: `DASH ${score}: severe disability — multidisciplinary care; reassess diagnosis, nerve, and psychosocial factors.`,
         },
       ]);
+      const details: { label: string; value: string }[] = [
+        { label: 'Direction', value: 'Higher = more disability (0–100 scale)' },
+        { label: 'Optional modules', value: 'Work / sport-music scored separately (not in this total)' },
+      ];
+      if (answeredCount > 0) {
+        details.unshift(
+          { label: 'Answered items', value: `${answeredCount} / 30 (min 27 required)` },
+          { label: 'Raw item mean', value: `${round(rawSum / answeredCount, 2)} / 5.0` },
+        );
+      }
       return {
         score,
         unit: '0–100',
         ...r,
-        details: [
-          { label: 'Direction', value: 'Higher = more disability' },
-          { label: 'Optional modules', value: 'Work / sport-music scored separately (not in this total)' },
-        ],
+        details,
       };
     },
     evidence: {
@@ -365,22 +740,129 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     id: 'quickdash',
     name: 'QuickDASH',
     shortName: 'QuickDASH',
-    description: 'Interprets QuickDASH disability/symptom score (0–100; higher = worse) from 11 items.',
+    description: 'Scores and interprets the 11-item QuickDASH disability/symptom score (0–100; higher = worse).',
     category: 'orthopedics',
     tags: ['quickdash', 'dash', 'upper extremity', 'hand', 'shoulder'],
     whenToUse: 'Brief upper-extremity PRO when full DASH is too long; same 0–100 metric family.',
     whyUse: '11-item short form correlates highly with full DASH and is practical in clinic.',
     inputs: [
-      numberInput('total', 'QuickDASH score', {
+      selectInput('entryMode', 'Entry Mode', [
+        { label: 'Interactive 11-item questionnaire (recommended)', value: 'survey' },
+        { label: 'Direct score override (0–100)', value: 'direct' },
+      ], 'survey'),
+      selectInput('qdash_q1', '1. Open a tight or new jar', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('qdash_q2', '2. Do heavy household chores (e.g. wash walls, floors)', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('qdash_q3', '3. Carry a shopping bag or briefcase', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('qdash_q4', '4. Wash your back', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('qdash_q5', '5. Use a knife to cut food', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('qdash_q6', '6. Heavy recreational activities with force or impact through arm (e.g. hammering, tennis)', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('qdash_q7', '7. Interference with normal social activities with family, friends, neighbors or groups', [
+        { label: '1 - Not at all', value: 1 },
+        { label: '2 - Slightly', value: 2 },
+        { label: '3 - Moderately', value: 3 },
+        { label: '4 - Quite a bit', value: 4 },
+        { label: '5 - Extremely', value: 5 },
+      ], 1),
+      selectInput('qdash_q8', '8. Limited in your work or other regular daily activities', [
+        { label: '1 - Not limited at all', value: 1 },
+        { label: '2 - Slightly limited', value: 2 },
+        { label: '3 - Moderately limited', value: 3 },
+        { label: '4 - Very limited', value: 4 },
+        { label: '5 - Unable', value: 5 },
+      ], 1),
+      selectInput('qdash_q9', '9. Arm, shoulder or hand pain', [
+        { label: '1 - None', value: 1 },
+        { label: '2 - Mild', value: 2 },
+        { label: '3 - Moderate', value: 3 },
+        { label: '4 - Severe', value: 4 },
+        { label: '5 - Extreme', value: 5 },
+      ], 1),
+      selectInput('qdash_q10', '10. Tingling (pins and needles) in your arm, shoulder or hand', [
+        { label: '1 - None', value: 1 },
+        { label: '2 - Mild', value: 2 },
+        { label: '3 - Moderate', value: 3 },
+        { label: '4 - Severe', value: 4 },
+        { label: '5 - Extreme', value: 5 },
+      ], 1),
+      selectInput('qdash_q11', '11. Difficulty sleeping because of pain in arm, shoulder or hand', [
+        { label: '1 - No difficulty', value: 1 },
+        { label: '2 - Mild difficulty', value: 2 },
+        { label: '3 - Moderate difficulty', value: 3 },
+        { label: '4 - Severe difficulty', value: 4 },
+        { label: '5 - So much difficulty that I cannot sleep', value: 5 },
+      ], 1),
+      numberInput('total', 'Direct QuickDASH score override', {
         min: 0,
         max: 100,
         step: 0.1,
         defaultValue: 32,
-        helpText: 'QuickDASH = ((sum of n / n) − 1) × 25; need ≥10 of 11 items',
+        helpText: 'Used if Direct Score Override mode is active. QuickDASH = ((sum of n / n) − 1) × 25.',
       }),
     ],
     calculate(values) {
-      const score = round(clamp01_100(num(values.total, 0)), 1);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+      let answeredCount = 0;
+      let rawSum = 0;
+
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.qdash_q1 === undefined)) {
+        score = round(clamp01_100(num(values.total, 0)), 1);
+      } else {
+        const qKeys = [
+          'qdash_q1', 'qdash_q2', 'qdash_q3', 'qdash_q4', 'qdash_q5',
+          'qdash_q6', 'qdash_q7', 'qdash_q8', 'qdash_q9', 'qdash_q10',
+          'qdash_q11',
+        ];
+        for (const k of qKeys) {
+          const v = num(values[k], 0);
+          if (v >= 1 && v <= 5) {
+            rawSum += v;
+            answeredCount++;
+          }
+        }
+        if (answeredCount >= 10) {
+          score = round(((rawSum / answeredCount) - 1) * 25, 1);
+        } else {
+          score = round(clamp01_100(num(values.total, 0)), 1);
+        }
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 15,
@@ -407,11 +889,20 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
           interpretation: `QuickDASH ${score}: severe UE disability.`,
         },
       ]);
+      const details: { label: string; value: string }[] = [
+        { label: 'Direction', value: 'Higher = more disability (0–100 scale)' },
+      ];
+      if (answeredCount > 0) {
+        details.unshift(
+          { label: 'Answered items', value: `${answeredCount} / 11 (min 10 required)` },
+          { label: 'Raw item mean', value: `${round(rawSum / answeredCount, 2)} / 5.0` },
+        );
+      }
       return {
         score,
         unit: '0–100',
         ...r,
-        details: [{ label: 'Items', value: '11 disability/symptom (+ optional work/sport modules)' }],
+        details,
       };
     },
     evidence: {
@@ -439,40 +930,232 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     id: 'womac',
     name: 'WOMAC Osteoarthritis Index (Total)',
     shortName: 'WOMAC',
-    description: 'Interprets Western Ontario and McMaster Universities Osteoarthritis Index total (classic Likert 0–96).',
+    description: 'Scores and interprets the Western Ontario and McMaster Universities Osteoarthritis Index (WOMAC) across Pain (5), Stiffness (2), and Function (17) subscales (Likert 0–96).',
     category: 'orthopedics',
     tags: ['womac', 'osteoarthritis', 'knee', 'hip', 'function'],
-    whenToUse: 'When WOMAC pain + stiffness + function subscales have been summed for hip/knee OA.',
-    whyUse: 'Core PRO for hip and knee osteoarthritis trials and clinic outcomes.',
+    whenToUse: 'When evaluating hip or knee osteoarthritis symptoms and physical disability.',
+    whyUse: 'Core PRO for hip and knee osteoarthritis trials and clinic outcomes endorsed by OMERACT.',
     inputs: [
-      numberInput('total', 'WOMAC total (0–96 Likert)', {
+      selectInput('entryMode', 'Entry Mode', [
+        { label: 'Interactive 24-item questionnaire (recommended)', value: 'survey' },
+        { label: 'Direct score override (0–96)', value: 'direct' },
+      ], 'survey'),
+      // Pain (5 items)
+      selectInput('w_p1', 'Pain: Walking on flat surface', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 1),
+      selectInput('w_p2', 'Pain: Going up or down stairs', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 2),
+      selectInput('w_p3', 'Pain: At night while in bed', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 1),
+      selectInput('w_p4', 'Pain: Sitting or lying down', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 1),
+      selectInput('w_p5', 'Pain: Standing upright', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 2),
+      // Stiffness (2 items)
+      selectInput('w_s1', 'Stiffness: How severe is stiffness after first awakening in the morning?', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 1),
+      selectInput('w_s2', 'Stiffness: How severe is stiffness after sitting, lying or resting later in the day?', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 1),
+      // Function (17 items)
+      selectInput('w_f1', 'Function: Descending stairs', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 2),
+      selectInput('w_f2', 'Function: Ascending stairs', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 2),
+      selectInput('w_f3', 'Function: Rising from sitting', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 2),
+      selectInput('w_f4', 'Function: Standing', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 1),
+      selectInput('w_f5', 'Function: Bending to floor / pick up an object', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 2),
+      selectInput('w_f6', 'Function: Walking on flat ground', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 1),
+      selectInput('w_f7', 'Function: Getting in or out of a car', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 2),
+      selectInput('w_f8', 'Function: Going shopping', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 2),
+      selectInput('w_f9', 'Function: Putting on socks / stockings', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 1),
+      selectInput('w_f10', 'Function: Rising from bed', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 1),
+      selectInput('w_f11', 'Function: Taking off socks / stockings', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 1),
+      selectInput('w_f12', 'Function: Lying in bed', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 1),
+      selectInput('w_f13', 'Function: Getting in or out of bath', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 2),
+      selectInput('w_f14', 'Function: Sitting', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 1),
+      selectInput('w_f15', 'Function: Getting on or off toilet', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 1),
+      selectInput('w_f16', 'Function: Heavy domestic duties (e.g. moving heavy boxes, scrub floors)', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 3),
+      selectInput('w_f17', 'Function: Light domestic duties (e.g. cooking, dusting)', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+        { label: '4 - Extreme', value: 4 },
+      ], 1),
+      numberInput('total', 'WOMAC total (0–96 Likert override)', {
         min: 0,
         max: 96,
         step: 1,
         defaultValue: 40,
-        helpText: 'Pain 0–20 + stiffness 0–8 + function 0–68 (5-point Likert). VAS/normalized 0–100 versions differ — convert first.',
+        helpText: 'Used if Direct score override mode is chosen.',
       }),
-      numberInput('pain', 'Pain subscale (optional)', {
+      numberInput('pain', 'Pain subscale override (optional, 0–20)', {
         min: 0,
         max: 20,
         step: 1,
         defaultValue: 8,
-        helpText: '5 items × 0–4',
         required: false,
       }),
-      numberInput('function', 'Function subscale (optional)', {
+      numberInput('function', 'Function subscale override (optional, 0–68)', {
         min: 0,
         max: 68,
         step: 1,
         defaultValue: 28,
-        helpText: '17 items × 0–4',
         required: false,
       }),
     ],
     calculate(values) {
-      const score = round(Math.min(96, Math.max(0, num(values.total, 0))), 0);
-      const pain = num(values.pain, NaN);
-      const func = num(values.function, NaN);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+      let painScore = 0;
+      let stiffScore = 0;
+      let funcScore = 0;
+
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.w_p1 === undefined)) {
+        score = round(Math.min(96, Math.max(0, num(values.total, 0))), 0);
+        painScore = num(values.pain, NaN);
+        funcScore = num(values.function, NaN);
+      } else {
+        painScore = num(values.w_p1, 0) + num(values.w_p2, 0) + num(values.w_p3, 0) + num(values.w_p4, 0) + num(values.w_p5, 0);
+        stiffScore = num(values.w_s1, 0) + num(values.w_s2, 0);
+        funcScore =
+          num(values.w_f1, 0) + num(values.w_f2, 0) + num(values.w_f3, 0) + num(values.w_f4, 0) +
+          num(values.w_f5, 0) + num(values.w_f6, 0) + num(values.w_f7, 0) + num(values.w_f8, 0) +
+          num(values.w_f9, 0) + num(values.w_f10, 0) + num(values.w_f11, 0) + num(values.w_f12, 0) +
+          num(values.w_f13, 0) + num(values.w_f14, 0) + num(values.w_f15, 0) + num(values.w_f16, 0) +
+          num(values.w_f17, 0);
+        score = painScore + stiffScore + funcScore;
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 24,
@@ -501,10 +1184,11 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
       ]);
       const details: { label: string; value: string }[] = [
         { label: 'Direction', value: 'Higher = worse' },
-        { label: 'Subscales', value: 'Pain 0–20, stiffness 0–8, function 0–68' },
+        { label: 'Total Score', value: `${score} / 96 (${round((score / 96) * 100, 1)}%)` },
       ];
-      if (Number.isFinite(pain)) details.push({ label: 'Pain entered', value: `${pain}/20` });
-      if (Number.isFinite(func)) details.push({ label: 'Function entered', value: `${func}/68` });
+      if (Number.isFinite(painScore)) details.push({ label: 'Pain subscale', value: `${painScore} / 20` });
+      if (stiffScore > 0 || mode === 'survey') details.push({ label: 'Stiffness subscale', value: `${stiffScore} / 8` });
+      if (Number.isFinite(funcScore)) details.push({ label: 'Function subscale', value: `${funcScore} / 68` });
       return { score, unit: '/96', ...r, details };
     },
     evidence: {
@@ -532,13 +1216,142 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     id: 'ikdc',
     name: 'IKDC Subjective Knee Form (Total)',
     shortName: 'IKDC',
-    description: 'Interprets International Knee Documentation Committee subjective score (0–100; higher = better).',
+    description: 'Scores and interprets the International Knee Documentation Committee (IKDC) Subjective Knee Evaluation Form (transformed 0–100; higher = better).',
     category: 'orthopedics',
     tags: ['ikdc', 'knee', 'acl', 'sports', 'ortho'],
-    whenToUse: 'When IKDC subjective form has been scored after knee injury, ACL reconstruction, or cartilage treatment.',
-    whyUse: 'Standard sports-knee PRO spanning symptoms, sports activity, and function.',
+    whenToUse: 'When evaluating knee symptoms, sports function, and daily activities after knee ligament, meniscus, or cartilage injury.',
+    whyUse: 'Standard sports-knee PRO spanning symptoms, sports activity, and function endorsed by AOSSM.',
     inputs: [
-      numberInput('total', 'IKDC subjective total', {
+      selectInput('entryMode', 'Entry Mode', [
+        { label: 'Interactive questionnaire (recommended)', value: 'survey' },
+        { label: 'Direct transformed score override (0–100)', value: 'direct' },
+      ], 'survey'),
+      selectInput('ikdc_q1', '1. Highest level of activity without significant knee pain', [
+        { label: '4 - Very strenuous activities like jumping or pivoting as in basketball or soccer', value: 4 },
+        { label: '3 - Strenuous activities like heavy physical work, skiing or tennis', value: 3 },
+        { label: '2 - Moderate activities like moderate physical work, running or jogging', value: 2 },
+        { label: '1 - Light activities like walking, housework or yard work', value: 1 },
+        { label: '0 - Unable to perform any of the above activities due to knee pain', value: 0 },
+      ], 3),
+      selectInput('ikdc_q2', '2. Frequency of knee pain (past 4 weeks)', [
+        { label: '10 - Never', value: 10 },
+        { label: '8 - Rarely', value: 8 },
+        { label: '6 - Sometimes', value: 6 },
+        { label: '4 - Frequently', value: 4 },
+        { label: '2 - Very frequently', value: 2 },
+        { label: '0 - Constantly', value: 0 },
+      ], 8),
+      selectInput('ikdc_q3', '3. Severity of knee pain (past 4 weeks)', [
+        { label: '10 - No pain', value: 10 },
+        { label: '8 - Mild pain', value: 8 },
+        { label: '6 - Moderate pain', value: 6 },
+        { label: '4 - Fairly severe pain', value: 4 },
+        { label: '2 - Very severe pain', value: 2 },
+        { label: '0 - Worst pain imaginable', value: 0 },
+      ], 8),
+      selectInput('ikdc_q4', '4. Stiffness / difficulty moving knee', [
+        { label: '4 - Not at all stiff', value: 4 },
+        { label: '3 - Mildly stiff', value: 3 },
+        { label: '2 - Moderately stiff', value: 2 },
+        { label: '1 - Very stiff', value: 1 },
+        { label: '0 - Extremely stiff', value: 0 },
+      ], 3),
+      selectInput('ikdc_q5', '5. Swelling in your knee', [
+        { label: '4 - Never', value: 4 },
+        { label: '3 - Rarely', value: 3 },
+        { label: '2 - Sometimes', value: 2 },
+        { label: '1 - Frequently', value: 1 },
+        { label: '0 - Constantly', value: 0 },
+      ], 3),
+      selectInput('ikdc_q6', '6. Does your knee lock or catch?', [
+        { label: '1 - No', value: 1 },
+        { label: '0 - Yes', value: 0 },
+      ], 1),
+      selectInput('ikdc_q7', '7. Does your knee give way or feel unstable?', [
+        { label: '4 - Never gives way', value: 4 },
+        { label: '3 - Rarely gives way', value: 3 },
+        { label: '2 - Sometimes gives way', value: 2 },
+        { label: '1 - Frequently gives way', value: 1 },
+        { label: '0 - Constantly gives way', value: 0 },
+      ], 3),
+      selectInput('ikdc_q8', '8. Highest level of activity without significant swelling', [
+        { label: '4 - Very strenuous activities (jumping/pivoting)', value: 4 },
+        { label: '3 - Strenuous activities (heavy work, skiing, tennis)', value: 3 },
+        { label: '2 - Moderate activities (jogging, moderate work)', value: 2 },
+        { label: '1 - Light activities (walking, housework)', value: 1 },
+        { label: '0 - Unable due to swelling', value: 0 },
+      ], 3),
+      selectInput('ikdc_q9', '9. Highest level of activity without knee giving way', [
+        { label: '4 - Very strenuous activities (jumping/pivoting)', value: 4 },
+        { label: '3 - Strenuous activities (heavy work, skiing, tennis)', value: 3 },
+        { label: '2 - Moderate activities (jogging, moderate work)', value: 2 },
+        { label: '1 - Light activities (walking, housework)', value: 1 },
+        { label: '0 - Unable due to instability', value: 0 },
+      ], 3),
+      selectInput('ikdc_q10a', '10a. Go up stairs', [
+        { label: '4 - Not difficult at all', value: 4 },
+        { label: '3 - Minimally difficult', value: 3 },
+        { label: '2 - Moderately difficult', value: 2 },
+        { label: '1 - Extremely difficult', value: 1 },
+        { label: '0 - Unable to do', value: 0 },
+      ], 3),
+      selectInput('ikdc_q10b', '10b. Go down stairs', [
+        { label: '4 - Not difficult at all', value: 4 },
+        { label: '3 - Minimally difficult', value: 3 },
+        { label: '2 - Moderately difficult', value: 2 },
+        { label: '1 - Extremely difficult', value: 1 },
+        { label: '0 - Unable to do', value: 0 },
+      ], 3),
+      selectInput('ikdc_q10c', '10c. Kneel on front of your knee', [
+        { label: '4 - Not difficult at all', value: 4 },
+        { label: '3 - Minimally difficult', value: 3 },
+        { label: '2 - Moderately difficult', value: 2 },
+        { label: '1 - Extremely difficult', value: 1 },
+        { label: '0 - Unable to do', value: 0 },
+      ], 2),
+      selectInput('ikdc_q10d', '10d. Squat', [
+        { label: '4 - Not difficult at all', value: 4 },
+        { label: '3 - Minimally difficult', value: 3 },
+        { label: '2 - Moderately difficult', value: 2 },
+        { label: '1 - Extremely difficult', value: 1 },
+        { label: '0 - Unable to do', value: 0 },
+      ], 2),
+      selectInput('ikdc_q10e', '10e. Sit with knee bent', [
+        { label: '4 - Not difficult at all', value: 4 },
+        { label: '3 - Minimally difficult', value: 3 },
+        { label: '2 - Moderately difficult', value: 2 },
+        { label: '1 - Extremely difficult', value: 1 },
+        { label: '0 - Unable to do', value: 0 },
+      ], 3),
+      selectInput('ikdc_q10f', '10f. Rise from a chair', [
+        { label: '4 - Not difficult at all', value: 4 },
+        { label: '3 - Minimally difficult', value: 3 },
+        { label: '2 - Moderately difficult', value: 2 },
+        { label: '1 - Extremely difficult', value: 1 },
+        { label: '0 - Unable to do', value: 0 },
+      ], 3),
+      selectInput('ikdc_q10g', '10g. Run straight ahead', [
+        { label: '4 - Not difficult at all', value: 4 },
+        { label: '3 - Minimally difficult', value: 3 },
+        { label: '2 - Moderately difficult', value: 2 },
+        { label: '1 - Extremely difficult', value: 1 },
+        { label: '0 - Unable to do', value: 0 },
+      ], 2),
+      selectInput('ikdc_q10h', '10h. Jump and land on your involved leg', [
+        { label: '4 - Not difficult at all', value: 4 },
+        { label: '3 - Minimally difficult', value: 3 },
+        { label: '2 - Moderately difficult', value: 2 },
+        { label: '1 - Extremely difficult', value: 1 },
+        { label: '0 - Unable to do', value: 0 },
+      ], 2),
+      selectInput('ikdc_q10i', '10i. Stop and start quickly', [
+        { label: '4 - Not difficult at all', value: 4 },
+        { label: '3 - Minimally difficult', value: 3 },
+        { label: '2 - Moderately difficult', value: 2 },
+        { label: '1 - Extremely difficult', value: 1 },
+        { label: '0 - Unable to do', value: 0 },
+      ], 2),
+      numberInput('total', 'IKDC subjective total override (0–100)', {
         min: 0,
         max: 100,
         step: 0.1,
@@ -547,7 +1360,25 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
       }),
     ],
     calculate(values) {
-      const score = round(clamp01_100(num(values.total, 0)), 1);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+      let rawScore = 0;
+      const maxPossible = 81; // Sum of maxes: 4 + 10 + 10 + 4 + 4 + 1 + 4 + 4 + 4 + (9 * 4) = 45 + 36 = 81
+
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.ikdc_q1 === undefined)) {
+        score = round(clamp01_100(num(values.total, 0)), 1);
+      } else {
+        const keys = [
+          'ikdc_q1', 'ikdc_q2', 'ikdc_q3', 'ikdc_q4', 'ikdc_q5', 'ikdc_q6', 'ikdc_q7',
+          'ikdc_q8', 'ikdc_q9', 'ikdc_q10a', 'ikdc_q10b', 'ikdc_q10c', 'ikdc_q10d',
+          'ikdc_q10e', 'ikdc_q10f', 'ikdc_q10g', 'ikdc_q10h', 'ikdc_q10i',
+        ];
+        for (const k of keys) {
+          rawScore += num(values[k], 0);
+        }
+        score = round((rawScore / maxPossible) * 100, 1);
+      }
+
       // Higher is better — invert risk banding
       let riskLevel: 'normal' | 'low' | 'moderate' | 'high' | 'critical' = 'normal';
       let label = '';
@@ -573,22 +1404,26 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         label = 'Poor (<40)';
         interpretation = `IKDC ${score}: poor subjective knee status — comprehensive ortho/rehab review.`;
       }
+      const details: { label: string; value: string }[] = [
+        { label: 'Direction', value: 'Higher = better (0–100 scale)' },
+        { label: 'MCID (approx)', value: '~6–16 points (population-dependent)' },
+      ];
+      if (mode === 'survey' || rawScore > 0) {
+        details.unshift({ label: 'Raw score', value: `${rawScore} / ${maxPossible}` });
+      }
       return {
         score,
         unit: '/100',
         label,
         interpretation,
         riskLevel,
-        details: [
-          { label: 'Direction', value: 'Higher = better' },
-          { label: 'MCID (approx)', value: '~6–16 points (population-dependent)' },
-        ],
+        details,
       };
     },
     evidence: {
       summary:
         'IKDC Subjective Knee Form transformed to 0–100 (100 = no limitation). Covers symptoms, sports, and daily function; cornerstone ACL/sports knee outcome.',
-      formula: 'User-entered transformed IKDC (0–100)',
+      formula: 'Transformed IKDC = (Raw Score / Maximum Possible Raw Score) × 100',
       validation: 'Irrgang et al.; widely validated; age/sex normative data available.',
       references: [
         {
@@ -611,22 +1446,186 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     id: 'easi-eczema',
     name: 'EASI (Eczema Area and Severity Index)',
     shortName: 'EASI',
-    description: 'Interprets EASI total (0–72) for atopic dermatitis severity.',
+    description: 'Scores and interprets the Eczema Area and Severity Index (EASI) (0–72) across 4 body regions combining area and 4 clinical signs.',
     category: 'dermatology',
     tags: ['easi', 'eczema', 'atopic dermatitis', 'dermatology', 'severity'],
-    whenToUse: 'When regional EASI components have been scored for AD trials or treat-to-target clinic care.',
+    whenToUse: 'When evaluating atopic dermatitis severity in clinic or clinical trials.',
     whyUse: 'Core clinician-reported AD severity endpoint in modern dermatology trials and guidelines.',
     inputs: [
-      numberInput('total', 'EASI total', {
+      selectInput('entryMode', 'Entry Mode', [
+        { label: 'Interactive regional assessment (recommended)', value: 'survey' },
+        { label: 'Direct score override (0–72)', value: 'direct' },
+      ], 'survey'),
+      // Head and neck (0.1)
+      selectInput('head_area', 'Head & Neck: Area involvement score', [
+        { label: '0 - 0% (no eruption)', value: 0 },
+        { label: '1 - 1%–9%', value: 1 },
+        { label: '2 - 10%–29%', value: 2 },
+        { label: '3 - 30%–49%', value: 3 },
+        { label: '4 - 50%–69%', value: 4 },
+        { label: '5 - 70%–89%', value: 5 },
+        { label: '6 - 90%–100%', value: 6 },
+      ], 2),
+      selectInput('head_erythema', 'Head & Neck: Erythema (redness)', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      selectInput('head_induration', 'Head & Neck: Induration / Papulation (thickness/swelling)', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      selectInput('head_excoriation', 'Head & Neck: Excoriation (scratch marks)', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      selectInput('head_lichenification', 'Head & Neck: Lichenification (skin thickening/lining)', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 0),
+      // Upper limbs (0.2)
+      selectInput('ul_area', 'Upper Limbs: Area involvement score', [
+        { label: '0 - 0% (no eruption)', value: 0 },
+        { label: '1 - 1%–9%', value: 1 },
+        { label: '2 - 10%–29%', value: 2 },
+        { label: '3 - 30%–49%', value: 3 },
+        { label: '4 - 50%–69%', value: 4 },
+        { label: '5 - 70%–89%', value: 5 },
+        { label: '6 - 90%–100%', value: 6 },
+      ], 2),
+      selectInput('ul_erythema', 'Upper Limbs: Erythema', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      selectInput('ul_induration', 'Upper Limbs: Induration / Papulation', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      selectInput('ul_excoriation', 'Upper Limbs: Excoriation', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      selectInput('ul_lichenification', 'Upper Limbs: Lichenification', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      // Trunk (0.3)
+      selectInput('trunk_area', 'Trunk: Area involvement score', [
+        { label: '0 - 0% (no eruption)', value: 0 },
+        { label: '1 - 1%–9%', value: 1 },
+        { label: '2 - 10%–29%', value: 2 },
+        { label: '3 - 30%–49%', value: 3 },
+        { label: '4 - 50%–69%', value: 4 },
+        { label: '5 - 70%–89%', value: 5 },
+        { label: '6 - 90%–100%', value: 6 },
+      ], 2),
+      selectInput('trunk_erythema', 'Trunk: Erythema', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      selectInput('trunk_induration', 'Trunk: Induration / Papulation', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      selectInput('trunk_excoriation', 'Trunk: Excoriation', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      selectInput('trunk_lichenification', 'Trunk: Lichenification', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 0),
+      // Lower limbs (0.4)
+      selectInput('ll_area', 'Lower Limbs: Area involvement score', [
+        { label: '0 - 0% (no eruption)', value: 0 },
+        { label: '1 - 1%–9%', value: 1 },
+        { label: '2 - 10%–29%', value: 2 },
+        { label: '3 - 30%–49%', value: 3 },
+        { label: '4 - 50%–69%', value: 4 },
+        { label: '5 - 70%–89%', value: 5 },
+        { label: '6 - 90%–100%', value: 6 },
+      ], 2),
+      selectInput('ll_erythema', 'Lower Limbs: Erythema', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      selectInput('ll_induration', 'Lower Limbs: Induration / Papulation', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      selectInput('ll_excoriation', 'Lower Limbs: Excoriation', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      selectInput('ll_lichenification', 'Lower Limbs: Lichenification', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      numberInput('total', 'Direct EASI total override (0–72)', {
         min: 0,
         max: 72,
         step: 0.1,
         defaultValue: 16,
-        helpText: 'Enter the total from the official EASI worksheet (0–72). Four regions (head/neck, trunk, upper limbs, lower limbs) combine area with four signs (erythema, edema/papulation, excoriation, lichenification). Do not reconstruct from memory if the form is available.',
+        helpText: 'Used if Direct score override mode is chosen.',
       }),
     ],
     calculate(values) {
-      const score = round(Math.min(72, Math.max(0, num(values.total, 0))), 1);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+      let headSub = 0;
+      let ulSub = 0;
+      let trunkSub = 0;
+      let llSub = 0;
+
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.head_area === undefined)) {
+        score = round(Math.min(72, Math.max(0, num(values.total, 0))), 1);
+      } else {
+        const hSigns = num(values.head_erythema, 0) + num(values.head_induration, 0) + num(values.head_excoriation, 0) + num(values.head_lichenification, 0);
+        headSub = 0.1 * num(values.head_area, 0) * hSigns;
+
+        const ulSigns = num(values.ul_erythema, 0) + num(values.ul_induration, 0) + num(values.ul_excoriation, 0) + num(values.ul_lichenification, 0);
+        ulSub = 0.2 * num(values.ul_area, 0) * ulSigns;
+
+        const trSigns = num(values.trunk_erythema, 0) + num(values.trunk_induration, 0) + num(values.trunk_excoriation, 0) + num(values.trunk_lichenification, 0);
+        trunkSub = 0.3 * num(values.trunk_area, 0) * trSigns;
+
+        const llSigns = num(values.ll_erythema, 0) + num(values.ll_induration, 0) + num(values.ll_excoriation, 0) + num(values.ll_lichenification, 0);
+        llSub = 0.4 * num(values.ll_area, 0) * llSigns;
+
+        score = round(Math.min(72, Math.max(0, headSub + ulSub + trunkSub + llSub)), 1);
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 1,
@@ -659,20 +1658,29 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
           interpretation: `EASI ${score}: very severe AD — urgent specialty management; infection and erythroderma precautions.`,
         },
       ]);
+      const details: { label: string; value: string }[] = [
+        { label: 'EASI-50 / EASI-75', value: '≥50% / ≥75% improvement from baseline (trial endpoints)' },
+        { label: 'Regions', value: 'Head/neck (0.1), Upper limbs (0.2), Trunk (0.3), Lower limbs (0.4)' },
+      ];
+      if (mode === 'survey' || headSub > 0 || ulSub > 0 || trunkSub > 0 || llSub > 0) {
+        details.push(
+          { label: 'Head & Neck score', value: `${round(headSub, 1)}` },
+          { label: 'Upper Limbs score', value: `${round(ulSub, 1)}` },
+          { label: 'Trunk score', value: `${round(trunkSub, 1)}` },
+          { label: 'Lower Limbs score', value: `${round(llSub, 1)}` },
+        );
+      }
       return {
         score,
         unit: '0–72',
         ...r,
-        details: [
-          { label: 'EASI-50 / EASI-75', value: '≥50% / ≥75% improvement from baseline (trial endpoints)' },
-          { label: 'Regions', value: 'Head/neck, trunk, UE, LE with area × severity weights' },
-        ],
+        details,
       };
     },
     evidence: {
       summary:
         'EASI combines erythema, edema/papulation, excoriation, and lichenification with body-region area scores (total 0–72). Severity bands (clear/mild/moderate/severe/very severe) are widely used educationally (e.g., Leshem et al.).',
-      formula: 'User-entered EASI total 0–72',
+      formula: 'EASI = 0.1(H) + 0.2(UL) + 0.3(T) + 0.4(LL), where each region = Area × (E + I + Ex + L)',
       validation: 'Validated clinician AD score; primary endpoint family in AD RCTs.',
       references: [
         {
@@ -695,22 +1703,109 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     id: 'scorad-eczema',
     name: 'SCORAD (Atopic Dermatitis)',
     shortName: 'SCORAD',
-    description: 'Interprets SCORAD total (0–103) for atopic dermatitis severity.',
+    description: 'Scores and interprets the SCORing Atopic Dermatitis (SCORAD) index (0–103) across Extent (A), Intensity (B), and Subjective symptoms (C).',
     category: 'dermatology',
     tags: ['scorad', 'eczema', 'atopic dermatitis', 'dermatology'],
-    whenToUse: 'When SCORAD (extent A, intensity B, subjective C) has been calculated.',
-    whyUse: 'Classic European composite AD severity score including itch and sleep.',
+    whenToUse: 'When evaluating atopic dermatitis severity including clinical extent, intensity, and subjective pruritus/sleep loss.',
+    whyUse: 'Classic European composite AD severity score combining objective signs and patient symptoms.',
     inputs: [
-      numberInput('total', 'SCORAD total', {
+      selectInput('entryMode', 'Entry Mode', [
+        { label: 'Interactive components assessment (recommended)', value: 'survey' },
+        { label: 'Direct SCORAD total override (0–103)', value: 'direct' },
+      ], 'survey'),
+      numberInput('extent_a', 'Part A: Extent (Body Surface Area % affected)', {
+        min: 0,
+        max: 100,
+        step: 1,
+        defaultValue: 25,
+        unit: '%',
+        helpText: 'Estimated using the rule of nines (0–100%).',
+      }),
+      selectInput('int_erythema', 'Part B: Erythema (redness)', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      selectInput('int_edema', 'Part B: Edema / Papulation (swelling)', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      selectInput('int_oozing', 'Part B: Oozing / Crusting', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      selectInput('int_excoriation', 'Part B: Excoriation (scratch marks)', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      selectInput('int_lichenification', 'Part B: Lichenification (skin thickening)', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      selectInput('int_dryness', 'Part B: Dryness / Xerosis (non-lesional skin)', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - Mild', value: 1 },
+        { label: '2 - Moderate', value: 2 },
+        { label: '3 - Severe', value: 3 },
+      ], 1),
+      numberInput('subj_pruritus', 'Part C: Pruritus VAS (0–10)', {
+        min: 0,
+        max: 10,
+        step: 0.5,
+        defaultValue: 5,
+        helpText: 'Visual analog scale average of last 3 days (0 = no itch, 10 = worst imaginable).',
+      }),
+      numberInput('subj_sleep', 'Part C: Sleep loss VAS (0–10)', {
+        min: 0,
+        max: 10,
+        step: 0.5,
+        defaultValue: 3,
+        helpText: 'Visual analog scale average of last 3 nights (0 = no sleep loss, 10 = complete sleeplessness).',
+      }),
+      numberInput('total', 'Direct SCORAD total override (0–103)', {
         min: 0,
         max: 103,
         step: 0.1,
         defaultValue: 35,
-        helpText: 'SCORAD = A/5 + 7B/2 + C (max 103)',
+        helpText: 'Used if Direct score override mode is selected.',
       }),
     ],
     calculate(values) {
-      const score = round(Math.min(103, Math.max(0, num(values.total, 0))), 1);
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+      let partA = 0;
+      let partB = 0;
+      let partC = 0;
+      let objScorad = 0;
+
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.extent_a === undefined)) {
+        score = round(Math.min(103, Math.max(0, num(values.total, 0))), 1);
+      } else {
+        partA = Math.min(100, Math.max(0, num(values.extent_a, 0)));
+        partB =
+          num(values.int_erythema, 0) +
+          num(values.int_edema, 0) +
+          num(values.int_oozing, 0) +
+          num(values.int_excoriation, 0) +
+          num(values.int_lichenification, 0) +
+          num(values.int_dryness, 0);
+        partC =
+          Math.min(10, Math.max(0, num(values.subj_pruritus, 0))) +
+          Math.min(10, Math.max(0, num(values.subj_sleep, 0)));
+
+        objScorad = round(partA / 5 + (7 * partB) / 2, 1);
+        score = round(Math.min(103, Math.max(0, objScorad + partC)), 1);
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 25,
@@ -731,14 +1826,25 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
           interpretation: `SCORAD ${score}: severe AD — specialty management; evaluate systemic/advanced options and complications.`,
         },
       ]);
+      const details: { label: string; value: string }[] = [
+        { label: 'Components', value: 'A extent (BSA), B intensity (6 signs), C pruritus + sleep (VAS)' },
+      ];
+      if (mode === 'survey' || partA > 0 || partB > 0 || partC > 0) {
+        details.unshift(
+          { label: 'Part A (Extent / BSA)', value: `${partA}%` },
+          { label: 'Part B (Intensity sum)', value: `${partB} / 18` },
+          { label: 'Part C (Subjective symptoms)', value: `${partC} / 20` },
+          { label: 'Objective SCORAD (A/5 + 7B/2)', value: `${objScorad} / 83` },
+        );
+      } else {
+        details.push({ label: 'Objective SCORAD', value: 'Excludes subjective C (max 83)' });
+      }
+
       return {
         score,
         unit: '0–103',
         ...r,
-        details: [
-          { label: 'Components', value: 'A extent (BSA), B intensity (6 signs), C pruritus + sleep (VAS)' },
-          { label: 'Objective SCORAD', value: 'Excludes subjective C (max 83)' },
-        ],
+        details,
       };
     },
     evidence: {
@@ -1002,22 +2108,114 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     id: 'vhi-10',
     name: 'Voice Handicap Index-10',
     shortName: 'VHI-10',
-    description: 'Interprets Voice Handicap Index-10 total (0–40) for patient-perceived voice handicap.',
+    description: 'Scores and interprets the Voice Handicap Index-10 (0–40) across 10 functional, physical, and emotional voice-related items.',
     category: 'otolaryngology',
     tags: ['vhi-10', 'voice', 'dysphonia', 'ent', 'laryngology'],
-    whenToUse: 'When VHI-10 questionnaire has been completed for dysphonia or post-laryngeal treatment follow-up.',
-    whyUse: 'Brief, validated voice-related quality-of-life / handicap measure used in ENT clinics.',
+    whenToUse: 'When evaluating patient-perceived voice handicap for dysphonia, vocal cord pathology, or post-laryngeal treatment follow-up.',
+    whyUse: 'Brief, validated voice-related quality-of-life measure widely used in ENT and speech therapy clinics.',
     inputs: [
-      numberInput('total', 'VHI-10 total', {
+      selectInput('entryMode', 'Entry Mode', [
+        { label: 'Interactive 10-item survey (recommended)', value: 'survey' },
+        { label: 'Direct score override (0–40)', value: 'direct' },
+      ], 'survey'),
+      selectInput('vhi_q1', '1. My voice makes it difficult for people to hear me', [
+        { label: '0 - Never', value: 0 },
+        { label: '1 - Almost never', value: 1 },
+        { label: '2 - Sometimes', value: 2 },
+        { label: '3 - Almost always', value: 3 },
+        { label: '4 - Always', value: 4 },
+      ], 1),
+      selectInput('vhi_q2', '2. People have difficulty understanding me in a noisy room', [
+        { label: '0 - Never', value: 0 },
+        { label: '1 - Almost never', value: 1 },
+        { label: '2 - Sometimes', value: 2 },
+        { label: '3 - Almost always', value: 3 },
+        { label: '4 - Always', value: 4 },
+      ], 2),
+      selectInput('vhi_q3', '3. My voice difficulties restrict my personal and social life', [
+        { label: '0 - Never', value: 0 },
+        { label: '1 - Almost never', value: 1 },
+        { label: '2 - Sometimes', value: 2 },
+        { label: '3 - Almost always', value: 3 },
+        { label: '4 - Always', value: 4 },
+      ], 1),
+      selectInput('vhi_q4', '4. I feel left out of conversations because of my voice', [
+        { label: '0 - Never', value: 0 },
+        { label: '1 - Almost never', value: 1 },
+        { label: '2 - Sometimes', value: 2 },
+        { label: '3 - Almost always', value: 3 },
+        { label: '4 - Always', value: 4 },
+      ], 1),
+      selectInput('vhi_q5', '5. My voice problem causes me to lose income', [
+        { label: '0 - Never', value: 0 },
+        { label: '1 - Almost never', value: 1 },
+        { label: '2 - Sometimes', value: 2 },
+        { label: '3 - Almost always', value: 3 },
+        { label: '4 - Always', value: 4 },
+      ], 0),
+      selectInput('vhi_q6', '6. I feel as though I have to strain to produce voice', [
+        { label: '0 - Never', value: 0 },
+        { label: '1 - Almost never', value: 1 },
+        { label: '2 - Sometimes', value: 2 },
+        { label: '3 - Almost always', value: 3 },
+        { label: '4 - Always', value: 4 },
+      ], 2),
+      selectInput('vhi_q7', '7. The clarity of my voice is unpredictable', [
+        { label: '0 - Never', value: 0 },
+        { label: '1 - Almost never', value: 1 },
+        { label: '2 - Sometimes', value: 2 },
+        { label: '3 - Almost always', value: 3 },
+        { label: '4 - Always', value: 4 },
+      ], 2),
+      selectInput('vhi_q8', '8. My voice problem upsets me', [
+        { label: '0 - Never', value: 0 },
+        { label: '1 - Almost never', value: 1 },
+        { label: '2 - Sometimes', value: 2 },
+        { label: '3 - Almost always', value: 3 },
+        { label: '4 - Always', value: 4 },
+      ], 1),
+      selectInput('vhi_q9', '9. My voice makes me feel handicapped', [
+        { label: '0 - Never', value: 0 },
+        { label: '1 - Almost never', value: 1 },
+        { label: '2 - Sometimes', value: 2 },
+        { label: '3 - Almost always', value: 3 },
+        { label: '4 - Always', value: 4 },
+      ], 1),
+      selectInput('vhi_q10', '10. People ask, "What is wrong with your voice?"', [
+        { label: '0 - Never', value: 0 },
+        { label: '1 - Almost never', value: 1 },
+        { label: '2 - Sometimes', value: 2 },
+        { label: '3 - Almost always', value: 3 },
+        { label: '4 - Always', value: 4 },
+      ], 1),
+      numberInput('total', 'Direct VHI-10 total override (0–40)', {
         min: 0,
         max: 40,
         step: 1,
         defaultValue: 12,
-        helpText: 'Sum of 10 items scored 0–4 (0=never, 4=always)',
+        helpText: 'Used if Direct score override mode is selected.',
       }),
     ],
     calculate(values) {
-      const score = Math.round(Math.min(40, Math.max(0, num(values.total, 0))));
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.vhi_q1 === undefined)) {
+        score = Math.round(Math.min(40, Math.max(0, num(values.total, 0))));
+      } else {
+        score =
+          num(values.vhi_q1, 0) +
+          num(values.vhi_q2, 0) +
+          num(values.vhi_q3, 0) +
+          num(values.vhi_q4, 0) +
+          num(values.vhi_q5, 0) +
+          num(values.vhi_q6, 0) +
+          num(values.vhi_q7, 0) +
+          num(values.vhi_q8, 0) +
+          num(values.vhi_q9, 0) +
+          num(values.vhi_q10, 0);
+      }
+
       // Normative mean ~2–3; >11 often abnormal (Arffa et al.)
       const r = riskFromThresholds(score, [
         {
@@ -1050,8 +2248,9 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         unit: '/40',
         ...r,
         details: [
-          { label: 'Item scale', value: '0 never – 4 always' },
+          { label: 'Item scale', value: '0 never – 4 always (10 items)' },
           { label: 'Common abnormal cutoff', value: '≥11 (population-dependent)' },
+          { label: 'MCID (approx)', value: '≥4 to 6 points' },
         ],
       };
     },
@@ -1323,22 +2522,106 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     id: 'cat-copd',
     name: 'COPD Assessment Test (CAT)',
     shortName: 'CAT',
-    description: 'Interprets COPD Assessment Test total (0–40) for symptom burden.',
+    description: 'Scores and interprets the COPD Assessment Test (0–40) across 8 clinical domains to quantify symptom burden and guide GOLD staging.',
     category: 'pulmonary',
     tags: ['cat', 'copd', 'symptoms', 'gold', 'quality of life'],
-    whenToUse: 'Routine COPD visits to quantify symptoms and guide GOLD ABE grouping / treatment intensity.',
-    whyUse: '8-item validated symptom score preferred in GOLD for impact assessment (with mMRC).',
+    whenToUse: 'Routine COPD visits to quantify symptoms and guide GOLD ABE grouping and treatment escalation.',
+    whyUse: '8-item validated symptom score preferred in GOLD guidelines for impact assessment (with mMRC).',
     inputs: [
-      numberInput('total', 'CAT total', {
+      selectInput('entryMode', 'Entry Mode', [
+        { label: 'Interactive 8-item assessment (recommended)', value: 'survey' },
+        { label: 'Direct CAT score override (0–40)', value: 'direct' },
+      ], 'survey'),
+      selectInput('cat_cough', '1. Cough', [
+        { label: '0 - I never cough', value: 0 },
+        { label: '1 - Rare cough', value: 1 },
+        { label: '2 - Occasional cough', value: 2 },
+        { label: '3 - Frequent cough', value: 3 },
+        { label: '4 - Very frequent cough', value: 4 },
+        { label: '5 - I cough all the time', value: 5 },
+      ], 2),
+      selectInput('cat_phlegm', '2. Phlegm (mucus) in the chest', [
+        { label: '0 - My chest is completely clear of phlegm', value: 0 },
+        { label: '1 - Rare phlegm', value: 1 },
+        { label: '2 - Moderate phlegm', value: 2 },
+        { label: '3 - Substantial phlegm', value: 3 },
+        { label: '4 - Very heavy phlegm', value: 4 },
+        { label: '5 - My chest is completely full of phlegm', value: 5 },
+      ], 2),
+      selectInput('cat_tightness', '3. Chest tightness', [
+        { label: '0 - My chest does not feel tight at all', value: 0 },
+        { label: '1 - Slight tightness occasionally', value: 1 },
+        { label: '2 - Mild tightness', value: 2 },
+        { label: '3 - Moderate tightness', value: 3 },
+        { label: '4 - Severe tightness', value: 4 },
+        { label: '5 - My chest feels very tight', value: 5 },
+      ], 1),
+      selectInput('cat_breathlessness', '4. Breathlessness walking up a hill or one flight of stairs', [
+        { label: '0 - Not breathless at all', value: 0 },
+        { label: '1 - Slightly breathless', value: 1 },
+        { label: '2 - Moderately breathless', value: 2 },
+        { label: '3 - Quite breathless', value: 3 },
+        { label: '4 - Very breathless', value: 4 },
+        { label: '5 - Completely breathless / unable to walk up stairs', value: 5 },
+      ], 3),
+      selectInput('cat_activities', '5. Activity limitation at home', [
+        { label: '0 - I am not limited doing any activities at home', value: 0 },
+        { label: '1 - Very slightly limited', value: 1 },
+        { label: '2 - Moderately limited', value: 2 },
+        { label: '3 - Substantially limited', value: 3 },
+        { label: '4 - Very limited', value: 4 },
+        { label: '5 - I am totally limited doing any activities at home', value: 5 },
+      ], 2),
+      selectInput('cat_confidence', '6. Confidence leaving home despite lung condition', [
+        { label: '0 - I am completely confident leaving my home', value: 0 },
+        { label: '1 - Mostly confident', value: 1 },
+        { label: '2 - Moderately confident', value: 2 },
+        { label: '3 - Somewhat anxious / lacking confidence', value: 3 },
+        { label: '4 - Very unconfident', value: 4 },
+        { label: '5 - I am not at all confident leaving my home', value: 5 },
+      ], 2),
+      selectInput('cat_sleep', '7. Sleep quality', [
+        { label: '0 - I sleep soundly', value: 0 },
+        { label: '1 - Minor sleep disturbance', value: 1 },
+        { label: '2 - Moderate sleep interruption', value: 2 },
+        { label: '3 - Frequently awake due to chest', value: 3 },
+        { label: '4 - Very poor sleep', value: 4 },
+        { label: '5 - I do not sleep soundly at all because of my lung condition', value: 5 },
+      ], 2),
+      selectInput('cat_energy', '8. Energy level', [
+        { label: '0 - I have lots of energy', value: 0 },
+        { label: '1 - Good energy most days', value: 1 },
+        { label: '2 - Moderate energy', value: 2 },
+        { label: '3 - Low energy', value: 3 },
+        { label: '4 - Very low energy', value: 4 },
+        { label: '5 - I have no energy at all', value: 5 },
+      ], 2),
+      numberInput('total', 'Direct CAT total override (0–40)', {
         min: 0,
         max: 40,
         step: 1,
         defaultValue: 15,
-        helpText: 'Enter the sum from the official 8-item CAT (each 0–5). GOLD “more symptoms” is CAT ≥10 (or mMRC ≥2).',
+        helpText: 'Used if Direct score override mode is selected.',
       }),
     ],
     calculate(values) {
-      const score = Math.round(Math.min(40, Math.max(0, num(values.total, 0))));
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.cat_cough === undefined)) {
+        score = Math.round(Math.min(40, Math.max(0, num(values.total, 0))));
+      } else {
+        score =
+          num(values.cat_cough, 0) +
+          num(values.cat_phlegm, 0) +
+          num(values.cat_tightness, 0) +
+          num(values.cat_breathlessness, 0) +
+          num(values.cat_activities, 0) +
+          num(values.cat_confidence, 0) +
+          num(values.cat_sleep, 0) +
+          num(values.cat_energy, 0);
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 9,
@@ -1370,7 +2653,7 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         unit: '/40',
         ...r,
         details: [
-          { label: 'GOLD more symptoms', value: 'CAT ≥10 (or mMRC ≥2)' },
+          { label: 'GOLD symptom threshold', value: score >= 10 ? '≥10 (High symptom burden / GOLD Group B/E candidate)' : '<10 (Low symptom burden)' },
           { label: 'MCID (approx)', value: '2 points' },
         ],
       };
@@ -1597,41 +2880,93 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     id: 'act-asthma',
     name: 'Asthma Control Test (ACT)',
     shortName: 'ACT',
-    description: 'Interprets Asthma Control Test total (5–25) for symptom control over 4 weeks.',
+    description: 'Scores and interprets the Asthma Control Test (ACT) total (5–25) across 5 validated items for symptom control over the past 4 weeks.',
     category: 'pulmonary',
     tags: ['act', 'asthma', 'control', 'gina'],
-    whenToUse: 'Clinic visits to assess asthma control and step therapy decisions.',
-    whyUse: '5-item validated patient questionnaire; cutoff ≤19 identifies uncontrolled asthma.',
+    whenToUse: 'Routine asthma clinic visits to assess symptom control and guide step-up / step-down therapy decisions.',
+    whyUse: '5-item validated patient questionnaire; cutoff ≤19 identifies uncontrolled asthma with high sensitivity.',
     inputs: [
-      numberInput('total', 'ACT total', {
+      selectInput('entryMode', 'Entry Mode', [
+        { label: 'Interactive 5-item questionnaire (recommended)', value: 'survey' },
+        { label: 'Direct ACT score override (5–25)', value: 'direct' },
+      ], 'survey'),
+      selectInput('act_q1', '1. In past 4 weeks, how much did asthma keep you from getting work, school, or home tasks done?', [
+        { label: '1 - All of the time', value: 1 },
+        { label: '2 - Most of the time', value: 2 },
+        { label: '3 - Some of the time', value: 3 },
+        { label: '4 - A little of the time', value: 4 },
+        { label: '5 - None of the time', value: 5 },
+      ], 4),
+      selectInput('act_q2', '2. During the past 4 weeks, how often have you had shortness of breath?', [
+        { label: '1 - More than once a day', value: 1 },
+        { label: '2 - Once a day', value: 2 },
+        { label: '3 - 3 to 6 times a week', value: 3 },
+        { label: '4 - Once or twice a week', value: 4 },
+        { label: '5 - Not at all', value: 5 },
+      ], 4),
+      selectInput('act_q3', '3. During the past 4 weeks, how often did your asthma symptoms wake you up at night or earlier than usual?', [
+        { label: '1 - 4 or more nights a week', value: 1 },
+        { label: '2 - 2 to 3 nights a week', value: 2 },
+        { label: '3 - Once a week', value: 3 },
+        { label: '4 - Once or twice', value: 4 },
+        { label: '5 - Not at all', value: 5 },
+      ], 4),
+      selectInput('act_q4', '4. During the past 4 weeks, how often have you used your rescue inhaler or nebulizer medication (such as albuterol)?', [
+        { label: '1 - 3 or more times a day', value: 1 },
+        { label: '2 - 1 to 2 times a day', value: 2 },
+        { label: '3 - 2 or 3 times a week', value: 3 },
+        { label: '4 - Once a week or less', value: 4 },
+        { label: '5 - Not at all', value: 5 },
+      ], 4),
+      selectInput('act_q5', '5. How would you rate your asthma control during the past 4 weeks?', [
+        { label: '1 - Not controlled at all', value: 1 },
+        { label: '2 - Poorly controlled', value: 2 },
+        { label: '3 - Somewhat controlled', value: 3 },
+        { label: '4 - Well controlled', value: 4 },
+        { label: '5 - Completely controlled', value: 5 },
+      ], 4),
+      numberInput('total', 'Direct ACT total override (5–25)', {
         min: 5,
         max: 25,
         step: 1,
         defaultValue: 18,
-        helpText: 'Enter the sum from the official ACT (past 4 weeks; 5 items each 1–5). 25 = complete control; ≤19 is the usual uncontrolled cutoff. Do not reconstruct item stems from memory if the form is available.',
+        helpText: 'Used if Direct score override mode is chosen.',
       }),
     ],
     calculate(values) {
-      const score = Math.round(Math.min(25, Math.max(5, num(values.total, 18))));
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.act_q1 === undefined)) {
+        score = Math.round(Math.min(25, Math.max(5, num(values.total, 18))));
+      } else {
+        score =
+          num(values.act_q1, 4) +
+          num(values.act_q2, 4) +
+          num(values.act_q3, 4) +
+          num(values.act_q4, 4) +
+          num(values.act_q5, 4);
+      }
+
       let riskLevel: 'normal' | 'low' | 'moderate' | 'high' = 'normal';
       let label = '';
       let interpretation = '';
       if (score >= 25) {
         riskLevel = 'normal';
         label = 'Total control (25)';
-        interpretation = `ACT ${score}: totally controlled asthma over past 4 weeks — maintain therapy and written action plan.`;
+        interpretation = `ACT ${score}/25: totally controlled asthma over past 4 weeks — maintain therapy and written action plan.`;
       } else if (score >= 20) {
         riskLevel = 'low';
         label = 'Well controlled (20–24)';
-        interpretation = `ACT ${score}: well controlled — continue current regimen; address any residual triggers.`;
+        interpretation = `ACT ${score}/25: well controlled — continue current regimen; address any residual triggers.`;
       } else if (score >= 16) {
         riskLevel = 'moderate';
         label = 'Not well controlled (16–19)';
-        interpretation = `ACT ${score}: not well controlled (classic cut ≤19). Review adherence, technique, comorbidities; step-up per GINA/NAEPP.`;
+        interpretation = `ACT ${score}/25: not well controlled (classic cut ≤19). Review adherence, technique, comorbidities; step-up per GINA/NAEPP.`;
       } else {
         riskLevel = 'high';
         label = 'Very poorly controlled (≤15)';
-        interpretation = `ACT ${score}: very poorly controlled — prompt step-up, exacerbation risk counseling, specialty referral if refractory.`;
+        interpretation = `ACT ${score}/25: very poorly controlled — prompt step-up, exacerbation risk counseling, specialty referral if refractory.`;
       }
       return {
         score,
@@ -1640,7 +2975,8 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         interpretation,
         riskLevel,
         details: [
-          { label: 'Uncontrolled cutoff', value: '≤19' },
+          { label: 'Uncontrolled cutoff', value: '≤19 (requires therapy review / step-up)' },
+          { label: 'Well controlled target', value: '20–25' },
           { label: 'MCID (approx)', value: '3 points' },
         ],
       };
@@ -1671,28 +3007,120 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     id: 'acq-asthma',
     name: 'Asthma Control Questionnaire (ACQ)',
     shortName: 'ACQ',
-    description: 'Interprets Asthma Control Questionnaire mean score (0–6; higher = worse control).',
+    description: 'Scores and interprets the Asthma Control Questionnaire (ACQ) mean score (0–6; higher = worse control) with ACQ-5, ACQ-6, or ACQ-7 item sets.',
     category: 'pulmonary',
     tags: ['acq', 'asthma', 'control', 'juniper'],
-    whenToUse: 'When ACQ-5, ACQ-6, or ACQ-7 mean has been calculated for research or specialty clinic.',
-    whyUse: 'Juniper ACQ is a standard continuous control metric in asthma trials.',
+    whenToUse: 'When evaluating asthma control continuously in research, specialty asthma clinics, or biologic monitoring.',
+    whyUse: 'Juniper ACQ is a standard continuous control metric in asthma clinical trials with well-established cutoffs.',
     inputs: [
-      numberInput('total', 'ACQ mean score', {
+      selectInput('entryMode', 'Entry Mode', [
+        { label: 'Interactive item-by-item questionnaire (recommended)', value: 'survey' },
+        { label: 'Direct precalculated ACQ mean override (0–6)', value: 'direct' },
+      ], 'survey'),
+      selectInput('version', 'ACQ Version', [
+        { label: 'ACQ-5 (5 symptom items only; clinic/patient survey)', value: '5', description: '5 symptom items (night waking, morning symptoms, limitation, shortness of breath, wheeze). Mean of 5.' },
+        { label: 'ACQ-6 (+ rescue bronchodilator use)', value: '6', description: 'ACQ-5 plus daily rescue short-acting bronchodilator use. Mean of 6.' },
+        { label: 'ACQ-7 (+ FEV1 % predicted from spirometry)', value: '7', description: 'ACQ-6 plus pre-bronchodilator FEV1 % predicted. Mean of 7. Requires clinic spirometry.' },
+      ], '5'),
+      // Items 1-5 (Symptoms)
+      selectInput('acq_q1', '1. On average, during the past week, how often were you woken by your asthma during the night?', [
+        { label: '0 - Never', value: 0 },
+        { label: '1 - Hardly ever', value: 1 },
+        { label: '2 - A few times', value: 2 },
+        { label: '3 - Several times', value: 3 },
+        { label: '4 - Many times', value: 4 },
+        { label: '5 - A great many times', value: 5 },
+        { label: '6 - Unable to sleep because of asthma', value: 6 },
+      ], 1),
+      selectInput('acq_q2', '2. On average, during the past week, how bad were your asthma symptoms when you woke up in the morning?', [
+        { label: '0 - No symptoms', value: 0 },
+        { label: '1 - Very mild symptoms', value: 1 },
+        { label: '2 - Mild symptoms', value: 2 },
+        { label: '3 - Moderate symptoms', value: 3 },
+        { label: '4 - Quite severe symptoms', value: 4 },
+        { label: '5 - Severe symptoms', value: 5 },
+        { label: '6 - Very severe symptoms', value: 6 },
+      ], 1),
+      selectInput('acq_q3', '3. In general, during the past week, how limited were you in your daily activities because of your asthma?', [
+        { label: '0 - Not limited at all', value: 0 },
+        { label: '1 - Very slightly limited', value: 1 },
+        { label: '2 - Slightly limited', value: 2 },
+        { label: '3 - Moderately limited', value: 3 },
+        { label: '4 - Very limited', value: 4 },
+        { label: '5 - Extremely limited', value: 5 },
+        { label: '6 - Totally limited', value: 6 },
+      ], 1),
+      selectInput('acq_q4', '4. In general, during the past week, how much shortness of breath did you experience because of your asthma?', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - A very little', value: 1 },
+        { label: '2 - A little', value: 2 },
+        { label: '3 - A moderate amount', value: 3 },
+        { label: '4 - Quite a lot', value: 4 },
+        { label: '5 - A great deal', value: 5 },
+        { label: '6 - A very great deal', value: 6 },
+      ], 1),
+      selectInput('acq_q5', '5. In general, during the past week, how much of the time did you wheeze?', [
+        { label: '0 - Not at all', value: 0 },
+        { label: '1 - Hardly any of the time', value: 1 },
+        { label: '2 - A little of the time', value: 2 },
+        { label: '3 - A moderate amount of the time', value: 3 },
+        { label: '4 - A lot of the time', value: 4 },
+        { label: '5 - Most of the time', value: 5 },
+        { label: '6 - All the time', value: 6 },
+      ], 1),
+      // Item 6 (Rescue puffs - for ACQ-6 and 7)
+      selectInput('acq_q6', '6. On average, during the past week, how many puffs of short-acting bronchodilator (e.g. albuterol) have you used each day?', [
+        { label: '0 - None', value: 0 },
+        { label: '1 - 1–2 puffs most days', value: 1 },
+        { label: '2 - 3–4 puffs most days', value: 2 },
+        { label: '3 - 5–8 puffs most days', value: 3 },
+        { label: '4 - 9–12 puffs most days', value: 4 },
+        { label: '5 - 13–16 puffs most days', value: 5 },
+        { label: '6 - More than 16 puffs most days', value: 6 },
+      ], 1, 'Used in ACQ-6 and ACQ-7.'),
+      // Item 7 (FEV1 - for ACQ-7)
+      selectInput('acq_q7', '7. Pre-bronchodilator FEV1 % predicted (clinic spirometry)', [
+        { label: '0 - >95% predicted', value: 0 },
+        { label: '1 - 90%–95% predicted', value: 1 },
+        { label: '2 - 80%–89% predicted', value: 2 },
+        { label: '3 - 70%–79% predicted', value: 3 },
+        { label: '4 - 60%–69% predicted', value: 4 },
+        { label: '5 - 50%–59% predicted', value: 5 },
+        { label: '6 - <50% predicted', value: 6 },
+      ], 2, 'Used in ACQ-7 only.'),
+      numberInput('total', 'Direct ACQ mean score override (0–6)', {
         min: 0,
         max: 6,
         step: 0.01,
         defaultValue: 1.2,
-        helpText: 'Mean of items (0 = totally controlled, 6 = severely uncontrolled). ACQ-5/6/7 means are interpreted similarly.',
+        helpText: 'Used if Direct score override mode is selected. Mean of items (0 = totally controlled, 6 = severely uncontrolled).',
       }),
-      selectInput('version', 'Version (informational)', [
-        { label: 'ACQ-5 (symptoms only)', value: '5', description: '5 symptom items (night waking, morning symptoms, limitation, shortness of breath, wheeze). Mean of 5.' },
-        { label: 'ACQ-6 (+ rescue bronchodilator)', value: '6', description: 'ACQ-5 plus daily rescue short-acting bronchodilator use. Mean of 6.' },
-        { label: 'ACQ-7 (+ FEV1 %)', value: '7', description: 'ACQ-6 plus pre-bronchodilator FEV1 % predicted. Mean of 7. Requires clinic spirometry.' },
-      ], undefined, 'Enter the already-calculated mean (0–6), not the raw sum. Version is informational only and does not change the number.'),
     ],
     calculate(values) {
-      const score = round(Math.min(6, Math.max(0, num(values.total, 0))), 2);
+      const mode = String(values.entryMode ?? 'survey');
       const version = String(values.version ?? '5');
+      let score: number;
+
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.acq_q1 === undefined)) {
+        score = round(Math.min(6, Math.max(0, num(values.total, 0))), 2);
+      } else {
+        const q1 = num(values.acq_q1, 0);
+        const q2 = num(values.acq_q2, 0);
+        const q3 = num(values.acq_q3, 0);
+        const q4 = num(values.acq_q4, 0);
+        const q5 = num(values.acq_q5, 0);
+        const q6 = num(values.acq_q6, 0);
+        const q7 = num(values.acq_q7, 0);
+
+        if (version === '7') {
+          score = round((q1 + q2 + q3 + q4 + q5 + q6 + q7) / 7, 2);
+        } else if (version === '6') {
+          score = round((q1 + q2 + q3 + q4 + q5 + q6) / 6, 2);
+        } else {
+          score = round((q1 + q2 + q3 + q4 + q5) / 5, 2);
+        }
+      }
+
       // Common cuts: ≤0.75 well controlled; ≥1.5 not well controlled
       let riskLevel: 'normal' | 'low' | 'moderate' | 'high' = 'normal';
       let label = '';
@@ -1723,14 +3151,14 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         details: [
           { label: 'Version', value: `ACQ-${version}` },
           { label: 'MCID', value: '0.5 points' },
-          { label: 'Well / not well cuts', value: '≤0.75 / ≥1.5' },
+          { label: 'Well / not well cuts', value: '≤0.75 (controlled) / ≥1.5 (uncontrolled)' },
         ],
       };
     },
     evidence: {
       summary:
         'ACQ mean score 0–6 (higher worse). Common interpretive cuts: ≤0.75 well controlled, ≥1.5 not well controlled; MCID 0.5. ACQ-5/6/7 variants differ by rescue use and FEV1 item.',
-      formula: 'User-entered ACQ mean (0–6)',
+      formula: 'ACQ Mean = Sum of items / Number of items (5, 6, or 7)',
       validation: 'Juniper et al.; standard asthma trial endpoint.',
       references: [
         {
@@ -2311,22 +3739,71 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     id: 'mna-sf',
     name: 'Mini Nutritional Assessment – Short Form',
     shortName: 'MNA-SF',
-    description: 'Interprets MNA-SF total (0–14) for malnutrition risk in older adults.',
+    description: 'Scores and interprets the Mini Nutritional Assessment – Short Form (MNA-SF) (0–14) across 6 geriatric screening items.',
     category: 'geriatrics',
     tags: ['mna', 'mna-sf', 'nutrition', 'malnutrition', 'geriatrics'],
-    whenToUse: 'Geriatric nutrition screening in clinic, hospital, or long-term care.',
-    whyUse: 'Validated 6-item short form; identifies malnutrition risk quickly for full MNA or dietitian referral.',
+    whenToUse: 'Geriatric nutrition screening in outpatient clinics, acute hospital admission, or long-term care settings.',
+    whyUse: 'Validated 6-item short form; rapidly identifies older adults malnourished or at risk of malnutrition.',
     inputs: [
-      numberInput('total', 'MNA-SF total', {
+      selectInput('entryMode', 'Entry Mode', [
+        { label: 'Interactive 6-item screening (recommended)', value: 'survey' },
+        { label: 'Direct MNA-SF score override (0–14)', value: 'direct' },
+      ], 'survey'),
+      selectInput('mna_a', 'A. Has food intake declined over the past 3 months due to loss of appetite, digestive problems, or chewing/swallowing difficulties?', [
+        { label: '0 - Severe decrease in food intake', value: 0 },
+        { label: '1 - Moderate decrease in food intake', value: 1 },
+        { label: '2 - No decrease in food intake', value: 2 },
+      ], 2),
+      selectInput('mna_b', 'B. Involuntary weight loss during the last 3 months', [
+        { label: '0 - Weight loss greater than 3 kg (6.6 lbs)', value: 0 },
+        { label: '1 - Does not know', value: 1 },
+        { label: '2 - Weight loss between 1 and 3 kg (2.2 and 6.6 lbs)', value: 2 },
+        { label: '3 - No weight loss', value: 3 },
+      ], 3),
+      selectInput('mna_c', 'C. Mobility', [
+        { label: '0 - Bed or chair bound', value: 0 },
+        { label: '1 - Able to get out of bed/chair but does not go out', value: 1 },
+        { label: '2 - Goes out', value: 2 },
+      ], 2),
+      selectInput('mna_d', 'D. Has suffered psychological stress or acute disease in the past 3 months?', [
+        { label: '0 - Yes', value: 0 },
+        { label: '2 - No', value: 2 },
+      ], 2),
+      selectInput('mna_e', 'E. Neuropsychological problems', [
+        { label: '0 - Severe dementia or depression', value: 0 },
+        { label: '1 - Mild dementia', value: 1 },
+        { label: '2 - No psychological problems', value: 2 },
+      ], 2),
+      selectInput('mna_f', 'F. Body Mass Index (BMI) or Calf Circumference (CC)', [
+        { label: '0 - BMI < 19 kg/m² (or CC < 31 cm)', value: 0 },
+        { label: '1 - BMI 19 to < 21 kg/m²', value: 1 },
+        { label: '2 - BMI 21 to < 23 kg/m²', value: 2 },
+        { label: '3 - BMI ≥ 23 kg/m² (or CC ≥ 31 cm)', value: 3 },
+      ], 3, 'If BMI is not available, measure calf circumference (CC in cm): 0 if < 31 cm, 3 if ≥ 31 cm.'),
+      numberInput('total', 'Direct MNA-SF total override (0–14)', {
         min: 0,
         max: 14,
         step: 1,
         defaultValue: 10,
-        helpText: 'Enter the sum from the official MNA-SF (Nestlé) form: 6 items (appetite, weight loss, mobility, stress/acute disease, neuropsychological, BMI or calf circumference). 12–14 normal; 8–11 at risk; 0–7 malnourished.',
+        helpText: 'Used if Direct score override mode is selected.',
       }),
     ],
     calculate(values) {
-      const score = Math.round(Math.min(14, Math.max(0, num(values.total, 10))));
+      const mode = String(values.entryMode ?? 'survey');
+      let score: number;
+
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.mna_a === undefined)) {
+        score = Math.round(Math.min(14, Math.max(0, num(values.total, 10))));
+      } else {
+        score =
+          num(values.mna_a, 2) +
+          num(values.mna_b, 3) +
+          num(values.mna_c, 2) +
+          num(values.mna_d, 2) +
+          num(values.mna_e, 2) +
+          num(values.mna_f, 3);
+      }
+
       const r = riskFromThresholds(score, [
         {
           max: 7,
@@ -2352,15 +3829,16 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
         unit: '/14',
         ...r,
         details: [
-          { label: 'Items', value: '6 (max 14 points)' },
-          { label: 'BMI alternative', value: 'Calf circumference if BMI unavailable' },
+          { label: 'Items completed', value: '6 items (max 14 points)' },
+          { label: 'Thresholds', value: '12–14 Normal, 8–11 At risk, 0–7 Malnourished' },
+          { label: 'BMI alternative', value: 'Calf circumference (CC < 31 cm = 0, ≥ 31 cm = 3)' },
         ],
       };
     },
     evidence: {
       summary:
         'MNA-SF scores 0–14: 12–14 normal, 8–11 at risk, 0–7 malnourished. Six items cover intake, weight loss, mobility, acute stress, neuropsych status, and BMI (or calf circumference).',
-      formula: 'User-entered MNA-SF total (0–14)',
+      formula: 'MNA-SF = A + B + C + D + E + F (0–14)',
       validation: 'Nested in full MNA; validated in community and hospital elderly populations.',
       references: [
         {
