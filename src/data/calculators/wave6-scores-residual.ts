@@ -41,28 +41,131 @@ export const wave6ScoresResidualCalcs: Calculator[] = [
     id: 'oswestry',
     name: 'Oswestry Disability Index',
     shortName: 'ODI',
-    description: 'Interprets Oswestry Disability Index percentage (0–100%) for low back pain–related disability.',
+    description: 'Scores and interprets the Oswestry Disability Index (ODI) across 10 functional sections for low back pain–related disability.',
     category: 'orthopedics',
     tags: ['oswestry', 'odi', 'low back pain', 'disability', 'spine'],
-    whenToUse: 'When ODI questionnaire (10 sections × 0–5) has been scored and percent disability is available.',
+    whenToUse: 'When evaluating functional impairment and disability in patients with acute or chronic low back pain.',
     whyUse: 'Most widely used condition-specific disability measure for low back pain outcomes and research.',
     inputs: [
-      numberInput('pct', 'ODI disability %', {
-        min: 0,
-        max: 100,
-        step: 1,
-        defaultValue: 30,
-        helpText: 'ODI % = (sum of scored sections / (5 × n scored)) × 100. Omit unanswered sections from denominator.',
-      }),
+      selectInput('pain', 'Section 1: Pain Intensity', [
+        { label: 'I have no pain at the moment', value: 0, points: 0 },
+        { label: 'The pain is very mild at the moment', value: 1, points: 1 },
+        { label: 'The pain is moderate at the moment', value: 2, points: 2 },
+        { label: 'The pain is fairly severe at the moment', value: 3, points: 3 },
+        { label: 'The pain is very severe at the moment', value: 4, points: 4 },
+        { label: 'The pain is the worst imaginable at the moment', value: 5, points: 5 },
+      ], 0),
+      selectInput('personalCare', 'Section 2: Personal Care (washing, dressing, etc.)', [
+        { label: 'I can look after myself normally without causing extra pain', value: 0, points: 0 },
+        { label: 'I can look after myself normally but it is very painful', value: 1, points: 1 },
+        { label: 'It is painful to look after myself and I am slow and careful', value: 2, points: 2 },
+        { label: 'I need some help but manage most of my personal care', value: 3, points: 3 },
+        { label: 'I need help every day in most aspects of self-care', value: 4, points: 4 },
+        { label: 'I do not get dressed, I wash with difficulty and stay in bed', value: 5, points: 5 },
+      ], 0),
+      selectInput('lifting', 'Section 3: Lifting', [
+        { label: 'I can lift heavy weights without extra pain', value: 0, points: 0 },
+        { label: 'I can lift heavy weights but it gives extra pain', value: 1, points: 1 },
+        { label: 'Pain prevents me from lifting heavy weights off the floor, but I can manage if they are conveniently placed, e.g. on a table', value: 2, points: 2 },
+        { label: 'Pain prevents me from lifting heavy weights, but I can manage light to medium weights if they are conveniently positioned', value: 3, points: 3 },
+        { label: 'I can only lift very light weights', value: 4, points: 4 },
+        { label: 'I cannot lift or carry anything at all', value: 5, points: 5 },
+      ], 0),
+      selectInput('walking', 'Section 4: Walking', [
+        { label: 'Pain does not prevent me walking any distance', value: 0, points: 0 },
+        { label: 'Pain prevents me from walking more than 1 mile', value: 1, points: 1 },
+        { label: 'Pain prevents me from walking more than 1/2 mile', value: 2, points: 2 },
+        { label: 'Pain prevents me from walking more than 100 yards', value: 3, points: 3 },
+        { label: 'I can only walk using a stick or crutches', value: 4, points: 4 },
+        { label: 'I am in bed most of the time and have to crawl to the toilet', value: 5, points: 5 },
+      ], 0),
+      selectInput('sitting', 'Section 5: Sitting', [
+        { label: 'I can sit in any chair as long as I like', value: 0, points: 0 },
+        { label: 'I can only sit in my favorite chair as long as I like', value: 1, points: 1 },
+        { label: 'Pain prevents me from sitting more than 1 hour', value: 2, points: 2 },
+        { label: 'Pain prevents me from sitting more than 30 minutes', value: 3, points: 3 },
+        { label: 'Pain prevents me from sitting more than 10 minutes', value: 4, points: 4 },
+        { label: 'Pain prevents me from sitting at all', value: 5, points: 5 },
+      ], 0),
+      selectInput('standing', 'Section 6: Standing', [
+        { label: 'I can stand as long as I want without extra pain', value: 0, points: 0 },
+        { label: 'I can stand as long as I want but it gives me extra pain', value: 1, points: 1 },
+        { label: 'Pain prevents me from standing for more than 1 hour', value: 2, points: 2 },
+        { label: 'Pain prevents me from standing for more than 30 minutes', value: 3, points: 3 },
+        { label: 'Pain prevents me from standing for more than 10 minutes', value: 4, points: 4 },
+        { label: 'Pain prevents me from standing at all', value: 5, points: 5 },
+      ], 0),
+      selectInput('sleeping', 'Section 7: Sleeping', [
+        { label: 'My sleep is never disturbed by pain', value: 0, points: 0 },
+        { label: 'My sleep is occasionally disturbed by pain', value: 1, points: 1 },
+        { label: 'Because of pain I have less than 6 hours sleep', value: 2, points: 2 },
+        { label: 'Because of pain I have less than 4 hours sleep', value: 3, points: 3 },
+        { label: 'Because of pain I have less than 2 hours sleep', value: 4, points: 4 },
+        { label: 'Pain prevents me from sleeping at all', value: 5, points: 5 },
+      ], 0),
+      selectInput('sexLife', 'Section 8: Sex Life (if applicable)', [
+        { label: 'My sex life is normal and gives me no extra pain', value: 0, points: 0 },
+        { label: 'My sex life is normal but causes some extra pain', value: 1, points: 1 },
+        { label: 'My sex life is nearly normal but is very painful', value: 2, points: 2 },
+        { label: 'My sex life is severely restricted by pain', value: 3, points: 3 },
+        { label: 'My sex life is nearly absent because of pain', value: 4, points: 4 },
+        { label: 'Pain prevents any sex life at all', value: 5, points: 5 },
+        { label: 'Not applicable / omit (not answered)', value: -1 },
+      ], 0, 'If omitted or not applicable, the section is excluded from both numerator and denominator per Fairbank scoring rules.'),
+      selectInput('socialLife', 'Section 9: Social Life', [
+        { label: 'My social life is normal and gives me no extra pain', value: 0, points: 0 },
+        { label: 'My social life is normal but increases the degree of pain', value: 1, points: 1 },
+        { label: 'Pain has no significant effect on my social life apart from limiting my more energetic interests, e.g. sport', value: 2, points: 2 },
+        { label: 'Pain has restricted my social life and I do not go out as often', value: 3, points: 3 },
+        { label: 'Pain has restricted my social life to my home', value: 4, points: 4 },
+        { label: 'I have no social life because of pain', value: 5, points: 5 },
+      ], 0),
+      selectInput('travelling', 'Section 10: Travelling', [
+        { label: 'I can travel anywhere without pain', value: 0, points: 0 },
+        { label: 'I can travel anywhere but it gives me extra pain', value: 1, points: 1 },
+        { label: 'Pain is bad but I manage journeys over 2 hours', value: 2, points: 2 },
+        { label: 'Pain restricts me to journeys of less than 1 hour', value: 3, points: 3 },
+        { label: 'Pain restricts me to short necessary journeys under 30 minutes', value: 4, points: 4 },
+        { label: 'Pain prevents me from travelling except to receive treatment', value: 5, points: 5 },
+      ], 0),
     ],
     calculate(values) {
-      const pct = round(clamp01_100(num(values.pct, 0)), 0);
+      const items = [
+        values.pain,
+        values.personalCare,
+        values.lifting,
+        values.walking,
+        values.sitting,
+        values.standing,
+        values.sleeping,
+        values.sexLife,
+        values.socialLife,
+        values.travelling,
+      ];
+
+      let rawScore = 0;
+      let answeredCount = 0;
+
+      for (const item of items) {
+        const val = num(item, 0);
+        if (val >= 0) {
+          rawScore += val;
+          answeredCount++;
+        }
+      }
+
+      const maxPossible = 5 * answeredCount;
+      const pct = answeredCount > 0 ? round((rawScore / maxPossible) * 100, 1) : 0;
       const r = odiBand(pct);
+
       return {
         score: pct,
         unit: '%',
         ...r,
         details: [
+          { label: 'Raw score', value: `${rawScore} / ${maxPossible}` },
+          { label: 'Answered sections', value: `${answeredCount} / 10` },
+          { label: 'Disability percentage', value: `${pct}%` },
           { label: 'Range', value: '0% (no disability) – 100% (maximal)' },
           { label: 'MCID (approx)', value: '~10 percentage points often cited' },
         ],
