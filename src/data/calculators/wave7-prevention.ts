@@ -936,7 +936,8 @@ export const wave7PreventionCalcs: Calculator[] = [
     description:
       '10-year recurrent MACE (MI, stroke, vascular death) after established ASCVD using SMART/SMART2 clinical predictors (age, sex, smoking, diabetes, SBP, non-HDL, eGFR, years since first event, vascular territory, hsCRP).',
     category: 'cardiology',
-    tags: ['smart2', 'secondary prevention', 'ascvd', 'residual risk', 'mace'],
+    tags: ['smart2', 'secondary prevention', 'ascvd', 'residual risk', 'mace', 'educational'],
+    status: 'educational',
     whenToUse: 'Adults with established CAD, cerebrovascular disease, or PAD (without current acute coronary syndrome work-up) for residual 10-year recurrent-event risk.',
     whyUse: 'SMART2 updates SMART with competing-risk modelling and geographic recalibration so secondary prevention can be intensity-matched to residual risk.',
     inputs: [
@@ -1081,6 +1082,7 @@ export const wave7PreventionCalcs: Calculator[] = [
       'Educational QRISK3-style 10-year CVD risk using the published QRISK3 predictor list (age, sex, ethnicity, smoking, SBP, BMI, TC/HDL, diabetes type, treated HTN, AF, RA, CKD, migraine, steroids, atypical antipsychotics, SMI, SLE, ED, family history, Townsend). Not the licensed qrisk.org algorithm.',
     category: 'cardiology',
     tags: ['qrisk3', 'nice', 'prevention', 'uk', 'educational'],
+    status: 'educational',
     whenToUse:
       'UK primary-prevention teaching for ages 25–84 without established CVD. For clinical decisions use the official licensed calculator at qrisk.org.',
     whyUse:

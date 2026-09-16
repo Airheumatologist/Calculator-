@@ -762,7 +762,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
       summary:
         'Mannheim Peritonitis Index weights age>50, female, organ failure, malignancy, duration >24h, non-colonic origin, diffuse peritonitis, and exudate type (clear/cloudy/fecal).',
       formula: 'Sum of weighted factors (0–47 typical maximum)',
-      validation: 'Validated European surgical cohorts; cutoffs approximate mortality strata — local performance varies.',
+      validation: 'Published MPI cohorts were validated in European surgical series; cutoffs here approximate mortality strata — local performance varies. This module is a simplified helper.',
       references: [
         {
           title: 'The Mannheim peritonitis index',

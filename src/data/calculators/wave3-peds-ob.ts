@@ -846,7 +846,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       summary:
         'N-PASS rates crying, behavior, face, extremities, and vitals from −2 (sedation) to +2 (pain/agitation). Positive totals guide analgesia; negative totals guide sedation depth.',
       formula: 'Five domains −2 to +2; interpret positive vs negative subtotals',
-      validation: 'Validated in neonatal intensive care for pain and sedation assessment.',
+      validation: 'The published N-PASS instrument was validated in neonatal intensive care for pain and sedation assessment. This module is a simplified helper.',
       references: [
         { title: 'Clinical reliability and validity of the N-PASS: neonatal pain, agitation and sedation scale with prolonged pain', citation: 'Hummel P, Puchalski M, Creech SD, Weiss MG. J Perinatol. 2008;28(1):55-60', year: 2008, pmid: '18165830',
           doi: '10.1038/sj.jp.7211861', },

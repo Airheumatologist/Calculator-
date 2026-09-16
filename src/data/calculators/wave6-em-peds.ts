@@ -754,7 +754,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         'Phoenix criteria (SCCM 2024) define pediatric sepsis as infection with life-threatening organ dysfunction measured by Phoenix scores; septic shock includes cardiovascular dysfunction.',
       formula: 'Infection + simplified organ points (≥2 educational threshold); CV domain for shock',
       validation:
-        'Derived/validated in large international datasets (Schlapbach/Watson et al.). This app version is intentionally simplified for teaching.',
+        'Published Phoenix criteria were derived and validated in large international datasets (Schlapbach/Watson et al.). This app version is intentionally simplified for teaching.',
       references: [
         {
           title: 'International Consensus Criteria for Pediatric Sepsis and Septic Shock',

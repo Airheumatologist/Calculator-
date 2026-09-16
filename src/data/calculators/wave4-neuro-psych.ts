@@ -1797,7 +1797,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       summary:
         'bCAM uses CAM diagnostic logic adapted for ED: Feature 1 (acute change/fluctuation), Feature 2 (inattention), Feature 3 (altered LOC), Feature 4 (disorganized thinking). Positive if 1+2 and (3 or 4).',
       formula: 'Positive = F1 AND F2 AND (F3 OR F4)',
-      validation: 'Brief CAM validated in emergency department older adults for delirium detection.',
+      validation: 'Published bCAM was validated in emergency department older adults for delirium detection. This module is a simplified checklist.',
       references: [
         {
           title: 'Diagnosing delirium in older ED patients: validity of bCAM',

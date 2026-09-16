@@ -12,18 +12,18 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whenToUse: 'Drug dosing adjustments based on renal function.',
     whyUse: 'Still used in many FDA drug labels despite CKD-EPI for staging.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 60 }),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 20, max: 300, defaultValue: 70, helpText: 'Enter weight in kg, not lb. Original Cockcroft–Gault uses actual body weight; many pharmacies substitute IBW or AdjBW in obesity.' }),
-      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.0, helpText: 'mg/dL (divide µmol/L by 88.4).' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110 }),
+      numberInput('weight', 'Weight', { unit: 'kg', min: 20, max: 300, helpText: 'Enter weight in kg, not lb. Original Cockcroft–Gault uses actual body weight; many pharmacies substitute IBW or AdjBW in obesity.' }),
+      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, helpText: 'mg/dL (divide µmol/L by 88.4).' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 1 },
         { label: 'Female (×0.85)', value: 0.85 },
       ]),
     ],
     calculate(values) {
-      const age = num(values.age, 60);
-      const wt = num(values.weight, 70);
-      const scr = num(values.scr, 1);
+      const age = num(values.age);
+      const wt = num(values.weight);
+      const scr = num(values.scr);
       const sex = num(values.sex, 1);
       if (scr <= 0) {
         return { score: '—', label: 'Invalid creatinine', interpretation: 'Serum creatinine must be > 0.', riskLevel: 'info' as const };
@@ -62,22 +62,22 @@ export const nephrologyEndoCalcs: Calculator[] = [
     description: 'Estimates GFR from creatinine using 2021 race-free CKD-EPI equation.',
     category: 'nephrology',
     tags: ['gfr', 'ckd', 'egfr'],
-    whenToUse: 'CKD detection, staging, and monitoring.',
+    whenToUse: 'Estimating GFR from creatinine in adults. A single eGFR is a GFR category, not a CKD diagnosis.',
     whyUse: 'Preferred equation in current KDIGO/NKF guidance (2021 race-free).',
     inputs: [
-      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.0, helpText: 'mg/dL, IDMS-traceable creatinine. 2021 race-free CKD-EPI.' }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 50 }),
+      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, helpText: 'mg/dL, IDMS-traceable creatinine. 2021 race-free CKD-EPI.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110 }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
       ]),
     ],
     calculate(values) {
-      const scr = num(values.scr, 1);
+      const scr = num(values.scr);
       if (scr <= 0) {
         return { score: '—', label: 'Invalid creatinine', interpretation: 'Serum creatinine must be > 0.', riskLevel: 'info' as const };
       }
-      const age = num(values.age, 50);
+      const age = num(values.age);
       const female = values.sex === 'F';
       const kappa = female ? 0.7 : 0.9;
       const alpha = female ? -0.241 : -0.302;
@@ -110,8 +110,8 @@ export const nephrologyEndoCalcs: Calculator[] = [
       return {
         score: egfr,
         unit: 'mL/min/1.73m²',
-        label: `CKD stage ${stage}`,
-        interpretation: `eGFR ${egfr}. Stage ${stage} (albuminuria needed for full CGA staging).`,
+        label: `GFR category ${stage}`,
+        interpretation: `eGFR ${egfr} mL/min/1.73 m² corresponds to GFR category ${stage}. A single eGFR does not establish CKD; chronicity and/or other markers of kidney damage are required. G1 and G2 in particular require evidence of kidney damage to diagnose CKD. Albuminuria (and cause) are needed for full CGA risk classification.`,
         riskLevel,
       };
     },
@@ -133,7 +133,9 @@ export const nephrologyEndoCalcs: Calculator[] = [
     shortName: 'MDRD',
     description: 'Historical 4-variable MDRD estimated GFR.',
     category: 'nephrology',
-    tags: ['gfr', 'mdrd'],
+    tags: ['gfr', 'mdrd', 'legacy'],
+    status: 'legacy',
+    supersededBy: 'ckd-epi',
     whenToUse: 'Legacy reports; prefer CKD-EPI for new estimates.',
     whyUse: 'Still appears on older lab reports.',
     inputs: [

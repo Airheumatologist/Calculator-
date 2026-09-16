@@ -4,13 +4,15 @@ import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds }
 export const extraCalcs: Calculator[] = [
   {
     id: 'duke-criteria',
-    name: 'Modified Duke Criteria (IE Helper)',
-    shortName: 'Duke IE',
-    description: 'Counts major/minor criteria for infective endocarditis probability.',
+    name: 'Modified Duke Criteria (2000 — legacy helper)',
+    shortName: 'Duke 2000',
+    description: 'Simplified Li 2000 modified Duke major/minor count. Does not implement the 2023 Duke-ISCVID criteria.',
     category: 'infectious-disease',
-    tags: ['endocarditis', 'duke', 'infection'],
-    whenToUse: 'Suspected infective endocarditis classification.',
-    whyUse: 'Standard diagnostic framework (definite / possible / rejected).',
+    tags: ['endocarditis', 'duke', 'infection', 'legacy'],
+    status: 'legacy',
+    supersededBy: 'duke-iscvid-2023',
+    whenToUse: 'Historical comparison with the 2000 modified Duke clinical count. Use duke-iscvid-2023 for current classification.',
+    whyUse: 'Preserves the Li 2000 definite/possible/rejected count. The 2023 Duke-ISCVID revision expanded typical organisms, imaging, molecular diagnostics, and surgical criteria.',
     inputs: [
       yesNo(
         'bloodCx',
@@ -82,10 +84,13 @@ export const extraCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Modified Duke criteria classify IE as definite, possible, or rejected using major/minor clinical and pathologic features.',
-      validation: 'Standard ID/cardiology diagnostic framework; ESC/AHA adaptations exist.',
-      references: [{ title: 'Proposed modifications to the Duke criteria for IE', citation: 'Li JS et al. Clin Infect Dis. 2000', year: 2000, pmid: '10770721',
-          doi: '10.1086/313753', }],
+      summary: 'Li 2000 modified Duke clinical criteria classify IE as definite, possible, or rejected. This helper does not implement Duke-ISCVID 2023 (expanded typical organisms, molecular diagnostics, cardiac CT / FDG-PET/CT, intraoperative surgical major criterion, and updated predisposing/vascular/immunologic definitions).',
+      validation: 'Legacy 2000 clinical-count helper. Prefer duke-iscvid-2023 for current diagnostic classification.',
+      references: [
+        { title: 'Proposed modifications to the Duke criteria for IE', citation: 'Li JS et al. Clin Infect Dis. 2000', year: 2000, pmid: '10770721',
+          doi: '10.1086/313753' },
+        { title: 'The 2023 Duke-International Society for Cardiovascular Infectious Diseases Criteria for Infective Endocarditis', citation: 'Fowler VG et al. Clin Infect Dis. 2023;77:518-526', year: 2023, pmid: '37138445', doi: '10.1093/cid/ciad271' },
+      ],
     },
     nextSteps: [
       { condition: 'Possible/Definite', actions: ['Multiple blood cultures before antibiotics if stable', 'Echo (TTE ± TEE)', 'ID + cardiology involvement'] },

@@ -496,13 +496,13 @@ export const criticalCareCalcs: Calculator[] = [
     id: 'psi-port',
     name: 'PSI / PORT Score (Pneumonia)',
     shortName: 'PSI/PORT',
-    description: 'Pneumonia Severity Index for CAP mortality and site-of-care.',
+    description: 'Two-step Pneumonia Severity Index for CAP mortality and site-of-care (Fine 1997).',
     category: 'pulmonary',
     tags: ['pneumonia', 'psi', 'port'],
     whenToUse: 'Adult CAP risk stratification when more detail than CURB-65 is desired.',
-    whyUse: 'Highly validated; Classes I–II often outpatient candidates.',
+    whyUse: 'Highly validated two-step rule: Class I is assigned before points; Classes II–V use the point total.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 65 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110 }),
       selectInput('sex', 'Sex', [
         { label: 'Female (−10)', value: -10 },
         { label: 'Male (0)', value: 0 },
@@ -527,7 +527,21 @@ export const criticalCareCalcs: Calculator[] = [
       yesNo('pleural', 'Pleural effusion', 10, 'Pleural effusion on chest radiograph (any size; Fine 1997).'),
     ],
     calculate(values) {
-      let score = num(values.age) + num(values.sex);
+      const age = num(values.age);
+      const classI =
+        age <= 50 &&
+        !bool(values.neoplasm) &&
+        !bool(values.liver) &&
+        !bool(values.chf) &&
+        !bool(values.cerebro) &&
+        !bool(values.renal) &&
+        !bool(values.ams) &&
+        !bool(values.hr125) &&
+        !bool(values.rr30) &&
+        !bool(values.sbp90) &&
+        !bool(values.temp35);
+
+      let score = age + num(values.sex);
       const pts: [string, number][] = [
         ['nh', 10], ['neoplasm', 30], ['liver', 20], ['chf', 10], ['cerebro', 10], ['renal', 10],
         ['ams', 20], ['rr30', 20], ['sbp90', 20], ['temp35', 15], ['hr125', 10],
@@ -536,12 +550,28 @@ export const criticalCareCalcs: Calculator[] = [
       pts.forEach(([k, p]) => {
         if (bool(values[k])) score += p;
       });
-      let cls = 'I–II';
+
+      if (classI) {
+        return {
+          score,
+          label: 'PSI Class I',
+          interpretation:
+            'Step 1 Class I (age ≤50, no neoplastic/liver/CHF/cerebrovascular/renal disease, normal mental status, pulse <125, RR <30, SBP ≥90, temperature ≥35°C and <40°C). Approx. mortality 0.1%. Often an outpatient candidate if clinically appropriate. Class I is assigned before the point score.',
+          riskLevel: 'low',
+          details: [
+            { label: 'Algorithm stage', value: 'Step 1 — Class I (points not used for class assignment)' },
+            { label: 'Point total (reference only)', value: String(score) },
+            { label: 'Approx. mortality', value: '0.1%' },
+          ],
+        };
+      }
+
+      let cls = 'II';
       let riskLevel: 'low' | 'moderate' | 'high' | 'critical' = 'low';
-      let mort = '<1%';
+      let mort = '0.6%';
       if (score <= 70) {
-        cls = score < 51 ? 'I–II' : 'II';
-        mort = '0.1–0.6%';
+        cls = 'II';
+        mort = '0.6%';
         riskLevel = 'low';
       } else if (score <= 90) {
         cls = 'III';
@@ -559,19 +589,26 @@ export const criticalCareCalcs: Calculator[] = [
       return {
         score,
         label: `PSI Class ${cls}`,
-        interpretation: `Approx. mortality ${mort}. Classes I–II often outpatient; III observation; IV–V inpatient/ICU consideration.`,
+        interpretation: `Step 2 point class ${cls} (did not meet Step 1 Class I). Approx. mortality ${mort}. Class II often outpatient; III observation; IV–V inpatient/ICU consideration.`,
         riskLevel,
-        details: [{ label: 'Approx. mortality', value: mort }],
+        details: [
+          { label: 'Algorithm stage', value: 'Step 2 — point scoring (Classes II–V)' },
+          { label: 'Approx. mortality', value: mort },
+        ],
       };
     },
     evidence: {
-      summary: 'PORT/PSI from Pneumonia Patient Outcomes Research Team predicts CAP mortality.',
-      validation: 'One of the most validated pneumonia severity tools.',
+      summary: 'PORT/PSI is a two-step rule: Class I is assigned before points using age, five comorbidities, mental status, and vital signs; remaining patients are scored into Classes II–V.',
+      formula:
+        'Step 1 Class I if age ≤50 AND no neoplastic, liver, CHF, cerebrovascular, or renal disease AND normal mental status AND pulse <125 AND RR <30 AND SBP ≥90 AND temperature ≥35°C and <40°C. Otherwise points: Class II ≤70, III 71–90, IV 91–130, V >130.',
+      validation: 'One of the most validated pneumonia severity tools (Fine 1997; IDSA CAP two-step algorithm).',
       references: [{ title: 'A prediction rule to identify low-risk patients with community-acquired pneumonia', citation: 'Fine MJ et al. N Engl J Med. 1997', year: 1997, pmid: '8995086',
           doi: '10.1056/NEJM199701233360402', }],
     },
     nextSteps: [
-      { condition: 'Class I–II', actions: ['Outpatient oral antibiotics if reliable'] },
+      { condition: 'Class I', actions: ['Often outpatient oral antibiotics if reliable follow-up'] },
+      { condition: 'Class II', actions: ['Often outpatient candidate if clinically appropriate'] },
+      { condition: 'Class III', actions: ['Consider observation or short inpatient stay'] },
       { condition: 'Class IV–V', actions: ['Admit', 'Consider ICU for respiratory failure/shock'] },
     ],
   },

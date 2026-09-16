@@ -82,7 +82,12 @@ export function HomePage() {
           {list.length ? (
             list.map((calc) => (
               <Link key={calc.id} to={`/calc/${calc.id}`} className="calc-row">
-                <h3>{calc.name}</h3>
+                <h3>
+                  {calc.name}
+                  {calc.status && calc.status !== 'current' ? (
+                    <span className={`status-badge status-${calc.status}`}>{calc.status}</span>
+                  ) : null}
+                </h3>
                 <p>{calc.description}</p>
               </Link>
             ))

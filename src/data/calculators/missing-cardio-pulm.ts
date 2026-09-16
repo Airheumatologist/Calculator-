@@ -12,7 +12,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'Adults undergoing noncardiac surgery for preoperative cardiac risk stratification.',
     whyUse: 'Simple, validated 6-factor index used widely in perioperative medicine and guidelines.',
     inputs: [
-      yesNo('highRiskSx', 'High-risk surgery (intraperitoneal, intrathoracic, or suprainguinal vascular)', 1, 'Lee RCRI high-risk = intraperitoneal, intrathoracic, or suprainguinal vascular. Do not score laparoscopic cholecystectomy, breast, endoscopic, or cataract surgery.'),
+      yesNo('highRiskSx', 'High-risk surgery (intraperitoneal, intrathoracic, or suprainguinal vascular)', 1, 'Lee 1999 high-risk surgery = intraperitoneal, intrathoracic, or suprainguinal vascular operations. Laparoscopic intraperitoneal procedures (including cholecystectomy) meet the original intraperitoneal definition; do not score breast, endoscopic, or cataract surgery.'),
       yesNo('ihd', 'History of ischemic heart disease', 1, 'MI, positive stress test, current angina, nitrate use, or Q waves'),
       yesNo('hf', 'History of heart failure', 1, 'History of HF, pulmonary edema, or PND; bilateral rales or S3 on exam; or CXR with pulmonary vascular redistribution (Lee 1999).'),
       yesNo('cvd', 'History of cerebrovascular disease (stroke or TIA)', 1),
@@ -1441,19 +1441,25 @@ export const missingCardioPulmCalcs: Calculator[] = [
           pmid: '37947094',
           doi: '10.1161/CIR.0000000000001191',
         },
+        {
+          title: '2026 ACC/AHA/AACVPR/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA Guideline on the Management of Dyslipidemia',
+          citation: 'Circulation/JACC. 2026',
+          year: 2026,
+          doi: '10.1161/CIR.0000000000001423',
+        },
       ],
     },
     nextSteps: [
       {
-        condition: '10-year CVD ≥10% or ASCVD ≥7.5%',
+        condition: '2026 PREVENT-ASCVD high (≥10%)',
         actions: ['Official AHA PREVENT confirmation', 'High-intensity or moderate-intensity statin discussion per 2026 ACC/AHA lipids', 'BP, weight, CKM care'],
       },
       {
-        condition: '5–<10%',
-        actions: ['Risk enhancers / CAC if decision uncertain', 'Lifestyle', 'Shared decision on statin'],
+        condition: '2026 PREVENT-ASCVD intermediate (5–<10%) or borderline (3–<5%)',
+        actions: ['Risk enhancers / CAC if decision uncertain', 'Lifestyle', 'Shared decision on statin per 2026 ACC/AHA lipids'],
       },
       {
-        condition: '<5%',
+        condition: '2026 PREVENT-ASCVD low (<3%)',
         actions: ['Lifestyle', 'Reassess periodically', 'Treat individual risk factors (BP, smoking)'],
       },
     ],
@@ -1462,6 +1468,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
       'Confirm with the official AHA PREVENT calculator before charting or treating.',
       '30-year equations are validated through age 59; older-age 30-year numbers are computed from published coefficients but should be interpreted with that caveat.',
       'UACR, HbA1c, and SDI are published optional add-ons; they are omitted here so unused fields are not shown as if they contribute.',
+      '2026 ACC/AHA lipids uses 10-year PREVENT-ASCVD categories: low <3%, borderline 3% to <5%, intermediate 5% to <10%, high ≥10%. The live badge here is still based on 10-year total CVD.',
     ],
   },
 ];

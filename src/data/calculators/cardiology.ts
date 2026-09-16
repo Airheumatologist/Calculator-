@@ -9,6 +9,8 @@ export const cardiologyCalcs: Calculator[] = [
     description: 'Legacy, widely used stroke-risk score for non-valvular atrial fibrillation; includes female sex as a risk modifier.',
     category: 'cardiology',
     tags: ['afib', 'stroke', 'anticoagulation', 'af', 'legacy'],
+    status: 'legacy',
+    supersededBy: 'cha2ds2-va',
     whenToUse: 'Patients with non-valvular atrial fibrillation to assess annual stroke risk and need for anticoagulation.',
     whyUse: 'Widely validated; AHA/ACC guideline-recommended for stroke risk stratification in nonvalvular AF (ESC 2024 prefers CHA₂DS₂-VA).',
     inputs: [
@@ -812,7 +814,7 @@ export const cardiologyCalcs: Calculator[] = [
     evidence: {
       summary: 'sPESI dichotomizes PE patients into low (0) vs high (≥1) risk using 6 variables.',
       formula: 'Age >80 + cancer + chronic cardiopulmonary disease + HR ≥110 + SBP <100 + O₂ sat <90% (1 each). 0 = low risk; ≥1 = high risk.',
-      validation: 'Validated against full PESI with similar prognostic accuracy.',
+      validation: 'The published sPESI rule was validated against full PESI with similar prognostic accuracy. This module follows that published simplified rule.',
       references: [{ title: 'Simplification of the pulmonary embolism severity index for prognostication in patients with acute symptomatic pulmonary embolism', citation: 'Jiménez D et al. Arch Intern Med. 2010', year: 2010, pmid: '20696966',
           doi: '10.1001/archinternmed.2010.199', }],
     },
@@ -911,18 +913,22 @@ export const cardiologyCalcs: Calculator[] = [
     id: 'qtc-bazett',
     name: 'Corrected QT (Bazett)',
     shortName: 'QTc Bazett',
-    description: 'Corrects QT interval for heart rate using Bazett formula.',
+    description: 'Corrects QT interval for heart rate using Bazett formula, with sex-specific adult interpretation bands.',
     category: 'cardiology',
     tags: ['ecg', 'qt', 'arrhythmia'],
     whenToUse: 'Drug monitoring, syncope, electrolyte disorders, congenital LQTS screening.',
-    whyUse: 'Prolonged QTc increases risk of torsades de pointes.',
+    whyUse: 'Prolonged QTc increases risk of torsades de pointes. Adult prolonged thresholds are sex-specific.',
     inputs: [
-      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, defaultValue: 400, helpText: 'Measure in lead II or V5/V6 from QRS onset to the end of the T wave (not the U wave).' }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, defaultValue: 70, helpText: 'Bazett overcorrects at high HR and undercorrects at low HR; consider Fridericia at extremes.' }),
+      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, helpText: 'Measure in lead II or V5/V6 from QRS onset to the end of the T wave (not the U wave).' }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, helpText: 'Bazett overcorrects at high HR and undercorrects at low HR; consider Fridericia at extremes.' }),
+      selectInput('sex', 'Sex', [
+        { label: 'Male', value: 'M' },
+        { label: 'Female', value: 'F' },
+      ]),
     ],
     calculate(values) {
-      const qt = num(values.qt, 400);
-      const hr = num(values.hr, 70);
+      const qt = num(values.qt);
+      const hr = num(values.hr);
       if (hr <= 0) {
         return {
           score: '—',
@@ -935,21 +941,30 @@ export const cardiologyCalcs: Calculator[] = [
       }
       const rr = 60 / hr;
       const qtc = round(qt / Math.sqrt(rr), 0);
+      const female = values.sex === 'F';
+      const prolongedCut = female ? 460 : 450;
+      const borderlineCut = female ? 450 : 430;
       let riskLevel: 'normal' | 'moderate' | 'high' | 'critical' = 'normal';
       let label = 'Normal QTc';
-      let interpretation = 'QTc within typical reference range for most adults.';
+      let interpretation = female
+        ? 'QTc within typical adult female reference range (prolonged if >460 ms).'
+        : 'QTc within typical adult male reference range (prolonged if >450 ms).';
       if (qtc >= 500) {
         riskLevel = 'critical';
         label = 'Markedly prolonged';
-        interpretation = 'QTc ≥500 ms: high risk for torsades. Stop QT-prolonging drugs, replete K/Mg, continuous monitoring.';
-      } else if (qtc >= 460) {
+        interpretation = 'QTc ≥500 ms: substantially higher risk for torsades. Stop QT-prolonging drugs, replete K/Mg, continuous monitoring.';
+      } else if (qtc > prolongedCut) {
         riskLevel = 'high';
         label = 'Prolonged';
-        interpretation = 'Prolonged QTc. Review medications and electrolytes; consider specialist input.';
-      } else if (qtc >= 440) {
+        interpretation = female
+          ? 'Prolonged QTc for an adult female (>460 ms). Review medications and electrolytes; consider specialist input.'
+          : 'Prolonged QTc for an adult male (>450 ms). Review medications and electrolytes; consider specialist input.';
+      } else if (qtc > borderlineCut) {
         riskLevel = 'moderate';
         label = 'Borderline';
-        interpretation = 'Borderline QTc. Reassess with Fridericia if extreme HR; check meds/electrolytes.';
+        interpretation = female
+          ? 'Borderline adult female QTc (451–460 ms). Reassess with Fridericia if extreme HR; check meds/electrolytes.'
+          : 'Borderline adult male QTc (431–450 ms). Reassess with Fridericia if extreme HR; check meds/electrolytes.';
       } else if (qtc < 350) {
         riskLevel = 'moderate';
         label = 'Short QTc';
@@ -959,19 +974,23 @@ export const cardiologyCalcs: Calculator[] = [
         score: qtc,
         unit: 'ms',
         label,
-        interpretation,
+        interpretation: `${interpretation} Bazett overcorrects at high heart rates and undercorrects at low heart rates.`,
         riskLevel,
         details: [
           { label: 'RR interval', value: `${round(rr, 3)} s` },
+          { label: 'Sex-specific prolonged cutoff', value: female ? '>460 ms (female)' : '>450 ms (male)' },
           { label: 'Formula', value: 'QT / √RR' },
         ],
       };
     },
     evidence: {
-      summary: 'Bazett (QTc = QT/√RR) is most common but overcorrects at high HR and undercorrects at low HR. Fridericia preferred at extremes.',
+      summary: 'Bazett (QTc = QT/√RR) is most common but overcorrects at high HR and undercorrects at low HR. Fridericia preferred at extremes. Adult prolonged QTc is >450 ms in males and >460 ms in females; ≥500 ms is a substantially higher-risk range.',
       formula: 'QTc (Bazett) = QT / √(RR) with RR in seconds',
-      validation: 'Standard ECG teaching; thresholds vary by sex and method.',
-      references: [{ title: 'An analysis of the time-relations of electrocardiograms', citation: 'Bazett HC. Heart. 1920;7:353-370', year: 1920 }],
+      validation: 'Standard ECG teaching; interpretation uses sex-specific adult bands rather than a single universal cutoff.',
+      references: [
+        { title: 'An analysis of the time-relations of electrocardiograms', citation: 'Bazett HC. Heart. 1920;7:353-370', year: 1920 },
+        { title: 'The QT Interval', citation: 'Giudicessi JR et al. Circulation. 2019', year: 2019, pmid: '31136210', doi: '10.1161/CIRCULATIONAHA.118.038584' },
+      ],
     },
     nextSteps: [
       { condition: 'QTc ≥ 500', actions: ['Telemetry', 'MgSO4 if TdP or very high risk', 'Discontinue offending agents', 'Replete K+ to >4 and Mg >2'] },
@@ -979,15 +998,17 @@ export const cardiologyCalcs: Calculator[] = [
   },
   {
     id: 'ascvd-risk',
-    name: 'ASCVD 10-Year Risk (Pooled Cohort)',
-    shortName: 'ASCVD Risk',
-    description: 'Estimates 10-year risk of atherosclerotic cardiovascular disease for statin decision-making.',
+    name: 'ASCVD 10-Year Risk (2013 PCE — legacy)',
+    shortName: 'PCE 2013',
+    description: '2013 ACC/AHA Pooled Cohort Equations for 10-year ASCVD risk. Historical/comparison use only — not the current ACC/AHA primary-prevention lipid-risk tool.',
     category: 'cardiology',
-    tags: ['prevention', 'statin', 'cholesterol'],
-    whenToUse: 'Adults 40–79 without prior ASCVD for primary prevention.',
-    whyUse: 'ACC/AHA guideline tool for statin and lifestyle primary-prevention discussions.',
+    tags: ['prevention', 'statin', 'cholesterol', 'legacy', 'pce'],
+    status: 'legacy',
+    supersededBy: 'prevent-cvd',
+    whenToUse: 'When a 2013 PCE estimate is specifically needed for comparison or a historical protocol. For current US primary-prevention lipid decisions, use AHA PREVENT.',
+    whyUse: 'Preserves the published 2013 PCE. The 2026 ACC/AHA dyslipidemia guideline replaces PCE with PREVENT-ASCVD for statin decision-making.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 40, max: 79, defaultValue: 55 }),
+      numberInput('age', 'Age', { unit: 'years', min: 40, max: 79 }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
@@ -996,18 +1017,18 @@ export const cardiologyCalcs: Calculator[] = [
         { label: 'White / Other', value: 'W' },
         { label: 'African American', value: 'AA' },
       ]),
-      numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 100, max: 400, defaultValue: 200 }),
-      numberInput('hdl', 'HDL-C', { unit: 'mg/dL', min: 20, max: 120, defaultValue: 50 }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, defaultValue: 130 }),
+      numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 100, max: 400 }),
+      numberInput('hdl', 'HDL-C', { unit: 'mg/dL', min: 20, max: 120 }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200 }),
       yesNo('txHtn', 'On antihypertensive treatment', null),
       yesNo('dm', 'Diabetes', null),
       yesNo('smoker', 'Current smoker', null),
     ],
     calculate(values) {
-      const age = num(values.age, 55);
-      const tc = num(values.tc, 200);
-      const hdl = num(values.hdl, 50);
-      const sbp = num(values.sbp, 130);
+      const age = num(values.age);
+      const tc = num(values.tc);
+      const hdl = num(values.hdl);
+      const sbp = num(values.sbp);
       const invalidLogInputs = ([
         ['Age', age],
         ['Total cholesterol', tc],
@@ -1094,28 +1115,33 @@ export const cardiologyCalcs: Calculator[] = [
 
       const risk = round(100 * (1 - baselineSurvival ** Math.exp(sum - mean)), 1);
       const r = riskFromThresholds(risk, [
-        { max: 4.9, level: 'low', label: 'Low risk (<5%)', interpretation: 'Emphasize lifestyle. Statin generally not indicated solely for risk unless LDL very high or other indications.' },
-        { max: 7.4, level: 'moderate', label: 'Borderline (5–7.4%)', interpretation: 'Risk enhancers and CAC score may refine statin decision.' },
-        { max: 19.9, level: 'moderate', label: 'Intermediate (7.5–19.9%)', interpretation: 'Moderate-intensity statin generally favored after shared decision-making.' },
-        { max: 100, level: 'high', label: 'High (≥20%)', interpretation: 'High-intensity statin recommended for primary prevention.' },
+        { max: 4.9, level: 'low', label: '2013 PCE <5%', interpretation: 'Historical 2013 PCE low-risk band. These PCE categories are not the 2026 ACC/AHA PREVENT-ASCVD statin-decision framework (low <3%, borderline 3–<5%, intermediate 5–<10%, high ≥10%).' },
+        { max: 7.4, level: 'moderate', label: '2013 PCE 5–7.4%', interpretation: 'Historical 2013 PCE borderline band. Do not use these PCE cutoffs as current ACC/AHA statin-decision thresholds.' },
+        { max: 19.9, level: 'moderate', label: '2013 PCE 7.5–19.9%', interpretation: 'Historical 2013 PCE intermediate band. Use AHA PREVENT for current US primary-prevention lipid decisions.' },
+        { max: 100, level: 'high', label: '2013 PCE ≥20%', interpretation: 'Historical 2013 PCE high-risk band. This is not a current ACC/AHA high-intensity-statin mandate by itself.' },
       ]);
       return {
         score: risk,
         unit: '%',
         ...r,
-        details: [{ label: 'Model', value: `2013 ACC/AHA PCE (${isBlack ? 'Black' : 'White/Other'} ${isFemale ? 'female' : 'male'})` }],
+        details: [
+          { label: 'Model', value: `2013 ACC/AHA PCE (${isBlack ? 'Black' : 'White/Other'} ${isFemale ? 'female' : 'male'}) — legacy` },
+          { label: 'Current US tool', value: 'AHA PREVENT (prevent-cvd)' },
+        ],
       };
     },
     evidence: {
-      summary: 'ACC/AHA Pooled Cohort Equations estimate 10-year risk of nonfatal MI, CHD death, and stroke.',
+      summary: '2013 ACC/AHA Pooled Cohort Equations estimate 10-year risk of nonfatal MI, CHD death, and stroke. Retained as a legacy calculator. The 2026 ACC/AHA dyslipidemia guideline replaces PCE with PREVENT-ASCVD for primary-prevention lipid-lowering decisions.',
       formula: 'Official 2013 ACC/AHA race- and sex-specific Cox Pooled Cohort Equations: risk = 100 × (1 − S₀^exp(sum − mean))',
-      validation: 'Derived from multiple community cohorts; recalibrated in some populations.',
-      references: [{ title: '2013 ACC/AHA Guideline on Assessment of Cardiovascular Risk', citation: 'Goff DC et al. Circulation. 2014', year: 2014, pmid: '24222018',
-          doi: '10.1161/01.cir.0000437741.48606.98', }],
+      validation: 'Derived from multiple community cohorts; recalibrated in some populations. Not the current ACC/AHA primary-prevention risk equation.',
+      references: [
+        { title: '2013 ACC/AHA Guideline on Assessment of Cardiovascular Risk', citation: 'Goff DC et al. Circulation. 2014', year: 2014, pmid: '24222018',
+          doi: '10.1161/01.cir.0000437741.48606.98' },
+        { title: '2026 ACC/AHA/AACVPR/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA Guideline on the Management of Dyslipidemia', citation: 'Circulation/JACC. 2026', year: 2026, doi: '10.1161/CIR.0000000000001423' },
+      ],
     },
     nextSteps: [
-      { condition: 'Risk ≥7.5%', actions: ['Discuss moderate- or high-intensity statin', 'Lifestyle therapy', 'Reassess lipids'] },
-      { condition: 'Borderline risk', actions: ['Consider CAC scoring', 'Assess risk enhancers (family hx, Lp(a), CKD, etc.)'] },
+      { condition: 'Any 2013 PCE result', actions: ['Treat this as a historical PCE estimate only', 'Use AHA PREVENT (prevent-cvd) for current US primary-prevention lipid-lowering decisions'] },
     ],
   },
 ];

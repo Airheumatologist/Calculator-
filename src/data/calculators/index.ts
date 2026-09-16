@@ -1,4 +1,5 @@
 import type { Calculator } from '../../types/calculator';
+import { assertUniqueCalculatorIds } from '../../utils/registry';
 import { cardiologyCalcs } from './cardiology';
 import { criticalCareCalcs } from './critical-care';
 import { nephrologyEndoCalcs } from './nephrology-endo';
@@ -99,14 +100,7 @@ export const calculators: Calculator[] = [
   ...wave7FillinsCalcs,
 ];
 
-// Ensure unique IDs
-const seen = new Set<string>();
-for (const c of calculators) {
-  if (seen.has(c.id)) {
-    console.warn(`Duplicate calculator id: ${c.id}`);
-  }
-  seen.add(c.id);
-}
+assertUniqueCalculatorIds(calculators);
 
 export function getCalculator(id: string): Calculator | undefined {
   return calculators.find((c) => c.id === id);

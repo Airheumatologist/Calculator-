@@ -607,7 +607,9 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     description:
       'Historical 4-variable MDRD study equation including the legacy race coefficient — educational/legacy comparison only. Prefer race-free CKD-EPI 2021.',
     category: 'nephrology',
-    tags: ['mdrd', 'egfr', 'gfr', 'historical', 'ckd', 'race'],
+    tags: ['mdrd', 'egfr', 'gfr', 'historical', 'ckd', 'race', 'legacy'],
+    status: 'legacy',
+    supersededBy: 'ckd-epi',
     whenToUse: 'Interpreting older lab reports that used MDRD, or teaching why race-based eGFR was abandoned.',
     whyUse: 'Shows the classic 175 equation and documents that the Black race multiplier is no longer recommended for clinical care.',
     inputs: [

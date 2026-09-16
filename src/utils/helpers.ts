@@ -35,7 +35,14 @@ export function riskFromThresholds(
   thresholds: { max: number; level: RiskLevel; label: string; interpretation: string }[]
 ): { riskLevel: RiskLevel; label: string; interpretation: string } {
   if (!thresholds || thresholds.length === 0) {
-    return { riskLevel: 'info', label: '—', interpretation: '' };
+    throw new Error('riskFromThresholds requires a non-empty threshold list');
+  }
+  for (let i = 1; i < thresholds.length; i++) {
+    if (!(thresholds[i].max > thresholds[i - 1].max)) {
+      throw new Error(
+        `riskFromThresholds thresholds must be strictly increasing by max (saw ${thresholds[i - 1].max} then ${thresholds[i].max})`
+      );
+    }
   }
   for (const t of thresholds) {
     if (score <= t.max) {
@@ -261,6 +268,42 @@ export function isMissingValue(
   return numeric ? !Number.isFinite(parseFloat(raw)) : false;
 }
 
+/** Patient numeric fields are required unless they explicitly opt out. */
+export function isRequiredInput(input: { type?: string; required?: boolean }): boolean {
+  if (input.required === false) return false;
+  if (input.required === true) return true;
+  return input.type === 'number';
+}
+
+export function getInitialFormValues(
+  calc: CalculatorQuestionnaireShape | undefined
+): Record<string, number | string | boolean | null> {
+  const values: Record<string, number | string | boolean | null> = {};
+  if (!calc) return values;
+  const isQuestionnaire = isQuestionnaireCalculator(calc);
+  const modeInput = isQuestionnaire ? getQuestionnaireModeInput(calc) : undefined;
+  for (const input of calc.inputs) {
+    if (isQuestionnaire && input.id !== modeInput?.id) {
+      values[input.id] = null;
+      continue;
+    }
+    if (input.type === 'number') {
+      values[input.id] = null;
+      continue;
+    }
+    if (input.defaultValue !== undefined) {
+      values[input.id] = input.defaultValue;
+    } else if (input.type === 'boolean') {
+      values[input.id] = false;
+    } else if (input.type === 'select' || input.type === 'segmented') {
+      values[input.id] = input.options?.[0]?.value ?? null;
+    } else {
+      values[input.id] = null;
+    }
+  }
+  return values;
+}
+
 /** Required inputs the user has not filled in yet. Zero is a valid value. */
 export function getMissingRequiredInputs(
   inputs: { id: string; label: string; type?: string; required?: boolean }[],
@@ -268,12 +311,71 @@ export function getMissingRequiredInputs(
 ): MissingRequiredInput[] {
   const missing: MissingRequiredInput[] = [];
   for (const input of inputs) {
-    if (input.required !== true) continue;
+    if (!isRequiredInput(input)) continue;
     if (isMissingValue(values[input.id], input.type === 'number')) {
       missing.push({ id: input.id, label: input.label });
     }
   }
   return missing;
+}
+
+export type InvalidSelectValue = {
+  id: string;
+  label: string;
+  value: number | string | boolean | null | undefined;
+};
+
+/** Select/segmented values that are not in the declared option set. */
+export function getInvalidSelectValues(
+  inputs: { id: string; label: string; type: string; options?: { value: string | number | boolean }[] }[],
+  values: Record<string, number | string | boolean | null | undefined>
+): InvalidSelectValue[] {
+  const invalid: InvalidSelectValue[] = [];
+  for (const input of inputs) {
+    if (input.type !== 'select' && input.type !== 'segmented') continue;
+    if (!input.options || input.options.length === 0) continue;
+    const raw = values[input.id];
+    if (isMissingValue(raw, false)) continue;
+    if (!input.options.some((option) => option.value === raw)) {
+      invalid.push({ id: input.id, label: input.label, value: raw });
+    }
+  }
+  return invalid;
+}
+
+export function invalidSelectResult(invalid: InvalidSelectValue[]): {
+  score: string;
+  label: string;
+  interpretation: string;
+  riskLevel: RiskLevel;
+  details: { label: string; value: string }[];
+} {
+  return {
+    score: '—',
+    label: 'Invalid selection; please change to proceed',
+    interpretation: invalid
+      .map((item) => `${item.label}: ${String(item.value)} is not an allowed option.`)
+      .join(' '),
+    riskLevel: 'info',
+    details: invalid.map((item) => ({ label: item.label, value: String(item.value) })),
+  };
+}
+
+export function calculatorErrorResult(id: string): {
+  score: string;
+  label: string;
+  interpretation: string;
+  riskLevel: RiskLevel;
+  details: { label: string; value: string }[];
+} {
+  return {
+    score: '—',
+    label: 'Calculator error — result unavailable',
+    interpretation:
+      'This tool could not compute a result because of an internal error, not because of missing inputs. Do not interpret this as a clinical score.',
+    riskLevel: 'info',
+    details: [{ label: 'Calculator', value: id }],
+  };
 }
 
 /** Live result shown while any required input is still empty; `calculate` must not run. */

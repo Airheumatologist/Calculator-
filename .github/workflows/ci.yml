@@ -26,5 +26,8 @@ jobs:
       - name: Lint (must stay at 0 warnings)
         run: npm run lint
 
+      - name: Calculator tests
+        run: npm test
+
       - name: Type-check and build
         run: npm run build

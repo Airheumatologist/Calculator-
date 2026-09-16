@@ -6,55 +6,31 @@ import { LiveResult } from '../components/LiveResult';
 import { EvidencePanel } from '../components/EvidencePanel';
 import { NextStepsPanel } from '../components/NextStepsPanel';
 import {
+  calculatorErrorResult,
   getActiveQuestionnaireInputs,
+  getInvalidSelectValues,
   getMissingQuestionnaireInputs,
   getQuestionnaireModeInput,
   getRangeViolations,
   getStepViolations,
+  getInitialFormValues,
   incompleteResult,
-  isQuestionnaireCalculator,
+  invalidSelectResult,
   rangeBlockedResult,
   stepBlockedResult,
 } from '../utils/helpers';
-
-function initialValues(calc: ReturnType<typeof getCalculator>) {
-  const values: Record<string, number | string | boolean | null> = {};
-  if (!calc) return values;
-  const isQuestionnaire = isQuestionnaireCalculator(calc);
-  const modeInput = isQuestionnaire ? getQuestionnaireModeInput(calc) : undefined;
-  for (const input of calc.inputs) {
-    if (isQuestionnaire && input.id !== modeInput?.id) {
-      // Defaults are useful for calculators that intentionally start with a
-      // representative clinical value, but they silently answer questionnaire
-      // items. Keep only the branch selector preselected; all active answers
-      // must come from the user.
-      values[input.id] = null;
-      continue;
-    }
-    if (input.defaultValue !== undefined) {
-      values[input.id] = input.defaultValue;
-    } else if (input.type === 'boolean') {
-      values[input.id] = false;
-    } else if (input.type === 'select' || input.type === 'segmented') {
-      values[input.id] = input.options?.[0]?.value ?? null;
-    } else {
-      values[input.id] = null;
-    }
-  }
-  return values;
-}
 
 export function CalculatorPage() {
   const { id } = useParams();
   const calcId = id ?? '';
   const calc = getCalculator(calcId);
-  const [formState, setFormState] = useState(() => ({ calcId, values: initialValues(calc) }));
+  const [formState, setFormState] = useState(() => ({ calcId, values: getInitialFormValues(calc) }));
   const [selectedOptionIndices, setSelectedOptionIndices] = useState<Record<string, number>>({});
   const [tab, setTab] = useState<'evidence' | 'next'>('next');
 
   let values = formState.values;
   if (formState.calcId !== calcId) {
-    values = initialValues(calc);
+    values = getInitialFormValues(calc);
     setFormState({ calcId, values });
     setSelectedOptionIndices({});
     setTab('next');
@@ -87,6 +63,13 @@ export function CalculatorPage() {
     [calc, activeInputs, values]
   );
 
+  const invalidSelects = useMemo(
+    () => (calc ? getInvalidSelectValues(activeInputs, values) : []),
+    [calc, activeInputs, values]
+  );
+
+  const successor = calc?.supersededBy ? getCalculator(calc.supersededBy) : undefined;
+
   const result = useMemo(() => {
     if (!calc) return null;
     if (missingRequired.length > 0) {
@@ -98,17 +81,16 @@ export function CalculatorPage() {
     if (stepViolations.length > 0) {
       return stepBlockedResult(stepViolations);
     }
+    if (invalidSelects.length > 0) {
+      return invalidSelectResult(invalidSelects);
+    }
     try {
       return calc.calculate(values);
-    } catch {
-      return {
-        score: '—',
-        label: 'Incomplete',
-        interpretation: 'Adjust inputs to calculate.',
-        riskLevel: 'info' as const,
-      };
+    } catch (error) {
+      console.error(`Calculator ${calc.id} failed`, error);
+      return calculatorErrorResult(calc.id);
     }
-  }, [calc, values, missingRequired, rangeViolations, stepViolations]);
+  }, [calc, values, missingRequired, rangeViolations, stepViolations, invalidSelects]);
 
   if (!calc || !result) {
     return (
@@ -125,8 +107,18 @@ export function CalculatorPage() {
       <Link to="/" className="calc-back">
         All calculators
       </Link>
-      <h1>{calc.name}</h1>
+      <h1>
+        {calc.name}
+        {calc.status && calc.status !== 'current' ? (
+          <span className={`status-badge status-${calc.status}`}>{calc.status}</span>
+        ) : null}
+      </h1>
       <p className="lede">{calc.description}</p>
+      {successor ? (
+        <p className="status-note">
+          Current tool: <Link to={`/calc/${successor.id}`}>{successor.name}</Link>
+        </p>
+      ) : null}
 
       <div className="when-why">
         <div className="meta-block">
@@ -156,7 +148,7 @@ export function CalculatorPage() {
             }
           }}
           onReset={() => {
-            setFormState({ calcId, values: initialValues(calc) });
+            setFormState({ calcId, values: getInitialFormValues(calc) });
             setSelectedOptionIndices({});
           }}
         />

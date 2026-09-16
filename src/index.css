@@ -316,6 +316,39 @@ a {
   font-size: 0.95rem;
 }
 
+.status-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.12rem 0.4rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+.status-legacy,
+.status-superseded {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-educational,
+.status-research-only {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.status-note {
+  margin: -0.6rem 0 1rem;
+  font-size: 0.88rem;
+}
+
+.calc-row h3 .status-badge {
+  margin-left: 0.4rem;
+}
+
 .when-why {
   display: grid;
   grid-template-columns: 1fr 1fr;

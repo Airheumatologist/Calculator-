@@ -37,6 +37,7 @@ npm run dev
 Open **http://localhost:5173**
 
 ```bash
+npm test          # vitest: registry validation + calculator fixtures
 npm run build     # typecheck + production bundle → dist/
 npm run preview   # serve the production build
 npm run lint      # oxlint
@@ -290,7 +291,7 @@ Calculator
 ```
 
 **Chunking.** The registry is ~2.9 MB minified and is consumed synchronously (`export const calculators`),
-so it cannot be lazy-loaded without breaking the test suite. `vite.config.ts` therefore uses
+so it cannot be lazy-loaded without breaking `npm test` (vitest imports the named export). `vite.config.ts` therefore uses
 `build.rollupOptions.output.manualChunks` to emit one chunk per data family (`calc-base`,
 `calc-missing-a/b`, `calc-wave2-a/b` … `calc-wave6-a/b`) plus a `vendor-react` chunk. Total transfer for a
 cold first load is unchanged, but the chunks download in parallel and a change to one data family

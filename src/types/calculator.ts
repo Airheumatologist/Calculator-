@@ -64,6 +64,8 @@ export interface QuestionnaireMetadata {
   activeInputIdsByMode?: Record<string, string[]>;
 }
 
+export type CalculatorStatus = 'current' | 'legacy' | 'superseded' | 'research-only' | 'educational';
+
 export interface Calculator {
   id: string;
   name: string;
@@ -71,6 +73,14 @@ export interface Calculator {
   description: string;
   category: CategoryId;
   tags: string[];
+  /** Distinguishes current tools from historical or educational ones in search and headers. */
+  status?: CalculatorStatus;
+  /** Registry id of the preferred current alternative, when this tool is legacy/superseded. */
+  supersededBy?: string;
+  lastClinicalReviewDate?: string;
+  reviewedBy?: string;
+  sourceVersion?: string;
+  validationStatus?: 'unverified' | 'single-reviewed' | 'independently-verified';
   whenToUse: string;
   whyUse: string;
   inputs: CalcInput[];

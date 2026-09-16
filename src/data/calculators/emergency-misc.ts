@@ -415,19 +415,27 @@ export const emergencyMiscCalcs: Calculator[] = [
     calculate(values) {
       const score = num(values.appearance) + num(values.pulse) + num(values.grimace) + num(values.activity) + num(values.respiration);
       const r = riskFromThresholds(score, [
-        { max: 3, level: 'critical', label: 'Critically low', interpretation: '0–3: severely depressed — ongoing NRP resuscitation.' },
-        { max: 6, level: 'high', label: 'Moderately abnormal', interpretation: '4–6: moderately depressed — support as needed; reassess frequently.' },
-        { max: 10, level: 'low', label: 'Reassuring', interpretation: '7–10: reassuring transition. Continue routine care if stable.' },
+        { max: 3, level: 'critical', label: 'Critically low', interpretation: '0–3: severely depressed newborn condition. This documents status and response; it does not determine whether to start resuscitation or which NRP steps to use. Continue/adjust resuscitation according to the NRP physiologic algorithm (heart rate, respirations, oxygenation), not the Apgar total. Resuscitation begins before the 1-minute score and should not wait for Apgar.' },
+        { max: 6, level: 'high', label: 'Moderately abnormal', interpretation: '4–6: moderately abnormal transition. Document and reassess; do not use the total to dictate resuscitative steps. Continue/adjust care according to the NRP physiologic algorithm (heart rate, respirations, oxygenation).' },
+        { max: 10, level: 'low', label: 'Reassuring', interpretation: '7–10: reassuring transition. Continue routine care if the infant is otherwise stable. Apgar still does not replace physiologic assessment.' },
       ]);
       return { score, ...r };
     },
     evidence: {
-      summary: 'APGAR: Appearance, Pulse, Grimace, Activity, Respiration (0–2 each).',
-      validation: 'Virginia Apgar 1953; universal perinatal standard.',
-      references: [{ title: 'A proposal for a new method of evaluation of the newborn infant', citation: 'Apgar V. Curr Res Anesth Analg. 1953', year: 1953, pmid: '13083014' }],
+      summary: 'APGAR: Appearance, Pulse, Grimace, Activity, Respiration (0–2 each). Appropriate for documenting neonatal condition and response to resuscitation — not for deciding whether to initiate or how to conduct NRP.',
+      validation: 'Virginia Apgar 1953; AAP/ACOG 2015 statement: do not use Apgar to dictate resuscitation; repeat every 5 minutes to 20 minutes if the 5-minute score is <7.',
+      references: [
+        { title: 'A proposal for a new method of evaluation of the newborn infant', citation: 'Apgar V. Curr Res Anesth Analg. 1953', year: 1953, pmid: '13083014' },
+        { title: 'The Apgar Score', citation: 'AAP Committee on Fetus and Newborn / ACOG Committee on Obstetric Practice. Pediatrics. 2015;136:819-822', year: 2015, pmid: '26416932', doi: '10.1542/peds.2015-2651' },
+      ],
     },
     nextSteps: [
-      { condition: 'Score <7 at 5 min', actions: ['Continue NRP', 'Repeat q5 min', 'Investigate etiology'] },
+      { condition: 'Any score', actions: ['Continue/adjust resuscitation according to the NRP physiologic algorithm (heart rate, respirations, oxygenation), not the Apgar total', 'Do not delay or stop resuscitation to assign the 1-minute score'] },
+      { condition: 'Score <7 at 5 min', actions: ['Repeat Apgar every 5 minutes through 20 minutes', 'Investigate etiology of delayed transition'] },
+    ],
+    pearls: [
+      'Resuscitation begins before the 1-minute Apgar and is guided by heart rate, respirations, and oxygenation — not the total score.',
+      'A 5-minute score <7 is a reason to repeat scoring at 5-minute intervals to 20 minutes, not a trigger that determines NRP steps.',
     ],
   },
   {
@@ -496,8 +504,8 @@ export const emergencyMiscCalcs: Calculator[] = [
     description: 'Estimates gestational age and EDD from LMP.',
     category: 'obstetrics',
     tags: ['pregnancy', 'edd', 'lmp'],
-    whenToUse: 'Dating pregnancy when LMP known (ultrasound preferred early).',
-    whyUse: 'Naegele’s rule standard estimate.',
+    whenToUse: 'Dating pregnancy when LMP is known and reliable. First-trimester ultrasound is preferred when LMP is uncertain or cycles are irregular.',
+    whyUse: 'Naegele’s rule standard LMP-based estimate, assuming a reliable LMP and an approximately 28-day cycle.',
     inputs: [
       numberInput('lmpYear', 'LMP year', { min: 2020, max: 2030, defaultValue: 2026 }),
       numberInput('lmpMonth', 'LMP month', { min: 1, max: 12, defaultValue: 1 }),
@@ -549,7 +557,7 @@ export const emergencyMiscCalcs: Calculator[] = [
       return {
         score: `${weeks}+${rem}`,
         label: 'Gestational age',
-        interpretation: `Approximately ${weeks} weeks + ${rem} days. EDD (Naegele): ${eddStr}. Confirm with ultrasound dating.`,
+        interpretation: `Approximately ${weeks} weeks + ${rem} days. EDD (Naegele): ${eddStr}. Assumes a reliable LMP and ~28-day cycles; a different cycle length shifts the LMP-based estimate. Confirm with first-trimester ultrasound when dating is uncertain.`,
         riskLevel: 'info',
         details: [
           { label: 'Days since LMP', value: String(days) },
@@ -558,12 +566,16 @@ export const emergencyMiscCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'EDD = LMP + 280 days (Naegele: +1 year −3 months +7 days).',
-      validation: 'Standard obstetric dating; first-trimester US more accurate if LMP uncertain.',
+      summary: 'EDD = LMP + 280 days (Naegele: +1 year −3 months +7 days). Usual assumptions: reliable LMP and an approximately regular 28-day cycle. Cycle length different from 28 days shifts the LMP-based estimate. First-trimester ultrasound is more accurate if LMP is uncertain.',
+      validation: 'Standard obstetric dating; first-trimester US more accurate if LMP uncertain or cycles irregular.',
       references: [{ title: 'Naegele\'s rule and the length of pregnancy - A review', citation: 'Lawson GW. Aust N Z J Obstet Gynaecol. 2021 (review of Naegele\'s rule)', year: 2021, pmid: '33079400',
           doi: '10.1111/ajo.13253', }],
     },
     nextSteps: [{ condition: 'Dating', actions: ['Offer dating ultrasound if uncertain LMP', 'Prenatal care schedule'] }],
+    pearls: [
+      'Naegele dating assumes a reliable LMP and approximately 28-day cycles.',
+      'Prioritize first-trimester ultrasound when LMP is uncertain or cycles are irregular.',
+    ],
   },
   {
     id: 'pgcs',
