@@ -21,7 +21,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
       selectInput('ecg', 'ECG', [
         { label: 'Normal', value: 0, points: 0, description: 'Entirely normal tracing' },
         { label: 'Non-specific repolarization disturbance', value: 1, points: 1, description: 'LBBB, LVH strain, digoxin effect, RV pacemaker, or unchanged known repolarization' },
-        { label: 'Significant ST deviation', value: 2, points: 2, description: 'New or unknown ST depression often ≥0.5 mm, or ACS-pattern elevation' },
+        { label: 'Significant ST deviation', value: 2, points: 2, description: 'Significant ST depression or elevation (typically ≥1 mm / 0.1 mV), not TIMI ≥0.5 mm' },
       ]),
       selectInput('age', 'Age', [
         { label: '< 45 years', value: 0, points: 0 },
@@ -64,11 +64,22 @@ export const wave2CardiologyCalcs: Calculator[] = [
           'Return precautions for recurrent chest pain, dyspnea, syncope',
           'Shared decision-making and ensure social support'
         );
-      } else if (heart <= 3 && !serialNeg) {
+      } else if (heart <= 3) {
         riskLevel = 'moderate';
-        label = 'HEART low but serial troponin not negative';
-        interpretation = `HEART ${heart} but serial troponins not confirmed negative (or initial troponin elevated). Do not use early-discharge pathway; continue ACS workup.`;
-        recommendations.push('Complete serial troponins per protocol', 'Observe / further testing as indicated');
+        const tropPts = num(values.troponinPoints);
+        if (!serialNeg) {
+          label = 'HEART 0–3 but serial troponin not negative';
+          interpretation = `HEART ${heart} (0–3) but serial troponins are not confirmed negative. Does not meet the Mahler low-risk pathway; continue ACS workup.`;
+          recommendations.push('Complete serial troponins per protocol', 'Observe / further testing as indicated');
+        } else {
+          label = 'HEART 0–3 but initial troponin elevated';
+          interpretation = `HEART ${heart} (0–3) with serial troponins marked negative, but the initial HEART troponin component is ${tropPts} (1–3× or >3× URL). An elevated index troponin is inconsistent with a negative serial pair and does not meet the low-risk pathway; do not early-discharge on pathway criteria.`;
+          recommendations.push(
+            'Do not use the early-discharge pathway',
+            'Reconcile the index troponin with serial values',
+            'Continue ACS evaluation'
+          );
+        }
       } else if (heart >= 7) {
         riskLevel = 'high';
         label = 'High HEART score';
@@ -95,7 +106,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
     evidence: {
       summary:
         'The HEART Pathway uses HEART score 0–3 plus negative serial troponins to identify patients safe for early discharge; higher HEART scores need further evaluation.',
-      formula: 'HEART (0–10) + serial troponin pathway flag; low-risk if HEART ≤3 and serial troponins negative',
+      formula: 'HEART (0–10) + serial troponin flag; low-risk pathway only if HEART ≤3, initial trop ≤URL (0 points), and serial troponins negative',
       validation: 'HEART Pathway RCTs/implementation studies showed reduced objective cardiac testing and hospitalization with low missed MACE.',
       references: [
         { title: 'The HEART Pathway randomized trial', citation: 'Mahler SA et al. Circ Cardiovasc Qual Outcomes. 2015', year: 2015, pmid: '25737484', doi: '10.1161/CIRCOUTCOMES.114.001384' },
@@ -934,14 +945,14 @@ export const wave2CardiologyCalcs: Calculator[] = [
         riskLevel = 'info';
         label = 'Negative TPG';
         interpretation = 'mPAP < PCWP yields negative TPG — check measurement fidelity.';
-      } else if (pvrWu < 2) {
+      } else if (pvrWu <= 2) {
         riskLevel = 'normal';
         label = 'Normal PVR';
-        interpretation = `PVR ${pvrWu} WU (${pvrDyn} dyn): normal pulmonary vascular resistance (<2 WU often considered normal; PH definitions use ≥2–3 WU thresholds by era/guideline).`;
+        interpretation = `PVR ${pvrWu} WU (${pvrDyn} dyn): not elevated by 2022 ESC/ERS criteria (elevated PVR is >2 WU).`;
       } else if (pvrWu < 3) {
         riskLevel = 'moderate';
         label = 'Mildly elevated PVR';
-        interpretation = `PVR ${pvrWu} WU (${pvrDyn} dyn): mildly elevated. Interpret with mPAP and PCWP for PH group classification.`;
+        interpretation = `PVR ${pvrWu} WU (${pvrDyn} dyn): mildly elevated (>2 and <3 WU). Interpret with mPAP and PCWP for PH group classification.`;
       } else if (pvrWu < 6) {
         riskLevel = 'high';
         label = 'Elevated PVR';
@@ -972,7 +983,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'PVR = (mPAP − PCWP) / CO. ESC/ERS PH guidelines define elevated PVR with thresholds that have evolved (historically >3 WU; newer definitions lower).',
+      summary: 'PVR = (mPAP − PCWP) / CO. 2022 ESC/ERS defines elevated PVR as >2 WU (previously >3 WU); 2.0 WU is still within the normal threshold.',
       formula: 'PVR (WU) = (mPAP − PCWP) / CO; ×80 for dyn·s·cm⁻⁵',
       validation: 'Standard RHC-derived parameter in PH guidelines.',
       references: [
@@ -1134,8 +1145,21 @@ export const wave2CardiologyCalcs: Calculator[] = [
       references: [
         {
           title: "Bazett's QT correction reviewed: evidence that a linear QT correction for heart rate is better",
-          citation: 'Hodges M, Salerno D, Erlien D. J Am Coll Cardiol. 1983 (abstract; QTc = QT + 1.75×(HR−60))',
+          citation: 'Hodges M, Salerno D, Erlien D. J Am Coll Cardiol. 1983;1:694 (abstract; QTc = QT + 1.75×(HR−60); not indexed in PubMed)',
           year: 1983,
+        },
+        {
+          title: 'Rate correction of the QT interval',
+          citation: 'Hodges M. Card Electrophysiol Rev. 1997;1:360–363',
+          year: 1997,
+          doi: '10.1023/A:1009933509868',
+        },
+        {
+          title: 'A comparison of commonly used QT correction formulae: the effect of heart rate on the QTc of normal ECGs',
+          citation: 'Luo S, Michler K, Johnston P, Macfarlane PW. J Electrocardiol. 2004',
+          year: 2004,
+          pmid: '15534815',
+          doi: '10.1016/j.jelectrocard.2004.08.030',
         },
       ],
     },

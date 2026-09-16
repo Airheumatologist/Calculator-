@@ -1506,7 +1506,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     id: 'haq-di',
     name: 'HAQ-DI (Health Assessment Questionnaire Disability Index)',
     shortName: 'HAQ-DI',
-    description: 'Scores and interprets the Health Assessment Questionnaire Disability Index (HAQ-DI) across 8 functional activity categories with assistive device adjustments (0–3).',
+    description:
+      'Official 20-item HAQ-DI: 2–3 items in each of 8 categories; category score is the worst item, aids/help raise 0–1 to 2, then mean of 8 categories (0–3).',
     category: 'rheumatology',
     tags: ['haq', 'haq-di', 'disability', 'rheumatology', 'function'],
     whenToUse: 'When evaluating functional impairment and physical disability in rheumatoid arthritis, psoriatic arthritis, or other rheumatic conditions.',
@@ -1514,79 +1515,143 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     questionnaire: true,
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
-        { label: 'Interactive 8-category questionnaire (recommended)', value: 'survey' },
+        { label: 'Interactive 20-item HAQ-DI (recommended)', value: 'survey' },
         { label: 'Direct HAQ-DI score override (0–3)', value: 'direct' },
       ], 'survey'),
-      // Category 1: Dressing & Grooming
-      selectInput('haq_c1', '1. Dressing & Grooming (dressing self, shoelaces, buttons, shampooing hair)', [
-        { label: '0 - Without ANY difficulty', value: 0 },
-        { label: '1 - With SOME difficulty', value: 1 },
-        { label: '2 - With MUCH difficulty', value: 2 },
-        { label: '3 - UNABLE to do', value: 3 },
-      ], 1),
-      yesNo('haq_c1_aid', 'Do you use aids/devices (button hook, zipper pull) or need help dressing?'),
-      // Category 2: Arising
-      selectInput('haq_c2', '2. Arising (standing up from armless straight chair, getting in and out of bed)', [
-        { label: '0 - Without ANY difficulty', value: 0 },
-        { label: '1 - With SOME difficulty', value: 1 },
-        { label: '2 - With MUCH difficulty', value: 2 },
-        { label: '3 - UNABLE to do', value: 3 },
-      ], 1),
-      yesNo('haq_c2_aid', 'Do you use aids/devices (built-up chair) or need help arising?'),
-      // Category 3: Eating
-      selectInput('haq_c3', '3. Eating (cutting meat, lifting full cup/glass to mouth, opening milk carton)', [
+      selectInput('haq_dress', 'Dressing: Dress yourself, including tying shoelaces and doing buttons', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
       ], 0),
-      yesNo('haq_c3_aid', 'Do you use specially adapted utensils or need help eating?'),
-      // Category 4: Walking
-      selectInput('haq_c4', '4. Walking (walking outdoors on flat ground, climbing up 5 steps)', [
+      selectInput('haq_shampoo', 'Dressing: Shampoo your hair', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 1),
-      yesNo('haq_c4_aid', 'Do you use a cane, crutches, walker, or need help walking?'),
-      // Category 5: Hygiene
-      selectInput('haq_c5', '5. Hygiene (washing and drying entire body, taking tub bath, getting on/off toilet)', [
+      ], 0),
+      yesNo('haq_c1_aid', 'Dressing aids/help (button hook, zipper pull, or personal assistance)?'),
+      selectInput('haq_chair', 'Arising: Stand up from an armless straight chair', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 1),
-      yesNo('haq_c5_aid', 'Do you use a raised toilet seat, bathtub seat, long-handled sponge, or need help?'),
-      // Category 6: Reach
-      selectInput('haq_c6', '6. Reach (reaching and getting down a 5 lb object from above head, bending down to floor)', [
+      ], 0),
+      selectInput('haq_bed', 'Arising: Get in and out of bed', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 1),
-      yesNo('haq_c6_aid', 'Do you use long-handled reacher appliances or need help reaching?'),
-      // Category 7: Grip
-      selectInput('haq_c7', '7. Grip (opening car doors, opening previously opened jars, turning faucets)', [
+      ], 0),
+      yesNo('haq_c2_aid', 'Arising aids/help (built-up or special chair, or personal assistance)?'),
+      selectInput('haq_cut', 'Eating: Cut your meat', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 1),
-      yesNo('haq_c7_aid', 'Do you use jar openers, adapted door handles, or need help gripping?'),
-      // Category 8: Activities
-      selectInput('haq_c8', '8. Activities (running errands and shopping, getting in/out of car, chores/vacuuming)', [
+      ], 0),
+      selectInput('haq_cup', 'Eating: Lift a full cup or glass to your mouth', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 2),
-      yesNo('haq_c8_aid', 'Do you need help with chores, vacuuming, or shopping?'),
+      ], 0),
+      selectInput('haq_carton', 'Eating: Open a new milk carton', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 0),
+      yesNo('haq_c3_aid', 'Eating aids/help (built-up or special utensils, or personal assistance)?'),
+      selectInput('haq_walk', 'Walking: Walk outdoors on flat ground', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 0),
+      selectInput('haq_steps', 'Walking: Climb up five steps', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 0),
+      yesNo('haq_c4_aid', 'Walking aids/help (cane, crutches, walker, or personal assistance)?'),
+      selectInput('haq_wash', 'Hygiene: Wash and dry your entire body', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 0),
+      selectInput('haq_tub', 'Hygiene: Take a tub bath', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 0),
+      selectInput('haq_toilet', 'Hygiene: Get on and off the toilet', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 0),
+      yesNo('haq_c5_aid', 'Hygiene aids/help (raised toilet seat, bathtub seat, long-handled appliances, or personal assistance)?'),
+      selectInput('haq_reach', 'Reach: Reach and get down a 5 lb object from just above your head', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 0),
+      selectInput('haq_bend', 'Reach: Bend down to pick up clothing from the floor', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 0),
+      yesNo('haq_c6_aid', 'Reach aids/help (long-handled appliances, or personal assistance)?'),
+      selectInput('haq_cardoor', 'Grip: Open car doors', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 0),
+      selectInput('haq_jars', 'Grip: Open jars which have been previously opened', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 0),
+      selectInput('haq_faucets', 'Grip: Turn faucets on and off', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 0),
+      yesNo('haq_c7_aid', 'Grip aids/help (jar opener, or personal assistance)?'),
+      selectInput('haq_errands', 'Activities: Run errands and shop', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 0),
+      selectInput('haq_car', 'Activities: Get in and out of a car', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 0),
+      selectInput('haq_chores', 'Activities: Do chores such as vacuuming or yardwork', [
+        { label: '0 - Without ANY difficulty', value: 0 },
+        { label: '1 - With SOME difficulty', value: 1 },
+        { label: '2 - With MUCH difficulty', value: 2 },
+        { label: '3 - UNABLE to do', value: 3 },
+      ], 0),
+      yesNo('haq_c8_aid', 'Activities aids/help (personal assistance with chores, shopping, or errands)?'),
       numberInput('total', 'Direct HAQ-DI total override (0–3)', {
         min: 0,
         max: 3,
         step: 0.125,
         defaultValue: 1,
-        helpText: 'Used if Direct score override mode is selected.',
+        helpText: 'Used if Direct score override mode is selected. Enter the official 20-item HAQ-DI (mean of 8 category scores).',
       }),
     ],
     calculate(values) {
@@ -1594,9 +1659,14 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
       let score: number;
       let catScores: number[] = [];
 
-      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.haq_c1 === undefined)) {
+      const categoryScore = (items: number[], aid: boolean) => {
+        const worst = Math.max(...items);
+        return aid ? Math.max(worst, 2) : worst;
+      };
+
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.haq_dress === undefined && values.haq_c1 === undefined)) {
         score = round(num(values.total, 0), 3);
-      } else {
+      } else if (values.haq_c1 !== undefined && values.haq_dress === undefined) {
         const c1 = bool(values.haq_c1_aid) ? Math.max(num(values.haq_c1, 0), 2) : num(values.haq_c1, 0);
         const c2 = bool(values.haq_c2_aid) ? Math.max(num(values.haq_c2, 0), 2) : num(values.haq_c2, 0);
         const c3 = bool(values.haq_c3_aid) ? Math.max(num(values.haq_c3, 0), 2) : num(values.haq_c3, 0);
@@ -1605,6 +1675,17 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         const c6 = bool(values.haq_c6_aid) ? Math.max(num(values.haq_c6, 0), 2) : num(values.haq_c6, 0);
         const c7 = bool(values.haq_c7_aid) ? Math.max(num(values.haq_c7, 0), 2) : num(values.haq_c7, 0);
         const c8 = bool(values.haq_c8_aid) ? Math.max(num(values.haq_c8, 0), 2) : num(values.haq_c8, 0);
+        catScores = [c1, c2, c3, c4, c5, c6, c7, c8];
+        score = round(catScores.reduce((a, b) => a + b, 0) / 8, 3);
+      } else {
+        const c1 = categoryScore([num(values.haq_dress, 0), num(values.haq_shampoo, 0)], bool(values.haq_c1_aid));
+        const c2 = categoryScore([num(values.haq_chair, 0), num(values.haq_bed, 0)], bool(values.haq_c2_aid));
+        const c3 = categoryScore([num(values.haq_cut, 0), num(values.haq_cup, 0), num(values.haq_carton, 0)], bool(values.haq_c3_aid));
+        const c4 = categoryScore([num(values.haq_walk, 0), num(values.haq_steps, 0)], bool(values.haq_c4_aid));
+        const c5 = categoryScore([num(values.haq_wash, 0), num(values.haq_tub, 0), num(values.haq_toilet, 0)], bool(values.haq_c5_aid));
+        const c6 = categoryScore([num(values.haq_reach, 0), num(values.haq_bend, 0)], bool(values.haq_c6_aid));
+        const c7 = categoryScore([num(values.haq_cardoor, 0), num(values.haq_jars, 0), num(values.haq_faucets, 0)], bool(values.haq_c7_aid));
+        const c8 = categoryScore([num(values.haq_errands, 0), num(values.haq_car, 0), num(values.haq_chores, 0)], bool(values.haq_c8_aid));
 
         catScores = [c1, c2, c3, c4, c5, c6, c7, c8];
         const sum = catScores.reduce((a, b) => a + b, 0);
@@ -1650,8 +1731,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     },
     evidence: {
       summary:
-        'HAQ-DI averages difficulty (0–3) across 8 activity categories; higher = worse function. Scoring rule: use of aids/devices or personal assistance elevates that category to minimum of 2. Mild <1, moderate 1–2, severe >2 are common educational bands.',
-      formula: 'HAQ-DI = (Sum of 8 adjusted category scores) / 8',
+        'Official HAQ-DI uses 20 items in 8 categories. Category score = maximum item in that category; aids/devices or personal assistance raise a category of 0 or 1 to 2; HAQ-DI is the mean of the 8 category scores (need ≥6 categories). Mild <1, moderate 1–2, severe >2 are common educational bands. This is not the 8-item MHAQ.',
+      formula: 'HAQ-DI = mean of 8 category scores; category = max(items), then max(category, 2) if aid/help',
       validation: 'Fries et al. original HAQ; widely used PRO in rheumatology trials.',
       references: [
         {
@@ -1667,7 +1748,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
       { condition: 'HAQ-DI ≥1', actions: ['PT/OT referral', 'Treat active inflammatory disease', 'Assess work/ADL needs'] },
     ],
     pearls: [
-      'Scoring rules for aids/devices matter — use of device or help automatically raises that category to ≥2.',
+      'Scoring rules for aids/devices matter — use of device or help automatically raises that category to ≥2 (does not lower a 3).',
+      'Category score is the worst of 2–3 items, not a single combined activity rating (MHAQ-style 8-item forms are not interchangeable).',
       'HAQ is relatively insensitive to change at low disability levels (floor effects less of an issue than ceiling).',
     ],
   },

@@ -447,10 +447,15 @@ export const extraCalcs: Calculator[] = [
     inputs: [
       numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, defaultValue: 400, helpText: 'Measure from QRS onset to the end of the T wave (not U wave) in a lead with a clear T; use a representative RR.' }),
       numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, defaultValue: 70, helpText: 'Use the same cycle as the measured QT (or the mean HR of that tracing).' }),
+      selectInput('sex', 'Sex', [
+        { label: 'Male', value: 'M' },
+        { label: 'Female', value: 'F' },
+      ], undefined, 'AHA/ACCF/HRS adult prolonged-QTc cuts are sex-specific (>450 ms men, >460 ms women).'),
     ],
     calculate(values) {
       const qt = num(values.qt, 400);
       const hr = num(values.hr, 70);
+      const female = values.sex === 'F';
       if (hr <= 0) {
         return {
           score: '—',
@@ -463,9 +468,11 @@ export const extraCalcs: Calculator[] = [
       }
       const rr = 60 / hr;
       const qtc = round(qt / Math.cbrt(rr), 0);
+      const prolongedCut = female ? 460 : 450;
+      const sexLabel = female ? 'women' : 'men';
       let riskLevel: 'normal' | 'moderate' | 'high' | 'critical' = 'normal';
       let label = 'Normal QTc';
-      let interpretation = 'Fridericia QTc within typical range for many adults.';
+      let interpretation = `Fridericia QTc ${qtc} ms within the AHA/ACCF/HRS adult range for ${sexLabel} (prolonged if >${prolongedCut} ms).`;
       if (qtc < 350) {
         riskLevel = 'moderate';
         label = 'Short QTc';
@@ -473,23 +480,44 @@ export const extraCalcs: Calculator[] = [
       } else if (qtc >= 500) {
         riskLevel = 'critical';
         label = 'Markedly prolonged';
-        interpretation = 'QTc ≥500 ms: high TdP risk.';
-      } else if (qtc >= 460) {
+        interpretation = `QTc ${qtc} ms: ≥500 ms — high TdP risk (sex-independent safety cutoff).`;
+      } else if (qtc > prolongedCut) {
         riskLevel = 'high';
         label = 'Prolonged';
-        interpretation = 'Prolonged QTc — review meds/electrolytes.';
+        interpretation = `QTc ${qtc} ms: prolonged for ${sexLabel} (AHA/ACCF/HRS >${prolongedCut} ms). Review meds/electrolytes.`;
       } else if (qtc >= 440) {
         riskLevel = 'moderate';
         label = 'Borderline';
-        interpretation = 'Borderline prolongation.';
+        interpretation = `QTc ${qtc} ms: borderline for ${sexLabel} (440–${prolongedCut} ms; prolonged if >${prolongedCut} ms).`;
       }
-      return { score: qtc, unit: 'ms', label, interpretation, riskLevel };
+      return {
+        score: qtc,
+        unit: 'ms',
+        label,
+        interpretation,
+        riskLevel,
+        details: [
+          { label: 'Sex', value: female ? 'Female' : 'Male' },
+          { label: 'Prolonged cutoff', value: `>${prolongedCut} ms (${sexLabel})` },
+          { label: 'Formula', value: 'QT / ∛RR' },
+        ],
+      };
     },
     evidence: {
-      summary: 'QTcF = QT / ∛RR. Preferred over Bazett when HR extreme.',
-      validation: 'Increasingly recommended in drug studies and clinical practice.',
-      references: [{ title: 'The duration of systole in an electrocardiogram in normal humans and in patients with heart disease (1920)', citation: 'Fridericia LS. Acta Med Scand. 1920. English reprint: Ann Noninvasive Electrocardiol. 2003', year: 1920, pmid: '14516292',
-          doi: '10.1046/j.1542-474x.2003.08413.x', }],
+      summary: 'QTcF = QT / ∛RR. Adult prolonged QTc per AHA/ACCF/HRS ECG recommendations: >450 ms in men, >460 ms in women. ≥500 ms is a sex-independent high TdP-risk cut.',
+      formula: 'QTcF = QT / ∛RR (RR in seconds). Prolonged: >450 ms men, >460 ms women (AHA/ACCF/HRS 2009).',
+      validation: 'Fridericia preferred over Bazett at HR extremes; sex-specific adult cuts from AHA/ACCF/HRS ECG standardization, not a unisex 440/460/500 scheme.',
+      references: [
+        { title: 'The duration of systole in an electrocardiogram in normal humans and in patients with heart disease (1920)', citation: 'Fridericia LS. Acta Med Scand. 1920. English reprint: Ann Noninvasive Electrocardiol. 2003', year: 1920, pmid: '14516292',
+          doi: '10.1046/j.1542-474x.2003.08413.x', },
+        {
+          title: 'AHA/ACCF/HRS recommendations for the standardization and interpretation of the electrocardiogram: part IV: the ST segment, T and U waves, and the QT interval',
+          citation: 'Rautaharju PM et al. Circulation. 2009 (prolonged QTc >450 ms men, >460 ms women)',
+          year: 2009,
+          pmid: '19188556',
+          doi: '10.1161/circulationaha.108.191096',
+        },
+      ],
     },
     nextSteps: [{ condition: 'QTc ≥500', actions: ['Telemetry', 'Stop QT drugs', 'Replete K/Mg'] }],
   },
@@ -535,7 +563,7 @@ export const extraCalcs: Calculator[] = [
     whenToUse: 'Alternative IBW estimate for nutrition.',
     whyUse: 'Common dietetics formula.',
     inputs: [
-      numberInput('heightIn', 'Height', { unit: 'inches', min: 55, max: 84, defaultValue: 67, helpText: 'Height in inches (e.g. 5′7″ = 67 in). Formula is for adults; ±10% frame-size adjustment is sometimes applied after the result.' }),
+      numberInput('heightIn', 'Height', { unit: 'inches', min: 55, max: 84, defaultValue: 67, helpText: 'Height in inches (e.g. 5′7″ = 67 in). Below 5 ft (60 in) the same per-inch increment is subtracted. ±10% frame-size adjustment is sometimes applied after the result.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
@@ -543,18 +571,22 @@ export const extraCalcs: Calculator[] = [
     ],
     calculate(values) {
       const h = num(values.heightIn, 67);
-      const over = Math.max(0, h - 60);
+      const over = h - 60; // signed: subtract the same per-inch increment below 5 ft
       const ibw = values.sex === 'F' ? 100 + 5 * over : 106 + 6 * over;
+      const shortNote =
+        h < 60
+          ? ` Height ${h} in is below 5 ft: subtracted ${round(60 - h, 1)} in × ${values.sex === 'F' ? '5' : '6'} lb (common Hamwi extension; ≈2.3 kg/inch).`
+          : '';
       return {
         score: round(ibw, 0),
         unit: 'lb',
         label: 'Hamwi IBW',
-        interpretation: `≈${round(ibw * 0.4536, 1)} kg. Frame size adjustments ±10% sometimes applied.`,
+        interpretation: `≈${round(ibw * 0.4536, 1)} kg. Frame size adjustments ±10% sometimes applied.${shortNote}`,
         riskLevel: 'info',
       };
     },
     evidence: {
-      summary: 'Hamwi: Men 106 lb + 6 lb/inch >5 ft; Women 100 + 5 lb/inch >5 ft.',
+      summary: 'Hamwi: Men 106 lb + 6 lb/inch over 5 ft; Women 100 + 5 lb/inch over 5 ft. Below 5 ft the same per-inch term is subtracted (men 6 lb, women 5 lb ≈ 2.3 kg per inch).',
       validation: 'Nutrition practice formula.',
       references: [
         {
@@ -591,8 +623,8 @@ export const extraCalcs: Calculator[] = [
       const alb = num(values.alb, 25);
       const corr = round(ca + 0.02 * (40 - alb), 2);
       const r = riskFromThresholds(corr, [
-        { max: 2.1, level: 'moderate', label: 'Low', interpretation: 'Below typical 2.2–2.6 mmol/L range.' },
-        { max: 2.6, level: 'normal', label: 'Normal', interpretation: 'Within approximate normal range.' },
+        { max: 2.19, level: 'moderate', label: 'Low', interpretation: 'Corrected Ca <2.20 mmol/L — below the typical adult 2.20–2.60 mmol/L interval.' },
+        { max: 2.6, level: 'normal', label: 'Normal', interpretation: 'Within approximate adult range (2.20–2.60 mmol/L).' },
         { max: 5, level: 'high', label: 'High', interpretation: 'Elevated corrected calcium.' },
       ]);
       return { score: corr, unit: 'mmol/L', ...r };

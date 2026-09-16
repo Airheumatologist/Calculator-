@@ -256,45 +256,41 @@ export const missingPedsObToxCalcs: Calculator[] = [
 
   {
     id: 'vbac-success',
-    name: 'VBAC Success (Grobman Educational Model)',
+    name: 'VBAC Success (Grobman 2007 Antenatal Model)',
     shortName: 'VBAC Success',
-    description: 'Educational estimate of VBAC success using major Grobman nomogram predictors (simplified logistic).',
+    description: 'Predicted VBAC success from the published Grobman 2007 antenatal logistic model (NICHD MFMU).',
     category: 'obstetrics',
     tags: ['vbac', 'tolac', 'cesarean', 'grobman', 'labor'],
-    whenToUse: 'Counseling candidates for trial of labor after cesarean (TOLAC).',
-    whyUse: 'Major predictors of VBAC success help shared decision-making; not a guarantee of outcome.',
+    whenToUse: 'Counseling candidates for trial of labor after cesarean (TOLAC) using antenatal (not admission) predictors.',
+    whyUse: 'Published Grobman 2007 coefficients estimate VBAC probability from age, BMI, race/ethnicity, prior vaginal birth, prior VBAC, and recurring cesarean indication.',
     inputs: [
       numberInput('age', 'Maternal age', { unit: 'years', min: 15, max: 55, defaultValue: 30 }),
-      numberInput('bmi', 'Prepregnancy BMI', { unit: 'kg/m²', min: 15, max: 60, step: 0.1, defaultValue: 28, helpText: 'Use prepregnancy (not admission) BMI as in the original Grobman model.' }),
+      numberInput('bmi', 'Prepregnancy BMI', { unit: 'kg/m²', min: 15, max: 60, step: 0.1, defaultValue: 28, helpText: 'Use prepregnancy (not admission) BMI as in the 2007 Grobman antenatal model.' }),
       selectInput('ethnicity', 'Race / ethnicity (as in original model categories)', [
         { label: 'Neither African American nor Hispanic', value: 'other' },
         { label: 'African American', value: 'aa' },
         { label: 'Hispanic', value: 'hispanic' },
       ]),
       yesNo('priorVaginal', 'Any prior vaginal delivery', null),
-      yesNo('priorVbac', 'Prior VBAC (successful)', null),
+      yesNo('priorVbac', 'Prior VBAC (successful vaginal birth after a prior cesarean)', null),
       yesNo('recurringIndication', 'Recurring indication for cesarean (arrest / CPD / FTP)', null),
-      yesNo('induction', 'Induction of labor (vs spontaneous)', null),
     ],
     calculate(values) {
-      // Educational simplification inspired by Grobman logistic predictors (not the full NICHD calculator).
-      // Coefficients are approximate for teaching — label as educational estimate.
+      // Grobman WA et al. Obstet Gynecol. 2007;109:806-812. PMID 17400840 (antenatal model; no induction term).
       const age = num(values.age, 30);
       const bmi = num(values.bmi, 28);
       const eth = String(values.ethnicity ?? 'other');
       const priorVaginal = bool(values.priorVaginal);
       const priorVbac = bool(values.priorVbac);
       const recurring = bool(values.recurringIndication);
-      const induction = bool(values.induction);
 
       let x =
         3.766 -
         0.039 * age -
         0.06 * bmi +
         (priorVaginal ? 0.888 : 0) +
-        (priorVbac ? 0.58 : 0) -
-        (recurring ? 0.632 : 0) -
-        (induction ? 0.4 : 0);
+        (priorVbac ? 1.003 : 0) -
+        (recurring ? 0.632 : 0);
       if (eth === 'aa') x -= 0.671;
       if (eth === 'hispanic') x -= 0.68;
 
@@ -306,19 +302,19 @@ export const missingPedsObToxCalcs: Calculator[] = [
           max: 49,
           level: 'high',
           label: 'Lower predicted success',
-          interpretation: `Educational estimate ≈${pct}% VBAC success. Lower-range estimate — counsel carefully on risks of failed TOLAC / emergency cesarean.`,
+          interpretation: `Grobman 2007 antenatal predicted VBAC success ≈${pct}%. Lower-range estimate — counsel carefully on risks of failed TOLAC / emergency cesarean.`,
         },
         {
           max: 69,
           level: 'moderate',
           label: 'Intermediate predicted success',
-          interpretation: `Educational estimate ≈${pct}% VBAC success. Intermediate range — individualize with obstetric history and facility resources.`,
+          interpretation: `Grobman 2007 antenatal predicted VBAC success ≈${pct}%. Intermediate range — individualize with obstetric history and facility resources.`,
         },
         {
           max: 100,
           level: 'low',
           label: 'Higher predicted success',
-          interpretation: `Educational estimate ≈${pct}% VBAC success. More favorable predictor profile — still requires TOLAC-capable setting and consent for uterine rupture risk.`,
+          interpretation: `Grobman 2007 antenatal predicted VBAC success ≈${pct}%. More favorable predictor profile — still requires TOLAC-capable setting and consent for uterine rupture risk.`,
         },
       ]);
 
@@ -326,19 +322,19 @@ export const missingPedsObToxCalcs: Calculator[] = [
         score: pct,
         unit: '%',
         label: r.label,
-        interpretation: r.interpretation + ' This is a simplified educational model, not the official NICHD Grobman calculator.',
+        interpretation: r.interpretation + ' This is the published 2007 antenatal equation (no labor-admission variables). The 2009 admission model adds cervical exam and induction; use institutional / NICHD tools when those data are available.',
         riskLevel: r.riskLevel,
         details: [
-          { label: 'Linear predictor (x)', value: String(round(x, 3)) },
-          { label: 'Model note', value: 'Simplified logistic using major Grobman factors' },
+          { label: 'Linear predictor (w)', value: String(round(x, 3)) },
+          { label: 'Model', value: 'Grobman 2007 antenatal logistic (PMID 17400840)' },
         ],
       };
     },
     evidence: {
       summary:
-        'Grobman et al. developed a logistic model for predicted VBAC success from admission/antenatal factors. This app uses a simplified educational approximation of major predictors.',
-      formula: 'P = 1/(1+e^(−x)); x ≈ f(age, BMI, ethnicity, prior VD/VBAC, recurring indication, induction)',
-      validation: 'Original nomogram widely validated; use institutional / NICHD tools for formal counseling when available.',
+        'Grobman 2007 antenatal VBAC model: w = 3.766 − 0.039×age − 0.060×BMI − 0.671 if African American − 0.680 if Hispanic + 0.888 if any prior vaginal delivery + 1.003 if prior VBAC − 0.632 if recurring cesarean indication; P = 1/(1+e^(−w)). Induction is not a 2007 antenatal variable (it appears in the 2009 admission model).',
+      formula: 'P = 1/(1+e^(−w)); w = 3.766 − 0.039(age) − 0.060(BMI) − 0.671(AA) − 0.680(Hispanic) + 0.888(any prior VD) + 1.003(prior VBAC) − 0.632(recurring indication)',
+      validation: 'Derived and internally validated in the NICHD MFMU cesarean registry; use alongside local TOLAC counseling and uterine-rupture discussion.',
       references: [
         { title: 'Development of a nomogram for prediction of vaginal birth after cesarean delivery', citation: 'Grobman WA et al. Obstet Gynecol. 2007', year: 2007, pmid: '17400840',
           doi: '10.1097/01.AOG.0000259312.36053.02', },
@@ -468,10 +464,10 @@ export const missingPedsObToxCalcs: Calculator[] = [
       numberInput('ldh', 'LDH', { unit: 'U/L', min: 50, max: 5000, defaultValue: 400, helpText: 'Tennessee-style hemolysis often uses LDH ≥600 U/L (or bilirubin ≥1.2 mg/dL or schistocytes).' }),
       numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 0.8, helpText: 'Hemolysis support if ≥1.2 mg/dL (Tennessee-style).' }),
       yesNo('schistocytes', 'Schistocytes / hemolysis on smear (if known)'),
-      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 5000, defaultValue: 40, helpText: 'Tennessee-style elevated LFTs: AST or ALT ≥2× this lab’s ULN (classically AST ≥70 U/L if ULN ≈35).' }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 5000, defaultValue: 40, helpText: 'Tennessee/Sibai elevated LFTs: AST or ALT ≥2× this lab’s ULN (classically ≥70 U/L when ULN ≈35).' }),
       numberInput('alt', 'ALT', { unit: 'U/L', min: 5, max: 5000, defaultValue: 40, helpText: 'Same ≥2× ULN rule as AST. Either enzyme meeting the fold-change counts.' }),
-      numberInput('astUln', 'AST ULN (lab)', { unit: 'U/L', min: 20, max: 80, defaultValue: 40, helpText: 'Enter this lab’s AST upper limit of normal. Tool uses 2× ULN as the LFT gate.' }),
-      numberInput('platelets', 'Platelet count', { unit: '×10³/µL', min: 5, max: 600, defaultValue: 150, helpText: 'Tennessee thrombocytopenia: platelets <100 ×10³/µL. Mississippi class: I ≤50, II 50–100, III 100–150 (if other criteria).' }),
+      numberInput('astUln', 'AST/ALT ULN (lab)', { unit: 'U/L', min: 20, max: 80, defaultValue: 35, helpText: 'Enter this lab’s AST/ALT upper limit of normal. Tennessee uses ≥2× ULN (default ULN 35 → threshold 70 U/L, matching classic AST ≥70).' }),
+      numberInput('platelets', 'Platelet count', { unit: '×10³/µL', min: 5, max: 600, defaultValue: 150, helpText: 'Tennessee thrombocytopenia: platelets ≤100 ×10⁹/L. Mississippi class: I ≤50, II >50–≤100, III >100–≤150 (if other criteria).' }),
     ],
     calculate(values) {
       const ldh = num(values.ldh, 400);
@@ -479,12 +475,12 @@ export const missingPedsObToxCalcs: Calculator[] = [
       const schisto = bool(values.schistocytes);
       const ast = num(values.ast, 40);
       const alt = num(values.alt, 40);
-      const uln = num(values.astUln, 40);
+      const uln = num(values.astUln, 35);
       const plt = num(values.platelets, 150);
 
       const hemolysis = ldh >= 600 || bili >= 1.2 || schisto;
       const elevatedLft = ast >= 2 * uln || alt >= 2 * uln;
-      const lowPlt = plt < 100;
+      const lowPlt = plt <= 100;
 
       const count = (hemolysis ? 1 : 0) + (elevatedLft ? 1 : 0) + (lowPlt ? 1 : 0);
 
@@ -502,7 +498,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
           details: [
             { label: 'Hemolysis', value: hemolysis ? 'Yes' : 'No' },
             { label: 'Elevated LFTs', value: elevatedLft ? 'Yes' : 'No' },
-            { label: 'Platelets <100', value: lowPlt ? 'Yes' : 'No' },
+            { label: 'Platelets ≤100', value: lowPlt ? 'Yes' : 'No' },
             { label: 'Mississippi class (by plt)', value: mississippi },
           ],
         };
@@ -516,7 +512,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
           details: [
             { label: 'Hemolysis', value: hemolysis ? 'Yes' : 'No' },
             { label: 'Elevated LFTs', value: elevatedLft ? 'Yes' : 'No' },
-            { label: 'Platelets <100', value: lowPlt ? 'Yes' : 'No' },
+            { label: 'Platelets ≤100', value: lowPlt ? 'Yes' : 'No' },
             { label: 'Mississippi class (by plt)', value: mississippi },
           ],
         };
@@ -534,7 +530,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Tennessee criteria often use LDH ≥600, AST ≥70 (or ≥2× ULN), platelets ≤100k. Mississippi classifies by platelet nadir.',
+      summary: 'Tennessee/Sibai complete HELLP: hemolysis (LDH ≥600 U/L, bilirubin ≥1.2 mg/dL, or schistocytes), AST or ALT ≥2× lab ULN (classically ≥70 U/L), and platelets ≤100 ×10⁹/L. Mississippi classifies by platelet nadir (I ≤50, II >50–≤100, III >100–≤150).',
       validation: 'Clinical diagnosis; smear, haptoglobin, and trends aid hemolysis confirmation.',
       references: [
         { title: 'Syndrome of hemolysis, elevated liver enzymes, and low platelet count: a severe consequence of hypertension in pregnancy', citation: 'Weinstein L. Am J Obstet Gynecol. 1982', year: 1982, pmid: '7055180',
@@ -925,7 +921,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
       formula: 'rate = dose × weight × 60 / concentration',
       validation: 'Standard ICU drip calculation.',
       references: [
-        { title: 'IV Therapy Management (calculating infusion rates)', citation: 'Open RN. Nursing Skills. NCBI Bookshelf. Chapter 23', year: 2021, url: 'https://www.ncbi.nlm.nih.gov/books/NBK596734/' },
+        { title: 'Math Calculations (IV infusion rates, dimensional analysis)', citation: 'Open RN. Nursing Skills. NCBI Bookshelf. Chapter 5', year: 2021, url: 'https://www.ncbi.nlm.nih.gov/books/NBK596732/' },
         { title: 'Infusion Therapy Standards of Practice, 8th Edition', citation: 'Gorski LA et al. J Infus Nurs. 2021', year: 2021, pmid: '33394637', doi: '10.1097/NAN.0000000000000396' },
       ],
     },
@@ -998,7 +994,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
         details: [
           { label: 'Corrected retic %', value: String(corrected) },
           { label: 'Maturation factor', value: String(maturation) },
-          { label: 'Formula', value: 'Corrected = retic × (Hct/45); RPI = corrected / maturation' },
+          { label: 'Formula', value: `Corrected = retic × (Hct/${normalHct}); RPI = corrected / maturation` },
         ],
       };
     },
@@ -1006,7 +1002,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
       summary: 'Corrected retic = retic% × (Hct/45). RPI = corrected / maturation (1–2.5 by Hct). RPI >3 adequate response.',
       formula: 'Corrected retic = retic × (Hct/normalHct); RPI = corrected / maturation factor',
       validation: 'Standard hematology teaching tool.',
-      references: [{ title: 'Reticulocytes (corrected count and reticulocyte index)', citation: 'Hillman RS. In: Walker HK, Hall WD, Hurst JW, eds. Clinical Methods. 3rd ed. Boston: Butterworths; 1990. Chapter 156', year: 1990, url: 'https://www.ncbi.nlm.nih.gov/books/NBK264/' }],
+      references: [{ title: 'Reticulocytes', citation: 'Bessman JD. In: Walker HK, Hall WD, Hurst JW, eds. Clinical Methods. 3rd ed. Boston: Butterworths; 1990. Chapter 156', year: 1990, pmid: '21250107', url: 'https://www.ncbi.nlm.nih.gov/books/NBK264/' }],
     },
     nextSteps: [
       { condition: 'Low RPI', actions: ['Iron/B12/folate studies', 'EPO/renal function', 'Review meds', 'Consider marrow evaluation'] },

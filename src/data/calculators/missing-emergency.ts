@@ -929,17 +929,17 @@ export const missingEmergencyCalcs: Calculator[] = [
       validation: 'Widely taught MCI system (Newport Beach FD / Hoag); JumpSTART used for pediatrics; local variants exist (SALT).',
       references: [
         {
+          title: 'START Adult Triage Algorithm (original Newport Beach / Hoag teaching)',
+          citation: 'Super G, Nagy S, et al. Newport Beach Fire Department / Hoag Memorial Hospital Presbyterian. START adult RPM algorithm (1983). Reproduced by REMM/HHS.',
+          year: 1983,
+          url: 'https://remm.hhs.gov/startadult.htm',
+        },
+        {
           title: 'Disaster triage: START, then SAVE—a new method of dynamic triage for victims of a catastrophic earthquake',
-          citation: 'Benson M, Koenig KL, Schultz CH. Prehosp Disaster Med. 1996;11:117-124',
+          citation: 'Benson M, Koenig KL, Schultz CH. Prehosp Disaster Med. 1996;11:117-124. Secondary SAVE staging after START — not the original START derivation.',
           year: 1996,
           pmid: '10159733',
           doi: '10.1017/s1049023x0004276x',
-        },
-        {
-          title: 'START Adult Triage Algorithm',
-          citation: 'Radiation Emergency Medical Management (REMM), U.S. Department of Health and Human Services',
-          year: 1983,
-          url: 'https://remm.hhs.gov/startadult.htm',
         },
       ],
     },
@@ -1002,8 +1002,8 @@ export const missingEmergencyCalcs: Calculator[] = [
       validation: 'Rodriguez et al. NEXUS Chest studies; high sensitivity for clinically major thoracic injury.',
       references: [
         {
-          title: 'NEXUS chest imaging decision instrument',
-          citation: 'Rodriguez RM et al. PLoS Med / JAMA Surg validations (NEXUS Chest)',
+          title: 'NEXUS chest: validation of a decision instrument for selective chest imaging in blunt trauma',
+          citation: 'Rodriguez RM, Anglin D, Langdorf MI, et al. JAMA Surg. 2013;148:940-946',
           year: 2013, pmid: '23925583',
           doi: '10.1001/jamasurg.2013.2757', },
       ],

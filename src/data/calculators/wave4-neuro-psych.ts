@@ -66,6 +66,28 @@ const irlsDurationOptions = [
   { label: '4 — Very severe (≥8 hours per 24 hours)', value: 4 },
 ];
 
+const psqiFreqOptions = [
+  { label: '0 — Not during the past month', value: 0 },
+  { label: '1 — Less than once a week', value: 1 },
+  { label: '2 — Once or twice a week', value: 2 },
+  { label: '3 — Three or more times a week', value: 3 },
+];
+
+function psqiComponentFromSum(sum: number): number {
+  if (sum <= 0) return 0;
+  if (sum <= 2) return 1;
+  if (sum <= 4) return 2;
+  return 3;
+}
+
+function psqiHoursInBed(bedH: number, bedM: number, wakeH: number, wakeM: number): number {
+  const bed = ((bedH % 24) + 24) % 24 + Math.max(0, Math.min(59, bedM)) / 60;
+  const wake = ((wakeH % 24) + 24) % 24 + Math.max(0, Math.min(59, wakeM)) / 60;
+  let hrs = wake - bed;
+  if (hrs <= 0) hrs += 24;
+  return hrs;
+}
+
 function gdsReverse(id: string, n: number, question: string) {
   return selectInput(
     id,
@@ -573,39 +595,39 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     calculate(values) {
       const score =
         num(values.age) + num(values.gcs) + num(values.location) + num(values.volume) + num(values.cognition);
-      // Approximate published rates of functional independence (mRS 0–2) at 90 days
-      let independence = '~0%';
+      // Rost 2008 grouped FUNC prediction tool: GOS ≥4 at 90 days (not mRS)
+      let independence = '0%';
       let level: 'critical' | 'high' | 'moderate' | 'low' = 'critical';
       let label = 'Very low chance of independence';
       if (score <= 4) {
-        independence = '~0%';
+        independence = '0%';
         level = 'critical';
-        label = 'FUNC 0–4 — ~0% independent';
+        label = 'FUNC 0–4 — 0% independent (GOS ≥4)';
       } else if (score <= 7) {
-        independence = '~20–30%';
+        independence = '1–20%';
         level = 'high';
-        label = 'FUNC 5–7 — low–intermediate independence';
+        label = 'FUNC 5–7 — 1–20% independent (GOS ≥4)';
       } else if (score === 8) {
-        independence = '~45–50%';
+        independence = '21–60%';
         level = 'moderate';
-        label = 'FUNC 8 — intermediate independence';
+        label = 'FUNC 8 — 21–60% independent (GOS ≥4)';
       } else if (score <= 10) {
-        independence = '~70–80%';
+        independence = '61–80%';
         level = 'low';
-        label = 'FUNC 9–10 — higher independence';
+        label = 'FUNC 9–10 — 61–80% independent (GOS ≥4)';
       } else {
-        independence = '~90–95%';
+        independence = '81–100%';
         level = 'low';
-        label = 'FUNC 11 — highest independence band';
+        label = 'FUNC 11 — 81–100% independent (GOS ≥4)';
       }
       return {
         score,
         unit: '/11',
         label,
         riskLevel: level,
-        interpretation: `FUNC score ${score}/11: approximate chance of functional independence (often mRS 0–2) at 90 days about ${independence}. Population estimates only — do not use alone for care limitation.`,
+        interpretation: `FUNC score ${score}/11: published chance of functional independence (Glasgow Outcome Scale ≥4) at 90 days is ${independence}. These are Rost grouped bands, not mRS 0–2 rates. Population estimates only — do not use alone for care limitation.`,
         details: [
-          { label: 'Approx. independence @ 90 d', value: independence },
+          { label: 'Independence @ 90 d (GOS ≥4)', value: independence },
           { label: 'Range', value: '0–11 (higher = better functional outlook)' },
         ],
         recommendations: [
@@ -617,9 +639,9 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'FUNC: age (<70:2, 70–79:1, ≥80:0) + GCS (≥9:2, ≤8:0) + location (lobar 2, deep 1, infratentorial 0) + volume (<30:4, 30–60:2, >60:0) + no pre-ICH cognitive impairment (1). Higher score → higher chance of independence.',
+        'FUNC: age (<70:2, 70–79:1, ≥80:0) + GCS (≥9:2, ≤8:0) + location (lobar 2, deep 1, infratentorial 0) + volume (<30:4, 30–60:2, >60:0) + no pre-ICH cognitive impairment (1). Outcome is GOS ≥4 at 90 days. Rost grouped bands: 0–4 = 0%; 5–7 = 1–20%; 8 = 21–60%; 9–10 = 61–80%; 11 = 81–100%.',
       formula: 'Sum 0–11',
-      validation: 'Rost et al. derivation for 90-day functional independence after ICH; external validations exist with band-level estimates.',
+      validation: 'Rost et al. derivation for 90-day functional independence (GOS ≥4) after primary ICH; grouped FUNC prediction-tool bands as published.',
       references: [
         {
           title: 'Prediction of functional outcome in patients with primary ICH: the FUNC score',
@@ -638,6 +660,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     ],
     pearls: [
       'Higher FUNC = better functional prognosis (opposite direction from ICH Score mortality).',
+      'Published independence is Glasgow Outcome Scale ≥4 at 90 days, not mRS 0–2. FUNC 5–7 is 1–20%, not ~20–30%.',
       'Self-fulfilling prophecy bias can inflate mortality at high severity — use carefully.',
     ],
   },
@@ -789,9 +812,8 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       let grade = 1;
       if (gcs >= 3 && gcs <= 6) grade = 5;
       else if (gcs >= 7 && gcs <= 12) grade = 4;
-      else if (gcs >= 13 && gcs <= 14 && deficit) grade = 3;
+      else if (gcs >= 13 && gcs <= 15 && deficit) grade = 3;
       else if (gcs >= 13 && gcs <= 14 && !deficit) grade = 2;
-      else if (gcs === 15 && deficit) grade = 2; // uncommon; map to ≥II messaging
       else grade = 1; // GCS 15, no motor deficit
 
       const r = riskFromThresholds(grade, [
@@ -805,13 +827,13 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
           max: 2,
           level: 'moderate',
           label: 'WFNS II',
-          interpretation: 'GCS 13–14 without motor deficit (or GCS 15 with deficit mapped here). Intermediate severity — monitor for hydrocephalus and rebleeding.',
+          interpretation: 'GCS 13–14 without motor deficit. Intermediate severity — monitor for hydrocephalus and rebleeding.',
         },
         {
           max: 3,
           level: 'high',
           label: 'WFNS III',
-          interpretation: 'GCS 13–14 with motor deficit. Higher morbidity; urgent aneurysm treatment and ICU care.',
+          interpretation: 'GCS 13–15 with major focal motor deficit (including GCS 15 with deficit). Higher morbidity; urgent aneurysm treatment and ICU care.',
         },
         {
           max: 4,
@@ -835,14 +857,14 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
           { label: 'Motor deficit', value: deficit ? 'Yes' : 'No' },
           {
             label: 'WFNS map',
-            value: 'I:15 no deficit · II:13–14 no deficit · III:13–14 + deficit · IV:7–12 · V:3–6',
+            value: 'I: GCS 15 no deficit · II: GCS 13–14 no deficit · III: GCS 13–15 with deficit · IV: GCS 7–12 · V: GCS 3–6',
           },
         ],
       };
     },
     evidence: {
       summary:
-        'WFNS grades SAH: I = GCS 15; II = GCS 13–14 no motor deficit; III = GCS 13–14 with motor deficit; IV = GCS 7–12; V = GCS 3–6.',
+        'WFNS grades SAH: I = GCS 15 no motor deficit; II = GCS 13–14 no motor deficit; III = GCS 13–15 with motor deficit; IV = GCS 7–12; V = GCS 3–6.',
       formula: 'Map GCS + presence of major motor deficit → grade I–V',
       validation: 'International standard grading system for aSAH severity and outcome communication.',
       references: [
@@ -2695,93 +2717,137 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
   {
     id: 'psqi',
     ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        survey: [
+          'q1BedHour', 'q1BedMin', 'q2LatencyMin', 'q3WakeHour', 'q3WakeMin', 'q4HoursSlept',
+          'q5a', 'q5b', 'q5c', 'q5d', 'q5e', 'q5f', 'q5g', 'q5h', 'q5i', 'q5j',
+          'q6Quality', 'q7Meds', 'q8StayAwake', 'q9Enthusiasm',
+        ],
+        direct: ['global'],
+      },
+    },
     name: 'Pittsburgh Sleep Quality Index (PSQI)',
     shortName: 'PSQI',
-    description: 'Pittsburgh Sleep Quality Index: 7 component scores (0–3 each, global 0–21) evaluating past-month sleep quality, or direct global score.',
+    description: 'Official Buysse 1989 PSQI: 19 self-rated items scored into 7 components (0–3 each; global 0–21) for past-month sleep quality, or a direct global score.',
     category: 'neurology',
     tags: ['psqi', 'sleep', 'insomnia', 'quality'],
-    whenToUse: 'Comprehensive past-month sleep quality assessment in clinical sleep, psychiatric, or general medical encounters.',
-    whyUse: 'Standard validated metric of sleep quality; global score >5 reliably distinguishes poor from good sleepers (89.6% sensitivity, 86.5% specificity).',
+    whenToUse: 'Past-month sleep quality assessment using the full 19-item PSQI (not a short form).',
+    whyUse: 'Standard validated metric of sleep quality; global score >5 distinguishes poor from good sleepers (89.6% sensitivity, 86.5% specificity).',
     inputs: [
       selectInput('entryMode', 'Entry mode', [
-        { label: '7 Component Scores selector', value: 'survey' },
+        { label: 'Complete 19-item PSQI (7 components)', value: 'survey' },
         { label: 'Direct global score override', value: 'direct' },
-      ]),
+      ], 'survey'),
       numberInput('global', 'PSQI global score (0–21, direct mode)', {
         min: 0,
         max: 21,
         defaultValue: 5,
-        helpText: 'Used only if direct override is selected.',
+        helpText: 'Used only if direct override is selected. Enter a previously scored official PSQI global total.',
       }),
-      selectInput('comp1_quality', 'Component 1: Subjective sleep quality', [
+      numberInput('q1BedHour', 'Q1: Usual bedtime (hour, 24-h clock)', {
+        min: 0, max: 23, step: 1, defaultValue: 22,
+        helpText: 'Past month. Example: 22 for 10:00 PM.',
+      }),
+      numberInput('q1BedMin', 'Q1: Usual bedtime (minutes)', {
+        min: 0, max: 59, step: 1, defaultValue: 30,
+      }),
+      numberInput('q2LatencyMin', 'Q2: Minutes to fall asleep', {
+        unit: 'min', min: 0, max: 240, step: 1, defaultValue: 15,
+        helpText: 'Usual number of minutes to fall asleep. ≤15 = 0; 16–30 = 1; 31–60 = 2; >60 = 3.',
+      }),
+      numberInput('q3WakeHour', 'Q3: Usual get-up time (hour, 24-h clock)', {
+        min: 0, max: 23, step: 1, defaultValue: 6,
+        helpText: 'Past month. Example: 6 for 6:00 AM.',
+      }),
+      numberInput('q3WakeMin', 'Q3: Usual get-up time (minutes)', {
+        min: 0, max: 59, step: 1, defaultValue: 30,
+      }),
+      numberInput('q4HoursSlept', 'Q4: Hours of actual sleep per night', {
+        unit: 'hours', min: 0, max: 16, step: 0.25, defaultValue: 7,
+        helpText: 'Hours actually slept, not hours in bed. >7 = C3 0; 6–7 = 1; 5–6 = 2; <5 = 3.',
+      }),
+      selectInput('q5a', 'Q5a: Cannot get to sleep within 30 minutes', psqiFreqOptions, 0),
+      selectInput('q5b', 'Q5b: Wake up in the middle of the night or early morning', psqiFreqOptions, 0),
+      selectInput('q5c', 'Q5c: Have to get up to use the bathroom', psqiFreqOptions, 0),
+      selectInput('q5d', 'Q5d: Cannot breathe comfortably', psqiFreqOptions, 0),
+      selectInput('q5e', 'Q5e: Cough or snore loudly', psqiFreqOptions, 0),
+      selectInput('q5f', 'Q5f: Feel too cold', psqiFreqOptions, 0),
+      selectInput('q5g', 'Q5g: Feel too hot', psqiFreqOptions, 0),
+      selectInput('q5h', 'Q5h: Had bad dreams', psqiFreqOptions, 0),
+      selectInput('q5i', 'Q5i: Have pain', psqiFreqOptions, 0),
+      selectInput('q5j', 'Q5j: Other reason(s) for trouble sleeping', psqiFreqOptions, 0, 'If no other reason, choose 0. Frequency of the other reason only; the 5 bed-partner items are not scored.'),
+      selectInput('q6Quality', 'Q6: Overall sleep quality', [
         { label: '0 — Very good', value: 0 },
         { label: '1 — Fairly good', value: 1 },
         { label: '2 — Fairly bad', value: 2 },
-        { label: '3 — Very bad', value: 3 }
-      ]),
-      selectInput('comp2_latency', 'PSQI Q2: Minutes to fall asleep (latency score)', [
-        { label: '0 — ≤15 minutes', value: 0 },
-        { label: '1 — 16–30 minutes', value: 1 },
-        { label: '2 — 31–60 minutes', value: 2 },
-        { label: '3 — >60 minutes', value: 3 }
-      ]),
-      selectInput('comp2_q5a', 'PSQI Q5a: Trouble getting to sleep within 30 minutes', [
-        { label: '0 — Not during the past month', value: 0 },
-        { label: '1 — Less than once a week', value: 1 },
-        { label: '2 — Once or twice a week', value: 2 },
-        { label: '3 — Three or more times a week', value: 3 },
-      ]),
-      selectInput('comp3_duration', 'Component 3: Sleep duration', [
-        { label: '0 — >7 hours sleep per night', value: 0 },
-        { label: '1 — 6–7 hours sleep per night', value: 1 },
-        { label: '2 — 5–6 hours sleep per night', value: 2 },
-        { label: '3 — <5 hours sleep per night', value: 3 }
-      ]),
-      selectInput('comp4_efficiency', 'Component 4: Habitual sleep efficiency', [
-        { label: '0 — ≥85% sleep efficiency (hours slept / hours in bed)', value: 0 },
-        { label: '1 — 75–84% sleep efficiency', value: 1 },
-        { label: '2 — 65–74% sleep efficiency', value: 2 },
-        { label: '3 — <65% sleep efficiency', value: 3 }
-      ]),
-      selectInput('comp5_disturbances', 'Component 5: Sleep disturbances', [
-        { label: '0 — No sleep disturbances (wake up, bathroom, cough, snore, cold, hot)', value: 0 },
-        { label: '1 — Mild disturbances (score 1–9 sum)', value: 1 },
-        { label: '2 — Moderate disturbances (score 10–18 sum)', value: 2 },
-        { label: '3 — Severe disturbances (score 19–27 sum)', value: 3 }
-      ]),
-      selectInput('comp6_medication', 'Component 6: Use of sleep medications', [
-        { label: '0 — Not during the past month', value: 0 },
-        { label: '1 — Less than once a week', value: 1 },
-        { label: '2 — Once or twice a week', value: 2 },
-        { label: '3 — Three or more times a week', value: 3 }
-      ]),
-      selectInput('comp7_dysfunction', 'Component 7: Daytime dysfunction', [
-        { label: '0 — No problem staying awake / enthusiasm', value: 0 },
-        { label: '1 — Mild problem staying awake / enthusiasm', value: 1 },
-        { label: '2 — Moderate problem staying awake / enthusiasm', value: 2 },
-        { label: '3 — Severe problem staying awake / enthusiasm', value: 3 }
-      ]),
+        { label: '3 — Very bad', value: 3 },
+      ], 0, 'Component 1 is this item.'),
+      selectInput('q7Meds', 'Q7: Taken medicine to help you sleep (prescribed or over the counter)', psqiFreqOptions, 0, 'Component 6 is this item.'),
+      selectInput('q8StayAwake', 'Q8: Trouble staying awake while driving, eating, or socializing', psqiFreqOptions, 0),
+      selectInput('q9Enthusiasm', 'Q9: Problem keeping up enough enthusiasm to get things done', [
+        { label: '0 — No problem at all', value: 0 },
+        { label: '1 — Only a very slight problem', value: 1 },
+        { label: '2 — Somewhat of a problem', value: 2 },
+        { label: '3 — A very big problem', value: 3 },
+      ], 0, 'Component 7 = mapped sum of Q8 + Q9.'),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');
       let score = 0;
-      let c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0, c6 = 0, c7 = 0;
+      let c1 = 0;
+      let c2 = 0;
+      let c3 = 0;
+      let c4 = 0;
+      let c5 = 0;
+      let c6 = 0;
+      let c7 = 0;
       let c2Latency = 0;
       let c2Q5a = 0;
+      let hoursSlept = 0;
+      let hoursBed = 0;
+      let efficiency = 0;
+      let c5Sum = 0;
 
-      if (mode === 'direct' || (values.global !== undefined && values.entryMode === undefined && values.comp1_quality === undefined)) {
+      if (mode === 'direct') {
         score = Math.max(0, Math.min(21, num(values.global, 5)));
       } else {
-        c1 = Math.max(0, Math.min(3, num(values.comp1_quality, 0)));
-        c2Latency = Math.max(0, Math.min(3, num(values.comp2_latency, 0)));
-        c2Q5a = Math.max(0, Math.min(3, num(values.comp2_q5a, 0)));
-        const c2Raw = c2Latency + c2Q5a;
-        c2 = c2Raw === 0 ? 0 : c2Raw <= 2 ? 1 : c2Raw <= 4 ? 2 : 3;
-        c3 = Math.max(0, Math.min(3, num(values.comp3_duration, 1)));
-        c4 = Math.max(0, Math.min(3, num(values.comp4_efficiency, 0)));
-        c5 = Math.max(0, Math.min(3, num(values.comp5_disturbances, 1)));
-        c6 = Math.max(0, Math.min(3, num(values.comp6_medication, 0)));
-        c7 = Math.max(0, Math.min(3, num(values.comp7_dysfunction, 1)));
+        c1 = Math.max(0, Math.min(3, num(values.q6Quality, 0)));
+
+        const latencyMin = Math.max(0, num(values.q2LatencyMin, 15));
+        c2Latency = latencyMin <= 15 ? 0 : latencyMin <= 30 ? 1 : latencyMin <= 60 ? 2 : 3;
+        c2Q5a = Math.max(0, Math.min(3, num(values.q5a, 0)));
+        c2 = psqiComponentFromSum(c2Latency + c2Q5a);
+
+        hoursSlept = Math.max(0, num(values.q4HoursSlept, 7));
+        c3 = hoursSlept > 7 ? 0 : hoursSlept >= 6 ? 1 : hoursSlept >= 5 ? 2 : 3;
+
+        hoursBed = psqiHoursInBed(
+          num(values.q1BedHour, 22),
+          num(values.q1BedMin, 30),
+          num(values.q3WakeHour, 6),
+          num(values.q3WakeMin, 30),
+        );
+        efficiency = hoursBed > 0 ? Math.min(100, (hoursSlept / hoursBed) * 100) : 0;
+        c4 = efficiency >= 85 ? 0 : efficiency >= 75 ? 1 : efficiency >= 65 ? 2 : 3;
+
+        c5Sum =
+          num(values.q5b, 0) +
+          num(values.q5c, 0) +
+          num(values.q5d, 0) +
+          num(values.q5e, 0) +
+          num(values.q5f, 0) +
+          num(values.q5g, 0) +
+          num(values.q5h, 0) +
+          num(values.q5i, 0) +
+          num(values.q5j, 0);
+        c5 = c5Sum <= 0 ? 0 : c5Sum <= 9 ? 1 : c5Sum <= 18 ? 2 : 3;
+
+        c6 = Math.max(0, Math.min(3, num(values.q7Meds, 0)));
+        c7 = psqiComponentFromSum(num(values.q8StayAwake, 0) + num(values.q9Enthusiasm, 0));
         score = c1 + c2 + c3 + c4 + c5 + c6 + c7;
       }
 
@@ -2790,7 +2856,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
           max: 5,
           level: 'low',
           label: 'Good sleep quality range (≤5)',
-          interpretation: 'PSQI ≤5: indicates good overall sleep quality. Continue sleep hygiene best practices.',
+          interpretation: 'PSQI ≤5: good overall sleep quality by the Buysse cutoff. Continue sleep hygiene best practices.',
         },
         {
           max: 10,
@@ -2809,14 +2875,20 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       const details = [
         { label: 'Global score', value: `${score} / 21` },
         { label: 'Diagnostic cutoff', value: '>5 = Poor sleep quality (sensitivity 89.6%, specificity 86.5%)' },
-        { label: 'Entry mode', value: mode === 'survey' ? '7 Component scores' : 'Direct override' },
+        { label: 'Entry mode', value: mode === 'survey' ? '19-item PSQI' : 'Direct override' },
       ];
 
       if (mode === 'survey') {
-        details.push({ label: 'C1: Quality / C2: Latency component', value: `${c1} / ${c2}` });
-        details.push({ label: 'C2 inputs (Q2 latency + Q5a trouble)', value: `${c2Latency} + ${c2Q5a} → ${c2}` });
-        details.push({ label: 'C3: Duration / C4: Efficiency', value: `${c3} / ${c4}` });
-        details.push({ label: 'C5: Disturbance / C6: Meds / C7: Daytime', value: `${c5} / ${c6} / ${c7}` });
+        details.push({ label: 'C1 quality (Q6)', value: String(c1) });
+        details.push({ label: 'C2 latency (Q2 + Q5a)', value: `${c2Latency} + ${c2Q5a} → ${c2}` });
+        details.push({ label: 'C3 duration (Q4)', value: `${round(hoursSlept, 2)} h → ${c3}` });
+        details.push({
+          label: 'C4 efficiency (Q1/Q3/Q4)',
+          value: `${round(hoursSlept, 2)} / ${round(hoursBed, 2)} h = ${round(efficiency, 0)}% → ${c4}`,
+        });
+        details.push({ label: 'C5 disturbances (Q5b–Q5j sum)', value: `${c5Sum} → ${c5}` });
+        details.push({ label: 'C6 medication (Q7)', value: String(c6) });
+        details.push({ label: 'C7 daytime (Q8 + Q9)', value: String(c7) });
       }
 
       return {
@@ -2828,9 +2900,9 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Pittsburgh Sleep Quality Index (PSQI): 19 self-rated questions generate 7 component scores (subjective sleep quality, sleep latency, sleep duration, habitual sleep efficiency, sleep disturbances, use of sleep medication, daytime dysfunction), each rated 0–3. The global score ranges 0–21, with >5 distinguishing poor from good sleepers.',
-      formula: 'Sum of 7 component scores (each 0–3, global 0–21)',
-      validation: 'Buysse DJ et al. Gold standard sleep quality instrument across clinical and research settings.',
+        'Official PSQI (Buysse 1989): 19 self-rated items (Q1 bedtime, Q2 latency minutes, Q3 get-up time, Q4 hours slept, Q5a–j disturbance frequencies, Q6 quality, Q7 sleep medicine, Q8 staying awake, Q9 enthusiasm) form 7 components (0–3): C1 = Q6; C2 = mapped sum of Q2 band + Q5a; C3 = Q4 duration bands; C4 = hours slept / hours in bed from Q1 and Q3; C5 = mapped sum of Q5b–j; C6 = Q7; C7 = mapped sum of Q8 + Q9. Global 0–21; >5 = poor sleeper. The 5 bed-partner items are not scored.',
+      formula: 'Global = C1+C2+C3+C4+C5+C6+C7 (each 0–3)',
+      validation: 'Buysse DJ et al. Psychiatry Res. 1989. Gold-standard sleep quality instrument; cutoff >5 with 89.6% sensitivity and 86.5% specificity in the derivation sample.',
       references: [
         {
           title: 'The Pittsburgh Sleep Quality Index: a new instrument for psychiatric practice and research',
@@ -2853,6 +2925,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       },
     ],
     pearls: [
+      'This is the full 19-item PSQI, not a 7-slider short form. Bed-partner/roommate items are collected in the original instrument but are not part of the global score.',
       'Component breakdown directs specific therapy (e.g. high C2/C4 suggests insomnia stimulus control; high C5 suggests OSA/GERD/nocturia).',
       'Does not replace objective polysomnography when sleep apnea, narcolepsy, or parasomnias are suspected.',
     ],

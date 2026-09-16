@@ -868,9 +868,9 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     inputs: [
       selectInput('age', 'Age band', [
         { label: '≤60 (1)', value: 1, description: 'Age ≤60 years' },
-        { label: '61–70 (2)', value: 2, description: 'Age 61–70 years (educational simplification — full POSSUM uses 61–70 = 3)' },
+        { label: '61–70 (2)', value: 2, description: 'Age 61–70 years (Copeland POSSUM = 2; CR-POSSUM uses 3 in this band)' },
         { label: '≥71 (4)', value: 4, description: 'Age ≥71 years' },
-      ], undefined, 'Educational POSSUM-style bands. Full Copeland POSSUM ages 61–70 score 3, not 2 — do not quote this as official POSSUM.'),
+      ], undefined, 'Copeland POSSUM exponential 1/2/4/8: ≤60 = 1, 61–70 = 2, ≥71 = 4. The 3-point 61–70 band is CR-POSSUM, not Copeland POSSUM.'),
       selectInput('cardiac', 'Cardiac status', [
         { label: 'No failure (1)', value: 1, description: 'No cardiac failure; no cardiac meds for failure/angina' },
         { label: 'Diuretic/digoxin/antianginal (2)', value: 2, description: 'On diuretic, digoxin, antianginal, or antihypertensive therapy (compensated)' },
@@ -907,7 +907,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: 'Major (4)', value: 4, description: 'Laparotomy, bowel resection, CBD exploration, major amputation, peripheral vascular' },
         { label: 'Major+ (8)', value: 8, description: 'Aortic, APR, Whipple, liver resection, esophagectomy' },
       ]),
-      yesNo('emergency', 'Emergency surgery', 3, 'Yes if the operation is not elective (immediate or urgent). Educational weight only — not the full 6-variable POSSUM operative score.'),
+      yesNo('emergency', 'Emergency surgery', 4, 'Yes if the operation is not elective (urgent/emergency). Copeland urgency: elective = 1; emergency with time to resuscitate = 4; immediate (<2 h) = 8. This educational helper adds 4 for any emergency (no 8-point immediate band).'),
     ],
     calculate(values) {
       const phys =
@@ -1107,7 +1107,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         },
         4: {
           label: 'ASA IV',
-          interpretation: 'Severe systemic disease that is a constant threat to life (e.g., recent MI/CVA/stents <3 mo, ongoing cardiac ischemia, severe valve dysfunction, sepsis, DIC, ARD or ESRD not on regular dialysis).',
+          interpretation: 'Severe systemic disease that is a constant threat to life (e.g., recent MI/CVA/stents <3 mo, ongoing cardiac ischemia, severe valve dysfunction, sepsis, DIC, ARDS, or ESRD not on regular dialysis).',
           riskLevel: 'high',
         },
         5: {
@@ -1138,8 +1138,11 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
       references: [
         {
           title: 'ASA Physical Status Classification System',
-          citation: 'American Society of Anesthesiologists — official ASA PS definitions',
-          year: 2014, url: 'https://www.asahq.org/standards-and-practice-parameters/statement-on-asa-physical-status-classification-system' },
+          citation: 'American Society of Anesthesiologists. Statement on ASA Physical Status Classification System. House of Delegates, last amended 2025.',
+          year: 2025,
+          doi: '10.1097/AO9.0000000000000002',
+          url: 'https://www.asahq.org/standards-and-guidelines/asa-physical-status-classification-system',
+        },
       ],
     },
     nextSteps: [
@@ -1469,6 +1472,20 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
           citation: 'Cormack RS, Lehane J. Anaesthesia. 1984;39:1105-1111',
           year: 1984,
           pmid: '6507827',
+        },
+        {
+          title: 'Evaluation of an improved scoring system for the grading of direct laryngoscopy',
+          citation: 'Yentis SM, Lee DJ. Anaesthesia. 1998;53:1041-1044 (grade 2a/2b split)',
+          year: 1998,
+          pmid: '10023271',
+          doi: '10.1046/j.1365-2044.1998.00605.x',
+        },
+        {
+          title: 'A grading system for direct laryngoscopy',
+          citation: 'Cook TM. Anaesthesia. 1999;54:496-497',
+          year: 1999,
+          pmid: '10995154',
+          doi: '10.1046/j.1365-2044.1999.0907f.x',
         },
       ],
     },

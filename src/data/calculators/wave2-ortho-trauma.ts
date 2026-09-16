@@ -1434,7 +1434,7 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
       const ageIndex = bool(values.age55) ? 1 : 0;
       const penetrating = values.mechanism === 'penetrating';
 
-      // Standard adult TRISS coefficients (Champion/Boyd methodology)
+      // Champion 1995 revised adult TRISS coefficients (not Boyd 1987)
       const b0 = penetrating ? -2.5355 : -0.4499;
       const b1 = penetrating ? 0.9934 : 0.8085;
       const b2 = penetrating ? -0.0651 : -0.0835;
@@ -1459,21 +1459,28 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
           { label: 'b (logit)', value: String(round(b, 4)) },
           { label: 'RTS', value: String(rts) },
           { label: 'ISS', value: String(iss) },
-          { label: 'Age index', value: ageIndex ? '1 (>55)' : '0 (≤55)' },
+          { label: 'Age index', value: ageIndex ? '1 (≥55 / >54)' : '0 (<55)' },
           { label: 'Mechanism', value: penetrating ? 'Penetrating' : 'Blunt' },
         ],
       };
     },
     evidence: {
       summary:
-        'TRISS: Ps = 1/(1+e^(−b)); b = b0 + b1·RTS + b2·ISS + b3·AgeIndex. Separate coefficients for blunt and penetrating trauma.',
-      formula: 'Ps = 1/(1+exp(−(b0 + b1·RTS + b2·ISS + b3·Age>55)))',
-      validation: 'Boyd/Champion MTOS methodology; used for trauma center performance benchmarking (W-score, etc.).',
+        'TRISS: Ps = 1/(1+e^(−b)); b = b0 + b1·RTS + b2·ISS + b3·AgeIndex. AgeIndex = 1 if age ≥55 (>54). Coefficients here are the Champion 1995 revised adult (MTOS) values, not Boyd 1987.',
+      formula: 'Ps = 1/(1+exp(−(b0 + b1·RTS + b2·ISS + b3·Age≥55)))',
+      validation: 'Champion 1995 revised adult TRISS coefficients; Boyd 1987 describes the TRISS method. Used for trauma center performance benchmarking (W-score, etc.).',
       references: [
         {
           title: 'Evaluating trauma care: the TRISS method',
-          citation: 'Boyd CR, Tolson MA, Copes WS. J Trauma. 1987',
+          citation: 'Boyd CR, Tolson MA, Copes WS. J Trauma. 1987;27:370-378 (method)',
           year: 1987, pmid: '3106646' },
+        {
+          title: 'Injury severity scoring again',
+          citation: 'Champion HR, Sacco WJ, Copes WS. J Trauma. 1995;38:94-95 (revised adult TRISS coefficients)',
+          year: 1995,
+          pmid: '7745669',
+          doi: '10.1097/00005373-199501000-00024',
+        },
       ],
     },
     nextSteps: [
@@ -1486,7 +1493,7 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
         ],
       },
     ],
-    pearls: ['Coefficients vary slightly by dataset version; this uses classic adult blunt/penetrating values for education.'],
+    pearls: ['Coefficients are Champion 1995 revised adult blunt/penetrating values (not the original Boyd 1987 set).'],
   },
 
   {

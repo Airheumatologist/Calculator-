@@ -1144,12 +1144,12 @@ export const wave4IcuVentCalcs: Calculator[] = [
       ];
       const score = components.reduce((a, b) => a + b, 0);
       const singleThree = components.some((c) => c >= 3);
-      const r = riskFromThresholds(score, [
+      let r = riskFromThresholds(score, [
         {
           max: 4,
           level: 'low',
           label: 'Low (0–4)',
-          interpretation: `NEWS ${score}: low aggregate clinical risk. ${singleThree ? 'Note: a single parameter scoring 3 still warrants urgent review per many protocols.' : 'Continue routine monitoring per policy.'}`,
+          interpretation: `NEWS ${score}: low aggregate clinical risk. Continue routine monitoring per policy.`,
         },
         {
           max: 6,
@@ -1164,6 +1164,15 @@ export const wave4IcuVentCalcs: Calculator[] = [
           interpretation: `NEWS ${score}: high risk — emergency assessment / critical care outreach.`,
         },
       ]);
+      // RCP 2012 Chart 2: a single parameter scoring 3 is a medium-level (urgent) alert, same family as aggregate 5–6
+      if (singleThree && score <= 4) {
+        r = {
+          ...r,
+          riskLevel: 'moderate',
+          label: 'Low–medium (single parameter = 3)',
+          interpretation: `NEWS ${score} with a RED score (any single parameter = 3): medium-level alert — urgent clinician review, equivalent to aggregate NEWS 5–6 (RCP 2012 Chart 2).`,
+        };
+      }
       return {
         score,
         ...r,
@@ -1174,8 +1183,9 @@ export const wave4IcuVentCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Original NEWS aggregates RR, SpO₂, oxygen use, temperature, SBP, HR, and AVPU.',
-      formula: 'Sum of weighted physiologic parameters (max typically 20)',
+      summary:
+        'Original NEWS aggregates RR, SpO₂, oxygen use, temperature, SBP, HR, and AVPU. RCP 2012 Chart 2: aggregate ≥5 or any single parameter = 3 is a medium-level (urgent) alert; ≥7 is high.',
+      formula: 'Sum of weighted physiologic parameters (max typically 20); single parameter 3 = medium alert even if total 0–4',
       validation: 'Widely validated for deterioration; NEWS2 (2017) added SpO₂ scale 2 for hypercapnic failure and new confusion.',
       references: [
         {
@@ -1344,18 +1354,14 @@ export const wave4IcuVentCalcs: Calculator[] = [
       let riskLevel: 'low' | 'moderate' | 'high' | 'critical' | 'normal' = 'moderate';
       let label = '';
       let interpretation = '';
-      if (clearance >= 20) {
+      if (clearance >= 10) {
         riskLevel = 'low';
-        label = 'Good clearance (≥20%)';
-        interpretation = `Lactate clearance ${clearance}%${hoursProvided ? ` over ~${hours} h` : ' (measurement interval not entered)'} (Δ ${absolute} mmol/L). Favorable trend if clinical perfusion also improving.`;
-      } else if (clearance >= 10) {
-        riskLevel = 'moderate';
-        label = 'Partial clearance (10–19%)';
-        interpretation = `Lactate clearance ${clearance}% — partial improvement. Continue resuscitation and reassess source control.`;
+        label = 'Adequate clearance (≥10%)';
+        interpretation = `Lactate clearance ${clearance}%${hoursProvided ? ` over ~${hours} h` : ' (measurement interval not entered)'} (Δ ${absolute} mmol/L). Meets the ≥10% goal used in Jones 2010 and Nguyen 2004. Favorable trend if clinical perfusion also improving.`;
       } else if (clearance >= 0) {
         riskLevel = 'high';
-        label = 'Minimal clearance (<10%)';
-        interpretation = `Lactate clearance only ${clearance}%. Inadequate trend — escalate shock evaluation.`;
+        label = 'Inadequate clearance (<10%)';
+        interpretation = `Lactate clearance only ${clearance}%. Below the ≥10% Jones/Nguyen goal — escalate shock evaluation.`;
       } else {
         riskLevel = 'critical';
         label = 'Rising lactate (negative clearance)';
@@ -1375,8 +1381,9 @@ export const wave4IcuVentCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Lactate clearance percentage is a pragmatic marker of resuscitation response in sepsis literature.',
-      formula: 'Clearance % = (Lactate_initial − Lactate_delayed) / Lactate_initial × 100',
+      summary:
+        'Lactate clearance percentage is a pragmatic marker of resuscitation response. Jones 2010 and Nguyen 2004 used ≥10% clearance as the favorable/protocol goal (SSC 2021 recommends serial lactate without a 20% “good” cutoff).',
+      formula: 'Clearance % = (Lactate_initial − Lactate_delayed) / Lactate_initial × 100; ≥10% = adequate (Jones/Nguyen)',
       validation: 'Associated with survival in observational and some interventional sepsis studies; not a sole endpoint.',
       references: [
         {
@@ -1385,6 +1392,13 @@ export const wave4IcuVentCalcs: Calculator[] = [
           year: 2010,
           pmid: '20179283',
           doi: '10.1001/jama.2010.158',
+        },
+        {
+          title: 'Early lactate clearance is associated with improved outcome in severe sepsis and septic shock',
+          citation: 'Nguyen HB et al. Crit Care Med. 2004',
+          year: 2004,
+          pmid: '15307513',
+          doi: '10.1097/01.ccm.0000132904.35713.a7',
         },
         {
           title: 'Surviving Sepsis Campaign guidance on lactate',
@@ -1445,21 +1459,17 @@ export const wave4IcuVentCalcs: Calculator[] = [
             ? `Base excess ${-bd} (deficit ${bd}): metabolic alkalosis or compensated range — not a tissue-hypoxia deficit pattern.`
             : `Base deficit ${bd}: within normal base deficit band (roughly −2 to +2 BE).`;
       } else if (bd <= 5) {
-        label = 'Mild deficit (Class I-ish)';
+        label = 'Mild deficit (Davis 1988)';
         riskLevel = 'low';
-        interpretation = `Base deficit ${bd} mEq/L — mild. Early hypoperfusion or mild metabolic acidosis possible.`;
-      } else if (bd <= 9) {
-        label = 'Moderate deficit (Class II-ish)';
-        riskLevel = 'moderate';
-        interpretation = `Base deficit ${bd} mEq/L — moderate. Associated with significant shock/trauma load; active resuscitation.`;
+        interpretation = `Base deficit ${bd} mEq/L — mild (Davis 1988: 2–5). Early hypoperfusion or mild metabolic acidosis possible.`;
       } else if (bd <= 14) {
-        label = 'Severe deficit (Class III-ish)';
-        riskLevel = 'high';
-        interpretation = `Base deficit ${bd} mEq/L — severe metabolic debt. High risk of transfusion need and organ dysfunction.`;
+        label = 'Moderate deficit (Davis 1988)';
+        riskLevel = 'moderate';
+        interpretation = `Base deficit ${bd} mEq/L — moderate (Davis 1988: 6–14). Associated with significant shock/trauma load; active resuscitation.`;
       } else {
-        label = 'Critical deficit (Class IV-ish)';
+        label = 'Severe deficit (Davis 1988)';
         riskLevel = 'critical';
-        interpretation = `Base deficit ${bd} mEq/L — critical. Profound shock/acidemia risk; aggressive hemorrhage control and resuscitation.`;
+        interpretation = `Base deficit ${bd} mEq/L — severe (Davis 1988: ≥15). Profound shock/acidemia risk; aggressive hemorrhage control and resuscitation.`;
       }
       return {
         score: bd,
@@ -1469,18 +1479,19 @@ export const wave4IcuVentCalcs: Calculator[] = [
         riskLevel,
         details: [
           { label: 'Equivalent BE', value: `${round(-bd, 1)} mEq/L` },
-          { label: 'Bands used', value: '<2 normal; 2–5 mild; 6–9 moderate; 10–14 severe; ≥15 critical' },
+          { label: 'Bands used', value: 'Davis 1988: <2 normal; 2–5 mild; 6–14 moderate; ≥15 severe' },
         ],
       };
     },
     evidence: {
-      summary: 'Base deficit is a validated marker of hypoperfusion severity in trauma and critical illness.',
-      formula: 'Classify BD (mEq/L): normal <2; mild 2–5; moderate 6–9; severe 10–14; critical ≥15 (educational bands)',
+      summary:
+        'Davis 1988 grouped admission base deficit as mild 2–5, moderate 6–14, and severe ≥15. (Davis 1996 later used mild 2–5, moderate 6–9, severe ≥10 — not used here.)',
+      formula: 'Classify BD (mEq/L, Davis 1988): normal <2; mild 2–5; moderate 6–14; severe ≥15',
       validation: 'Multiple trauma databases link admission BD to mortality and resource use; cutoffs vary slightly by study.',
       references: [
         {
           title: 'Base deficit as a guide to volume resuscitation',
-          citation: 'Davis JW et al. J Trauma. 1988 / subsequent trauma literature',
+          citation: 'Davis JW et al. J Trauma. 1988',
           year: 1988,
           pmid: '3172306',
           doi: '10.1097/00005373-198810000-00010',
@@ -2233,16 +2244,17 @@ export const wave4IcuVentCalcs: Calculator[] = [
         { label: 'Discolored grade 1 (2)', value: 'discolored-grade1', description: 'Intact skin with non-blanching redness (grade/stage 1 pressure damage) at a risk area' },
         { label: 'Broken spots grade 2+ (3)', value: 'broken-grade2-plus', description: 'Broken skin: blister, abrasion, or ulcer — partial-thickness or deeper (grade/stage 2–4)' },
       ], 'healthy', 'Score from the official Waterlow card (Judy Waterlow, copyrighted). Grade 1 = intact non-blanching erythema; grade 2+ = broken skin. Official card may add multiple skin descriptors — this tool scores the highest one only. Score from the official card for audit-critical work.'),
-      selectInput('sexAge', 'Sex and age (combined points)', [
-        { label: 'Male only — age not added (1)', value: 'male-only', description: 'Official sex = 1 for male. Prefer a combined row below so age is included.' },
-        { label: 'Female only — age not added (2)', value: 'female-only', description: 'Official sex = 2 for female. Also equals Male 14–49 combined (1+1). Prefer a combined row if age known.' },
-        { label: 'Age 14–49, sex not added (1)', value: 'age14-49', description: 'Official age 14–49 = 1. Combined should be Male 2 / Female 3 — this row under-scores.' },
-        { label: 'Male 50–64 combined (3)', value: 'male50-64', description: 'Male 1 + age 2 = 3. Female 50–64 official = 4 (use next row).' },
-        { label: 'Male 65–74 or Female 50–64 combined (4)', value: 'male65-74-female50-64', description: 'Male 65–74 = 1+3=4; Female 50–64 = 2+2=4.' },
-        { label: 'Male 75–80 or Female 65–74 combined (5)', value: 'male75-80-female65-74', description: 'Male 75–80 = 1+4=5; Female 65–74 = 2+3=5.' },
-        { label: 'Male 81+ or Female 75–80 combined (6)', value: 'male81-plus-female75-80', description: 'Male 81+ = 1+5=6; Female 75–80 = 2+4=6.' },
-        { label: 'Female 81+ combined (7)', value: 'female81-plus', description: 'Female 2 + age 81+ (5) = 7. Official sex/age maximum.' },
-      ], 'male-only', 'Official Waterlow adds sex (M 1 / F 2) plus age (14–49:1, 50–64:2, 65–74:3, 75–80:4, 81+:5). Pick the combined total. Female 81+ = 7. Male/Female-only rows omit age and under-score. Card copyright Judy Waterlow.'),
+      selectInput('sex', 'Sex', [
+        { label: 'Male (1)', value: 'male', description: 'Official Waterlow sex = 1' },
+        { label: 'Female (2)', value: 'female', description: 'Official Waterlow sex = 2' },
+      ], 'male', 'Official Waterlow sex: male 1, female 2. Added to the age band (not a substitute for age). Card copyright Judy Waterlow.'),
+      selectInput('ageBand', 'Age', [
+        { label: '14–49 (1)', value: '14-49', description: 'Official age 14–49 = 1' },
+        { label: '50–64 (2)', value: '50-64', description: 'Official age 50–64 = 2' },
+        { label: '65–74 (3)', value: '65-74', description: 'Official age 65–74 = 3' },
+        { label: '75–80 (4)', value: '75-80', description: 'Official age 75–80 = 4' },
+        { label: '81+ (5)', value: '81-plus', description: 'Official age 81+ = 5' },
+      ], '14-49', 'Official Waterlow age: 14–49:+1, 50–64:+2, 65–74:+3, 75–80:+4, 81+:+5. Always added to sex. Card copyright Judy Waterlow.'),
       selectInput('continence', 'Continence', [
         { label: 'Complete / catheterized (0)', value: 0, description: 'Fully continent, or urine diverted by catheter with continent stool' },
         { label: 'Occasional incontinence (1)', value: 1, description: 'Occasional urine or stool incontinence (not every episode)' },
@@ -2296,16 +2308,14 @@ export const wave4IcuVentCalcs: Calculator[] = [
         'discolored-grade1': 2,
         'broken-grade2-plus': 3,
       };
-      const sexAgePoints: Record<string, number> = {
-        'male-only': 1,
-        'female-only': 2,
-        'age14-49': 1,
-        'male50-64': 3,
-        'male65-74-female50-64': 4,
-        'male75-80-female65-74': 5,
-        'male81-plus-female75-80': 6,
-        'female81-plus': 7,
+      const agePoints: Record<string, number> = {
+        '14-49': 1,
+        '50-64': 2,
+        '65-74': 3,
+        '75-80': 4,
+        '81-plus': 5,
       };
+      const sexPoints = String(values.sex) === 'female' ? 2 : 1;
       const tissuePoints: Record<string, number> = {
         none: 0,
         'terminal-cachexia': 8,
@@ -2326,7 +2336,8 @@ export const wave4IcuVentCalcs: Calculator[] = [
       const score =
         num(values.build) +
         points(values.skin, skinPoints) +
-        points(values.sexAge, sexAgePoints) +
+        sexPoints +
+        (agePoints[String(values.ageBand)] ?? 1) +
         num(values.continence) +
         num(values.mobility) +
         num(values.appetite) +
@@ -2365,13 +2376,14 @@ export const wave4IcuVentCalcs: Calculator[] = [
         ...r,
         details: [
           { label: 'Thresholds', value: '10+ at risk; 15+ high; 20+ very high' },
-          { label: 'Note', value: 'Sex/age combined selector is simplified for bedside use' },
+          { label: 'Sex + age', value: `Sex ${sexPoints} + age ${agePoints[String(values.ageBand)] ?? 1}` },
         ],
       };
     },
     evidence: {
       summary: 'Waterlow scores multiple intrinsic and extrinsic pressure ulcer risk factors; higher totals mean higher risk.',
-      formula: 'Sum of build, skin, sex/age, continence, mobility, appetite, tissue, neuro, surgery, meds points',
+      formula:
+        'Sum of build, skin, sex (M1/F2), age (14–49:1, 50–64:2, 65–74:3, 75–80:4, 81+:5), continence, mobility, appetite, tissue, neuro, surgery, meds',
       validation: 'Widely used in UK; sensitivity/specificity vary; education required for consistent scoring.',
       references: [
         {
@@ -2395,7 +2407,7 @@ export const wave4IcuVentCalcs: Calculator[] = [
     ],
     pearls: [
       'Unlike Braden, higher Waterlow = higher risk.',
-      'This implementation simplifies sex+age stacking — verify against your printed Waterlow card for audit-critical scoring.',
+      'Sex and age are separate additive items (male 1 / female 2 plus age 1–5); omitting age under-scores, especially in older adults.',
     ],
   },
 
@@ -2518,8 +2530,10 @@ export const wave4IcuVentCalcs: Calculator[] = [
         { label: 'BMI >20 (0) (>30 obese still scores 0 for MUST BMI step)', value: 'bmi-over20', description: 'Includes overweight/obese BMI >30, which still scores 0 on this step' },
         { label: 'BMI 18.5–20 (1)', value: 'bmi-18-5-20' },
         { label: 'BMI <18.5 (2)', value: 'bmi-under18-5' },
-        { label: 'BMI unknown — alternatives used; this choice scores 0 pending clinical estimate', value: 'bmi-unknown', description: 'Do not assume unknown = 0. Estimate height from ulna length (BAPEN); MUAC <23.5 cm suggests BMI <20 (at least 1 if also clinically thin). MUAC is not a standalone MUST point.' },
-      ], 'bmi-over20', 'Obese BMI >30 still scores 0 on the BMI step. If BMI unmeasurable, estimate height from ulna length (BAPEN table); MUAC <23.5 cm suggests BMI <20. BAPEN: MUAC is not a standalone MUST point — do not assume unknown = 0. MUST is BAPEN copyright (free non-commercial).'),
+        { label: 'BMI unknown, MUAC ≥23.5 cm (0) — suggests BMI ≥20', value: 'muac-ge23-5', description: 'Use when BMI cannot be measured. BAPEN: MUAC ≥23.5 cm suggests BMI ≥20 (0 BMI points).' },
+        { label: 'BMI unknown, MUAC <23.5 cm (1) — suggests BMI <20', value: 'muac-lt23-5', description: 'Use when BMI cannot be measured. BAPEN: MUAC <23.5 cm suggests BMI <20 (at least 1 BMI point). Cannot distinguish <18.5 (2 points).' },
+        { label: 'BMI unknown — no MUAC/ulna estimate (cannot score)', value: 'bmi-unknown', description: 'Unknown BMI is not 0 points. Estimate height from ulna length or use MUAC; do not label MUST 0 / low risk.' },
+      ], 'bmi-over20', 'Obese BMI >30 still scores 0 on the BMI step. If BMI unmeasurable, estimate height from ulna length (BAPEN table) or MUAC (<23.5 cm suggests BMI <20 → at least 1 point). Unknown BMI is not scored as 0. MUST is BAPEN copyright (free non-commercial).'),
       selectInput('wtLoss', 'Unplanned weight loss in past 3–6 months', [
         { label: '<5% (0)', value: 0, description: 'Unplanned loss <5% of usual weight over 3–6 months' },
         { label: '5–10% (1)', value: 1, description: 'Unplanned loss 5–10% of usual weight over 3–6 months' },
@@ -2539,11 +2553,25 @@ export const wave4IcuVentCalcs: Calculator[] = [
       ], 0, 'Score 2 only if BOTH: (1) acutely ill AND (2) likely no nutritional intake for >5 days. Illness alone without starvation risk is 0.'),
     ],
     calculate(values) {
+      if (String(values.bmi) === 'bmi-unknown') {
+        return {
+          score: '—',
+          label: 'Incomplete — BMI unknown',
+          interpretation:
+            'MUST cannot be scored as low risk when BMI is unknown. Estimate BMI (ulna length per BAPEN) or enter MUAC: ≥23.5 cm suggests BMI ≥20 (0 points); <23.5 cm suggests BMI <20 (at least 1 BMI point). Unknown BMI is not 0 points.',
+          riskLevel: 'info',
+          details: [
+            { label: 'BMI step', value: 'Unknown — not scored as 0' },
+            { label: 'Next', value: 'Use MUAC or ulna-length height estimate, then rescore' },
+          ],
+        };
+      }
       const bmiPoints: Record<string, number> = {
         'bmi-over20': 0,
         'bmi-18-5-20': 1,
         'bmi-under18-5': 2,
-        'bmi-unknown': 0,
+        'muac-ge23-5': 0,
+        'muac-lt23-5': 1,
       };
       const score = (bmiPoints[String(values.bmi)] ?? num(values.bmi)) + num(values.wtLoss) + num(values.acute);
       let riskLevel: 'low' | 'moderate' | 'high' = 'low';

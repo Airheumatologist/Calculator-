@@ -498,7 +498,7 @@ export const wave7BedsideCalcs: Calculator[] = [
     ],
     pearls: [
       'Score the values after ~1 hour of optimized NIV, not the pre-NIV gases alone.',
-      'HACOR was derived mainly in COPD; extra-caution in de novo hypoxemic failure.',
+      '2017 HACOR derivation is hypoxemic NIV failure (Duan); a 2019 paper applied HACOR in COPD. Interpret COPD and de novo hypoxemia with the matching papers.',
     ],
   },
 
@@ -1476,8 +1476,7 @@ export const wave7BedsideCalcs: Calculator[] = [
       const male = str(values.sex, 'F') === 'M';
       const alcohol = num(values.alcohol, 0);
       const mets: string[] = [];
-      if (bmiMet) mets.push('BMI');
-      if (waistMet) mets.push('waist');
+      if (bmiMet || waistMet) mets.push(bmiMet && waistMet ? 'adiposity (BMI and waist)' : bmiMet ? 'BMI' : 'waist');
       if (glucoseMet) mets.push('glucose/DM');
       if (bpMet) mets.push('BP');
       if (tgMet) mets.push('TG');
@@ -1541,7 +1540,7 @@ export const wave7BedsideCalcs: Calculator[] = [
     evidence: {
       summary:
         'Rinella / multi-society 2023: MASLD = steatosis + ≥1 cardiometabolic criterion + no other cause, with alcohol <20 g/d (women) or <30 g/d (men). MetALD = MASLD metabolic criteria + alcohol 20–50 (F) or 30–60 (M) g/d. Above 50/60 g/d = ALD.',
-      formula: 'Rule-based SLD subcategory from steatosis, metabolic traits, competing disease, and sex-specific alcohol bands',
+      formula: 'Rule-based SLD subcategory from steatosis, up to 5 cardiometabolic slots (BMI or waist is one adiposity slot), competing disease, and sex-specific alcohol bands',
       validation: 'Consensus nomenclature (AASLD/EASL/ALEH); intended to replace NAFLD terminology in research and clinics.',
       references: [
         {

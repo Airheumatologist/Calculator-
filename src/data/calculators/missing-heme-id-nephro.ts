@@ -1119,12 +1119,10 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
         { label: 'RR >10 above normal, accessory muscles, or FiO₂ ~30% (1)', value: 1 },
         { label: 'RR >20 above normal, recession, or FiO₂ ~40% (2)', value: 2 },
         { label: 'RR ≥5 below normal with distress/grunting or FiO₂ ≥50% (3)', value: 3 },
-      ], 0, 'Age-normal RR: neonate 30–60, infant 30–50, toddler 25–35, preschool 20–30, school-age 18–25, adolescent 12–20. Score vs that band, not an adult RR.'),
-      yesNo('oxygen', 'Receiving any supplemental oxygen (+2 in many PEWS variants)', 2),
+      ], 0, 'Age-normal RR: neonate 30–60, infant 30–50, toddler 25–35, preschool 20–30, school-age 18–25, adolescent 12–20. Score vs that band, not an adult RR. FiO₂/oxygen is scored only in this respiratory column — do not add a separate oxygen bonus.'),
     ],
     calculate(values) {
-      const score =
-        num(values.behavior) + num(values.cv) + num(values.resp) + (bool(values.oxygen) ? 2 : 0);
+      const score = num(values.behavior) + num(values.cv) + num(values.resp);
       const r = riskFromThresholds(score, [
         {
           max: 2,
@@ -1151,14 +1149,13 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
         details: [
           { label: 'Behavior', value: String(num(values.behavior)) },
           { label: 'Cardiovascular', value: String(num(values.cv)) },
-          { label: 'Respiratory', value: String(num(values.resp)) },
-          { label: 'Oxygen bonus', value: bool(values.oxygen) ? '2' : '0' },
+          { label: 'Respiratory (includes FiO₂/distress)', value: String(num(values.resp)) },
         ],
       };
     },
     evidence: {
-      summary: 'PEWS systems (e.g., Monaghan/Brighton-style) score behavior, CV, and respiratory status; institutional cutoffs differ.',
-      formula: 'Behavior (0–3) + CV (0–3) + Resp (0–3) + O₂ (0 or 2)',
+      summary: 'PEWS systems (e.g., Monaghan/Brighton-style) score behavior, CV, and respiratory status (FiO₂/distress live in the respiratory column only); institutional cutoffs differ.',
+      formula: 'Behavior (0–3) + CV (0–3) + Resp (0–3). Supplemental oxygen is not added as a second +2 on top of FiO₂ bands.',
       validation: 'Multiple PEWS variants associate higher scores with ICU transfer; not a substitute for clinical concern.',
       references: [
         { title: 'Detecting and managing deterioration in children', citation: 'Monaghan A. Paediatr Nurs. 2005', year: 2005, pmid: '15751446',
@@ -1169,7 +1166,11 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       { condition: 'Score ≥5 or any domain 3', actions: ['Urgent clinician review', 'Increase monitoring', 'Prepare for escalation'] },
       { condition: 'Score 3–4', actions: ['Medical review', 'Repeat observations sooner'] },
     ],
-    pearls: ['Caregiver concern is an independent escalation trigger in many hospitals.', 'Use local PEWS chart when available — thresholds are institution-specific.'],
+    pearls: [
+      'Caregiver concern is an independent escalation trigger in many hospitals.',
+      'Use local PEWS chart when available — thresholds are institution-specific.',
+      'Oxygen is scored only via the respiratory FiO₂/distress item; a separate any-oxygen +2 is not added (avoids double-counting).',
+    ],
   },
   {
     id: 'hemorr2hages',

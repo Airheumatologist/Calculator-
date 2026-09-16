@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
+import { num, bool, str, round, clamp, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave3CardioVascCalcs: Calculator[] = [
   {
@@ -92,6 +92,13 @@ export const wave3CardioVascCalcs: Calculator[] = [
           year: 2019,
           pmid: '31104355',
           doi: '10.1002/ccd.28329',
+        },
+        {
+          title: 'SCAI SHOCK Stage Classification Expert Consensus Update: A Review and Incorporation of Validation Studies',
+          citation: 'Naidu SS et al. J Am Coll Cardiol. 2022',
+          year: 2022,
+          pmid: '35115207',
+          doi: '10.1016/j.jacc.2022.01.018',
         },
       ],
     },
@@ -255,33 +262,26 @@ export const wave3CardioVascCalcs: Calculator[] = [
         num(values.lactate) +
         num(values.egfr);
 
-      // Approximate in-hospital mortality bands from CardShock derivation
-      const mort =
-        score <= 3 ? '~8–15%' : score <= 5 ? '~30–40%' : score <= 7 ? '~60–70%' : '~70–90%';
+      // Harjola 2015 three groups: 0–3 / 4–5 / 6–9 with 8.7% / 36% / 77% in-hospital mortality
+      const mort = score <= 3 ? '8.7%' : score <= 5 ? '36%' : '77%';
       const r = riskFromThresholds(score, [
         {
           max: 3,
           level: 'moderate',
-          label: 'Lower CardShock risk (0–3)',
-          interpretation: `CardShock ${score}: lower short-term mortality band (~8–15% in derivation strata). Still requires shock-level care.`,
+          label: 'Low CardShock risk (0–3)',
+          interpretation: `CardShock ${score}: low-risk group (8.7% in-hospital mortality in derivation). Still requires shock-level care.`,
         },
         {
           max: 5,
           level: 'high',
           label: 'Intermediate CardShock risk (4–5)',
-          interpretation: `CardShock ${score}: intermediate mortality risk (~30–40%). Intensify support and etiology therapy.`,
-        },
-        {
-          max: 7,
-          level: 'critical',
-          label: 'High CardShock risk (6–7)',
-          interpretation: `CardShock ${score}: high predicted mortality (~60–70%). Escalate MCS/shock team early.`,
+          interpretation: `CardShock ${score}: intermediate-risk group (36% in-hospital mortality). Intensify support and etiology therapy.`,
         },
         {
           max: 9,
           level: 'critical',
-          label: 'Very high CardShock risk (8–9)',
-          interpretation: `CardShock ${score}: very high predicted mortality (~70–90%). Maximal support and goals discussion.`,
+          label: 'High CardShock risk (6–9)',
+          interpretation: `CardShock ${score}: high-risk group (77% in-hospital mortality). Escalate MCS/shock team early; discuss goals of care.`,
         },
       ]);
 
@@ -300,8 +300,8 @@ export const wave3CardioVascCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'CardShock score predicts in-hospital mortality in cardiogenic shock using age, confusion, prior MI/CABG, ACS etiology, LVEF, lactate, and eGFR.',
-      formula: 'Age>75 + confusion + prior MI/CABG + ACS + LVEF<40 + lactate (0–2) + eGFR (0–2) = 0–9',
+        'CardShock score predicts in-hospital mortality in cardiogenic shock using age, confusion, prior MI/CABG, ACS etiology, LVEF, lactate, and eGFR. Derivation groups: 0–3 (8.7%), 4–5 (36%), 6–9 (77%).',
+      formula: 'Age>75 + confusion + prior MI/CABG + ACS + LVEF<40 + lactate (0–2) + eGFR (0–2) = 0–9. Risk groups 0–3 / 4–5 / 6–9.',
       validation: 'Derived/validated in CardShock study (European multicentre CS cohort).',
       references: [
         {
@@ -317,14 +317,18 @@ export const wave3CardioVascCalcs: Calculator[] = [
       { condition: 'Score 0–3', actions: ['Standard CS protocols', 'Close reassessment'] },
       { condition: 'Score ≥4', actions: ['Early advanced therapies', 'Multidisciplinary shock care'] },
     ],
-    pearls: ['Lactate and renal function dominate risk.', 'Score complements — does not replace — SCAI staging.'],
+    pearls: [
+      'Lactate and renal function dominate risk.',
+      'Score complements — does not replace — SCAI staging.',
+      'Do not split 6–9 into unofficial finer mortality bands; derivation reported one high-risk group (77%).',
+    ],
   },
   {
     id: 'crusade',
     name: 'CRUSADE Bleeding Risk Score',
     shortName: 'CRUSADE',
     description:
-      'CRUSADE in-hospital major bleeding risk after NSTE-ACS (simplified educational point bands from key variables).',
+      'CRUSADE in-hospital major bleeding risk after NSTE-ACS using the published Subherwal 8-variable point table and official quintiles.',
     category: 'cardiology',
     tags: ['bleeding', 'acs', 'crusade', 'nste-acs', 'antiplatelet'],
     whenToUse: 'NSTE-ACS patients when balancing ischemic vs bleeding risk for antithrombotic intensity.',
@@ -439,8 +443,9 @@ export const wave3CardioVascCalcs: Calculator[] = [
     evidence: {
       summary:
         'CRUSADE bleeding score predicts major in-hospital bleeding in NSTE-ACS using Hct, CrCl, HR, SBP, HF signs, vascular disease, diabetes, and sex.',
-      formula: 'Weighted points from 8 admission variables (max theoretical high 90s)',
-      validation: 'Derived from CRUSADE registry; widely used educational bleeding risk tool (era pre-universal radial/potent P2Y12).',
+      formula:
+        'Subherwal table: Hct (<31:9, <34:7, <37:3, <40:2) + CrCl (≤15:39, ≤30:35, ≤60:28, ≤90:17, ≤120:7) + HR (≥121:11, ≥111:10, ≥101:8, ≥91:6, ≥81:3, ≥71:1) + SBP (≤90:10, ≤100:8, ≤120:5, ≤180:1, ≤200:3, else 5) + HF (7) + vascular disease (6) + DM (6) + female (8). Quintiles ≤20 / 21–30 / 31–40 / 41–50 / >50.',
+      validation: 'Derived from CRUSADE registry; full published point table (not a simplified educational subset). Era predates universal radial access and potent P2Y12 inhibitors.',
       references: [
         {
           title: 'Baseline risk of major bleeding in non-ST-segment-elevation MI (CRUSADE)',
@@ -557,20 +562,20 @@ export const wave3CardioVascCalcs: Calculator[] = [
   },
   {
     id: 'precise-dapt',
-    name: 'PRECISE-DAPT (Simplified Educational)',
+    name: 'PRECISE-DAPT Score',
     shortName: 'PRECISE-DAPT',
     description:
-      'Simplified educational PRECISE-DAPT-style bleeding risk bands after PCI using age, CrCl, hemoglobin, WBC, and prior bleeding.',
+      'PRECISE-DAPT out-of-hospital bleeding risk after PCI from the Costa 2017 five-item nomogram (age, CrCl, hemoglobin, WBC, prior spontaneous bleeding).',
     category: 'cardiology',
     tags: ['precise-dapt', 'bleeding', 'pci', 'dapt', 'antiplatelet'],
-    whenToUse: 'Educational estimate of out-of-hospital bleeding risk to inform DAPT duration after coronary stenting.',
-    whyUse: 'Highlights major PRECISE-DAPT predictors; full nomogram is preferred for precise cutoffs (e.g. ≥25).',
+    whenToUse: 'At the time of coronary stenting to inform DAPT duration from out-of-hospital bleeding risk.',
+    whyUse: 'Score ≥25 identifies high bleeding risk in whom longer DAPT increased bleeding without ischemic benefit in the derivation analyses.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 68 }),
-      numberInput('crcl', 'Creatinine clearance', { unit: 'mL/min', min: 5, max: 200, defaultValue: 70 }),
-      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 5, max: 20, step: 0.1, defaultValue: 13 }),
-      numberInput('wbc', 'White blood cell count', { unit: '×10⁹/L', min: 1, max: 50, step: 0.1, defaultValue: 8 }),
-      yesNo('priorBleed', 'Previous spontaneous bleeding (hospitalized / TIMI-style, not access-site or traumatic)', 15, 'Costa 2017 nomogram item is prior spontaneous bleed. This tool remains educational, not the official PRECISE-DAPT nomogram.'),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 68, helpText: 'Nomogram age axis is truncated at 50–90 years.' }),
+      numberInput('crcl', 'Creatinine clearance', { unit: 'mL/min', min: 5, max: 200, defaultValue: 70, helpText: 'Cockcroft–Gault CrCl (mL/min). Nomogram axis truncated at 0–100 mL/min.' }),
+      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 5, max: 20, step: 0.1, defaultValue: 13, helpText: 'Baseline hemoglobin. Nomogram axis truncated at 10–12 g/dL (values ≥12 score 0).' }),
+      numberInput('wbc', 'White blood cell count', { unit: '×10⁹/L', min: 1, max: 50, step: 0.1, defaultValue: 8, helpText: 'Baseline WBC. Nomogram axis truncated at 5–20 ×10⁹/L.' }),
+      yesNo('priorBleed', 'Previous spontaneous bleeding', 26, 'Prior spontaneous (not access-site or traumatic) bleed requiring hospitalization / TIMI-style event. Nomogram: 26 points if present.'),
     ],
     calculate(values) {
       const age = num(values.age, 68);
@@ -578,41 +583,43 @@ export const wave3CardioVascCalcs: Calculator[] = [
       const hb = num(values.hb, 13);
       const wbc = num(values.wbc, 8);
 
-      // Educational pseudo-points approximating direction of PRECISE-DAPT nomogram
-      let pts = 0;
-      pts += Math.max(0, age - 50) * 0.6;
-      if (crcl < 30) pts += 25;
-      else if (crcl < 45) pts += 18;
-      else if (crcl < 60) pts += 12;
-      else if (crcl < 90) pts += 5;
-      if (hb < 10) pts += 18;
-      else if (hb < 11) pts += 14;
-      else if (hb < 12) pts += 10;
-      else if (hb < 13) pts += 5;
-      if (wbc >= 15) pts += 10;
-      else if (wbc >= 10) pts += 5;
-      else if (wbc >= 8) pts += 2;
-      if (bool(values.priorBleed)) pts += 15;
-      pts = round(pts, 0);
+      // Costa 2017 Figure 1 nomogram (linear interpolation; axes truncated at published ticks).
+      // Endpoints sum to 100: age 19 + CrCl 25 + Hb 15 + WBC 15 + prior bleed 26.
+      const lerp = (x: number, x0: number, x1: number, p0: number, p1: number) => {
+        const t = (clamp(x, Math.min(x0, x1), Math.max(x0, x1)) - x0) / (x1 - x0);
+        return p0 + t * (p1 - p0);
+      };
+      const agePts = lerp(age, 50, 90, 0, 19);
+      const crclPts = lerp(crcl, 100, 0, 0, 25);
+      const hbPts = lerp(hb, 12, 10, 0, 15);
+      const wbcPts = lerp(wbc, 5, 20, 0, 15);
+      const bleedPts = bool(values.priorBleed) ? 26 : 0;
+      const pts = round(agePts + crclPts + hbPts + wbcPts + bleedPts, 0);
 
       const r = riskFromThresholds(pts, [
         {
+          max: 7,
+          level: 'low',
+          label: 'Very low bleeding risk (0–7)',
+          interpretation: `PRECISE-DAPT ${pts}: very-low quartile. Standard or prolonged DAPT may be considered if ischemic risk is high.`,
+        },
+        {
           max: 17,
           level: 'low',
-          label: 'Lower bleeding risk band (educational)',
-          interpretation: `Simplified PRECISE-DAPT-style points ${pts}: lower bleeding risk band. Longer DAPT may be reasonable if ischemic risk high (confirm with full score).`,
+          label: 'Low bleeding risk (8–17)',
+          interpretation: `PRECISE-DAPT ${pts}: low bleeding-risk quartile. Standard (12-month) or longer DAPT may be reasonable if ischemic risk is high.`,
         },
         {
           max: 24,
           level: 'moderate',
-          label: 'Intermediate bleeding risk band',
-          interpretation: `Simplified points ${pts}: intermediate bleeding risk. Individualize DAPT duration; avoid default prolongation.`,
+          label: 'Moderate bleeding risk (18–24)',
+          interpretation: `PRECISE-DAPT ${pts}: moderate bleeding risk. Individualize duration; avoid default prolongation.`,
         },
         {
           max: 100,
           level: 'high',
-          label: 'Higher bleeding risk band (~PRECISE-DAPT ≥25 zone)',
-          interpretation: `Simplified points ${pts}: maps toward high bleeding risk (PRECISE-DAPT ≥25 associated with more bleeding on long DAPT). Prefer shorter DAPT when ischemic risk allows.`,
+          label: 'High bleeding risk (≥25)',
+          interpretation: `PRECISE-DAPT ${pts}: high bleeding risk. Longer DAPT increased TIMI bleeding without ischemic benefit in derivation — prefer shortened (3–6 month) DAPT when ischemic risk allows.`,
         },
       ]);
 
@@ -620,20 +627,21 @@ export const wave3CardioVascCalcs: Calculator[] = [
         score: pts,
         ...r,
         details: [
-          { label: 'Note', value: 'Educational simplification — not the official PRECISE-DAPT calculator' },
-          { label: 'Official high-risk cutoff', value: 'PRECISE-DAPT ≥ 25' },
+          { label: 'Age / CrCl / Hb / WBC / prior bleed', value: `${round(agePts, 1)} / ${round(crclPts, 1)} / ${round(hbPts, 1)} / ${round(wbcPts, 1)} / ${bleedPts}` },
+          { label: 'High-risk cutoff', value: '≥ 25' },
         ],
         recommendations:
           pts >= 25
-            ? ['Consider shortened DAPT if acceptable ischemic risk', 'Radial access, PPI, avoid NSAIDs', 'Use full PRECISE-DAPT nomogram for decisions']
+            ? ['Consider shortened DAPT (3–6 months) if acceptable ischemic risk', 'Radial access, PPI, avoid NSAIDs', 'Reconcile with ARC-HBR and DAPT score']
             : ['Standard or longer DAPT per ischemic risk', 'Still mitigate modifiable bleed risks'],
       };
     },
     evidence: {
       summary:
-        'PRECISE-DAPT predicts out-of-hospital bleeding on DAPT using age, CrCl, hemoglobin, WBC, and prior bleeding; score ≥25 marks high bleeding risk.',
-      formula: 'Educational weighted points from age, CrCl, Hb, WBC, prior bleed (not official nomogram)',
-      validation: 'Original PRECISE-DAPT derived from PCI trial pooled cohorts; this app version is simplified for teaching.',
+        'PRECISE-DAPT predicts out-of-hospital TIMI major/minor bleeding on DAPT using a five-item nomogram (age, CrCl, hemoglobin, WBC, prior spontaneous bleeding); score ≥25 marks high bleeding risk.',
+      formula:
+        'Nomogram linear interpolation (Costa 2017 Fig. 1): age 0 at ≤50 to 19 at ≥90; CrCl 0 at ≥100 to 25 at 0 mL/min; Hb 0 at ≥12 to 15 at ≤10 g/dL; WBC 0 at ≤5 to 15 at ≥20 ×10⁹/L; prior spontaneous bleed 26. Quartiles 0–7 / 8–17 / 18–24 / ≥25.',
+      validation: 'Derived from pooled PCI trials (n=14 963); validated in PLATO PCI and BernPCI. Decision cutoff ≥25 from DAPT-duration interaction analyses.',
       references: [
         {
           title: 'Predicting bleeding complications in patients undergoing stent implantation and subsequent DAPT (PRECISE-DAPT)',
@@ -645,111 +653,105 @@ export const wave3CardioVascCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Lower band', actions: ['Ischemic risk drives duration', 'Standard secondary prevention'] },
-      { condition: 'Higher band', actions: ['Short DAPT strategies', 'HBR checklist (ARC-HBR)', 'Verify with full calculator'] },
+      { condition: 'Score <25', actions: ['Ischemic risk drives duration', 'Standard secondary prevention'] },
+      { condition: 'Score ≥25', actions: ['Short DAPT strategies', 'HBR checklist (ARC-HBR)'] },
     ],
     pearls: [
-      'Not a substitute for the published PRECISE-DAPT web/nomogram calculator.',
-      'Complement with DAPT score and clinical HBR criteria.',
+      'Apply at the time of PCI — not after an uneventful year (that is the DAPT score setting).',
+      'Complement with DAPT score and ARC-HBR criteria; high ischemic risk may still warrant longer DAPT.',
     ],
   },
   {
     id: 'hcm-risk-scd',
-    name: 'HCM Risk-SCD (Simplified Educational)',
+    name: 'HCM Risk-SCD (ESC 5-year)',
     shortName: 'HCM Risk-SCD',
     description:
-      'Educational factor checklist and risk bands for sudden cardiac death risk discussion in hypertrophic cardiomyopathy (not the full ESC calculator).',
+      'ESC HCM Risk-SCD 5-year sudden cardiac death probability (O’Mahony 2014) from age, wall thickness, LA diameter, LVOT gradient, family SCD, NSVT, and unexplained syncope.',
     category: 'cardiology',
     tags: ['hcm', 'scd', 'icd', 'hypertrophic cardiomyopathy', 'risk'],
-    whenToUse: 'Adults with HCM when framing SCD risk factors before using the official HCM Risk-SCD model or AHA pathway.',
-    whyUse: 'Counts major ESC-model inputs and classic risk markers for structured counseling; full 5-year % needs official tool.',
+    whenToUse: 'Adults ≥16 years with HCM for primary-prevention SCD risk (not after aborted SCD/sustained VT, not pediatric, not phenocopies).',
+    whyUse: 'Published Cox model used in ESC HCM guidelines; 5-year risk <4% / 4–<6% / ≥6% frames ICD discussion.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 16, max: 90, defaultValue: 45 }),
-      numberInput('mwt', 'Maximal wall thickness', { unit: 'mm', min: 5, max: 50, defaultValue: 18, helpText: 'Greatest LV wall thickness (mm) in any segment. ≥30 mm is a classic major SCD factor and is also counted automatically.' }),
-      numberInput('la', 'Left atrial diameter', { unit: 'mm', min: 20, max: 80, defaultValue: 42, helpText: 'Anteroposterior LA diameter (mm). ESC model is continuous; this helper also flags ≥45 mm educationally.' }),
-      numberInput('lvot', 'Max LVOT gradient', { unit: 'mmHg', min: 0, max: 200, defaultValue: 20, helpText: 'Peak LVOT gradient (rest or Valsalva/exercise), mmHg. ESC model is continuous; ≥30 mmHg is flagged here.' }),
-      yesNo('fhScd', 'Family history of SCD in first-degree relative', 1, '≥1 first-degree SCD <40 y, or SCD at any age if that relative had confirmed HCM.'),
-      yesNo('nsvt', 'NSVT on Holter', 1, '≥3 consecutive ventricular beats ≥120 bpm lasting <30 s on 24–48 h ECG.'),
-      yesNo('syncope', 'Unexplained syncope', 1, 'Unexplained TLOC, not neurally mediated or purely LVOTO; strongest if within ~6 months.'),
-      yesNo('abnormalBP', 'Abnormal exercise BP response (optional classic factor)', 1, 'Optional AHA classic marker (not in the ESC continuous model): SBP fails to rise ≥20 mmHg or falls ≥10 mmHg during exercise.'),
-      yesNo('massiveH', 'Massive hypertrophy ≥30 mm (classic major factor)', 1),
+      numberInput('age', 'Age at evaluation', { unit: 'years', min: 16, max: 90, defaultValue: 45, helpText: 'Do not use below age 16. Younger age increases 5-year risk in this model.' }),
+      numberInput('mwt', 'Maximal wall thickness', { unit: 'mm', min: 5, max: 50, defaultValue: 18, helpText: 'Greatest LV wall thickness (mm) in any segment (echo). Entered continuously — do not add extra points for ≥30 mm.' }),
+      numberInput('la', 'Left atrial diameter', { unit: 'mm', min: 20, max: 80, defaultValue: 42, helpText: 'Anteroposterior LA diameter (mm); continuous predictor.' }),
+      numberInput('lvot', 'Max LVOT gradient', { unit: 'mmHg', min: 0, max: 200, defaultValue: 20, helpText: 'Peak LVOT gradient at rest or with Valsalva/exercise (mmHg); continuous. Use 0 if none.' }),
+      yesNo('fhScd', 'Family history of SCD in first-degree relative', null, '≥1 first-degree SCD <40 y, or SCD at any age if that relative had confirmed HCM.'),
+      yesNo('nsvt', 'NSVT on ambulatory ECG', null, '≥3 consecutive ventricular beats ≥120 bpm lasting <30 s.'),
+      yesNo('syncope', 'Unexplained syncope', null, 'Unexplained TLOC, not neurally mediated or purely obstructive; strongest if recent.'),
+      yesNo('abnormalBP', 'Abnormal exercise BP response (AHA marker — not in ESC model)', 0, 'Optional AHA classic marker only (not an O’Mahony covariate): SBP fails to rise ≥20 mmHg or falls ≥10 mmHg. Does not enter the 5-year %. Displayed as a counseling flag.'),
     ],
     calculate(values) {
       const age = num(values.age, 45);
       const mwt = num(values.mwt, 18);
       const la = num(values.la, 42);
-      const lvot = num(values.lvot, 20);
+      const lvot = Math.max(0, num(values.lvot, 20));
+      const fh = bool(values.fhScd) ? 1 : 0;
+      const nsvt = bool(values.nsvt) ? 1 : 0;
+      const syncope = bool(values.syncope) ? 1 : 0;
 
-      let factors = 0;
-      const detailFlags: string[] = [];
-      if (bool(values.fhScd)) {
-        factors += 1;
-        detailFlags.push('Family SCD');
-      }
-      if (bool(values.nsvt)) {
-        factors += 1;
-        detailFlags.push('NSVT');
-      }
-      if (bool(values.syncope)) {
-        factors += 1;
-        detailFlags.push('Unexplained syncope');
-      }
-      if (bool(values.massiveH) || mwt >= 30) {
-        factors += 1;
-        detailFlags.push('MWT ≥30 mm');
-      }
-      if (bool(values.abnormalBP)) {
-        factors += 1;
-        detailFlags.push('Abnormal BP response');
-      }
-      if (la >= 45) {
-        factors += 1;
-        detailFlags.push('LA enlarged');
-      }
-      if (lvot >= 30) detailFlags.push('LVOT gradient ≥30');
-      if (age < 40) detailFlags.push('Younger age (higher model risk weight)');
+      const pi =
+        0.15939858 * mwt -
+        0.00294271 * mwt * mwt +
+        0.0259082 * la +
+        0.00446131 * lvot +
+        0.4583082 * fh +
+        0.82639195 * nsvt +
+        0.71650361 * syncope -
+        0.01799934 * age;
+      const risk = round((1 - Math.pow(0.998, Math.exp(pi))) * 100, 1);
 
-      // Rough educational band — not ESC 5-year %
-      const r = riskFromThresholds(factors, [
+      const r = riskFromThresholds(risk, [
         {
-          max: 0,
+          max: 3.99,
           level: 'low',
-          label: 'Few major risk markers',
-          interpretation: `No major classic markers selected (MWT ${mwt} mm, LA ${la} mm, LVOT ${lvot} mmHg). Still compute official HCM Risk-SCD 5-year risk; ICD usually not indicated for primary prevention if low calculated risk and no major factors.`,
+          label: '5-year SCD risk <4%',
+          interpretation: `HCM Risk-SCD 5-year SCD probability ${risk}%. ESC 2014: ICD generally not indicated for primary prevention at <4% (individualize if other high-risk features).`,
         },
         {
-          max: 1,
+          max: 5.99,
           level: 'moderate',
-          label: 'Intermediate marker burden',
-          interpretation: `About ${factors} major/educational risk marker(s): ${detailFlags.join(', ') || 'see inputs'}. Use full ESC HCM Risk-SCD calculator and shared decision-making for ICD.`,
+          label: '5-year SCD risk 4–<6%',
+          interpretation: `HCM Risk-SCD 5-year SCD probability ${risk}%. ESC 2014: ICD may be considered after shared decision-making.`,
         },
         {
-          max: 9,
+          max: 100,
           level: 'high',
-          label: 'Multiple risk markers',
-          interpretation: `${factors} risk markers present (${detailFlags.join(', ')}). Elevated concern for SCD — complete official risk model, consider ICD primary prevention discussion, and specialty HCM care.`,
+          label: '5-year SCD risk ≥6%',
+          interpretation: `HCM Risk-SCD 5-year SCD probability ${risk}%. ESC 2014: ICD should be considered for primary prevention.`,
         },
       ]);
 
+      const flags = [
+        fh ? 'Family SCD' : null,
+        nsvt ? 'NSVT' : null,
+        syncope ? 'Unexplained syncope' : null,
+        bool(values.abnormalBP) ? 'Abnormal exercise BP (AHA marker; not in ESC equation)' : null,
+      ].filter(Boolean) as string[];
+
       return {
-        score: factors,
+        score: risk,
+        unit: '% / 5y',
         ...r,
         details: [
-          { label: 'Educational factor count', value: String(factors) },
-          { label: 'Markers', value: detailFlags.length ? detailFlags.join('; ') : 'None flagged' },
-          { label: 'Official tool', value: 'ESC HCM Risk-SCD 5-year % required for formal estimate' },
+          { label: 'Prognostic index', value: String(round(pi, 4)) },
+          { label: 'MWT / LA / LVOT / age', value: `${mwt} mm / ${la} mm / ${lvot} mmHg / ${age} y` },
+          { label: 'Binary predictors', value: flags.length ? flags.join('; ') : 'None selected' },
         ],
         recommendations:
-          factors >= 2 || mwt >= 30 || bool(values.syncope)
-            ? ['Refer HCM center', 'Official HCM Risk-SCD calculation', 'ICD counseling if high predicted risk / major factors']
-            : ['Routine HCM follow-up', 'Risk factor surveillance (Holter, imaging)', 'Lifestyle and family screening'],
+          risk >= 6
+            ? ['ICD shared decision — ESC “should be considered”', 'Refer HCM center', 'Lifestyle / family screening']
+            : risk >= 4
+              ? ['ICD may be considered — shared decision', 'Reassess with new syncope/NSVT/imaging', 'HCM-expert exercise counseling']
+              : ['Routine HCM follow-up', 'Surveillance (Holter, imaging)', 'ICD generally not indicated for primary prevention at <4%'],
       };
     },
     evidence: {
       summary:
-        'ESC HCM Risk-SCD uses age, MWT, LA size, LVOT gradient, family SCD, NSVT, and unexplained syncope to estimate 5-year SCD risk; this helper counts factors educationally.',
-      formula: 'Educational count of major markers; official model is a continuous survival equation',
-      validation: 'ESC model validated in HCM cohorts; AHA/ACC pathways differ slightly (individual major risk factors).',
+        'ESC HCM Risk-SCD estimates 5-year SCD (or appropriate ICD shock) risk from a Cox model using age, maximal wall thickness (quadratic), LA diameter, max LVOT gradient, family SCD, NSVT, and unexplained syncope.',
+      formula:
+        'PI = 0.15939858·MWT − 0.00294271·MWT² + 0.0259082·LA + 0.00446131·LVOTmax + 0.4583082·FHSCD + 0.82639195·NSVT + 0.71650361·syncope − 0.01799934·age. 5-year SCD = 1 − 0.998^exp(PI). ESC bands: <4% / 4–<6% / ≥6%. Abnormal exercise BP is not a model covariate.',
+      validation: 'Derived in 3675 patients (O’Mahony 2014); externally validated (EVIDENCE-HCM). Not for age <16, metabolic phenocopies, elite athletes, or secondary-prevention ICD candidates.',
       references: [
         {
           title: 'A novel clinical risk prediction model for sudden cardiac death in HCM (HCM Risk-SCD)',
@@ -758,15 +760,24 @@ export const wave3CardioVascCalcs: Calculator[] = [
           pmid: '24126876',
           doi: '10.1093/eurheartj/eht439',
         },
+        {
+          title: '2014 ESC Guidelines on diagnosis and management of hypertrophic cardiomyopathy',
+          citation: 'Elliott PM et al. Eur Heart J. 2014',
+          year: 2014,
+          pmid: '25173338',
+          doi: '10.1093/eurheartj/ehu284',
+        },
       ],
     },
     nextSteps: [
-      { condition: 'Low marker count', actions: ['Calculate official 5-year risk', 'Reassess with new syncope/NSVT/imaging'] },
-      { condition: 'Multiple markers / syncope / MWT≥30', actions: ['Specialty HCM clinic', 'ICD shared decision', 'Exercise counseling with HCM expert (shared decision)'] },
+      { condition: '5-year risk <4%', actions: ['Surveillance', 'Reassess if new syncope/NSVT/wall-thickness change'] },
+      { condition: '5-year risk 4–<6%', actions: ['Shared ICD decision', 'HCM-center input'] },
+      { condition: '5-year risk ≥6%', actions: ['ICD counseling (should consider)', 'Specialty HCM care'] },
     ],
     pearls: [
-      'Do not use this factor count as a substitute for the published HCM Risk-SCD percentage.',
-      'Secondary prevention ICD indicated after cardiac arrest or sustained VT regardless of score.',
+      'Secondary-prevention ICD is indicated after cardiac arrest or sustained VT regardless of this percentage.',
+      'Abnormal exercise BP is an older AHA binary marker and is not used in the ESC equation.',
+      'Use caution after myectomy or alcohol septal ablation (LVOT term may not apply the same way).',
     ],
   },
   {
@@ -1345,9 +1356,10 @@ export const wave3CardioVascCalcs: Calculator[] = [
   },
   {
     id: 'metabolic-syndrome',
-    name: 'Metabolic Syndrome (NCEP ATP III)',
+    name: 'Metabolic Syndrome (AHA/NHLBI 2005 ATP III)',
     shortName: 'MetSynd ATP III',
-    description: 'NCEP ATP III metabolic syndrome diagnosis: ≥3 of 5 clinical criteria.',
+    description:
+      'AHA/NHLBI 2005-revised ATP III metabolic syndrome: ≥3 of 5 criteria, including fasting glucose ≥100 mg/dL (original 2002 ATP III used ≥110).',
     category: 'cardiology',
     tags: ['metabolic syndrome', 'ncep', 'atp iii', 'diabetes', 'prevention'],
     whenToUse: 'Adults undergoing cardiometabolic risk assessment in clinic or prevention visits.',
@@ -1361,7 +1373,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
       yesNo('tg', 'Triglycerides ≥ 150 mg/dL (1.7 mmol/L) or on treatment', 1),
       yesNo('hdl', 'Low HDL-C (men <40, women <50 mg/dL) or on treatment', 1),
       yesNo('bp', 'BP ≥ 130/85 mmHg or on antihypertensive therapy', 1),
-      yesNo('glucose', 'Fasting glucose ≥ 100 mg/dL (5.6 mmol/L) or on treatment', 1),
+      yesNo('glucose', 'Fasting glucose ≥ 100 mg/dL (5.6 mmol/L) or on treatment', 1, 'AHA/NHLBI 2005 lowered the ATP III glucose cut-point from 110 to 100 mg/dL (ADA impaired fasting glucose). Original 2002 ATP III used ≥110.'),
     ],
     calculate(values) {
       const keys = ['waist', 'tg', 'hdl', 'bp', 'glucose'] as const;
@@ -1371,8 +1383,8 @@ export const wave3CardioVascCalcs: Calculator[] = [
         score,
         label: met ? 'Metabolic syndrome present (≥3/5)' : 'Criteria not met',
         interpretation: met
-          ? `Meets NCEP ATP III metabolic syndrome (${score}/5 criteria). Associated with higher risk of T2DM and ASCVD — intensify lifestyle therapy and risk-factor treatment.`
-          : `${score}/5 ATP III criteria. Metabolic syndrome not diagnosed (needs ≥3). Address each abnormal component.`,
+          ? `Meets AHA/NHLBI 2005-revised ATP III metabolic syndrome (${score}/5 criteria). Associated with higher risk of T2DM and ASCVD — intensify lifestyle therapy and risk-factor treatment.`
+          : `${score}/5 AHA/NHLBI ATP III criteria. Metabolic syndrome not diagnosed (needs ≥3). Address each abnormal component.`,
         riskLevel: met ? 'high' : score === 2 ? 'moderate' : 'low',
         details: [
           { label: 'Criteria met', value: `${score} / 5` },
@@ -1390,12 +1402,19 @@ export const wave3CardioVascCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'NCEP ATP III defines metabolic syndrome as ≥3 of: elevated waist, TG ≥150, low HDL, BP ≥130/85 (or treatment), fasting glucose ≥100 (or treatment).',
-      formula: 'Count of 5 dichotomous criteria; ≥3 = metabolic syndrome',
+        'AHA/NHLBI 2005 revision of ATP III: metabolic syndrome = ≥3 of elevated waist, TG ≥150 (or treatment), low HDL (or treatment), BP ≥130/85 (or treatment), fasting glucose ≥100 mg/dL (or treatment). Original ATP III 2002 used glucose ≥110.',
+      formula: 'Count of 5 dichotomous AHA/NHLBI 2005 criteria; ≥3 = metabolic syndrome',
       validation: 'Widely used clinical definition; IDF uses ethnicity-specific waist as mandatory in some versions.',
       references: [
         {
-          title: 'NCEP ATP III final report',
+          title: 'Diagnosis and management of the metabolic syndrome: AHA/NHLBI scientific statement',
+          citation: 'Grundy SM et al. Circulation. 2005',
+          year: 2005,
+          pmid: '16157765',
+          doi: '10.1161/CIRCULATIONAHA.105.169404',
+        },
+        {
+          title: 'NCEP ATP III final report (original 2002 criteria; glucose ≥110 mg/dL)',
           citation: 'Expert Panel. Circulation. 2002',
           year: 2002,
           pmid: '12485966',
@@ -1410,6 +1429,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
     pearls: [
       'Treated hypertension, lipids, or hyperglycemia still count as positive criteria.',
       'Waist thresholds differ by sex and sometimes ethnicity (IDF).',
+      'This tool uses the 2005 glucose threshold (≥100), not the original 2002 ATP III ≥110 mg/dL cut-point.',
     ],
   },
   {
@@ -1607,123 +1627,141 @@ export const wave3CardioVascCalcs: Calculator[] = [
   },
   {
     id: 'reynolds-risk',
-    name: 'Reynolds Risk Score (Simplified Educational)',
+    name: 'Reynolds Risk Score',
     shortName: 'Reynolds',
     description:
-      'Simplified educational Reynolds Risk-style estimate using age, BP, lipids, hsCRP, smoking, family history (± HbA1c).',
+      'Published Reynolds 10-year CVD risk (Ridker 2007 women; Ridker 2008 men) using age, SBP, lipids, hsCRP, smoking, parental MI, and HbA1c if diabetic (women).',
     category: 'cardiology',
     tags: ['reynolds', 'prevention', 'hscrp', 'ascvd', 'women'],
-    whenToUse: 'Primary prevention adults when hsCRP and parental MI history are available (educational).',
-    whyUse: 'Incorporates inflammation (hsCRP) and family history beyond traditional Framingham factors.',
+    whenToUse: 'Primary-prevention adults without known CVD when hsCRP and parental MI history are available.',
+    whyUse: 'Adds hsCRP and parental premature MI to traditional factors; sex-specific Cox models.',
     inputs: [
       selectInput('sex', 'Sex', [
-        { label: 'Female (original Reynolds women model context)', value: 'female' },
-        { label: 'Male', value: 'male' },
+        { label: 'Female (Ridker 2007 Women’s Health Study)', value: 'female' },
+        { label: 'Male (Ridker 2008 Physicians’ Health Study II)', value: 'male' },
       ]),
-      numberInput('age', 'Age', { unit: 'years', min: 45, max: 80, defaultValue: 55 }),
+      numberInput('age', 'Age', { unit: 'years', min: 45, max: 80, defaultValue: 55, helpText: 'Women model derived at age ≥45. Men model used initially healthy men (typically ≥50).' }),
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 220, defaultValue: 130 }),
       numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 100, max: 400, defaultValue: 210 }),
       numberInput('hdl', 'HDL-C', { unit: 'mg/dL', min: 15, max: 120, defaultValue: 50 }),
       numberInput('hscrp', 'hsCRP', { unit: 'mg/L', min: 0.1, max: 20, step: 0.1, defaultValue: 2, helpText: 'High-sensitivity CRP (mg/L). Do not measure during acute illness/infection — wait until baseline.' }),
       yesNo('smoker', 'Current smoker', 0),
       yesNo('parentMi', 'Parental MI before age 60', 0),
-      yesNo('dm', 'Diabetes', 0),
-      numberInput('hba1c', 'HbA1c if diabetes', {
+      yesNo('dm', 'Diabetes', 0, 'Women: HbA1c term applies only if diabetic. Men: Ridker 2008 was derived in non-diabetic men — diabetes is not in that equation.'),
+      numberInput('hba1c', 'HbA1c if diabetes (women)', {
         unit: '%',
         min: 4,
         max: 15,
         step: 0.1,
-        defaultValue: 7,
-        helpText: 'Used only if diabetes = yes (educational)',
+        helpText: 'Women with diabetes only. No default is assumed if left blank.',
         required: false,
       }),
     ],
     calculate(values) {
-      const age = num(values.age, 55);
-      const sbp = num(values.sbp, 130);
-      const tc = num(values.tc, 210);
+      const age = Math.max(num(values.age, 55), 1);
+      const sbp = Math.max(num(values.sbp, 130), 1);
+      const tc = Math.max(num(values.tc, 210), 1);
       const hdl = Math.max(num(values.hdl, 50), 1);
-      const hscrp = num(values.hscrp, 2);
+      const hscrp = Math.max(num(values.hscrp, 2), 0.1);
       const male = String(values.sex) === 'male';
+      const smoker = bool(values.smoker) ? 1 : 0;
+      const parent = bool(values.parentMi) ? 1 : 0;
       const dm = bool(values.dm);
       const a1cMissing = isMissingValue(values.hba1c, true);
+      const a1c = a1cMissing ? null : num(values.hba1c);
 
-      let pts = (age - 45) * (male ? 0.7 : 0.6);
-      pts += (sbp - 120) * 0.1;
-      pts += (tc - 200) * 0.04;
-      pts -= (hdl - 50) * 0.08;
-      pts += Math.log(Math.max(hscrp, 0.1)) * 3;
-      pts += bool(values.smoker) ? 5 : 0;
-      pts += bool(values.parentMi) ? 4 : 0;
-      if (dm) {
-        pts += 4 + Math.max(0, num(values.hba1c, 7) - 7) * 1.5;
+      let b: number;
+      if (male) {
+        b =
+          4.385 * Math.log(age) +
+          2.607 * Math.log(sbp) +
+          0.963 * Math.log(tc) -
+          0.772 * Math.log(hdl) +
+          0.405 * smoker +
+          0.102 * Math.log(hscrp) +
+          0.541 * parent;
+      } else {
+        const a1cTerm = dm && a1c !== null ? 0.134 * a1c : 0;
+        b =
+          0.0799 * age +
+          3.137 * Math.log(sbp) +
+          0.180 * Math.log(hscrp) +
+          1.382 * Math.log(tc) -
+          1.172 * Math.log(hdl) +
+          a1cTerm +
+          0.818 * smoker +
+          0.438 * parent;
       }
-      pts += male ? 2 : 0;
-      pts = Math.max(0, pts);
-      const est = Math.min(50, Math.max(1, round(pts * 0.65, 0)));
+      const s0 = male ? 0.8990 : 0.98634;
+      const mean = male ? 33.097 : 22.325;
+      const est = round(100 * (1 - Math.pow(s0, Math.exp(b - mean))), 1);
 
       const r = riskFromThresholds(est, [
         {
-          max: 5,
+          max: 4.99,
           level: 'low',
-          label: 'Lower 10-year risk band',
-          interpretation: `Educational Reynolds-style estimate ~${est}% 10-year CVD risk. Lifestyle emphasis; confirm with published Reynolds calculator.`,
+          label: 'Lower 10-year risk (<5%)',
+          interpretation: `Reynolds 10-year CVD risk ${est}%. Lifestyle emphasis; reassess when risk factors change.`,
         },
         {
-          max: 10,
+          max: 9.99,
           level: 'moderate',
-          label: 'Intermediate risk band',
-          interpretation: `Educational estimate ~${est}%. Intermediate — risk enhancers and patient preference guide statin decisions.`,
+          label: 'Intermediate risk (5–<10%)',
+          interpretation: `Reynolds 10-year CVD risk ${est}%. Intermediate — risk enhancers and patient preference guide statin decisions.`,
         },
         {
-          max: 20,
+          max: 19.99,
           level: 'high',
-          label: 'High risk band',
-          interpretation: `Educational estimate ~${est}%. High risk — intensive prevention; statin therapy typically indicated.`,
+          label: 'High risk (10–<20%)',
+          interpretation: `Reynolds 10-year CVD risk ${est}%. High risk — intensive prevention; statin therapy typically indicated.`,
         },
         {
           max: 100,
           level: 'critical',
-          label: 'Very high risk band',
-          interpretation: `Educational estimate ~${est}%. Very high predicted risk — aggressive multifactorial therapy.`,
+          label: 'Very high risk (≥20%)',
+          interpretation: `Reynolds 10-year CVD risk ${est}%. Very high predicted risk — aggressive multifactorial therapy.`,
         },
       ]);
 
-      const interpretation =
-        dm && a1cMissing
-          ? `${r.interpretation} HbA1c was not entered — 7% was assumed for the diabetes points.`
-          : r.interpretation;
+      const notes: string[] = [];
+      if (!male && dm && a1cMissing) {
+        notes.push('Diabetes is yes but HbA1c was not entered — the 0.134×HbA1c term was omitted (not assumed 7%).');
+      }
+      if (male && dm) {
+        notes.push('Men’s Reynolds equation was derived in non-diabetic men; diabetes is not a model covariate.');
+      }
 
       return {
         score: est,
-        unit: '% (educational)',
+        unit: '% / 10y',
         label: r.label,
-        interpretation,
+        interpretation: notes.length ? `${r.interpretation} ${notes.join(' ')}` : r.interpretation,
         riskLevel: r.riskLevel,
         details: [
-          { label: 'Note', value: 'Educational simplification — not official Reynolds equation output' },
+          { label: 'Model', value: male ? 'Ridker 2008 men' : 'Ridker 2007 women (model B)' },
           { label: 'hsCRP', value: `${hscrp} mg/L` },
-          { label: 'Parental MI <60', value: bool(values.parentMi) ? 'Yes' : 'No' },
-          ...(dm
+          { label: 'Parental MI <60', value: parent ? 'Yes' : 'No' },
+          ...(!male && dm
             ? [
                 {
                   label: 'HbA1c',
-                  value: a1cMissing ? '7% (assumed — not entered)' : `${num(values.hba1c, 7)}% (entered)`,
+                  value: a1cMissing ? 'Not entered (term omitted)' : `${a1c}%`,
                 },
               ]
             : []),
         ],
         recommendations:
           est >= 10
-            ? ['Confirm with official Reynolds tool', 'Statin + lifestyle', 'BP and smoking cessation']
-            : ['Lifestyle', 'Recheck lipids/CRP when appropriate', 'Official calculator if decisions hinge on %'],
+            ? ['Statin + lifestyle', 'BP and smoking cessation', 'Address other risk enhancers']
+            : ['Lifestyle', 'Recheck lipids/CRP when appropriate'],
       };
     },
     evidence: {
       summary:
-        'Reynolds Risk Score predicts 10-year global CVD risk including hsCRP and parental history of MI; separate models for women and men.',
-      formula: 'Educational points from age, SBP, TC, HDL, ln(hsCRP), smoking, parental MI, diabetes/HbA1c',
-      validation: 'Original models from Women’s Health Study and similar male cohorts; use official calculator for care decisions.',
+        'Reynolds Risk Score predicts 10-year global CVD (MI, stroke, coronary revascularization, CV death) using sex-specific Cox models with hsCRP and parental MI before age 60. Women’s model adds HbA1c if diabetic; men’s model was derived in non-diabetic men.',
+      formula:
+        'Women: 10y% = [1 − 0.98634^exp(B − 22.325)] × 100; B = 0.0799·age + 3.137·ln(SBP) + 0.180·ln(hsCRP) + 1.382·ln(TC) − 1.172·ln(HDL) + 0.134·HbA1c (if diabetic) + 0.818 (smoker) + 0.438 (parental MI <60). Men: 10y% = [1 − 0.8990^exp(B − 33.097)] × 100; B = 4.385·ln(age) + 2.607·ln(SBP) + 0.963·ln(TC) − 0.772·ln(HDL) + 0.405 (smoker) + 0.102·ln(hsCRP) + 0.541 (parental MI <60). Lipids in mg/dL.',
+      validation: 'Women: Women’s Health Study (Ridker JAMA 2007). Men: Physicians’ Health Study II (Ridker Circulation 2008). Endpoint includes revascularization (not hard ASCVD-only).',
       references: [
         {
           title: 'Development and validation of improved algorithms for assessment of global cardiovascular risk in women (Reynolds)',
@@ -1732,14 +1770,22 @@ export const wave3CardioVascCalcs: Calculator[] = [
           pmid: '17299196',
           doi: '10.1001/jama.297.6.611',
         },
+        {
+          title: 'C-reactive protein and parental history improve global cardiovascular risk prediction: the Reynolds Risk Score for men',
+          citation: 'Ridker PM et al. Circulation. 2008',
+          year: 2008,
+          pmid: '18514522',
+          doi: '10.1161/CIRCULATIONAHA.108.814251',
+        },
       ],
     },
     nextSteps: [
-      { condition: '≥10% educational band', actions: ['Statin discussion', 'Risk factor control', 'Official score confirmation'] },
+      { condition: '≥10% 10-year risk', actions: ['Statin discussion', 'Risk factor control'] },
     ],
     pearls: [
       'hsCRP should not be measured during acute illness.',
-      'Family history item is parental MI before age 60.',
+      'Family history item is parental MI before age 60 (not any first-degree CVD).',
+      'Do not apply after established ASCVD; men with diabetes are outside the 2008 derivation.',
     ],
   },
   {

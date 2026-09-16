@@ -177,7 +177,7 @@ function wifiClinicalStage(w: number, i: number, fi: number): number {
       [3, 3, 4, 4],
       [4, 4, 4, 4],
       [4, 4, 4, 4],
-      [4, 4, 4, 5],
+      [4, 4, 4, 4],
     ],
   ];
   const ww = clamp(Math.round(w), 0, 3);
@@ -664,7 +664,11 @@ export const wave7HighuseCalcs: Calculator[] = [
         { label: 'Moderate (>5% in 6 months or >10% beyond 6 months)', value: 'moderate', description: 'Phenotypic moderate: >5% over 6 months, or >10% beyond 6 months' },
         { label: 'Severe (>10% in 6 months or >20% beyond 6 months)', value: 'severe', description: 'Phenotypic severe: >10% over 6 months, or >20% beyond 6 months' },
       ], undefined, 'Unintentional only. Use usual (premorbid) weight as the baseline.'),
-      yesNo('reducedMuscle', 'Reduced muscle mass (validated method)', null, 'DXA, BIA, ultrasound, calf circumference, or physical exam per GLIM.'),
+      selectInput('reducedMuscle', 'Reduced muscle mass (validated method)', [
+        { label: 'Not reduced / not measured', value: 'none', description: 'No phenotypic muscle-mass criterion' },
+        { label: 'Moderate reduction', value: 'moderate', description: 'Mild-to-moderate deficit by DXA, BIA, ultrasound, calf circumference, or exam — confirms GLIM and stages moderate unless another phenotypic item is severe' },
+        { label: 'Severe reduction', value: 'severe', description: 'Severe deficit by a validated method — confirms GLIM and stages severe (worst phenotypic criterion)' },
+      ], undefined, 'DXA, BIA, ultrasound, calf circumference, or physical exam per GLIM Table 3. Severity uses the worst phenotypic criterion, including muscle mass.'),
       yesNo('reducedIntake', 'Reduced food intake or assimilation', null, '≤50% of requirements >1 week, any reduction >2 weeks, or chronic GI malabsorption.'),
       yesNo('inflammation', 'Inflammation / disease burden', null, 'Acute illness/injury or chronic inflammatory disease (CRP, albumin as supportive).'),
     ],
@@ -672,15 +676,19 @@ export const wave7HighuseCalcs: Calculator[] = [
       const age = num(values.age, 70);
       const bmi = num(values.bmi, 24);
       const weightLoss = str(values.weightLoss, 'none');
-      const reducedMuscle = bool(values.reducedMuscle);
+      const muscleRaw = values.reducedMuscle;
+      const reducedMuscle = muscleRaw === true || muscleRaw === 'true' || muscleRaw === 'yes' || muscleRaw === 1
+        ? 'moderate'
+        : str(muscleRaw, 'none');
+      const muscleReduced = reducedMuscle === 'moderate' || reducedMuscle === 'severe';
       const reducedIntake = bool(values.reducedIntake);
       const inflammation = bool(values.inflammation);
       const severeBmi = age >= 70 ? bmi < 20 : bmi < 18.5;
       const moderateBmi = !severeBmi && (age >= 70 ? bmi < 22 : bmi < 20);
       const lowBmi = severeBmi || moderateBmi;
-      const phenotypic = weightLoss !== 'none' || lowBmi || reducedMuscle;
+      const phenotypic = weightLoss !== 'none' || lowBmi || muscleReduced;
       const etiologic = reducedIntake || inflammation;
-      const severePhenotypic = weightLoss === 'severe' || severeBmi;
+      const severePhenotypic = weightLoss === 'severe' || severeBmi || reducedMuscle === 'severe';
       let score: string;
       let riskLevel: 'low' | 'moderate' | 'high';
       let label: string;
@@ -695,13 +703,13 @@ export const wave7HighuseCalcs: Calculator[] = [
         riskLevel = 'high';
         label = 'GLIM severe malnutrition';
         interpretation =
-          'GLIM malnutrition, severe (stage 2): etiologic criterion plus severe weight loss and/or severe low BMI. Nutrition-support urgency is high.';
+          'GLIM malnutrition, severe (stage 2): etiologic criterion plus at least one severe phenotypic criterion (weight loss, low BMI, or reduced muscle mass). Nutrition-support urgency is high.';
       } else {
         score = 'GLIM moderate';
         riskLevel = 'moderate';
         label = 'GLIM moderate malnutrition';
         interpretation =
-          'GLIM malnutrition, moderate (stage 1): ≥1 phenotypic and ≥1 etiologic criterion without severe BMI/weight-loss thresholds.';
+          'GLIM malnutrition, moderate (stage 1): ≥1 phenotypic and ≥1 etiologic criterion without a severe phenotypic band.';
       }
       return {
         score,
@@ -712,7 +720,7 @@ export const wave7HighuseCalcs: Calculator[] = [
           { label: 'Age', value: `${age} y (BMI cut ${age >= 70 ? '<22 / severe <20' : '<20 / severe <18.5'})` },
           { label: 'BMI', value: `${bmi} kg/m²${lowBmi ? (severeBmi ? ' — severe phenotypic' : ' — moderate phenotypic') : ''}` },
           { label: 'Weight loss', value: weightLoss },
-          { label: 'Reduced muscle mass', value: reducedMuscle ? 'yes (phenotypic)' : 'no' },
+          { label: 'Reduced muscle mass', value: reducedMuscle === 'severe' ? 'severe (phenotypic)' : reducedMuscle === 'moderate' ? 'moderate (phenotypic)' : 'no' },
           { label: 'Reduced intake/assimilation', value: reducedIntake ? 'yes (etiologic)' : 'no' },
           { label: 'Inflammation/disease burden', value: inflammation ? 'yes (etiologic)' : 'no' },
           { label: 'Phenotypic criterion', value: phenotypic ? 'met' : 'not met' },
@@ -725,9 +733,9 @@ export const wave7HighuseCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'GLIM (2018/2019): malnutrition requires ≥1 phenotypic (weight loss, low BMI, reduced muscle mass) AND ≥1 etiologic (reduced intake/assimilation, inflammation). Severity is staged by degree of weight loss or low BMI (age-specific; Asian cut-offs differ).',
+        'GLIM (2018/2019): malnutrition requires ≥1 phenotypic (weight loss, low BMI, reduced muscle mass) AND ≥1 etiologic (reduced intake/assimilation, inflammation). Severity is staged by the worst phenotypic criterion (weight-loss %, low BMI, or reduced muscle mass; age-specific BMI; Asian cut-offs differ).',
       formula:
-        'Positive = (≥1 phenotypic) AND (≥1 etiologic). Severe if weight loss is the severe band or BMI <18.5 (<70 y) / <20 (≥70 y); otherwise moderate when positive.',
+        'Positive = (≥1 phenotypic) AND (≥1 etiologic). Severe if any phenotypic criterion is in the severe band (weight loss, BMI <18.5 (<70 y) / <20 (≥70 y), or severe muscle-mass deficit); otherwise moderate when positive.',
       validation: 'Consensus of ASPEN/ESPEN/FELANPE/PENSA. Subsequent cohort studies support prognostic association with mortality and LOS.',
       references: [
         {
@@ -1204,14 +1212,11 @@ export const wave7HighuseCalcs: Calculator[] = [
             ? 'Stage 2 — low amputation risk'
             : stage === 3
               ? 'Stage 3 — moderate amputation risk'
-              : stage === 4
-                ? 'Stage 4 — high amputation risk'
-                : 'Stage 5 — unsalvageable / extreme';
-      let riskLevel: 'low' | 'moderate' | 'high' | 'critical';
+              : 'Stage 4 — high amputation risk';
+      let riskLevel: 'low' | 'moderate' | 'high';
       if (stage <= 2) riskLevel = 'low';
       else if (stage === 3) riskLevel = 'moderate';
-      else if (stage === 4) riskLevel = 'high';
-      else riskLevel = 'critical';
+      else riskLevel = 'high';
       const interpretation =
         stage <= 1
           ? `WIfI clinical stage ${stage} (W${wound}-I${ischemia}-fI${infection}; sum ${sum}). ${stageLabel}. Lower threatened-limb burden — optimize perfusion work-up if rest pain and infection control.`
@@ -1219,9 +1224,7 @@ export const wave7HighuseCalcs: Calculator[] = [
             ? `WIfI clinical stage ${stage} (W${wound}-I${ischemia}-fI${infection}; sum ${sum}). ${stageLabel}. Multidisciplinary diabetic-foot follow-up; optimize offloading and perfusion assessment.`
             : stage === 3
               ? `WIfI clinical stage ${stage} (W${wound}-I${ischemia}-fI${infection}; sum ${sum}). ${stageLabel}. Multidisciplinary diabetic-foot / vascular review; revascularization often considered.`
-              : stage === 4
-                ? `WIfI clinical stage ${stage} (W${wound}-I${ischemia}-fI${infection}; sum ${sum}). ${stageLabel}. High 1-year amputation risk in SVS consensus — urgent limb-salvage pathway.`
-                : `WIfI clinical stage ${stage} (W${wound}-I${ischemia}-fI${infection}; sum ${sum}). ${stageLabel}. Extreme limb threat; salvage vs amputation decision with vascular surgery.`;
+              : `WIfI clinical stage ${stage} (W${wound}-I${ischemia}-fI${infection}; sum ${sum}). ${stageLabel}. High 1-year amputation risk in SVS consensus — urgent limb-salvage pathway.`;
       return {
         score: stage,
         label: stageLabel,
@@ -1243,8 +1246,8 @@ export const wave7HighuseCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'SVS WIfI grades Wound 0–3, Ischemia 0–3, and foot Infection 0–3. A published expert grid maps the 64 combinations to clinical stages 1–4 (very low → high 1-year amputation risk); the most extreme W3-I3-fI3 cell is labeled stage 5 here. Displayed score is the clinical stage; the 0–9 sum and WIfI code are in details.',
-      formula: 'Clinical stage from Mills 2014 amputation-risk grid (VL=1, L=2, M=3, H=4; W3-I3-fI3 = 5). Sum = W + I + fI (0–9) is shown in details, not used as the live risk band.',
+        'SVS WIfI grades Wound 0–3, Ischemia 0–3, and foot Infection 0–3. A published expert grid maps the 64 combinations to clinical stages 1–4 (very low → high 1-year amputation risk); W3-I3-fI3 is high risk (stage 4), same as the other W3-I3 cells. Displayed score is the clinical stage; the 0–9 sum and WIfI code are in details.',
+      formula: 'Clinical stage from Mills 2014 amputation-risk grid (VL=1, L=2, M=3, H=4; all W3-I3 cells including fI3 = 4). Sum = W + I + fI (0–9) is shown in details, not used as the live risk band.',
       validation: 'Mills et al. J Vasc Surg 2014; subsequent series correlate stage with amputation, wound healing, and benefit of revascularization.',
       references: [
         {

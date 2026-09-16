@@ -1719,7 +1719,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Hamilton Depression Rating Scale (HAM-D 17): 17 clinician items (8 items 0–4; 9 items 0–2). Total 0–52. Published in 1960; public domain.',
+        'Hamilton Depression Rating Scale (HAM-D 17): 17 clinician items (9 items 0–4 and 8 items 0–2). Total 0–52. Published in 1960; public domain.',
       formula: 'Sum of 17 items (0–52)',
       validation: 'Historic gold-standard clinician depression scale; public domain.',
       references: [

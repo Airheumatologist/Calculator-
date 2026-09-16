@@ -7,7 +7,7 @@ function cloglogCalibrate(uncal: number, scale1: number, scale2: number): number
   const x = Math.min(20, Math.max(-20, scale1 + scale2 * inner));
   const cal = 1 - Math.exp(-Math.exp(x));
   if (!Number.isFinite(cal)) return u;
-  return Math.min(0.95, Math.max(0, cal));
+  return Math.min(1, Math.max(0, cal));
 }
 
 function expitPct(lp: number): number {

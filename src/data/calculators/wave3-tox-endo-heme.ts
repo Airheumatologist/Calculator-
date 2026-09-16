@@ -1535,12 +1535,16 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       references: [
         {
           title: 'Prediction of percent body fat for U.S. Navy men from body circumferences and height',
-          citation: 'Hodgdon JA, Beckett MB. Naval Health Research Center Report No. 84-11',
-          year: 1984, doi: '10.21236/ada143890' },
+          citation: 'Hodgdon JA, Beckett MB. Naval Health Research Center Report No. 84-11 (DTIC ADA143890)',
+          year: 1984,
+          url: 'https://apps.dtic.mil/sti/citations/ADA143890',
+        },
         {
           title: 'Prediction of percent body fat for U.S. Navy women from body circumferences and height',
-          citation: 'Hodgdon JA, Beckett MB. Naval Health Research Center Report No. 84-29',
-          year: 1984, doi: '10.21236/ada146456' },
+          citation: 'Hodgdon JA, Beckett MB. Naval Health Research Center Report No. 84-29 (DTIC ADA146456)',
+          year: 1984,
+          url: 'https://apps.dtic.mil/sti/citations/ADA146456',
+        },
       ],
     },
     nextSteps: [
@@ -1999,79 +2003,103 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
   // ─── 22. Myxedema coma score ───────────────────────────────────────────────
   {
     id: 'myxedema',
-    name: 'Myxedema Coma Diagnostic Score (Simplified)',
+    name: 'Myxedema Coma Diagnostic Score (Popoveniuc)',
     shortName: 'Myxedema',
-    description: 'Simplified Popoveniuc-style myxedema coma scoring features for diagnostic likelihood.',
+    description:
+      'Popoveniuc 2014 diagnostic point scale for myxedema coma (thermoregulatory, CNS, GI, precipitant, cardiovascular, and metabolic domains).',
     category: 'endocrinology',
     tags: ['myxedema', 'hypothyroid', 'coma', 'thyroid', 'critical care'],
     whenToUse: 'Suspected decompensated hypothyroidism / myxedema coma in a critically ill patient.',
-    whyUse: 'Structures thermoregulatory, CNS, cardiovascular, GI, and metabolic features while labs pending.',
+    whyUse: 'Published multi-item score; ≥60 highly suggestive, 25–59 supportive, <25 unlikely (Popoveniuc et al.).',
     inputs: [
-      selectInput('temp', 'Temperature (°C)', [
-        { label: '>35 (0)', value: 0 },
-        { label: '32–35 (10)', value: 10 },
-        { label: '<32 (20)', value: 20 },
+      selectInput('temp', 'Thermoregulatory dysfunction — temperature', [
+        { label: '>35 °C / >95 °F (0)', value: 0, points: 0 },
+        { label: '32–35 °C / 89.6–95 °F (10)', value: 10, points: 10 },
+        { label: '<32 °C / <89.6 °F (20)', value: 20, points: 20 },
       ]),
-      selectInput('cns', 'CNS / mentation', [
-        { label: 'Normal / mild lethargy (0)', value: 0, description: 'Alert, or only mild lethargy (opens eyes to voice, follows commands). Maps original 0 / mild lethargy.' },
-        { label: 'Obtunded / somnolent (10)', value: 10, description: 'Somnolent or obtunded: requires tactile/painful stimulation; drowsy with slowed responses. Maps original ~10–15.' },
-        { label: 'Stupor / coma / seizures (20)', value: 20, description: 'Unrousable or only reflex responses, or seizure. Maps original stupor 20 / coma–seizures 30 into this simplified bin.' },
-      ], undefined, 'Score the worst mentation. Simplified three bins collapse the original 0/10/15/20/30 CNS scale.'),
-      selectInput('hr', 'Heart rate', [
-        { label: '≥60 (0)', value: 0 },
-        { label: '50–59 (10)', value: 10 },
-        { label: '<50 (20)', value: 20 },
-      ]),
-      selectInput('ecg', 'ECG / cardiovascular', [
-        { label: 'Normal / nonspecific (0)', value: 0, description: 'No low voltage, QT prolongation, bundle-branch block, AV block, or pericardial-effusion signs' },
-        { label: 'Low voltage / long QT / bundle / heart block / pericardial effusion signs (10)', value: 10, description: 'Low QRS voltage, prolonged QTc, bundle-branch block, AV block, or echocardiographic/ECG signs of pericardial effusion' },
-      ]),
-      selectInput('precipitant', 'Precipitating event (infection, cold, drugs, MI, etc.)', [
-        { label: 'Absent (0)', value: 0, description: 'No identifiable precipitant' },
-        { label: 'Present (10)', value: 10, description: 'Infection, cold exposure, sedative/opioid, MI, GI bleed, CVA, or other acute illness' },
+      selectInput('cns', 'Central nervous system effects (worst)', [
+        { label: 'Absent (0)', value: 0, points: 0, description: 'Alert; no CNS depression.' },
+        { label: 'Somnolent / lethargy (10)', value: 10, points: 10, description: 'Drowsy but arousable; slowed responses.' },
+        { label: 'Obtunded (15)', value: 15, points: 15, description: 'Requires tactile or painful stimulation to arouse.' },
+        { label: 'Stupor (20)', value: 20, points: 20, description: 'Unrousable or only reflex responses, without coma/seizures.' },
+        { label: 'Coma / seizures (30)', value: 30, points: 30, description: 'Coma or seizures (original 30-point CNS ceiling).' },
+      ], undefined, 'Score the single worst CNS category (0 / 10 / 15 / 20 / 30).'),
+      selectInput('gi', 'Gastrointestinal findings (worst)', [
+        { label: 'Absent (0)', value: 0, points: 0 },
+        { label: 'Anorexia / abdominal pain / constipation (5)', value: 5, points: 5 },
+        { label: 'Decreased intestinal motility (15)', value: 15, points: 15 },
+        { label: 'Paralytic ileus (20)', value: 20, points: 20 },
+      ], undefined, 'Use the single highest GI item (not additive).'),
+      selectInput('precipitant', 'Precipitating event', [
+        { label: 'Absent (0)', value: 0, points: 0, description: 'No identifiable precipitant' },
+        { label: 'Present (10)', value: 10, points: 10, description: 'Infection, cold exposure, sedative/opioid, MI, GI bleed, CVA, or other acute illness' },
       ], undefined, 'Present = infection, cold exposure, sedatives, MI, GI bleed, stroke, or similar decompensating event.'),
-      selectInput('gi', 'GI findings (anorexia, abdominal pain, constipation, ileus, megacolon)', [
-        { label: 'Absent (0)', value: 0, description: 'Normal appetite and bowel function' },
-        { label: 'Present (10)', value: 10, description: 'Anorexia, constipation, hypoactive bowel sounds, ileus, or megacolon' },
-      ], undefined, 'Present = anorexia, constipation, hypoactive bowel, or ileus/megacolon.'),
-      selectInput('metabolic', 'Metabolic (hyponatremia, hypoglycemia, hypoxemia, hypercarbia, ↓GFR, anemia)', [
-        { label: 'None (0)', value: 0, description: 'None of the listed metabolic abnormalities' },
-        { label: 'One abnormality (10)', value: 10, description: 'Exactly one of: hyponatremia, hypoglycemia, hypoxemia, hypercarbia, ↓GFR, anemia' },
-        { label: '≥2 abnormalities (20)', value: 20, description: 'Two or more of the listed metabolic abnormalities' },
-      ], undefined, 'Teaching cutoffs (not extra points): Na typically <130–135 mEq/L; glucose <60 mg/dL; PaO2 <60 mmHg or new O2 need; PaCO2 >45–50 mmHg; AKI below baseline; anemia. Count how many of these six are present.'),
-      yesNo('knownHypo', 'Known history of hypothyroidism / thyroidectomy / RAI', 10),
+      selectInput('hr', 'Bradycardia / heart rate', [
+        { label: 'HR ≥60 (0)', value: 0, points: 0 },
+        { label: 'HR 50–59 (10)', value: 10, points: 10 },
+        { label: 'HR 40–49 (20)', value: 20, points: 20 },
+        { label: 'HR <40 (30)', value: 30, points: 30 },
+      ]),
+      yesNo('ecg', 'Other ECG changes (QT prolongation, low voltage, bundle-branch block, nonspecific ST-T, heart block)', 10),
+      yesNo('effusion', 'Pericardial and/or pleural effusion', 10),
+      yesNo('pulmEdema', 'Pulmonary edema', 15),
+      yesNo('cardiomegaly', 'Cardiomegaly', 15),
+      yesNo('hypotension', 'Hypotension', 20),
+      yesNo('hyponatremia', 'Hyponatremia', 10, 'Each listed metabolic abnormality is +10 (max 50).'),
+      yesNo('hypoglycemia', 'Hypoglycemia', 10),
+      yesNo('hypoxemia', 'Hypoxemia', 10),
+      yesNo('hypercarbia', 'Hypercarbia', 10),
+      yesNo('decreasedGfr', 'Decrease in GFR', 10),
     ],
     calculate(values) {
-      let score =
+      const score =
         num(values.temp, 0) +
         num(values.cns, 0) +
-        num(values.hr, 0) +
-        num(values.ecg, 0) +
-        num(values.precipitant, 0) +
         num(values.gi, 0) +
-        num(values.metabolic, 0);
-      if (bool(values.knownHypo)) score += 10;
+        num(values.precipitant, 0) +
+        num(values.hr, 0) +
+        (bool(values.ecg) ? 10 : 0) +
+        (bool(values.effusion) ? 10 : 0) +
+        (bool(values.pulmEdema) ? 15 : 0) +
+        (bool(values.cardiomegaly) ? 15 : 0) +
+        (bool(values.hypotension) ? 20 : 0) +
+        (bool(values.hyponatremia) ? 10 : 0) +
+        (bool(values.hypoglycemia) ? 10 : 0) +
+        (bool(values.hypoxemia) ? 10 : 0) +
+        (bool(values.hypercarbia) ? 10 : 0) +
+        (bool(values.decreasedGfr) ? 10 : 0);
 
-      // Original Popoveniuc: ≥60 highly suggestive / diagnostic; 25–59 supportive; <25 unlikely
-      // Our simplified max is lower (~120) — use analogous bands scaled educationally
+      const metabolicPts =
+        (bool(values.hyponatremia) ? 10 : 0) +
+        (bool(values.hypoglycemia) ? 10 : 0) +
+        (bool(values.hypoxemia) ? 10 : 0) +
+        (bool(values.hypercarbia) ? 10 : 0) +
+        (bool(values.decreasedGfr) ? 10 : 0);
+      const cvExtra =
+        (bool(values.ecg) ? 10 : 0) +
+        (bool(values.effusion) ? 10 : 0) +
+        (bool(values.pulmEdema) ? 15 : 0) +
+        (bool(values.cardiomegaly) ? 15 : 0) +
+        (bool(values.hypotension) ? 20 : 0);
+
       const r = riskFromThresholds(score, [
         {
           max: 24,
           level: 'low',
-          label: 'Unlikely myxedema coma (≤24)',
-          interpretation: 'Score ≤24 on this simplified tool: myxedema coma unlikely, but treat overt hypothyroidism and search for other causes of illness.',
+          label: 'Unlikely myxedema coma (<25)',
+          interpretation: 'Score <25 on the Popoveniuc scale: myxedema coma unlikely, but treat overt hypothyroidism and search for other causes of illness.',
         },
         {
           max: 59,
           level: 'moderate',
-          label: 'Possible / supportive (25–59)',
-          interpretation: 'Intermediate score — compatible features present. Check TSH/free T4 urgently; if high clinical suspicion treat empirically while evaluating infection and other precipitants.',
+          label: 'Supportive of diagnosis (25–59)',
+          interpretation: 'Score 25–59: supportive of myxedema coma. Check TSH/free T4 urgently; if high clinical suspicion treat empirically while evaluating infection and other precipitants. Scores 45–59 are often described as at-risk.',
         },
         {
-          max: 200,
+          max: 300,
           level: 'critical',
-          label: 'Highly suggestive (≥60)',
-          interpretation: 'Score ≥60: highly suggestive of myxedema coma on simplified Popoveniuc-style framing. Empiric IV thyroid hormone per protocol, glucocorticoids until adrenal insufficiency excluded, passive rewarming, supportive ICU care, treat precipitant.',
+          label: 'Highly suggestive / diagnostic (≥60)',
+          interpretation: 'Score ≥60: highly suggestive/diagnostic of myxedema coma on the original Popoveniuc scale. Empiric IV thyroid hormone per protocol, glucocorticoids until adrenal insufficiency excluded, passive rewarming, supportive ICU care, treat precipitant.',
         },
       ]);
       return {
@@ -2079,16 +2107,24 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         unit: 'points',
         ...r,
         details: [
-          { label: 'Known hypothyroidism bonus', value: bool(values.knownHypo) ? '+10' : '0' },
-          { label: 'Note', value: 'Simplified educational adaptation — original full score has more granular items' },
+          { label: 'Temperature', value: String(num(values.temp, 0)) },
+          { label: 'CNS', value: String(num(values.cns, 0)) },
+          { label: 'GI (worst item)', value: String(num(values.gi, 0)) },
+          { label: 'Precipitant', value: String(num(values.precipitant, 0)) },
+          { label: 'Heart rate band', value: String(num(values.hr, 0)) },
+          { label: 'Other CV items (ECG, effusion, edema, cardiomegaly, hypotension)', value: String(cvExtra) },
+          { label: 'Metabolic (5 × 10)', value: String(metabolicPts) },
+          { label: 'Cutoffs', value: '≥60 highly suggestive; 25–59 supportive; <25 unlikely' },
         ],
       };
     },
     evidence: {
       summary:
-        'Myxedema coma diagnostic scores (e.g., Popoveniuc et al.) assign points for hypothermia, CNS depression, cardiovascular findings, precipitants, GI and metabolic abnormalities; higher totals support diagnosis.',
-      formula: 'Sum of simplified category points (educational adaptation)',
-      validation: 'Based on published diagnostic scoring concepts; this implementation is simplified for bedside teaching — not a full reproduction of every original item.',
+        'Popoveniuc et al. (Endocr Pract 2014): temperature 0/10/20; CNS 0/10/15/20/30 (coma/seizures 30); GI anorexia 5 / decreased motility 15 / ileus 20; precipitant 10; HR 0/10/20/30 (<40 = 30); ECG +10, pericardial/pleural effusion +10, pulmonary edema +15, cardiomegaly +15, hypotension +20; each of hyponatremia, hypoglycemia, hypoxemia, hypercarbia, ↓GFR +10. Score ≥60 diagnostic/highly suggestive; 25–59 supportive; <25 unlikely.',
+      formula:
+        'Sum of published items (temp + CNS + GI + precipitant + HR + additive CV findings + 10 per metabolic abnormality)',
+      validation:
+        'Derivation: all 14 institutional MC patients scored ≥60; score of 60 had 100% sensitivity and 85.71% specificity in that series.',
       references: [
         {
           title: 'A diagnostic scoring system for myxedema coma',

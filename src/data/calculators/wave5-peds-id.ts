@@ -42,6 +42,29 @@ function aap2022PhotoThreshold(gaWeeks: number, ageHours: number, anyNeuroRisk: 
   return interpPhotoKnots(ageHours, vals);
 }
 
+/** AAP 2022 Supplemental Tables 3–4 exchange knots (mg/dL); ≥38 wk share one curve (PediTools). */
+const AAP2022_EXCHANGE_NO_RISK: Record<number, number[]> = {
+  38: [18.8, 19.7, 20.6, 21.4, 22.1, 22.8, 23.4, 24.0, 24.6, 25.1, 25.9, 27.0, 27.0, 27.0, 27.0],
+  37: [17.8, 18.7, 19.5, 20.3, 21.1, 21.8, 22.5, 23.1, 23.7, 24.3, 25.2, 26.6, 26.7, 27.0, 27.0],
+  36: [16.7, 17.5, 18.3, 19.1, 19.9, 20.6, 21.3, 21.9, 22.5, 23.1, 24.1, 25.5, 25.7, 26.2, 26.8],
+  35: [15.6, 16.4, 17.2, 17.9, 18.7, 19.4, 20.0, 20.7, 21.3, 21.8, 22.9, 24.5, 24.7, 25.3, 26.0],
+};
+const AAP2022_EXCHANGE_ANY_RISK: Record<number, number[]> = {
+  38: [15.5, 16.3, 17.0, 17.7, 18.3, 19.0, 19.6, 20.1, 20.7, 21.2, 22.1, 23.5, 23.5, 23.5, 23.5],
+  37: [15.0, 15.7, 16.5, 17.2, 17.9, 18.5, 19.1, 19.7, 20.2, 20.7, 21.7, 23.1, 23.2, 23.5, 23.5],
+  36: [14.4, 15.2, 15.9, 16.6, 17.3, 17.9, 18.5, 19.1, 19.6, 20.1, 20.9, 22.1, 22.3, 22.8, 23.3],
+  35: [13.8, 14.6, 15.4, 16.1, 16.8, 17.4, 17.9, 18.5, 18.9, 19.4, 20.1, 21.1, 21.3, 21.9, 22.6],
+};
+
+function aap2022ExchangeThreshold(gaWeeks: number, ageHours: number, anyNeuroRisk: boolean): number {
+  const ga = Math.min(40, Math.max(35, Math.floor(gaWeeks)));
+  const table = anyNeuroRisk ? AAP2022_EXCHANGE_ANY_RISK : AAP2022_EXCHANGE_NO_RISK;
+  const key = Math.min(ga, 38);
+  const fallback = anyNeuroRisk ? AAP2022_EXCHANGE_ANY_RISK[38] : AAP2022_EXCHANGE_NO_RISK[38];
+  const vals = (table[key] ?? fallback) as number[];
+  return interpPhotoKnots(ageHours, vals);
+}
+
 export const wave5PedsIdCalcs: Calculator[] = [
   // ─── 1. Full PEWS (multi-domain) ───────────────────────────────────────────
   {
@@ -702,10 +725,10 @@ export const wave5PedsIdCalcs: Calculator[] = [
       validation: 'The current 2025 AHA/AAP Pediatric Cardiac Arrest Algorithm specifies IV/IO epinephrine and omits an endotracheal dose; the 2020 AHA PALS paper is retained only as historical/supporting context.',
       references: [
         {
-          title: '2025 AHA/AAP Pediatric Cardiac Arrest Algorithm',
-          citation: 'American Heart Association and American Academy of Pediatrics. Pediatric Cardiac Arrest Algorithm. 2025',
+          title: 'Part 8: Pediatric Advanced Life Support — 2025 AHA Guidelines for CPR and ECC',
+          citation: 'American Heart Association. Pediatric Advanced Life Support (CPR & ECC Guidelines). 2025',
           year: 2025,
-          url: 'https://cpr.heart.org/-/media/CPR-Files/CPR-Guidelines-Files/2025-Algorithms/Algorithm-PALS-CA-250123.pdf',
+          url: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/pediatric-advanced-life-support',
         },
         {
           title: '2020 AHA Guidelines for CPR and ECC — Pediatric Basic and Advanced Life Support (historical/supporting)',
@@ -1203,49 +1226,59 @@ export const wave5PedsIdCalcs: Calculator[] = [
   // ─── 13. Exchange transfusion threshold ────────────────────────────────────
   {
     id: 'exchange-transfusion-threshold',
-    name: 'Exchange Transfusion Threshold (Approximate)',
+    name: 'AAP-Style Exchange Transfusion Threshold',
     shortName: 'Exchange TSB',
     description:
-      'Approximate TSB threshold helper for exchange transfusion consideration in ≥35-week newborns (educational; confirm with AAP tools).',
+      'AAP 2022 hour- and GA-specific exchange-transfusion TSB threshold helper for ≥35-week newborns (interpolated supplemental-table knots; confirm with PediTools / official AAP tool).',
     category: 'pediatrics',
     tags: ['exchange transfusion', 'bilirubin', 'jaundice', 'neonate', 'kernicterus'],
     whenToUse: 'Severe hyperbilirubinemia when estimating proximity to exchange thresholds alongside neurotoxicity signs.',
-    whyUse: 'Exchange thresholds are higher than phototherapy thresholds and lower when acute bilirubin encephalopathy signs exist.',
+    whyUse: 'Exchange thresholds rise with postnatal age and fall with lower GA and neurotoxicity risk; ABE prompts exchange regardless of a single TSB.',
     inputs: [
-      numberInput('ageHours', 'Age', { unit: 'hours', min: 12, max: 168, defaultValue: 48 }),
+      numberInput('gaWeeks', 'Gestational age at birth (completed weeks)', {
+        unit: 'weeks',
+        min: 35,
+        max: 42,
+        defaultValue: 40,
+        helpText: 'AAP 2022 exchange tables start at 35 completed weeks. No extra neurotoxicity risk: ≥38 weeks share one curve. Any extra risk: ≥38 weeks share one curve.',
+      }),
+      numberInput('ageHours', 'Age', { unit: 'hours', min: 6, max: 336, defaultValue: 48 }),
       numberInput('tsb', 'Total serum bilirubin', { unit: 'mg/dL', min: 1, max: 45, step: 0.1, defaultValue: 22 }),
-      selectInput('risk', 'Neurotoxicity risk band', [
-        { label: 'Lower risk (≥38 wks, well, no neurotoxicity risk factors)', value: 'low' },
-        { label: 'Medium risk (35–37+6 well, or ≥38 with any neurotoxicity risk factor)', value: 'med' },
-        { label: 'Higher risk (35–37+6 with any neurotoxicity risk factor)', value: 'high' },
-      ], undefined, 'AAP 2022 Table 2 neurotoxicity risk factors: albumin <3.0 g/dL; isoimmune hemolytic disease (DAT+), G6PD, or other hemolysis; sepsis; significant clinical instability in the previous 24 h.'),
+      selectInput('risk', 'Neurotoxicity risk factors other than GA', [
+        { label: 'None besides gestational age', value: 'none', description: 'Use the GA-specific no-risk-factor exchange curve' },
+        { label: 'Any (albumin <3.0, hemolysis, sepsis, instability)', value: 'any', description: 'Any one AAP Table 2 factor besides GA uses the with-risk-factors curve' },
+      ], 'none', 'AAP 2022 Table 2 (besides GA): albumin <3.0 g/dL; isoimmune hemolytic disease (DAT+), G6PD deficiency, or other hemolysis; sepsis; significant clinical instability in the previous 24 h. GA <38 weeks is already captured by the GA curve. Legacy low/med/high values still map (low → none; med/high → any).'),
       yesNo('abeSigns', 'Signs of acute bilirubin encephalopathy (ABE)', -4,
-        'Tone changes, retrocollis/opisthotonos, poor suck, abnormal cry, fever, altered alertness'),
+        'Tone changes, retrocollis/opisthotonos, poor suck, abnormal cry, fever, altered alertness. AAP: intermediate/advanced ABE is an indication for urgent exchange even if TSB is below the hour-specific threshold.'),
     ],
     calculate(values) {
       const h = num(values.ageHours, 48);
       const tsb = num(values.tsb, 22);
-      const risk = String(values.risk ?? 'low');
+      const ga = num(values.gaWeeks, 40);
+      const riskRaw = String(values.risk ?? 'none').toLowerCase();
+      const anyNeuroRisk = riskRaw === 'any' || riskRaw === 'high' || riskRaw === 'med' || riskRaw === 'true';
       const abe = bool(values.abeSigns);
-      // Educational exchange floors (higher than photo); simplified
-      let thr: number;
-      if (risk === 'high') thr = h < 48 ? 18 : h < 72 ? 20 : 22;
-      else if (risk === 'med') thr = h < 48 ? 20 : h < 72 ? 22.5 : 24;
-      else thr = h < 48 ? 22 : h < 72 ? 25 : 27;
-      if (abe) thr = Math.min(thr, risk === 'high' ? 15 : 18); // much lower urgency with ABE
-      thr = round(thr, 1);
+      const thr = round(aap2022ExchangeThreshold(ga, h, anyNeuroRisk), 1);
+      const gaBand = Math.min(40, Math.max(35, Math.floor(ga)));
+      const curveLabel = anyNeuroRisk
+        ? gaBand >= 38
+          ? '≥38 wk with any neurotoxicity risk'
+          : `${gaBand} wk with any neurotoxicity risk`
+        : gaBand >= 38
+          ? '≥38 wk, no neurotoxicity risk'
+          : `${gaBand} wk, no neurotoxicity risk`;
       let riskLevel: 'low' | 'moderate' | 'high' | 'critical' = 'moderate';
-      let label = 'Below approximate exchange threshold';
+      let label = 'Below exchange threshold (AAP 2022 table lookup)';
       if (abe) {
         riskLevel = 'critical';
-        label = 'ABE signs — urgent expert management';
+        label = 'ABE signs — urgent exchange pathway (independent of TSB)';
       } else if (tsb >= thr) {
         riskLevel = 'critical';
-        label = 'At/above approximate exchange range';
-      } else if (tsb >= thr - 3) {
+        label = 'At/above exchange threshold';
+      } else if (tsb >= thr - 2) {
         riskLevel = 'high';
-        label = 'Approaching exchange range — intensive photo ± prepare';
-      } else if (tsb >= thr - 6) {
+        label = 'Within 2 mg/dL of exchange — escalate care / intensive phototherapy';
+      } else if (tsb >= thr - 5) {
         riskLevel = 'moderate';
         label = 'Elevated — intensive phototherapy focus';
       } else {
@@ -1255,11 +1288,14 @@ export const wave5PedsIdCalcs: Calculator[] = [
         score: thr,
         unit: 'mg/dL',
         label,
-        interpretation: `Approximate exchange threshold ≈ ${thr} mg/dL at ${h} h (${risk} risk${abe ? ', with ABE signs' : ''}). TSB ${tsb} mg/dL. With ABE or TSB near/above threshold, initiate intensive phototherapy immediately, involve neonatology, and prepare for possible exchange per AAP pathway. This is educational only.`,
+        interpretation: `Exchange threshold ≈ ${thr} mg/dL at ${h} h (${curveLabel}; interpolated AAP 2022 supplemental-table knots). Measured TSB ${tsb} mg/dL.${abe ? ' Signs of ABE: AAP recommends urgent intensive phototherapy and exchange even if TSB is below this threshold.' : ''} Confirm with PediTools / official AAP hourly tables; first-24-hour exchange curves are dashed (uncertain) in the guideline figures.`,
         riskLevel,
         details: [
-          { label: 'Approx exchange thr', value: `${thr} mg/dL` },
+          { label: 'Threshold (table lookup)', value: `${thr} mg/dL` },
           { label: 'TSB', value: `${tsb} mg/dL` },
+          { label: 'GA (completed weeks)', value: String(gaBand) },
+          { label: 'Neurotoxicity risk factors besides GA', value: anyNeuroRisk ? 'Any' : 'None' },
+          { label: 'Curve', value: curveLabel },
           { label: 'ABE signs', value: abe ? 'Yes' : 'No' },
         ],
         recommendations: [
@@ -1271,9 +1307,9 @@ export const wave5PedsIdCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'AAP guidance provides exchange transfusion thresholds above phototherapy levels; treatment is accelerated when signs of intermediate/advanced ABE are present.',
-      formula: 'Compare TSB to approximate age/risk exchange threshold; ABE lowers action threshold',
-      validation: 'Educational approximation of AAP 2022 guidance — use official tools and neonatology consultation.',
+        'AAP 2022 (Kemper) hour-specific exchange thresholds by completed GA and neurotoxicity risk. Helper interpolates published supplemental-table / PediTools knots (e.g. ≥38 wk no risk ≈19.7 mg/dL at 12 h, 21.4 at 24 h, 24.0 at 48 h, 25.9 at 72 h, 27 at ≥96 h). Intermediate/advanced ABE is an exchange indication independent of TSB. Not a substitute for PediTools hourly tables.',
+      formula: 'Linear interpolation of AAP 2022 Supplemental Table 3 (no extra risk) or Table 4 (any neurotoxicity risk) knots by age in hours and completed GA',
+      validation: 'Knot interpolation of published AAP 2022 / PediTools exchange tables for bedside use; confirm treatment with PediTools or the official hourly tables.',
       references: [
         {
           title: 'Clinical Practice Guideline Revision: Management of Hyperbilirubinemia in the Newborn Infant 35 or More Weeks of Gestation',
@@ -2048,8 +2084,9 @@ export const wave5PedsIdCalcs: Calculator[] = [
         score,
         ...r,
         recommendations: [
-          'Bag-quality specimen before antibiotics when possible',
-          'UA screens; culture confirms in young children',
+          'Culture from catheterization or SPA in non-toilet-trained children; midstream clean-catch if toilet-trained',
+          'Bag urine is screening only (high false-positive rate) — do not diagnose or treat UTI from a bag culture',
+          'Obtain a proper specimen before antibiotics when possible',
           'Follow local imaging pathways after febrile UTI',
         ],
       };
@@ -2080,7 +2117,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
       { condition: 'UA suggestive', actions: ['Culture', 'Empiric abx per local resistance'] },
     ],
     pearls: [
-      'Bag specimens prevent false positives from bags.',
+      'AAP 2011: bag specimens are not reliable for diagnosis; confirm positive bag UA with catheter or SPA culture.',
       'Circumcised boys have lower UTI risk than uncircumcised boys.',
     ],
   },

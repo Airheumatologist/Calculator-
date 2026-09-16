@@ -155,16 +155,16 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
 
   {
     id: 'p-possum',
-    name: 'P-POSSUM Mortality (Simplified Educational)',
+    name: 'P-POSSUM Mortality',
     shortName: 'P-POSSUM',
     description:
-      'Educational simplified P-POSSUM-style physiologic and operative burden with approximate logistic mortality — not a full 18-variable calculator.',
+      'Portsmouth-POSSUM logistic 30-day mortality from the full 12 physiologic and 6 operative Copeland variables.',
     category: 'surgery',
     tags: ['p-possum', 'possum', 'surgical risk', 'mortality', 'perioperative'],
     whenToUse:
-      'Teaching / rough discussion of emergency or major elective surgical risk when full P-POSSUM software is unavailable.',
+      'Adults undergoing emergency or elective surgery when a P-POSSUM mortality estimate is useful for audit or shared decision-making.',
     whyUse:
-      'P-POSSUM recalibrated POSSUM to reduce over-prediction of death in low-risk patients; this helper surfaces key domains only.',
+      'P-POSSUM recalibrated POSSUM to reduce over-prediction of death in low-risk patients, using complete physiologic and operative scores.',
     inputs: [
       selectInput('age', 'Age', [
         { label: '≤60 (1)', value: 1, description: 'Age ≤60 years' },
@@ -218,6 +218,23 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: '10–11.4 or 17.1–18 (4)', value: 4 },
         { label: '≤9.9 or ≥18.1 (8)', value: 8 },
       ]),
+      selectInput('sodium', 'Sodium (mmol/L)', [
+        { label: '≥136 (1)', value: 1, description: 'Na ≥136 mmol/L' },
+        { label: '131–135 (2)', value: 2, description: 'Na 131–135 mmol/L' },
+        { label: '126–130 (4)', value: 4, description: 'Na 126–130 mmol/L' },
+        { label: '≤125 (8)', value: 8, description: 'Na ≤125 mmol/L' },
+      ], undefined, 'Copeland physiologic sodium (mmol/L).'),
+      selectInput('potassium', 'Potassium (mmol/L)', [
+        { label: '3.5–5.0 (1)', value: 1, description: 'K 3.5–5.0 mmol/L' },
+        { label: '3.2–3.4 or 5.1–5.3 (2)', value: 2, description: 'K 3.2–3.4 or 5.1–5.3 mmol/L' },
+        { label: '2.9–3.1 or 5.4–5.9 (4)', value: 4, description: 'K 2.9–3.1 or 5.4–5.9 mmol/L' },
+        { label: '≤2.8 or ≥6.0 (8)', value: 8, description: 'K ≤2.8 or ≥6.0 mmol/L' },
+      ], undefined, 'Copeland physiologic potassium (mmol/L).'),
+      selectInput('ecg', 'ECG', [
+        { label: 'Normal (1)', value: 1, description: 'Normal sinus rhythm; no ischaemic changes' },
+        { label: 'AF rate 60–90 (4)', value: 4, description: 'Atrial fibrillation with ventricular rate 60–90 /min' },
+        { label: 'Other abnormal rhythm / ectopics / Q waves / ST–T (8)', value: 8, description: 'Any other abnormal rhythm, ≥5 ventricular ectopics/min, Q waves, or ST/T-wave changes' },
+      ], undefined, 'Copeland ECG: 1 = normal; 4 = AF 60–90; 8 = other abnormal rhythm, ≥5 ectopics/min, Q waves, or ST/T changes. No 2-point ECG band.'),
       selectInput('opMagnitude', 'Operation magnitude', [
         { label: 'Minor (1)', value: 1, description: 'Hernia, varicose veins, minor perianal/scrotal' },
         { label: 'Moderate (2)', value: 2, description: 'Appendectomy, cholecystectomy, mastectomy, TURP' },
@@ -263,7 +280,10 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         num(values.gcs) +
         num(values.urea) +
         num(values.wbc) +
-        num(values.hb);
+        num(values.hb) +
+        num(values.sodium) +
+        num(values.potassium) +
+        num(values.ecg);
       const op =
         num(values.opMagnitude) +
         num(values.procedures) +
@@ -271,27 +291,26 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         num(values.peritoneal) +
         num(values.malignancy) +
         num(values.timing);
-      // Approximate P-POSSUM logit using published coefficients on partial scores (educational)
       const logit = -9.065 + 0.1692 * phys + 0.155 * op;
       const mort = round((1 / (1 + Math.exp(-logit))) * 100, 1);
       const r = riskFromThresholds(mort, [
         {
           max: 5,
           level: 'low',
-          label: 'Lower approximate predicted mortality',
-          interpretation: `Educational approx mortality ~${mort}% (phys ${phys}, op ${op}). Still optimize comorbidities; full institutional calculator preferred for consent.`,
+          label: 'Lower predicted mortality',
+          interpretation: `P-POSSUM predicted mortality ~${mort}% (PS ${phys}, OS ${op}). Still optimize comorbidities; institutional NELA/ACS-NSQIP may complement consent.`,
         },
         {
           max: 15,
           level: 'moderate',
-          label: 'Moderate approximate predicted mortality',
-          interpretation: `Educational approx mortality ~${mort}%. Senior review, level-2/3 postop care planning, shared decision-making.`,
+          label: 'Moderate predicted mortality',
+          interpretation: `P-POSSUM predicted mortality ~${mort}%. Senior review, level-2/3 postop care planning, shared decision-making.`,
         },
         {
           max: 100,
           level: 'high',
-          label: 'High approximate predicted mortality',
-          interpretation: `Educational approx mortality ~${mort}%. High-risk pathway: ICU, consider less invasive options, frank goals discussion.`,
+          label: 'High predicted mortality',
+          interpretation: `P-POSSUM predicted mortality ~${mort}%. High-risk pathway: ICU, consider less invasive options, frank goals discussion.`,
         },
       ]);
       return {
@@ -299,23 +318,21 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         unit: '%',
         ...r,
         details: [
-          { label: 'Physiologic score (partial)', value: String(phys) },
-          { label: 'Operative score (partial)', value: String(op) },
-          { label: 'Note', value: 'Missing full 12 phys + Na/K/ECG variables — approximate only' },
+          { label: 'Physiologic score (12 variables)', value: String(phys) },
+          { label: 'Operative score (6 variables)', value: String(op) },
         ],
         recommendations: [
-          'Do not quote as official P-POSSUM output',
-          'Use NELA / ACS-NSQIP / full P-POSSUM tools when available',
+          'Use alongside NELA / ACS-NSQIP when available',
           'Document discussion of risk vs benefit',
         ],
       };
     },
     evidence: {
       summary:
-        'P-POSSUM uses logistic regression on physiologic and operative scores: ln[R/(1−R)] = −9.065 + 0.1692·PS + 0.1550·OS. This app uses a reduced variable set for education.',
-      formula: 'R = 1/(1+e^(−(−9.065 + 0.1692·PS + 0.155·OS))) on partial scores',
+        'P-POSSUM uses the complete Copeland 12-variable physiologic score (including Na, K, ECG) and 6-variable operative score: ln[R/(1−R)] = −9.065 + 0.1692·PS + 0.1550·OS.',
+      formula: 'R = 1/(1+e^(−(−9.065 + 0.1692·PS + 0.155·OS))); PS min 12, OS min 6',
       validation:
-        'Full P-POSSUM is widely validated; this incomplete implementation is for teaching only and may mis-estimate risk.',
+        'P-POSSUM is widely used for surgical audit; individual consent should still incorporate clinical judgment and local outcomes.',
       references: [
         {
           title: 'An evaluation of the POSSUM surgical scoring system',
@@ -339,7 +356,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
     ],
     pearls: [
       'Original POSSUM over-predicted death at low risk; P-POSSUM recalibrated the equation.',
-      'Missing labs (Na, K, ECG) mean this app under-specifies the true PS.',
+      'ECG has no 2-point band: normal = 1, AF 60–90 = 4, other abnormal rhythm/Q waves/ST–T = 8.',
     ],
   },
 
@@ -1187,24 +1204,42 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: '75–83.9 (2)', value: 2 },
         { label: '≥84 (3)', value: 3 },
       ]),
-      selectInput('crp', 'CRP (mg/L) by symptom duration', [
-        { label: 'CRP low for duration (0)', value: 0, description: '<24 h: CRP <4. >24 h: CRP <12' },
-        { label: 'Intermediate CRP band (1–2)', value: 2, description: '<24 h: CRP 4–<25. >24 h: CRP 12–<152 (official 2 pts)' },
-        { label: 'High CRP for duration (3–4)', value: 4, description: '<24 h: CRP ≥25 (official 5, except ≥83 = 1). >24 h: CRP ≥152 (official 1 — point drop)' },
-      ], 0, 'Official AAS (mg/L): symptoms <24 h — ≥4 and <11 = 2; ≥11 and <25 = 3; ≥25 and <83 = 5; ≥83 = 1. Symptoms >24 h — ≥12 and <53 = 2; ≥53 and <152 = 2; ≥152 = 1. This helper maps low→0, intermediate official 2–3→2, high official 3–5→4 (does not apply the high-CRP point drop). Pick the closest band.'),
+      selectInput('symptomDuration', 'Symptom duration', [
+        { label: '<24 hours', value: 'lt24', description: 'Onset to assessment <24 h — early CRP table (high CRP can score 5 or drop to 1)' },
+        { label: '>24 hours', value: 'gt24', description: 'Onset to assessment >24 h — late CRP table (CRP ≥152 scores 1)' },
+      ], undefined, 'Sammalkorpi AAS CRP points are duration-specific. At exactly 24 h, use the >24 h table.'),
+      numberInput('crp', 'CRP', {
+        unit: 'mg/L',
+        min: 0,
+        max: 500,
+        step: 1,
+        defaultValue: 0,
+        helpText:
+          'Official AAS (mg/L). <24 h: <4 = 0; ≥4 and <11 = 2; ≥11 and <25 = 3; ≥25 and <83 = 5; ≥83 = 1. >24 h: <12 = 0; ≥12 and <152 = 2; ≥152 = 1 (high-CRP point drop).',
+      }),
       selectInput('sexAge', 'Sex / age adjustment', [
         { label: 'Male or age ≥40 (0 extra)', value: 0 },
         { label: 'Female age <40 (−3 if applying full AAS discount)', value: -3 },
       ], 0, 'Young women receive negative points in full AAS to reduce false positives'),
     ],
     calculate(values) {
+      const crp = num(values.crp);
+      const gt24 = String(values.symptomDuration) === 'gt24';
+      let crpPts = 0;
+      if (gt24) {
+        if (crp >= 152) crpPts = 1;
+        else if (crp >= 12) crpPts = 2;
+      } else if (crp >= 83) crpPts = 1;
+      else if (crp >= 25) crpPts = 5;
+      else if (crp >= 11) crpPts = 3;
+      else if (crp >= 4) crpPts = 2;
       const score =
         num(values.painMigration) +
         num(values.rlqPain) +
         num(values.guarding) +
         num(values.wbcBand) +
         num(values.neutPct) +
-        num(values.crp) +
+        crpPts +
         num(values.sexAge);
       const r = riskFromThresholds(score, [
         {
@@ -1231,14 +1266,16 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         ...r,
         details: [
           { label: 'Typical cutoffs', value: '≤10 low; 11–15 intermediate; ≥16 high' },
-          { label: 'Note', value: 'CRP bands simplified — verify duration-specific tables' },
+          { label: 'Symptom duration', value: gt24 ? '>24 h' : '<24 h' },
+          { label: 'CRP points', value: String(crpPts) },
         ],
       };
     },
     evidence: {
       summary:
-        'Adult Appendicitis Score (Sammalkorpi et al.) combines migration, RLQ pain, guarding, WBC, neutrophils, CRP (duration-adjusted), with lower points for young women.',
-      formula: 'Sum of clinical + laboratory points (approx range can be negative to ~20+)',
+        'Adult Appendicitis Score (Sammalkorpi et al.) combines migration, RLQ pain, guarding, WBC, neutrophils, duration-specific CRP (including the high-CRP point drop), with lower points for young women.',
+      formula:
+        'Sum of clinical + laboratory points. CRP <24 h: <4=0, 4–<11=2, 11–<25=3, 25–<83=5, ≥83=1. CRP >24 h: <12=0, 12–<152=2, ≥152=1.',
       validation:
         'Validated in Finnish cohorts; cutoffs ≤10 / 11–15 / ≥16 used in imaging triage studies.',
       references: [
@@ -1279,9 +1316,9 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: 'Male (2)', value: 2 },
       ]),
       selectInput('intensity', 'Intensity of pain', [
-        { label: 'Mild (0)', value: 0, description: 'Able to walk and converse; pain does not dominate the exam' },
-        { label: 'Moderate / severe (2)', value: 2, description: 'Pain limits activity or exam; patient prefers to lie still' },
-      ], 0, 'Subjective pain intensity on history/exam (Lintula has no numeric VAS cut).'),
+        { label: 'Mild or moderate (0)', value: 0, description: 'Mild or moderate pain — Lintula scores 0' },
+        { label: 'Severe (2)', value: 2, description: 'Severe abdominal pain — Lintula +2 only for severe' },
+      ], 0, 'Original Lintula: severe = 2; mild or moderate = 0 (no numeric VAS cut).'),
       yesNo('relocation', 'Relocation of pain', 4,
         'Pain started periumbilical or epigastric and later migrated to the RLQ.'),
       yesNo('rlqPain', 'Pain in the right lower quadrant', 4,

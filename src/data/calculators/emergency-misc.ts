@@ -206,19 +206,29 @@ export const emergencyMiscCalcs: Calculator[] = [
     whenToUse: 'Alert (GCS 15) stable adults with blunt trauma.',
     whyUse: 'Slightly more sensitive/specific than NEXUS in some comparisons.',
     inputs: [
-      yesNo('highRisk', 'High-risk factor: age≥65 OR dangerous mechanism OR paresthesias', 0,
-        'Yes if age ≥65 or paresthesias in the extremities, or dangerous mechanism: fall ≥3 ft/1 m or 5 stairs; axial load e.g. diving; MVC >100 km/h (~62 mph), rollover, or ejection; motorized recreational vehicle; bicycle collision.'),
+      yesNo('age65', 'Age ≥65 years', 0,
+        'Independent high-risk factor. Any one high-risk item → radiography (do not proceed to low-risk/ROM).'),
+      yesNo('dangerousMechanism', 'Dangerous mechanism', 0,
+        'Fall ≥3 ft/1 m or 5 stairs; axial load (e.g. diving); MVC >100 km/h (~62 mph), rollover, or ejection; motorized recreational vehicle; bicycle collision.'),
+      yesNo('paresthesias', 'Paresthesias in the extremities', 0,
+        'Any extremity paresthesias after the injury. Independent high-risk factor — image if Yes even if age <65 and mechanism is not “dangerous.”'),
       yesNo('lowRisk', 'Any low-risk factor allowing assessment: simple rear-end MVC, sitting in ED, ambulatory, delayed neck pain, or absence of midline tenderness', -1,
-        'Any of: simple rear-end (exclude pushed into oncoming traffic, hit by bus/large truck, rollover, or high-speed impact); sitting in the ED; ambulatory at any time; delayed (not immediate) neck pain; absence of midline C-spine tenderness. Do not test ROM unless a low-risk factor is present.'),
+        'Any of: simple rear-end (exclude pushed into oncoming traffic, hit by bus/large truck, rollover, or high-speed impact); sitting in the ED; ambulatory at any time; delayed (not immediate) neck pain; absence of midline C-spine tenderness. Do not test ROM unless a low-risk factor is present. Skip this branch if any high-risk factor is Yes.'),
       yesNo('rotate', 'Unable to actively rotate neck 45° left AND right', 0,
         'Patient actively rotates 45° left and 45° right. Yes (unable) if either side fails. Do not test if high-risk or no low-risk factor.'),
     ],
     calculate(values) {
-      const highRisk = bool(values.highRisk);
+      const age65 = bool(values.age65);
+      const dangerousMechanism = bool(values.dangerousMechanism);
+      const paresthesias = bool(values.paresthesias);
+      const highRisk = age65 || dangerousMechanism || paresthesias;
       const lowRisk = bool(values.lowRisk);
       const rotate = bool(values.rotate);
       const details = [
-        { label: 'High-risk factor', value: highRisk ? 'Yes' : 'No' },
+        { label: 'Age ≥65', value: age65 ? 'Yes' : 'No' },
+        { label: 'Dangerous mechanism', value: dangerousMechanism ? 'Yes' : 'No' },
+        { label: 'Paresthesias in extremities', value: paresthesias ? 'Yes' : 'No' },
+        { label: 'Any high-risk factor', value: highRisk ? 'Yes — imaging' : 'No' },
         { label: 'Low-risk factor allowing ROM assessment', value: lowRisk ? 'Yes' : 'No' },
         { label: 'Unable to rotate neck 45° left AND right', value: rotate ? 'Yes' : 'No' },
       ];
@@ -259,7 +269,8 @@ export const emergencyMiscCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Canadian C-Spine Rule algorithm: high-risk → image; else low-risk assessment → ROM testing.',
+      summary: 'Canadian C-Spine Rule: image if ANY high-risk factor (age ≥65, dangerous mechanism, or extremity paresthesias); else if no low-risk factor → image; else if cannot rotate 45° both ways → image; else clear.',
+      formula: 'High-risk (any of age ≥65 / dangerous mechanism / paresthesias) → radiography. Else no low-risk factor → radiography. Else unable to rotate 45° left and right → radiography. Else no imaging.',
       validation: 'Derived/validated by Stiell et al.; high sensitivity for clinically important C-spine injury.',
       references: [{ title: 'The Canadian C-Spine Rule for radiography', citation: 'Stiell IG et al. JAMA. 2001', year: 2001, pmid: '11597285',
           doi: '10.1001/jama.286.15.1841', }],
@@ -267,6 +278,9 @@ export const emergencyMiscCalcs: Calculator[] = [
     nextSteps: [
       { condition: 'Positive', actions: ['CT C-spine', 'Maintain immobilization'] },
       { condition: 'Negative', actions: ['Clear C-spine clinically'] },
+    ],
+    pearls: [
+      'The three high-risk factors are independent — a single Yes is enough for imaging before low-risk/ROM steps.',
     ],
   },
   {
@@ -803,9 +817,9 @@ export const emergencyMiscCalcs: Calculator[] = [
   },
   {
     id: 'wells-hit',
-    name: '4Ts Score for HIT',
+    name: '4Ts Score for HIT (not Wells)',
     shortName: '4Ts HIT',
-    description: 'Pretest probability of heparin-induced thrombocytopenia.',
+    description: '4Ts pretest probability of heparin-induced thrombocytopenia (Thrombocytopenia, Timing, Thrombosis, oTher causes). This is the Lo 4Ts instrument, not a Wells PE/DVT score.',
     category: 'hematology',
     tags: ['hit', 'heparin', 'thrombocytopenia'],
     whenToUse: 'Thrombocytopenia in patients receiving heparin.',
@@ -849,6 +863,9 @@ export const emergencyMiscCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'Score ≥4', actions: ['Discontinue heparin/LMWH', 'Start argatroban/bivalirudin/fondaparinux per setting', 'HIT Ab ELISA ± functional assay'] },
+    ],
+    pearls: [
+      'The URL/id slug wells-hit is historical only; the live instrument is the 4Ts score (Lo et al.), not Wells PE or DVT.',
     ],
   },
   {
@@ -1253,7 +1270,7 @@ export const emergencyMiscCalcs: Calculator[] = [
         { label: 'Tramadol', value: 'tramadol' },
         { label: 'Tapentadol', value: 'tapentadol' },
         { label: 'Fentanyl patch (mcg/hr → special)', value: 'fentanyl_patch', description: 'Enter patch mcg/h as the dose and set doses/day = 1. CDC MME/day = mcg/h × 2.4.' },
-        { label: 'Methadone (complex — approx 4–12)', value: 'methadone', description: 'CDC methadone MME is dose-stratified (4/8/10/12); this tool uses 4 as a lower-bound approximation — verify the CDC table.' },
+        { label: 'Methadone (CDC dose-stratified 4 / 8 / 10 / 12)', value: 'methadone', description: 'Factor applies to total daily methadone mg: 1–20 mg/day ×4; 21–40 ×8; 41–60 ×10; ≥61 ×12. Not for converting between opioids.' },
       ]),
     ],
     calculate(values) {
@@ -1268,9 +1285,16 @@ export const emergencyMiscCalcs: Calculator[] = [
         tramadol: 0.1,
         tapentadol: 0.4,
         fentanyl_patch: 2.4,
-        methadone: 4,
       };
-      const factor = conversionFactors[String(values.opioid)] ?? num(values.opioid, 1);
+      const opioid = String(values.opioid);
+      const methadoneFactor = (dailyMg: number): number => {
+        if (dailyMg <= 20) return 4;
+        if (dailyMg <= 40) return 8;
+        if (dailyMg <= 60) return 10;
+        return 12;
+      };
+      const factor =
+        opioid === 'methadone' ? methadoneFactor(daily) : (conversionFactors[opioid] ?? num(values.opioid, 1));
       const mme = round(daily * factor, 1);
       const r = riskFromThresholds(mme, [
         { max: 49, level: 'moderate', label: 'Lower CDC threshold band', interpretation: 'Still risk of OD; use caution, naloxone co-prescribing as appropriate.' },
@@ -1281,11 +1305,21 @@ export const emergencyMiscCalcs: Calculator[] = [
         score: mme,
         unit: 'MME/day',
         ...r,
-        details: [{ label: 'Note', value: 'Methadone/fentanyl conversions are complex; verify with CDC table' }],
+        details: [
+          { label: 'Daily opioid amount', value: `${round(daily, 1)} ${opioid === 'fentanyl_patch' ? 'mcg/h (×1)' : 'mg/day'}` },
+          { label: 'CDC conversion factor', value: String(factor) },
+          {
+            label: 'Methadone strata',
+            value:
+              opioid === 'methadone'
+                ? `Daily methadone ${round(daily, 1)} mg → factor ${factor} (1–20×4, 21–40×8, 41–60×10, ≥61×12)`
+                : 'n/a',
+          },
+        ],
       };
     },
     evidence: {
-      summary: 'MME uses CDC conversion factors to standardize opioid intensity.',
+      summary: 'MME uses CDC conversion factors to standardize opioid intensity. Methadone is dose-stratified (4 / 8 / 10 / 12 by daily mg), not a flat ×4.',
       validation: 'Public health tool for risk; not exact equianalgesia for switching (use caution).',
       references: [{ title: 'CDC Clinical Practice Guideline for Prescribing Opioids', citation: 'Dowell D et al. MMWR. 2022', year: 2022, pmid: '36327391',
           doi: '10.15585/mmwr.rr7103a1', }],
@@ -1387,6 +1421,14 @@ export const emergencyMiscCalcs: Calculator[] = [
     inputs: [
       numberInput('serumNa', 'Serum Na', { unit: 'mEq/L', min: 100, max: 180, defaultValue: 120 }),
       numberInput('infusateNa', 'Infusate Na', { unit: 'mEq/L', min: 0, max: 513, defaultValue: 154, helpText: 'D5W=0, 0.45%NaCl=77, NS=154, 3%=513' }),
+      numberInput('infusateK', 'Infusate K (optional)', {
+        unit: 'mEq/L',
+        min: 0,
+        max: 100,
+        defaultValue: 0,
+        required: false,
+        helpText: 'K in the liter of infusate (e.g. 10–40 mEq/L KCl). Published ΔNa uses infusate Na + K. Leave 0 if none.',
+      }),
       numberInput('weight', 'Weight', { unit: 'kg', min: 20, max: 200, defaultValue: 70 }),
       selectInput('tbwFactor', 'TBW factor', [
         { label: 'Young man 0.6', value: 0.6 },
@@ -1397,18 +1439,25 @@ export const emergencyMiscCalcs: Calculator[] = [
     calculate(values) {
       const sNa = num(values.serumNa, 120);
       const iNa = num(values.infusateNa, 154);
+      const iK = num(values.infusateK, 0);
       const tbw = num(values.weight, 70) * num(values.tbwFactor, 0.5);
-      const delta = round((iNa - sNa) / (tbw + 1), 2);
+      const infusateCation = iNa + iK;
+      const delta = round((infusateCation - sNa) / (tbw + 1), 2);
       return {
         score: delta,
         unit: 'mEq/L per L',
         label: 'Predicted ΔNa per liter',
-        interpretation: `Each liter of infusate changes Na by ~${delta} mEq/L. Limit correction (often ≤8–10 mEq/L/day in chronic hyponatremia) to reduce ODS risk.`,
+        interpretation: `Each liter of infusate changes Na by ~${delta} mEq/L (Adrogué–Madias, including infusate K). Limit correction (often ≤8–10 mEq/L/day in chronic hyponatremia) to reduce ODS risk.`,
         riskLevel: 'info',
+        details: [
+          { label: 'TBW used', value: `${round(tbw, 1)} L` },
+          { label: 'Infusate Na + K', value: `${infusateCation} mEq/L` },
+        ],
       };
     },
     evidence: {
-      summary: 'Adrogué-Madias: ΔNa = (infusate Na − serum Na) / (TBW + 1).',
+      summary: 'Adrogué-Madias: ΔNa = (infusate Na + infusate K − serum Na) / (TBW + 1).',
+      formula: 'ΔNa = (Na_inf + K_inf − Na_serum) / (TBW + 1)',
       validation: 'Widely taught; actual change varies with ongoing losses/ADH.',
       references: [{ title: 'Hyponatremia', citation: 'Adrogué HJ, Madias NE. N Engl J Med. 2000', year: 2000, pmid: '10824078',
           doi: '10.1056/NEJM200005253422107', }],

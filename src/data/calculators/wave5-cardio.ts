@@ -406,7 +406,7 @@ export const wave5CardioCalcs: Calculator[] = [
     whyUse: 'Classic, simple voltage criterion; limited sensitivity but good specificity when met.',
     inputs: [
       numberInput('sV1', 'S-wave amplitude in V1', { unit: 'mm', min: 0, max: 50, step: 0.5, defaultValue: 15, helpText: '1 mm = 0.1 mV standard calibration' }),
-      numberInput('rV5V6', 'Tallest R in V5 or V6', { unit: 'mm', min: 0, max: 50, step: 0.5, defaultValue: 15, helpText: 'Precordial criterion positive if S V1 + this R ≥35 mm' }),
+      numberInput('rV5V6', 'Tallest R in V5 or V6', { unit: 'mm', min: 0, max: 50, step: 0.5, defaultValue: 15, helpText: 'Precordial criterion positive if S V1 + this R >35 mm' }),
       numberInput('rAvl', 'R-wave in aVL (optional limb criterion)', { unit: 'mm', min: 0, max: 30, step: 0.5, defaultValue: 5, required: false, helpText: 'Limb criterion positive if R aVL ≥11 mm' }),
     ],
     calculate(values) {
@@ -415,7 +415,7 @@ export const wave5CardioCalcs: Calculator[] = [
       const rAvlProvided = !isMissingValue(values.rAvl, true);
       const rAvl = num(values.rAvl, 0);
       const sum = round(sV1 + rV5V6, 1);
-      const precordialPos = sum >= 35;
+      const precordialPos = sum > 35;
       const limbPos = rAvlProvided && rAvl >= 11;
       const positive = precordialPos || limbPos;
 
@@ -424,12 +424,12 @@ export const wave5CardioCalcs: Calculator[] = [
         unit: 'mm',
         label: positive ? 'Meets Sokolow–Lyon LVH voltage' : 'Does not meet Sokolow–Lyon voltage',
         interpretation: positive
-          ? `S V1 + R V5/V6 = ${sum} mm${precordialPos ? ' (≥35)' : ''}${limbPos ? `; R aVL ${rAvl} mm (≥11)` : ''}. Voltage criteria for LVH met — correlate with imaging; consider strain pattern and clinical context.`
-          : `S V1 + R V5/V6 = ${sum} mm (<35)${rAvlProvided ? ` and R aVL ${rAvl} mm (<11)` : '; R aVL not entered, so the limb criterion was not assessed'}. Voltage criteria not met; ECG LVH not excluded (low sensitivity).`,
+          ? `S V1 + R V5/V6 = ${sum} mm${precordialPos ? ' (>35)' : ''}${limbPos ? `; R aVL ${rAvl} mm (≥11)` : ''}. Voltage criteria for LVH met — correlate with imaging; consider strain pattern and clinical context.`
+          : `S V1 + R V5/V6 = ${sum} mm (≤35)${rAvlProvided ? ` and R aVL ${rAvl} mm (<11)` : '; R aVL not entered, so the limb criterion was not assessed'}. Voltage criteria not met; ECG LVH not excluded (low sensitivity).`,
         riskLevel: positive ? 'moderate' : 'normal',
         details: [
           { label: 'S V1 + R V5/V6', value: `${sum} mm` },
-          { label: 'Precordial criterion (≥35 mm)', value: precordialPos ? 'Positive' : 'Negative' },
+          { label: 'Precordial criterion (>35 mm)', value: precordialPos ? 'Positive' : 'Negative' },
           { label: 'R aVL criterion (≥11 mm)', value: rAvlProvided ? (limbPos ? 'Positive' : 'Negative') : 'Not assessed — R aVL not entered' },
         ],
         recommendations: positive
@@ -438,8 +438,8 @@ export const wave5CardioCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Sokolow–Lyon: S in V1 + R in V5 or V6 ≥35 mm (or R aVL ≥11 mm) suggests LVH by voltage.',
-      formula: 'Positive if (S_V1 + R_V5/V6 ≥ 35 mm) OR (R_aVL ≥ 11 mm)',
+      summary: 'Sokolow–Lyon: S in V1 + R in V5 or V6 >35 mm (or R aVL ≥11 mm) suggests LVH by voltage.',
+      formula: 'Positive if (S_V1 + R_V5/V6 > 35 mm) OR (R_aVL ≥ 11 mm)',
       validation: 'Classic criteria (1949); high specificity, modest sensitivity vs echo LV mass.',
       references: [
         {
@@ -473,9 +473,9 @@ export const wave5CardioCalcs: Calculator[] = [
     whyUse: 'Sex-specific thresholds improve performance; Cornell product adds QRS duration.',
     inputs: [
       selectInput('sex', 'Sex', [
-        { label: 'Male', value: 'M', description: 'Cornell voltage positive if R aVL + S V3 ≥28 mm' },
-        { label: 'Female', value: 'F', description: 'Cornell voltage positive if R aVL + S V3 ≥20 mm' },
-      ], undefined, 'Sex-specific Cornell voltage: ≥28 mm in men, ≥20 mm in women.'),
+        { label: 'Male', value: 'M', description: 'Cornell voltage positive if R aVL + S V3 >28 mm' },
+        { label: 'Female', value: 'F', description: 'Cornell voltage positive if R aVL + S V3 >20 mm' },
+      ], undefined, 'Sex-specific Cornell voltage (Casale 1987): >28 mm in men, >20 mm in women.'),
       numberInput('rAvl', 'R-wave in aVL', { unit: 'mm', min: 0, max: 30, step: 0.5, defaultValue: 8 }),
       numberInput('sV3', 'S-wave in V3', { unit: 'mm', min: 0, max: 50, step: 0.5, defaultValue: 12 }),
       numberInput('qrsMs', 'QRS duration (optional, for Cornell product)', {
@@ -495,7 +495,7 @@ export const wave5CardioCalcs: Calculator[] = [
       const qrs = num(values.qrsMs, 0);
       const voltage = round(rAvl + sV3, 1);
       const threshold = sex === 'F' ? 20 : 28;
-      const voltagePos = voltage >= threshold;
+      const voltagePos = voltage > threshold;
       const product = qrsProvided ? round(voltage * qrs, 0) : null;
       const productPos = product != null && product > 2440;
 
@@ -505,18 +505,18 @@ export const wave5CardioCalcs: Calculator[] = [
         unit: 'mm',
         label: positive ? 'Meets Cornell LVH criteria' : 'Does not meet Cornell criteria',
         interpretation: voltagePos
-          ? `Cornell voltage ${voltage} mm ≥ ${threshold} mm (${sex === 'F' ? 'women' : 'men'}). LVH by Cornell voltage. ${
+          ? `Cornell voltage ${voltage} mm > ${threshold} mm (${sex === 'F' ? 'women' : 'men'}). LVH by Cornell voltage. ${
               product != null ? `Cornell product ${product} mm·ms ${productPos ? '(also >2440)' : ''}.` : 'Cornell product not computed — QRS duration not entered.'
             }`
           : productPos
-            ? `Voltage ${voltage} mm below ${threshold} mm threshold, but Cornell product ${product} mm·ms >2440 — positive by product criterion.`
-            : `Cornell voltage ${voltage} mm (<${threshold} mm for ${sex === 'F' ? 'women' : 'men'}); ${
+            ? `Voltage ${voltage} mm not above ${threshold} mm threshold, but Cornell product ${product} mm·ms >2440 — positive by product criterion.`
+            : `Cornell voltage ${voltage} mm (≤${threshold} mm for ${sex === 'F' ? 'women' : 'men'}); ${
                 product != null ? `product ${product} mm·ms (≤2440)` : 'product not computed because QRS duration was not entered'
               }. Criteria not met.`,
         riskLevel: positive ? 'moderate' : 'normal',
         details: [
           { label: 'R aVL + S V3', value: `${voltage} mm` },
-          { label: 'Sex-specific cutoff', value: `≥${threshold} mm` },
+          { label: 'Sex-specific cutoff', value: `>${threshold} mm` },
           { label: 'Cornell product', value: product != null ? `${product} mm·ms` : 'Not calculated — QRS duration not entered' },
           { label: 'Product criterion', value: product == null ? 'Not assessed' : productPos ? 'Positive (>2440)' : 'Negative' },
         ],
@@ -527,8 +527,8 @@ export const wave5CardioCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Cornell voltage: R aVL + S V3 ≥28 mm (men) or ≥20 mm (women). Cornell product (voltage × QRS ms) >2440 mm·ms is an alternate criterion.',
-      formula: 'Voltage = R_aVL + S_V3; + if ≥28 mm (♂) or ≥20 mm (♀); product = voltage × QRS_ms',
+        'Cornell voltage: R aVL + S V3 >28 mm (men) or >20 mm (women) (Casale 1987: exceeds 2.8 / 2.0 mV). Cornell product (voltage × QRS ms) >2440 mm·ms is an alternate criterion.',
+      formula: 'Voltage = R_aVL + S_V3; + if >28 mm (♂) or >20 mm (♀); product = voltage × QRS_ms',
       validation: 'Derived and validated against echo LV mass; used in hypertension trials (e.g. LIFE).',
       references: [
         {
@@ -562,35 +562,48 @@ export const wave5CardioCalcs: Calculator[] = [
     inputs: [
       numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, defaultValue: 400, helpText: 'Onset of QRS to end of T in the lead with the clearest T-wave end' }),
       numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, defaultValue: 70 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 55, helpText: 'Rautaharju 2014 prolongation ULNs are age- and sex-specific.' }),
+      selectInput('sex', 'Sex', [
+        { label: 'Male', value: 'M' },
+        { label: 'Female', value: 'F' },
+      ]),
     ],
     calculate(values) {
       const qt = num(values.qt, 400);
       const hr = num(values.hr, 70);
+      const age = num(values.age, 55);
+      const sex = String(values.sex ?? 'M');
       if (hr <= 0) {
         return { score: 0, label: 'Invalid HR', interpretation: 'HR must be > 0.', riskLevel: 'info' };
       }
       const qtc = round((qt * (120 + hr)) / 180, 0);
+      let uln = sex === 'F' ? 450 : 440;
+      let ulnBand = 'age 40–69';
+      if (age < 40) {
+        uln = sex === 'F' ? 440 : 430;
+        ulnBand = 'age <40';
+      } else if (age >= 70) {
+        uln = sex === 'F' ? 460 : 455;
+        ulnBand = 'age ≥70';
+      }
+      const sexWord = sex === 'F' ? 'women' : 'men';
       let riskLevel: 'normal' | 'moderate' | 'high' | 'critical' = 'normal';
       let label = 'Normal QTc';
-      let interpretation = `Rautaharju QTc ${qtc} ms.`;
+      let interpretation = `Rautaharju QTcMod ${qtc} ms (ULN ${uln} ms for ${sexWord}, ${ulnBand}).`;
       if (qtc >= 500) {
         riskLevel = 'critical';
         label = 'Markedly prolonged';
-        interpretation = `QTc ${qtc} ms (≥500): high torsades risk — stop QT-prolonging drugs, replete K/Mg, telemetry.`;
-      } else if (qtc >= 470) {
+        interpretation = `QTcMod ${qtc} ms (≥500): high torsades risk — stop QT-prolonging drugs, replete K/Mg, telemetry. Rautaharju 2014 ULN for ${sexWord}, ${ulnBand} is ${uln} ms.`;
+      } else if (qtc >= uln) {
         riskLevel = 'high';
-        label = 'Prolonged';
-        interpretation = `QTc ${qtc} ms: prolonged — review meds/electrolytes; sex-specific cutoffs apply.`;
-      } else if (qtc >= 440) {
-        riskLevel = 'moderate';
-        label = 'Borderline';
-        interpretation = `QTc ${qtc} ms: borderline — recheck measurement and secondary causes.`;
+        label = 'Prolonged (above Rautaharju ULN)';
+        interpretation = `QTcMod ${qtc} ms is at/above the 2014 age- and sex-specific ULN of ${uln} ms (${sexWord}, ${ulnBand}). Review meds/electrolytes; ≥500 ms remains the conventional TdP-precaution cutoff.`;
       } else if (qtc < 350) {
         riskLevel = 'moderate';
         label = 'Short QTc';
-        interpretation = `QTc ${qtc} ms: short — consider short QT syndrome if persistent.`;
+        interpretation = `QTcMod ${qtc} ms: short — consider short QT syndrome if persistent.`;
       } else {
-        interpretation = `Rautaharju QTc ${qtc} ms within commonly accepted range for many adults.`;
+        interpretation = `Rautaharju QTcMod ${qtc} ms is below the 2014 ULN of ${uln} ms for ${sexWord}, ${ulnBand}.`;
       }
       return {
         score: qtc,
@@ -601,19 +614,21 @@ export const wave5CardioCalcs: Calculator[] = [
         details: [
           { label: 'QT', value: `${qt} ms` },
           { label: 'HR', value: `${hr} bpm` },
-          { label: 'Formula', value: 'QT × (120 + HR) / 180' },
+          { label: 'Formula', value: 'QTcMod = QT × (120 + HR) / 180' },
+          { label: '2014 ULN', value: `${uln} ms (${sexWord}, ${ulnBand})` },
         ],
         recommendations:
           qtc >= 500
             ? ['Telemetry', 'Discontinue QT-prolonging agents', 'Replete K⁺/Mg²⁺']
-            : qtc >= 470
+            : qtc >= uln
               ? ['Medication and electrolyte review', 'Repeat ECG']
               : ['Document baseline QTc method used'],
       };
     },
     evidence: {
-      summary: 'Rautaharju QTc = QT × (120 + HR) / 180 (QT in ms, HR in bpm).',
-      formula: 'QTc_Rautaharju = QT × (120 + HR) / 180',
+      summary:
+        'QTcMod = QT × (120 + HR) / 180. Rautaharju 2014 prolonged-QTc ULNs: age <40 men 430 / women 440 ms; age 40–69 men 440 / women 450 ms; age ≥70 men 455 / women 460 ms. ≥500 ms is a conventional TdP-precaution cutoff, not a 2014 ULN.',
+      formula: 'QTcMod = QT × (120 + HR) / 180; prolonged if ≥ age/sex ULN',
       validation: 'Proposed as HR-robust alternative; compare with Fridericia/Bazett in the same patient.',
       references: [
         {
@@ -649,79 +664,85 @@ export const wave5CardioCalcs: Calculator[] = [
       numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, defaultValue: 440, helpText: 'Onset of QRS to end of T; JT = QT − QRS' }),
       numberInput('qrs', 'QRS duration', { unit: 'ms', min: 60, max: 250, defaultValue: 120 }),
       numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, defaultValue: 70 }),
-      selectInput('method', 'Rate correction method', [
-        { label: 'Bazett on JT (JT / √RR)', value: 'bazett' },
-        { label: 'JTc ≈ QTc_Bazett − QRS', value: 'qtc_minus' },
-        { label: 'Uncorrected JT only', value: 'none' },
+      selectInput('sex', 'Sex', [
+        { label: 'Male', value: 'M', description: 'QT(RR,QRS) k = −22 ms; JTrr k = +34 ms' },
+        { label: 'Female', value: 'F', description: 'QT(RR,QRS) k = −34 ms; JTrr k = +22 ms' },
       ]),
+      selectInput('method', 'Rate correction method', [
+        { label: 'Rautaharju QT(RR,QRS) — VCD-adjusted QT', value: 'qt_rr_qrs' },
+        { label: 'Rautaharju JTrr — linear JT rate adjustment', value: 'jtrr' },
+        { label: 'Uncorrected JT only', value: 'none' },
+      ], undefined, 'Rautaharju 2004 found QTc − QRS ill-advised (residual rate correlation r=0.54).'),
     ],
     calculate(values) {
       const qt = num(values.qt, 440);
       const qrs = num(values.qrs, 120);
       const hr = num(values.hr, 70);
-      const method = String(values.method ?? 'bazett');
+      const sex = String(values.sex ?? 'M');
+      const method = String(values.method ?? 'qt_rr_qrs');
       if (hr <= 0) {
         return { score: 0, label: 'Invalid HR', interpretation: 'HR must be > 0.', riskLevel: 'info' };
       }
       const jt = round(qt - qrs, 0);
-      const rr = 60 / hr;
-      const qtcBaz = qt / Math.sqrt(rr);
-      let jtc = jt;
+      let reported = jt;
       let formula = 'JT = QT − QRS (uncorrected)';
-      if (method === 'bazett') {
-        jtc = round(jt / Math.sqrt(rr), 0);
-        formula = 'JTc = JT / √RR';
-      } else if (method === 'qtc_minus') {
-        jtc = round(qtcBaz - qrs, 0);
-        formula = 'JTc = QTc_Bazett − QRS';
+      let p95 = 350;
+      let p98 = 370;
+      if (method === 'qt_rr_qrs') {
+        const k = sex === 'F' ? -34 : -22;
+        reported = round(qt - 155 * (60 / hr - 1) - 0.93 * (qrs - 139) + k, 0);
+        formula = `QT(RR,QRS) = QT − 155×(60/HR − 1) − 0.93×(QRS − 139) + k (k=${k})`;
+        p95 = 450;
+        p98 = 460;
+      } else if (method === 'jtrr') {
+        const k = sex === 'F' ? 22 : 34;
+        reported = round(jt - 155 * (60 / hr - 1) + k, 0);
+        formula = `JTrr = JT − 155×(60/HR − 1) + k (k=${k})`;
+        p95 = 350;
+        p98 = 370;
       }
 
-      // Common teaching: JTc ≥360–370 ms concerning; ≥390–400 higher risk (thresholds vary)
       let riskLevel: 'normal' | 'moderate' | 'high' | 'critical' | 'info' = 'normal';
-      let label = method === 'none' ? 'JT interval' : 'JTc interval';
+      let label = method === 'none' ? 'JT interval' : method === 'qt_rr_qrs' ? 'QT(RR,QRS)' : 'JTrr';
       let interpretation = '';
       if (method === 'none') {
         riskLevel = 'info';
-        interpretation = `JT = ${jt} ms (uncorrected). Rate correction recommended for serial comparison.`;
-      } else if (jtc >= 400) {
-        riskLevel = 'critical';
-        label = 'Markedly prolonged JTc';
-        interpretation = `JTc ${jtc} ms (≥400): markedly prolonged repolarization with wide-QRS context — high concern; treat as prolonged repolarization risk.`;
-      } else if (jtc >= 370) {
+        interpretation = `JT = ${jt} ms (uncorrected). Use QT(RR,QRS) or JTrr for rate-adjusted comparison in ventricular conduction delay.`;
+      } else if (reported >= p98) {
         riskLevel = 'high';
-        label = 'Prolonged JTc';
-        interpretation = `JTc ${jtc} ms (≥370): prolonged — review QT drugs and electrolytes; compare with prior tracings.`;
-      } else if (jtc >= 350) {
+        label = method === 'qt_rr_qrs' ? 'Prolonged QT(RR,QRS)' : 'Prolonged JTrr';
+        interpretation = `${label.replace('Prolonged ', '')} ${reported} ms is at/above the 2004 2% upper limit (${p98} ms). Review QT drugs and electrolytes.`;
+      } else if (reported >= p95) {
         riskLevel = 'moderate';
-        label = 'Borderline JTc';
-        interpretation = `JTc ${jtc} ms: borderline depending on lab-specific cutoffs (often ~360 ms).`;
+        label = method === 'qt_rr_qrs' ? 'Borderline QT(RR,QRS)' : 'Borderline JTrr';
+        interpretation = `${reported} ms is at/above the 2004 5% upper limit (${p95} ms) and below the 2% limit (${p98} ms).`;
       } else {
-        interpretation = `JTc ${jtc} ms within commonly cited acceptable range for many adults; always use local cutoffs.`;
+        interpretation = `${reported} ms is below the 2004 5% upper limit (${p95} ms).`;
       }
 
       return {
-        score: method === 'none' ? jt : jtc,
+        score: method === 'none' ? jt : reported,
         unit: 'ms',
         label,
-        interpretation: `${interpretation} JT uncorrected ${jt} ms; QRS ${qrs} ms.`,
+        interpretation: `${interpretation} Uncorrected JT ${jt} ms; QRS ${qrs} ms.`,
         riskLevel,
         details: [
           { label: 'JT (QT − QRS)', value: `${jt} ms` },
-          { label: 'JTc / reported', value: `${method === 'none' ? jt : jtc} ms` },
+          { label: 'Reported interval', value: `${method === 'none' ? jt : reported} ms` },
           { label: 'Method', value: formula },
-          { label: 'QTc Bazett (ref)', value: `${round(qtcBaz, 0)} ms` },
+          { label: '2004 limits', value: method === 'none' ? 'Not applied' : `P95 ${p95} ms; P98 ${p98} ms` },
         ],
         recommendations:
-          (method !== 'none' && jtc >= 370) || (method === 'none' && jt > 320)
+          (method !== 'none' && reported >= p95) || (method === 'none' && jt > 320)
             ? ['Review QT-prolonging meds', 'Replete K/Mg', 'Avoid additional QT risk', 'EP/cardiology if congenital concern']
             : ['Document method used', 'Serial comparison with same formula'],
       };
     },
     evidence: {
       summary:
-        'JT = QT − QRS. Rate-corrected JTc isolates repolarization when QRS is prolonged; cutoffs are less standardized than QTc.',
-      formula: 'JT = QT − QRS; JTc = JT/√RR or QTc − QRS',
-      validation: 'Supported in ECG literature for BBB/paced rhythms; institutional cutoffs vary.',
+        'Rautaharju 2004: QTc − QRS retains residual rate correlation (r=0.54) and is ill-advised. Use QT(RR,QRS) = QT − 155×(60/HR − 1) − 0.93×(QRS − 139) + k (k = −22 men, −34 women; P95 450 / P98 460 ms) or JTrr = JT − 155×(60/HR − 1) + k (k = +34 men, +22 women; P95 350 / P98 370 ms).',
+      formula: 'JT = QT − QRS; QT(RR,QRS) or JTrr as in Rautaharju 2004',
+      validation: 'Derived in 11,739 adults with normal conduction and 1,251 with major VCD.',
       references: [
         {
           title: 'Assessment of prolonged QT and JT intervals in ventricular conduction defects',
@@ -1216,11 +1237,10 @@ export const wave5CardioCalcs: Calculator[] = [
       validation: 'Matches common US labeling patterns; orthopedic/ACS nuances exist.',
       references: [
         {
-          title: 'Enoxaparin prescribing information / CHEST antithrombotic guidance (dosing principles)',
-          citation: 'Product label; Kearon C et al. Chest antithrombotic guidelines (various updates)',
-          year: 2016,
-          pmid: '26867832',
-          doi: '10.1016/j.chest.2015.11.026',
+          title: 'LOVENOX (enoxaparin sodium) injection prescribing information',
+          citation: 'Sanofi-Aventis U.S. FDA label (NDA 020164)',
+          year: 2021,
+          url: 'https://www.accessdata.fda.gov/drugsatfda_docs/label/2021/020164s129lbl.pdf',
         },
       ],
     },
@@ -1437,20 +1457,20 @@ export const wave5CardioCalcs: Calculator[] = [
     inputs: [
       numberInput('apob', 'ApoB', { unit: 'mg/dL', min: 20, max: 250, defaultValue: 90 }),
       selectInput('context', 'Clinical risk context', [
-        { label: 'Low / borderline primary prevention', value: 'low' },
-        { label: 'Intermediate–high primary prevention / risk enhancers', value: 'high' },
+        { label: 'Low / moderate primary prevention', value: 'low' },
+        { label: 'High-risk primary prevention / risk enhancers', value: 'high' },
         { label: 'Very high risk / established ASCVD', value: 'vh' },
-      ]),
+      ], undefined, '2019 ESC/EAS ApoB secondary goals: <100 / <80 / <65 mg/dL for moderate / high / very-high risk.'),
     ],
     calculate(values) {
       const apob = num(values.apob, 90);
       const ctx = String(values.context ?? 'high');
 
-      // Common targets: <90 general high-risk, <80 / <70 very high (guideline- and region-dependent)
-      let target = 90;
-      if (ctx === 'vh') target = 70;
+      // 2019 ESC/EAS ApoB secondary goals (mg/dL)
+      let target = 100;
+      if (ctx === 'vh') target = 65;
       else if (ctx === 'high') target = 80;
-      else target = 90;
+      else target = 100;
 
       let riskLevel: 'low' | 'moderate' | 'high' | 'critical' = 'low';
       let label = '';
@@ -1473,7 +1493,7 @@ export const wave5CardioCalcs: Calculator[] = [
         score: apob,
         unit: 'mg/dL',
         label: atGoal ? `${label} — at contextual goal (<${target})` : `${label} — above contextual goal (<${target})`,
-        interpretation: `ApoB ${apob} mg/dL. Contextual goal often <${target} mg/dL for selected ${ctx === 'vh' ? 'very high-risk' : ctx === 'high' ? 'higher-risk primary prevention' : 'lower-risk'} patients (thresholds vary by guideline). ${atGoal ? 'At or below that goal band.' : 'Not at goal — intensify lipid-lowering if clinically appropriate.'}`,
+        interpretation: `ApoB ${apob} mg/dL. 2019 ESC/EAS secondary goal is <${target} mg/dL for ${ctx === 'vh' ? 'very-high-risk' : ctx === 'high' ? 'high-risk' : 'moderate-risk'} patients. ${atGoal ? 'At or below that goal band.' : 'Not at goal — intensify lipid-lowering if clinically appropriate.'}`,
         riskLevel: atGoal ? (riskLevel === 'critical' ? 'moderate' : riskLevel) : riskLevel,
         details: [
           { label: 'ApoB', value: `${apob} mg/dL` },
@@ -1487,8 +1507,8 @@ export const wave5CardioCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'ApoB is a measure of circulating atherogenic particle number; guidelines increasingly support ApoB targets especially when discordant with LDL-C.',
-      formula: 'Compare ApoB (mg/dL) to context-specific goals (~<90 / <80 / <70)',
+        'ApoB is a measure of circulating atherogenic particle number; 2019 ESC/EAS secondary goals are <100 / <80 / <65 mg/dL for moderate / high / very-high risk.',
+      formula: 'Compare ApoB (mg/dL) to ESC/EAS secondary goals (<100 / <80 / <65)',
       validation: 'Epidemiology and consensus lipid guidance (ESC/EAS and ACC expert discussions).',
       references: [
         {
@@ -1732,7 +1752,7 @@ export const wave5CardioCalcs: Calculator[] = [
       yesNo('cr', 'Serum creatinine >190 µmol/L (~>2.1 mg/dL)', 1),
       yesNo('hb', 'Hemoglobin <9 g/dL', 1),
       yesNo('ischemia', 'Ischemic ECG changes', 1, 'Typically new ST-segment depression or T-wave inversion consistent with ischemia, not isolated nonspecific ST–T changes.'),
-      yesNo('loc', 'History of loss of consciousness after presentation', 1, 'This form scores LOC after presentation. Original Hardman listed loss of consciousness (collapse) without that restriction.'),
+      yesNo('loc', 'Loss of consciousness (collapse)', 1, 'Original Hardman 1996 scores any preoperative loss of consciousness / collapse, not only LOC after presentation.'),
     ],
     calculate(values) {
       const score =

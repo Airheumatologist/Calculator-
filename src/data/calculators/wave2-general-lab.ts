@@ -93,9 +93,9 @@ export const wave2GeneralLabCalcs: Calculator[] = [
         };
       }
       const nonHdl = tc - hdl;
-      // Sampson-NIH: LDL = TC/0.948 − HDL/0.971 − [TG/8.59 + (TG×nonHDL)/2140 − TG²/16100] − 9.44
+      // Sampson-NIH: LDL = TC/0.948 − HDL/0.971 − [TG/8.56 + (TG×nonHDL)/2140 − TG²/16100] − 9.44
       const ldl = round(
-        tc / 0.948 - hdl / 0.971 - (tg / 8.59 + (tg * nonHdl) / 2140 - (tg * tg) / 16100) - 9.44,
+        tc / 0.948 - hdl / 0.971 - (tg / 8.56 + (tg * nonHdl) / 2140 - (tg * tg) / 16100) - 9.44,
         0
       );
       const r = riskFromThresholds(ldl, [
@@ -117,7 +117,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     },
     evidence: {
       summary: 'Sampson-NIH equation estimates LDL-C from TC, HDL, and TG with improved accuracy vs Friedewald at higher TG and low LDL.',
-      formula: 'LDL = TC/0.948 − HDL/0.971 − [TG/8.59 + (TG×nonHDL)/2140 − TG²/16100] − 9.44 (mg/dL)',
+      formula: 'LDL = TC/0.948 − HDL/0.971 − [TG/8.56 + (TG×nonHDL)/2140 − TG²/16100] − 9.44 (mg/dL)',
       validation: 'Derived vs β-quantification; accurate with TG up to ~800 mg/dL in original work.',
       references: [
         {
@@ -1329,7 +1329,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       const cosm = round((uosm * v) / posm, 2);
       const ch2o = round(v - cosm, 2);
       const r = riskFromThresholds(cosm, [
-        { max: 2, level: 'normal', label: 'Typical Cosm range', interpretation: 'Osmolar clearance often ~2–3 mL/min under usual solute loads; higher with osmotic diuresis.' },
+        { max: 3, level: 'normal', label: 'Typical Cosm range', interpretation: 'Osmolar clearance often ~2–3 mL/min under usual solute loads; higher with osmotic diuresis.' },
         { max: 5, level: 'moderate', label: 'Elevated Cosm', interpretation: 'Elevated osmolar clearance — consider osmotic diuresis (glucose, urea, mannitol, salt).' },
         { max: 50, level: 'high', label: 'Markedly elevated Cosm', interpretation: 'High Cosm with polyuria suggests osmotic diuresis; check urine glucose, urea, electrolytes.' },
       ]);

@@ -2192,7 +2192,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
     ],
     pearls: [
       'Absolute PASI and BSA/DLQI together guide real-world decisions better than PASI alone.',
-      'This tool interprets a total — it does not compute regional PASI components.',
+      'Regional PASI components are computed (head 0.1, upper 0.2, trunk 0.3, lower 0.4) and shown in details unless a precomputed total is entered.',
     ],
   },
 ];

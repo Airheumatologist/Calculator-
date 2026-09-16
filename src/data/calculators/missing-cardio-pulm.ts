@@ -1095,7 +1095,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
     inputs: [
       numberInput('hr', 'Heart rate', { unit: 'bpm', min: 20, max: 250, defaultValue: 100 }),
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 40, max: 250, defaultValue: 110 }),
-      numberInput('age', 'Age', { unit: 'years', min: 1, max: 110, defaultValue: 65 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 65, helpText: 'Adult ASI bands (≥50 / ≥70) are for adults. Not validated in children — use classic shock index (~0.9) in pediatrics.' }),
     ],
     calculate(values) {
       const hr = num(values.hr, 100);
@@ -1112,6 +1112,20 @@ export const missingCardioPulmCalcs: Calculator[] = [
       const si = hr / sbp;
       const asi = round(si * age, 1);
       const rpp = Math.round(hr * sbp);
+      if (age < 18) {
+        return {
+          score: round(si, 2),
+          unit: 'SI',
+          label: 'Pediatric — adult ASI bands not applied',
+          interpretation: `Age ${round(age, 0)} y is below the adult derivation range. Classic shock index = ${round(si, 2)} (HR/SBP). Adult ASI cutoffs of 50/70 are not applied; children almost never reach those ASI values even with abnormal SI. Use pediatric vitals and SI (~0.9) rather than ASI.`,
+          riskLevel: 'info',
+          details: [
+            { label: 'Shock index (HR/SBP)', value: round(si, 2).toString() },
+            { label: 'ASI (not interpreted)', value: String(asi) },
+          ],
+          recommendations: ['Do not use adult ASI 50/70 bands in children', 'Interpret SI with age-normal HR and SBP'],
+        };
+      }
       const r = riskFromThresholds(asi, [
         {
           max: 49.9,
@@ -1160,7 +1174,10 @@ export const missingCardioPulmCalcs: Calculator[] = [
       { condition: 'ASI ≥50 or SI ≥0.9', actions: ['Urgent workup for shock/hemorrhage', 'IV access, labs, imaging as indicated'] },
       { condition: 'Any elevation', actions: ['Serial vitals', 'Treat underlying cause'] },
     ],
-    pearls: ['Beta-blockers and pacemakers blunt HR response—SI/ASI may be falsely low.'],
+    pearls: [
+      'Beta-blockers and pacemakers blunt HR response—SI/ASI may be falsely low.',
+      'Zarzaur described age×SI for older injured adults. Adult ASI bands are not for infants/children; this tool requires age ≥18.',
+    ],
   },
   {
     id: 'prevent-cvd',
@@ -1173,7 +1190,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse:
       'Adults 30–79 years without established CVD for primary-prevention 10-year (and, through age 59, 30-year) risk of total CVD, ASCVD, and HF.',
     whyUse:
-      'AHA 2023 scientific statement and 2024 PREVENT equations replace race-based PCEs with a CKM-aware, race-free model using lipids, BP, BMI, eGFR, diabetes, smoking, antihypertensive and statin therapy, with optional UACR and HbA1c add-on.',
+      'AHA 2023 scientific statement and 2024 PREVENT equations replace race-based PCEs with a CKM-aware, race-free base model using lipids, BP, BMI, eGFR, diabetes, smoking, antihypertensive and statin therapy. This tool is the base equation only (no UACR/HbA1c/SDI add-on).',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 30, max: 79, defaultValue: 55 }),
       selectInput('sex', 'Sex', [
@@ -1189,23 +1206,6 @@ export const missingCardioPulmCalcs: Calculator[] = [
       yesNo('smoker', 'Current smoker', null),
       yesNo('bpTx', 'On antihypertensive therapy', null),
       yesNo('statin', 'On statin', null),
-      numberInput('uacr', 'UACR (optional CKM add-on)', {
-        unit: 'mg/g',
-        min: 0,
-        max: 5000,
-        defaultValue: 0,
-        required: false,
-        helpText: 'Optional display field; not used in this base PREVENT probability. Leave 0 if not measured.',
-      }),
-      numberInput('hba1c', 'HbA1c (optional CKM add-on)', {
-        unit: '%',
-        min: 0,
-        max: 14,
-        step: 0.1,
-        defaultValue: 0,
-        required: false,
-        helpText: 'Optional display field; not used in this base PREVENT probability. Leave 0 if not measured.',
-      }),
     ],
     calculate(values) {
       const age = num(values.age, 55);
@@ -1219,8 +1219,6 @@ export const missingCardioPulmCalcs: Calculator[] = [
       const smk = bool(values.smoker) ? 1 : 0;
       const bptx = bool(values.bpTx) ? 1 : 0;
       const statin = bool(values.statin) ? 1 : 0;
-      const uacr = num(values.uacr, 0);
-      const hba1c = num(values.hba1c, 0);
       const ageT = (age - 55) / 10;
       const age2T = ageT * ageT;
       const nhT = (totalChol - hdl) * 0.02586 - 3.5;
@@ -1406,7 +1404,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
         score: cvd10,
         unit: '% 10y CVD',
         ...r,
-        interpretation: `${r.interpretation} This implementation is the base PREVENT equation without the unofficial CKM addon.`,
+        interpretation: `${r.interpretation} Base PREVENT equation only (no UACR, HbA1c, or SDI add-on).`,
         details: [
           { label: '10-year total CVD', value: `${cvd10}%` },
           { label: '10-year ASCVD', value: `${ascvd10}%` },
@@ -1414,7 +1412,6 @@ export const missingCardioPulmCalcs: Calculator[] = [
           { label: '30-year total CVD', value: `${cvd30}%${age > 59 ? ' (coefficients computed; 30y validated through age 59)' : ''}` },
           { label: '30-year ASCVD', value: `${ascvd30}%` },
           { label: '30-year HF', value: `${hf30}%` },
-          { label: 'Optional CKM inputs (not in base equation)', value: hba1c === 0 && uacr === 0 ? 'none (HbA1c and UACR 0)' : `HbA1c ${round(hba1c, 1)}%, UACR ${round(uacr, 0)} mg/g — displayed only; not used in probability` },
         ],
         recommendations:
           cvd10 >= 5
@@ -1426,9 +1423,9 @@ export const missingCardioPulmCalcs: Calculator[] = [
       summary:
         'PREVENT (Khan SS et al., Circulation 2024) provides sex-specific, race-free 10- and 30-year equations for total CVD, ASCVD, and HF in adults 30–79 without baseline CVD, using CKM predictors (lipids, BP treatment, BMI, eGFR, diabetes, smoking, statin).',
       formula:
-        'Scaled predictors (age−55)/10, non-HDL mmol/L−3.5, HDL and SBP/BMI/eGFR splines at 110/130, 30, and 60/90. Logistic risk = 100·exp(LP)/(1+exp(LP)) with published sex- and outcome-specific coefficients. Base PREVENT equation only — HbA1c/UACR are optional display inputs and do not enter the linear predictor.',
+        'Scaled predictors (age−55)/10, non-HDL mmol/L−3.5, HDL and SBP/BMI/eGFR splines at 110/130, 30, and 60/90. Logistic risk = 100·exp(LP)/(1+exp(LP)) with published sex- and outcome-specific coefficients. Base PREVENT only — UACR, HbA1c, and SDI add-on models are not implemented and are not shown as inputs.',
       validation:
-        'Derived in ~3 million US adults; 30-year equations validated through age 59. Use the AHA PREVENT online calculator for clinical decisions. This implementation is the official base PREVENT equation set without the unofficial CKM addon.',
+        'Derived in ~3 million US adults; 30-year equations validated through age 59. Use the AHA PREVENT online calculator for clinical decisions. This implementation is the official base PREVENT equation set (no UACR/HbA1c/SDI add-on).',
       references: [
         {
           title: 'Development and Validation of the American Heart Association PREVENT Equations',
@@ -1464,7 +1461,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
       'PREVENT is a risk estimate, not a diagnosis of CVD, ASCVD, or heart failure.',
       'Confirm with the official AHA PREVENT calculator before charting or treating.',
       '30-year equations are validated through age 59; older-age 30-year numbers are computed from published coefficients but should be interpreted with that caveat.',
-      'Optional UACR and HbA1c are displayed if entered but do not affect probability (base PREVENT, no unofficial CKM addon).',
+      'UACR, HbA1c, and SDI are published optional add-ons; they are omitted here so unused fields are not shown as if they contribute.',
     ],
   },
 ];

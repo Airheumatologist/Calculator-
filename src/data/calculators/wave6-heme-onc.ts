@@ -1232,6 +1232,11 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'When raw PT, MNPT, and reagent ISI are known and INR needs verification or teaching calculation.',
     whyUse: 'INR standardizes PT across reagents: INR = (PTpatient / MNPT)^ISI.',
     inputs: [
+      selectInput('indication', 'Anticoagulation indication (INR goal)', [
+        { label: 'AF / VTE (goal 2.0–3.0)', value: 'af-vte' },
+        { label: 'Mechanical aortic valve (typical goal 2.0–3.0)', value: 'mech-aortic' },
+        { label: 'Mechanical mitral valve (goal 2.5–3.5)', value: 'mech-mitral' },
+      ], 'af-vte', 'Bands follow the selected goal. Bileaflet mechanical AVR without additional risk factors is often 2.0–3.0; mechanical mitral (and many higher-risk mechanical valves) 2.5–3.5. On-X AVR after 3 months may use 1.5–2.0 with aspirin — not modeled here.'),
       numberInput('pt', 'Patient PT', { unit: 'sec', min: 5, max: 120, step: 0.1, defaultValue: 22 }),
       numberInput('mnpt', 'Mean normal PT (MNPT)', { unit: 'sec', min: 8, max: 20, step: 0.1, defaultValue: 12 }),
       numberInput('isi', 'Reagent ISI', { min: 0.8, max: 2.5, step: 0.01, defaultValue: 1.0, helpText: 'International Sensitivity Index of thromboplastin' }),
@@ -1240,6 +1245,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
       const pt = num(values.pt, 22);
       const mnpt = num(values.mnpt, 12);
       const isi = num(values.isi, 1);
+      const indication = String(values.indication ?? 'af-vte');
       if (mnpt <= 0 || pt <= 0 || isi <= 0) {
         return {
           score: '—',
@@ -1249,49 +1255,112 @@ export const wave6HemeOncCalcs: Calculator[] = [
         };
       }
       const inr = round(Math.pow(pt / mnpt, isi), 2);
-      const r = riskFromThresholds(inr, [
-        {
-          max: 1.2,
-          level: 'normal',
-          label: 'Near-normal INR',
-          interpretation: `INR ${inr}. Near normal for most assays—usually not anticoagulated range.`,
-        },
-        {
-          max: 1.49,
-          level: 'low',
-          label: 'Subtherapeutic',
-          interpretation: `INR ${inr}. Subtherapeutic relative to typical AF/VTE goal of 2–3. Interpret vs indication.`,
-        },
-        {
-          max: 1.99,
-          level: 'low',
-          label: 'Below typical AF/VTE goal',
-          interpretation: `INR ${inr}. Below typical AF/VTE goal of 2–3. Interpret vs indication.`,
-        },
-        {
-          max: 3.0,
-          level: 'normal',
-          label: 'Typical therapeutic (AF/VTE goal 2–3)',
-          interpretation: `INR ${inr}. Typical therapeutic range for AF/VTE (goal 2–3). Mechanical-valve targets may differ; interpret vs indication.`,
-        },
-        {
-          max: 3.5,
-          level: 'moderate',
-          label: 'High-therapeutic / mechanical-valve range',
-          interpretation: `INR ${inr}. High-therapeutic; may be in range for some mechanical valves (often up to ~3.5). Match to indication and bleeding risk.`,
-        },
-        {
-          max: 100,
-          level: 'critical',
-          label: 'Supratherapeutic INR',
-          interpretation: `INR ${inr}. Supratherapeutic—assess bleeding, hold VKA, consider vitamin K / PCC per guideline if bleeding or very high INR.`,
-        },
-      ]);
+      const goalLabel =
+        indication === 'mech-mitral'
+          ? 'mechanical mitral 2.5–3.5'
+          : indication === 'mech-aortic'
+            ? 'typical mechanical aortic 2.0–3.0'
+            : 'AF/VTE 2.0–3.0';
+      const thresholds =
+        indication === 'mech-mitral'
+          ? [
+              {
+                max: 1.2,
+                level: 'normal' as const,
+                label: 'Near-normal INR',
+                interpretation: `INR ${inr}. Near normal — below the mechanical-mitral goal of 2.5–3.5.`,
+              },
+              {
+                max: 2.49,
+                level: 'low' as const,
+                label: 'Below mechanical-mitral goal (2.5–3.5)',
+                interpretation: `INR ${inr}. Below typical mechanical mitral (and many higher-risk mechanical) target 2.5–3.5.`,
+              },
+              {
+                max: 3.5,
+                level: 'normal' as const,
+                label: 'In-goal for mechanical mitral (2.5–3.5)',
+                interpretation: `INR ${inr}. Within the usual mechanical-mitral goal of 2.5–3.5. This is not “high-therapeutic / consider holding” for this indication.`,
+              },
+              {
+                max: 100,
+                level: 'critical' as const,
+                label: 'Above mechanical-mitral goal (>3.5)',
+                interpretation: `INR ${inr}. Above the 2.5–3.5 mitral-valve goal — assess bleeding; hold VKA and consider vitamin K / PCC per guideline if bleeding or very high INR.`,
+              },
+            ]
+          : indication === 'mech-aortic'
+            ? [
+                {
+                  max: 1.2,
+                  level: 'normal' as const,
+                  label: 'Near-normal INR',
+                  interpretation: `INR ${inr}. Near normal — below typical bileaflet mechanical-aortic goal of 2.0–3.0.`,
+                },
+                {
+                  max: 1.99,
+                  level: 'low' as const,
+                  label: 'Below typical mechanical-aortic goal (2–3)',
+                  interpretation: `INR ${inr}. Below usual bileaflet AVR goal of 2.0–3.0 (higher-risk aortic prostheses may target 2.5–3.5).`,
+                },
+                {
+                  max: 3.0,
+                  level: 'normal' as const,
+                  label: 'In-goal for typical mechanical aortic (2–3)',
+                  interpretation: `INR ${inr}. Within the usual bileaflet mechanical-AVR goal of 2.0–3.0 (no additional thromboembolic risk factors).`,
+                },
+                {
+                  max: 3.5,
+                  level: 'moderate' as const,
+                  label: 'Above typical aortic goal (2–3)',
+                  interpretation: `INR ${inr}. Above usual bileaflet AVR 2–3. Some higher-risk mechanical aortic valves target 2.5–3.5 — match the prosthesis-specific goal rather than holding solely because INR is 3.01–3.50.`,
+                },
+                {
+                  max: 100,
+                  level: 'critical' as const,
+                  label: 'Supratherapeutic vs typical aortic goal',
+                  interpretation: `INR ${inr}. Above 3.5 — assess bleeding; hold VKA and consider vitamin K / PCC per guideline if bleeding or very high INR.`,
+                },
+              ]
+            : [
+                {
+                  max: 1.2,
+                  level: 'normal' as const,
+                  label: 'Near-normal INR',
+                  interpretation: `INR ${inr}. Near normal for most assays — usually not in an anticoagulated range.`,
+                },
+                {
+                  max: 1.99,
+                  level: 'low' as const,
+                  label: 'Below AF/VTE goal (2–3)',
+                  interpretation: `INR ${inr}. Below typical AF/VTE goal of 2.0–3.0.`,
+                },
+                {
+                  max: 3.0,
+                  level: 'normal' as const,
+                  label: 'In-goal for AF/VTE (2–3)',
+                  interpretation: `INR ${inr}. Within typical AF/VTE therapeutic range (2.0–3.0). Mechanical mitral goal is 2.5–3.5 — use that indication if applicable.`,
+                },
+                {
+                  max: 3.5,
+                  level: 'moderate' as const,
+                  label: 'Above AF/VTE goal (2–3)',
+                  interpretation: `INR ${inr}. Above AF/VTE goal of 2–3. For mechanical mitral this band (3.01–3.50) is typically still in-goal — switch the indication selector rather than treating it as automatically high-therapeutic.`,
+                },
+                {
+                  max: 100,
+                  level: 'critical' as const,
+                  label: 'Supratherapeutic INR',
+                  interpretation: `INR ${inr}. Above 3.5 — assess bleeding; hold VKA and consider vitamin K / PCC per guideline if bleeding or very high INR.`,
+                },
+              ];
+      const r = riskFromThresholds(inr, thresholds);
       return {
         score: inr,
         unit: 'INR',
         ...r,
         details: [
+          { label: 'Indication / goal', value: goalLabel },
           { label: 'PT', value: `${pt} s` },
           { label: 'MNPT', value: `${mnpt} s` },
           { label: 'ISI', value: String(isi) },
@@ -1300,7 +1369,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'INR = (PTpatient ÷ MNPT)^ISI. Standard WHO transformation for oral VKA monitoring.',
+      summary:
+        'INR = (PTpatient ÷ MNPT)^ISI. Clinical bands are keyed to indication: AF/VTE 2.0–3.0; typical bileaflet mechanical AVR 2.0–3.0; mechanical mitral (and many higher-risk mechanical valves) 2.5–3.5 (ACCP / ACC-AHA VHD).',
       formula: 'INR = (PT / MNPT) ^ ISI',
       validation: 'Universal laboratory definition of INR.',
       references: [

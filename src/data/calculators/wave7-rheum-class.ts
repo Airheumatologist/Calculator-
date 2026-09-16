@@ -238,7 +238,7 @@ export const wave7RheumClassCalcs: Calculator[] = [
     name: '2010 ACR/EULAR Rheumatoid Arthritis Classification',
     shortName: 'ACR/EULAR RA',
     description:
-      'Additive 2010 ACR/EULAR RA classification (joints, serology, acute-phase reactants, duration). Threshold ≥6 with ≥1 swollen joint and no better alternative diagnosis.',
+      'Additive 2010 ACR/EULAR RA classification (joints, serology, acute-phase reactants, duration). Classify if score ≥6 with ≥1 swollen joint, or if typical RA erosions plus a compatible history are present, and no better alternative diagnosis.',
     category: 'rheumatology',
     tags: ['ra', 'rheumatoid', 'acr', 'eular', 'classification', 'acpa', 'rf'],
     whenToUse:
@@ -246,8 +246,9 @@ export const wave7RheumClassCalcs: Calculator[] = [
     whyUse:
       'Replaced 1987 criteria to capture earlier disease; score ≥6 classifies definite RA when entry is met.',
     inputs: [
-      yesNo('entrySwollen', '≥1 swollen joint (entry criterion)', null, 'Required to classify; score is still computed if absent'),
-      yesNo('betterAlt', 'Better alternative diagnosis explains the synovitis', null, 'If yes, cannot classify even if points ≥6'),
+      yesNo('entrySwollen', '≥1 swollen joint (entry criterion)', null, 'Required for the additive-score path; score is still computed if absent'),
+      yesNo('typicalErosions', 'Typical RA erosions with a compatible history', null, 'Classifies as RA even if the current additive score is <6 (still excluded if a better alternative diagnosis explains the findings)'),
+      yesNo('betterAlt', 'Better alternative diagnosis explains the synovitis', null, 'If yes, cannot classify even if points ≥6 or erosions are present'),
       selectInput('joints', 'Joint involvement', RA_JOINTS, undefined, 'Large = shoulders, elbows, hips, knees, ankles. Small = MCPs, PIPs, 2nd–5th MTPs, thumb IPs, wrists. Do not count DIPs, 1st CMC, or 1st MTP. Count a joint if tender or swollen; >10 joints needs ≥1 small.'),
       selectInput('serology', 'Serology (RF / ACPA)', RA_SEROLOGY, undefined, 'Negative = ≤ULN for both RF and ACPA; low-positive = >ULN but ≤3× ULN; high-positive = >3× ULN for RF or ACPA.'),
       selectInput('apr', 'Acute-phase reactants', RA_APR, undefined, 'Abnormal = CRP or ESR above the laboratory ULN (either counts).'),
@@ -261,29 +262,37 @@ export const wave7RheumClassCalcs: Calculator[] = [
       const score = jointPts + seroPts + aprPts + durPts;
       const entry = bool(values.entrySwollen);
       const betterAlt = bool(values.betterAlt);
-      const classified = entry && !betterAlt && score >= 6;
+      const erosions = bool(values.typicalErosions);
+      const scorePath = entry && score >= 6;
+      const classified = !betterAlt && (scorePath || erosions);
+      const whyClassified = classified
+        ? scorePath && erosions
+          ? `Score ${score}/10 (≥6) with swollen-joint entry, and typical RA erosions with compatible history; no better alternative diagnosis.`
+          : scorePath
+            ? `Score ${score}/10 (≥6) with swollen-joint entry and no better alternative diagnosis.`
+            : `Typical RA erosions with a compatible history (additive score ${score}/10 may be <6); no better alternative diagnosis.`
+        : `Score ${score}/10. Classification requires (≥6 points with ≥1 swollen joint) OR typical RA erosions with compatible history, and no better alternative diagnosis (entry swollen: ${entry ? 'yes' : 'no'}; typical erosions: ${erosions ? 'yes' : 'no'}; better alternative: ${betterAlt ? 'yes' : 'no'}).`;
       return classResult(
         score,
         classified,
         'RA',
-        classified
-          ? `Score ${score}/10 (≥6) with swollen-joint entry and no better alternative diagnosis.`
-          : `Score ${score}/10. Classification requires ≥6 points, ≥1 swollen joint, and no better alternative diagnosis (entry swollen: ${entry ? 'yes' : 'no'}; better alternative: ${betterAlt ? 'yes' : 'no'}).`,
+        whyClassified,
         [
           { label: 'Entry: ≥1 swollen joint', value: entry ? 'Yes' : 'No' },
+          { label: 'Typical RA erosions', value: erosions ? 'Yes — erosions path' : 'No' },
           { label: 'Better alternative diagnosis', value: betterAlt ? 'Yes — cannot classify' : 'No' },
           { label: 'Joint involvement', value: `${lab(RA_JOINTS, values.joints)} (${jointPts})` },
           { label: 'Serology', value: `${lab(RA_SEROLOGY, values.serology)} (${seroPts})` },
           { label: 'Acute-phase reactants', value: `${lab(RA_APR, values.apr)} (${aprPts})` },
           { label: 'Duration', value: `${lab(RA_DURATION, values.duration)} (${durPts})` },
-          { label: 'Threshold', value: '≥6 with entry' },
+          { label: 'Threshold', value: '≥6 with entry, or typical erosions' },
         ],
       );
     },
     evidence: {
       summary:
-        '2010 ACR/EULAR RA classification uses four additive domains (joints 0–5, serology 0–3, APR 0–1, duration 0–1). Definite RA requires score ≥6 plus ≥1 swollen joint not better explained by another disease.',
-      formula: 'Joints (0–5) + serology (0–3) + APR (0–1) + duration (0–1); classify if ≥6 AND entry AND not better alternative',
+        '2010 ACR/EULAR RA classification uses four additive domains (joints 0–5, serology 0–3, APR 0–1, duration 0–1). Definite RA requires score ≥6 plus ≥1 swollen joint not better explained by another disease, or typical RA erosions with a history compatible with the criteria.',
+      formula: 'Joints (0–5) + serology (0–3) + APR (0–1) + duration (0–1); classify if (score ≥6 AND entry) OR typical RA erosions, AND not better alternative',
       validation: 'Aletaha et al., derived and validated in early arthritis cohorts; sensitivity/specificity superior to 1987 criteria for early RA.',
       references: [
         {
@@ -297,7 +306,7 @@ export const wave7RheumClassCalcs: Calculator[] = [
     },
     nextSteps: classSteps('RA'),
     pearls: classPearls([
-      'Typical RA erosions with a compatible history also classify as RA even if the current score is <6.',
+      'Typical RA erosions with a compatible history classify as RA even if the current additive score is <6 (better-alternative exclusion still applies).',
       'High-positive serology is >3× ULN for RF or ACPA.',
     ]),
   },
@@ -552,6 +561,9 @@ export const wave7RheumClassCalcs: Calculator[] = [
     whenToUse: 'Age ≥50 with bilateral shoulder aching and raised CRP/ESR when classifying PMR.',
     whyUse: 'Provisional 2012 criteria add optional ultrasound to improve discrimination from RA and shoulder disease.',
     inputs: [
+      yesNo('age50', 'Age ≥50 years (required setting)', null, 'Required clinical setting — not point-scored. Classification is gated until age ≥50, bilateral shoulder aching, and abnormal CRP/ESR are all met.'),
+      yesNo('bilateralShoulder', 'Bilateral shoulder aching (required setting)', null, 'Required clinical setting — not point-scored. New inflammatory aching of both shoulders.'),
+      yesNo('abnormalApr', 'Abnormal CRP or ESR (required setting)', null, 'Required clinical setting — not point-scored. CRP and/or ESR above laboratory ULN.'),
       yesNo('stiffness', 'Morning stiffness >45 minutes', 2,
         'Morning stiffness lasting >45 minutes in the shoulder and/or hip girdle.'),
       yesNo('hip', 'Hip pain or limited range of motion', 1,
@@ -575,15 +587,22 @@ export const wave7RheumClassCalcs: Calculator[] = [
       const usPts = algorithm === 'us' ? usSH + usBoth : 0;
       const score = stiffness + hip + seronegative + noPeriph + usPts;
       const threshold = algorithm === 'us' ? 5 : 4;
-      const classified = score >= threshold;
+      const age50 = bool(values.age50);
+      const bilateralShoulder = bool(values.bilateralShoulder);
+      const abnormalApr = bool(values.abnormalApr);
+      const setting = age50 && bilateralShoulder && abnormalApr;
+      const classified = setting && score >= threshold;
       return classResult(
         score,
         classified,
         'PMR',
         classified
-          ? `Score ${score} meets the ${algorithm === 'us' ? 'clinical+US ≥5' : 'clinical ≥4'} threshold.`
-          : `Score ${score} does not meet the ${algorithm === 'us' ? 'clinical+US ≥5' : 'clinical ≥4'} threshold.`,
+          ? `Required setting met; score ${score} meets the ${algorithm === 'us' ? 'clinical+US ≥5' : 'clinical ≥4'} threshold.`
+          : setting
+            ? `Required setting met, but score ${score} does not meet the ${algorithm === 'us' ? 'clinical+US ≥5' : 'clinical ≥4'} threshold.`
+            : `Score ${score} computed, but classification requires the published setting (age ≥50, bilateral shoulder aching, and abnormal CRP or ESR) before the ${algorithm === 'us' ? 'clinical+US ≥5' : 'clinical ≥4'} threshold.`,
         [
+          { label: 'Required setting', value: setting ? 'Met' : `Not met (age ≥50: ${age50 ? 'yes' : 'no'}; bilateral shoulders: ${bilateralShoulder ? 'yes' : 'no'}; abnormal CRP/ESR: ${abnormalApr ? 'yes' : 'no'})` },
           { label: 'Algorithm', value: lab(PMR_ALG, values.algorithm) },
           { label: 'Threshold used', value: `≥${threshold}` },
           { label: 'Morning stiffness >45 min', value: bool(values.stiffness) ? 'Yes (2)' : 'No' },
@@ -597,8 +616,8 @@ export const wave7RheumClassCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        '2012 ACR/EULAR PMR: required age ≥50, bilateral shoulder aching, abnormal CRP/ESR. Additive: stiffness 2, hip 1, RF/ACPA negative 2, no peripheral synovitis 1. US shoulder+hip 1 and both shoulders 1 are added only on the US algorithm. Classify if ≥4 without US or ≥5 with US.',
-      formula: 'Clinical items always; US items only on the US algorithm. Threshold 4 (clinical, no US points) or 5 (clinical+US)',
+        '2012 ACR/EULAR PMR: required age ≥50, bilateral shoulder aching, abnormal CRP/ESR before scoring. Additive: stiffness 2, hip 1, RF/ACPA negative 2, no peripheral synovitis 1. US shoulder+hip 1 and both shoulders 1 are added only on the US algorithm. Classify if setting is met AND ≥4 without US or ≥5 with US.',
+      formula: 'Classify only if age ≥50 AND bilateral shoulder aching AND abnormal CRP/ESR, then clinical items always; US items only on the US algorithm. Threshold 4 (clinical, no US points) or 5 (clinical+US)',
       validation: 'Dasgupta et al. 2012; score ≥4 sensitivity 68% / specificity 78% without US; US algorithm ≥5 specificity 81%.',
       references: [
         {
@@ -612,7 +631,7 @@ export const wave7RheumClassCalcs: Calculator[] = [
     },
     nextSteps: classSteps('PMR'),
     pearls: classPearls([
-      'Required setting is age ≥50 + bilateral shoulder aching + raised CRP or ESR — not scored as points.',
+      'Required setting is age ≥50 + bilateral shoulder aching + raised CRP or ESR — not scored as points, and classification is not applied without it.',
       'Ultrasound points are added only when the clinical+US algorithm is selected (threshold ≥5). The clinical-without-US pathway uses threshold ≥4 and ignores US items.',
     ]),
   },
@@ -791,12 +810,13 @@ export const wave7RheumClassCalcs: Calculator[] = [
     name: '2022 ACR/EULAR Eosinophilic Granulomatosis with Polyangiitis Classification',
     shortName: 'ACR/EULAR EGPA',
     description:
-      '2022 ACR/EULAR EGPA classification. Threshold ≥6 (obstructive airway disease +3, nasal polyps +3, eosinophilia +5; PR3-ANCA and hematuria subtract).',
+      '2022 ACR/EULAR EGPA classification. Entry: small/medium-vessel vasculitis with mimics excluded. Threshold ≥6 (obstructive airway disease +3, nasal polyps +3, eosinophilia +5; PR3-ANCA and hematuria subtract).',
     category: 'rheumatology',
     tags: ['egpa', 'churg-strauss', 'eosinophil', 'anca', 'vasculitis', 'classification'],
     whenToUse: 'After a clinical diagnosis of small- or medium-vessel vasculitis, to classify EGPA for research.',
     whyUse: 'Weighted 2022 criteria distinguish EGPA from GPA/MPA using eosinophils, asthma, and polyps.',
     inputs: [
+      yesNo('entryVasculitis', 'Small/medium-vessel vasculitis diagnosed and mimics excluded (entry)', null, 'Required to classify; not point-scored. Same 2022 ACR/EULAR vasculitis-entry gate as GPA/MPA. Mimics include infection, cocaine/levamisole, malignancy, and other vasculopathies.'),
       yesNo('airway', 'Obstructive airway disease (e.g. asthma)', 3,
         'Physician-diagnosed asthma or other obstructive airway disease (spirometry obstruction or consistent clinical diagnosis).'),
       yesNo('polyps', 'Nasal polyps', 3,
@@ -820,13 +840,17 @@ export const wave7RheumClassCalcs: Calculator[] = [
       const pr3 = bool(values.pr3) ? -3 : 0;
       const hematuria = bool(values.hematuria) ? -1 : 0;
       const score = airway + polyps + mono + eos + extra + pr3 + hematuria;
-      const classified = score >= 6;
+      const entry = bool(values.entryVasculitis);
+      const classified = entry && score >= 6;
       return classResult(
         score,
         classified,
         'EGPA',
-        classified ? `Score ${score} (≥6).` : `Score ${score} (<6).`,
+        classified
+          ? `Score ${score} (≥6) with vasculitis entry.`
+          : `Score ${score}. Classification requires ≥6 points and small/medium-vessel vasculitis with mimics excluded (entry ${entry ? 'met' : 'not met'}).`,
         [
+          { label: 'Vasculitis entry', value: entry ? 'Yes' : 'No' },
           { label: 'Obstructive airway disease', value: bool(values.airway) ? 'Yes (+3)' : 'No' },
           { label: 'Nasal polyps', value: bool(values.polyps) ? 'Yes (+3)' : 'No' },
           { label: 'Mononeuritis multiplex', value: bool(values.mononeuritis) ? 'Yes (+1)' : 'No' },
@@ -839,8 +863,8 @@ export const wave7RheumClassCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        '2022 ACR/EULAR EGPA: obstructive airway disease +3, nasal polyps +3, mononeuritis +1, eosinophils ≥1×10⁹/L +5, extravascular eosinophils +2, PR3 −3, hematuria −1. Classify if ≥6.',
-      formula: 'Sum of signed item weights; classify if ≥6',
+        '2022 ACR/EULAR EGPA: among patients with small/medium-vessel vasculitis, obstructive airway disease +3, nasal polyps +3, mononeuritis +1, eosinophils ≥1×10⁹/L +5, extravascular eosinophils +2, PR3 −3, hematuria −1. Classify if ≥6 after vasculitis entry.',
+      formula: 'Sum of signed item weights; classify if entry AND ≥6',
       validation: 'Grayson et al. 2022; validation sensitivity 85%, specificity 99%.',
       references: [
         {
@@ -854,7 +878,7 @@ export const wave7RheumClassCalcs: Calculator[] = [
     },
     nextSteps: classSteps('EGPA'),
     pearls: classPearls([
-      'Apply only after a clinical diagnosis of small- or medium-vessel vasculitis with mimics excluded (infection, cocaine/levamisole, malignancy). Asthma + eosinophilia already scores 8 and classifies as EGPA.',
+      'Apply only after a clinical diagnosis of small- or medium-vessel vasculitis with mimics excluded (infection, cocaine/levamisole, malignancy). Asthma + eosinophilia already scores 8 but does not classify EGPA without that entry.',
       'PR3-ANCA and hematuria subtract points toward GPA.',
     ]),
   },
@@ -1644,13 +1668,14 @@ export const wave7RheumClassCalcs: Calculator[] = [
     name: '2023 ACR/EULAR Antiphospholipid Syndrome Classification',
     shortName: 'ACR/EULAR APS',
     description:
-      '2023 ACR/EULAR APS classification. Classify if ≥3 clinical points AND ≥3 laboratory points. The solid-phase lab domain uses the published aCL/anti-β2GPI cluster weights rather than adding each assay independently.',
+      '2023 ACR/EULAR APS classification. Entry: ≥1 clinical and ≥1 laboratory criterion within 3 years of each other. Then classify if ≥3 clinical points AND ≥3 laboratory points. The solid-phase lab domain uses the published aCL/anti-β2GPI cluster weights rather than adding each assay independently.',
     category: 'rheumatology',
     tags: ['aps', 'antiphospholipid', 'lupus anticoagulant', 'classification'],
     whenToUse: 'aPL-associated clinical events when classifying APS for research.',
     whyUse: 'Much higher specificity than Sydney/Sapporo criteria in the 2023 validation cohort.',
     inputs: [
-      selectInput('vte', 'Macrovascular VTE (highest)', APS_VTE, undefined, 'High-risk VTE profile = major transient factor (surgery with GA >30 min, hospital bedbound ≥3 days, cesarean, major trauma/fracture). Optional entry: ≥1 clinical and ≥1 lab criterion within 3 years of each other.'),
+      yesNo('entryWindow', '≥1 clinical AND ≥1 laboratory criterion within 3 years of each other (entry)', null, 'Absolute 2023 entry: first clinical criterion and first laboratory criterion occur within 3 years. Required to classify; score is still computed if absent.'),
+      selectInput('vte', 'Macrovascular VTE (highest)', APS_VTE, undefined, 'High-risk VTE profile = major transient factor (surgery with GA >30 min, hospital bedbound ≥3 days, cesarean, major trauma/fracture).'),
       selectInput('arterial', 'Macrovascular arterial thrombosis (highest)', APS_ART, undefined, 'High-risk CVD profile: current smoking, treated HTN, DM, LDL ≥160 mg/dL or on lipid-lowering therapy.'),
       selectInput('microvascular', 'Microvascular domain (highest)', APS_MICRO, undefined, 'Suspected = livedo/livedo racemosa, aPL nephropathy, alveolar hemorrhage without histopathology; established = biopsy- or unequivocal imaging-proven.'),
       selectInput('obstetric', 'Obstetric domain (highest)', APS_OB, undefined, 'Highest obstetric item only. Pre-10-week losses = ≥3 consecutive unexplained. Fetal death bands are 10–16 weeks vs ≥16 weeks. Severe pre-eclampsia is ACOG severe features requiring delivery <34 weeks.'),
@@ -1683,15 +1708,17 @@ export const wave7RheumClassCalcs: Calculator[] = [
       const solidPhase = bothHighIgG ? 7 : anyHighIgG ? 5 : anyModerateIgG ? 4 : anyIgM ? 1 : 0;
       const labScore = lac + solidPhase;
       const score = clinical + labScore;
-      const classified = clinical >= 3 && labScore >= 3;
+      const entry = bool(values.entryWindow);
+      const classified = entry && clinical >= 3 && labScore >= 3;
       return classResult(
         score,
         classified,
         'APS',
         classified
-          ? `Clinical ${clinical} (≥3) + laboratory ${labScore} (≥3); combined ${score}.`
-          : `Clinical ${clinical} (need ≥3) + laboratory ${labScore} (need ≥3); combined ${score}.`,
+          ? `Entry met; clinical ${clinical} (≥3) + laboratory ${labScore} (≥3); combined ${score}.`
+          : `Clinical ${clinical} (need ≥3) + laboratory ${labScore} (need ≥3); combined ${score}. Classification also requires entry (≥1 clinical and ≥1 lab criterion within 3 years; entry ${entry ? 'met' : 'not met'}).`,
         [
+          { label: 'Entry (clinical + lab within 3 years)', value: entry ? 'Yes' : 'No' },
           { label: 'Clinical points', value: String(clinical) },
           { label: 'Laboratory points', value: String(labScore) },
           { label: 'Solid-phase highest cluster', value: `${solidPhase}${bothHighIgG ? ' (both IgG assays high)' : ''}` },
@@ -1712,7 +1739,7 @@ export const wave7RheumClassCalcs: Calculator[] = [
     evidence: {
       summary:
         '2023 ACR/EULAR APS: entry of ≥1 clinical and ≥1 lab criterion within 3 years, then additive weighted domains. Classify if ≥3 clinical AND ≥3 laboratory points. The laboratory score adds LAC to one solid-phase aCL/anti-β2GPI cluster: IgM positivity 1, moderate IgG 4, high IgG in one assay 5, or high IgG in both assays 7. Moderate ELISA 40–79 units; high ≥80 units.',
-      formula: 'Clinical sum (highest per clinical domain) + LAC + clustered solid-phase score (IgM 1; moderate IgG 4; one high IgG 5; both high IgG 7); classify if clinical ≥3 AND lab ≥3',
+      formula: 'Entry (≥1 clinical and ≥1 lab within 3 years), then clinical sum (highest per clinical domain) + LAC + clustered solid-phase score (IgM 1; moderate IgG 4; one high IgG 5; both high IgG 7); classify if entry AND clinical ≥3 AND lab ≥3',
       validation: 'Barbhaiya et al. 2023; validation specificity 99% vs 86% for Sydney criteria, sensitivity 84% vs 99%.',
       references: [
         {
@@ -1726,6 +1753,7 @@ export const wave7RheumClassCalcs: Calculator[] = [
     },
     nextSteps: classSteps('APS'),
     pearls: classPearls([
+      'Do not classify on domain points alone — entry is ≥1 clinical and ≥1 laboratory criterion within 3 years of each other.',
       'Only the highest item within each clinical domain counts.',
       'Persistent LAC (5 points) already meets the laboratory threshold by itself.',
     ]),

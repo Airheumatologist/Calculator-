@@ -314,11 +314,12 @@ export const wave5NephroGiCalcs: Calculator[] = [
       const wt = num(values.weight, 70);
       const ht = num(values.height, 170);
       const female = str(values.sex, 'M') === 'F';
-      const bsa = round(Math.sqrt((ht * wt) / 3600), 2); // Mosteller
+      const bsa = round(0.007184 * Math.pow(wt, 0.425) * Math.pow(ht, 0.725), 2); // DuBois (Wright 2001)
       const scrUmol = scr * 88.4;
-      // Wright (common form): {[6550 − 38.8×age] × BSA × sexFactor} / Scr(µmol/L)
-      const sexFactor = female ? 0.85 : 1;
-      const gfr = round(Math.max(((6550 - 38.8 * age) * bsa * sexFactor) / scrUmol, 0), 1);
+      // Wright 2001 Jaffe (without CK): (6580 − 38.8×age) × BSA × (1 − 0.168×sex) / Scr(µmol/L); sex=1 if female
+      const sexTerm = female ? 1 : 0;
+      const sexFactor = 1 - 0.168 * sexTerm;
+      const gfr = round(Math.max(((6580 - 38.8 * age) * bsa * sexFactor) / scrUmol, 0), 1);
       const r = riskFromThresholds(gfr, [
         { max: 29, level: 'high', label: 'Low estimated GFR', interpretation: `Wright estimate ≈ ${gfr} mL/min — markedly reduced; renally adjust drugs and consider measured GFR for high-stakes dosing.` },
         { max: 59, level: 'moderate', label: 'Moderately reduced', interpretation: `Wright estimate ≈ ${gfr} mL/min — moderately reduced clearance.` },
@@ -330,16 +331,16 @@ export const wave5NephroGiCalcs: Calculator[] = [
         unit: 'mL/min',
         ...r,
         details: [
-          { label: 'BSA (Mosteller)', value: `${bsa} m²` },
+          { label: 'BSA (DuBois)', value: `${bsa} m²` },
           { label: 'Scr used', value: `${scr} mg/dL (${round(scrUmol, 0)} µmol/L)` },
-          { label: 'Sex factor', value: String(sexFactor) },
+          { label: 'Sex factor (1 − 0.168×sex)', value: String(round(sexFactor, 3)) },
         ],
       };
     },
     evidence: {
       summary:
-        'Educational Wright form: GFR ≈ {[6550 − 38.8×age] × BSA × (0.85 if female)} / Scr(µmol/L). BSA via Mosteller. Variants exist (race coefficients in some oncology papers).',
-      formula: 'GFR = [6550 − 38.8×age] × BSA × sexFactor / (Scr_mg/dL × 88.4)',
+        'Wright 2001 Jaffe (without Cockcroft–Gault) form: GFR = (6580 − 38.8×age) × BSA × (1 − 0.168×sex) / Scr(µmol/L), sex = 1 if female (female factor 0.832). BSA is DuBois as in the derivation.',
+      formula: 'GFR = [6580 − 38.8×age] × BSA_DuBois × (1 − 0.168 if female) / (Scr_mg/dL × 88.4)',
       validation: 'Used historically in chemotherapy GFR estimation literature; CKD-EPI preferred for staging; isotope GFR gold standard for precise dosing when needed.',
       references: [
         {
@@ -355,7 +356,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
       { condition: 'Chemo dosing decisions', actions: ['Follow protocol-preferred GFR method', 'Consider measured GFR if borderline AUC-critical drugs', 'Do not mix formulas across cycles carelessly'] },
     ],
     pearls: [
-      'Result is mL/min (not /1.73 m²).',
+      'Result is mL/min (not /1.73 m²). BSA is DuBois as in Wright 2001 (not Mosteller).',
       'Low muscle mass underestimates true GFR when Scr is low — interpret cautiously.',
     ],
   },
@@ -1513,11 +1514,11 @@ export const wave5NephroGiCalcs: Calculator[] = [
     id: 'bicarb-ckd',
     name: 'Metabolic Acidosis Treatment Threshold in CKD',
     shortName: 'HCO₃ CKD',
-    description: 'Interprets serum bicarbonate against KDIGO-oriented alkali therapy thresholds in CKD.',
+    description: 'Interprets serum bicarbonate against historical KDIGO 2012 (<22) and KDIGO 2024 practice-point (<18 example) alkali-therapy framing in CKD.',
     category: 'nephrology',
     tags: ['bicarbonate', 'ckd', 'metabolic acidosis', 'alkali', 'kdigo'],
     whenToUse: 'CKD patients with low or borderline total CO₂/HCO₃ to decide on alkali therapy consideration.',
-    whyUse: 'Frames alkali consideration in CKD; hard-outcome benefit is uncertain—contemporary guidance prioritizes more severe acidosis and avoiding over-correction.',
+    whyUse: 'Frames alkali consideration in CKD; hard-outcome benefit is uncertain. KDIGO 2024 dropped the 2012 graded <22 recommendation and uses <18 mmol/L as a practice-point example.',
     inputs: [
       numberInput('hco3', 'Serum HCO₃⁻ or total CO₂', { unit: 'mEq/L', min: 5, max: 40, step: 0.1, defaultValue: 20 }),
       selectInput('stage', 'CKD stage (context)', [
@@ -1541,17 +1542,17 @@ export const wave5NephroGiCalcs: Calculator[] = [
         riskLevel = hco3 < 18 ? 'moderate' : 'info';
         interpretation = `HCO₃ ${hco3} mEq/L on dialysis — pre/post dialysis values differ; manage via dialysate bath and oral alkali per nephrology protocol rather than non-dialysis thresholds alone.`;
       } else if (hco3 < 18) {
-        label = 'Below common treatment threshold (low)';
+        label = 'Below 18 — 2024 practice-point example';
         riskLevel = 'high';
-        interpretation = `HCO₃ ${hco3} mEq/L — clearly below the common KDIGO-oriented threshold (<22) for considering alkali therapy in non-dialysis CKD. Evaluate cause (RTA, diarrhea, residual AG acidosis) and consider oral bicarb if no contraindication.`;
+        interpretation = `HCO₃ ${hco3} mEq/L — below the KDIGO 2024 practice-point example of acidosis with potential clinical implications (e.g. serum bicarbonate <18 mmol/L in adults). Evaluate cause (RTA, diarrhea, residual AG acidosis) and consider pharmacologic alkali ± dietary acid reduction if no contraindication.`;
       } else if (hco3 < 22) {
-        label = 'Below 22 — consider alkali';
+        label = 'Below 22 — historical 2012 threshold';
         riskLevel = 'moderate';
-        interpretation = `HCO₃ ${hco3} mEq/L — KDIGO suggests considering treatment when HCO₃ <22 mEq/L in CKD to maintain in normal range, unless contraindicated. ${sx ? 'Symptoms present — lower threshold to act.' : 'Individualize vs volume overload/HTN risk from sodium load.'}`;
+        interpretation = `HCO₃ ${hco3} mEq/L — KDIGO 2012 suggested treating chronic metabolic acidosis when HCO₃ <22 mEq/L. KDIGO 2024 dropped that graded recommendation; Practice Point 3.10.1 instead highlights acidosis with potential clinical implications (example <18 mmol/L). ${sx ? 'Symptoms present — individualize therapy.' : 'Individualize vs volume overload/HTN risk from sodium load.'}`;
       } else if (hco3 <= 26) {
         label = 'Within common target range';
         riskLevel = 'normal';
-        interpretation = `HCO₃ ${hco3} mEq/L — within common normal/target range for CKD alkali goals. Monitor serially as eGFR declines.`;
+        interpretation = `HCO₃ ${hco3} mEq/L — within common normal range. Monitor serially as eGFR declines.`;
       } else {
         label = 'High-normal / elevated HCO₃';
         riskLevel = 'low';
@@ -1564,20 +1565,29 @@ export const wave5NephroGiCalcs: Calculator[] = [
         interpretation,
         riskLevel,
         details: [
-          { label: 'Common threshold', value: 'Consider alkali if HCO₃ <22 (non-dialysis CKD)' },
+          { label: 'KDIGO 2012 (historical)', value: 'Suggested alkali if HCO₃ <22 (non-dialysis CKD)' },
+          { label: 'KDIGO 2024', value: 'No graded <22 rec; PP 3.10.1 example <18 mmol/L' },
           { label: 'Stage', value: stage },
           { label: 'Symptoms flagged', value: sx ? 'Yes' : 'No' },
         ],
       };
     },
     evidence: {
-      summary: 'KDIGO CKD guidance: suggest treating chronic metabolic acidosis when HCO₃ <22 mEq/L to maintain HCO₃ in normal range, unless contraindicated.',
-      formula: 'Threshold check: HCO₃ < 22 mEq/L → consider alkali therapy',
-      validation: 'Guideline-based educational threshold; RCTs mixed on hard outcomes — individualize sodium load and HTN risk.',
+      summary: 'KDIGO 2012 suggested treating chronic metabolic acidosis when HCO₃ <22 mEq/L. KDIGO 2024 dropped that graded recommendation; Practice Point 3.10.1 considers pharmacologic treatment to prevent acidosis with potential clinical implications (example: serum bicarbonate <18 mmol/L in adults).',
+      formula: 'KDIGO 2012: HCO₃ <22 → consider alkali. KDIGO 2024: no graded <22 rec; example threshold <18 mmol/L.',
+      validation: 'Guideline-based educational thresholds; RCTs mixed on hard outcomes — individualize sodium load and HTN risk.',
       references: [
         {
+          title: 'KDIGO 2012 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease',
+          citation: 'Kidney Disease: Improving Global Outcomes (KDIGO) CKD Work Group. Kidney Int Suppl. 2013 (Chapter 3: suggested treating metabolic acidosis if HCO₃ <22 mEq/L)',
+          year: 2013,
+          pmid: '25018998',
+          doi: '10.1038/kisup.2012.73',
+          url: 'https://kdigo.org/guidelines/ckd-evaluation-and-management/',
+        },
+        {
           title: 'KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease',
-          citation: 'Kidney Disease: Improving Global Outcomes (KDIGO) CKD Work Group. Kidney Int. 2024 (metabolic acidosis / alkali therapy recommendations)',
+          citation: 'Kidney Disease: Improving Global Outcomes (KDIGO) CKD Work Group. Kidney Int. 2024 (Practice Point 3.10.1: example bicarbonate <18 mmol/L; graded <22 alkali rec dropped)',
           year: 2024,
           pmid: '38490803',
           doi: '10.1016/j.kint.2023.10.018',
@@ -1668,10 +1678,15 @@ export const wave5NephroGiCalcs: Calculator[] = [
       let label = 'Remission';
       let interpretation = `Full Mayo score ${fullScore}/12 (Endoscopic subscore ${endo}): consistent with clinical and endoscopic remission (0–2 with no individual subscore >1).`;
 
-      if (fullScore <= 2 && stool <= 1 && bleed === 0 && endo <= 1 && pga <= 1) {
+      const inRemission = fullScore <= 2 && stool <= 1 && bleed === 0 && endo <= 1 && pga <= 1;
+      if (inRemission) {
         riskLevel = 'normal';
         label = 'Clinical & Endoscopic Remission (0–2)';
         interpretation = `Full Mayo score ${fullScore}/12 (Endoscopic subscore ${endo}): clinical and endoscopic remission. Supports maintenance therapy and treat-to-target mucosal healing.`;
+      } else if (fullScore <= 2) {
+        riskLevel = 'low';
+        label = 'Not in remission (score ≤2 with subscore >1)';
+        interpretation = `Full Mayo score ${fullScore}/12 (Endoscopic subscore ${endo}): total is in the 0–2 band but does not meet remission (requires no subscore >1 and rectal bleeding 0). Treat as residual/mild activity rather than remission.`;
       } else if (fullScore <= 5) {
         riskLevel = 'low';
         label = 'Mild Disease Activity (3–5)';
@@ -1717,8 +1732,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Score ≥2', actions: ['Optimize UC therapy', 'Stool infection studies if flare', 'Discuss treat-to-target with patient'] },
-      { condition: 'Score 0–1', actions: ['Maintain therapy', 'Surveillance intervals per guidelines'] },
+      { condition: 'Not in remission (activity, including score 2 failing remission rules)', actions: ['Optimize UC therapy', 'Stool infection studies if flare', 'Discuss treat-to-target with patient'] },
+      { condition: 'Remission (≤2, no subscore >1, rectal bleeding 0)', actions: ['Maintain therapy', 'Surveillance intervals per guidelines'] },
     ],
     pearls: ['Full clinical Mayo also includes stool frequency, rectal bleeding, and physician global assessment.'],
   },

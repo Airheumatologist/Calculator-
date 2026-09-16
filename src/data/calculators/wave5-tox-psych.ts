@@ -1429,11 +1429,13 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: '5–9 years', value: '5to9' },
         { label: '≥10 years', value: 'ge10' },
       ]),
+      yesNo('immunocompromised', 'HIV or severe immunodeficiency', null, 'CDC: people with HIV or severe immunodeficiency who have dirty/major wounds should receive TIG even after a complete toxoid series. TIG is never indicated for clean minor wounds.'),
     ],
     calculate(values) {
       const dirty = String(values.wound ?? 'dirty') === 'dirty';
       const incomplete = String(values.history ?? 'incomplete') === 'incomplete';
       const last = String(values.last_dose_years ?? 'na');
+      const immuno = bool(values.immunocompromised);
 
       let vaccine = false;
       let tig = false;
@@ -1456,20 +1458,33 @@ export const wave5ToxPsychCalcs: Calculator[] = [
           // dirty: booster if ≥5 years
           if (last === 'lt5') vaccine = false;
           else vaccine = true;
-          tig = false;
-          label = vaccine ? 'Booster indicated (dirty wound, ≥5 y)' : 'No booster (dirty, <5 y since last)';
-          interpretation = vaccine
-            ? '≥3 prior doses with dirty/other wound: give booster if ≥5 years since last dose. TIG not indicated when primary series complete.'
-            : '≥3 prior doses, dirty wound, last dose <5 years: no toxoid booster and no TIG needed for tetanus prophylaxis.';
-          riskLevel = vaccine ? 'moderate' : 'low';
+          tig = immuno;
+          if (tig && vaccine) {
+            label = 'Give booster + TIG (dirty wound, immunocompromised)';
+            interpretation =
+              '≥3 prior doses with dirty/other wound and HIV/severe immunodeficiency: give TIG (250 IU IM typical) even after a complete toxoid series, plus a booster if ≥5 years since last dose.';
+          } else if (tig && !vaccine) {
+            label = 'Give TIG (dirty wound, immunocompromised; booster not due)';
+            interpretation =
+              '≥3 prior doses, dirty wound, last dose <5 years: no toxoid booster, but CDC still indicates TIG for HIV or severe immunodeficiency with dirty/major wounds.';
+          } else if (vaccine) {
+            label = 'Booster indicated (dirty wound, ≥5 y)';
+            interpretation =
+              '≥3 prior doses with dirty/other wound: give booster if ≥5 years since last dose. TIG is not indicated when the primary series is complete and the patient is not HIV/severely immunocompromised.';
+          } else {
+            label = 'No booster (dirty, <5 y since last)';
+            interpretation =
+              '≥3 prior doses, dirty wound, last dose <5 years, not immunocompromised: no toxoid booster and no TIG needed for tetanus prophylaxis.';
+          }
+          riskLevel = tig ? 'high' : vaccine ? 'moderate' : 'low';
         } else {
-          // clean: booster if ≥10 years
+          // clean: booster if ≥10 years; TIG never for clean minor wounds
           vaccine = last === 'ge10' || last === 'na';
           tig = false;
           label = vaccine ? 'Booster indicated (clean wound, ≥10 y)' : 'No booster (clean, <10 y)';
           interpretation = vaccine
-            ? '≥3 prior doses + clean minor wound: booster if ≥10 years since last dose. Prefer Tdap if indicated (e.g., no prior Tdap adult, pregnancy).'
-            : '≥3 prior doses, clean wound, last dose <10 years: no tetanus prophylaxis needed.';
+            ? '≥3 prior doses + clean minor wound: booster if ≥10 years since last dose. Prefer Tdap if indicated (e.g., no prior Tdap adult, pregnancy). TIG is not indicated for clean minor wounds.'
+            : '≥3 prior doses, clean wound, last dose <10 years: no tetanus prophylaxis needed. TIG is not indicated for clean minor wounds.';
           riskLevel = vaccine ? 'moderate' : 'low';
         }
       }
@@ -1488,6 +1503,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         details: [
           { label: 'Wound', value: dirty ? 'Dirty / other' : 'Clean minor' },
           { label: 'Immunization history', value: incomplete ? 'Unknown or <3 doses' : '≥3 doses' },
+          { label: 'HIV / severe immunodeficiency', value: immuno ? 'Yes' : 'No' },
           { label: 'Vaccine now', value: vaccine ? 'Yes' : 'No' },
           { label: 'TIG now', value: tig ? 'Yes' : 'No' },
         ],
@@ -1496,7 +1512,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'CDC tetanus prophylaxis: incomplete series → vaccine ± TIG (TIG if dirty). Complete series → booster at 10 y (clean) or 5 y (dirty); TIG not needed if ≥3 doses.',
+        'CDC tetanus prophylaxis: incomplete series → vaccine ± TIG (TIG if dirty). Complete series → booster at 10 y (clean) or 5 y (dirty). TIG is also indicated for dirty/major wounds in people with HIV or severe immunodeficiency even after ≥3 toxoid doses. TIG is never indicated for clean minor wounds.',
       formula: 'Wound class × immunization completeness × years since last dose',
       validation: 'Aligned with CDC Pink Book / ACIP wound management tables (educational).',
       references: [
@@ -1514,6 +1530,10 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         actions: ['Vaccine now', 'TIG if dirty wound', 'Schedule catch-up series', 'Wound cleaning'],
       },
       {
+        condition: 'HIV / severe immunodeficiency + dirty wound',
+        actions: ['Give TIG 250 IU IM even if ≥3 prior toxoid doses', 'Toxoid booster if due (≥5 y for dirty wounds)', 'Separate anatomic sites from vaccine'],
+      },
+      {
         condition: 'All wounds',
         actions: ['Thorough irrigation/debridement', 'Consider antibiotics if indicated for wound type'],
       },
@@ -1521,6 +1541,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     pearls: [
       'Tdap preferred once for adults if never received; use Td/Tdap per current ACIP.',
       'TIG and vaccine at different anatomic sites.',
+      'HIV or severe immunodeficiency + dirty/major wound: give TIG regardless of prior dose count.',
     ],
   },
 
@@ -1536,7 +1557,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whyUse: 'Rabies is nearly always fatal once clinical — correct PEP is time-critical when indicated.',
     inputs: [
       selectInput('animal', 'Animal / exposure', [
-        { label: 'Bat (any contact / possible unrecognized bite)', value: 'bat', description: 'Any bat contact, or a bat in the room when a bite cannot be excluded (child, sleeper, intoxicated)' },
+        { label: 'Bat', value: 'bat', description: 'Bat as the species. PEP depends on exposure type: known bite/mucosa, or bat-in-room when a bite cannot be excluded. Intact-skin/no contact is not an exposure.' },
         { label: 'Dog / cat / ferret (domestic)', value: 'dogcat', description: 'Domestic dog, cat, or ferret — 10-day observation possible if healthy and available' },
         { label: 'Raccoon / skunk / fox / other wild carnivore', value: 'wild', description: 'High-risk wild carnivore; regard as rabid unless brain tests negative' },
         { label: 'Livestock / horse / other', value: 'other', description: 'Livestock or uncommon species — case-by-case with public health' },
@@ -1560,11 +1581,14 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       const prior = String(values.prior_vax ?? 'none') === 'prior';
       const observe = bool(values.available_observe);
 
-      if (exposure === 'none' && animal !== 'bat') {
+      if (exposure === 'none') {
         return {
           score: 0,
           label: 'PEP generally not indicated',
-          interpretation: 'No exposure identified. PEP not indicated. Wound care if needed; tetanus as appropriate.',
+          interpretation:
+            animal === 'bat'
+              ? 'No contact / intact skin only is not a rabies exposure, including with bats. CDC does not indicate PEP when a bite, scratch, or mucous-membrane exposure can be confidently excluded. Use “Bat in room with possible unrecognized contact” when a bite cannot be ruled out (sleeping child, intoxicated person).'
+              : 'No exposure identified. PEP not indicated. Wound care if needed; tetanus as appropriate.',
           riskLevel: 'low' as const,
           details: [
             { label: 'HRIG', value: 'No' },
@@ -1590,7 +1614,9 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         indicated = true;
         label = 'PEP often indicated (bat exposure framework)';
         interpretation =
-          'Bat exposures: PEP frequently recommended when bite cannot be ruled out (including bats in room with unattended child, deep sleeper, intoxicated person). Start PEP unless animal tests negative.';
+          exposure === 'batroom'
+            ? 'Bat in the room when a bite cannot be excluded (unattended child, deep sleeper, intoxicated person): treat as an exposure. Start PEP unless the animal tests negative.'
+            : 'Bat bite, scratch, or saliva-to-mucosa/open-wound: PEP is indicated. Start PEP unless the animal tests negative.';
         riskLevel = 'high';
       } else if (animal === 'wild') {
         indicated = true;

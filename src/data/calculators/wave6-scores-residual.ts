@@ -1504,7 +1504,11 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         { label: 'Interactive regional assessment (recommended)', value: 'survey' },
         { label: 'Direct score override (0–72)', value: 'direct' },
       ], 'survey'),
-      // Head and neck (0.1)
+      selectInput('ageBand', 'Age band (region multipliers)', [
+        { label: '≥8 years (head/neck 0.1, lower limbs 0.4)', value: 'ge8' },
+        { label: '<8 years (head/neck 0.2, lower limbs 0.3)', value: 'lt8' },
+      ], 'ge8', 'Hanifin/HOME EASI: ≥8 y uses 0.1 / 0.2 / 0.3 / 0.4; <8 y uses 0.2 / 0.2 / 0.3 / 0.3 (upper limbs 0.2 and trunk 0.3 unchanged). Direct override still needs this only for display.'),
+      // Head and neck
       selectInput('head_area', 'Head & Neck: Area involvement score', [
         { label: '0 - 0% (no eruption)', value: 0 },
         { label: '1 - 1%–9%', value: 1 },
@@ -1656,11 +1660,15 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
       let trunkSub = 0;
       let llSub = 0;
 
+      const pediatric = String(values.ageBand ?? 'ge8') === 'lt8';
+      const headW = pediatric ? 0.2 : 0.1;
+      const llW = pediatric ? 0.3 : 0.4;
+
       if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.head_area === undefined)) {
         score = round(Math.min(72, Math.max(0, num(values.total, 0))), 1);
       } else {
         const hSigns = num(values.head_erythema, 0) + num(values.head_induration, 0) + num(values.head_excoriation, 0) + num(values.head_lichenification, 0);
-        headSub = 0.1 * num(values.head_area, 0) * hSigns;
+        headSub = headW * num(values.head_area, 0) * hSigns;
 
         const ulSigns = num(values.ul_erythema, 0) + num(values.ul_induration, 0) + num(values.ul_excoriation, 0) + num(values.ul_lichenification, 0);
         ulSub = 0.2 * num(values.ul_area, 0) * ulSigns;
@@ -1669,7 +1677,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         trunkSub = 0.3 * num(values.trunk_area, 0) * trSigns;
 
         const llSigns = num(values.ll_erythema, 0) + num(values.ll_induration, 0) + num(values.ll_excoriation, 0) + num(values.ll_lichenification, 0);
-        llSub = 0.4 * num(values.ll_area, 0) * llSigns;
+        llSub = llW * num(values.ll_area, 0) * llSigns;
 
         score = round(Math.min(72, Math.max(0, headSub + ulSub + trunkSub + llSub)), 1);
       }
@@ -1708,7 +1716,12 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
       ]);
       const details: { label: string; value: string }[] = [
         { label: 'EASI-50 / EASI-75', value: '≥50% / ≥75% improvement from baseline (trial endpoints)' },
-        { label: 'Regions', value: 'Head/neck (0.1), Upper limbs (0.2), Trunk (0.3), Lower limbs (0.4)' },
+        {
+          label: 'Age band / region weights',
+          value: pediatric
+            ? '<8 years: Head/neck 0.2, Upper limbs 0.2, Trunk 0.3, Lower limbs 0.3'
+            : '≥8 years: Head/neck 0.1, Upper limbs 0.2, Trunk 0.3, Lower limbs 0.4',
+        },
       ];
       if (mode === 'survey' || headSub > 0 || ulSub > 0 || trunkSub > 0 || llSub > 0) {
         details.push(
@@ -1727,8 +1740,8 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     },
     evidence: {
       summary:
-        'EASI combines erythema, edema/papulation, excoriation, and lichenification with body-region area scores (total 0–72). Severity bands (clear/mild/moderate/severe/very severe) are widely used educationally (e.g., Leshem et al.).',
-      formula: 'EASI = 0.1(H) + 0.2(UL) + 0.3(T) + 0.4(LL), where each region = Area × (E + I + Ex + L)',
+        'EASI combines erythema, edema/papulation, excoriation, and lichenification with body-region area scores (total 0–72). ≥8 years: head/neck 0.1, upper 0.2, trunk 0.3, lower 0.4. <8 years: head/neck 0.2 and lower limbs 0.3 (upper 0.2, trunk 0.3 unchanged). Severity bands (clear/mild/moderate/severe/very severe) are widely used educationally (e.g., Leshem et al.).',
+      formula: '≥8 y: 0.1(H)+0.2(UL)+0.3(T)+0.4(LL); <8 y: 0.2(H)+0.2(UL)+0.3(T)+0.3(LL); region = Area × (E+I+Ex+L)',
       validation: 'Validated clinician AD score; primary endpoint family in AD RCTs.',
       references: [
         {
@@ -2472,9 +2485,9 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         { label: 'Never / nearly never (0)', value: 'never' },
         { label: '1–2×/month (0)', value: 'monthly-1-2' },
         { label: '1–2×/week (0)', value: 'weekly-1-2' },
-        { label: '3–4×/week (1)', value: 'weekly-3-4' },
-        { label: 'Nearly every day (1)', value: 'daily' },
-      ]),
+        { label: '3–4×/week (2)', value: 'weekly-3-4' },
+        { label: 'Nearly every day (2)', value: 'daily' },
+      ], undefined, 'Netzer Category 1 item 5: nearly every day or 3–4 times/week = 2 points (not 1). 1–2 times/week or less = 0.'),
       // Category 2 — sleepiness
       selectInput('tiredWake', 'Tired/fatigued after sleep?', [
         { label: 'Never / nearly never (0)', value: 'never' },
@@ -2513,6 +2526,13 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         'weekly-3-4': 1,
         daily: 1,
       };
+      const quitBreathPoints: Record<string, number> = {
+        never: 0,
+        'monthly-1-2': 0,
+        'weekly-1-2': 0,
+        'weekly-3-4': 2,
+        daily: 2,
+      };
       const points = (value: number | string | boolean | null, mapping: Record<string, number>) =>
         mapping[String(value)] ?? num(value);
       const cat1 =
@@ -2520,7 +2540,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         points(values.snoreLoud, loudPoints) +
         points(values.snoreFreq, frequencyPoints) +
         num(values.bothers) +
-        points(values.quitBreath, frequencyPoints);
+        points(values.quitBreath, quitBreathPoints);
       const cat2 = points(values.tiredWake, frequencyPoints) + points(values.tiredDay, frequencyPoints) + num(values.nodrive);
       const bmi = num(values.bmi, 32);
       const cat3pts = (bool(values.htn) ? 1 : 0) + (bmi > 30 ? 1 : 0);
@@ -2549,8 +2569,8 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     },
     evidence: {
       summary:
-        'Berlin Questionnaire: Category 1 (snoring/apnea items) positive if ≥2 points; Category 2 (fatigue/drowsy driving) positive if ≥2; Category 3 positive if HTN or BMI >30. High risk if ≥2 categories positive.',
-      formula: 'High risk if ≥2 of 3 categories positive',
+        'Berlin Questionnaire: Category 1 (snoring/apnea items) positive if ≥2 points — witnessed apneas nearly every day or 3–4×/week score 2 points (Netzer item 5). Category 2 (fatigue/drowsy driving) positive if ≥2; Category 3 positive if HTN or BMI >30. High risk if ≥2 categories positive.',
+      formula: 'High risk if ≥2 of 3 categories positive; Category 1 item 5 (quit breathing) = 2 points if nearly every day or 3–4×/week',
       validation: 'Netzer et al. 1999; common primary-care OSA screen (STOP-BANG often preferred perioperatively).',
       references: [
         {

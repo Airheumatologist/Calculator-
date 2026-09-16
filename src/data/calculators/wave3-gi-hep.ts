@@ -65,60 +65,120 @@ export const wave3GiHepCalcs: Calculator[] = [
 
   {
     id: 'peld-score',
-    name: 'PELD Score',
-    shortName: 'PELD',
-    description: 'Pediatric End-Stage Liver Disease score for children under 12 years.',
+    name: 'PELD-Cr (OPTN)',
+    shortName: 'PELD-Cr',
+    description: 'Current OPTN Pediatric End-Stage Liver Disease score with creatinine (PELD-Cr, July 2023) for candidates younger than 12 years. Route id peld-score is unchanged.',
     category: 'gastroenterology',
-    tags: ['peld', 'pediatric', 'transplant', 'liver', 'prognosis'],
-    whenToUse: 'Children <12 years with chronic liver disease for prognosis / transplant prioritization context.',
-    whyUse: 'Age-appropriate counterpart to MELD using bilirubin, INR, albumin, age <1 year, and growth failure.',
+    tags: ['peld', 'peld-cr', 'pediatric', 'transplant', 'liver', 'prognosis'],
+    whenToUse: 'Children younger than 12 years with chronic liver disease being assessed with the current OPTN listing model (Policy 9.1.E).',
+    whyUse: 'Current OPTN allocation model (implemented July 13, 2023): continuous age and growth, creatinine, and a floor of 6 aligned to adult MELD 3.0 waitlist-mortality risk.',
     inputs: [
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 3.0 }),
-      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, defaultValue: 1.5 }),
-      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, defaultValue: 3.0 }),
-      yesNo('ageUnder1', 'Age < 1 year', null),
-      yesNo('growthFailure', 'Growth failure (<2 SD height or weight for age)', null, 'Yes if height or weight is more than 2 standard deviations below the age- and sex-specific mean (CDC/WHO charts).'),
+      numberInput('ageYears', 'Age at most recent PELD labs', {
+        unit: 'years',
+        min: 0,
+        max: 11.99,
+        step: 0.1,
+        defaultValue: 2,
+        helpText: 'Fractional calendar years at the lab date used for PELD. Policy: <1 year uses 1; >5.5 and <12 uses 5.5; otherwise the measured age. For age ≥12 use MELD 3.0.',
+      }),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 3.0, helpText: 'Floored at 1.0 mg/dL; spline at 4; capped at 40.' }),
+      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, defaultValue: 1.5, helpText: 'Floored at 1.0; spline at 2; capped at 10.' }),
+      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, defaultValue: 3.0, helpText: 'Floored at 1.0 g/dL; values >1.9 are set to 1.9.' }),
+      numberInput('creat', 'Serum creatinine', { unit: 'mg/dL', min: 0.05, max: 15, step: 0.01, defaultValue: 0.4, helpText: 'Floored at 0.2 mg/dL; values >1.3 or qualifying dialysis are set to 1.3.' }),
+      yesNo(
+        'dialysis',
+        'Dialysis ≥2 times or ≥24 h CVVHD in the 7 days before the creatinine test',
+        0,
+        'If yes, creatinine is set to 1.3 mg/dL (OPTN Policy 9.1.E).',
+      ),
+      numberInput('minZ', 'Minimum of CDC 2000 height- or weight-for-age z-score', {
+        min: -10,
+        max: 5,
+        step: 0.1,
+        defaultValue: -2.1,
+        helpText: 'Use the more negative of CDC 2000 height-for-age and weight-for-age z-scores (LMS). Policy bounds: < −5 → −5; > −2.1 → −2.1. Leave −2.1 if growth is not below −2.1 SD.',
+      }),
     ],
     calculate(values) {
-      // OPTN-style floors: bilirubin, INR, and albumin values <1.0 are set to 1.0
-      const bili = Math.max(num(values.bili, 3), 1.0);
-      const inr = Math.max(num(values.inr, 1.5), 1.0);
-      const alb = Math.max(num(values.albumin, 3), 1.0);
-      const ageF = bool(values.ageUnder1) ? 1 : 0;
-      const gf = bool(values.growthFailure) ? 1 : 0;
-      // PELD = 10 × [0.480×ln(bili) + 1.857×ln(INR) − 0.687×ln(albumin) + 0.436×age<1 + 0.667×growth failure]
+      const age = Math.max(0, Math.min(11.99, num(values.ageYears, 2)));
+      const ageUsed = age < 1 ? 1 : age > 5.5 ? 5.5 : age;
+
+      let albUsed = Math.max(1.0, num(values.albumin, 3));
+      if (albUsed > 1.9) albUsed = 1.9;
+
+      let biliUsed = Math.max(1.0, num(values.bili, 3));
+      if (biliUsed > 40) biliUsed = 40;
+      const biliFactor =
+        biliUsed <= 4
+          ? 0.7854 * Math.log(biliUsed) + 0.3434 * Math.log(4)
+          : 0.7854 * Math.log(4) + 0.3434 * Math.log(biliUsed);
+
+      let inrUsed = Math.max(1.0, num(values.inr, 1.5));
+      if (inrUsed > 10) inrUsed = 10;
+      const inrFactor =
+        inrUsed <= 2
+          ? 1.981 * Math.log(inrUsed) + 0.7298 * Math.log(2)
+          : 1.981 * Math.log(2) + 0.7298 * Math.log(inrUsed);
+
+      const dial = bool(values.dialysis);
+      let creatUsed = num(values.creat, 0.4);
+      if (dial) creatUsed = 1.3;
+      else if (creatUsed < 0.2) creatUsed = 0.2;
+      else if (creatUsed > 1.3) creatUsed = 1.3;
+
+      let mzsUsed = num(values.minZ, -2.1);
+      if (mzsUsed < -5) mzsUsed = -5;
+      else if (mzsUsed > -2.1) mzsUsed = -2.1;
+
       const raw =
-        10 *
-        (0.48 * Math.log(bili) +
-          1.857 * Math.log(inr) -
-          0.687 * Math.log(alb) +
-          0.436 * ageF +
-          0.667 * gf);
-      const score = round(Math.max(0, raw), 0);
+        (-0.1967 * ageUsed -
+          1.842 * Math.log(albUsed) +
+          biliFactor +
+          inrFactor -
+          0.1807 * mzsUsed +
+          1.453 * Math.log(creatUsed) +
+          1.5287) *
+          10 +
+        2.82;
+      const score = Math.max(6, round(raw, 0));
+
       const r = riskFromThresholds(score, [
-        { max: 10, level: 'low', label: 'Lower PELD', interpretation: 'Lower calculated PELD — still integrate growth, complications, and center policy.' },
-        { max: 20, level: 'moderate', label: 'Intermediate PELD', interpretation: 'Intermediate priority/mortality risk band; transplant center involvement typical.' },
-        { max: 30, level: 'high', label: 'High PELD', interpretation: 'High score — significant waitlist mortality risk historically.' },
-        { max: 100, level: 'critical', label: 'Very high PELD', interpretation: 'Very high PELD — urgent transplant pathways and exception review as applicable.' },
+        { max: 10, level: 'low', label: 'Lower PELD-Cr (6–10)', interpretation: 'Lower calculated PELD-Cr on the current OPTN scale (floor 6). Integrate growth, complications, and center policy.' },
+        { max: 20, level: 'moderate', label: 'Intermediate PELD-Cr (11–20)', interpretation: 'Intermediate medical-urgency score; transplant-center involvement is typical.' },
+        { max: 30, level: 'high', label: 'High PELD-Cr (21–30)', interpretation: 'High waitlist-mortality urgency on the current OPTN PELD-Cr scale.' },
+        { max: 200, level: 'critical', label: 'Very high PELD-Cr (>30)', interpretation: 'Very high PELD-Cr — urgent transplant pathways and exception review as applicable. Unlike MELD, PELD-Cr is not capped at 40.' },
       ]);
       return {
         score,
         unit: 'points',
         ...r,
         details: [
-          { label: 'Age <1 factor', value: ageF ? 'Yes (+0.436×10)' : 'No' },
-          { label: 'Growth failure', value: gf ? 'Yes (+0.667×10)' : 'No' },
+          { label: 'Unrounded formula result', value: `${round(raw, 2)}` },
+          { label: 'Age used', value: `${round(ageUsed, 2)} y (entered ${round(age, 2)})` },
+          { label: 'Albumin used', value: `${round(albUsed, 2)} g/dL (cap 1.9)` },
+          { label: 'Bilirubin used', value: `${round(biliUsed, 2)} mg/dL` },
+          { label: 'INR used', value: `${round(inrUsed, 2)}` },
+          { label: 'Creatinine used', value: `${round(creatUsed, 2)} mg/dL${dial ? ' (dialysis rule)' : ''}` },
+          { label: 'Min z-score used', value: `${round(mzsUsed, 2)} (entered ${round(num(values.minZ, -2.1), 2)})` },
         ],
       };
     },
     evidence: {
-      summary: 'PELD = 10×[0.480×ln(bili) + 1.857×ln(INR) − 0.687×ln(albumin) + 0.436 if age<1 + 0.667 if growth failure]. Labs in mg/dL and g/dL.',
-      formula: 'PELD = 10 × (0.480 ln bili + 1.857 ln INR − 0.687 ln albumin + age/growth terms)',
-      validation: 'Used in pediatric liver allocation frameworks (with policy updates and exception scores). Educational tool — confirm current OPTN/center rules.',
+      summary:
+        'OPTN Policy 9.1.E PELD-Cr (July 13, 2023): PELD = (age term + albumin term + bilirubin spline + INR spline + min CDC z-score term + creatinine term + 1.5287) × 10 + 2.82, then rounded and floored at 6. Age used is 1 if <1 year, 5.5 if >5.5 and <12, else fractional age. Albumin/bilirubin/INR <1.0 set to 1.0; albumin capped at 1.9; bilirubin spline at 4 and cap 40; INR spline at 2 and cap 10; creatinine floored at 0.2 and set to 1.3 if >1.3 or qualifying dialysis; min height/weight z-score bounded to [−5, −2.1]. This is not classic McDiarmid 2002 PELD.',
+      formula:
+        'PELD-Cr = 10×[−0.1967×AgeUsed − 1.842×ln(AlbUsed) + BiliFactor + INRFactor − 0.1807×MZSUsed + 1.453×ln(CreatUsed) + 1.5287] + 2.82; then round, min 6',
+      validation: 'Current OPTN Policy 9.1.E; implemented July 13, 2023 so waitlist mortality at a given PELD-Cr aligns with an 18-year-old MELD 3.0 of the same numeric score. Educational aid — not the official OPTN listing system.',
       references: [
         {
+          title: 'OPTN Policies — Policy 9.1.E PELD Score (PELD-Cr)',
+          citation: 'Organ Procurement and Transplantation Network; PELD-Cr implemented July 13, 2023',
+          year: 2025,
+          url: 'https://www.hrsa.gov/sites/default/files/hrsa/optn/optn-policies.pdf',
+        },
+        {
           title: 'Development of a pediatric end-stage liver disease score',
-          citation: 'McDiarmid SV et al. Transplantation. 2002',
+          citation: 'McDiarmid SV et al. Transplantation. 2002 (historical PELD; superseded for OPTN listing)',
           year: 2002,
           pmid: '12151728',
           doi: '10.1097/00007890-200207270-00006',
@@ -126,12 +186,14 @@ export const wave3GiHepCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Elevated PELD or decompensation', actions: ['Pediatric transplant center referral', 'Nutrition and growth support', 'Manage portal HTN complications'] },
-      { condition: 'Growth failure', actions: ['Dietitian involvement', 'Document serial anthropometrics for listing'] },
+      { condition: 'Elevated PELD-Cr or decompensation', actions: ['Pediatric transplant center referral', 'Nutrition and growth support', 'Manage portal HTN complications'] },
+      { condition: 'Growth z-score < −2.1', actions: ['Dietitian involvement', 'Document serial CDC height and weight z-scores for listing'] },
     ],
     pearls: [
-      'For age ≥12 years, adult MELD/MELD-Na frameworks generally apply.',
-      'Listing may use calculated PELD plus exception points — this is not an allocation API.',
+      'This is current OPTN PELD-Cr, not the 2002 categorical age<1 / growth-failure PELD.',
+      'Enter the minimum of CDC 2000 height-for-age and weight-for-age z-scores; this tool does not compute LMS z-scores from raw height/weight.',
+      'For age ≥12 years, current OPTN MELD 3.0 applies (not historical MELD-Na).',
+      'Listing may add exception points — this is not an allocation API.',
     ],
   },
 
@@ -260,10 +322,10 @@ export const wave3GiHepCalcs: Calculator[] = [
         { label: '3 pts — INR ≥2.5 [Coagulation Failure]', value: 3, points: 3 },
       ], 1),
       selectInput('circ', '5. Circulation: Blood Pressure / Vasopressors', [
-        { label: '1 pt — MAP ≥70 mmHg without vasopressors', value: 1, points: 1 },
-        { label: '2 pts — MAP ≤70 mmHg', value: 2, points: 2 },
+        { label: '1 pt — MAP ≥70 mmHg without vasopressors', value: 1, points: 1, description: 'MAP of exactly 70 without vasopressors scores 1' },
+        { label: '2 pts — MAP <70 mmHg without vasopressors', value: 2, points: 2, description: 'Jalan CLIF-OF: MAP <70 (not ≤70). MAP 70 is the 1-point band.' },
         { label: '3 pts — Any vasopressor use [Circulatory Failure]', value: 3, points: 3 },
-      ], 1),
+      ], 1, 'MAP of exactly 70 mmHg without vasopressors = 1 point. MAP <70 without vasopressors = 2. Any vasopressor (including terlipressin) = 3 even if MAP ≥70.'),
       selectInput('resp', '6. Respiration: PaO₂/FiO₂ or SpO₂/FiO₂', [
         { label: '1 pt — PaO₂/FiO₂ >300 or SpO₂/FiO₂ >357', value: 1, points: 1 },
         { label: '2 pts — PaO₂/FiO₂ >200 to ≤300 or SpO₂/FiO₂ >214 to ≤357', value: 2, points: 2 },

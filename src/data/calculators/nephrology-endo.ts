@@ -156,10 +156,25 @@ export const nephrologyEndoCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'MDRD study equation; less accurate than CKD-EPI at higher GFR.',
-      references: [{ title: 'A more accurate method to estimate GFR from serum creatinine', citation: 'Levey AS et al. Ann Intern Med. 1999', year: 1999, pmid: '10075613',
-          doi: '10.7326/0003-4819-130-6-199903160-00002', }],
-      validation: 'Widely used historically; race coefficient no longer recommended.',
+      summary: 'IDMS-traceable 4-variable MDRD (175 equation): 175 × Scr^−1.154 × age^−0.203 × 0.742 if female × 1.212 if Black. This is the 2006/2007 re-expression for standardized creatinine, not the original 1999 186 equation.',
+      formula: 'eGFR = 175 × Scr^−1.154 × age^−0.203 × (0.742 if female) × (1.212 if Black) [IDMS 175, not 186]',
+      references: [
+        {
+          title: 'Expressing the Modification of Diet in Renal Disease Study equation for estimating GFR with standardized serum creatinine values',
+          citation: 'Levey AS et al. Clin Chem. 2007 (IDMS-traceable 175 × Scr^−1.154 equation)',
+          year: 2007,
+          pmid: '16705032',
+          doi: '10.1373/clinchem.2006.077180',
+        },
+        {
+          title: 'Using standardized serum creatinine values in the Modification of Diet in Renal Disease Study equation for estimating glomerular filtration rate',
+          citation: 'Levey AS et al. Ann Intern Med. 2006 (IDMS re-expression of 4-variable MDRD)',
+          year: 2006,
+          pmid: '16908915',
+          doi: '10.7326/0003-4819-145-4-200608150-00004',
+        },
+      ],
+      validation: 'Widely used historically; race coefficient no longer recommended. Prefer 2021 CKD-EPI.',
     },
     nextSteps: [{ condition: 'Any', actions: ['Prefer CKD-EPI 2021 for staging'] }],
   },
@@ -202,10 +217,20 @@ export const nephrologyEndoCalcs: Calculator[] = [
       return { score: fena, unit: '%', label, interpretation, riskLevel };
     },
     evidence: {
-      summary: 'FENa = (UNa×PCr)/(PNa×UCr)×100. <1% prerenal, >2% ATN in oliguric AKI without diuretics.',
-      validation: 'Classic teaching; many exceptions (contrast, rhabdo, contrast nephropathy, CKD, diuretics).',
-      references: [{ title: 'The FENa test. Use in the differential diagnosis of acute renal failure', citation: 'Espinel CH. JAMA. 1976', year: 1976, pmid: '947239',
-          doi: '10.1001/jama.236.6.579', }],
+      summary: 'FENa = (UNa×PCr)/(PNa×UCr)×100. Common teaching (Miller 1978): <1% prerenal, 1–2% indeterminate, >2% ATN in oliguric AKI without diuretics. Espinel 1976 used <1% prerenal and >3% ATN.',
+      formula: 'FENa (%) = (UNa × PCr) / (PNa × UCr) × 100. Cutoffs here: <1% prerenal, >2% ATN (Miller); Espinel ATN was >3%.',
+      validation: 'Classic teaching; many exceptions (contrast, rhabdo, CKD, diuretics).',
+      references: [
+        { title: 'The FENa test. Use in the differential diagnosis of acute renal failure', citation: 'Espinel CH. JAMA. 1976 (prerenal <1%, ATN >3%)', year: 1976, pmid: '947239',
+          doi: '10.1001/jama.236.6.579', },
+        {
+          title: 'Urinary diagnostic indices in acute renal failure: a prospective study',
+          citation: 'Miller TR et al. Ann Intern Med. 1978 (FENa / RFI teaching cutoffs; ATN commonly >2%)',
+          year: 1978,
+          pmid: '666184',
+          doi: '10.7326/0003-4819-89-1-47',
+        },
+      ],
     },
     nextSteps: [
       { condition: 'Prerenal pattern', actions: ['Volume resuscitation if hypovolemic', 'Hold nephrotoxins/ACEi/NSAIDs as appropriate'] },
@@ -880,15 +905,16 @@ export const nephrologyEndoCalcs: Calculator[] = [
       }
       const ldl = round(tc - hdl - tg / 5, 0);
       const r = riskFromThresholds(ldl, [
-        { max: 99, level: 'normal', label: 'Optimal / near optimal', interpretation: 'LDL <100 optimal for many; <70 for very high-risk ASCVD.' },
-        { max: 129, level: 'low', label: 'Borderline', interpretation: 'LDL 100–129: borderline high depending on risk.' },
-        { max: 159, level: 'moderate', label: 'High', interpretation: 'LDL 130–159: high.' },
-        { max: 500, level: 'high', label: 'Very high', interpretation: 'LDL ≥160: high/very high — consider therapy intensity.' },
+        { max: 99, level: 'normal', label: 'Optimal', interpretation: 'ATP III: LDL <100 mg/dL optimal (many very-high-risk patients still use <70).' },
+        { max: 129, level: 'low', label: 'Near optimal / above optimal', interpretation: 'ATP III: LDL 100–129 mg/dL near optimal/above optimal.' },
+        { max: 159, level: 'moderate', label: 'Borderline high', interpretation: 'ATP III: LDL 130–159 mg/dL borderline high.' },
+        { max: 189, level: 'high', label: 'High', interpretation: 'ATP III: LDL 160–189 mg/dL high.' },
+        { max: 500, level: 'high', label: 'Very high', interpretation: 'ATP III: LDL ≥190 mg/dL very high — consider high-intensity therapy.' },
       ]);
       return { score: ldl, unit: 'mg/dL', ...r };
     },
     evidence: {
-      summary: 'LDL = TC − HDL − TG/5 (mg/dL). Invalid if TG ≥400.',
+      summary: 'LDL = TC − HDL − TG/5 (mg/dL). Invalid if TG ≥400. ATP III categories: <100 optimal, 100–129 near optimal, 130–159 borderline high, 160–189 high, ≥190 very high.',
       validation: 'Friedewald 1972; Martin-Hopkins improves accuracy at low LDL/high TG.',
       references: [{ title: 'Estimation of concentration of low-density lipoprotein cholesterol', citation: 'Friedewald WT et al. Clin Chem. 1972', year: 1972, pmid: '4337382' }],
     },

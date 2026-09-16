@@ -1736,8 +1736,8 @@ export const wave4FormulasCalcs: Calculator[] = [
       validation: 'Heuristic only; substantial overlap between conditions.',
       references: [
         {
-          title: 'Red cell distribution width in the diagnosis of iron deficiency and thalassemia',
-          citation: 'Bessman JD / classic RDW clinical teaching literature',
+          title: 'Improved classification of anemias by MCV and RDW',
+          citation: 'Bessman JD, Gilmer PR Jr, Gardner FH. Am J Clin Pathol. 1983;80:322-326',
           year: 1983,
           pmid: '6881096',
           doi: '10.1093/ajcp/80.3.322',

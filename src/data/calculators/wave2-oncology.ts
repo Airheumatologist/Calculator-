@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds } from '../../utils/helpers';
+import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave2OncologyCalcs: Calculator[] = [
   {
@@ -312,10 +312,21 @@ export const wave2OncologyCalcs: Calculator[] = [
         defaultValue: 1.2,
         helpText: 'SI units ×10⁹/L only (e.g., 0.5 = 500/µL). Do not enter cells/µL.',
       }),
+      numberInput('lln', 'Lab ANC lower limit of normal (optional)', {
+        unit: '×10⁹/L',
+        min: 1.5,
+        max: 4,
+        step: 0.1,
+        required: false,
+        helpText:
+          'CTCAE G1 is <LLN–1.5 ×10⁹/L. Leave blank if LLN unknown — 1.5–<2.0 is not graded G1 without a lab LLN.',
+      }),
     ],
     calculate(values) {
       const anc = num(values.anc, 1.2);
       const ancK = anc;
+      const llnProvided = !isMissingValue(values.lln, true);
+      const lln = num(values.lln);
 
       let grade = 0;
       let label = 'Grade 0';
@@ -340,12 +351,16 @@ export const wave2OncologyCalcs: Calculator[] = [
         interpretation =
           'ANC 1.0–<1.5 ×10⁹/L: moderate. May prompt delay or modification depending on protocol day and intent.';
         riskLevel = 'moderate';
-      } else if (ancK < 2.0) {
+      } else if (llnProvided && ancK < lln) {
         grade = 1;
-        label = 'Grade 1 (if < institutional LLN)';
-        interpretation =
-          'CTCAE grade 1 is <LLN to 1.5 ×10⁹/L. ANC 1.5–<2.0 is grade 1 only when below lab LLN; otherwise grade 0.';
+        label = 'Grade 1 neutropenia';
+        interpretation = `ANC ${round(ancK, 2)} ×10⁹/L is below lab LLN (${round(lln, 2)}) down to 1.5 — CTCAE grade 1.`;
         riskLevel = 'low';
+      } else if (!llnProvided) {
+        interpretation =
+          'ANC ≥1.5 ×10⁹/L. CTCAE grade 1 is <LLN–1.5; without a lab LLN this is not graded G1 (including 1.5–<2.0).';
+      } else {
+        interpretation = `ANC ≥ lab LLN (${round(lln, 2)} ×10⁹/L) — grade 0.`;
       }
 
       return {
@@ -356,16 +371,22 @@ export const wave2OncologyCalcs: Calculator[] = [
         riskLevel,
         details: [
           { label: 'ANC', value: `${round(ancK, 3)} ×10⁹/L` },
-          { label: 'CTCAE bands', value: 'G2 1.0–<1.5; G3 0.5–<1.0; G4 <0.5' },
+          { label: 'Lab LLN', value: llnProvided ? `${round(lln, 2)} ×10⁹/L` : 'Not entered' },
+          { label: 'CTCAE bands', value: 'G1 <LLN–1.5; G2 1.0–<1.5; G3 0.5–<1.0; G4 <0.5' },
         ],
       };
     },
     evidence: {
       summary: 'CTCAE neutropenia: G1 <LLN–1.5; G2 1.0–<1.5; G3 0.5–<1.0; G4 <0.5 ×10⁹/L.',
-      formula: 'Grade from ANC thresholds (×10⁹/L)',
+      formula: 'Grade from ANC thresholds (×10⁹/L); G1 only when ANC < provided LLN and ≥1.5',
       validation: 'NCI CTCAE used universally in oncology trials; confirm version in protocol.',
       references: [
-        { title: 'Common Terminology Criteria for Adverse Events (CTCAE) v5.0', citation: 'National Cancer Institute CTEP. CTCAE v5.0. 2017', year: 2017, url: 'https://dctd.cancer.gov/research/ctep-trials/trial-development' },
+        {
+          title: 'Common Terminology Criteria for Adverse Events (CTCAE) v5.0',
+          citation: 'National Cancer Institute. CTCAE v5.0. 2017',
+          year: 2017,
+          url: 'https://evs.nci.nih.gov/ftp1/CTCAE/CTCAE_5.0/',
+        },
       ],
     },
     nextSteps: [
@@ -393,9 +414,18 @@ export const wave2OncologyCalcs: Calculator[] = [
         defaultValue: 90,
         helpText: '×10⁹/L equals ×10³/µL numerically (e.g., 50 = 50,000/µL)',
       }),
+      numberInput('lln', 'Lab platelet lower limit of normal', {
+        unit: '×10⁹/L',
+        min: 75,
+        max: 200,
+        step: 1,
+        defaultValue: 150,
+        helpText: 'CTCAE G1 is <LLN–75 ×10⁹/L. Typical adult LLN ≈150; do not stop G1 at 100.',
+      }),
     ],
     calculate(values) {
       const plt = num(values.plt, 90);
+      const lln = num(values.lln, 150);
       let grade = 0;
       let label = 'Grade 0';
       let interpretation = 'Platelets not in CTCAE thrombocytopenia grade range (typically ≥ LLN).';
@@ -416,12 +446,13 @@ export const wave2OncologyCalcs: Calculator[] = [
         label = 'Grade 2 thrombocytopenia';
         interpretation = 'Platelets 50–<75 ×10⁹/L: moderate. May delay treatment depending on regimen (many cytotoxics require ≥75–100).';
         riskLevel = 'moderate';
-      } else if (plt < 100) {
+      } else if (plt < lln) {
         grade = 1;
-        label = 'Grade 1 thrombocytopenia (if < LLN)';
-        interpretation =
-          'CTCAE G1 is <LLN to 75 ×10⁹/L. Values 75–<100 are often still below many labs’ LLN or chemo hold lines — treat as mild thrombocytopenia educationally.';
+        label = 'Grade 1 thrombocytopenia';
+        interpretation = `Platelets ${round(plt, 0)} ×10⁹/L: CTCAE G1 (<LLN ${round(lln, 0)} to 75).`;
         riskLevel = 'low';
+      } else {
+        interpretation = `Platelets ≥ lab LLN (${round(lln, 0)} ×10⁹/L) — grade 0.`;
       }
 
       return {
@@ -432,16 +463,22 @@ export const wave2OncologyCalcs: Calculator[] = [
         riskLevel,
         details: [
           { label: 'Platelets', value: `${round(plt, 0)} ×10⁹/L` },
-          { label: 'CTCAE G3 / G4', value: '25–<50 / <25' },
+          { label: 'Lab LLN', value: `${round(lln, 0)} ×10⁹/L` },
+          { label: 'CTCAE bands', value: 'G1 <LLN–75; G2 50–<75; G3 25–<50; G4 <25' },
         ],
       };
     },
     evidence: {
       summary: 'CTCAE platelets: G1 <LLN–75; G2 50–<75; G3 25–<50; G4 <25 ×10⁹/L.',
-      formula: 'Grade from platelet count thresholds',
+      formula: 'Grade from platelet count vs lab LLN (default LLN 150 ×10⁹/L) and 75/50/25 cutoffs',
       validation: 'NCI CTCAE; protocol-specific hold parameters may be stricter.',
       references: [
-        { title: 'Common Terminology Criteria for Adverse Events (CTCAE) v5.0', citation: 'National Cancer Institute CTEP. CTCAE v5.0. 2017', year: 2017, url: 'https://dctd.cancer.gov/research/ctep-trials/trial-development' },
+        {
+          title: 'Common Terminology Criteria for Adverse Events (CTCAE) v5.0',
+          citation: 'National Cancer Institute. CTCAE v5.0. 2017',
+          year: 2017,
+          url: 'https://evs.nci.nih.gov/ftp1/CTCAE/CTCAE_5.0/',
+        },
       ],
     },
     nextSteps: [
@@ -1048,15 +1085,17 @@ export const wave2OncologyCalcs: Calculator[] = [
         min: 0,
         max: 500,
         step: 0.1,
-        defaultValue: 0,
-        helpText: 'PD requires ≥20% increase AND ≥5 mm absolute increase vs nadir',
+        required: false,
+        helpText:
+          'Required to call target PD: ≥20% relative increase AND ≥5 mm vs nadir. Leave blank if not measured — unentered is not 0 mm of growth.',
       }),
     ],
     calculate(values) {
       const pct = num(values.pctChange, -25);
       const newLesions = bool(values.newLesions);
       const cr = bool(values.completeDisappearance);
-      const absInc = num(values.absIncreaseMm, 0);
+      const absMissing = isMissingValue(values.absIncreaseMm, true);
+      const absInc = absMissing ? NaN : num(values.absIncreaseMm);
 
       if (newLesions) {
         return {
@@ -1082,16 +1121,28 @@ export const wave2OncologyCalcs: Calculator[] = [
           riskLevel: 'low',
         };
       }
-      // PD: ≥20% increase and ≥5 mm absolute
-      if (pct >= 20 && absInc >= 5) {
-        return {
-          score: 'PD',
-          label: 'Progressive disease',
-          interpretation: `Sum increased ${pct}% with absolute increase ${absInc} mm (≥20% and ≥5 mm vs nadir) → PD.`,
-          riskLevel: 'high',
-        };
-      }
-      if (pct >= 20 && absInc < 5) {
+      // PD: ≥20% increase and ≥5 mm absolute (unentered mm is not 0 mm of growth)
+      if (pct >= 20) {
+        if (absMissing) {
+          return {
+            score: '—',
+            label: 'Enter absolute increase to apply PD rule',
+            interpretation: `Sum increased ${pct}% (≥20%). RECIST 1.1 target PD also requires ≥5 mm absolute increase vs nadir. Absolute increase was not entered — not classified as PD or SD.`,
+            riskLevel: 'info',
+            details: [
+              { label: '% change', value: `${pct}%` },
+              { label: 'Absolute increase', value: 'Not entered' },
+            ],
+          };
+        }
+        if (absInc >= 5) {
+          return {
+            score: 'PD',
+            label: 'Progressive disease',
+            interpretation: `Sum increased ${pct}% with absolute increase ${absInc} mm (≥20% and ≥5 mm vs nadir) → PD.`,
+            riskLevel: 'high',
+          };
+        }
         return {
           score: 'SD*',
           label: 'Not PD by absolute mm rule',
@@ -1245,11 +1296,12 @@ export const wave2OncologyCalcs: Calculator[] = [
     ],
     calculate(values) {
       const kps = num(values.kps, 80);
+      // Ma 2010 / ECOG pearl: 100=0, 80–90=1, 60–70=2, 40–50=3, 10–30=4
       let ecogApprox = 0;
-      if (kps >= 90) ecogApprox = 0;
-      else if (kps >= 70) ecogApprox = 1;
-      else if (kps >= 50) ecogApprox = 2;
-      else if (kps >= 30) ecogApprox = 3;
+      if (kps >= 100) ecogApprox = 0;
+      else if (kps >= 80) ecogApprox = 1;
+      else if (kps >= 60) ecogApprox = 2;
+      else if (kps >= 40) ecogApprox = 3;
       else if (kps >= 10) ecogApprox = 4;
       else ecogApprox = 5;
 
@@ -1285,19 +1337,27 @@ export const wave2OncologyCalcs: Calculator[] = [
         ...r,
         details: [
           { label: 'Approximate ECOG', value: String(ecogApprox) },
+          { label: 'ECOG map', value: 'KPS 100=0; 80–90=1; 60–70=2; 40–50=3; 10–30=4 (Ma 2010)' },
           { label: 'IMDC/Motzer cut-off', value: kps < 80 ? 'KPS <80 (risk factor present)' : 'KPS ≥80' },
         ],
       };
     },
     evidence: {
       summary: 'KPS 0–100 (steps of 10) rates functional independence and care needs.',
-      formula: 'Select matching KPS descriptor',
+      formula: 'Select matching KPS descriptor. Approximate ECOG (Ma 2010): 100=0, 80–90=1, 60–70=2, 40–50=3, 10–30=4',
       validation: 'Long-standing performance scale in oncology and palliative care.',
       references: [
         {
           title: 'The clinical evaluation of chemotherapeutic agents in cancer',
           citation: 'Karnofsky DA, Burchenal JH. In: MacLeod CM, ed. Evaluation of Chemotherapeutic Agents. Columbia University Press. 1949',
           year: 1949 },
+        {
+          title: 'Interconversion of three measures of performance status: an empirical analysis',
+          citation: 'Ma C et al. Eur J Cancer. 2010',
+          year: 2010,
+          pmid: '20674334',
+          doi: '10.1016/j.ejca.2010.06.010',
+        },
       ],
     },
     nextSteps: [

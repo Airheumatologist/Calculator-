@@ -47,7 +47,7 @@ export const cardiologyCalcs: Calculator[] = [
         5: '6.7%',
         6: '9.8%',
         7: '9.6%',
-        8: '12.5%',
+        8: '6.7%',
         9: '15.2%',
       };
       const annual = riskMap[Math.min(score, 9)] ?? '>15%';
@@ -82,7 +82,7 @@ export const cardiologyCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'CHA₂DS₂-VASc refines CHADS₂ by adding vascular disease, age 65–74, and female sex. Validated in multiple large registries.',
+      summary: 'CHA₂DS₂-VASc refines CHADS₂ by adding vascular disease, age 65–74, and female sex. Lip 2010 adjusted annual stroke rates: 0% / 1.3% / 2.2% / 3.2% / 4.0% / 6.7% / 9.8% / 9.6% / 6.7% / 15.2% for scores 0–9 (score 8 is 6.7%, a small-n artifact, not 12.5%).',
       formula: 'CHF (1) + HTN (1) + Age≥75 (2) + DM (1) + Stroke/TIA (2) + Vascular (1) + Age 65–74 (1) + Female (1)',
       validation: 'Derived and validated in European and global AF cohorts; incorporated into major society guidelines.',
       references: [
@@ -106,7 +106,11 @@ export const cardiologyCalcs: Calculator[] = [
         actions: ['Generally no anticoagulation', 'Control HTN, DM, lifestyle factors'],
       },
     ],
-    pearls: ['Female sex alone (score 1) is not usually an indication for anticoagulation.', 'Do not use for valvular AF (moderate–severe mitral stenosis or mechanical valves).'],
+    pearls: [
+      'Female sex alone (score 1) is not usually an indication for anticoagulation.',
+      'Do not use for valvular AF (moderate–severe mitral stenosis or mechanical valves).',
+      'Lip 2010 lists score 8 as 6.7%/yr (same as score 5); do not substitute a 12.5% interpolated value.',
+    ],
   },
   {
     id: 'has-bled',
@@ -463,6 +467,7 @@ export const cardiologyCalcs: Calculator[] = [
     },
     evidence: {
       summary: 'Killip & Kimball (1967) classified AMI patients by HF severity with stepwise mortality increase.',
+      formula: 'Class I: no clinical HF. II: S3, rales <½ lung fields, or JVD. III: frank pulmonary edema. IV: cardiogenic shock (typically SBP <90 with hypoperfusion). Select the highest class that fits.',
       validation: 'Foundational classification still embedded in modern ACS risk scores.',
       references: [{ title: 'Treatment of myocardial infarction in a coronary care unit', citation: 'Killip T, Kimball JT. Am J Cardiol. 1967', year: 1967, pmid: '6059183',
           doi: '10.1016/0002-9149(67)90023-9', }],
@@ -571,6 +576,7 @@ export const cardiologyCalcs: Calculator[] = [
     },
     evidence: {
       summary: 'Wells DVT criteria stratify pretest probability; the two-tier version classifies scores ≤1 as unlikely and scores ≥2 as likely for use with D-dimer and ultrasound pathways.',
+      formula: 'Active cancer, paralysis/cast, bedridden ≥3 d or major surgery ≤12 wk, deep-vein tenderness, entire-leg swelling, calf ≥3 cm, pitting edema, non-varicose collaterals, prior DVT (+1 each); alternative diagnosis at least as likely (−2). Two-tier: ≤1 unlikely, ≥2 likely.',
       validation: 'Extensively validated outpatient DVT diagnostic algorithm.',
       references: [
         { title: 'Value of assessment of pretest probability of DVT in clinical management', citation: 'Wells PS et al. Lancet. 1997', year: 1997, pmid: '9428249',
@@ -676,6 +682,7 @@ export const cardiologyCalcs: Calculator[] = [
     },
     evidence: {
       summary: 'Revised Geneva score provides objective PE pretest probability without clinician gestalt item.',
+      formula: 'Age >65 (1) + prior DVT/PE (3) + surgery or lower-limb fracture ≤1 mo (2) + active malignancy (2) + unilateral lower-limb pain (3) + hemoptysis (2) + HR 75–94 (3) or ≥95 (5) + pain on deep-vein palpation and unilateral edema (4). 0–3 low, 4–10 intermediate, ≥11 high.',
       validation: 'Validated prospectively against Wells criteria.',
       references: [{ title: 'Prediction of pulmonary embolism in the emergency department: the revised Geneva score', citation: 'Le Gal G et al. Ann Intern Med. 2006', year: 2006, pmid: '16461960',
           doi: '10.7326/0003-4819-144-3-200602070-00004', }],
@@ -757,6 +764,7 @@ export const cardiologyCalcs: Calculator[] = [
     },
     evidence: {
       summary: 'PESI predicts PE mortality; Classes I–II are low risk and may be managed outpatient in selected patients.',
+      formula: 'Age (years) + male (10) + cancer (30) + HF (10) + chronic lung disease (10) + HR ≥110 (20) + SBP <100 (30) + RR ≥30 (20) + temperature <36°C (20) + AMS (60) + O₂ sat <90% (20). Class I ≤65, II 66–85, III 86–105, IV 106–125, V >125.',
       validation: 'Large derivation/validation cohorts; simplified sPESI also widely used.',
       references: [{ title: 'Derivation and validation of PESI', citation: 'Aujesky D et al. Am J Respir Crit Care Med. 2005', year: 2005, pmid: '16020800',
           doi: '10.1164/rccm.200506-862OC', }],
@@ -803,6 +811,7 @@ export const cardiologyCalcs: Calculator[] = [
     },
     evidence: {
       summary: 'sPESI dichotomizes PE patients into low (0) vs high (≥1) risk using 6 variables.',
+      formula: 'Age >80 + cancer + chronic cardiopulmonary disease + HR ≥110 + SBP <100 + O₂ sat <90% (1 each). 0 = low risk; ≥1 = high risk.',
       validation: 'Validated against full PESI with similar prognostic accuracy.',
       references: [{ title: 'Simplification of the pulmonary embolism severity index for prognostication in patients with acute symptomatic pulmonary embolism', citation: 'Jiménez D et al. Arch Intern Med. 2010', year: 2010, pmid: '20696966',
           doi: '10.1001/archinternmed.2010.199', }],
@@ -845,6 +854,7 @@ export const cardiologyCalcs: Calculator[] = [
     },
     evidence: {
       summary: 'CHADS₂ from National Registry of Atrial Fibrillation; largely superseded by CHA₂DS₂-VASc.',
+      formula: 'CHF (1) + HTN (1) + Age ≥75 (1) + DM (1) + Stroke/TIA (2). Gage 2001 annual stroke rates 1.9 / 2.8 / 4.0 / 5.9 / 8.5 / 12.5 / 18.2% for scores 0–6.',
       references: [{ title: 'Validation of clinical classification schemes for predicting stroke', citation: 'Gage BF et al. JAMA. 2001', year: 2001, pmid: '11401607',
           doi: '10.1001/jama.285.22.2864', }],
       validation: 'Widely validated but less sensitive than CHA₂DS₂-VASc for low-risk identification.',
@@ -1136,6 +1146,7 @@ export const cardiologyCalcs: Calculator[] = [
     },
     evidence: {
       summary: 'Centor criteria with McIsaac age adjustment estimate group A strep probability.',
+      formula: 'Fever + absence of cough + tender anterior cervical nodes + tonsillar exudate/swelling (+1 each); McIsaac age 3–14 (+1), 15–44 (0), ≥45 (−1). Age <3: age points 0 (testing rarely indicated).',
       validation: 'Validated in adult and pediatric primary care / ED settings.',
       references: [
         { title: 'The diagnosis of strep throat in adults in the emergency room', citation: 'Centor RM et al. Med Decis Making. 1981', year: 1981, pmid: '6763125',

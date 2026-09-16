@@ -214,18 +214,49 @@ export const wave4EmIdCalcs: Calculator[] = [
       yesNo('anemia', 'Anemia', 1.5, 'Hb <13 g/dL men or <12 g/dL women (derivation definition)'),
       yesNo('priorBleed', 'History of bleeding', 1.5, 'Prior major or clinically relevant non-major bleeding (CRNMB), rectal bleeding, frequent epistaxis, or hematuria.'),
       yesNo('age60', 'Age ≥60 years', 1.5),
-      yesNo('renal', 'Renal dysfunction (CrCl 30–60 mL/min)', 1.5),
+      selectInput('renal', 'Renal function (Cockcroft–Gault CrCl)', [
+        { label: 'CrCl >60 mL/min (0)', value: 'gt60', points: 0 },
+        { label: 'CrCl 30–60 mL/min (+1.5)', value: '30-60', points: 1.5 },
+        { label: 'CrCl <30 mL/min (not in derivation)', value: 'lt30' },
+      ], 'gt60', 'VTE-BLEED awards +1.5 for CrCl 30–60 mL/min. RE-COVER derivation excluded CrCl <30 — do not use the <2 low-risk band if CrCl <30.'),
     ],
     calculate(values) {
-      const score = round(
+      const renalRaw = values.renal;
+      const renal =
+        renalRaw === 'lt30' || renalRaw === '30-60' || renalRaw === 'gt60'
+          ? renalRaw
+          : bool(renalRaw)
+            ? '30-60'
+            : 'gt60';
+      const rest = round(
         (bool(values.cancer) ? 2 : 0) +
           (bool(values.maleHtn) ? 1 : 0) +
           (bool(values.anemia) ? 1.5 : 0) +
           (bool(values.priorBleed) ? 1.5 : 0) +
-          (bool(values.age60) ? 1.5 : 0) +
-          (bool(values.renal) ? 1.5 : 0),
+          (bool(values.age60) ? 1.5 : 0),
         1
       );
+
+      if (renal === 'lt30') {
+        return {
+          score: rest,
+          label: 'Not validated — CrCl <30 mL/min',
+          interpretation: `Other VTE-BLEED items sum to ${rest}, but CrCl <30 mL/min was excluded from derivation/validation (RE-COVER). Do not interpret a total <2 as low bleed risk. Treat as high bleed-risk / not applicable and individualize anticoagulation.`,
+          riskLevel: 'high' as const,
+          details: [
+            { label: 'Renal item', value: 'CrCl <30 — score not applicable' },
+            { label: 'Other points (without renal)', value: String(rest) },
+            { label: 'Official renal criterion', value: 'CrCl 30–60 mL/min = +1.5' },
+          ],
+          recommendations: [
+            'Do not use VTE-BLEED low-risk (<2) labeling when CrCl <30',
+            'Review anticoagulant choice/dose for severe CKD',
+            'Shared decision on intensity and duration',
+          ],
+        };
+      }
+
+      const score = round(rest + (renal === '30-60' ? 1.5 : 0), 1);
 
       if (score < 2) {
         return {
@@ -235,6 +266,7 @@ export const wave4EmIdCalcs: Calculator[] = [
           riskLevel: 'low' as const,
           details: [
             { label: 'Threshold', value: '<2 low; ≥2 high' },
+            { label: 'Renal item', value: renal === '30-60' ? 'CrCl 30–60 (+1.5)' : 'CrCl >60 (0)' },
             { label: 'Max theoretical', value: '9.5 points' },
           ],
           recommendations: [
@@ -250,6 +282,7 @@ export const wave4EmIdCalcs: Calculator[] = [
         riskLevel: score >= 4 ? ('high' as const) : ('moderate' as const),
         details: [
           { label: 'Threshold', value: '<2 low; ≥2 high' },
+          { label: 'Renal item', value: renal === '30-60' ? 'CrCl 30–60 (+1.5)' : 'CrCl >60 (0)' },
           {
             label: 'Points',
             value: 'Cancer 2; male+HTN 1; anemia 1.5; prior bleed 1.5; age≥60 1.5; CrCl 30–60 1.5',
@@ -265,7 +298,7 @@ export const wave4EmIdCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'VTE-BLEED: active cancer (2), male with uncontrolled HTN (1), anemia (1.5), history of bleeding (1.5), age ≥60 (1.5), CrCl 30–60 mL/min (1.5). High risk if ≥2.',
+        'VTE-BLEED: active cancer (2), male with uncontrolled HTN (1), anemia (1.5), history of bleeding (1.5), age ≥60 (1.5), CrCl 30–60 mL/min (1.5). High risk if ≥2. CrCl <30 was excluded from derivation — this tool does not assign a low-risk band in that range.',
       formula: 'Sum of points; dichotomize at 2',
       validation: 'Derived and validated in VTE anticoagulation cohorts (Klok / VTE-BLEED investigators).',
       references: [
@@ -285,6 +318,7 @@ export const wave4EmIdCalcs: Calculator[] = [
     pearls: [
       'Designed for the stable anticoagulation phase after VTE — not the acute hospital bleed score.',
       'Uncontrolled hypertension criterion applies to men in the original model.',
+      'CrCl <30 mL/min was excluded from RE-COVER/VTE-BLEED derivation — do not treat an unchecked 30–60 box as no renal risk.',
     ],
   },
 

@@ -2040,7 +2040,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       const hb = num(values.hb, 10);
       const sao2Frac = num(values.sao2, 98) / 100;
       const pao2 = num(values.pao2, 90);
-      const cao2 = round(1.34 * hb * sao2Frac + 0.003 * pao2, 2);
+      const cao2 = round(1.34 * hb * sao2Frac + 0.0031 * pao2, 2);
       const do2 = round(co * cao2 * 10, 0);
       // Normal DO2 ~900–1100 mL/min; DO2I ~500–600 mL/min/m²
       const r = riskFromThresholds(do2, [
@@ -2076,13 +2076,13 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         details: [
           { label: 'CaO₂', value: `${cao2} mL O₂/dL` },
           { label: 'CO', value: `${co} L/min` },
-          { label: 'Formula', value: 'DO₂ = CO × CaO₂ × 10; CaO₂ = (1.34×Hb×SaO₂)+(0.003×PaO₂)' },
+          { label: 'Formula', value: 'DO₂ = CO × CaO₂ × 10; CaO₂ = (1.34×Hb×SaO₂)+(0.0031×PaO₂)' },
         ],
       };
     },
     evidence: {
       summary: 'DO₂ is the product of cardiac output and arterial oxygen content.',
-      formula: 'CaO₂ = (1.34 × Hb × SaO₂) + (0.003 × PaO₂); DO₂ = CO × CaO₂ × 10',
+      formula: 'CaO₂ = (1.34 × Hb × SaO₂) + (0.0031 × PaO₂); DO₂ = CO × CaO₂ × 10',
       validation: 'Core physiology; absolute targets less useful than trends and clinical perfusion markers.',
       references: [
         {
@@ -2098,7 +2098,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       { condition: 'Low DO₂ + shock', actions: ['Restore CO (fluids/inotropes as indicated)', 'Correct hypoxemia', 'Consider transfusion only per restrictive thresholds'] },
     ],
     pearls: [
-      'Dissolved O₂ (0.003×PaO₂) is usually tiny unless hyperbaric / extreme PaO₂.',
+      'Dissolved O₂ (0.0031×PaO₂) is usually tiny unless hyperbaric / extreme PaO₂.',
       'Index to BSA (DO₂I) when comparing across body sizes.',
     ],
   },
