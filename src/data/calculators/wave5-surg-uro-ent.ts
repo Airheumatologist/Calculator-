@@ -345,85 +345,83 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
 
   {
     id: 'sort-score',
-    name: 'SORT — Surgical Outcome Risk Tool (Simplified)',
+    name: 'SORT — Surgical Outcome Risk Tool (30-day mortality)',
     shortName: 'SORT',
     description:
-      'Simplified SORT-style preoperative mortality risk using ASA, urgency, specialty high-risk flag, severity, cancer, and age.',
+      'Protopapa 2014 SORT logistic model for 30-day mortality after non-cardiac, non-neurologic surgery (NCEPOD).',
     category: 'surgery',
     tags: ['sort', 'surgical risk', 'mortality', 'asa', 'preoperative'],
     whenToUse:
-      'Adults undergoing non-cardiac, non-neurologic surgery when a quick UK-style mortality estimate is useful (educational simplification).',
+      'Adults undergoing non-cardiac, non-neurologic surgery when a UK SORT 30-day mortality estimate is useful.',
     whyUse:
-      'SORT was derived from NCEPOD data for 30-day mortality with few routinely available variables.',
+      'SORT was derived from NCEPOD data using six routinely available preoperative variables.',
     inputs: [
       selectInput('asa', 'ASA physical status', [
-        { label: 'ASA 1', value: 1, description: 'Healthy patient' },
-        { label: 'ASA 2', value: 2, description: 'Mild systemic disease' },
-        { label: 'ASA 3', value: 3, description: 'Severe systemic disease' },
-        { label: 'ASA 4', value: 4, description: 'Severe systemic disease that is a constant threat to life' },
-        { label: 'ASA 5', value: 5, description: 'Moribund; not expected to survive without the operation' },
-      ], 1, 'ASA: I healthy; II mild systemic disease; III severe systemic disease; IV constant threat to life; V moribund.'),
+        { label: 'ASA I (0)', value: 1, description: 'Healthy patient — coefficient 0' },
+        { label: 'ASA II (0)', value: 2, description: 'Mild systemic disease — coefficient 0 (same as ASA I)' },
+        { label: 'ASA III (+1.411)', value: 3, description: 'Severe systemic disease' },
+        { label: 'ASA IV (+2.388)', value: 4, description: 'Severe systemic disease that is a constant threat to life' },
+        { label: 'ASA V (+4.081)', value: 5, description: 'Moribund; not expected to survive without the operation' },
+      ], 1, 'Published SORT: ASA I–II = 0; ASA III = 1.411; ASA IV = 2.388; ASA V = 4.081. ASA II does not receive a coefficient.'),
       selectInput('urgency', 'Urgency', [
-        { label: 'Elective', value: 'elective', description: 'NCEPOD: booked, planned admission' },
-        { label: 'Expedited', value: 'expedited', description: 'NCEPOD: days; not immediately life-threatening' },
-        { label: 'Urgent', value: 'urgent', description: 'NCEPOD: hours; acute threat to life, limb, or organ' },
-        { label: 'Immediate', value: 'immediate', description: 'NCEPOD: minutes; life/limb/organ-saving' },
+        { label: 'Elective (0)', value: 'elective', description: 'NCEPOD: booked, planned admission' },
+        { label: 'Expedited (+1.236)', value: 'expedited', description: 'NCEPOD: days; not immediately life-threatening' },
+        { label: 'Urgent (+1.657)', value: 'urgent', description: 'NCEPOD: hours; acute threat to life, limb, or organ' },
+        { label: 'Immediate (+2.452)', value: 'immediate', description: 'NCEPOD: minutes; life/limb/organ-saving' },
       ], 'elective', 'NCEPOD time-to-theatre: Immediate = minutes; Urgent = hours; Expedited = days; Elective = booked.'),
       selectInput('severity', 'Surgical severity', [
-        { label: 'Minor', value: 'minor', description: 'e.g. EUA, abscess drainage, cast' },
-        { label: 'Intermediate', value: 'intermediate', description: 'e.g. inguinal hernia, varicose veins, tonsillectomy' },
-        { label: 'Major / complex', value: 'major', description: 'e.g. colectomy, arthroplasty, TAH, thyroidectomy' },
-      ], 'minor', 'AXA-PPP-style examples: minor = EUA/abscess/cast; intermediate = inguinal hernia, varicose veins, tonsillectomy; major/complex = colectomy, arthroplasty, TAH, thyroidectomy.'),
+        { label: 'Minor (0)', value: 'minor', description: 'e.g. EUA, abscess drainage, cast' },
+        { label: 'Intermediate (0)', value: 'intermediate', description: 'e.g. inguinal hernia, varicose veins, tonsillectomy' },
+        { label: 'Major (0)', value: 'major', description: 'e.g. many arthroplasties, thyroidectomy — not extra-major' },
+        { label: 'Xmajor / complex (+0.381)', value: 'xmajor', description: 'Extra-major / complex (e.g. major colorectal resection, complex major intra-abdominal)' },
+      ], 'minor', 'Only Xmajor/complex scores 0.381. Minor, intermediate, and major are 0 in the published SORT model.'),
       yesNo('highRiskSpecialty', 'High-risk specialty (GI, thoracic, vascular)', null,
-        'SORT high-risk specialties: gastrointestinal, thoracic, or vascular surgery. Not ortho, gyn, breast, ENT, or plastics.'),
+        'SORT high-risk specialties: gastrointestinal, thoracic, or vascular surgery (coefficient 0.712). Not ortho, gyn, breast, ENT, or plastics.'),
       yesNo('cancer', 'Surgery for cancer', null,
-        'The operation is being performed for a malignant diagnosis (not incidental/history of remote treated cancer).'),
-      numberInput('age', 'Age', { unit: 'years', min: 16, max: 110, step: 1, defaultValue: 65 }),
+        'The operation is being performed for a malignant diagnosis (coefficient 0.667).'),
+      numberInput('age', 'Age', { unit: 'years', min: 16, max: 110, step: 1, defaultValue: 65, helpText: 'Categorical in SORT: <65 = 0; 65–79 = 0.777; ≥80 = 1.591 (not a per-year coefficient).' }),
     ],
     calculate(values) {
-      // Coefficients approximated from published SORT logistic model (Protopapa 2014) — educational
-      const asa = num(values.asa, 2);
+      const asa = num(values.asa, 1);
       const age = num(values.age, 65);
       const urgency = String(values.urgency ?? 'elective');
-      const severity = String(values.severity ?? 'intermediate');
+      const severity = String(values.severity ?? 'minor');
+      // Protopapa Br J Surg 2014 Table 4 / BJA restatement
       let logit = -7.366;
-      // ASA (ref ASA 1)
-      const asaCoef: Record<number, number> = { 1: 0, 2: 0.905, 3: 1.989, 4: 3.048, 5: 3.048 };
-      logit += asaCoef[asa] ?? 0.905;
-      // Urgency (ref elective)
+      const asaCoef: Record<number, number> = { 1: 0, 2: 0, 3: 1.411, 4: 2.388, 5: 4.081 };
+      logit += asaCoef[asa] ?? 0;
       const urgCoef: Record<string, number> = {
         elective: 0,
         expedited: 1.236,
-        urgent: 1.658,
+        urgent: 1.657,
         immediate: 2.452,
       };
       logit += urgCoef[urgency] ?? 0;
-      // Severity (ref minor)
-      const sevCoef: Record<string, number> = { minor: 0, intermediate: 1.411, major: 2.262 };
-      logit += sevCoef[severity] ?? 1.411;
-      if (bool(values.highRiskSpecialty)) logit += 0.903;
+      // Only Xmajor/complex scores; treat legacy "major" as 0 unless mapped to xmajor
+      if (severity === 'xmajor' || severity === 'complex') logit += 0.381;
+      if (bool(values.highRiskSpecialty)) logit += 0.712;
       if (bool(values.cancer)) logit += 0.667;
-      // Age continuous ~ per year above baseline effect; published uses age as continuous
-      logit += 0.0365 * age;
+      if (age >= 80) logit += 1.591;
+      else if (age >= 65) logit += 0.777;
       const mort = round((1 / (1 + Math.exp(-logit))) * 100, 2);
       const r = riskFromThresholds(mort, [
         {
           max: 1,
           level: 'low',
           label: 'Lower predicted 30-day mortality',
-          interpretation: `Simplified SORT-style estimate ~${mort}% 30-day mortality. Routine perioperative pathway if otherwise well.`,
+          interpretation: `SORT 30-day mortality ${mort}%. Routine perioperative pathway if otherwise well.`,
         },
         {
           max: 5,
           level: 'moderate',
           label: 'Moderate predicted mortality',
-          interpretation: `Simplified estimate ~${mort}%. Consider enhanced monitoring, medical optimization, and shared decision-making.`,
+          interpretation: `SORT 30-day mortality ${mort}%. Consider enhanced monitoring, medical optimization, and shared decision-making.`,
         },
         {
           max: 100,
           level: 'high',
           label: 'Higher predicted mortality',
-          interpretation: `Simplified estimate ~${mort}%. High-risk clinic / critical care outreach; reassess necessity and invasiveness of surgery.`,
+          interpretation: `SORT 30-day mortality ${mort}%. High-risk clinic / critical care outreach; reassess necessity and invasiveness of surgery.`,
         },
       ]);
       return {
@@ -431,19 +429,21 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         unit: '%',
         ...r,
         details: [
+          { label: 'SORT 30-day mortality', value: `${mort}%` },
           { label: 'ASA', value: String(asa) },
           { label: 'Urgency', value: urgency },
           { label: 'Severity', value: severity },
-          { label: 'Note', value: 'Educational approximation of SORT coefficients' },
+          { label: 'Age band', value: age >= 80 ? '≥80' : age >= 65 ? '65–79' : '<65' },
         ],
       };
     },
     evidence: {
       summary:
-        'SORT predicts 30-day mortality from ASA, urgency, specialty, severity, cancer, and age using NCEPOD-derived logistic regression.',
-      formula: 'Logistic model on 6 preoperative variables (app uses published coefficient approximations)',
+        'SORT (Protopapa 2014): ln(R/(1−R)) = −7.366 + 1.411·ASA3 + 2.388·ASA4 + 4.081·ASA5 + 1.236·expedited + 1.657·urgent + 2.452·immediate + 0.712·high-risk specialty + 0.381·Xmajor/complex + 0.667·cancer + 0.777·age 65–79 + 1.591·age ≥80. ASA I–II = 0. Age is categorical. Only extra-major/complex surgery scores 0.381.',
+      formula:
+        'ln(R/(1−R)) = −7.366 + ASA + urgency + 0.712·high-risk specialty + 0.381·Xmajor/complex + 0.667·cancer + age band; R = 30-day mortality',
       validation:
-        'Validated in UK cohorts; always prefer the official SORT online calculator for clinical decisions.',
+        'NCEPOD derivation/validation (AUC 0.91 in validation). Excludes cardiac and neurosurgery.',
       references: [
         {
           title: 'Development and validation of the Surgical Outcome Risk Tool (SORT)',
@@ -460,7 +460,8 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
     ],
     pearls: [
       'Excludes cardiac and neurosurgery in original derivation.',
-      'Urgency definitions follow NCEPOD (immediate / urgent / expedited / elective).',
+      'ASA I and II both contribute 0; only Xmajor/complex (not intermediate or major) adds 0.381.',
+      'Age is categorical (<65 / 65–79 / ≥80), not a per-year coefficient.',
     ],
   },
 
@@ -599,18 +600,18 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
 
   {
     id: 'gupta-mica',
-    name: 'Gupta MICA Perioperative Risk (Simplified)',
-    shortName: 'Gupta MICA',
+    name: 'Gupta 2011 Periop Cardiac-Risk Checklist (Educational)',
+    shortName: 'Gupta factors',
     description:
-      'Simplified Gupta myocardial infarction or cardiac arrest (MICA) perioperative risk using key NSQIP-derived predictors.',
+      'Educational checklist of Gupta 2011 MICA predictor domains (age, functional status, ASA, creatinine, procedure type). Does not compute a MICA percentage — official NSQIP MICA is procedure-specific.',
     category: 'cardiology',
-    tags: ['gupta', 'mica', 'perioperative', 'mi', 'cardiac risk', 'nsqip'],
+    tags: ['gupta', 'mica', 'perioperative', 'mi', 'cardiac risk', 'nsqip', 'checklist'],
     whenToUse:
-      'Preoperative cardiac risk stratification for noncardiac surgery (educational simplification of Gupta MICA).',
+      'Preoperative review of Gupta 2011 cardiac-risk domains before noncardiac surgery. Not a substitute for the ACS-NSQIP MICA calculator.',
     whyUse:
-      'Gupta MICA predicts 30-day MI or cardiac arrest from routinely available variables and often outperforms RCRI for discrimination.',
+      'Gupta MICA (Circulation 2011) predicts inpatient MI or cardiac arrest from NSQIP variables and often outperforms RCRI, but the published model uses procedure-specific intercepts that this checklist does not apply.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 65 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 65, helpText: 'Gupta uses continuous age in the official logistic; this checklist does not convert age into a MICA %.' }),
       selectInput('functional', 'Functional status', [
         { label: 'Independent', value: 0, description: 'No human help for any ADLs; devices (cane, walker) still count as independent' },
         { label: 'Partially dependent', value: 1, description: 'Some human help for ADLs in the 30 days before surgery' },
@@ -627,60 +628,69 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: 'Normal (≤1.5 mg/dL)', value: 0, description: 'Serum creatinine ≤1.5 mg/dL (≈ ≤133 µmol/L)' },
         { label: 'Elevated (>1.5 mg/dL)', value: 1, description: 'Serum creatinine >1.5 mg/dL (≈ >133 µmol/L)' },
       ], undefined, 'Gupta MICA uses 1.5 mg/dL as the creatinine cut. 1.5 mg/dL ≈ 133 µmol/L.'),
-      selectInput('procedure', 'Procedure type risk group', [
-        { label: 'Low (e.g., breast, endocrine, minor)', value: 'low' },
-        { label: 'Intermediate (e.g., ortho, spine, gyn)', value: 'intermediate' },
-        { label: 'High (e.g., aortic, thoracic, major vascular)', value: 'high' },
+      selectInput('procedure', 'Procedure type (Gupta domain)', [
+        { label: 'Lower-risk examples (e.g., breast, endocrine, minor)', value: 'low' },
+        { label: 'Intermediate examples (e.g., ortho, spine, gyn)', value: 'intermediate' },
+        { label: 'Higher-risk examples (e.g., aortic, thoracic, major vascular)', value: 'high' },
         { label: 'Intraperitoneal / major abdominal', value: 'intraperitoneal' },
-      ]),
+      ], undefined, 'Official Gupta MICA uses CPT/procedure-specific intercepts — these groups are educational reminders only, not intercepts.'),
     ],
     calculate(values) {
-      // Educational logistic approximation inspired by Gupta 2011 predictors
       const age = num(values.age, 65);
-      let logit = -5.25 + 0.02 * age;
-      logit += num(values.functional) * 0.65;
+      const functional = num(values.functional);
       const asa = num(values.asa, 2);
-      logit += (asa - 1) * 0.75;
-      if (num(values.creatinine) === 1) logit += 0.61;
-      const procedurePoints: Record<string, number> = { low: 0, intermediate: 1, high: 2, intraperitoneal: 2 };
-      logit += (procedurePoints[String(values.procedure)] ?? num(values.procedure)) * 0.7;
-      const risk = round((1 / (1 + Math.exp(-logit))) * 100, 2);
-      const r = riskFromThresholds(risk, [
-        {
-          max: 0.5,
-          level: 'low',
-          label: 'Lower MICA risk',
-          interpretation: `Simplified estimated inpatient MI/arrest risk ~${risk}%. Generally low cardiac event risk — routine care unless other concerns.`,
-        },
-        {
-          max: 1.5,
-          level: 'moderate',
-          label: 'Intermediate MICA risk',
-          interpretation: `Simplified estimate ~${risk}%. Consider guideline-directed testing only if it would change management; optimize meds (β-blocker continuation, statin).`,
-        },
-        {
-          max: 100,
-          level: 'high',
-          label: 'Higher MICA risk',
-          interpretation: `Simplified estimate ~${risk}%. Elevated predicted MI/arrest — cardiology input if results change plan; ICU telemetry; delay elective surgery if unstable syndromes.`,
-        },
-      ]);
+      const creatElevated = num(values.creatinine) === 1;
+      const procedure = String(values.procedure ?? 'low');
+      const flags: string[] = [];
+      if (functional === 1) flags.push('Partially dependent functional status');
+      if (functional === 2) flags.push('Totally dependent functional status');
+      if (asa >= 3) flags.push(`ASA ${asa}`);
+      if (creatElevated) flags.push('Creatinine >1.5 mg/dL');
+      if (procedure === 'high' || procedure === 'intraperitoneal') {
+        flags.push(procedure === 'high' ? 'Higher-risk procedure group' : 'Intraperitoneal / major abdominal procedure group');
+      }
+      const n = flags.length;
+      let riskLevel: 'info' | 'moderate' | 'high' = 'info';
+      let label = 'Educational domain review — not a MICA %';
+      let interpretation =
+        'Checklist of Gupta 2011 predictor domains only. This tool does not output a myocardial infarction or cardiac arrest probability. Use the ACS-NSQIP surgical risk calculator / official Gupta MICA for a procedure-specific % if a numeric estimate is needed.';
+      if (n >= 3) {
+        riskLevel = 'high';
+        label = 'Several higher-risk domains present — not a MICA %';
+        interpretation =
+          `${n} higher-risk domains flagged. This is not a Gupta/MICA percentage. Consider guideline-directed evaluation only if it would change management; use ACS-NSQIP MICA for a numeric estimate.`;
+      } else if (n >= 1) {
+        riskLevel = 'moderate';
+        label = 'One or more higher-risk domains — not a MICA %';
+        interpretation =
+          `${n} higher-risk domain(s) flagged. This is not a Gupta/MICA percentage. Continue indicated cardioprotective meds; do not quote this screen as an event rate.`;
+      }
       return {
-        score: risk,
-        unit: '%',
-        ...r,
+        score: n === 0 ? 'No higher-risk domains flagged' : `${n} higher-risk domain(s)`,
+        label,
+        interpretation,
+        riskLevel,
         details: [
-          { label: 'Model', value: 'Educational approximation — use ACS-NSQIP MICA for precise %' },
-          { label: 'Endpoint', value: 'Inpatient MI or cardiac arrest' },
+          { label: 'Age', value: `${age} years` },
+          { label: 'Functional status', value: functional === 2 ? 'Totally dependent' : functional === 1 ? 'Partially dependent' : 'Independent' },
+          { label: 'ASA', value: String(asa) },
+          { label: 'Creatinine', value: creatElevated ? '>1.5 mg/dL' : '≤1.5 mg/dL' },
+          { label: 'Procedure group', value: procedure },
+          { label: 'Numeric MICA %', value: 'Not calculated — procedure-specific intercepts required' },
+        ],
+        recommendations: [
+          'Do not quote a MICA percentage from this checklist',
+          'Use ACS-NSQIP / official Gupta MICA for procedure-specific probability',
+          'RCRI remains a complementary clinical score',
         ],
       };
     },
     evidence: {
       summary:
-        'Gupta et al. derived a NSQIP-based model for perioperative MI or cardiac arrest using age, functional status, ASA, creatinine, and procedure type.',
-      formula: 'Logistic MICA model (app uses simplified coefficients for education)',
+        'Gupta et al. (Circulation 2011) derived a NSQIP logistic model for perioperative MI or cardiac arrest using age, functional status, ASA class, creatinine, and procedure type. The published model is procedure-specific (CPT intercepts). This module is an educational checklist of those domains and does not apply unpublished or invented intercepts, so it does not report a MICA %.',
+      formula: 'No numeric MICA probability. Official model: procedure-specific intercept + coefficients for age, functional status, ASA, and creatinine.',
       validation:
-        'Original model C-statistic ~0.88 in derivation; always prefer online ACS surgical risk calculator for clinical use.',
+        'Original Gupta MICA C-statistic ~0.88; always prefer ACS-NSQIP / published procedure-specific calculator for clinical percentages.',
       references: [
         {
           title: 'Development and validation of a risk calculator for prediction of cardiac risk after surgery',
@@ -692,12 +702,12 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Low risk', actions: ['Proceed if otherwise indicated', 'Continue indicated cardioprotective meds'] },
-      { condition: 'Higher risk', actions: ['Review active cardiac conditions', 'Anesthesia planning', 'Postop monitoring intensity'] },
+      { condition: 'All patients', actions: ['Do not quote a MICA % from this checklist', 'Continue indicated cardioprotective meds'] },
+      { condition: 'Higher-risk domains present', actions: ['Use ACS-NSQIP MICA if a numeric estimate is needed', 'Review active cardiac conditions', 'Anesthesia planning'] },
     ],
     pearls: [
-      'MICA endpoint differs from RCRI (which includes pulmonary edema, complete heart block, VF).',
-      'Procedure category is a major driver of risk.',
+      'Official Gupta MICA is procedure-specific; a generic intercept cannot produce a valid %.',
+      'MICA endpoint is inpatient MI or cardiac arrest — different from RCRI (which includes pulmonary edema, complete heart block, VF).',
     ],
   },
 
@@ -1432,93 +1442,90 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
 
   {
     id: 'wses',
-    name: 'WSES Sepsis Severity Score (Surgical)',
+    name: 'WSES / WISS Sepsis Severity Score (cIAI)',
     shortName: 'WSES',
     description:
-      'World Society of Emergency Surgery sepsis severity score for patients with complicated intra-abdominal infections.',
+      'WISS Table 5 WSES Sepsis Severity Score for complicated intra-abdominal infection (range 0–18).',
     category: 'critical-care',
-    tags: ['wses', 'sepsis', 'intra-abdominal', 'peritonitis', 'surgery'],
+    tags: ['wses', 'wiss', 'sepsis', 'intra-abdominal', 'peritonitis', 'surgery'],
     whenToUse:
-      'Complicated intra-abdominal infection / peritonitis when estimating severity and mortality risk.',
+      'Complicated intra-abdominal infection / peritonitis when estimating WSES sepsis severity and mortality band.',
     whyUse:
-      'Integrates clinical condition, setting of acquisition, organ failures, and delays to source control.',
+      'Integrates clinical condition, setting of acquisition, origin of IAI, delay to source control, age >70, and immunosuppression.',
     inputs: [
       selectInput('condition', 'Clinical condition at admission', [
-        { label: 'Severe sepsis (3) — sepsis-related organ dysfunction / hypo perfusion', value: 3, description: 'Sepsis with organ dysfunction or hypoperfusion (SSC 2012-style: lactate above ULN, oliguria, acute AMS, or other sepsis-related organ dysfunction) without refractory hypotension' },
-        { label: 'Septic shock (5) — sepsis with hypotension refractory to fluids', value: 5, description: 'Sepsis with hypotension persisting after adequate fluid resuscitation, typically needing vasopressors' },
         { label: 'Neither severe sepsis nor shock (0)', value: 0, description: 'Complicated IAI without sepsis-related organ dysfunction or shock' },
-      ], undefined, 'Use SSC 2012-era terms as in WISS: severe sepsis = sepsis-related organ dysfunction/hypoperfusion without refractory shock; septic shock = hypotension refractory to fluids. Pick the worse applicable category.'),
+        { label: 'Severe sepsis (3)', value: 3, description: 'Acute organ dysfunction at admission (SSC 2012-style) without refractory shock' },
+        { label: 'Septic shock (5)', value: 5, description: 'Acute circulatory failure with persistent hypotension; always requires vasopressors' },
+      ], 0, 'WISS: severe sepsis = 3 or septic shock = 5 (pick one). Shock is hypotension refractory to fluids requiring vasopressors.'),
       yesNo('healthcare', 'Healthcare-associated infection', 2,
         'HCAI = healthcare-facility associated, not community-onset.'),
-      yesNo('delay', 'Delay in source control >24 h (if peritonitis)', 3,
-        'Time from diagnosis (or hospital arrival with peritonitis) to source-control procedure >24 hours.'),
-      yesNo('age70', 'Age ≥70 years', 2),
-      yesNo('cancer', 'Malignancy', 3,
-        'Active solid or hematologic malignancy.'),
+      selectInput('origin', 'Origin of the IAI', [
+        { label: 'Other / not listed (0) — e.g. appendicitis, cholecystitis, gastroduodenal without listed peritonitis types', value: 'other' },
+        { label: 'Colonic non-diverticular perforation peritonitis (2)', value: 'colonic' },
+        { label: 'Small-bowel perforation peritonitis (3)', value: 'smallbowel' },
+        { label: 'Diverticular diffuse peritonitis (2)', value: 'diverticular' },
+        { label: 'Postoperative diffuse peritonitis (2)', value: 'postop' },
+      ], 'other', 'Table 5 origin items only. Appendicitis and other unlisted sources score 0 for origin.'),
+      yesNo('delay', 'Delay in source control >24 h', 3,
+        'Preoperative duration of peritonitis (localized or diffuse) >24 hours.'),
+      yesNo('age70', 'Age >70 years', 2, 'WISS Table 5: age >70 (not ≥70).'),
       yesNo('immunosuppression', 'Immunosuppression', 3,
-        'Chronic glucocorticoids, immunosuppressants, chemotherapy, active lymphatic disease, or HIV.'),
-      yesNo('acuteRenal', 'Acute renal failure', 3,
-        'Creatinine >2.0 mg/dL or oliguria (WISS / SSC 2012-style).'),
-      yesNo('ards', 'Acute respiratory failure / ARDS', 3,
-        'ALI/ARDS (PaO₂/FiO₂ impairment meeting ALI/ARDS definitions).'),
-      yesNo('cardiovasc', 'Cardiovascular failure', 3,
-        'Vasopressor-dependent hypotension.'),
-      yesNo('hepatic', 'Hepatic failure', 3,
-        'Bilirubin >2 mg/dL.'),
-      yesNo('neuro', 'Neurologic failure / coma', 3,
-        'Coma or GCS ≤8.'),
-      yesNo('coag', 'Coagulopathy', 3,
-        'INR >1.5 or platelets <100×10⁹/L.'),
+        'Chronic glucocorticoids, immunosuppressants, chemotherapy, lymphatic disease, or virus (HIV). Malignancy is not a separate WISS item.'),
     ],
     calculate(values) {
       let score = num(values.condition);
       if (bool(values.healthcare)) score += 2;
+      const origin = String(values.origin ?? 'other');
+      const originPts: Record<string, number> = {
+        other: 0,
+        colonic: 2,
+        smallbowel: 3,
+        diverticular: 2,
+        postop: 2,
+      };
+      score += originPts[origin] ?? 0;
       if (bool(values.delay)) score += 3;
       if (bool(values.age70)) score += 2;
-      if (bool(values.cancer)) score += 3;
       if (bool(values.immunosuppression)) score += 3;
-      if (bool(values.acuteRenal)) score += 3;
-      if (bool(values.ards)) score += 3;
-      if (bool(values.cardiovasc)) score += 3;
-      if (bool(values.hepatic)) score += 3;
-      if (bool(values.neuro)) score += 3;
-      if (bool(values.coag)) score += 3;
 
       const r = riskFromThresholds(score, [
         {
           max: 3,
           level: 'low',
-          label: 'Lower WSES severity',
-          interpretation: `WSES-style points ${score}. Lower mortality band in original data — still ensure timely antibiotics and source control.`,
+          label: 'WSES 0–3 (~0.63% mortality)',
+          interpretation: `WSES ${score} (band 0–3). WISS observed mortality 0.63%. Still ensure timely antibiotics and source control.`,
         },
         {
           max: 6,
           level: 'moderate',
-          label: 'Moderate severity',
-          interpretation: `Score ${score}: intermediate severity — aggressive resuscitation, early OR/IR source control, ICU consideration.`,
+          label: 'WSES 4–6 (~6.3% mortality)',
+          interpretation: `WSES ${score} (band 4–6). WISS observed mortality 6.3%. Aggressive resuscitation and early OR/IR source control; ICU consideration.`,
         },
         {
-          max: 50,
+          max: 18,
           level: 'high',
-          label: 'High / very high severity',
-          interpretation: `Score ${score}: high severity complicated IAI — mortality rises steeply with points (original high scores >>30% mortality). Immediate source control and organ support.`,
+          label: 'WSES ≥7 (~41.7% mortality)',
+          interpretation: `WSES ${score} (band ≥7). WISS observed mortality 41.7% (≥9 ~55.5%). Immediate source control and organ support.`,
         },
       ]);
       return {
         score,
+        unit: 'points',
         ...r,
         details: [
-          { label: 'Focus', value: 'Complicated intra-abdominal infection' },
-          { label: 'Note', value: 'Simplified item wording — confirm full WSES table for research' },
+          { label: 'Range', value: '0–18 (WISS Table 5)' },
+          { label: 'Mortality bands', value: '0–3: 0.63% · 4–6: 6.3% · ≥7: 41.7%' },
         ],
       };
     },
     evidence: {
       summary:
-        'WSES Sepsis Severity Score for complicated intra-abdominal infections weights severe sepsis/shock, healthcare association, delay >24 h, age, cancer, immunosuppression, and organ failures.',
-      formula: 'Sum of weighted clinical factors (0 to high 20+)',
+        'WSES Sepsis Severity Score (Sartelli WJES 2015, WISS Table 5), range 0–18: severe sepsis 3 or septic shock 5; healthcare-associated 2; origin of IAI (colonic non-diverticular perforation 2, small-bowel perforation 3, diverticular diffuse peritonitis 2, postoperative peritonitis 2); delay >24 h 3; age >70 2; immunosuppression 3. Malignancy and individual organ-failure flags are not separate Table 5 items. Observed mortality: 0–3 0.63%, 4–6 6.3%, ≥7 41.7%.',
+      formula:
+        'WSES = condition (0/3/5) + 2·HCAI + origin (0/2/3) + 3·delay>24 h + 2·age>70 + 3·immunosuppression',
       validation:
-        'Derived from WISS study / WSES multicenter data; higher scores associate with increased mortality.',
+        'WISS multicenter validation (n=4533); ROC best cutoff >5.5 for death (sens 89.2%, spec 83.5%).',
       references: [
         {
           title: 'Global validation of the WSES Sepsis Severity Score for patients with complicated intra-abdominal infections: a prospective multicentre study (WISS Study)',
@@ -1534,8 +1541,9 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
       { condition: 'High score', actions: ['ICU', 'Damage-control laparotomy if unstable', 'MDR coverage if risk factors'] },
     ],
     pearls: [
-      'Source control delay >24 h is heavily weighted.',
-      'Complements Mannheim Peritonitis Index and SOFA — different purposes.',
+      'Origin of IAI is scored only for the four Table 5 sources; appendicitis scores 0 for origin.',
+      'Malignancy and per-organ failure flags are not WISS Table 5 items (severe sepsis/shock already captures organ dysfunction).',
+      'Age cut is >70, not ≥70.',
     ],
   },
 

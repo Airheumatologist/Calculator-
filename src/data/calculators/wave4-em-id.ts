@@ -290,69 +290,64 @@ export const wave4EmIdCalcs: Calculator[] = [
 
   {
     id: 'riete-vte',
-    name: 'RIETE Simplified Score (Acute PE Prognosis)',
-    shortName: 'RIETE PE',
+    name: 'Simplified PESI (sPESI)',
+    shortName: 'sPESI',
     description:
-      'Simplified RIETE prognostic score for short-term mortality risk after acute pulmonary embolism.',
+      'Simplified Pulmonary Embolism Severity Index for 30-day mortality after acute PE (Jiménez 2010). Route id kept as riete-vte.',
     category: 'hematology',
-    tags: ['pe', 'riete', 'vte', 'prognosis', 'mortality'],
-    whenToUse: 'Confirmed acute PE for rapid prognostic stratification (adjunct to sPESI/PESI).',
+    tags: ['pe', 'spesi', 'pesi', 'vte', 'prognosis', 'mortality'],
+    whenToUse: 'Confirmed acute PE for rapid prognostic stratification (low vs high 30-day mortality risk).',
     whyUse:
-      'sPESI-like binary items (age, cancer, chronic HF, chronic lung disease, tachycardia, hypotension, hypoxia) band short-term PE mortality risk (RIETE-era literature).',
+      'Six binary sPESI items (age >80, cancer, chronic cardiopulmonary disease, HR ≥110, SBP <100, O₂ sat <90%) dichotomize low risk (0) vs high risk (≥1).',
     inputs: [
       yesNo('age80', 'Age >80 years', 1),
-      yesNo('cancer', 'Active cancer', 1, 'Cancer diagnosed or treated within 6 months, or metastatic — RIETE prognostic item (not skin BCC/SCC alone).'),
-      yesNo('chf', 'Chronic heart failure', 1),
-      yesNo('cld', 'Chronic lung disease', 1),
+      yesNo('cancer', 'Cancer', 1, 'History of cancer (active or prior), excluding non-melanoma skin cancer in usual PESI/sPESI practice.'),
+      yesNo(
+        'cpd',
+        'Chronic cardiopulmonary disease',
+        1,
+        'Chronic heart failure and/or chronic lung disease — sPESI combines these as a single 1-point item (not 1 each).',
+      ),
       yesNo('hr110', 'Pulse ≥110 bpm', 1),
       yesNo('sbp100', 'Systolic BP <100 mmHg', 1),
       yesNo('sat90', 'Arterial O₂ saturation <90%', 1),
     ],
     calculate(values) {
-      const keys = ['age80', 'cancer', 'chf', 'cld', 'hr110', 'sbp100', 'sat90'] as const;
+      const keys = ['age80', 'cancer', 'cpd', 'hr110', 'sbp100', 'sat90'] as const;
       const score = keys.reduce((s, k) => s + (bool(values[k]) ? 1 : 0), 0);
 
       if (score === 0) {
         return {
           score,
-          label: 'Low risk (RIETE simplified 0)',
-          interpretation: `RIETE simplified ${score}: low short-term mortality risk stratum in registry analyses. May support outpatient/early discharge pathways when Hestia/clinical criteria also favorable.`,
+          label: 'Low risk (sPESI 0)',
+          interpretation:
+            'sPESI 0: low 30-day mortality (~1% in original validation). May support outpatient/early discharge pathways when Hestia/clinical criteria also favorable.',
           riskLevel: 'low' as const,
-          details: [{ label: 'Items positive', value: '0 / 7' }],
+          details: [{ label: 'Items positive', value: '0 / 6' }],
           recommendations: [
             'Consider outpatient PE pathway if Hestia/local criteria met',
             'Ensure reliable follow-up and anticoagulation access',
           ],
         };
       }
-      if (score <= 2) {
-        return {
-          score,
-          label: 'Intermediate risk (1–2)',
-          interpretation: `RIETE simplified ${score}: intermediate mortality risk. Admit; risk-stratify further with RV strain, biomarkers, and sPESI/PESI as appropriate.`,
-          riskLevel: 'moderate' as const,
-          details: [{ label: 'Items positive', value: `${score} / 7` }],
-          recommendations: ['Inpatient monitoring', 'Assess RV function / troponin-BNP per protocol'],
-        };
-      }
       return {
         score,
-        label: 'High risk (≥3)',
-        interpretation: `RIETE simplified ${score}: high short-term mortality risk. Aggressive monitoring, consider intermediate-high/high-risk PE pathways (ICU, reperfusion discussion if unstable).`,
-        riskLevel: score >= 5 ? ('critical' as const) : ('high' as const),
-        details: [{ label: 'Items positive', value: `${score} / 7` }],
+        label: 'High risk (sPESI ≥1)',
+        interpretation: `sPESI ${score}: high-risk stratum (≥1). Elevated 30-day mortality (~9–11% in original validation). Admit; further risk-stratify with RV strain and biomarkers. Hypotension may define high-risk PE regardless of remaining items.`,
+        riskLevel: score >= 3 ? ('critical' as const) : ('high' as const),
+        details: [{ label: 'Items positive', value: `${score} / 6` }],
         recommendations: [
-          'Higher-level care / continuous monitoring',
-          'Urgent PE severity assessment (echo, lactate, shock index)',
+          'Inpatient management',
+          'Assess RV function / troponin-BNP per protocol',
           'Reperfusion options if hypotensive/obstructive shock',
         ],
       };
     },
     evidence: {
       summary:
-        'Simplified RIETE PE score assigns 1 point each for age >80, cancer, chronic HF, chronic lung disease, HR ≥110, SBP <100, O₂ sat <90%.',
-      formula: 'Sum 0–7; 0 low, 1–2 intermediate, ≥3 higher risk (educational banding)',
-      validation: 'Derived from RIETE registry PE cohorts; use alongside clinical judgment and other scores (sPESI, Bova).',
+        'sPESI assigns 1 point each for age >80, cancer, chronic cardiopulmonary disease (HF and chronic lung disease combined), HR ≥110, SBP <100, and O₂ sat <90%. Score 0 = low risk; ≥1 = high risk. Not the RIETE PE score (metastases, CrCl, recent major bleed, immobility, platelets).',
+      formula: 'Sum 0–6; dichotomize 0 vs ≥1',
+      validation: 'Jiménez et al. Arch Intern Med 2010 (simplification of PESI); similar discrimination to full PESI for identifying low-risk PE.',
       references: [
         {
           title: 'Simplification of the pulmonary embolism severity index for prognostication in patients with acute symptomatic pulmonary embolism',
@@ -361,21 +356,15 @@ export const wave4EmIdCalcs: Calculator[] = [
           pmid: '20696966',
           doi: '10.1001/archinternmed.2010.199',
         },
-        {
-          title: 'Clinical predictors for fatal pulmonary embolism in 15,520 patients with VTE (RIETE Registry)',
-          citation: 'Laporte S et al. Circulation. 2008;117:1711-1716',
-          year: 2008,
-          pmid: '18347212',
-          doi: '10.1161/CIRCULATIONAHA.107.726232',
-        },
       ],
     },
     nextSteps: [
-      { condition: '0', actions: ['Outpatient eligibility review (Hestia)', 'DOAC education'] },
-      { condition: '≥1', actions: ['Hospital management', 'Severity workup'] },
+      { condition: 'sPESI 0', actions: ['Outpatient eligibility review (Hestia)', 'DOAC education'] },
+      { condition: 'sPESI ≥1', actions: ['Hospital management', 'RV/biomarker severity workup'] },
     ],
     pearls: [
-      'Overlaps conceptually with sPESI (sPESI merges chronic cardiopulmonary disease).',
+      'sPESI merges chronic heart failure and chronic lung disease into one cardiopulmonary item.',
+      'This catalog id remains riete-vte for routing; the score implemented is sPESI, not the RIETE PE prognostic score.',
       'Hypotension alone may define high-risk PE regardless of score.',
     ],
   },
@@ -1137,10 +1126,11 @@ export const wave4EmIdCalcs: Calculator[] = [
         { label: '2.6–3.5 (1)', value: 1, description: '2.6–3.5 g/dL (≈ 26–35 g/L).' },
         { label: '≤2.5 (2)', value: 2, description: '≤2.5 g/dL (≈ ≤25 g/L).' },
       ], undefined, 'Lowest albumin (g/dL) during the episode. 3.5 g/dL ≈ 35 g/L.'),
-      selectInput('crPts', 'Serum creatinine (mg/dL)', [
-        { label: '≤1.3 (0)', value: 0, description: 'Creatinine ≤1.3 mg/dL (0 points).' },
-        { label: '>1.3 (2)', value: 2, description: 'Creatinine >1.3 mg/dL (2 points) — ATLAS has no 1-point creatinine band.' },
-      ], undefined, 'Highest creatinine (mg/dL) during the episode. Note: >1.3 scores 2, not 1.'),
+      selectInput('crPts', 'Serum creatinine', [
+        { label: '≤120 µmol/L (≤~1.36 mg/dL) (0)', value: 0, description: 'Creatinine ≤120 µmol/L (≤~1.36 mg/dL) — 0 points (Miller Table 1).' },
+        { label: '121–179 µmol/L (~1.4–2.0 mg/dL) (1)', value: 1, description: 'Creatinine 121–179 µmol/L (~1.4–2.0 mg/dL) — 1 point.' },
+        { label: '≥180 µmol/L (~≥2.0 mg/dL) (2)', value: 2, description: 'Creatinine ≥180 µmol/L (~≥2.04 mg/dL) — 2 points.' },
+      ], undefined, 'Highest creatinine during the episode. Original ATLAS bands are in µmol/L: ≤120 = 0; 121–179 = 1; ≥180 = 2.'),
     ],
     calculate(values) {
       const score =
@@ -1186,7 +1176,7 @@ export const wave4EmIdCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'ATLAS: Age (<60/60–79/≥80 → 0/1/2), Treatment with systemic antibiotics (2), Leukocytes (<16/16–25/>25 → 0/1/2), Albumin (>3.5/2.6–3.5/≤2.5 → 0/1/2), Serum creatinine (≤1.3/>1.3 → 0/2).',
+        'ATLAS: Age (<60/60–79/≥80 → 0/1/2), Treatment with systemic antibiotics (2), Leukocytes (<16/16–25/>25 → 0/1/2), Albumin (>3.5/2.6–3.5/≤2.5 → 0/1/2), Serum creatinine (≤120 / 121–179 / ≥180 µmol/L → 0/1/2; ≈ ≤1.36 / ~1.4–2.0 / ~≥2.0 mg/dL).',
       formula: 'Sum 0–10',
       validation: 'Miller et al. ATLAS score; used in CDI literature for severity and outcome correlation.',
       references: [

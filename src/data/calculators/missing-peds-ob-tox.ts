@@ -13,11 +13,12 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whyUse: 'Age-adjusted SI outperforms adult SI cutoffs and vital signs alone in pediatric trauma.',
     inputs: [
       selectInput('ageBand', 'Age band', [
-        { label: '1–6 years (cutoff >1.22)', value: '1-6' },
-        { label: '7–12 years (cutoff >1.0)', value: '7-12' },
-        { label: '13–17 years (cutoff >0.9)', value: '13-17' },
-      ]),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 40, max: 250, defaultValue: 120, helpText: 'SIPA = HR ÷ SBP. Cutoffs: >1.22 (1–6 y), >1.0 (7–12 y), >0.9 (13–17 y).' }),
+        { label: '4–6 years (Acker cutoff >1.22)', value: '4-6', description: 'Acker 2015 derivation band' },
+        { label: '7–12 years (Acker cutoff >1.0)', value: '7-12', description: 'Acker 2015 derivation band' },
+        { label: '13–16 years (Acker cutoff >0.9)', value: '13-16', description: 'Acker 2015 derivation band (not 13–17)' },
+        { label: '1–3 years (not Acker SIPA — no official cutoff)', value: '1-3', description: 'Acker derived SIPA in ages 4–16 years only; do not apply the 4–6 year cutoff' },
+      ], '4-6', 'Acker 2015 SIPA: children 4–16 years. Cutoffs SI >1.22 (4–6 y), >1.0 (7–12 y), >0.9 (13–16 y). 1–3 years is not the derivation population.'),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 40, max: 250, defaultValue: 120, helpText: 'SIPA = HR ÷ SBP. Acker cutoffs: >1.22 (4–6 y), >1.0 (7–12 y), >0.9 (13–16 y).' }),
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 40, max: 200, defaultValue: 90 }),
     ],
     calculate(values) {
@@ -32,28 +33,51 @@ export const missingPedsObToxCalcs: Calculator[] = [
         };
       }
       const si = round(hr / sbp, 2);
-      const band = String(values.ageBand ?? '1-6');
-      const cutoff = band === '13-17' ? 0.9 : band === '7-12' ? 1.0 : 1.22;
-      const elevated = si > cutoff;
+      const band = String(values.ageBand ?? '4-6');
+      const acker =
+        band === '1-3'
+          ? null
+          : band === '13-16' || band === '13-17'
+            ? { cutoff: 0.9, label: '13–16 years' }
+            : band === '7-12'
+              ? { cutoff: 1.0, label: '7–12 years' }
+              : { cutoff: 1.22, label: '4–6 years' };
+
+      if (!acker) {
+        return {
+          score: si,
+          unit: 'HR/SBP',
+          label: 'SI calculated — not Acker SIPA',
+          interpretation: `SI ${si} (HR ${hr} ÷ SBP ${sbp}). Acker SIPA was derived in children 4–16 years; there is no official Acker cutoff for ages 1–3. Do not apply the 4–6 year threshold (>1.22). Interpret SI with age-normal vitals and full trauma assessment.`,
+          riskLevel: 'info',
+          details: [
+            { label: 'Age band', value: '1–3 years (not Acker derivation)' },
+            { label: 'Cutoff', value: 'None (not Acker SIPA)' },
+            { label: 'HR / SBP', value: `${hr} / ${sbp}` },
+          ],
+        };
+      }
+
+      const elevated = si > acker.cutoff;
       return {
         score: si,
         unit: 'HR/SBP',
         label: elevated ? 'Elevated SIPA' : 'Normal SIPA',
         interpretation: elevated
-          ? `SI ${si} exceeds age-adjusted cutoff (${cutoff}). Associated with higher need for transfusion, surgery, and ICU in trauma cohorts.`
-          : `SI ${si} is at or below age-adjusted cutoff (${cutoff}). Integrate with full clinical assessment.`,
+          ? `SI ${si} exceeds Acker age-adjusted cutoff (>${acker.cutoff} for ${acker.label}). Associated with higher need for transfusion, surgery, and ICU in 4–16 year trauma cohorts.`
+          : `SI ${si} is at or below Acker cutoff (>${acker.cutoff} for ${acker.label}). Integrate with full clinical assessment.`,
         riskLevel: elevated ? 'high' : 'low',
         details: [
-          { label: 'Age band', value: band },
-          { label: 'Cutoff', value: `>${cutoff}` },
+          { label: 'Age band', value: acker.label },
+          { label: 'Cutoff', value: `>${acker.cutoff}` },
           { label: 'HR / SBP', value: `${hr} / ${sbp}` },
         ],
       };
     },
     evidence: {
-      summary: 'SIPA = HR/SBP with cutoffs ≈1.22 (1–6 y), 1.0 (7–12 y), 0.9 (13–17 y). Elevated SIPA predicts trauma morbidity.',
-      formula: 'SI = HR ÷ SBP; compare to age-specific threshold',
-      validation: 'Validated in pediatric trauma registries; improves identification of severely injured children vs adult SI >0.9 alone.',
+      summary: 'Acker 2015 SIPA (ages 4–16 y): SI = HR/SBP with cutoffs >1.22 (4–6 y), >1.0 (7–12 y), >0.9 (13–16 y). Not derived for 1–3 year olds. Elevated SIPA predicts trauma morbidity.',
+      formula: 'SI = HR ÷ SBP; compare to Acker age-specific threshold (4–16 y only)',
+      validation: 'Validated in pediatric trauma registries (ages 4–16); improves identification of severely injured children vs adult SI >0.9 alone.',
       references: [
         { title: 'Pediatric specific shock index accurately identifies severely injured children', citation: 'Acker SN et al. J Pediatr Surg. 2015', year: 2015, pmid: '25638631',
           doi: '10.1016/j.jpedsurg.2014.08.009', },
@@ -382,15 +406,16 @@ export const missingPedsObToxCalcs: Calculator[] = [
         };
       }
 
-      const preeclampsia = protein || endOrgan;
       const severeFeatures =
         severeBp || platelets || creatinine || lfts || pulmEdema || neuro || epigastric;
+      // ACOG PB 222: gestational HTN with severe-range BPs (≥160/110) is diagnosed/managed as preeclampsia with severe features.
+      const preeclampsia = protein || endOrgan || severeBp;
 
       if (!preeclampsia) {
         return {
           score: 'Gestational HTN pattern',
           label: 'Hypertension without protein/end-organ (yet)',
-          interpretation: 'HTN after 20 weeks without proteinuria or end-organ criteria suggests gestational hypertension — monitor closely for progression to preeclampsia.',
+          interpretation: 'HTN after 20 weeks without proteinuria, end-organ criteria, or severe-range BP suggests gestational hypertension — monitor closely for progression to preeclampsia.',
           riskLevel: 'moderate',
           details: [
             { label: 'Severe-range BP', value: severeBp ? 'Yes' : 'No' },
@@ -404,7 +429,9 @@ export const missingPedsObToxCalcs: Calculator[] = [
         score: severeFeatures ? 'Preeclampsia with severe features' : 'Preeclampsia (without severe features listed)',
         label: severeFeatures ? 'Preeclampsia with severe features' : 'Preeclampsia',
         interpretation: severeFeatures
-          ? 'Meets preeclampsia with severe features on this checklist — urgent obstetric management, MgSO₄ seizure prophylaxis as indicated, delivery planning.'
+          ? severeBp && !protein && !endOrgan
+            ? 'Severe-range BP (≥160/110) after 20 weeks is diagnosed and managed as preeclampsia with severe features even without proteinuria or other end-organ criteria (ACOG PB 222) — urgent antihypertensives, MgSO₄ seizure prophylaxis, delivery planning.'
+            : 'Meets preeclampsia with severe features on this checklist — urgent obstetric management, antihypertensives for severe-range BP, MgSO₄ seizure prophylaxis as indicated, delivery planning.'
           : 'Meets preeclampsia criteria (HTN + proteinuria and/or end-organ). Manage per gestational age and institutional protocol; watch for severe features.',
         riskLevel: severeFeatures ? 'critical' : 'high',
         details: [
@@ -416,7 +443,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'ACOG: preeclampsia = HTN after 20 weeks + proteinuria OR end-organ dysfunction (platelets, Cr, LFTs, pulmonary edema, neuro/visual symptoms).',
+      summary: 'ACOG PB 222: preeclampsia = HTN after 20 weeks + proteinuria OR end-organ dysfunction (platelets, Cr, LFTs, pulmonary edema, neuro/visual symptoms, severe persistent RUQ/epigastric pain). Severe-range BP (≥160/110) is a severe feature; gestational HTN with severe-range BPs is diagnosed and managed as preeclampsia with severe features.',
       validation: 'Standard obstetric diagnostic framework; delivery timing depends on GA and severity.',
       references: [
         { title: 'Gestational Hypertension and Preeclampsia: ACOG Practice Bulletin No. 222', citation: 'ACOG. Obstet Gynecol. 2020', year: 2020, pmid: '32443079', doi: '10.1097/AOG.0000000000003891' },

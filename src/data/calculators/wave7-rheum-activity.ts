@@ -1747,7 +1747,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
           citation: 'Clements PJ, Hurwitz EL, Wong WK, et al. Arthritis Rheum. 2000;43:2445-2454',
           year: 2000,
           pmid: '11083267',
-          doi: '10.1002/1529-0131(200011)43:11<2445::AID-ANR11>3.0.CO;2-P',
+          doi: '10.1002/1529-0131(200011)43:11<2445::AID-ANR11>3.0.CO;2-Q',
         },
       ],
     },

@@ -1719,9 +1719,9 @@ export const wave2OncologyCalcs: Calculator[] = [
         (bool(values.wbc) ? 1 : 0) +
         (bool(values.lymphopenia) ? 1 : 0);
 
-      // Approximate historical 5-y FFP from original publication (educational)
-      const ffpApprox = ['84%', '77%', '67%', '60%', '51%', '42%', '≈30–35%', '≈30% or less'];
-      const ffp = ffpApprox[Math.min(score, 7)];
+      // Hasenclever NEJM 1998: 5-y FFP 84/77/67/60/51/42% for 0/1/2/3/4/≥5 (no separate 6–7 band)
+      const ffpApprox = ['84%', '77%', '67%', '60%', '51%', '42%'];
+      const ffp = ffpApprox[Math.min(score, 5)];
 
       const r = riskFromThresholds(score, [
         {
@@ -1754,8 +1754,8 @@ export const wave2OncologyCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'IPS: male, age≥45, stage IV, albumin<4, Hb<10.5, WBC≥15, lymphopenia (<600/µL or <8% WBC). Each 1 point (0–7).',
-      formula: 'Sum of 7 binary factors',
+        'IPS: male, age≥45, stage IV, albumin<4, Hb<10.5, WBC≥15, lymphopenia (<600/µL or <8% WBC). Each 1 point (0–7). Historical 5-year FFP 84 / 77 / 67 / 60 / 51 / 42% for 0 / 1 / 2 / 3 / 4 / ≥5 factors (same 42% stratum for IPS 5–7).',
+      formula: 'Sum of 7 binary factors; FFP reported for 0–4 individually and ≥5 combined',
       validation: 'Hasenclever & Diehl NEJM 1998; outcomes better in modern therapy eras.',
       references: [
         {

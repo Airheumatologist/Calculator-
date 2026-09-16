@@ -958,7 +958,8 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       selectInput('fluid', 'IV fluid', [
         { label: '0.9% NaCl (NS) — 154 mEq/L', value: 'ns' },
         { label: '0.45% NaCl (½ NS) — 77 mEq/L', value: 'half-ns' },
-        { label: '0.225% NaCl (¼ NS) — 34 mEq/L', value: 'quarter-ns' },
+        { label: '0.225% NaCl (¼ NS) — 38.5 mEq/L', value: 'quarter-ns' },
+        { label: '0.2% NaCl (common US D5¼NS bag) — 34 mEq/L', value: 'ns-0-2' },
         { label: 'Lactated Ringer’s — ~130 mEq/L', value: 'lr' },
         { label: 'Plasma-Lyte / Normosol-R — ~140 mEq/L', value: 'plasma-lyte' },
         { label: '3% NaCl — 513 mEq/L', value: 'three-percent-ns' },
@@ -972,7 +973,8 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       const sodiumByFluid: Record<string, number> = {
         ns: 154,
         'half-ns': 77,
-        'quarter-ns': 34,
+        'quarter-ns': 38.5,
+        'ns-0-2': 34,
         lr: 130,
         'plasma-lyte': 140,
         'three-percent-ns': 513,
@@ -1005,7 +1007,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Standard Na content: NS 154, ½NS 77, LR ~130, 3% saline 513 mEq/L, D5W 0.',
+      summary: 'Standard Na content: NS 154, ½NS 77, 0.225% NaCl 38.5 (154/4), 0.2% NaCl 34 (common US D5¼NS bag), LR ~130, 3% saline 513 mEq/L, D5W 0.',
       formula: 'mEq = (mEq/L) × (L)',
       validation: 'Product labeling may vary slightly (e.g., balanced crystalloids); confirm bag label.',
       references: [
@@ -1027,6 +1029,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     pearls: [
       'NS is slightly hypertonic to plasma; large volumes load chloride.',
       'D5W is isotonic in the bag but free water physiologically after dextrose use.',
+      'True 0.225% NaCl is 38.5 mEq/L (154/4). 34 mEq/L is 0.2% NaCl, the common US “D5¼NS” bag.',
     ],
   },
 

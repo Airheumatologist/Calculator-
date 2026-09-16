@@ -6,6 +6,34 @@ const questionnaireMetadata = { questionnaire: true as const };
 // The validated ZBI-12 is a selected subset of the original ZBI-22, not items 1–12.
 const zbi12OriginalItemNumbers = [2, 3, 5, 6, 9, 10, 11, 12, 17, 19, 20, 21] as const;
 
+const iqcodeLikert = [
+  { label: '1 — Much improved', value: 1 },
+  { label: '2 — A bit improved', value: 2 },
+  { label: '3 — Not much change', value: 3 },
+  { label: '4 — A bit worse', value: 4 },
+  { label: '5 — Much worse', value: 5 },
+];
+
+/** Official Short IQCODE 16-item form (Jorm Psychol Med 1994; not long-form items 1–16). */
+const iqcodeShortItems = [
+  'Remembering things about family and friends (e.g. occupations, birthdays, addresses)',
+  'Remembering things that have happened recently',
+  'Recalling conversations a few days later',
+  'Remembering his/her address and telephone number',
+  'Remembering what day and month it is',
+  'Remembering where things are usually kept',
+  'Remembering where to find things which have been put in a different place from usual',
+  'Knowing how to work familiar machines around the house',
+  'Learning to use a new gadget or machine around the house',
+  'Learning new things in general',
+  'Following a story in a book or on TV',
+  'Making decisions on everyday matters',
+  'Handling money for shopping',
+  'Handling financial matters, e.g. the pension, dealing with the bank',
+  'Handling other everyday arithmetic problems, e.g. knowing how much food to buy, knowing how long between visits from family or friends',
+  "Using his/her intelligence to understand what's going on and to reason things through",
+] as const;
+
 const irlsSeverityOptions = [
   { label: '0 — None', value: 0 },
   { label: '1 — Mild', value: 1 },
@@ -337,9 +365,9 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       ),
       yesNo(
         'loc',
-        'LOC: incorrect on ≥1 of 2 orientation questions OR fails ≥1 of 2 commands',
+        'LOC: incorrect on ≥1 of 2 orientation questions AND fails ≥1 of 2 commands',
         1,
-        'Questions: “What is your age?” and “What month is it?” Commands: “Close your eyes.” then “Make a fist” / open and close your hand. Score Yes if ≥1 question is wrong OR ≥1 command is failed (this tool’s coded rule — do not switch to AND).',
+        'Questions (NIHSS 1b): “What is your age?” and “What month is it?” Commands (NIHSS 1c): “Close your eyes.” then “Make a fist” / open and close your hand. Score Yes only if orientation is abnormal (1b ≥1) AND commands are abnormal (1c ≥1). Do not score for questions or commands alone.',
       ),
     ],
     calculate(values) {
@@ -370,7 +398,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'C-STAT: gaze preference (2), arm weakness unable to hold against gravity (1), abnormal LOC by questions or commands (1). Total 0–4; ≥2 suggests LVO.',
+        'C-STAT: gaze preference (2), arm weakness unable to hold against gravity (1), abnormal LOC by questions AND commands (NIHSS 1b ≥1 and 1c ≥1) (1). Total 0–4; ≥2 suggests LVO.',
       formula: 'Gaze×2 + arm + LOC (0–4)',
       validation: 'Derived from Cincinnati Prehospital Stroke Scale components; studied for LVO prediction and destination decisions.',
       references: [
@@ -388,7 +416,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     ],
     pearls: [
       'Gaze carries double weight (2 points).',
-      'LOC questions are age and month; commands are close eyes and make a fist. This tool scores Yes if ≥1 question is wrong OR ≥1 command fails (not AND).',
+      'LOC questions are age and month (NIHSS 1b); commands are close eyes and make a fist (NIHSS 1c). Award the LOC point only if both 1b ≥1 AND 1c ≥1.',
       'False negatives occur with mild LVO or posterior circulation stroke.',
     ],
   },
@@ -1369,7 +1397,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
           title: 'Sport concussion assessment tool 6 (SCAT6)',
           citation: 'Echemendia RJ et al. Br J Sports Med. 2023',
           year: 2023,
-          pmid: '37316287',
+          pmid: '37316203',
           doi: '10.1136/bjsports-2023-107036',
         },
       ],
@@ -1889,118 +1917,9 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: 'Full IQCODE (26 items)', value: 'full' },
         { label: 'Not specified', value: 'na' },
       ]),
-      selectInput('iq1', '1. Recognizing faces of family and friends', [
-        { label: '1 — Much improved', value: 1 },
-        { label: '2 — A bit improved', value: 2 },
-        { label: '3 — Not much change', value: 3 },
-        { label: '4 — A bit worse', value: 4 },
-        { label: '5 — Much worse', value: 5 },
-      ], 2),
-      selectInput('iq2', '2. Remembering names of family and friends', [
-        { label: '1 — Much improved', value: 1 },
-        { label: '2 — A bit improved', value: 2 },
-        { label: '3 — Not much change', value: 3 },
-        { label: '4 — A bit worse', value: 4 },
-        { label: '5 — Much worse', value: 5 },
-      ], 2),
-      selectInput('iq3', '3. Remembering things about family and friends (e.g. occupations, birthdays)', [
-        { label: '1 — Much improved', value: 1 },
-        { label: '2 — A bit improved', value: 2 },
-        { label: '3 — Not much change', value: 3 },
-        { label: '4 — A bit worse', value: 4 },
-        { label: '5 — Much worse', value: 5 },
-      ], 2),
-      selectInput('iq4', '4. Remembering things that have happened recently', [
-        { label: '1 — Much improved', value: 1 },
-        { label: '2 — A bit improved', value: 2 },
-        { label: '3 — Not much change', value: 3 },
-        { label: '4 — A bit worse', value: 4 },
-        { label: '5 — Much worse', value: 5 },
-      ], 2),
-      selectInput('iq5', '5. Recalling conversations a few days later', [
-        { label: '1 — Much improved', value: 1 },
-        { label: '2 — A bit improved', value: 2 },
-        { label: '3 — Not much change', value: 3 },
-        { label: '4 — A bit worse', value: 4 },
-        { label: '5 — Much worse', value: 5 },
-      ], 2),
-      selectInput('iq6', '6. Forgetting what he/she wanted to say in the middle of a conversation', [
-        { label: '1 — Much improved', value: 1 },
-        { label: '2 — A bit improved', value: 2 },
-        { label: '3 — Not much change', value: 3 },
-        { label: '4 — A bit worse', value: 4 },
-        { label: '5 — Much worse', value: 5 },
-      ], 2),
-      selectInput('iq7', '7. Remembering his/her address and telephone number', [
-        { label: '1 — Much improved', value: 1 },
-        { label: '2 — A bit improved', value: 2 },
-        { label: '3 — Not much change', value: 3 },
-        { label: '4 — A bit worse', value: 4 },
-        { label: '5 — Much worse', value: 5 },
-      ], 2),
-      selectInput('iq8', '8. Remembering what day and month it is', [
-        { label: '1 — Much improved', value: 1 },
-        { label: '2 — A bit improved', value: 2 },
-        { label: '3 — Not much change', value: 3 },
-        { label: '4 — A bit worse', value: 4 },
-        { label: '5 — Much worse', value: 5 },
-      ], 2),
-      selectInput('iq9', '9. Remembering where things are usually kept', [
-        { label: '1 — Much improved', value: 1 },
-        { label: '2 — A bit improved', value: 2 },
-        { label: '3 — Not much change', value: 3 },
-        { label: '4 — A bit worse', value: 4 },
-        { label: '5 — Much worse', value: 5 },
-      ], 2),
-      selectInput('iq10', '10. Knowing where to find things that have been put in an unusual place', [
-        { label: '1 — Much improved', value: 1 },
-        { label: '2 — A bit improved', value: 2 },
-        { label: '3 — Not much change', value: 3 },
-        { label: '4 — A bit worse', value: 4 },
-        { label: '5 — Much worse', value: 5 },
-      ], 2),
-      selectInput('iq11', '11. Knowing how to work familiar gadgets and appliances (e.g. TV, stove)', [
-        { label: '1 — Much improved', value: 1 },
-        { label: '2 — A bit improved', value: 2 },
-        { label: '3 — Not much change', value: 3 },
-        { label: '4 — A bit worse', value: 4 },
-        { label: '5 — Much worse', value: 5 },
-      ], 2),
-      selectInput('iq12', '12. Learning to use a new gadget or appliance around the house', [
-        { label: '1 — Much improved', value: 1 },
-        { label: '2 — A bit improved', value: 2 },
-        { label: '3 — Not much change', value: 3 },
-        { label: '4 — A bit worse', value: 4 },
-        { label: '5 — Much worse', value: 5 },
-      ], 2),
-      selectInput('iq13', '13. Learning new things in general', [
-        { label: '1 — Much improved', value: 1 },
-        { label: '2 — A bit improved', value: 2 },
-        { label: '3 — Not much change', value: 3 },
-        { label: '4 — A bit worse', value: 4 },
-        { label: '5 — Much worse', value: 5 },
-      ], 2),
-      selectInput('iq14', '14. Following a story in a book or on television', [
-        { label: '1 — Much improved', value: 1 },
-        { label: '2 — A bit improved', value: 2 },
-        { label: '3 — Not much change', value: 3 },
-        { label: '4 — A bit worse', value: 4 },
-        { label: '5 — Much worse', value: 5 },
-      ], 2),
-      selectInput('iq15', '15. Making decisions on everyday matters (e.g. what to wear, meals)', [
-        { label: '1 — Much improved', value: 1 },
-        { label: '2 — A bit improved', value: 2 },
-        { label: '3 — Not much change', value: 3 },
-        { label: '4 — A bit worse', value: 4 },
-        { label: '5 — Much worse', value: 5 },
-      ], 2),
-      selectInput('iq16', '16. Handling financial matters (e.g. banking, shopping change)', [
-        { label: '1 — Much improved', value: 1 },
-        { label: '2 — A bit improved', value: 2 },
-        { label: '3 — Not much change', value: 3 },
-        { label: '4 — A bit worse', value: 4 },
-        { label: '5 — Much worse', value: 5 },
-      ], 2),
+      ...iqcodeShortItems.map((label, i) =>
+        selectInput(`iq${i + 1}`, `${i + 1}. ${label}`, [...iqcodeLikert], 3),
+      ),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');
@@ -2056,7 +1975,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Informant Questionnaire on Cognitive Decline in the Elderly (IQCODE): assesses cognitive and functional changes over ~10 years rated by a close relative/informant on a 1–5 scale. Mean ≥3.31–3.44 provides high sensitivity/specificity for dementia.',
+        'Short IQCODE (Jorm 1994, 16 items): informant rates change over ~10 years on a 1–5 Likert (much improved → much worse). Mean of completed items; ≥3.31–3.44 is a common dementia screen cutoff. This survey is the official short form, not long-form items 1–16.',
       formula: 'Sum of 16 items / 16 (or enter mean directly)',
       validation: 'Jorm AF. Validated across diverse international cohorts, independent of premorbid education or language fluency.',
       references: [
@@ -2068,11 +1987,11 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
           doi: '10.1017/s0033291700005742',
         },
         {
-          title: 'The Short Form of the Informant Questionnaire on Cognitive Decline in the Elderly (Short IQCODE): development and cross-validation',
+          title: 'A short form of the Informant Questionnaire on Cognitive Decline in the Elderly (IQCODE): development and cross-validation',
           citation: 'Jorm AF. Psychol Med. 1994',
           year: 1994,
-          pmid: '8008892',
-          doi: '10.1017/s0033291700027379',
+          pmid: '8208879',
+          doi: '10.1017/s003329170002691x',
         },
       ],
     },
@@ -2745,7 +2664,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
           title: 'The Zarit Burden Interview: a new short version and screening version',
           citation: 'Bédard M et al. Gerontologist. 2001',
           year: 2001,
-          pmid: '11565618',
+          pmid: '11574710',
           doi: '10.1093/geront/41.5.652',
         },
         {

@@ -1333,11 +1333,11 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     id: 'phos-replacement',
     name: 'Phosphate Replacement Estimate',
     shortName: 'Phos Dose',
-    description: 'Educational IV/oral phosphate dose range by severity and weight.',
+    description: 'Educational single IV phosphate dose by Clark 1995 severity bands and weight.',
     category: 'nephrology',
     tags: ['phosphate', 'hypophosphatemia', 'electrolytes', 'icu'],
-    whenToUse: 'Planning repletion for hypophosphatemia (weight-based mmol estimates).',
-    whyUse: 'Severity-stratified mmol/kg guidance commonly used in ICU protocols.',
+    whenToUse: 'Planning IV repletion for hypophosphatemia (weight-based mmol estimates).',
+    whyUse: 'Clark Crit Care Med 1995 graduated single-dose scheme (0.16 / 0.32 / 0.64 mmol/kg).',
     inputs: [
       numberInput('phos', 'Serum phosphate', {
         unit: 'mg/dL',
@@ -1360,58 +1360,54 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       // Convert mmol/L → approx mg/dL (1 mmol/L ≈ 3.1 mg/dL)
       const phosMg = units === 'mmol' ? phos * 3.1 : phos;
       let severity = 'mild';
-      let low = 0.08;
-      let high = 0.16;
+      let factor = 0.16;
       let riskLevel: 'info' | 'moderate' | 'high' | 'critical' = 'info';
-      if (phosMg < 1.0) {
-        severity = 'severe';
-        low = 0.32;
-        high = 0.64;
-        riskLevel = 'high';
-      } else if (phosMg < 2.0) {
-        severity = 'moderate';
-        low = 0.16;
-        high = 0.32;
-        riskLevel = 'moderate';
-      } else if (phosMg < 2.5) {
-        severity = 'mild';
-        low = 0.08;
-        high = 0.16;
-        riskLevel = 'info';
-      } else {
+      // Clark 1995: mild 2.3–3.0 → 0.16; moderate 1.6–2.2 → 0.32; severe <1.5 → 0.64 mmol/kg (single IV dose).
+      if (phosMg > 3.0) {
         return {
           score: 0,
           unit: 'mmol',
           label: 'No routine repletion',
-          interpretation: `Phosphate ${round(phosMg, 1)} mg/dL is at/above typical repletion threshold (~2.5 mg/dL). Treat only if ongoing losses or refeeding risk.`,
+          interpretation: `Phosphate ${round(phosMg, 1)} mg/dL is above the Clark mild band (2.3–3.0 mg/dL). Treat only if ongoing losses or refeeding risk.`,
           riskLevel: 'normal',
         };
       }
-      const doseLow = round(low * wt, 1);
-      const doseHigh = round(high * wt, 1);
-      // KPhos ~3 mmol Phos and 4.4 mEq K per mL in some products — note only
+      if (phosMg >= 2.3) {
+        severity = 'mild';
+        factor = 0.16;
+        riskLevel = 'info';
+      } else if (phosMg >= 1.6) {
+        severity = 'moderate';
+        factor = 0.32;
+        riskLevel = 'moderate';
+      } else {
+        severity = 'severe';
+        factor = 0.64;
+        riskLevel = 'high';
+      }
+      const dose = round(factor * wt, 1);
       return {
-        score: `${doseLow}–${doseHigh}`,
+        score: dose,
         unit: 'mmol',
-        label: `${severity} hypophosphatemia — ${doseLow}–${doseHigh} mmol`,
-        interpretation: `Estimated replacement ${doseLow}–${doseHigh} mmol phosphate (${low}–${high} mmol/kg × ${wt} kg) for ${severity} hypophosphatemia (≈${round(phosMg, 1)} mg/dL). Infuse IV slowly; reduce dose in kidney failure; monitor K/Ca if using K-Phos/Na-Phos.`,
+        label: `${severity} hypophosphatemia — ${dose} mmol`,
+        interpretation: `Clark single IV dose ${dose} mmol phosphate (${factor} mmol/kg × ${wt} kg) for ${severity} hypophosphatemia (≈${round(phosMg, 1)} mg/dL). Infuse IV slowly; reduce dose in kidney failure; monitor K/Ca if using K-Phos/Na-Phos.`,
         riskLevel,
         details: [
-          { label: 'Severity', value: severity },
-          { label: 'Dose range', value: `${low}–${high} mmol/kg` },
-          { label: 'Approx mg elemental P', value: `${round(doseLow * 31, 0)}–${round(doseHigh * 31, 0)} mg` },
+          { label: 'Severity (Clark)', value: severity },
+          { label: 'Dose', value: `${factor} mmol/kg (single IV)` },
+          { label: 'Approx mg elemental P', value: `${round(dose * 31, 0)} mg` },
         ],
         recommendations: [
           'Recheck phosphate after repletion',
-          'Use caution if eGFR low — prefer lower end / oral if possible',
+          'Use caution if eGFR low — prefer lower dose / oral if possible',
           'Watch for hypocalcemia with aggressive IV phosphate',
         ],
       };
     },
     evidence: {
-      summary: 'Weight-based phosphate repletion: mild ~0.08–0.16, moderate ~0.16–0.32, severe ~0.32–0.64 mmol/kg.',
-      formula: 'Dose (mmol) = factor × weight; factors by serum PO₄ severity',
-      validation: 'Common ICU protocol ranges; product concentrations vary — verify local formulation.',
+      summary: 'Clark Crit Care Med 1995 (PMID 7664552): single IV phosphorus bolus — mild 2.3–3.0 mg/dL → 0.16 mmol/kg; moderate 1.6–2.2 mg/dL → 0.32 mmol/kg; severe <1.5 mg/dL → 0.64 mmol/kg. Not overlapping 0.08-start ranges.',
+      formula: 'Dose (mmol) = Clark factor × weight; 0.16 / 0.32 / 0.64 mmol/kg',
+      validation: 'Prospective trial in specialized nutrition support; product concentrations vary — verify local formulation and renal function.',
       references: [
         {
           title: 'Treatment of hypophosphatemia in patients receiving specialized nutrition support using a graduated dosing scheme',
@@ -1423,7 +1419,10 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Severe (<1.0 mg/dL)', actions: ['IV repletion in monitored setting', 'Evaluate refeeding, vitamin D, hyperparathyroidism'] },
+      { condition: 'Severe (<1.5 mg/dL, Clark)', actions: ['IV repletion in monitored setting', 'Evaluate refeeding, vitamin D, hyperparathyroidism'] },
+    ],
+    pearls: [
+      'Clark 1995 uses a single IV bolus (0.16 / 0.32 / 0.64 mmol/kg), not ranges starting at 0.08 mmol/kg.',
     ],
   },
 
@@ -1626,11 +1625,11 @@ export const wave3NephroIcuCalcs: Calculator[] = [
             label: 'Controlled positive-pressure ventilation (distensibility)',
             value: 'ppv',
             description:
-              'Fully passive (no triggering), TV ≥8 mL/kg predicted body weight; Dmax typically on inspiration. Gray zone ~12–18%. Invalid if spontaneous efforts, low TV, IAH, or RV failure.',
+              'Fully passive (no triggering), TV ≥8 mL/kg predicted body weight; Dmax typically on inspiration. Barbier dIVC cutoff 18% using (Dmax−Dmin)/Dmin. Invalid if spontaneous efforts, low TV, IAH, or RV failure.',
           },
         ],
         undefined,
-        'Spontaneous: Dmax usually end-expiration, Dmin inspiration; CI ≥50% suggests low RAP if hypoperfused. Controlled PPV: Dmax usually inspiration; meaningful only if fully passive, TV ≥8 mL/kg PBW, no triggering. This tool always uses (Dmax−Dmin)/Dmax × 100.',
+        'Spontaneous (cIVC): (Dmax−Dmin)/Dmax × 100; CI ≥50% suggests low RAP if hypoperfused. Controlled PPV (Barbier dIVC): (Dmax−Dmin)/Dmin × 100; cutoff 18%. PPV valid only if fully passive, TV ≥8 mL/kg PBW, no triggering.',
       ),
     ],
     calculate(values) {
@@ -1643,29 +1642,26 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       if (dmin > dmax) {
         return { score: '—', label: 'Invalid diameters', interpretation: 'Dmin cannot exceed Dmax.', riskLevel: 'info' };
       }
-      // Standard collapsibility: (Dmax−Dmin)/Dmax×100
-      const ci = round(((dmax - dmin) / dmax) * 100, 0);
-      // Distensibility sometimes (Dmax−Dmin)/Dmin — we report collapsibility form and interpret by context
       if (vent === 'sb') {
-        // Spontaneous: CI >50% with small IVC suggests low RAP / possible fluid responsive
+        const ci = round(((dmax - dmin) / dmax) * 100, 0);
         const r = riskFromThresholds(ci, [
           {
             max: 20,
             level: 'moderate',
             label: 'Low collapsibility',
-            interpretation: `IVC CI ${ci}%: low collapsibility — higher RAP / less likely fluid responsive (if spontaneously breathing). Consider congestion.`,
+            interpretation: `cIVC ${ci}%: low collapsibility — higher RAP / less likely fluid responsive (if spontaneously breathing). Consider congestion.`,
           },
           {
             max: 49,
             level: 'info',
             label: 'Intermediate collapsibility',
-            interpretation: `IVC CI ${ci}%: intermediate — gray zone; use PLR, history, and other dynamic tests.`,
+            interpretation: `cIVC ${ci}%: intermediate — gray zone; use PLR, history, and other dynamic tests.`,
           },
           {
             max: 100,
             level: 'low',
             label: 'High collapsibility',
-            interpretation: `IVC CI ${ci}% ≥50%: high collapsibility on spontaneous breathing — suggests low RAP; may respond to fluid if hypoperfused.`,
+            interpretation: `cIVC ${ci}% ≥50%: high collapsibility on spontaneous breathing — suggests low RAP; may respond to fluid if hypoperfused.`,
           },
         ]);
         return {
@@ -1673,46 +1669,46 @@ export const wave3NephroIcuCalcs: Calculator[] = [
           unit: '%',
           ...r,
           details: [
+            { label: 'Index', value: 'cIVC (spontaneous collapsibility)' },
             { label: 'Formula', value: '(Dmax − Dmin) / Dmax × 100' },
             { label: 'Dmax / Dmin', value: `${dmax} / ${dmin} cm` },
           ],
         };
       }
-      // PPV controlled: higher distensibility suggests fluid responsiveness (often dIVC >12–18%)
-      const r = riskFromThresholds(ci, [
-        {
-          max: 11,
-          level: 'moderate',
-          label: 'Low variation',
-          interpretation: `Index ${ci}%: low IVC variation on controlled ventilation — less likely fluid responsive (best if fully passive, TV≥8 mL/kg, no efforts).`,
-        },
+      if (dmin <= 0) {
+        return { score: '—', label: 'Invalid diameters', interpretation: 'Dmin must be >0 for Barbier dIVC (/Dmin).', riskLevel: 'info' };
+      }
+      const divc = round(((dmax - dmin) / dmin) * 100, 0);
+      const r = riskFromThresholds(divc, [
         {
           max: 17,
-          level: 'info',
-          label: 'Gray zone',
-          interpretation: `Index ${ci}%: gray zone for ventilated distensibility thresholds (~12–18%).`,
+          level: 'moderate',
+          label: 'dIVC <18% — less likely fluid responsive',
+          interpretation: `Barbier dIVC ${divc}%: below the 18% cutoff on controlled ventilation — less likely fluid responsive (best if fully passive, TV≥8 mL/kg, no efforts).`,
         },
         {
           max: 100,
           level: 'low',
-          label: 'High variation',
-          interpretation: `Index ${ci}%: high IVC respiratory variation — favors fluid responsiveness if validity conditions met.`,
+          label: 'dIVC ≥18% — favors fluid responsiveness',
+          interpretation: `Barbier dIVC ${divc}% ≥18%: favors fluid responsiveness if validity conditions met (passive PPV, TV ≥8 mL/kg PBW).`,
         },
       ]);
       return {
-        score: ci,
+        score: divc,
         unit: '%',
         ...r,
         details: [
-          { label: 'Formula used', value: '(Dmax − Dmin) / Dmax × 100' },
-          { label: 'Note', value: 'Some protocols use /Dmin for distensibility' },
+          { label: 'Index', value: 'dIVC (Barbier distensibility)' },
+          { label: 'Formula', value: '(Dmax − Dmin) / Dmin × 100' },
+          { label: 'Cutoff', value: '18%' },
+          { label: 'Dmax / Dmin', value: `${dmax} / ${dmin} cm` },
         ],
       };
     },
     evidence: {
-      summary: 'IVC collapsibility (spontaneous) and distensibility (passive PPV) are dynamic ultrasound estimates of fluid responsiveness with important caveats.',
-      formula: 'CI% = (Dmax − Dmin) / Dmax × 100',
-      validation: 'Moderate accuracy; limited by spontaneous efforts, low TV, abdominal hypertension, RV failure.',
+      summary: 'Spontaneous breathing uses collapsibility cIVC = (Dmax−Dmin)/Dmax × 100. Controlled PPV uses Barbier 2004 distensibility dIVC = (Dmax−Dmin)/Dmin × 100 with an 18% cutoff for fluid responsiveness. Do not apply Feissel /mean 12% cutoffs to the Barbier /Dmin index.',
+      formula: 'cIVC (spontaneous) = (Dmax−Dmin)/Dmax × 100; dIVC (controlled PPV, Barbier) = (Dmax−Dmin)/Dmin × 100, cutoff 18%.',
+      validation: 'Barbier ICM 2004 in fully adapted ventilated septic patients (TV ≥8 mL/kg). Limited by spontaneous efforts, low TV, abdominal hypertension, RV failure.',
       references: [
         {
           title: 'Respiratory changes in inferior vena cava diameter are helpful in predicting fluid responsiveness in ventilated septic patients',
@@ -1726,6 +1722,10 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     nextSteps: [
       { condition: 'High CI + hypoperfusion', actions: ['Fluid challenge or PLR confirmation', 'Reassess perfusion'] },
       { condition: 'Low CI + overload', actions: ['Avoid fluids', 'Consider decongestion'] },
+    ],
+    pearls: [
+      'Controlled PPV uses Barbier dIVC = (Dmax−Dmin)/Dmin × 100, cutoff 18% — not (Dmax−Dmin)/Dmax and not Feissel’s 12% /mean cutoff.',
+      'Spontaneous collapsibility (cIVC) keeps /Dmax; do not mix the two indices.',
     ],
   },
 

@@ -170,7 +170,7 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
           title: 'Diagnosis of occult fractures about the hip. Magnetic resonance imaging compared with bone-scanning',
           citation: 'Rizzo PF, Gould ES, Lyden JP, Asnis SE. J Bone Joint Surg Am. 1993;75:395-401',
           year: 1993,
-          pmid: '8440163',
+          pmid: '8444918',
         },
       ],
     },

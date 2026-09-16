@@ -913,7 +913,7 @@ export const wave5CardioCalcs: Calculator[] = [
         helpText: 'Use actual body weight rules per local protocol / label',
       }),
       numberInput('age', 'Age (for apixaban dose-reduction criteria)', { unit: 'years', min: 18, max: 110, defaultValue: 70, helpText: 'Apixaban AF ABC: Age ≥80 is one of three dose-reduction criteria (need ≥2 of age ≥80, weight ≤60 kg, creatinine ≥1.5 mg/dL for 2.5 mg BID).' }),
-      numberInput('weight', 'Weight (for apixaban dose-reduction criteria)', { unit: 'kg', min: 30, max: 250, defaultValue: 80, helpText: 'Apixaban AF ABC: body weight ≤60 kg is one of three dose-reduction criteria.' }),
+      numberInput('weight', 'Weight (apixaban ABC / edoxaban VTE)', { unit: 'kg', min: 30, max: 250, defaultValue: 80, helpText: 'Apixaban AF ABC: body weight ≤60 kg is one of three dose-reduction criteria. US edoxaban VTE: reduce to 30 mg if weight ≤60 kg (independent of CrCl; still avoid CrCl <15).' }),
       numberInput('creatinine', 'Serum creatinine (for apixaban dose-reduction criteria)', {
         unit: 'mg/dL',
         min: 0.3,
@@ -922,6 +922,12 @@ export const wave5CardioCalcs: Calculator[] = [
         defaultValue: 1.0,
         helpText: 'Apixaban AF ABC: creatinine ≥1.5 mg/dL is one of three dose-reduction criteria. Used with age and weight — not a substitute for CrCl.',
       }),
+      yesNo(
+        'pgpInhibitors',
+        'Certain P-gp inhibitors (edoxaban VTE)',
+        0,
+        'US Savaysa VTE: reduce to 30 mg if taking verapamil, quinidine, azithromycin, clarithromycin, erythromycin, oral itraconazole, or oral ketoconazole. US AF dosing is not reduced for P-gp inhibitors.',
+      ),
     ],
     calculate(values) {
       const drug = String(values.drug ?? 'apix');
@@ -1016,28 +1022,49 @@ export const wave5CardioCalcs: Calculator[] = [
           interpretation = `VTE: parenteral anticoagulation ≥5 days then dabigatran 150 mg BID if renal function adequate. CrCl ${crcl}.`;
         }
       } else {
-        // edoxaban
-        if (crcl > 95 && ind === 'af') {
-          dose = 'Prefer alternative (US AF label: avoid if CrCl >95)';
-          label = 'Edoxaban AF — high CrCl warning';
-          riskLevel = 'high';
-          interpretation =
-            'US labeling advises against edoxaban for AF when CrCl >95 mL/min due to reduced efficacy signal. Other regions differ — check local label.';
-        } else if (crcl >= 50 && crcl <= 95) {
-          dose = ind === 'af' ? '60 mg daily' : '60 mg daily after parenteral lead-in';
-          label = 'Edoxaban standard';
-          riskLevel = 'low';
-          interpretation = `Standard 60 mg daily (VTE after ≥5 days parenteral). CrCl ${crcl}.`;
-        } else if (crcl >= 15 && crcl <= 50) {
-          dose = '30 mg daily (also if weight ≤60 kg or certain P-gp inhibitors)';
-          label = 'Edoxaban reduced dose';
-          riskLevel = 'moderate';
-          interpretation = `Reduce to 30 mg daily for CrCl 15–50 mL/min (and other label criteria).`;
-        } else {
+        // Edoxaban — US Savaysa: AF CrCl >95 not recommended; 15–50 inclusive → 30 mg.
+        // VTE has no CrCl >95 restriction; reduce to 30 mg if CrCl 15–50, weight ≤60 kg, or selected P-gp inhibitors.
+        const pgp = bool(values.pgpInhibitors);
+        if (crcl < 15) {
           dose = 'Avoid (CrCl <15)';
           label = 'Edoxaban — avoid';
           riskLevel = 'critical';
-          interpretation = 'Edoxaban not recommended at CrCl <15 mL/min.';
+          interpretation = 'Edoxaban not recommended at CrCl <15 mL/min (US label; both AF and VTE).';
+        } else if (ind === 'af') {
+          if (crcl > 95) {
+            dose = 'Prefer alternative (US AF label: avoid if CrCl >95)';
+            label = 'Edoxaban AF — high CrCl warning';
+            riskLevel = 'high';
+            interpretation =
+              'US labeling advises against edoxaban for AF when CrCl >95 mL/min due to reduced efficacy vs warfarin. Other regions differ — check local label. VTE has no CrCl >95 restriction.';
+          } else if (crcl > 50) {
+            dose = '60 mg daily';
+            label = 'Edoxaban AF standard';
+            riskLevel = 'low';
+            interpretation = `AF CrCl ${crcl} mL/min (51–95): 60 mg daily. US AF dose is not reduced for weight or P-gp inhibitors.`;
+          } else {
+            dose = '30 mg daily';
+            label = 'Edoxaban AF reduced dose';
+            riskLevel = 'moderate';
+            interpretation = `AF CrCl ${crcl} mL/min (15–50 inclusive): 30 mg daily.`;
+          }
+        } else {
+          const vteReduceReasons = [
+            crcl <= 50 ? `CrCl ${crcl} (15–50)` : null,
+            weight <= 60 ? `weight ${weight} kg ≤60 kg` : null,
+            pgp ? 'selected P-gp inhibitor' : null,
+          ].filter(Boolean) as string[];
+          if (vteReduceReasons.length) {
+            dose = '30 mg daily after parenteral lead-in';
+            label = 'Edoxaban VTE reduced dose';
+            riskLevel = 'moderate';
+            interpretation = `VTE: reduce to 30 mg daily after 5–10 days parenteral anticoagulation (${vteReduceReasons.join('; ')}). Weight ≤60 kg and selected P-gp inhibitors reduce independently of CrCl.`;
+          } else {
+            dose = '60 mg daily after parenteral lead-in';
+            label = 'Edoxaban VTE standard';
+            riskLevel = 'low';
+            interpretation = `VTE CrCl ${crcl} mL/min (>50) and weight ${weight} kg: 60 mg daily after 5–10 days parenteral anticoagulation. No US CrCl >95 restriction for VTE.`;
+          }
         }
       }
 
@@ -1050,6 +1077,7 @@ export const wave5CardioCalcs: Calculator[] = [
           { label: 'Drug', value: drug },
           { label: 'Indication', value: ind },
           { label: 'CrCl', value: `${crcl} mL/min` },
+          { label: 'Weight', value: `${weight} kg` },
           { label: 'Suggested label band', value: dose },
         ],
         recommendations: [
@@ -1061,8 +1089,9 @@ export const wave5CardioCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'DOAC doses depend on CrCl (and for apixaban AF: age/weight/creatinine criteria). Labels differ by region and indication.',
-      formula: 'Drug + indication + CrCl (± apixaban ABC) → label dose band',
+        'DOAC doses depend on CrCl (and for apixaban AF: age/weight/creatinine criteria). US edoxaban (Savaysa): AF avoid CrCl >95, 51–95 → 60 mg, 15–50 → 30 mg; VTE 60 mg after parenteral lead-in, reduce to 30 mg if CrCl 15–50, weight ≤60 kg, or selected P-gp inhibitors (no CrCl >95 ban). Labels differ by region.',
+      formula:
+        'Drug + indication + CrCl (± apixaban ABC; edoxaban VTE also weight ≤60 kg and selected P-gp inhibitors) → label dose band',
       validation: 'Educational synthesis of US/EU product characteristics; always confirm latest label.',
       references: [
         {
@@ -1071,6 +1100,12 @@ export const wave5CardioCalcs: Calculator[] = [
           year: 2019,
           pmid: '30686041',
           doi: '10.1161/CIR.0000000000000665',
+        },
+        {
+          title: 'SAVAYSA (edoxaban) prescribing information',
+          citation: 'Daiichi Sankyo. US FDA label',
+          year: 2015,
+          url: 'https://www.accessdata.fda.gov/drugsatfda_docs/label/2015/206316s002lbl.pdf',
         },
       ],
     },
@@ -1081,6 +1116,8 @@ export const wave5CardioCalcs: Calculator[] = [
     pearls: [
       'Cockcroft–Gault (not eGFR alone) is what most DOAC trials/labels used.',
       'Mechanical valves and moderate–severe MS: do not use DOAC.',
+      'Edoxaban CrCl >95 warning is AF-only (US). VTE still uses 60 mg if CrCl >50 unless weight ≤60 kg or selected P-gp inhibitors.',
+      'Edoxaban 30 mg renal band is CrCl 15–50 inclusive (CrCl 50 is reduced, not 60 mg).',
     ],
   },
 
@@ -2352,12 +2389,22 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'Suspected congenital LQTS based on ECG, symptoms, and family history.',
     whyUse: 'Stratifies low / intermediate / high probability of LQTS before or alongside genetic testing.',
     inputs: [
-      selectInput('qtc', 'QTc (Bazett) on ECG', [
+      selectInput('sex', 'Sex', [
+        { label: 'Male', value: 'male', description: '450–459 ms resting QTc scores +1 in males only' },
+        { label: 'Female', value: 'female', description: '450–459 ms resting QTc does not score in females' },
+      ], 'male', 'Schwartz & Crotti 2011: the 450–459 ms resting QTc band is awarded only in males.'),
+      selectInput('qtc', 'Resting QTc (Bazett) on ECG', [
         { label: '<450 ms (0)', value: 0, description: 'Resting Bazett QTc <450 ms — not prolonged by the Schwartz ECG criterion' },
-        { label: '450–459 ms (+1)', value: 1, description: 'Borderline QTc prolongation' },
-        { label: '460–479 ms (+2)', value: 2, description: 'Moderate QTc prolongation' },
+        { label: '450–459 ms (+1 males only)', value: 1, description: 'Scores +1 in males; 0 in females (Schwartz 2011)' },
+        { label: '460–479 ms (+2)', value: 2, description: 'Moderate QTc prolongation (both sexes)' },
         { label: '≥480 ms (+3)', value: 3, description: 'Marked QTc prolongation (highest ECG weight)' },
       ], undefined, 'Resting 12-lead, Bazett. Measure QT from QRS onset to T-wave end in the lead with the clearest T end; QTc = QT/√RR. Do not use a tracing during sinus tachycardia or on QT-prolonging drugs for congenital scoring.'),
+      yesNo(
+        'recoveryQtc',
+        'QTc ≥480 ms at 4th minute of recovery from exercise (+1)',
+        1,
+        'Schwartz 2011 add-on: Bazett QTc ≥480 ms at the 4th minute of recovery from an exercise stress test. Optional; leave No if no exercise test.',
+      ),
       yesNo('torsades', 'Torsades de pointes (+2)', 2, 'Polymorphic VT twisting around the isoelectric line in the setting of a long QT. If TdP is present, syncope points are not added (original mutual-exclusion rule).'),
       yesNo('tAlternans', 'T-wave alternans (+1)', 1, 'Beat-to-beat alternation of T-wave amplitude or polarity on the ECG — not respiratory T-wave variation.'),
       yesNo('notchedT', 'Notched T wave in 3 leads (+1)', 1, 'Bifid (notched) T wave in at least three ECG leads.'),
@@ -2375,8 +2422,13 @@ export const wave5CardioCalcs: Calculator[] = [
       ], undefined, 'Pick the highest-weight applicable item. This form is a single select and cannot add both +1 and +0.5. Immediate family = first-degree relatives.'),
     ],
     calculate(values) {
-      // Note: torsades and syncope are mutually exclusive in original (count max) — apply that rule
-      let score = num(values.qtc, 0);
+      // Resting QTc 450–459 ms scores only in males (Schwartz & Crotti 2011).
+      const sex = String(values.sex ?? 'male');
+      const qtcBand = num(values.qtc, 0);
+      const qtcPts = qtcBand === 1 && sex !== 'male' ? 0 : qtcBand;
+      let score = qtcPts;
+      if (bool(values.recoveryQtc)) score += 1;
+      // TdP and syncope are mutually exclusive — TdP takes the +2
       const torsades = bool(values.torsades);
       const syncopePts = num(values.syncope, 0);
       if (torsades) score += 2;
@@ -2385,6 +2437,7 @@ export const wave5CardioCalcs: Calculator[] = [
       if (bool(values.notchedT)) score += 1;
       if (bool(values.lowHr)) score += 0.5;
       if (bool(values.congenitalDeafness)) score += 0.5;
+      // Family history is a single-select (definite LQTS and unexplained SCD <30 are mutually exclusive)
       score += num(values.family, 0);
       score = round(score, 1);
 
@@ -2412,6 +2465,7 @@ export const wave5CardioCalcs: Calculator[] = [
         riskLevel,
         details: [
           { label: 'Schwartz points', value: String(score) },
+          { label: 'Resting QTc points', value: String(qtcPts) },
           { label: 'TdP / syncope rule', value: torsades ? 'TdP counted (syncope not added)' : 'Syncope points applied if selected' },
         ],
         recommendations:
@@ -2424,8 +2478,9 @@ export const wave5CardioCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Schwartz score sums ECG, clinical, and family findings; ≥3.5 high, 1.5–3 intermediate, ≤1 low probability of LQTS.',
-      formula: 'Weighted points (QTc, TdP, T alternans, notched T, low HR, syncope, deafness, family Hx)',
+        'Schwartz & Crotti 2011 score: resting QTc ≥480 = 3, 460–479 = 2, 450–459 = 1 in males only; optional +1 if QTc ≥480 ms at 4th minute of exercise recovery. TdP vs syncope mutually exclusive; family history single-select. ≤1 low, 1.5–3 intermediate, ≥3.5 high probability of LQTS.',
+      formula:
+        'Resting QTc (3/2/1 males-only at 450–459) + recovery QTc ≥480 (+1) + TdP (+2, excludes syncope) or syncope (2 stress / 1 not) + T alternans (+1) + notched T (+1) + low HR (+0.5) + deafness (+0.5) + family (1 or 0.5, not both)',
       validation: 'Widely used clinical diagnostic score; genetic confirmation is complementary.',
       references: [
         {
@@ -2448,7 +2503,10 @@ export const wave5CardioCalcs: Calculator[] = [
       { condition: 'High probability', actions: ['EP / inherited-arrhythmia referral', 'Avoid QT-prolonging drugs; discuss β-blocker', 'Family screening'] },
     ],
     pearls: [
+      '450–459 ms resting QTc scores only in males; females in that band get 0 for the resting QTc item.',
+      'QTc ≥480 ms at the 4th minute of exercise recovery adds +1 (2011 update).',
       'Original score treats TdP and syncope as mutually exclusive (higher weight TdP).',
+      'Family member with definite LQTS and unexplained SCD <30 cannot both be counted (same or different relatives: this form is single-select).',
       'Acquired QT prolongation (drugs/electrolytes) is a different pathway — score is for congenital likelihood.',
     ],
   },

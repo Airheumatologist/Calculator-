@@ -50,7 +50,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
       yesNo('systemicRxn', 'Acute systemic reaction after IV heparin bolus', 2, 'Typically within ~30 min of an IV heparin bolus — fever, chills, tachycardia, hypertension, flushing, dyspnea, chest pain, or rarely arrest (Warkentin-type). Not any mild infusion side effect.'),
       yesNo('bleeding', 'Bleeding, petechiae, or extensive bruising', -1, 'Clinically evident bleeding, petechiae, or extensive bruising — a negative HIT feature (HIT more often thrombotic).'),
       yesNo('chronicTCP', 'Chronic thrombocytopenic disorder present', -1, 'Known thrombocytopenia predating heparin (e.g. ITP, MDS, cirrhosis, chemo) — competing cause, not the acute HIT fall.'),
-      yesNo('newDrug', 'Newly started non-heparin drug known to cause thrombocytopenia', -1, 'Only if newly started and a plausible culprit (e.g. vancomycin, linezolid, piperacillin, GP IIb/IIIa inhibitor, chemotherapy).'),
+      yesNo('newDrug', 'Newly started non-heparin drug known to cause thrombocytopenia', -2, 'Only if newly started and a plausible culprit (e.g. vancomycin, linezolid, piperacillin, GP IIb/IIIa inhibitor, chemotherapy). Cuker Table 2 item 8b = −2.'),
       yesNo('severeInfection', 'Severe infection', -2, 'Clinically severe infection as a competing cause of thrombocytopenia (e.g. septic shock), not every positive culture.'),
       yesNo('dic', 'Severe DIC (e.g., fibrinogen <100 mg/dL and D-dimer >5 µg/mL)', -2),
       yesNo('arterialDevice', 'Indwelling arterial device (IABP, VAD, ECMO)', -2),
@@ -78,7 +78,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
       const systemic = bool(values.systemicRxn) ? 2 : 0;
       const bleeding = bool(values.bleeding) ? -1 : 0;
       const chronic = bool(values.chronicTCP) ? -1 : 0;
-      const newDrug = bool(values.newDrug) ? -1 : 0;
+      const newDrug = bool(values.newDrug) ? -2 : 0;
       const infection = bool(values.severeInfection) ? -2 : 0;
       const dic = bool(values.dic) ? -2 : 0;
       const device = bool(values.arterialDevice) ? -2 : 0;
@@ -146,8 +146,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'HEP assigns expert-weighted points for magnitude/timing of thrombocytopenia, nadir, thrombosis, skin necrosis, systemic reaction, bleeding (negative), and competing causes. Literature cutoffs often 2 (sensitive) and 5 (more specific).',
-      formula: 'Sum of weighted clinical items (can be negative); typical vs rapid timing pathways',
+        'HEP assigns expert-weighted points for magnitude/timing of thrombocytopenia, nadir, thrombosis, skin necrosis, systemic reaction, bleeding (negative), and competing causes. Newly initiated non-heparin drug known to cause thrombocytopenia is −2 (Cuker Table 2 item 8b), not −1. Do not award +3 “no other cause” if any competing-cause item is present. Literature cutoffs often 2 (sensitive) and 5 (more specific).',
+      formula: 'Sum of weighted clinical items (can be negative); typical vs rapid timing pathways; new non-heparin drug −2',
       validation: 'Cuker et al. JTH 2010; compared with 4Ts in subsequent cohorts (variable performance).',
       references: [
         {

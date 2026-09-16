@@ -117,12 +117,23 @@ export const wave5NephroGiCalcs: Calculator[] = [
       ]),
       numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 5, max: 90, defaultValue: 45 }),
       numberInput('acr', 'Urine ACR', { unit: 'mg/g', min: 0.1, max: 10000, step: 0.1, defaultValue: 30, helpText: 'Albumin/creatinine ratio; convert mg/mmol × 8.84 ≈ mg/g' }),
+      selectInput(
+        'region',
+        'Calibration region',
+        [
+          { label: 'North America (S₀ 2y 0.9750, 5y 0.9240)', value: 'na' },
+          { label: 'Non–North America (S₀ 2y 0.9832, 5y 0.9365)', value: 'non-na' },
+        ],
+        'na',
+        'Tangri JAMA 2016 matched S₀ pairs. Do not mix North America 2-year 0.9750 with non-NA 5-year 0.9365.',
+      ),
     ],
     calculate(values) {
       const age = num(values.age, 65);
       const male = str(values.sex, 'F') === 'M' ? 1 : 0;
       const egfr = Math.max(num(values.egfr, 45), 1);
       const acr = Math.max(num(values.acr, 30), 0.1);
+      const na = str(values.region, 'na') !== 'non-na';
       // Tangri 4-variable linear predictor (development centering)
       const lp =
         -0.2201 * (age / 10 - 7.036) +
@@ -130,9 +141,12 @@ export const wave5NephroGiCalcs: Calculator[] = [
         -0.5567 * (egfr / 5 - 7.222) +
         0.451 * (Math.log(acr) - 5.137);
       const expLp = Math.exp(lp);
-      // North America–style baseline survivals commonly used in educational tools
-      const risk2 = round((1 - Math.pow(0.975, expLp)) * 100, 1);
-      const risk5 = round((1 - Math.pow(0.9365, expLp)) * 100, 1);
+      // Matched regional S0 pairs (Tangri JAMA 2016): NA 0.9750/0.9240; non-NA 0.9832/0.9365
+      const s0_2 = na ? 0.975 : 0.9832;
+      const s0_5 = na ? 0.924 : 0.9365;
+      const regionLabel = na ? 'North America' : 'non–North America';
+      const risk2 = round((1 - Math.pow(s0_2, expLp)) * 100, 1);
+      const risk5 = round((1 - Math.pow(s0_5, expLp)) * 100, 1);
       const primary = risk5;
       let riskLevel: 'low' | 'moderate' | 'high' | 'critical' = 'low';
       let label = 'Lower 5-year kidney failure risk';
@@ -140,19 +154,19 @@ export const wave5NephroGiCalcs: Calculator[] = [
       if (primary >= 50) {
         riskLevel = 'critical';
         label = 'Very high 5-year risk';
-        interpretation = `Estimated ~${risk2}% 2-year and ~${risk5}% 5-year risk of treated kidney failure (educational NA-style KFRE). Urgent nephrology planning, RRT education, and vascular access pathway as appropriate.`;
+        interpretation = `Estimated ~${risk2}% 2-year and ~${risk5}% 5-year risk of treated kidney failure (${regionLabel} 4-variable KFRE). Urgent nephrology planning, RRT education, and vascular access pathway as appropriate.`;
       } else if (primary >= 20) {
         riskLevel = 'high';
         label = 'High 5-year risk (≥20%)';
-        interpretation = `Estimated ~${risk2}% 2-year and ~${risk5}% 5-year risk. Many systems use ≥3–5% 5-year (or ≥10–20% bands) to prioritize specialty care — confirm local referral thresholds.`;
+        interpretation = `Estimated ~${risk2}% 2-year and ~${risk5}% 5-year risk (${regionLabel}). Many systems use ≥3–5% 5-year (or ≥10–20% bands) to prioritize specialty care — confirm local referral thresholds.`;
       } else if (primary >= 5) {
         riskLevel = 'moderate';
         label = 'Intermediate 5-year risk';
-        interpretation = `Estimated ~${risk2}% 2-year and ~${risk5}% 5-year risk. Optimize BP, RASi/SGLT2i as indicated, ACR control, and nephrology co-management.`;
+        interpretation = `Estimated ~${risk2}% 2-year and ~${risk5}% 5-year risk (${regionLabel}). Optimize BP, RASi/SGLT2i as indicated, ACR control, and nephrology co-management.`;
       } else {
         riskLevel = 'low';
         label = 'Lower 5-year risk (<5%)';
-        interpretation = `Estimated ~${risk2}% 2-year and ~${risk5}% 5-year risk. Continue CKD care, risk-factor control, and periodic re-estimation as eGFR/ACR change.`;
+        interpretation = `Estimated ~${risk2}% 2-year and ~${risk5}% 5-year risk (${regionLabel}). Continue CKD care, risk-factor control, and periodic re-estimation as eGFR/ACR change.`;
       }
       return {
         score: primary,
@@ -165,19 +179,20 @@ export const wave5NephroGiCalcs: Calculator[] = [
           { label: '5-year risk (est.)', value: `${risk5}%` },
           { label: 'eGFR', value: `${egfr} mL/min/1.73 m²` },
           { label: 'ACR', value: `${acr} mg/g` },
-          { label: 'Model', value: '4-variable Tangri (educational NA baseline)' },
+          { label: 'Region', value: `${regionLabel} (S₀ 2y ${s0_2.toFixed(4)}, 5y ${s0_5.toFixed(4)})` },
+          { label: 'Model', value: '4-variable Tangri KFRE' },
         ],
         recommendations: [
-          'Regional KFRE calibrations (North America vs non-NA) differ — use local tool when available for counseling.',
+          'Use the matched regional S₀ pair for counseling; North America and non-NA calibrations differ.',
           'Not for AKI or rapidly changing labs.',
         ],
       };
     },
     evidence: {
       summary:
-        '4-variable KFRE uses age, sex, eGFR, and ln(ACR). Linear predictor centered as in Tangri development; 2- and 5-year risks use educational baseline survivals (≈0.975 and 0.9365). Non-NA calibrations differ.',
+        '4-variable KFRE uses age, sex, eGFR, and ln(ACR). Linear predictor centered as in Tangri development. Matched baseline survivals (Tangri JAMA 2016): North America S₀(2y)=0.9750, S₀(5y)=0.9240; non–North America S₀(2y)=0.9832, S₀(5y)=0.9365. Do not mix 0.975 with 0.9365.',
       formula:
-        'LP = −0.2201(age/10−7.036)+0.2467(male−0.5642)−0.5567(eGFR/5−7.222)+0.451(ln ACR−5.137); Risk = 1 − S₀^exp(LP)',
+        'LP = −0.2201(age/10−7.036)+0.2467(male−0.5642)−0.5567(eGFR/5−7.222)+0.451(ln ACR−5.137); Risk = 1 − S₀^exp(LP); NA S₀ 0.9750/0.9240; non-NA S₀ 0.9832/0.9365',
       validation: 'Tangri et al. JAMA 2011 / Kidney Int updates; widely validated. Educational implementation — prefer official regional calculator for formal counseling.',
       references: [
         {
@@ -203,6 +218,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
     pearls: [
       'ACR must be in mg/g (or convert carefully from mg/mmol).',
       'Risk falls as eGFR rises and ACR falls — recheck after optimization.',
+      'North America uses matched S₀ 0.9750 (2y) and 0.9240 (5y); non-NA uses 0.9832 and 0.9365.',
     ],
   },
 
@@ -619,9 +635,9 @@ export const wave5NephroGiCalcs: Calculator[] = [
   // 8. Spot → 24h Na (Kawasaki-style educational)
   {
     id: 'sodium-excretion',
-    name: 'Estimated 24-Hour Urine Sodium (Spot / Kawasaki-Style)',
+    name: 'Estimated 24-Hour Urine Sodium (Kawasaki)',
     shortName: '24h Na Est.',
-    description: 'Estimates 24-hour urinary sodium excretion from a spot urine Na/Cr using predicted creatinine excretion (Kawasaki-style educational).',
+    description: 'Estimates 24-hour urinary sodium excretion from a spot urine Na/Cr using Kawasaki 1993 sex-specific predicted creatinine excretion.',
     category: 'nephrology',
     tags: ['sodium', 'urine', 'dietary salt', 'kawasaki', 'hypertension'],
     whenToUse: 'Estimate daily sodium excretion / dietary salt when full 24h collection is unavailable.',
@@ -644,10 +660,10 @@ export const wave5NephroGiCalcs: Calculator[] = [
       const wt = num(values.weight, 70);
       const ht = num(values.height, 170);
       const male = str(values.sex, 'M') === 'M';
-      // Predicted 24h Cr excretion (mg/day) — Kawasaki PRCr
+      // Kawasaki 1993 predicted 24h Cr excretion (mg/day), sex-specific (not Tanaka)
       const prCr = male
-        ? -2.04 * age + 14.89 * wt + 16.14 * ht - 2244.45
-        : -2.04 * age + 14.89 * wt + 16.14 * ht - 2098.82;
+        ? -12.63 * age + 15.12 * wt + 7.39 * ht - 79.9
+        : -4.72 * age + 8.58 * wt + 5.09 * ht - 74.5;
       const prCrUse = Math.max(prCr, 100);
       // Kawasaki XNa: UNa (mmol/L) / (UCr mg/dL × 10) × PRCr (mg/day)
       // The ×10 converts creatinine from mg/dL to mg/L so units cancel with PRCr.
@@ -681,14 +697,14 @@ export const wave5NephroGiCalcs: Calculator[] = [
           { label: 'Est. 24h Na', value: `${na24} mEq/day` },
           { label: 'Approx. NaCl', value: `${saltG} g/day` },
           { label: 'Predicted 24h Cr', value: `${round(prCrUse, 0)} mg/day` },
-          { label: 'Method', value: 'Kawasaki-style educational' },
+          { label: 'Method', value: 'Kawasaki 1993 (sex-specific PRCr)' },
         ],
       };
     },
     evidence: {
       summary:
-        'Kawasaki-style: PRCr from age/weight/height/sex; XNa = (UNa mEq/L) / (UCr mg/dL × 10) × PRCr; 24h Na ≈ 16.3×√XNa. The ×10 converts Cr mg/dL→mg/L. Educational estimate — not a substitute for timed collection.',
-      formula: '24h Na ≈ 16.3 × √[(UNa / (UCr×10)) × PRCr]',
+        'Kawasaki 1993: sex-specific PRCr (male −12.63·age + 15.12·wt + 7.39·ht − 79.90; female −4.72·age + 8.58·wt + 5.09·ht − 74.50). XNa = (UNa mEq/L) / (UCr mg/dL × 10) × PRCr; 24h Na = 16.3 × √XNa. The ×10 converts Cr mg/dL→mg/L. Not Tanaka PRCr. Educational estimate — not a substitute for timed collection.',
+      formula: 'PRCr♂=−12.63·age+15.12·wt+7.39·ht−79.90; PRCr♀=−4.72·age+8.58·wt+5.09·ht−74.50; 24h Na = 16.3 × √[(UNa/(UCr×10))×PRCr]',
       validation: 'Spot formulas (Kawasaki, Tanaka, INTERSALT, Nerbass) show population utility but individual-level error is substantial.',
       references: [
         {
@@ -707,6 +723,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
     pearls: [
       'Diuretics and large day-to-day diet swings limit single-spot accuracy.',
       '1 g sodium ≈ 43 mEq; 1 g NaCl ≈ 17 mEq Na.',
+      'Kawasaki PRCr is sex-specific; Tanaka’s sex-independent PRCr is a different equation.',
     ],
   },
 

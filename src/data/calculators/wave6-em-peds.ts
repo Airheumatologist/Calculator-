@@ -392,15 +392,15 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whyUse: 'SIRS ≥2 criteria (must include temp or leukocyte abnormality in many pediatric definitions) flagged systemic inflammation; note Phoenix/Sepsis-3 evolution in newer frameworks.',
     inputs: [
       selectInput('ageBand', 'Age band (for vital thresholds)', [
-        { label: 'Newborn 0–7 days', value: '0-7d' },
-        { label: 'Neonate 8–30 days', value: '8-30d' },
-        { label: 'Infant 1–12 months', value: 'infant' },
-        { label: 'Toddler 1–5 years', value: 'toddler' },
+        { label: 'Newborn 0 days to 1 week', value: '0-7d' },
+        { label: 'Neonate 1 week to 1 month', value: '8-30d' },
+        { label: 'Infant 1 month–23 months (incl. 12–23 mo)', value: 'infant' },
+        { label: 'Toddler/preschool 2–5 years', value: 'toddler' },
         { label: 'School age 6–12 years', value: 'school' },
-        { label: 'Adolescent 13–18 years', value: 'teen' },
-      ], undefined, 'Goldstein 2005 tachycardia / tachypnea / WBC floors used here: 0–7 d HR >180, RR >50, WBC <5 or >34; 8–30 d HR >180, RR >40, WBC <5 or >19.5; 1–12 mo HR >180, RR >34, WBC <5 or >17.5; 1–5 y HR >140, RR >22, WBC <6 or >15.5; 6–12 y HR >130, RR >18, WBC <4.5 or >13.5; 13–18 y HR >110, RR >14, WBC <4.5 or >11. Neonatal bradycardia <100 also counts.'),
+        { label: 'Adolescent 13 to <18 years', value: 'teen' },
+      ], undefined, 'Goldstein 2005 age groups (no 1–5 year band). Map 12–23 mo to the infant band — do not use 2–5 y vitals. Newborn 0 d–1 wk: HR >180 or <100, RR >50, WBC >34. Neonate 1 wk–1 mo: HR >180 or <100, RR >40, WBC >19.5 or <5. Infant 1 mo–1 y (and 12–23 mo here): HR >180 or <90, RR >34, WBC >17.5 or <5. Toddler/preschool 2–5 y: HR >140, RR >22, WBC >15.5 or <6. School 6–12 y: HR >130, RR >18, WBC >13.5 or <4.5. Adolescent 13 to <18 y: HR >110, RR >14, WBC >11 or <4.5. Bradycardia is a CV SIRS criterion for children <1 year.'),
       numberInput('temp', 'Core temperature', { unit: '°C', min: 30, max: 43, step: 0.1, defaultValue: 38.5, helpText: 'Abnormal if >38.5°C or <36.0°C (Goldstein). Pediatric SIRS usually requires temperature or WBC abnormality among the ≥2 criteria.' }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 40, max: 280, defaultValue: 140, helpText: 'Tachycardia if above the age-band cutoff in the age-band helpText. Bradycardia <100 bpm counts in the first 30 days of life.' }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 40, max: 280, defaultValue: 140, helpText: 'Tachycardia if above the age-band cutoff. Bradycardia counts as the CV criterion for children <1 year (newborn/neonate <100; infant including 12–23 mo <90), not only 0–30 days.' }),
       numberInput('rr', 'Respiratory rate', { unit: '/min', min: 5, max: 120, defaultValue: 30, helpText: 'Tachypnea if above the age-band cutoff. Mechanical ventilation for an acute process also fulfills the respiratory criterion.' }),
       numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 100, step: 0.1, defaultValue: 14, helpText: 'Leukocyte criterion: WBC above or below the age-band range, or bands >10%.' }),
       yesNo('bands', 'Immature neutrophils (bands) >10%', 0),
@@ -412,19 +412,19 @@ export const wave6EmPedsCalcs: Calculator[] = [
       const hr = num(values.hr, 140);
       const rr = num(values.rr, 30);
       const wbc = num(values.wbc, 14);
-      // Approximate Goldstein age-specific abnormal HR/RR cutoffs (tachycardia / tachypnea upper limits)
-      const cut: Record<string, { hr: number; rr: number; wbcLo: number; wbcHi: number }> = {
-        '0-7d': { hr: 180, rr: 50, wbcLo: 5, wbcHi: 34 },
-        '8-30d': { hr: 180, rr: 40, wbcLo: 5, wbcHi: 19.5 },
-        infant: { hr: 180, rr: 34, wbcLo: 5, wbcHi: 17.5 },
-        toddler: { hr: 140, rr: 22, wbcLo: 6, wbcHi: 15.5 },
-        school: { hr: 130, rr: 18, wbcLo: 4.5, wbcHi: 13.5 },
-        teen: { hr: 110, rr: 14, wbcLo: 4.5, wbcHi: 11 },
+      // Goldstein 2005 Table 3. Infant band includes 12–23 mo (no official 1–5 y group).
+      const cut: Record<string, { hr: number; hrLo: number | null; rr: number; wbcLo: number; wbcHi: number }> = {
+        '0-7d': { hr: 180, hrLo: 100, rr: 50, wbcLo: 5, wbcHi: 34 },
+        '8-30d': { hr: 180, hrLo: 100, rr: 40, wbcLo: 5, wbcHi: 19.5 },
+        infant: { hr: 180, hrLo: 90, rr: 34, wbcLo: 5, wbcHi: 17.5 },
+        toddler: { hr: 140, hrLo: null, rr: 22, wbcLo: 6, wbcHi: 15.5 },
+        school: { hr: 130, hrLo: null, rr: 18, wbcLo: 4.5, wbcHi: 13.5 },
+        teen: { hr: 110, hrLo: null, rr: 14, wbcLo: 4.5, wbcHi: 11 },
       };
       const c = cut[age] ?? cut.infant;
       const tempAbn = temp > 38.5 || temp < 36;
-      const hrAbn = hr > c.hr; // bradycardia criterion mainly neonates — simplified
-      const bradycardia = (age === '0-7d' || age === '8-30d') && hr < 100;
+      const hrAbn = hr > c.hr;
+      const bradycardia = c.hrLo != null && hr < c.hrLo;
       const rrAbn = rr > c.rr || bool(values.mechVent);
       const wbcAbn = wbc > c.wbcHi || wbc < c.wbcLo || bool(values.bands);
       let criteria = 0;
@@ -467,7 +467,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
           { label: 'RR / vent abnormal', value: rrAbn ? 'Yes' : 'No' },
           { label: 'WBC / bands abnormal', value: wbcAbn ? 'Yes' : 'No' },
           { label: 'Bands >10%', value: bool(values.bands) ? 'Yes' : 'No' },
-          { label: 'Age HR cutoff used', value: `>${c.hr} bpm` },
+          { label: 'Age HR cutoff used', value: c.hrLo != null ? `>${c.hr} or <${c.hrLo} bpm` : `>${c.hr} bpm` },
           { label: 'Age RR cutoff used', value: `>${c.rr}/min` },
         ],
         recommendations: [
@@ -479,7 +479,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Goldstein 2005 pediatric sepsis consensus used age-specific SIRS thresholds. Sepsis = SIRS + infection; severe sepsis/septic shock required organ dysfunction. Newer Phoenix criteria shift away from SIRS-centric definitions.',
+        'Goldstein 2005 pediatric sepsis consensus age groups: newborn 0 d–1 wk; neonate 1 wk–1 mo; infant 1 mo–1 y; toddler/preschool 2–5 y; school age 6–12 y; adolescent 13 to <18 y (no 1–5 year band). 12–23 month olds are mapped to the infant vital band here. Bradycardia is a CV SIRS criterion for children <1 year. Sepsis = SIRS + infection; newer Phoenix criteria shift away from SIRS-centric definitions.',
       formula: '≥2 of: temp, HR, RR/vent, WBC/bands (with temp or WBC required)',
       validation: 'Historical standard; sensitive but nonspecific. Supplemented/superseded in research by organ-dysfunction scores.',
       references: [
@@ -498,7 +498,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
     ],
     pearls: [
       'Fever from viral illness commonly meets SIRS — clinical context is essential.',
-      'Neonatal bradycardia can count toward SIRS cardiovascular criterion.',
+      'Bradycardia counts toward the CV SIRS criterion for children <1 year (not only 0–30 days).',
     ],
   },
 

@@ -996,7 +996,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
     inputs: [
       yesNo('age', 'Age > 65 years', 1),
       yesNo('stage', 'Advanced stage (Rai I–IV or Binet B–C)', 1),
-      yesNo('b2m', 'β₂-microglobulin > upper limit of normal', 2),
+      yesNo('b2m', 'β₂-microglobulin > 3.5 mg/L', 2, 'CLL-IPI uses a fixed cutoff of >3.5 mg/L (2 points), not the institutional ULN.'),
       yesNo('ighv', 'IGHV unmutated (≥98% identity to germline)', 2, 'Unmutated = ≥98% identity to germline (CLL-IPI / ERIC). Mutated = <98%. 97.0–97.9% is mutated on the 98% convention; use the report’s stated cutoff if the lab uses 97%.'),
       yesNo('tp53', 'del(17p) and/or TP53 mutation', 4),
     ],
@@ -1045,7 +1045,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'CLL-IPI: age>65 (1), advanced stage (1), β2M>ULN (2), unmutated IGHV (2), del(17p)/TP53mut (4). Low 0–1, int 2–3, high 4–6, very high 7–10.',
+        'CLL-IPI: age>65 (1), advanced stage (1), β2M >3.5 mg/L (2), unmutated IGHV (2), del(17p)/TP53mut (4). Low 0–1, int 2–3, high 4–6, very high 7–10.',
       formula: 'Weighted sum 0–10',
       validation: 'International CLL-IPI working group (Lancet Oncol 2016).',
       references: [

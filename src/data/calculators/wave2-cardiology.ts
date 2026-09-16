@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
+import { num, bool, round, clamp, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave2CardiologyCalcs: Calculator[] = [
   {
@@ -214,90 +214,88 @@ export const wave2CardiologyCalcs: Calculator[] = [
   },
   {
     id: 'effect-hf',
-    name: 'EFFECT HF Mortality Score (Simplified)',
+    name: 'EFFECT HF 30-Day Mortality Score',
     shortName: 'EFFECT HF',
     description:
-      'Simplified educational version of key EFFECT predictors for 30-day mortality risk in acute heart failure hospitalizations.',
+      'Lee et al. JAMA 2003 Table 4 30-day EFFECT mortality risk index for patients hospitalized with heart failure.',
     category: 'cardiology',
     tags: ['heart failure', 'effect', 'mortality', '30-day'],
-    whenToUse: 'Adults admitted with heart failure when estimating short-term mortality risk (educational/simplified).',
-    whyUse: 'Highlights major EFFECT variables (age, vitals, labs, comorbidities) without full multi-outcome nomogram complexity.',
+    whenToUse: 'Adults admitted with heart failure when estimating 30-day mortality risk from admission variables.',
+    whyUse: 'Published 30-day integer model (age, RR, SBP credits, BUN, Na, comorbidities). Hemoglobin is in the 1-year model only.',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 75 }),
-      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 8, max: 60, defaultValue: 20 }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, defaultValue: 120 }),
-      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, defaultValue: 30 }),
-      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 110, max: 160, defaultValue: 138 }),
-      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 4, max: 20, step: 0.1, defaultValue: 12 }),
-      yesNo('cvd', 'Cerebrovascular disease', 6),
-      yesNo('dementia', 'Dementia', 8),
-      yesNo('copd', 'COPD', 4),
-      yesNo('cirrhosis', 'Hepatic cirrhosis', 10),
-      yesNo('cancer', 'Cancer', 8),
+      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 8, max: 60, defaultValue: 20, helpText: 'Table 4 adds RR after clamping to 20–45 /min (RR <20 counts as 20).' }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, defaultValue: 120, helpText: 'SBP contributes negative credits (higher SBP lowers the score).' }),
+      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, defaultValue: 30, helpText: 'Added 1 point per mg/dL, capped at 60.' }),
+      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 110, max: 160, defaultValue: 138, helpText: 'Na <136 mEq/L adds +10. Hemoglobin is not in the 30-day model.' }),
+      yesNo('cvd', 'Cerebrovascular disease', 10),
+      yesNo('dementia', 'Dementia', 20),
+      yesNo('copd', 'COPD', 10),
+      yesNo('cirrhosis', 'Hepatic cirrhosis', 25),
+      yesNo('cancer', 'Cancer', 15),
     ],
     calculate(values) {
       const age = num(values.age, 75);
-      const rr = num(values.rr, 20);
+      const rrRaw = num(values.rr, 20);
       const sbp = num(values.sbp, 120);
-      const bun = num(values.bun, 30);
+      const bunRaw = num(values.bun, 30);
       const na = num(values.na, 138);
-      const hb = num(values.hb, 12);
 
-      // Simplified points inspired by EFFECT 30-day model key weights (educational, not full nomogram)
-      let score = age; // age in years contributes as points in original EFFECT
-      if (rr >= 20 && rr <= 24) score += 0;
-      else if (rr >= 25 && rr <= 29) score += 4;
-      else if (rr >= 30) score += 8;
-      // low RR not heavily weighted; mild elevation baseline 0
+      // Lee DS JAMA 2003 Table 4 — 30-day EFFECT (not the 1-year model)
+      const rr = clamp(rrRaw, 20, 45);
+      const bun = Math.min(bunRaw, 60);
+      let sbpCredit = -30;
+      if (sbp >= 180) sbpCredit = -60;
+      else if (sbp >= 160) sbpCredit = -55;
+      else if (sbp >= 140) sbpCredit = -50;
+      else if (sbp >= 120) sbpCredit = -45;
+      else if (sbp >= 100) sbpCredit = -40;
+      else if (sbp >= 90) sbpCredit = -35;
 
-      if (sbp < 90) score += 28;
-      else if (sbp < 100) score += 20;
-      else if (sbp < 120) score += 13;
-      else if (sbp < 140) score += 7;
-      else if (sbp < 160) score += 3;
-
-      if (bun >= 90) score += 24;
-      else if (bun >= 60) score += 17;
-      else if (bun >= 40) score += 12;
-      else if (bun >= 30) score += 8;
-      else if (bun >= 20) score += 4;
-
-      if (na < 136) score += 4;
-      if (hb < 10) score += 3;
-
-      score += bool(values.cvd) ? 6 : 0;
-      score += bool(values.dementia) ? 8 : 0;
-      score += bool(values.copd) ? 4 : 0;
-      score += bool(values.cirrhosis) ? 10 : 0;
-      score += bool(values.cancer) ? 8 : 0;
+      let score =
+        age +
+        rr +
+        sbpCredit +
+        bun +
+        (na < 136 ? 10 : 0) +
+        (bool(values.cvd) ? 10 : 0) +
+        (bool(values.dementia) ? 20 : 0) +
+        (bool(values.copd) ? 10 : 0) +
+        (bool(values.cirrhosis) ? 25 : 0) +
+        (bool(values.cancer) ? 15 : 0);
 
       score = round(score, 0);
 
-      // Approximate 30-day mortality bands (educational; original EFFECT uses full point→risk table)
       const r = riskFromThresholds(score, [
         {
           max: 60,
           level: 'low',
-          label: 'Lower risk band',
-          interpretation: `Simplified EFFECT-style score ${score}: lower 30-day mortality band. Still individualize care.`,
+          label: 'Very low 30-day risk',
+          interpretation: `EFFECT 30-day score ${score} (≤60): very low predicted 30-day mortality (derivation ~0.4%). Still individualize care.`,
         },
         {
           max: 90,
-          level: 'moderate',
-          label: 'Intermediate risk band',
-          interpretation: `Simplified EFFECT-style score ${score}: intermediate 30-day mortality risk. Optimize HF therapy and monitor closely.`,
+          level: 'low',
+          label: 'Low 30-day risk',
+          interpretation: `EFFECT 30-day score ${score} (61–90): low predicted 30-day mortality. Optimize HF therapy and monitor closely.`,
         },
         {
           max: 120,
-          level: 'high',
-          label: 'Higher risk band',
-          interpretation: `Simplified EFFECT-style score ${score}: elevated 30-day mortality risk. Consider intensified care and goals-of-care discussion.`,
+          level: 'moderate',
+          label: 'Intermediate 30-day risk',
+          interpretation: `EFFECT 30-day score ${score} (91–120): intermediate predicted 30-day mortality. Intensify monitoring and GDMT as tolerated.`,
         },
         {
-          max: 300,
+          max: 150,
+          level: 'high',
+          label: 'High 30-day risk',
+          interpretation: `EFFECT 30-day score ${score} (121–150): high predicted 30-day mortality. Consider intensified care and goals-of-care discussion.`,
+        },
+        {
+          max: 400,
           level: 'critical',
-          label: 'Very high risk band',
-          interpretation: `Simplified EFFECT-style score ${score}: very high predicted short-term mortality. Multidisciplinary planning and advanced options as appropriate.`,
+          label: 'Very high 30-day risk',
+          interpretation: `EFFECT 30-day score ${score} (>150): very high predicted 30-day mortality (derivation ~59%). Multidisciplinary planning and advanced options as appropriate.`,
         },
       ]);
 
@@ -305,20 +303,25 @@ export const wave2CardiologyCalcs: Calculator[] = [
         score,
         ...r,
         details: [
-          { label: 'Note', value: 'Educational simplification — not the full EFFECT calculator' },
-          { label: 'Age contribution', value: String(age) },
+          { label: 'Age', value: String(age) },
+          { label: 'RR (clamped 20–45)', value: String(rr) },
+          { label: 'SBP credit', value: String(sbpCredit) },
+          { label: 'BUN (capped 60)', value: String(bun) },
         ],
         recommendations:
-          score > 90
+          score > 120
             ? ['Higher-intensity monitoring', 'Reassess congestion, perfusion, comorbidities', 'Palliative care / goals discussion when appropriate']
-            : ['Standard HF pathway', 'GDMT optimization', 'Address reversible precipitants'],
+            : score > 90
+              ? ['Close inpatient monitoring', 'GDMT optimization', 'Address reversible precipitants']
+              : ['Standard HF pathway', 'GDMT optimization', 'Address reversible precipitants'],
       };
     },
     evidence: {
       summary:
-        'EFFECT (Enhanced Feedback for Effective Cardiac Treatment) models predict 30-day and 1-year mortality after HF hospitalization using age, vitals, labs, and comorbidities.',
-      formula: 'Simplified points from age + RR + SBP + BUN + Na + Hb + selected comorbidities (educational)',
-      validation: 'Original EFFECT validated in Ontario HF cohorts; this app version is intentionally simplified.',
+        'EFFECT 30-day model (Lee JAMA 2003 Table 4) predicts mortality after HF hospitalization from age, respiratory rate (min 20, max 45), SBP credits, BUN (max 60 mg/dL), Na <136, and comorbidities. Hemoglobin is not in the 30-day model.',
+      formula:
+        'Score = Age + RR(clamped 20–45) + SBP credits (≥180 −60; 160–179 −55; 140–159 −50; 120–139 −45; 100–119 −40; 90–99 −35; <90 −30) + BUN mg/dL (max 60) + Na<136 (+10) + CVD (+10) + dementia (+20) + COPD (+10) + cirrhosis (+25) + cancer (+15). Strata: ≤60 very low; 61–90 low; 91–120 intermediate; 121–150 high; >150 very high.',
+      validation: 'Derived and validated in Ontario EFFECT HF cohorts (c-statistic ~0.80 for 30-day mortality).',
       references: [
         {
           title: 'Predicting mortality among patients hospitalized for heart failure (EFFECT)',
@@ -330,31 +333,35 @@ export const wave2CardiologyCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Lower risk band', actions: ['Usual inpatient HF care', 'Early ambulation and education'] },
-      { condition: 'High / very high band', actions: ['Consider telemetry/ICU if unstable', 'Advanced HF referral if candidate', 'Clarify goals of care'] },
+      { condition: 'Very low / low (≤90)', actions: ['Usual inpatient HF care', 'Early ambulation and education'] },
+      { condition: 'High / very high (≥121)', actions: ['Consider telemetry/ICU if unstable', 'Advanced HF referral if candidate', 'Clarify goals of care'] },
     ],
-    pearls: ['Not a substitute for the full published EFFECT point tables or online calculators.', 'Hyponatremia and low SBP are strong adverse markers in acute HF.'],
+    pearls: [
+      'Table 4 30-day model subtracts SBP credits; higher SBP lowers predicted risk.',
+      'RR below 20 is scored as 20; BUN is capped at 60 mg/dL.',
+      'Hemoglobin contributes to the 1-year EFFECT model, not the 30-day index.',
+    ],
   },
   {
     id: 'gwtg-hf',
-    name: 'GWTG-HF Risk Score (Simplified)',
+    name: 'GWTG-HF In-Hospital Mortality Score',
     shortName: 'GWTG-HF',
     description:
-      'Simplified educational Get With The Guidelines–Heart Failure in-hospital mortality risk using major predictors.',
+      'Peterson 2010 Get With The Guidelines–Heart Failure integer nomogram for in-hospital mortality.',
     category: 'cardiology',
     tags: ['heart failure', 'gwtg', 'mortality', 'aha'],
-    whenToUse: 'Adults admitted with acute HF for educational in-hospital mortality risk estimate.',
-    whyUse: 'Based on major GWTG-HF predictors (age, SBP, BUN, sodium, heart rate, COPD, race).',
+    whenToUse: 'Adults admitted with acute HF for in-hospital mortality risk estimate from admission variables.',
+    whyUse: 'Published integer point tables (age, SBP, BUN, heart rate, sodium, COPD +2, non-black race +3).',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 72 }),
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, defaultValue: 130 }),
       numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, defaultValue: 25 }),
       numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 200, defaultValue: 80 }),
       numberInput('na', 'Sodium', { unit: 'mEq/L', min: 110, max: 160, defaultValue: 138 }),
-      yesNo('copd', 'COPD', 3),
+      yesNo('copd', 'COPD', 2),
       selectInput('race', 'Race category (GWTG variable)', [
-        { label: 'Black', value: 'black', description: 'Black race as coded in GWTG-HF (associated with lower in-hospital mortality in derivation)' },
-        { label: 'Non-black', value: 'nonblack', description: 'All other race categories (adds points in this educational simplification)' },
+        { label: 'Black (0)', value: 'black', points: 0, description: 'Black race as coded in GWTG-HF (0 points; lower in-hospital mortality in derivation)' },
+        { label: 'Non-black (+3)', value: 'nonblack', points: 3, description: 'All other race categories add +3 in the published nomogram' },
       ], undefined, 'GWTG-HF derivation coding — not a clinical race assessment. Interpret cautiously.'),
     ],
     calculate(values) {
@@ -364,58 +371,130 @@ export const wave2CardiologyCalcs: Calculator[] = [
       const hr = num(values.hr, 80);
       const na = num(values.na, 138);
 
-      // Educational point approximation patterned on GWTG-HF nomogram directions
-      let pts = 0;
-      // Age: ~1 point per year above 19 (scaled)
-      pts += Math.max(0, age - 19) * 0.5;
-      // Lower SBP → higher risk
-      if (sbp < 100) pts += 25;
-      else if (sbp < 120) pts += 18;
-      else if (sbp < 140) pts += 12;
-      else if (sbp < 160) pts += 6;
-      else pts += 2;
-      // Higher BUN → higher risk
-      if (bun >= 60) pts += 22;
-      else if (bun >= 40) pts += 15;
-      else if (bun >= 30) pts += 10;
-      else if (bun >= 20) pts += 5;
-      // Higher HR
-      if (hr >= 105) pts += 8;
-      else if (hr >= 90) pts += 5;
-      else if (hr >= 80) pts += 3;
-      // Lower sodium
-      if (na < 130) pts += 8;
-      else if (na < 135) pts += 4;
-      else if (na < 138) pts += 1;
-      if (bool(values.copd)) pts += 3;
-      if (String(values.race) === 'nonblack') pts += 3;
+      // Peterson 2010 / AHA GWTG-HF integer nomogram (not a 0.5×(age−19) approximation)
+      let agePts = 28;
+      if (age < 20) agePts = 0;
+      else if (age < 30) agePts = 3;
+      else if (age < 40) agePts = 6;
+      else if (age < 50) agePts = 8;
+      else if (age < 60) agePts = 11;
+      else if (age < 70) agePts = 14;
+      else if (age < 80) agePts = 17;
+      else if (age < 90) agePts = 19;
+      else if (age < 100) agePts = 22;
+      else if (age < 110) agePts = 25;
 
-      pts = round(pts, 0);
+      let sbpPts = 28;
+      if (sbp >= 200) sbpPts = 0;
+      else if (sbp >= 190) sbpPts = 2;
+      else if (sbp >= 180) sbpPts = 4;
+      else if (sbp >= 170) sbpPts = 6;
+      else if (sbp >= 160) sbpPts = 8;
+      else if (sbp >= 150) sbpPts = 9;
+      else if (sbp >= 140) sbpPts = 11;
+      else if (sbp >= 130) sbpPts = 13;
+      else if (sbp >= 120) sbpPts = 15;
+      else if (sbp >= 110) sbpPts = 17;
+      else if (sbp >= 100) sbpPts = 19;
+      else if (sbp >= 90) sbpPts = 21;
+      else if (sbp >= 80) sbpPts = 23;
+      else if (sbp >= 70) sbpPts = 24;
+      else if (sbp >= 60) sbpPts = 26;
+      else sbpPts = 28;
+
+      let bunPts = 28;
+      if (bun < 10) bunPts = 0;
+      else if (bun < 20) bunPts = 2;
+      else if (bun < 30) bunPts = 4;
+      else if (bun < 40) bunPts = 6;
+      else if (bun < 50) bunPts = 8;
+      else if (bun < 60) bunPts = 9;
+      else if (bun < 70) bunPts = 11;
+      else if (bun < 80) bunPts = 13;
+      else if (bun < 90) bunPts = 15;
+      else if (bun < 100) bunPts = 17;
+      else if (bun < 110) bunPts = 19;
+      else if (bun < 120) bunPts = 21;
+      else if (bun < 130) bunPts = 23;
+      else if (bun < 140) bunPts = 25;
+      else if (bun < 150) bunPts = 27;
+      else bunPts = 28;
+
+      let hrPts = 8;
+      if (hr < 80) hrPts = 0;
+      else if (hr < 85) hrPts = 1;
+      else if (hr < 90) hrPts = 3;
+      else if (hr < 95) hrPts = 4;
+      else if (hr < 100) hrPts = 5;
+      else if (hr < 105) hrPts = 6;
+      else hrPts = 8;
+
+      let naPts = 4;
+      if (na >= 139) naPts = 0;
+      else if (na >= 137) naPts = 1;
+      else if (na >= 134) naPts = 2;
+      else if (na >= 131) naPts = 3;
+      else naPts = 4;
+
+      const copdPts = bool(values.copd) ? 2 : 0;
+      const racePts = String(values.race) === 'black' ? 0 : 3;
+
+      const pts = agePts + sbpPts + bunPts + hrPts + naPts + copdPts + racePts;
 
       const r = riskFromThresholds(pts, [
         {
           max: 33,
           level: 'low',
-          label: 'Lower in-hospital mortality band',
-          interpretation: `Simplified GWTG-HF points ${pts}: lower predicted in-hospital mortality band.`,
+          label: '<1% predicted in-hospital mortality',
+          interpretation: `GWTG-HF score ${pts} (0–33): predicted in-hospital mortality <1%.`,
         },
         {
           max: 50,
           level: 'moderate',
-          label: 'Intermediate risk band',
-          interpretation: `Simplified GWTG-HF points ${pts}: intermediate predicted in-hospital mortality.`,
+          label: '~1–5% predicted in-hospital mortality',
+          interpretation: `GWTG-HF score ${pts} (34–50): predicted in-hospital mortality ~1–5%.`,
+        },
+        {
+          max: 57,
+          level: 'high',
+          label: '~5–10% predicted in-hospital mortality',
+          interpretation: `GWTG-HF score ${pts} (51–57): predicted in-hospital mortality ~5–10%.`,
+        },
+        {
+          max: 61,
+          level: 'high',
+          label: '~10–15% predicted in-hospital mortality',
+          interpretation: `GWTG-HF score ${pts} (58–61): predicted in-hospital mortality ~10–15%.`,
+        },
+        {
+          max: 65,
+          level: 'high',
+          label: '~15–20% predicted in-hospital mortality',
+          interpretation: `GWTG-HF score ${pts} (62–65): predicted in-hospital mortality ~15–20%.`,
         },
         {
           max: 70,
-          level: 'high',
-          label: 'Higher risk band',
-          interpretation: `Simplified GWTG-HF points ${pts}: higher predicted in-hospital mortality. Intensify monitoring.`,
+          level: 'critical',
+          label: '~20–30% predicted in-hospital mortality',
+          interpretation: `GWTG-HF score ${pts} (66–70): predicted in-hospital mortality ~20–30%.`,
+        },
+        {
+          max: 74,
+          level: 'critical',
+          label: '~30–40% predicted in-hospital mortality',
+          interpretation: `GWTG-HF score ${pts} (71–74): predicted in-hospital mortality ~30–40%.`,
+        },
+        {
+          max: 78,
+          level: 'critical',
+          label: '~40–50% predicted in-hospital mortality',
+          interpretation: `GWTG-HF score ${pts} (75–78): predicted in-hospital mortality ~40–50%.`,
         },
         {
           max: 200,
           level: 'critical',
-          label: 'Very high risk band',
-          interpretation: `Simplified GWTG-HF points ${pts}: very high predicted in-hospital mortality risk.`,
+          label: '>50% predicted in-hospital mortality',
+          interpretation: `GWTG-HF score ${pts} (≥79): predicted in-hospital mortality >50%.`,
         },
       ]);
 
@@ -423,8 +502,12 @@ export const wave2CardiologyCalcs: Calculator[] = [
         score: pts,
         ...r,
         details: [
-          { label: 'Note', value: 'Educational simplification of GWTG-HF — not the official AHA calculator' },
-          { label: 'Key drivers', value: 'Age, low SBP, high BUN, HR, low Na, COPD, race' },
+          { label: 'Age points', value: String(agePts) },
+          { label: 'SBP points', value: String(sbpPts) },
+          { label: 'BUN points', value: String(bunPts) },
+          { label: 'HR points', value: String(hrPts) },
+          { label: 'Na points', value: String(naPts) },
+          { label: 'COPD / race', value: `${copdPts} / ${racePts}` },
         ],
         recommendations:
           pts > 50
@@ -434,9 +517,10 @@ export const wave2CardiologyCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'GWTG-HF risk score predicts in-hospital mortality using routinely available admission variables from the AHA Get With The Guidelines–HF registry.',
-      formula: 'Simplified points from age, SBP, BUN, HR, Na, COPD, race (educational)',
-      validation: 'Original score derived/validated in GWTG-HF; this version is simplified for teaching.',
+        'GWTG-HF integer nomogram (Peterson Circ Cardiovasc Qual Outcomes 2010) predicts in-hospital mortality from admission age, SBP, BUN, heart rate, sodium, COPD, and race.',
+      formula:
+        'Integer bins: age (<20=0 … 80–89=19 … ≥110=28); SBP (50–59=28 … ≥200=0); BUN (≤9=0 … ≥150=28); HR (≤79=0 … ≥105=8); Na (≤130=4 … ≥139=0); COPD +2; non-black +3. Mortality bands: 0–33 <1%; 34–50 ~1–5%; 51–57 ~5–10%; 58–61 ~10–15%; 62–65 ~15–20%; 66–70 ~20–30%; 71–74 ~30–40%; 75–78 ~40–50%; ≥79 >50%.',
+      validation: 'Derived/validated in AHA GWTG-HF (c-index 0.75 in derivation and validation).',
       references: [
         {
           title: 'A validated risk score for in-hospital mortality in heart failure (GWTG-HF)',
@@ -448,10 +532,14 @@ export const wave2CardiologyCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'Lower band', actions: ['Routine HF floor care', 'Focus on decongestion and education'] },
-      { condition: 'Higher bands', actions: ['Consider step-down/ICU if unstable', 'Address hypotension and renal injury', 'Disposition and goals planning'] },
+      { condition: '0–50 (<5%)', actions: ['Routine HF floor care', 'Focus on decongestion and education'] },
+      { condition: '≥51 (≥5–10%)', actions: ['Consider step-down/ICU if unstable', 'Address hypotension and renal injury', 'Disposition and goals planning'] },
     ],
-    pearls: ['Black race was associated with lower in-hospital mortality in the GWTG derivation — interpret cautiously.', 'Not for outpatient chronic HF prognosis alone.'],
+    pearls: [
+      'COPD is +2 (not +3); non-black race is +3.',
+      'Black race was associated with lower in-hospital mortality in the GWTG derivation — interpret cautiously.',
+      'Not for outpatient chronic HF prognosis alone.',
+    ],
   },
   {
     id: 'cpc-score',
@@ -571,30 +659,31 @@ export const wave2CardiologyCalcs: Calculator[] = [
       const ef = round((sv / edv) * 100, 1);
       const co = hrProvided ? round((sv * hr) / 1000, 2) : null;
 
+      // 2022 AHA/ACC/HFSA: HFrEF LVEF ≤40%; HFmrEF 41–49%; HFpEF ≥50%.
       const r = riskFromThresholds(ef, [
         {
           max: 29.9,
           level: 'critical',
           label: 'Severely reduced EF',
-          interpretation: `EF ${ef}% (SV ${sv} mL): severe LV systolic dysfunction by common echo cutoffs.`,
+          interpretation: `EF ${ef}% (SV ${sv} mL): severe LV systolic dysfunction by common echo cutoffs (still HFrEF if HF phenotype).`,
         },
         {
-          max: 39.9,
+          max: 40,
           level: 'high',
-          label: 'Moderately reduced EF (HFrEF range)',
-          interpretation: `EF ${ef}% (SV ${sv} mL): moderately reduced ejection fraction (HFrEF if chronic HF phenotype).`,
+          label: 'HFrEF range (LVEF ≤40%)',
+          interpretation: `EF ${ef}% (SV ${sv} mL): reduced ejection fraction — HFrEF if chronic HF phenotype (2022 AHA/ACC/HFSA: LVEF ≤40%).`,
         },
         {
           max: 49.9,
           level: 'moderate',
-          label: 'Mildly reduced EF',
-          interpretation: `EF ${ef}% (SV ${sv} mL): mildly reduced EF (HFmrEF range if HF present).`,
+          label: 'HFmrEF range (LVEF 41–49%)',
+          interpretation: `EF ${ef}% (SV ${sv} mL): mildly reduced EF (HFmrEF if HF present).`,
         },
         {
           max: 70,
           level: 'normal',
-          label: 'Preserved / normal EF',
-          interpretation: `EF ${ef}% (SV ${sv} mL): preserved EF range for many adults (context-dependent).`,
+          label: 'Preserved / normal EF (HFpEF range if HF)',
+          interpretation: `EF ${ef}% (SV ${sv} mL): preserved EF (HFpEF if HF phenotype; 2022 AHA/ACC/HFSA: LVEF ≥50%).`,
         },
         {
           max: 100,
@@ -615,24 +704,32 @@ export const wave2CardiologyCalcs: Calculator[] = [
           { label: 'EDV / ESV', value: `${edv} / ${esv} mL` },
         ],
         recommendations:
-          ef < 40
-            ? ['Correlate with clinical HF phenotype', 'GDMT for HFrEF when indicated', 'Evaluate cardiomyopathy etiology']
-            : ['Interpret with symptoms, diastolic function, and valves', 'SV alone does not define shock'],
+          ef <= 40
+            ? ['Correlate with clinical HF phenotype', 'GDMT for HFrEF when indicated (LVEF ≤40%)', 'Evaluate cardiomyopathy etiology']
+            : ef < 50
+              ? ['HFmrEF (41–49%): treat per phenotype and consider HFrEF-style GDMT when indicated', 'Interpret with symptoms, diastolic function, and valves']
+              : ['Interpret with symptoms, diastolic function, and valves', 'SV alone does not define shock'],
       };
     },
     evidence: {
-      summary: 'SV = EDV − ESV; EF (%) = 100 × SV/EDV; CO (L/min) = SV(mL) × HR / 1000.',
-      formula: 'SV = EDV − ESV; EF = SV/EDV × 100; CO = SV × HR / 1000',
-      validation: 'Standard echocardiographic and physiologic definitions.',
+      summary:
+        'SV = EDV − ESV; EF (%) = 100 × SV/EDV; CO (L/min) = SV(mL) × HR / 1000. HF phenotype by 2022 AHA/ACC/HFSA: HFrEF LVEF ≤40%, HFmrEF 41–49%, HFpEF ≥50%.',
+      formula: 'SV = EDV − ESV; EF = SV/EDV × 100; CO = SV × HR / 1000. HFrEF if EF ≤40%.',
+      validation: 'Standard echocardiographic and physiologic definitions; HF EF bands from 2022 AHA/ACC/HFSA guideline.',
       references: [
         { title: 'Recommendations for cardiac chamber quantification', citation: 'Lang RM et al. JASE / ASE-EACVI', year: 2015, pmid: '25559473', doi: '10.1016/j.echo.2014.10.003' },
+        { title: '2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure', citation: 'Heidenreich PA et al. Circulation. 2022', year: 2022, pmid: '35363499', doi: '10.1161/CIR.0000000000001063' },
       ],
     },
     nextSteps: [
       { condition: 'EF ≤40%', actions: ['HF workup', 'GDMT for HFrEF when indicated', 'ICD evaluation if EF remains ≤35% after GDMT'] },
       { condition: 'Low SV with shock', actions: ['Integrate with CI, lactate, filling pressures', 'Resuscitate phenotype-guided'] },
     ],
-    pearls: ['Normal SV often ~60–100 mL but varies with body size.', 'Teichholz EF from linear dimensions is less accurate than volumetric methods.'],
+    pearls: [
+      'Normal SV often ~60–100 mL but varies with body size.',
+      'Teichholz EF from linear dimensions is less accurate than volumetric methods.',
+      '2022 AHA/ACC/HFSA: HFrEF is LVEF ≤40% (not <40%); EF 40% is HFrEF and GDMT-eligible when HF is present.',
+    ],
   },
   {
     id: 'cardiac-index',

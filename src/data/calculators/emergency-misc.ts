@@ -12,14 +12,10 @@ export const emergencyMiscCalcs: Calculator[] = [
     whenToUse: 'Acute ankle or midfoot injury (<10 days) in patients ≥2 years (adults and children).',
     whyUse: 'Safely reduces unnecessary radiographs.',
     inputs: [
-      selectInput('zone', 'Injury zone', [
-        { label: 'Ankle', value: 'ankle' },
-        { label: 'Midfoot', value: 'midfoot' },
-      ]),
       yesNo('malleolarPain', 'Pain in malleolar zone', 0,
-        'Malleolar zone = distal fibula / tibia / talus. This is the prerequisite for ankle-series rules.'),
+        'Malleolar zone = distal 6 cm of tibia/fibula and talus. Prerequisite for the ankle series; does not suppress the foot rule.'),
       yesNo('midfootPain', 'Pain in midfoot zone', 0,
-        'Midfoot zone = navicular, cuboid, cuneiforms, metatarsal bases. This is the prerequisite for foot-series rules.'),
+        'Midfoot zone = navicular, cuboid, cuneiforms, metatarsal bases. Prerequisite for the foot series; does not suppress the ankle rule.'),
       yesNo('postLat', 'Bone tenderness posterior distal 6 cm lateral malleolus', 0,
         'Palpate bone along the posterior edge or tip of the distal 6 cm of the fibula — not ATFL or the anterior joint line.'),
       yesNo('postMed', 'Bone tenderness posterior distal 6 cm medial malleolus', 0,
@@ -29,10 +25,9 @@ export const emergencyMiscCalcs: Calculator[] = [
       yesNo('base5', 'Bone tenderness base of 5th metatarsal', 0,
         'Palpate bone at the base of the 5th metatarsal, not the peroneal tendons.'),
       yesNo('walk', 'Unable to bear weight 4 steps both immediately AND in ED', 0,
-        'Unable to take 4 steps both immediately AND in the ED (4 steps = 2 complete transfers onto each foot; limping allowed). If 4 steps in either setting, score No.'),
+        'Unable to take 4 steps both immediately AND in the ED (4 steps = 2 complete transfers onto each foot; limping allowed). If 4 steps in either setting, score No. Counts toward each series only when that zone has pain.'),
     ],
     calculate(values) {
-      const ankle = String(values.zone ?? 'ankle') === 'ankle';
       const malleolarPain = bool(values.malleolarPain);
       const midfootPain = bool(values.midfootPain);
       const postLat = bool(values.postLat);
@@ -41,14 +36,11 @@ export const emergencyMiscCalcs: Calculator[] = [
       const base5 = bool(values.base5);
       const walk = bool(values.walk);
 
-      // Ankle x-ray: malleolar-zone pain AND (post lat OR post med OR unable 4 steps)
+      // Independent series (Stiell JAMA 1993): a positive contralateral rule is never suppressed.
       const ankleXray = malleolarPain && (postLat || postMed || walk);
-      // Foot x-ray: midfoot pain AND (navicular OR base 5th OR unable 4 steps)
       const footXray = midfootPain && (navicular || base5 || walk);
-      const xray = ankle ? ankleXray : footXray;
 
       const details = [
-        { label: 'Zone assessed', value: ankle ? 'Ankle (malleolar)' : 'Midfoot' },
         { label: 'Malleolar zone pain', value: malleolarPain ? 'Yes' : 'No' },
         { label: 'Midfoot zone pain', value: midfootPain ? 'Yes' : 'No' },
         { label: 'Posterior lateral malleolus tenderness', value: postLat ? 'Yes' : 'No' },
@@ -56,44 +48,65 @@ export const emergencyMiscCalcs: Calculator[] = [
         { label: 'Navicular tenderness', value: navicular ? 'Yes' : 'No' },
         { label: 'Base of 5th metatarsal tenderness', value: base5 ? 'Yes' : 'No' },
         { label: 'Unable to walk 4 steps (immediate + ED)', value: walk ? 'Yes' : 'No' },
-        { label: 'Ankle x-ray criteria', value: ankleXray ? 'Positive' : 'Negative' },
-        { label: 'Foot x-ray criteria', value: footXray ? 'Positive' : 'Negative' },
+        { label: 'Ankle series', value: ankleXray ? 'Indicated' : 'Not indicated' },
+        { label: 'Foot series', value: footXray ? 'Indicated' : 'Not indicated' },
       ];
 
-      if (xray) {
+      if (ankleXray && footXray) {
         return {
-          score: 1,
-          label: 'X-ray indicated',
-          interpretation: ankle
-            ? 'Ottawa Ankle Rules positive — obtain ankle radiographs.'
-            : 'Ottawa Foot Rules positive — obtain foot radiographs.',
+          score: 2,
+          label: 'Ankle and foot x-rays indicated',
+          interpretation: 'Ottawa Ankle and Foot Rules both positive — obtain ankle series AND foot series.',
           riskLevel: 'moderate' as const,
           details,
-          recommendations: ankle
-            ? ['Ankle series radiographs']
-            : ['Foot series radiographs'],
+          recommendations: ['Ankle series radiographs', 'Foot series radiographs'],
+        };
+      }
+      if (ankleXray) {
+        return {
+          score: 1,
+          label: 'Ankle x-ray indicated',
+          interpretation: 'Ottawa Ankle Rules positive — obtain ankle radiographs. Foot series not indicated unless midfoot-zone criteria are also met.',
+          riskLevel: 'moderate' as const,
+          details,
+          recommendations: ['Ankle series radiographs'],
+        };
+      }
+      if (footXray) {
+        return {
+          score: 1,
+          label: 'Foot x-ray indicated',
+          interpretation: 'Ottawa Foot Rules positive — obtain foot radiographs. Ankle series not indicated unless malleolar-zone criteria are also met.',
+          riskLevel: 'moderate' as const,
+          details,
+          recommendations: ['Foot series radiographs'],
         };
       }
       return {
         score: 0,
         label: 'X-ray not required',
-        interpretation: ankle
-          ? 'Ankle rules negative — malleolar fracture unlikely; radiograph not required if exam reliable.'
-          : 'Foot rules negative — midfoot fracture unlikely; radiograph not required if exam reliable.',
+        interpretation: 'Neither ankle nor foot series criteria met — clinically significant malleolar and midfoot fracture unlikely; radiograph not required if exam reliable.',
         riskLevel: 'low' as const,
         details,
         recommendations: ['RICE', 'Weight bearing as tolerated', 'Follow-up if not improving'],
       };
     },
     evidence: {
-      summary: 'Ottawa Ankle Rules highly sensitive for clinically significant fractures.',
+      summary: 'Ottawa Ankle and Foot Rules are independent, highly sensitive instruments for clinically significant malleolar and midfoot fractures.',
+      formula: 'Ankle series if malleolar-zone pain AND (posterior edge/tip of lateral or medial malleolus OR inability to bear weight 4 steps immediately and in ED). Foot series if midfoot-zone pain AND (navicular or base of 5th metatarsal tenderness OR inability to bear weight 4 steps). Combined injuries can indicate both; “X-ray not required” only if neither series is indicated.',
       validation: 'Multiple prospective validations; near 100% sensitivity for malleolar/midfoot fractures.',
       references: [{ title: 'Decision rules for use of radiography in acute ankle injuries', citation: 'Stiell IG et al. JAMA. 1993', year: 1993, pmid: '8433468',
           doi: '10.1001/jama.269.9.1127', }],
     },
     nextSteps: [
-      { condition: 'Positive', actions: ['Ankle series and/or foot series as indicated'] },
-      { condition: 'Negative', actions: ['RICE', 'Early weight bearing as tolerated', 'Follow-up if not improving'] },
+      { condition: 'Ankle series positive', actions: ['Ankle radiographs'] },
+      { condition: 'Foot series positive', actions: ['Foot radiographs'] },
+      { condition: 'Both positive', actions: ['Ankle series and foot series'] },
+      { condition: 'Neither indicated', actions: ['RICE', 'Early weight bearing as tolerated', 'Follow-up if not improving'] },
+    ],
+    pearls: [
+      'Ankle and foot series are scored independently — do not skip a positive midfoot rule because the ankle is the “main” injury (or vice versa).',
+      'Inability to take 4 steps counts toward a series only when that zone has pain.',
     ],
   },
   {
@@ -666,82 +679,114 @@ export const emergencyMiscCalcs: Calculator[] = [
   },
   {
     id: 'pecarn-head',
-    name: 'PECARN Head Injury (Simplified)',
+    name: 'PECARN Head Injury',
     shortName: 'PECARN',
-    description: 'Pediatric head trauma CT decision support (simplified branch).',
+    description: 'Age-specific PECARN rule for CT after pediatric blunt head trauma.',
     category: 'pediatrics',
     tags: ['head injury', 'ct', 'pecarn'],
-    whenToUse: 'Children with minor blunt head trauma (GCS 14–15).',
-    whyUse: 'Identifies very low risk for ciTBI who may avoid CT.',
+    whenToUse: 'Children with blunt head trauma. Very-low-risk derivation enrolled GCS 14–15 within 24 h (excluding trivial injury). GCS ≤13 is outside that clearance path and must not be labeled very low risk.',
+    whyUse: 'Identifies children at very low risk for clinically important TBI who may avoid CT; GCS ≤13 or AMS is never very-low-risk.',
     inputs: [
       selectInput('ageGroup', 'Age group', [
         { label: '<2 years', value: 'young' },
         { label: '≥2 years', value: 'old' },
-      ], undefined, 'Blunt trauma, GCS 14–15, within 24 h. Exclude trivial injury (ground-level fall or running into a stationary object with no signs besides a scalp abrasion/laceration) and GCS ≤13.'),
-      yesNo('gcs14', 'GCS = 14 or other signs of AMS', 2,
-        'PECARN AMS = GCS 14 or agitation, somnolence, repetitive questioning, or slow response to verbal communication.'),
-      yesNo('palpable', 'Palpable skull fracture (or basilar signs if ≥2y)', 2,
+      ], undefined, 'Use the <2 y or ≥2 y predictor set. Exclude trivial injury (ground-level fall or running into a stationary object with no signs besides a scalp abrasion/laceration).'),
+      selectInput('gcs', 'GCS', [
+        { label: '15', value: '15' },
+        { label: '14', value: '14', points: 2 },
+        { label: '≤13', value: 'le13', points: 2 },
+      ], '15', 'PECARN AMS includes GCS <15. Derivation was GCS 14–15; GCS ≤13 is high risk (CT recommended) and never very low risk.'),
+      yesNo('ams', 'Other signs of altered mental status', 2,
+        'Agitation, somnolence, repetitive questioning, or slow response to verbal communication (independent of the GCS band).'),
+      yesNo('palpable', 'Age-appropriate skull-fracture signs', 2,
         '<2 y: palpable skull fracture. ≥2 y: signs of basilar skull fracture — hemotympanum, raccoon eyes, Battle sign, CSF oto/rhinorrhea.'),
-      yesNo('loc', 'LOC ≥5 sec (<2y) or any LOC / vomiting / severe HA / severe mechanism (≥2y) — risk factors', 1,
-        'Yes if <2 y LOC ≥5 s, ≥2 y any LOC, OR severe mechanism — MVC with ejection/death of passenger/rollover; unhelmeted pedestrian/bicyclist struck by a motor vehicle; fall >3 ft (<2 y) or >5 ft (≥2 y); head struck by a high-impact object.'),
-      yesNo('nonfrontal', 'Non-frontal hematoma (<2y) or vomiting / severe headache (≥2y)', 1,
-        '<2 y: occipital, parietal, or temporal scalp hematoma (not isolated frontal). ≥2 y: history of vomiting or severe headache.'),
-      yesNo('notActing', 'Not acting normally per parent (<2y)', 1,
+      yesNo('severeMechanism', 'Severe mechanism of injury', 1,
+        'Applies to BOTH age groups: MVC with ejection, rollover, or death of another passenger; pedestrian or bicyclist without helmet struck by a motor vehicle; fall >3 ft (<2 y) or >5 ft (≥2 y); head struck by a high-impact object.'),
+      yesNo('loc', 'Loss of consciousness (age-specific)', 1,
+        '<2 y: LOC ≥5 seconds. ≥2 y: any LOC. Do not use this box for isolated severe mechanism.'),
+      yesNo('hematoma', 'Non-frontal scalp hematoma (<2 y)', 1,
+        '<2 y only: occipital, parietal, or temporal scalp hematoma (not isolated frontal). Not a ≥2 y PECARN predictor.'),
+      yesNo('notActing', 'Not acting normally per parent (<2 y)', 1,
         '<2 y only: caregiver reports the child is not acting normally. Not a ≥2 y PECARN predictor.'),
+      yesNo('vomiting', 'History of vomiting (≥2 y)', 1,
+        '≥2 y only. Not an independent <2 y PECARN predictor.'),
+      yesNo('severeHA', 'Severe headache (≥2 y)', 1,
+        '≥2 y only. Not an independent <2 y PECARN predictor.'),
     ],
     calculate(values) {
       const ageGroup = String(values.ageGroup ?? 'young');
-      const ageLabel = ageGroup === 'young' ? '<2 years' : '≥2 years';
+      const young = ageGroup === 'young';
+      const ageLabel = young ? '<2 years' : '≥2 years';
+      const gcsVal = String(values.gcs ?? '15');
+      const gcs15 = gcsVal === '15';
+      const gcsLe13 = gcsVal === 'le13' || gcsVal === '<=13' || gcsVal === '13';
+      const gcsLabel = gcsLe13 ? '≤13' : gcsVal === '14' ? '14' : '15';
+      const ams = bool(values.ams);
+      const fracture = bool(values.palpable);
+      const severeMechanism = bool(values.severeMechanism);
+      const loc = bool(values.loc);
+      const hematoma = bool(values.hematoma);
+      const notActing = bool(values.notActing);
+      const vomiting = bool(values.vomiting);
+      const severeHA = bool(values.severeHA);
+
+      const abnormalMentation = !gcs15 || ams;
+      const highRisk = abnormalMentation || fracture;
+      const intermediate = young
+        ? severeMechanism || loc || hematoma || notActing
+        : severeMechanism || loc || vomiting || severeHA;
+
       const details = [
         { label: 'Age group', value: ageLabel },
-        { label: 'AMS / GCS 14', value: bool(values.gcs14) ? 'Yes' : 'No' },
-        { label: 'Palpable / basilar fracture signs', value: bool(values.palpable) ? 'Yes' : 'No' },
-        {
-          label: ageGroup === 'young' ? 'LOC ≥5 s / severe mechanism' : 'LOC / vomiting / severe HA / severe mechanism',
-          value: bool(values.loc) ? 'Yes' : 'No',
-        },
-        {
-          label: ageGroup === 'young' ? 'Non-frontal hematoma' : 'Vomiting / severe HA (additional)',
-          value: bool(values.nonfrontal) ? 'Yes' : 'No',
-        },
-        { label: 'Not acting normally (parent, <2y)', value: bool(values.notActing) ? 'Yes' : 'No' },
+        { label: 'GCS', value: gcsLabel },
+        { label: 'Other AMS', value: ams ? 'Yes' : 'No' },
+        { label: young ? 'Palpable skull fracture' : 'Basilar skull-fracture signs', value: fracture ? 'Yes' : 'No' },
+        { label: 'Severe mechanism', value: severeMechanism ? 'Yes' : 'No' },
+        { label: young ? 'LOC ≥5 s' : 'Any LOC', value: loc ? 'Yes' : 'No' },
+        { label: 'Non-frontal hematoma (<2 y)', value: hematoma ? (young ? 'Yes' : 'Yes (not a ≥2 y predictor)') : 'No' },
+        { label: 'Not acting normally per parent (<2 y)', value: notActing ? (young ? 'Yes' : 'Yes (not a ≥2 y predictor)') : 'No' },
+        { label: 'Vomiting (≥2 y)', value: vomiting ? (young ? 'Yes (not a <2 y predictor)' : 'Yes') : 'No' },
+        { label: 'Severe headache (≥2 y)', value: severeHA ? (young ? 'Yes (not a <2 y predictor)' : 'Yes') : 'No' },
       ];
 
-      if (bool(values.gcs14) || bool(values.palpable)) {
+      if (highRisk) {
         return {
           score: 2,
           label: 'Higher risk — CT recommended',
-          interpretation: `${ageLabel}: AMS or palpable/basilar fracture signs — CT generally recommended per PECARN high-risk branch.`,
+          interpretation: gcsLe13
+            ? `${ageLabel}: GCS ≤13 is outside the PECARN very-low-risk derivation (GCS 14–15) and is treated as high risk — CT recommended.`
+            : `${ageLabel}: GCS <15, other AMS, or age-appropriate fracture signs — CT generally recommended per PECARN high-risk branch.`,
           riskLevel: 'high',
           details,
+          recommendations: ['CT head', 'Neurosurgery if positive'],
+          alerts: gcsLe13
+            ? ['GCS ≤13 is not a PECARN very-low-risk clearance path; do not defer CT solely on other negative boxes.']
+            : undefined,
         };
       }
-      // Age-specific intermediate features (simplified PECARN branches)
-      const intermediate =
-        ageGroup === 'young'
-          ? bool(values.loc) || bool(values.nonfrontal) || bool(values.notActing)
-          : bool(values.loc) || bool(values.nonfrontal);
-      // notActing is primarily a <2y criterion; still surface for ≥2y if selected as caregiver concern
-      if (intermediate || (ageGroup === 'old' && bool(values.notActing))) {
+      if (intermediate) {
         return {
           score: 1,
           label: 'Intermediate — observation vs CT',
-          interpretation: `${ageLabel}: Intermediate PECARN risk features — observation vs CT with shared decision-making.`,
+          interpretation: `${ageLabel}: Intermediate PECARN predictor(s) present (including severe mechanism when selected) — observation vs CT with shared decision-making.`,
           riskLevel: 'moderate',
           details,
+          recommendations: ['Observation vs CT (shared decision-making)', 'Return precautions if observed without CT'],
         };
       }
       return {
         score: 0,
-        label: 'Very low risk',
-        interpretation: `${ageLabel}: No PECARN predictors — ciTBI risk very low; CT not routinely recommended.`,
+        label: 'Very low risk — CT not routinely recommended',
+        interpretation: `${ageLabel}: GCS 15, no AMS, no fracture signs, and no age-specific intermediate predictors — ciTBI risk very low; CT not routinely recommended.`,
         riskLevel: 'low',
         details,
+        recommendations: ['No routine CT', 'Return precautions'],
       };
     },
     evidence: {
-      summary: 'PECARN rules for children <2 and ≥2 years predict clinically important TBI with very high NPV.',
-      validation: 'Large multicenter cohort; widely adopted in pediatric EM.',
+      summary: 'PECARN rules for children <2 and ≥2 years identify very low risk of clinically important TBI (ciTBI) only when GCS is 15, AMS is absent, and no age-specific predictors are present. NPV is very high in that group.',
+      formula: 'High risk (CT recommended): GCS ≤13, GCS 14, other AMS, or age-appropriate fracture signs (palpable skull fracture if <2 y; basilar signs if ≥2 y). Intermediate (observation vs CT): remaining age-specific predictors — both ages: severe mechanism; <2 y: LOC ≥5 s, non-frontal hematoma, not acting normally per parent; ≥2 y: any LOC, vomiting, severe headache. Very low risk only if GCS 15 AND no AMS AND no predictors. GCS ≤13 never very low risk.',
+      validation: 'Large multicenter PECARN cohort (Kuppermann Lancet 2009); widely adopted in pediatric EM. Derivation/validation enrolled GCS 14–15.',
       references: [{ title: 'Identification of children at very low risk of ciTBI', citation: 'Kuppermann N et al. Lancet. 2009', year: 2009, pmid: '19758692',
           doi: '10.1016/S0140-6736(09)61558-0', }],
     },
@@ -749,6 +794,11 @@ export const emergencyMiscCalcs: Calculator[] = [
       { condition: 'Very low risk', actions: ['No routine CT', 'Return precautions'] },
       { condition: 'Intermediate', actions: ['Observation vs CT (shared decision-making)'] },
       { condition: 'Higher risk', actions: ['CT head', 'Neurosurgery if positive'] },
+    ],
+    pearls: [
+      'AMS in PECARN includes GCS <15 plus agitation, somnolence, repetitive questioning, or slow response.',
+      'Severe mechanism is an intermediate predictor in both age groups — isolated fall >3 ft in <2 y is not very low risk.',
+      'Do not apply infant-only predictors (non-frontal hematoma, not acting normally) to ≥2 y, or vomiting/severe headache to <2 y.',
     ],
   },
   {
@@ -873,65 +923,101 @@ export const emergencyMiscCalcs: Calculator[] = [
     id: 'caprini',
     name: 'Caprini Score (VTE Risk)',
     shortName: 'Caprini',
-    description: 'Surgical patient VTE risk stratification (selected items).',
+    description: 'Caprini RAM for perioperative VTE risk and prophylaxis intensity.',
     category: 'hematology',
     tags: ['vte', 'surgery', 'prophylaxis'],
-    whenToUse: 'Perioperative VTE risk assessment.',
-    whyUse: 'Widely used in surgical pathways for prophylaxis intensity.',
+    whenToUse: 'Perioperative VTE risk assessment (surgical and overlapping medical risk factors on the Caprini RAM).',
+    whyUse: 'Widely used in surgical pathways for prophylaxis intensity; total is the sum of published weighted items.',
     inputs: [
       yesNo('age41', 'Age 41–60 (1)', 1),
       yesNo('age61', 'Age 61–74 (2)', 2),
       yesNo('age75', 'Age ≥75 (3)', 3),
       yesNo('minorSurg', 'Minor surgery (1)', 1,
-        'Elective surgery <45 min (major surgery is already the >45 min item).'),
-      yesNo('majorSurg', 'Major surgery >45 min (2)', 2),
+        'Surgery <45 min. Do not also score major / laparoscopic >45 min / arthroscopic for the same case unless those procedures were also performed.'),
+      yesNo('majorSurg', 'Major open surgery >45 min (2)', 2),
+      yesNo('arthroscopic', 'Arthroscopic surgery (2)', 2),
+      yesNo('laparoscopic', 'Laparoscopic surgery >45 min (2)', 2),
       yesNo('bmi25', 'BMI ≥25 (1)', 1),
       yesNo('swollenLegs', 'Swollen legs (1)', 1),
       yesNo('varicose', 'Varicose veins (1)', 1),
       yesNo('pregnancy', 'Pregnancy/postpartum (1)', 1,
         'Currently pregnant or postpartum <1 month.'),
+      yesNo('recurrentSab', 'Unexplained stillbirth / recurrent spontaneous abortion (1)', 1,
+        'History of unexplained stillborn infant, recurrent SAB (≥3), or premature birth with toxemia or growth-restricted infant.'),
+      yesNo('ocpHrt', 'Oral contraceptives or HRT (1)', 1),
       yesNo('historyIbd', 'History of IBD (1)', 1),
+      yesNo('sepsis', 'Sepsis <1 month (1)', 1),
+      yesNo('pneumonia', 'Serious lung disease including pneumonia <1 month (1)', 1),
+      yesNo('abnormalPft', 'Abnormal pulmonary function (1)', 1,
+        'COPD or other abnormal PFTs as on the Caprini form (distinct from acute pneumonia/serious lung disease).'),
+      yesNo('acuteMi', 'Acute myocardial infarction (1)', 1),
+      yesNo('chf', 'CHF <1 month (1)', 1),
+      yesNo('bedrest', 'Medical patient currently at bed rest (1)', 1,
+        '1-point medical-patient bed rest. Distinct from confined to bed >72 h (2 points).'),
+      yesNo('bedrest72', 'Confined to bed >72 hours (2)', 2,
+        '2-point immobilization on the Caprini RAM — distinct from 1-point medical bed rest.'),
+      yesNo('plasterCast', 'Immobilizing plaster cast (2)', 2,
+        'Immobilizing plaster cast <1 month.'),
+      yesNo('cvc', 'Central venous access (2)', 2),
+      yesNo('cancer', 'Malignancy (2)', 2,
+        'Present or previous malignancy as on the Caprini form.'),
       yesNo('priorVte', 'History of VTE (3)', 3),
       yesNo('familyVte', 'Family history of VTE (3)', 3,
         'First-degree relative with VTE.'),
       yesNo('thrombophilia', 'Positive Factor V Leiden / prothrombin / high homocysteine etc. (3)', 3,
-        'Known thrombophilia: Factor V Leiden, prothrombin G20210A, antiphospholipid, antithrombin/protein C/S deficiency, or high homocysteine as on the Caprini form.'),
-      yesNo('cancer', 'Malignancy (2)', 2),
-      yesNo('bedrest', 'Medical patient bedrest (1)', 1,
-        'Currently on bed rest (this 1-point item; Caprini also has >72 h as 2 points — not separately scored here).'),
+        'Known thrombophilia: Factor V Leiden, prothrombin G20210A, antiphospholipid, antithrombin/protein C/S deficiency, or high homocysteine as on the Caprini form. HIT is a separate 3-point item.'),
+      yesNo('hit', 'History of HIT (3)', 3,
+        'Heparin-induced thrombocytopenia (3 points on Caprini forms).'),
       yesNo('hip', 'Elective major lower extremity arthroplasty (5)', 5),
       yesNo('hipFracture', 'Hip, pelvis, or leg fracture (5)', 5),
       yesNo('stroke', 'Acute spinal cord injury / stroke <1 mo (5)', 5),
+      yesNo('multipleTrauma', 'Multiple trauma <1 month (5)', 5),
     ],
     calculate(values) {
-      // Age and surgery-duration tiers are mutually exclusive on the Caprini form.
+      // Age bands are mutually exclusive (highest applicable). Surgery types add if selected
+      // (a single case is usually one of minor / major open / lap / arthroscopic).
       const agePoints = bool(values.age75) ? 3 : bool(values.age61) ? 2 : bool(values.age41) ? 1 : 0;
-      const surgeryPoints = bool(values.majorSurg) ? 2 : bool(values.minorSurg) ? 1 : 0;
+      const surgeryPoints = (bool(values.majorSurg) ? 2 : bool(values.minorSurg) ? 1 : 0);
       let score = agePoints + surgeryPoints;
       const items: [string, number][] = [
-        ['bmi25', 1], ['swollenLegs', 1], ['varicose', 1], ['pregnancy', 1], ['historyIbd', 1],
-        ['priorVte', 3], ['familyVte', 3], ['thrombophilia', 3], ['cancer', 2], ['bedrest', 1],
-        ['hip', 5], ['hipFracture', 5], ['stroke', 5],
+        ['arthroscopic', 2], ['laparoscopic', 2],
+        ['bmi25', 1], ['swollenLegs', 1], ['varicose', 1], ['pregnancy', 1], ['recurrentSab', 1],
+        ['ocpHrt', 1], ['historyIbd', 1], ['sepsis', 1], ['pneumonia', 1], ['abnormalPft', 1],
+        ['acuteMi', 1], ['chf', 1], ['bedrest', 1], ['bedrest72', 2], ['plasterCast', 2], ['cvc', 2],
+        ['cancer', 2], ['priorVte', 3], ['familyVte', 3], ['thrombophilia', 3], ['hit', 3],
+        ['hip', 5], ['hipFracture', 5], ['stroke', 5], ['multipleTrauma', 5],
       ];
       items.forEach(([k, p]) => {
         if (bool(values[k])) score += p;
       });
       const r = riskFromThresholds(score, [
-        { max: 1, level: 'low', label: 'Very low / low', interpretation: 'Early ambulation ± mechanical prophylaxis.' },
-        { max: 2, level: 'low', label: 'Low–moderate', interpretation: 'Mechanical ± pharmacologic prophylaxis per procedure.' },
-        { max: 4, level: 'moderate', label: 'Moderate', interpretation: 'Pharmacologic prophylaxis typically indicated unless bleeding risk high.' },
-        { max: 50, level: 'high', label: 'High', interpretation: 'High risk — pharmacologic + mechanical prophylaxis often recommended.' },
+        { max: 0, level: 'low', label: 'Very low (0)', interpretation: 'ACCP-style Caprini 0: early ambulation; pharmacologic prophylaxis generally not required.' },
+        { max: 2, level: 'low', label: 'Low (1–2)', interpretation: 'ACCP-style Caprini 1–2: mechanical prophylaxis; pharmacologic per procedure and bleed risk.' },
+        { max: 4, level: 'moderate', label: 'Moderate (3–4)', interpretation: 'ACCP-style Caprini 3–4: pharmacologic prophylaxis typically indicated unless bleeding risk high (or mechanical if bleeding).' },
+        { max: 50, level: 'high', label: 'High (≥5)', interpretation: 'ACCP-style Caprini ≥5: pharmacologic + mechanical prophylaxis often recommended when bleed risk allows.' },
       ]);
       return { score, ...r };
     },
     evidence: {
-      summary: 'Caprini risk assessment model assigns points to VTE risk factors for surgical patients.',
-      validation: 'Validated across surgical specialties; prophylaxis thresholds protocol-dependent.',
-      references: [{ title: 'Thrombosis risk assessment as a guide to quality patient care', citation: 'Caprini JA. Dis Mon. 2005', year: 2005, pmid: '15900257',
-          doi: '10.1016/j.disamonth.2005.02.003', }],
+      summary: 'Caprini RAM (2005/2010) assigns weighted points to VTE risk factors. This form includes the published 1-, 2-, 3-, and 5-point items used to generate a numeric total and ACCP-style prophylaxis bands.',
+      formula: 'Sum of selected items. Age: highest band only (41–60 = 1, 61–74 = 2, ≥75 = 3). 1 pt: minor surgery, BMI ≥25, swollen legs, varicose veins, pregnancy/postpartum, unexplained stillbirth/recurrent SAB, OCP/HRT, IBD, sepsis <1 mo, pneumonia/serious lung disease <1 mo, abnormal PFTs, acute MI, CHF <1 mo, medical bed rest. 2 pt: arthroscopic surgery, major open surgery >45 min, laparoscopic surgery >45 min, malignancy, confined to bed >72 h, immobilizing plaster cast, central venous access. 3 pt: prior VTE, family VTE, thrombophilia, HIT. 5 pt: elective major LE arthroplasty; hip/pelvis/leg fracture; stroke or acute SCI <1 mo; multiple trauma <1 mo.',
+      validation: 'Validated across surgical specialties (including Bahl 2010); prophylaxis thresholds remain protocol-dependent (ACCP 2012 Caprini bands shown).',
+      references: [
+        { title: 'Thrombosis risk assessment as a guide to quality patient care', citation: 'Caprini JA. Dis Mon. 2005', year: 2005, pmid: '15900257',
+          doi: '10.1016/j.disamonth.2005.02.003', },
+        { title: 'A validation study of a retrospective venous thromboembolism risk scoring method', citation: 'Bahl V et al. Ann Surg. 2010', year: 2010, pmid: '20160639',
+          doi: '10.1097/SLA.0b013e3181b7bb90', },
+      ],
     },
     nextSteps: [
+      { condition: 'Score 0', actions: ['Early ambulation'] },
+      { condition: 'Score 1–2', actions: ['Mechanical prophylaxis', 'Pharmacologic per procedure'] },
+      { condition: 'Score 3–4', actions: ['LMWH/heparin unless high bleed risk', 'Mechanical if bleeding'] },
       { condition: 'Score ≥5', actions: ['LMWH/heparin + SCDs often', 'Extended prophylaxis after some orthopedic cases'] },
+    ],
+    pearls: [
+      'Age bands are mutually exclusive (use the highest applicable). Medical bed rest (1) and confinement >72 h (2) are distinct published items.',
+      'HIT is 3 points on Caprini forms and is scored separately from other thrombophilias.',
     ],
   },
   {

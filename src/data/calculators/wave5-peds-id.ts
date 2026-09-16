@@ -1,6 +1,47 @@
 import type { Calculator } from '../../types/calculator';
 import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
+/** AAP 2022 Supplemental Tables 1–2 phototherapy knots (mg/dL) by completed GA weeks. */
+const AAP2022_PHOTO_HOURS = [6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 72, 96, 120, 192, 288];
+const AAP2022_PHOTO_NO_RISK: Record<number, number[]> = {
+  40: [10.0, 11.1, 12.2, 13.3, 14.3, 15.3, 16.2, 17.1, 17.8, 18.5, 19.8, 21.8, 21.8, 21.8, 21.8],
+  39: [9.5, 10.6, 11.8, 12.8, 13.8, 14.8, 15.7, 16.6, 17.4, 18.1, 19.5, 21.5, 21.7, 21.7, 21.7],
+  38: [9.0, 10.1, 11.2, 12.3, 13.3, 14.2, 15.1, 16.0, 16.8, 17.5, 18.8, 20.8, 20.9, 21.2, 21.7],
+  37: [8.4, 9.5, 10.7, 11.8, 12.6, 13.6, 14.5, 15.4, 16.2, 16.9, 18.1, 20.0, 20.2, 20.4, 20.9],
+  36: [7.9, 9.0, 10.2, 11.2, 12.2, 13.0, 14.0, 14.8, 15.5, 16.2, 17.5, 19.4, 19.5, 19.8, 20.1],
+  35: [7.3, 8.5, 9.7, 10.6, 11.5, 12.5, 13.4, 14.2, 14.9, 15.6, 16.8, 18.5, 18.8, 19.0, 19.4],
+};
+const AAP2022_PHOTO_ANY_RISK: Record<number, number[]> = {
+  38: [7.4, 8.4, 9.5, 10.5, 11.5, 12.3, 13.2, 14.0, 14.6, 15.2, 16.5, 18.2, 18.2, 18.2, 18.2],
+  37: [6.8, 7.9, 9.0, 10.0, 11.0, 12.0, 12.8, 13.5, 14.2, 14.8, 16.0, 17.9, 18.0, 18.2, 18.2],
+  36: [6.3, 7.5, 8.4, 9.5, 10.4, 11.2, 12.0, 12.8, 13.5, 14.1, 15.2, 17.0, 17.1, 17.5, 18.0],
+  35: [5.8, 6.9, 7.9, 8.9, 9.8, 10.5, 11.2, 12.1, 12.8, 13.4, 14.5, 16.1, 16.2, 16.6, 17.1],
+};
+
+function interpPhotoKnots(hours: number, vals: number[]): number {
+  const knots = AAP2022_PHOTO_HOURS;
+  if (hours <= knots[0]) return vals[0];
+  const last = knots.length - 1;
+  if (hours >= knots[last]) return vals[last];
+  for (let i = 1; i < knots.length; i++) {
+    if (hours <= knots[i]) {
+      const span = knots[i] - knots[i - 1];
+      const t = span === 0 ? 0 : (hours - knots[i - 1]) / span;
+      return vals[i - 1] + t * (vals[i] - vals[i - 1]);
+    }
+  }
+  return vals[last];
+}
+
+function aap2022PhotoThreshold(gaWeeks: number, ageHours: number, anyNeuroRisk: boolean): number {
+  const ga = Math.min(40, Math.max(35, Math.floor(gaWeeks)));
+  const table = anyNeuroRisk ? AAP2022_PHOTO_ANY_RISK : AAP2022_PHOTO_NO_RISK;
+  const key = anyNeuroRisk ? Math.min(ga, 38) : ga;
+  const fallback = anyNeuroRisk ? AAP2022_PHOTO_ANY_RISK[38] : AAP2022_PHOTO_NO_RISK[40];
+  const vals = (table[key] ?? fallback) as number[];
+  return interpPhotoKnots(ageHours, vals);
+}
+
 export const wave5PedsIdCalcs: Calculator[] = [
   // ─── 1. Full PEWS (multi-domain) ───────────────────────────────────────────
   {
@@ -1065,45 +1106,51 @@ export const wave5PedsIdCalcs: Calculator[] = [
     name: 'AAP-Style Phototherapy Threshold (Approximate)',
     shortName: 'Photo Threshold',
     description:
-      'Approximate phototherapy TSB threshold helper by age in hours and neurotoxicity risk for ≥35-week newborns (educational).',
+      'AAP 2022 hour- and GA-specific phototherapy TSB threshold helper for ≥35-week newborns (interpolated supplemental-table knots; confirm with PediTools / official AAP tool).',
     category: 'pediatrics',
     tags: ['phototherapy', 'bilirubin', 'jaundice', 'aap', 'neonate'],
     whenToUse: 'Estimating whether TSB is near phototherapy range in term/late-preterm infants (confirm with official AAP tool).',
-    whyUse: 'Phototherapy thresholds rise with age in hours and fall with neurotoxicity risk factors.',
+    whyUse: 'Phototherapy thresholds rise with age in hours and fall with lower GA and neurotoxicity risk factors.',
     inputs: [
-      numberInput('ageHours', 'Age', { unit: 'hours', min: 12, max: 168, defaultValue: 48 }),
+      numberInput('gaWeeks', 'Gestational age at birth (completed weeks)', {
+        unit: 'weeks',
+        min: 35,
+        max: 42,
+        defaultValue: 40,
+        helpText: 'AAP 2022 tables start at 35 completed weeks. ≥40 weeks uses the 40-week curve. With any neurotoxicity risk factor besides GA, ≥38 weeks share one curve.',
+      }),
+      numberInput('ageHours', 'Age', { unit: 'hours', min: 6, max: 336, defaultValue: 48 }),
       numberInput('tsb', 'Total serum bilirubin', { unit: 'mg/dL', min: 1, max: 35, step: 0.1, defaultValue: 14 }),
-      selectInput('risk', 'Neurotoxicity risk', [
-        { label: 'Lower risk (≥38 wks, well, no risk factors)', value: 'low' },
-        { label: 'Medium risk (35–37+6 well, or ≥38 with risk factors)', value: 'med' },
-        { label: 'Higher risk (35–37+6 with risk factors)', value: 'high' },
-      ], undefined, 'Neurotoxicity risk factors besides GA (AAP 2022 Table 2): albumin <3.0 g/dL; isoimmune hemolytic disease (DAT+), G6PD deficiency, or other hemolysis; sepsis; significant clinical instability in the previous 24 h. Any one other than GA moves the infant to the with-risk-factors curve.'),
+      selectInput('risk', 'Neurotoxicity risk factors other than GA', [
+        { label: 'None besides gestational age', value: 'none', description: 'Use the GA-specific no-risk-factor phototherapy curve' },
+        { label: 'Any (albumin <3.0, hemolysis, sepsis, instability)', value: 'any', description: 'Any one AAP Table 2 factor besides GA uses the with-risk-factors curve' },
+      ], 'none', 'AAP 2022 Table 2 (besides GA): albumin <3.0 g/dL; isoimmune hemolytic disease (DAT+), G6PD deficiency, or other hemolysis; sepsis; significant clinical instability in the previous 24 h. GA <38 weeks is already captured by the GA curve.'),
     ],
     calculate(values) {
       const h = num(values.ageHours, 48);
       const tsb = num(values.tsb, 14);
-      const risk = String(values.risk ?? 'low');
-      // Highly simplified thresholds inspired by AAP 2022 style curves (mg/dL)
-      const baseAt = (hours: number, low48: number, low96: number) => {
-        if (hours <= 24) return low48 - 4 + (hours / 24) * 2;
-        if (hours <= 48) return low48 - 2 + ((hours - 24) / 24) * 2;
-        if (hours <= 96) return low48 + ((hours - 48) / 48) * (low96 - low48);
-        return low96 + Math.min(2, (hours - 96) / 48);
-      };
-      let thr: number;
-      if (risk === 'high') thr = baseAt(h, 13, 17);
-      else if (risk === 'med') thr = baseAt(h, 15, 19);
-      else thr = baseAt(h, 17, 21);
-      thr = round(thr, 1);
+      const ga = num(values.gaWeeks, 40);
+      const riskRaw = String(values.risk ?? 'none').toLowerCase();
+      // Legacy 3-band values: low → no extra risk; med/high → any (conservative lower floor).
+      const anyNeuroRisk = riskRaw === 'any' || riskRaw === 'high' || riskRaw === 'med' || riskRaw === 'true';
+      const thr = round(aap2022PhotoThreshold(ga, h, anyNeuroRisk), 1);
       const delta = round(tsb - thr, 1);
+      const gaBand = Math.min(40, Math.max(35, Math.floor(ga)));
+      const curveLabel = anyNeuroRisk
+        ? gaBand >= 38
+          ? '≥38 wk with any neurotoxicity risk'
+          : `${gaBand} wk with any neurotoxicity risk`
+        : gaBand >= 40
+          ? '≥40 wk, no neurotoxicity risk'
+          : `${gaBand} wk, no neurotoxicity risk`;
       let riskLevel: 'low' | 'moderate' | 'high' | 'critical' = 'low';
-      let label = 'Below approximate phototherapy threshold';
+      let label = 'Below phototherapy threshold (AAP 2022 table lookup)';
       if (tsb >= thr + 3) {
         riskLevel = 'critical';
-        label = 'Well above threshold — phototherapy indicated (approx)';
+        label = 'Well above threshold — phototherapy indicated';
       } else if (tsb >= thr) {
         riskLevel = 'high';
-        label = 'At/above approximate phototherapy threshold';
+        label = 'At/above phototherapy threshold';
       } else if (tsb >= thr - 2) {
         riskLevel = 'moderate';
         label = 'Approaching threshold — close follow-up';
@@ -1112,15 +1159,17 @@ export const wave5PedsIdCalcs: Calculator[] = [
         score: thr,
         unit: 'mg/dL',
         label,
-        interpretation: `Approximate phototherapy threshold ≈ ${thr} mg/dL at ${h} h (${risk} neurotoxicity risk band). Measured TSB ${tsb} mg/dL (${delta >= 0 ? '+' : ''}${delta} vs threshold). Educational approximation of AAP hyperbilirubinemia guidance — use official AAP quantitative tools for treatment decisions.`,
+        interpretation: `Phototherapy threshold ≈ ${thr} mg/dL at ${h} h (${curveLabel}; interpolated AAP 2022 supplemental-table knots). Measured TSB ${tsb} mg/dL (${delta >= 0 ? '+' : ''}${delta} vs threshold). Confirm with PediTools / official AAP hourly tables for treatment decisions.`,
         riskLevel,
         details: [
-          { label: 'Approx threshold', value: `${thr} mg/dL` },
+          { label: 'Threshold (table lookup)', value: `${thr} mg/dL` },
           { label: 'TSB', value: `${tsb} mg/dL` },
-          { label: 'Risk band', value: risk },
+          { label: 'GA (completed weeks)', value: String(Math.min(40, Math.max(35, Math.floor(ga)))) },
+          { label: 'Neurotoxicity risk factors besides GA', value: anyNeuroRisk ? 'Any' : 'None' },
+          { label: 'Curve', value: curveLabel },
         ],
         recommendations: [
-          'Confirm with AAP 2022 phototherapy tool / institutional pathway',
+          'Confirm with PediTools AAP 2022 / institutional pathway',
           'Optimize hydration and lactation support',
           'Check blood type, Coombs, CBC as indicated',
         ],
@@ -1128,9 +1177,9 @@ export const wave5PedsIdCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'AAP clinical practice guideline (2022) provides hour-specific phototherapy thresholds stratified by gestational age and neurotoxicity risk factors.',
-      formula: 'Compare TSB to approximate age- and risk-stratified threshold',
-      validation: 'Simplified curves for education only — not identical to official AAP tables.',
+        'AAP 2022 (Kemper) hour-specific phototherapy thresholds by completed gestational age and neurotoxicity risk factors. This helper interpolates published supplemental-table knots (e.g. ≥40 wk no risk ≈13.3 mg/dL at 24 h and ≈11.1 at 12 h; ≥38 wk with any risk ≈10.5 at 24 h; 35 wk with risk ≈8.9 at 24 h). Not a substitute for PediTools hourly tables.',
+      formula: 'Linear interpolation of AAP 2022 Supplemental Table 1 (no extra risk) or Table 2 (any neurotoxicity risk) knots by age in hours and completed GA',
+      validation: 'Knot interpolation of published AAP 2022 tables for bedside use; confirm treatment with PediTools or the official hourly tables.',
       references: [
         {
           title: 'Clinical Practice Guideline Revision: Management of Hyperbilirubinemia in the Newborn Infant 35 or More Weeks of Gestation',

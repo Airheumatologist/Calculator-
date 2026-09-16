@@ -222,11 +222,11 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     name: 'ABC Score (Upper GI Bleed)',
     shortName: 'ABC UGIB',
     description:
-      'Simplified ABC mortality risk score for acute upper GI bleeding (age, blood tests, comorbidity-focused educational version).',
+      'Published ABC mortality risk score for acute upper GI bleeding (age, blood tests, comorbidity).',
     category: 'gastroenterology',
     tags: ['ugib', 'bleed', 'abc', 'mortality', 'gi'],
     whenToUse: 'Adults with acute upper GI bleeding for early mortality risk stratification alongside GBS/AIMS65/Rockall.',
-    whyUse: 'Bedside ABC-style variables capture age, labs, mental status, and major comorbidity burden.',
+    whyUse: 'Bedside ABC variables (age, urea, albumin, creatinine, AMS, cirrhosis, disseminated malignancy, ASA) predict in-hospital mortality.',
     inputs: [
       selectInput('age', 'Age', [
         { label: '≤59 years (0)', value: 0 },
@@ -234,15 +234,13 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: '≥75 years (2)', value: 2 },
       ], undefined, 'Age at presentation with UGIB.'),
       selectInput('urea', 'Blood urea (BUN-related)', [
-        { label: 'Urea <10 mmol/L (~BUN <28 mg/dL) (0)', value: 0 },
-        { label: 'Urea 10–19.9 mmol/L (~BUN 28–56 mg/dL) (2)', value: 2 },
-        { label: 'Urea ≥20 mmol/L (~BUN ≥56 mg/dL) (4)', value: 4 },
-      ], 0, 'Urea in mmol/L. BUN (mg/dL) ≈ urea × 2.8. 10 mmol/L ≈ BUN 28 mg/dL; 20 mmol/L ≈ BUN 56.'),
+        { label: 'Urea ≤10 mmol/L (~BUN ≤28 mg/dL) (0)', value: 0 },
+        { label: 'Urea >10 mmol/L (~BUN >28 mg/dL) (1)', value: 1 },
+      ], 0, 'Binary published cutoff: urea >10 mmol/L = 1. BUN (mg/dL) ≈ urea × 2.8; 10 mmol/L ≈ BUN 28 mg/dL.'),
       selectInput('albumin', 'Albumin', [
-        { label: '≥40 g/L (≥4.0 g/dL) (0)', value: 0 },
-        { label: '30–39.9 g/L (3.0–4.0 g/dL) (2)', value: 2 },
-        { label: '<30 g/L (<3.0 g/dL) (5)', value: 5 },
-      ], 0, '40 g/L = 4.0 g/dL; 30 g/L = 3.0 g/dL.'),
+        { label: '≥30 g/L (≥3.0 g/dL) (0)', value: 0 },
+        { label: '<30 g/L (<3.0 g/dL) (2)', value: 2 },
+      ], 0, 'Published ABC: albumin <30 g/L = 2; 30–39.9 g/L scores 0 (no mid-band). 30 g/L = 3.0 g/dL.'),
       selectInput('creatinine', 'Creatinine', [
         { label: '<100 µmol/L (~1.1 mg/dL) (0)', value: 0 },
         { label: '100–150 µmol/L (~1.1–1.7 mg/dL) (1)', value: 1 },
@@ -252,11 +250,10 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
       yesNo('cirrhosis', 'Cirrhosis', 2, 'Known cirrhosis or clear clinical/imaging evidence of cirrhosis (not isolated fatty liver).'),
       yesNo('malignancy', 'Disseminated malignancy', 4, 'Disseminated / metastatic cancer (not a fully resected local tumor in remission).'),
       selectInput('asa', 'ASA grade', [
-        { label: 'ASA 1 (0)', value: 0, description: 'I — normal healthy patient' },
-        { label: 'ASA 2 (1)', value: 1, description: 'II — mild systemic disease' },
-        { label: 'ASA 3 (3)', value: 3, description: 'III — severe systemic disease with functional limitation' },
-        { label: 'ASA ≥4 (5)', value: 5, description: 'IV–V — constant threat to life / moribund' },
-      ], 0, 'I healthy; II mild systemic disease; III severe systemic disease with functional limitation; ≥4 constant threat to life / moribund.'),
+        { label: 'ASA I–II (0)', value: 0, description: 'I — normal healthy patient; II — mild systemic disease' },
+        { label: 'ASA III (1)', value: 1, description: 'III — severe systemic disease' },
+        { label: 'ASA ≥IV (3)', value: 3, description: 'IV–V — constant threat to life / moribund' },
+      ], 0, 'Published ABC: ASA I–II = 0, III = 1, ≥IV = 3.'),
     ],
     calculate(values) {
       const score =
@@ -293,15 +290,16 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         score,
         ...r,
         details: [
-          { label: 'Typical bands (educational)', value: '≤3 low · 4–7 intermediate · ≥8 high' },
-          { label: 'Max theoretical', value: '22' },
+          { label: 'Typical bands', value: '≤3 low · 4–7 intermediate · ≥8 high' },
+          { label: 'Max theoretical', value: '18' },
         ],
       };
     },
     evidence: {
       summary:
-        'ABC score for UGIB mortality uses age, urea, albumin, creatinine, altered mental status, cirrhosis, disseminated malignancy, and ASA class (Laursen et al.).',
-      formula: 'Sum of weighted age + urea + albumin + Cr + AMS + cirrhosis + malignancy + ASA points',
+        'ABC score (Laursen et al.): age ≤59/60–74/≥75 = 0/1/2; urea >10 mmol/L = 1; albumin <30 g/L = 2; Cr 100–150/>150 µmol/L = 1/2; AMS 2; cirrhosis 2; disseminated malignancy 4; ASA I–II/III/≥IV = 0/1/3. Range 0–18. Mortality bands ≤3 / 4–7 / ≥8.',
+      formula:
+        'Age (0/1/2) + urea >10 mmol/L (1) + albumin <30 g/L (2) + creatinine (0/1/2) + AMS (2) + cirrhosis (2) + disseminated malignancy (4) + ASA (0/1/3); max 18',
       validation:
         'International multicenter derivation/validation for UGIB mortality; complementary to GBS (intervention) and AIMS65/Rockall.',
       references: [
@@ -320,7 +318,8 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     ],
     pearls: [
       'Pre-endoscopy Rockall already exists in this app — ABC is an alternate mortality tool.',
-      'Urea in mmol/L: BUN (mg/dL) ≈ urea (mmol/L) × 2.8.',
+      'Urea in mmol/L: BUN (mg/dL) ≈ urea (mmol/L) × 2.8. Only urea >10 mmol/L scores (1 point).',
+      'Albumin 30–39.9 g/L is 0 points; only <30 g/L scores 2.',
     ],
   },
 
@@ -328,11 +327,11 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     id: 'lower-gi-bleed-oakland',
     name: 'Oakland Score (Lower GI Bleed)',
     shortName: 'Oakland',
-    description: 'Simplified Oakland score variables for outpatient vs inpatient management of acute lower GI bleeding.',
+    description: 'Published Oakland score for outpatient vs inpatient management of acute lower GI bleeding (range 0–35).',
     category: 'gastroenterology',
     tags: ['lgib', 'bleed', 'oakland', 'colon'],
     whenToUse: 'Adults with acute lower GI bleeding being considered for safe discharge vs admission.',
-    whyUse: 'Oakland ≤8 often used as a low-risk threshold for safe discharge pathways in validated cohorts.',
+    whyUse: 'Oakland ≤8 is the validated low-risk threshold for safe discharge when using published Table 2 weights.',
     inputs: [
       selectInput('age', 'Age', [
         { label: '<40 years (0)', value: 0 },
@@ -352,18 +351,20 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: '≥110 (3)', value: 3 },
       ]),
       selectInput('sbp', 'Systolic BP', [
-        { label: '≥130 (0)', value: 0 },
-        { label: '120–129 (1)', value: 1 },
-        { label: '90–119 (2)', value: 2 },
-        { label: '<90 (3)', value: 3 },
-      ]),
+        { label: '≥160 (0)', value: 0 },
+        { label: '130–159 (2)', value: 2 },
+        { label: '120–129 (3)', value: 3 },
+        { label: '90–119 (4)', value: 4 },
+        { label: '50–89 (5)', value: 5 },
+      ], undefined, 'Oakland Table 2: ≥160 = 0, 130–159 = 2, 120–129 = 3, 90–119 = 4, 50–89 = 5. Treat SBP <50 as 5.'),
       selectInput('hb', 'Hemoglobin (g/dL)', [
         { label: '≥16.0 (0)', value: 0 },
-        { label: '13.0–15.9 (1)', value: 1 },
-        { label: '11.0–12.9 (2)', value: 2 },
-        { label: '9.0–10.9 (3)', value: 3 },
-        { label: '<9.0 (4)', value: 4 },
-      ]),
+        { label: '13.0–15.9 (4)', value: 4 },
+        { label: '11.0–12.9 (8)', value: 8 },
+        { label: '9.0–10.9 (13)', value: 13 },
+        { label: '7.0–8.9 (17)', value: 17 },
+        { label: '<7.0 (22)', value: 22 },
+      ], undefined, 'Published g/dL bands (g/L ÷ 10): ≥16.0 = 0, 13.0–15.9 = 4, 11.0–12.9 = 8, 9.0–10.9 = 13, 7.0–8.9 = 17, <7.0 (3.6–6.9) = 22.'),
     ],
     calculate(values) {
       const score =
@@ -375,6 +376,10 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         num(values.sbp) +
         num(values.hb);
 
+      const details = [
+        { label: 'Bands', value: '≤8 low / safe discharge · 9–12 moderate · >12 higher' },
+        { label: 'Max theoretical', value: '35' },
+      ];
       if (score <= 8) {
         return {
           score,
@@ -382,14 +387,16 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
           interpretation: `Oakland score ${score} ≤8: low risk of adverse outcomes in derivation/validation — candidate for outpatient management if clinically stable, reliable follow-up, and no competing concerns.`,
           riskLevel: 'low' as const,
           recommendations: ['Consider discharge with early follow-up', 'Safety-net for recurrent bleed/syncope', 'Hold/adjust anticoagulants per indication'],
+          details,
         };
       }
       if (score <= 12) {
         return {
           score,
           label: 'Intermediate Oakland risk',
-          interpretation: `Oakland score ${score}: not in classic low-risk discharge band — admit for monitoring, labs, and colonoscopy timing as indicated.`,
+          interpretation: `Oakland score ${score}: not in classic low-risk discharge band (≤8) — admit for monitoring, labs, and colonoscopy timing as indicated.`,
           riskLevel: 'moderate' as const,
+          details,
         };
       }
       return {
@@ -398,12 +405,14 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         interpretation: `Oakland score ${score}: higher risk band — inpatient care, resuscitation, consider ICU if unstable, urgent GI/IR pathways for massive bleed.`,
         riskLevel: 'high' as const,
         recommendations: ['Resuscitate', 'Type & cross', 'Urgent GI consult', 'CT angio if active brisk bleed'],
+        details,
       };
     },
     evidence: {
       summary:
-        'Oakland score: age, sex, prior LGIB admission, DRE blood, HR, SBP, hemoglobin. Score ≤8 associated with safe discharge in external validation cohorts.',
-      formula: 'Sum of age + sex + prior admit + DRE blood + HR + SBP + Hb points (0–18 range typical)',
+        'Oakland score (Table 2): age <40/40–69/≥70 = 0/1/2; female/male = 0/1; prior LGIB admit 1; DRE blood 1; HR <70/70–89/90–109/≥110 = 0/1/2/3; SBP ≥160/130–159/120–129/90–119/50–89 = 0/2/3/4/5; Hb ≥16/13–15.9/11–12.9/9–10.9/7–8.9/<7 g/dL = 0/4/8/13/17/22. Range 0–35. Score ≤8 associated with safe discharge.',
+      formula:
+        'Age (0–2) + sex (0–1) + prior LGIB admit (1) + DRE blood (1) + HR (0–3) + SBP (0/2/3/4/5) + Hb (0/4/8/13/17/22); max 35. ≤8 low-risk discharge if stable.',
       validation: 'Oakland et al. multicentre UK derivation/validation; thresholds may vary by local pathway.',
       references: [
         {
@@ -420,7 +429,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
       { condition: '>8 or unstable', actions: ['Admit', 'Resuscitation', 'Colonoscopy / CT angio per severity'] },
     ],
     pearls: [
-      'Simplified educational implementation — confirm points against your institutional Oakland worksheet.',
+      'Hb dominates the score: 9.0–10.9 g/dL is already 13 points, so most anemic patients exceed the ≤8 discharge cutoff.',
       'Massive hemorrhage or hemodynamic instability overrides any low score.',
     ],
   },

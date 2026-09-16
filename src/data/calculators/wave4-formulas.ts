@@ -5,28 +5,32 @@ import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, 
 const _sharedHelpers = { bool, yesNo, riskFromThresholds };
 void _sharedHelpers;
 
-/** Lund–Browder age-band head/thigh/leg % (one side for limbs; educational). */
+/** Classic Lund–Browder age-band head/thigh/leg % (one side for thigh/leg). */
 function lundBrowderPercents(ageYears: number): {
   head: number;
   thigh: number;
   leg: number;
   note: string;
 } {
-  // Classic teaching bands (approx). Neck 1%, upper arm 4%, forearm 3%, hand 2.5%,
-  // buttock 2.5% each, genitalia 1%, trunk ant/post 13% each are age-stable.
+  // Classic columns: head 19/17/13/11/9/7 at ages 0 / 1 / 5 / 10 / 15 / adult.
+  // Age-stable: neck 2, upper arm 4, forearm 3, hand 2.5 (whole arm 9.5),
+  // each buttock 2.5, genitalia 1, ant/post trunk 13, each foot 3.5.
   if (ageYears < 1) {
-    return { head: 19, thigh: 5.5, leg: 5, note: 'Infant <1 y: larger head, smaller legs' };
+    return { head: 19, thigh: 5.5, leg: 5, note: 'Infant <1 y (0-year column): larger head, smaller legs' };
   }
   if (ageYears < 5) {
-    return { head: 17, thigh: 6.5, leg: 5, note: 'Age 1–4 y band (simplified)' };
+    return { head: 17, thigh: 6.5, leg: 5, note: 'Age 1–4 y (1-year column)' };
   }
   if (ageYears < 10) {
-    return { head: 13, thigh: 8, leg: 5.5, note: 'Age 5–9 y band (simplified)' };
+    return { head: 13, thigh: 8, leg: 5.5, note: 'Age 5–9 y (5-year column)' };
   }
   if (ageYears < 15) {
-    return { head: 11, thigh: 8.5, leg: 6, note: 'Age 10–14 y band (simplified)' };
+    return { head: 11, thigh: 8.5, leg: 6, note: 'Age 10–14 y (10-year column)' };
   }
-  return { head: 9, thigh: 9, leg: 7, note: 'Adult / ≥15 y proportions' };
+  if (ageYears < 16) {
+    return { head: 9, thigh: 9, leg: 6.5, note: 'Age 15 y column (not adult; adult head is 7%)' };
+  }
+  return { head: 7, thigh: 9.5, leg: 7, note: 'Adult (≥16 y) column' };
 }
 
 export const wave4FormulasCalcs: Calculator[] = [
@@ -651,67 +655,76 @@ export const wave4FormulasCalcs: Calculator[] = [
   // ─── 9. Lund–Browder ───────────────────────────────────────────────────────
   {
     id: 'lund-browder',
-    name: 'Lund–Browder TBSA (Simplified)',
+    name: 'Lund–Browder TBSA',
     shortName: 'Lund–Browder',
-    description: 'Age-adjusted burn %TBSA helper using simplified Lund–Browder regional percentages.',
+    description: 'Age-adjusted burn %TBSA using classic Lund–Browder regional percentages (combined limb/head–neck fields that still sum to 100%).',
     category: 'emergency',
     tags: ['burn', 'tbsa', 'lund-browder', 'pediatrics'],
     whenToUse: 'Pediatric or age-sensitive TBSA estimates when rule-of-nines is too crude.',
     whyUse: 'Head and leg proportions change with age; Lund–Browder is the preferred chart method.',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 0, max: 100, step: 0.5, defaultValue: 3 }),
-      numberInput('head', 'Head & neck burned', { unit: '% of region 0–100', min: 0, max: 100, defaultValue: 0, helpText: 'Enter % of this anatomic region that is 2nd- or 3rd-degree — not first-degree erythema; 100 = entire region; do not enter % of whole-body TBSA.' }),
-      numberInput('antTrunk', 'Anterior trunk burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Enter % of this anatomic region that is 2nd- or 3rd-degree — not first-degree erythema; 100 = entire region; do not enter % of whole-body TBSA.' }),
-      numberInput('postTrunk', 'Posterior trunk burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Enter % of this anatomic region that is 2nd- or 3rd-degree — not first-degree erythema; 100 = entire region; do not enter % of whole-body TBSA.' }),
-      numberInput('armR', 'Right arm (whole) burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Helper collapses upper arm + forearm (+hand not separate). Enter % of this whole arm that is 2nd-/3rd-degree; 100 = entire arm. Use a full Lund–Browder chart when precision matters.' }),
-      numberInput('armL', 'Left arm (whole) burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Helper collapses upper arm + forearm. Enter % of this whole arm that is 2nd-/3rd-degree (not first-degree); 100 = entire arm; do not enter % of whole-body TBSA.' }),
-      numberInput('legR', 'Right leg (whole) burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Helper collapses thigh + leg + foot. Enter % of this whole leg that is 2nd-/3rd-degree; 100 = entire leg. Use a full Lund–Browder chart when precision matters.' }),
-      numberInput('legL', 'Left leg (whole) burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Helper collapses thigh + leg + foot. Enter % of this whole leg that is 2nd-/3rd-degree (not first-degree); 100 = entire leg; do not enter % of whole-body TBSA.' }),
-      numberInput('perineum', 'Perineum / genitalia burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Enter % of this anatomic region that is 2nd- or 3rd-degree — not first-degree erythema; 100 = entire region; do not enter % of whole-body TBSA.' }),
+      numberInput('head', 'Head & neck burned', { unit: '% of region 0–100', min: 0, max: 100, defaultValue: 0, helpText: 'Age-specific head + 2% neck. Enter % of this combined region that is 2nd- or 3rd-degree — not first-degree erythema; 100 = entire head and neck; do not enter % of whole-body TBSA.' }),
+      numberInput('antTrunk', 'Anterior trunk burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Anterior trunk = 13% TBSA. Enter % of this anatomic region that is 2nd- or 3rd-degree; 100 = entire region; do not enter % of whole-body TBSA.' }),
+      numberInput('postTrunk', 'Posterior trunk burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Posterior trunk = 13% TBSA (buttocks are separate). Enter % of this anatomic region that is 2nd- or 3rd-degree; 100 = entire region.' }),
+      numberInput('armR', 'Right arm (whole) burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Whole arm = upper arm 4 + forearm 3 + hand 2.5 = 9.5% TBSA. Enter % of this whole arm that is 2nd-/3rd-degree; 100 = entire arm including hand.' }),
+      numberInput('armL', 'Left arm (whole) burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Whole arm = 9.5% TBSA (upper arm 4 + forearm 3 + hand 2.5). Enter % of this whole arm that is 2nd-/3rd-degree; 100 = entire arm including hand.' }),
+      numberInput('legR', 'Right leg (whole) burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Whole leg = age-specific thigh + leg + foot 3.5. Enter % of this whole leg that is 2nd-/3rd-degree; 100 = entire leg. Buttocks are a separate field.' }),
+      numberInput('legL', 'Left leg (whole) burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Whole leg = age-specific thigh + leg + foot 3.5. Enter % of this whole leg that is 2nd-/3rd-degree; 100 = entire leg. Buttocks are a separate field.' }),
+      numberInput('buttocks', 'Buttocks (both) burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Both buttocks = 2.5% + 2.5% = 5% TBSA. Enter % of this combined region that is 2nd- or 3rd-degree; 100 = both buttocks fully burned.' }),
+      numberInput('perineum', 'Perineum / genitalia burned', { unit: '% of region', min: 0, max: 100, defaultValue: 0, helpText: 'Genitalia = 1% TBSA. Enter % of this anatomic region that is 2nd- or 3rd-degree; 100 = entire region; do not enter % of whole-body TBSA.' }),
     ],
     calculate(values) {
       const age = num(values.age, 3);
       const p = lundBrowderPercents(age);
-      // Age-stable regions (simplified adult chart teaching values)
+      const neck = 2;
+      const headNeckFull = p.head + neck;
       const antTrunkFull = 13;
       const postTrunkFull = 13;
-      const armFull = 7; // upper arm 4 + forearm 3 (hand often 2.5 separate; simplified whole-arm ~7–10)
+      const armFull = 9.5; // upper arm 4 + forearm 3 + hand 2.5
+      const buttocksFull = 5; // 2.5 each
       const perineumFull = 1;
-      // Legs: thigh + leg + foot approx = thigh + leg + ~3.5; use thigh+leg+3.5 as whole leg
-      const legFull = p.thigh + p.leg + 3.5;
+      const foot = 3.5;
+      const legFull = p.thigh + p.leg + foot;
 
       const frac = (regionInput: number) => Math.min(100, Math.max(0, regionInput)) / 100;
 
       const tbsa = round(
-        frac(num(values.head, 0)) * p.head +
+        frac(num(values.head, 0)) * headNeckFull +
           frac(num(values.antTrunk, 0)) * antTrunkFull +
           frac(num(values.postTrunk, 0)) * postTrunkFull +
           frac(num(values.armR, 0)) * armFull +
           frac(num(values.armL, 0)) * armFull +
           frac(num(values.legR, 0)) * legFull +
           frac(num(values.legL, 0)) * legFull +
+          frac(num(values.buttocks, 0)) * buttocksFull +
           frac(num(values.perineum, 0)) * perineumFull,
         1
       );
 
+      const chartTotal = round(headNeckFull + antTrunkFull + postTrunkFull + 2 * armFull + 2 * legFull + buttocksFull + perineumFull, 1);
+
       return {
         score: tbsa,
         unit: '% TBSA',
-        label: 'Simplified Lund–Browder TBSA',
-        interpretation: `Estimated TBSA ≈ ${tbsa}%. ${p.note}. Educational simplification — use a full Lund–Browder chart for clinical documentation when precision matters.`,
+        label: 'Lund–Browder TBSA',
+        interpretation: `Estimated TBSA ≈ ${tbsa}%. ${p.note}. Offered regions sum to ${chartTotal}% of BSA when fully burned. Use a full segmental chart when subregion precision matters.`,
         riskLevel: tbsa >= 20 ? 'high' : tbsa >= 10 ? 'moderate' : 'low',
         details: [
-          { label: 'Head/neck full region', value: `${p.head}%` },
-          { label: 'Each whole leg (approx)', value: `${round(legFull, 1)}%` },
-          { label: 'Each arm (simplified)', value: `${armFull}%` },
+          { label: 'Head + neck full region', value: `${headNeckFull}% (head ${p.head} + neck ${neck})` },
+          { label: 'Each whole arm', value: `${armFull}% (upper arm 4 + forearm 3 + hand 2.5)` },
+          { label: 'Each whole leg', value: `${round(legFull, 1)}% (thigh ${p.thigh} + leg ${p.leg} + foot ${foot})` },
           { label: 'Ant/post trunk each', value: `${antTrunkFull}%` },
+          { label: 'Buttocks (both)', value: `${buttocksFull}%` },
+          { label: 'Genitalia', value: `${perineumFull}%` },
+          { label: 'Chart total if all 100%', value: `${chartTotal}%` },
         ],
       };
     },
     evidence: {
-      summary: 'Lund–Browder charts assign age-dependent percentages especially to head and lower extremities.',
-      formula: 'TBSA = Σ (fraction of region burned × age-specific region %)',
-      validation: 'Standard burn surgery method preferred over rule-of-nines in children.',
+      summary: 'Classic Lund–Browder (1944): head 19/17/13/11/9/7 at ages 0/1/5/10/15/adult; neck 2%; each upper arm 4, forearm 3, hand 2.5 (whole arm 9.5); each buttock 2.5; genitalia 1; ant/post trunk 13 each; thigh/leg/foot age-specific. Combined fields here keep those weights so a fully burned body is 100% TBSA. Age 15 uses the 15-year head (9%); adult (≥16 y) uses head 7%.',
+      formula: 'TBSA = Σ (fraction of region burned × classic region %). Head&neck = age-specific head + 2; whole arm = 9.5; whole leg = thigh + leg + 3.5; buttocks = 5.',
+      validation: 'Standard burn surgery method preferred over rule-of-nines in children. Combined regions are weighted to the published chart rather than a reduced 88–89% simplification.',
       references: [
         {
           title: 'The estimation of areas of burns',
@@ -726,7 +739,10 @@ export const wave4FormulasCalcs: Calculator[] = [
         actions: ['Apply Parkland/Brooke if indicated', 'Burn center criteria', 'Palm method (~1% patient palm) for patchy burns'],
       },
     ],
-    pearls: ['This tool collapses arm segments and uses age bands — not a full chart substitute for OR planning.'],
+    pearls: [
+      'Whole-arm field is 9.5% (includes the 2.5% hand), not 7%. Head & neck is age-specific head plus 2% neck.',
+      'Age 15 is not adult: 15-year head is 9%; adult head is 7%.',
+    ],
   },
 
   // ─── 10. Temp C ↔ F ────────────────────────────────────────────────────────

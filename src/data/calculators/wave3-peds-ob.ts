@@ -399,121 +399,134 @@ export const wave3PedsObCalcs: Calculator[] = [
     id: 'bedsides-pews',
     name: 'Bedside PEWS (Pediatric Early Warning)',
     shortName: 'Bedside PEWS',
-    description: 'Simplified Bedside Pediatric Early Warning System using key vital-sign and clinical domains.',
+    description: 'Official 7-item Bedside Pediatric Early Warning System (Parshuram): HR, SBP, CRT, RR, respiratory effort, SpO₂, and oxygen therapy; subscores 0/1/2/4; range 0–26.',
     category: 'pediatrics',
     tags: ['pews', 'early warning', 'pediatric', 'deterioration', 'rapid response'],
     whenToUse: 'Hospitalized children for early recognition of clinical deterioration.',
-    whyUse: 'Structures vital signs and work-of-breathing into an actionable early-warning total.',
+    whyUse: 'Structures the seven published Bedside PEWS items into an actionable early-warning total (derivation ROC threshold 8).',
     inputs: [
       selectInput('hr', 'Heart rate (age-appropriate abnormal)', [
-        { label: 'Normal for age (0)', value: 0, description: 'Use Parshuram age-band table in help text (educational 0 maps to official 0)' },
-        { label: 'Mildly abnormal (1)', value: 1, description: 'Official Bedside PEWS column 1 (see age table)' },
+        { label: 'Normal for age (0)', value: 0, description: 'Official column 0 — see age table in help text' },
+        { label: 'Mildly abnormal (1)', value: 1, description: 'Official Bedside PEWS column 1' },
         { label: 'Moderately abnormal (2)', value: 2, description: 'Official Bedside PEWS column 2' },
-        { label: 'Severely abnormal (3)', value: 3, description: 'Official Bedside PEWS column 4 mapped onto this 3-point item — do not change the value' },
-      ], 0, 'Parshuram Bedside PEWS HR (bpm), educational 0/1/2/3 (official last column is 4 points, mapped here to 3). <3 mo: 110–149 = 0; ≥150 or ≤110 = 1; ≥180 or ≤90 = 2; ≥190 or ≤80 = 3. 3–12 mo: 100–149 = 0; ≥150 or ≤100 = 1; ≥170 or ≤80 = 2; ≥180 or ≤70 = 3. 1–4 y: 90–119 = 0; ≥120 or ≤90 = 1; ≥150 or ≤70 = 2; ≥170 or ≤60 = 3. 5–12 y: 70–109 = 0; ≥110 or ≤70 = 1; ≥130 or ≤60 = 2; ≥150 or ≤50 = 3. ≥12 y: 60–99 = 0; ≥100 or ≤60 = 1; ≥120 or ≤50 = 2; ≥140 or ≤40 = 3. Use hospital PEWS chart if it differs.'),
+        { label: 'Severely abnormal (4)', value: 4, description: 'Official Bedside PEWS column 4 (not 3)' },
+      ], 0, 'Parshuram Bedside PEWS HR (bpm), columns 0/1/2/4. 0 to <3 mo: >110 and <150 = 0; ≥150 or ≤110 = 1; ≥180 or ≤90 = 2; ≥190 or ≤80 = 4. 3 to <12 mo: >100 and <150 = 0; ≥150 or ≤100 = 1; ≥170 or ≤80 = 2; ≥180 or ≤70 = 4. 1–4 y: >90 and <120 = 0; ≥120 or ≤90 = 1; ≥150 or ≤70 = 2; ≥170 or ≤60 = 4. >4–12 y: >70 and <110 = 0; ≥110 or ≤70 = 1; ≥130 or ≤60 = 2; ≥150 or ≤50 = 4. >12 y: >60 and <100 = 0; ≥100 or ≤60 = 1; ≥120 or ≤50 = 2; ≥140 or ≤40 = 4.'),
       selectInput('rr', 'Respiratory rate', [
-        { label: 'Normal for age (0)', value: 0, description: 'Use Parshuram RR age-band table in help text' },
+        { label: 'Normal for age (0)', value: 0, description: 'Official column 0' },
         { label: 'Mildly abnormal (1)', value: 1, description: 'Official column 1' },
         { label: 'Moderately abnormal (2)', value: 2, description: 'Official column 2' },
-        { label: 'Severely abnormal (3)', value: 3, description: 'Official column 4 mapped to 3' },
-      ], 0, 'Parshuram Bedside PEWS RR (breaths/min); last official column (4 pts) mapped to 3. <3 mo: 30–60 = 0; ≥61 or ≤29 = 1; ≥81 or ≤19 = 2; ≥91 or ≤15 = 3. 3–12 mo: 25–50 = 0; ≥51 or ≤24 = 1; ≥71 or ≤19 = 2; ≥81 or ≤15 = 3. 1–4 y: 20–40 = 0; ≥41 or ≤19 = 1; ≥61 or ≤15 = 2; ≥71 or ≤12 = 3. 5–12 y: 20–30 = 0; ≥31 or ≤19 = 1; ≥41 or ≤14 = 2; ≥51 or ≤10 = 3. ≥12 y: 12–16 = 0; ≥17 or ≤11 = 1; ≥23 or ≤10 = 2; ≥30 or ≤9 = 3.'),
+        { label: 'Severely abnormal (4)', value: 4, description: 'Official column 4 (not 3)' },
+      ], 0, 'Parshuram Bedside PEWS RR (breaths/min), columns 0/1/2/4. 0 to <3 mo: >29 and <61 = 0; ≥61 or ≤29 = 1; ≥81 or ≤19 = 2; ≥91 or ≤15 = 4. 3 to <12 mo: >24 and <51 = 0; ≥51 or ≤24 = 1; ≥71 or ≤19 = 2; ≥81 or ≤15 = 4. 1–4 y: >19 and <41 = 0; ≥41 or ≤19 = 1; ≥61 or ≤15 = 2; ≥71 or ≤12 = 4. >4–12 y: >19 and <31 = 0; ≥31 or ≤19 = 1; ≥41 or ≤14 = 2; ≥51 or ≤10 = 4. >12 y: >11 and <17 = 0; ≥17 or ≤11 = 1; ≥23 or ≤10 = 2; ≥30 or ≤9 = 4.'),
       selectInput('sbp', 'Systolic BP', [
-        { label: 'Normal for age (0)', value: 0, description: 'Use Parshuram SBP age-band table in help text' },
+        { label: 'Normal for age (0)', value: 0, description: 'Official column 0' },
         { label: 'Mildly abnormal (1)', value: 1, description: 'Official column 1' },
         { label: 'Moderately abnormal (2)', value: 2, description: 'Official column 2' },
-        { label: 'Severely abnormal (3)', value: 3, description: 'Official column 4 mapped to 3' },
-      ], 0, 'Parshuram Bedside PEWS SBP (mmHg); last official column mapped to 3. <3 mo: 60–80 = 0; ≥80 or ≤60 = 1; ≥100 or ≤50 = 2; ≥130 or ≤45 = 3. 3–12 mo: 80–100 = 0; ≥100 or ≤80 = 1; ≥120 or ≤70 = 2; ≥150 or ≤60 = 3. 1–4 y: 90–110 = 0; ≥110 or ≤90 = 1; ≥125 or ≤75 = 2; ≥160 or ≤65 = 3. 5–12 y: 90–120 = 0; ≥120 or ≤90 = 1; ≥140 or ≤80 = 2; ≥170 or ≤70 = 3. ≥12 y: 100–130 = 0; ≥130 or ≤100 = 1; ≥150 or ≤85 = 2; ≥190 or ≤75 = 3.'),
+        { label: 'Severely abnormal (4)', value: 4, description: 'Official column 4 (not 3)' },
+      ], 0, 'Parshuram Bedside PEWS SBP (mmHg), columns 0/1/2/4. 0 to <3 mo: >60 and <80 = 0; ≥80 or ≤60 = 1; ≥100 or ≤50 = 2; ≥130 or ≤45 = 4. 3 to <12 mo: >80 and <100 = 0; ≥100 or ≤80 = 1; ≥120 or ≤70 = 2; ≥150 or ≤60 = 4. 1–4 y: >90 and <110 = 0; ≥110 or ≤90 = 1; ≥125 or ≤75 = 2; ≥160 or ≤65 = 4. >4–12 y: >90 and <120 = 0; ≥120 or ≤90 = 1; ≥140 or ≤80 = 2; ≥170 or ≤70 = 4. >12 y: >100 and <130 = 0; ≥130 or ≤100 = 1; ≥150 or ≤85 = 2; ≥190 or ≤75 = 4.'),
       selectInput('capRefill', 'Capillary refill', [
-        { label: '<2 s (0)', value: 0, description: 'Brisk refill <2 s' },
-        { label: '2–3 s (1)', value: 1, description: '2–3 s (this tool’s middle split)' },
-        { label: '>3 s (2)', value: 2, description: '>3 s delayed refill' },
-      ], 0, 'Score at the bedside (finger or sternum). Official Bedside PEWS is binary <3 s = 0 vs ≥3 s = 4; this tool keeps a 0/1/2 split. Use the institutional age table if it differs.'),
+        { label: '<3 s (0)', value: 0, description: 'Official: CRT <3 seconds = 0' },
+        { label: '≥3 s (4)', value: 4, description: 'Official: CRT ≥3 seconds = 4 (not a 0/1/2 split)' },
+      ], 0, 'Official Bedside PEWS CRT is binary: <3 s = 0 vs ≥3 s = 4. Score centrally (finger or sternum).'),
       selectInput('o2Therapy', 'Oxygen therapy', [
-        { label: 'Room air (0)', value: 0, description: 'No supplemental oxygen' },
-        { label: 'Any O₂ ≤2 L or low-flow (1)', value: 1, description: 'Nasal cannula ≤2 L/min or equivalent low-flow' },
-        { label: 'Higher O₂ / high-flow (2)', value: 2, description: 'Simple mask, >2 L/min, or high-flow nasal cannula' },
-        { label: 'Non-invasive / invasive vent (3)', value: 3, description: 'CPAP/BiPAP or invasive mechanical ventilation' },
-      ], 0, 'Score the current oxygen delivery device, not the SpO₂ (that is a separate item).'),
+        { label: 'Room air (0)', value: 0, description: 'Official: room air' },
+        { label: 'Any O₂ <4 L/min or <50% (1)', value: 1, description: 'Official: any supplemental O₂ below 4 L/min or 50%' },
+        { label: '≥4 L/min or ≥50% (2)', value: 2, description: 'Official: ≥4 L/min or ≥50% oxygen' },
+      ], 0, 'Official oxygen-therapy columns: room air (0); any O₂ <4 L/min or <50% (1); ≥4 L/min or ≥50% (2). Score the device/FiO₂, not the SpO₂.'),
       selectInput('spo2', 'Oxygen saturation', [
-        { label: '≥94% (or at baseline) (0)', value: 0, description: 'SpO₂ ≥94% or at the child’s known baseline' },
-        { label: '91–93% (1)', value: 1, description: 'SpO₂ 91–93%' },
-        { label: '≤90% (2)', value: 2, description: 'SpO₂ ≤90%' },
-      ], 0, 'Use the current saturation on whatever oxygen is in place. Cyanotic heart-disease patients: score vs their known baseline, not 94%.'),
+        { label: '>94% (0)', value: 0, description: 'Official: SpO₂ >94%' },
+        { label: '91–94% (1)', value: 1, description: 'Official: SpO₂ 91–94%' },
+        { label: '≤90% (2)', value: 2, description: 'Official: SpO₂ ≤90%' },
+      ], 0, 'Official saturation columns: >94 = 0; 91–94 = 1; ≤90 = 2. Cyanotic heart-disease patients: score vs known baseline per local protocol.'),
       selectInput('respEffort', 'Respiratory effort / distress', [
         { label: 'Normal (0)', value: 0, description: 'Official: normal effort' },
-        { label: 'Mild increase (1)', value: 1, description: 'Official: mild increase in effort (mild retractions)' },
-        { label: 'Moderate increase (2)', value: 2, description: 'Official: moderate increase (moderate retractions ± flaring)' },
-        { label: 'Severe increase or any apnea (3)', value: 3, description: 'Official: severe increase or any apnea (maps official 4-point band to 3)' },
-      ], 0, 'Official Bedside PEWS respiratory effort: Normal; Mild increase; Moderate increase; Severe increase or any apnea.'),
-      selectInput('behavior', 'Behavior / consciousness', [
-        { label: 'Playing / appropriate (0)', value: 0, description: 'Playing or interacting appropriately for age/situation' },
-        { label: 'Sleeping / irritable (1)', value: 1, description: 'Sleeping more than usual, or irritable but arousable' },
-        { label: 'Lethargic / confused (2)', value: 2, description: 'Lethargic or confused; decreased interaction' },
-        { label: 'Reduced response to pain (3)', value: 3, description: 'Reduced or no response to pain' },
-      ], 0, 'Score the best interaction during this assessment. Reduced response to pain is a critical finding.'),
+        { label: 'Mild increase (1)', value: 1, description: 'Official: mild increase in effort' },
+        { label: 'Moderate increase (2)', value: 2, description: 'Official: moderate increase' },
+        { label: 'Severe increase or any apnea (4)', value: 4, description: 'Official column 4 (not 3): severe increase or any apnea' },
+      ], 0, 'Official Bedside PEWS respiratory effort: Normal (0); mild increase (1); moderate increase (2); severe increase or any apnea (4). No behavior/consciousness item in the 7-item score.'),
     ],
     calculate(values) {
+      const col = (raw: number | string | boolean | null | undefined) => {
+        const n = num(raw);
+        return n === 3 ? 4 : n;
+      };
+      const crtRaw = num(values.capRefill);
+      const crt = crtRaw >= 2 ? 4 : 0;
+      const o2Raw = num(values.o2Therapy);
+      const o2 = o2Raw >= 3 ? 2 : o2Raw;
       const score =
-        num(values.hr) +
-        num(values.rr) +
-        num(values.sbp) +
-        num(values.capRefill) +
-        num(values.o2Therapy) +
+        col(values.hr) +
+        col(values.rr) +
+        col(values.sbp) +
+        crt +
+        o2 +
         num(values.spo2) +
-        num(values.respEffort) +
-        num(values.behavior);
+        col(values.respEffort);
       const r = riskFromThresholds(score, [
         {
           max: 2,
           level: 'low',
           label: 'Low (0–2)',
-          interpretation: `Bedside PEWS-style total ${score}. Routine monitoring; continue age-specific vitals.`,
+          interpretation: `Bedside PEWS ${score}/26. Routine monitoring (published response bands often rescore ~q4 h).`,
         },
         {
           max: 4,
           level: 'moderate',
           label: 'Increased (3–4)',
-          interpretation: `Score ${score}: increased concern — increase observation frequency and notify covering clinician per local PEWS protocol.`,
+          interpretation: `Score ${score}/26: increased concern — more frequent observation and covering-clinician review per local Bedside PEWS pathway.`,
         },
         {
-          max: 6,
+          max: 7,
           level: 'high',
-          label: 'High (5–6)',
-          interpretation: `Score ${score}: high concern — urgent bedside assessment; consider senior review / rapid response.`,
+          label: 'High (5–7)',
+          interpretation: `Score ${score}/26: high concern — urgent bedside assessment and senior review. Derivation ROC threshold is 8 (do not treat ≥7 as the critical cutoff on this 0–26 scale).`,
         },
         {
           max: 30,
           level: 'critical',
-          label: 'Critical (≥7)',
-          interpretation: `Score ${score}: critical early-warning band — activate rapid response / ICU review per institutional pathway.`,
+          label: 'Critical (≥8)',
+          interpretation: `Score ${score}/26: at or above the derivation ROC threshold of 8 (2009: sensitivity 82%, specificity 93%) — activate rapid response / ICU review per institutional pathway.`,
         },
       ]);
       return {
         score,
+        unit: 'points (0–26)',
         ...r,
+        details: [
+          { label: 'HR', value: String(col(values.hr)) },
+          { label: 'SBP', value: String(col(values.sbp)) },
+          { label: 'CRT', value: String(crt) },
+          { label: 'RR', value: String(col(values.rr)) },
+          { label: 'Respiratory effort', value: String(col(values.respEffort)) },
+          { label: 'SpO₂', value: String(num(values.spo2)) },
+          { label: 'Oxygen therapy', value: String(o2) },
+        ],
         recommendations: [
-          'Use institutional PEWS cutoffs and age-specific vital tables when available',
+          'Use the published 0/1/2/4 columns and age-specific vital tables',
           'Any single extreme vital or clinician concern overrides the score',
         ],
       };
     },
     evidence: {
       summary:
-        'Bedside PEWS aggregates cardiopulmonary and behavioral domains. This is a simplified educational version — local PEWS charts define exact age cutoffs and escalation thresholds.',
-      formula: 'Sum of HR + RR + SBP + cap refill + O₂ therapy + SpO₂ + effort + behavior (simplified points)',
-      validation: 'PEWS systems reduce unrecognized deterioration in pediatric wards when paired with response algorithms; thresholds are institution-specific.',
+        'Bedside PEWS (Parshuram Crit Care 2009/2011) is a 7-item score: heart rate, systolic BP, capillary refill, respiratory rate, respiratory effort, SpO₂, and oxygen therapy. Subscores use columns 0, 1, 2, and 4 (severe column is 4, not 3). CRT ≥3 s scores 4. There is no behavior/consciousness item. Range 0–26. Derivation ROC threshold 8.',
+      formula: 'Sum of HR + SBP + CRT + RR + respiratory effort + SpO₂ + oxygen therapy (0/1/2/4 columns; max 26)',
+      validation: '2009 derivation AUROC 0.91; at score 8, sensitivity 82% and specificity 93%. 2011 multicentre validation AUROC 0.87. Pair with a response algorithm; local charts may add single-parameter triggers.',
       references: [
         { title: 'Development and initial validation of the Bedside Paediatric Early Warning System score', citation: 'Parshuram CS, Hutchison J, Middaugh K. Crit Care. 2009;13(4):R135', year: 2009, pmid: '19678924',
           doi: '10.1186/cc7998', },
+        { title: 'Multicentre validation of the bedside paediatric early warning system score', citation: 'Parshuram CS et al. Crit Care. 2011;15(4):R184', year: 2011, pmid: '21812993',
+          doi: '10.1186/cc10337', },
       ],
     },
     nextSteps: [
-      { condition: 'Score ≥5 or rising trend', actions: ['Bedside evaluation', 'Senior review', 'Consider ICU consult'] },
+      { condition: 'Score ≥8 (derivation threshold)', actions: ['Rapid response / ICU review', 'Continuous monitoring', 'Escalate per institutional Bedside PEWS pathway'] },
+      { condition: 'Score 5–7', actions: ['Urgent bedside evaluation', 'Senior review', 'Increase observation frequency'] },
       { condition: 'Score 0–2 stable', actions: ['Routine monitoring'] },
     ],
     pearls: [
-      'Trend and clinical gestalt matter more than a single total.',
-      'Apply age-band vital norms from your hospital PEWS chart.',
+      'Do not add an unofficial behavior domain — the published score is seven items, 0–26.',
+      'CRT ≥3 seconds is 4 points, not a mild delay.',
+      'Trend and clinical gestalt still override a single total.',
     ],
   },
 

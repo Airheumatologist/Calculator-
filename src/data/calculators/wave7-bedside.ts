@@ -95,13 +95,13 @@ export const wave7BedsideCalcs: Calculator[] = [
       ]),
       numberInput('height', 'Height', { unit: 'cm', min: 50, max: 220, step: 0.1, defaultValue: 140, helpText: 'Measured standing height (recumbent length in infants). Required for the creatinine equation (height in metres).' }),
       numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.01, defaultValue: 0.8 }),
-      numberInput('cysc', 'Cystatin C', {
+      numberInput('cysc', 'Cystatin C (optional)', {
         unit: 'mg/L',
         min: 0.2,
         max: 8,
         step: 0.01,
-        defaultValue: 0.8,
-        helpText: 'IFCC-standardized (nephelometric preferred). Averaged with the creatinine estimate.',
+        required: false,
+        helpText: 'IFCC-standardized (nephelometric preferred). Leave blank if not measured — displayed result is then eGFRcr only. Averaged with creatinine only when both markers are entered.',
       }),
     ],
     calculate(values) {
@@ -109,64 +109,73 @@ export const wave7BedsideCalcs: Calculator[] = [
       const male = str(values.sex, 'F') === 'M';
       const heightCm = num(values.height, 140);
       const scr = Math.max(num(values.scr, 0.8), 0.1);
-      const cysc = Math.max(num(values.cysc, 0.8), 0.2);
+      const cyscMissing = isMissingValue(values.cysc, true);
       const htM = heightCm / 100;
       const egfrCr = kappaCr(age, male) * (htM / scr);
-      const egfrCys = kappaCys(age, male) * (1 / cysc);
-      const egfr = round((egfrCr + egfrCys) / 2, 1);
+      const cysc = cyscMissing ? null : Math.max(num(values.cysc, 0), 0.2);
+      const egfrCys = cysc == null ? null : kappaCys(age, male) * (1 / cysc);
+      const usedBoth = egfrCys != null;
+      const egfr = round(egfrCys != null ? (egfrCr + egfrCys) / 2 : egfrCr, 1);
+      const shown = usedBoth ? 'Average U25 eGFR' : 'U25 eGFRcr';
       const r = riskFromThresholds(egfr, [
         {
           max: 14.9,
           level: 'critical',
           label: 'Kidney failure range (G5)',
-          interpretation: `Average U25 eGFR ${egfr} mL/min/1.73 m² (<15): kidney-failure range. Confirm with clinical context; discuss nephrology/RRT planning.`,
+          interpretation: `${shown} ${egfr} mL/min/1.73 m² (<15): kidney-failure range. Confirm with clinical context; discuss nephrology/RRT planning.`,
         },
         {
           max: 29.9,
           level: 'high',
           label: 'Severely decreased (G4)',
-          interpretation: `Average U25 eGFR ${egfr} mL/min/1.73 m² (15–29): severely decreased. Nephrology co-management; avoid nephrotoxins; dose-adjust.`,
+          interpretation: `${shown} ${egfr} mL/min/1.73 m² (15–29): severely decreased. Nephrology co-management; avoid nephrotoxins; dose-adjust.`,
         },
         {
           max: 59.9,
           level: 'moderate',
           label: 'Moderately decreased (G3)',
-          interpretation: `Average U25 eGFR ${egfr} mL/min/1.73 m² (30–59): moderately decreased. Stage, treat cause, BP/proteinuria, CV risk.`,
+          interpretation: `${shown} ${egfr} mL/min/1.73 m² (30–59): moderately decreased. Stage, treat cause, BP/proteinuria, CV risk.`,
         },
         {
           max: 89.9,
           level: 'low',
           label: 'Mildly decreased (G2)',
-          interpretation: `Average U25 eGFR ${egfr} mL/min/1.73 m² (60–89): mildly decreased if CKD is otherwise documented (markers of damage).`,
+          interpretation: `${shown} ${egfr} mL/min/1.73 m² (60–89): mildly decreased if CKD is otherwise documented (markers of damage).`,
         },
         {
           max: 5000,
           level: 'normal',
           label: 'Normal or high (G1)',
-          interpretation: `Average U25 eGFR ${egfr} mL/min/1.73 m² (≥90): normal/high filtration. CKD staging still requires markers of kidney damage.`,
+          interpretation: `${shown} ${egfr} mL/min/1.73 m² (≥90): normal/high filtration. CKD staging still requires markers of kidney damage.`,
         },
       ]);
+      const details: { label: string; value: string }[] = [
+        { label: 'eGFRcr (U25)', value: `${round(egfrCr, 1)} mL/min/1.73 m²` },
+      ];
+      if (usedBoth && egfrCys != null && cysc != null) {
+        details.push({ label: 'eGFRcys (U25)', value: `${round(egfrCys, 1)} mL/min/1.73 m²` });
+        details.push({ label: 'Average (displayed)', value: `${egfr} mL/min/1.73 m²` });
+        details.push({ label: 'κ cystatin', value: round(kappaCys(age, male), 2).toString() });
+        details.push({ label: 'CysC', value: `${cysc} mg/L` });
+      } else {
+        details.push({ label: 'eGFRcys (U25)', value: 'Not calculated (cystatin not entered)' });
+        details.push({ label: 'Displayed', value: `eGFRcr ${egfr} mL/min/1.73 m²` });
+      }
+      details.push({ label: 'κ creatinine', value: round(kappaCr(age, male), 2).toString() });
+      details.push({ label: 'Height', value: `${heightCm} cm (${round(htM, 3)} m)` });
+      details.push({ label: 'SCr', value: `${scr} mg/dL` });
       return {
         score: egfr,
         unit: 'mL/min/1.73 m²',
         ...r,
-        details: [
-          { label: 'eGFRcr (U25)', value: `${round(egfrCr, 1)} mL/min/1.73 m²` },
-          { label: 'eGFRcys (U25)', value: `${round(egfrCys, 1)} mL/min/1.73 m²` },
-          { label: 'Average (displayed)', value: `${egfr} mL/min/1.73 m²` },
-          { label: 'κ creatinine', value: round(kappaCr(age, male), 2).toString() },
-          { label: 'κ cystatin', value: round(kappaCys(age, male), 2).toString() },
-          { label: 'Height', value: `${heightCm} cm (${round(htM, 3)} m)` },
-          { label: 'SCr', value: `${scr} mg/dL` },
-          { label: 'CysC', value: `${cysc} mg/L` },
-        ],
+        details,
       };
     },
     evidence: {
       summary:
-        'CKiD U25 (Pierce 2021) estimates GFR in ages 1–25 using sex- and age-dependent κ. Creatinine: eGFRcr = κ × (height_m / SCr). Cystatin: eGFRcys = κ × (1 / CysC). When both markers are available, the average is more precise and is the displayed result.',
+        'CKiD U25 (Pierce 2021) estimates GFR in ages 1–25 using sex- and age-dependent κ. Creatinine: eGFRcr = κ × (height_m / SCr). Cystatin: eGFRcys = κ × (1 / CysC). Display the average only when both markers are actually measured; if CysC is blank, display eGFRcr only (no 0.8 mg/L dummy default).',
       formula:
-        'eGFRcr = κ_cr × (Ht_m / SCr); eGFRcys = κ_cys × (1/CysC); displayed = (eGFRcr + eGFRcys)/2. κ_cr: F/M 1–<12 36.1/39.0 × 1.008^(age−12); 12–<18 36.1×1.023^(age−12) / 39.0×1.045^(age−12); 18–25 41.4/50.8. κ_cys: F 1–<12 79.9×1.004^(age−12); F 12–<18 79.9×0.974^(age−12); F 18–25 68.3; M <15 87.2×1.011^(age−15); M 15–<18 87.2×0.960^(age−15); M 18–25 77.1.',
+        'eGFRcr = κ_cr × (Ht_m / SCr); eGFRcys = κ_cys × (1/CysC). Display eGFRcr if CysC is blank; display the average only when both markers are measured. Do not default CysC to 0.8. κ_cr: F/M 1–<12 36.1/39.0 × 1.008^(age−12); 12–<18 36.1×1.023^(age−12) / 39.0×1.045^(age−12); 18–25 41.4/50.8. κ_cys: F 1–<12 79.9×1.004^(age−12); F 12–<18 79.9×0.974^(age−12); F 18–25 68.3; M <15 87.2×1.011^(age−15); M 15–<18 87.2×0.960^(age−15); M 18–25 77.1.',
       validation:
         'Derived and internally validated in CKiD (iohexol GFR). Preferred over bedside Schwartz for longitudinal CKD-range GFR in this age span; not for rapidly changing AKI.',
       references: [
@@ -190,7 +199,7 @@ export const wave7BedsideCalcs: Calculator[] = [
       },
     ],
     pearls: [
-      'Average of U25 creatinine and cystatin C is the preferred reported estimate when both are available.',
+      'Average of U25 creatinine and cystatin C is the preferred reported estimate when both are available; if CysC is not entered, the displayed value is eGFRcr only.',
       'Do not use U25 in AKI or when creatinine/cystatin is not in steady state.',
       'Height must be measured; recumbent length in infants.',
     ],

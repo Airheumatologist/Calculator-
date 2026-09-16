@@ -5,22 +5,55 @@ import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, 
 const _sharedHelpers = { bool, yesNo };
 void _sharedHelpers;
 
-/** Approximate Martin/Hopkins TG:VLDL factor from TG + non-HDL strata (educational table). */
+/** Martin/Hopkins 180-cell TG:VLDL-C factor (JAMA 2013 Fig 2). Factor rises with TG. */
 function martinHopkinsFactor(tg: number, nonHdl: number): number {
-  const tgIdx =
-    tg < 80 ? 0 : tg < 120 ? 1 : tg < 160 ? 2 : tg < 200 ? 3 : tg < 300 ? 4 : tg < 400 ? 5 : 6;
   const nhIdx =
     nonHdl < 100 ? 0 : nonHdl < 130 ? 1 : nonHdl < 160 ? 2 : nonHdl < 190 ? 3 : nonHdl < 220 ? 4 : 5;
-  // Rows = non-HDL bins; cols = TG bins. Factors ~3–12 (Martin/Hopkins range).
-  const factors = [
-    [11.9, 9.5, 7.6, 6.5, 5.5, 4.7, 3.9],
-    [11.5, 9.0, 7.3, 6.2, 5.3, 4.6, 3.8],
-    [11.0, 8.6, 7.0, 6.0, 5.2, 4.5, 3.7],
-    [10.5, 8.2, 6.8, 5.8, 5.0, 4.4, 3.6],
-    [10.0, 7.8, 6.5, 5.6, 4.9, 4.3, 3.5],
-    [9.5, 7.4, 6.2, 5.4, 4.7, 4.1, 3.4],
+  // 30 TG strata × 6 non-HDL columns. First matching upper bound.
+  const tgCuts = [
+    49, 56, 61, 66, 71, 75, 79, 83, 87, 92, 96, 100, 105, 110, 115, 120, 126, 132, 138, 146, 154, 163,
+    173, 185, 201, 220, 247, 292, 399, Infinity,
   ];
-  return factors[nhIdx][tgIdx];
+  const factors: number[][] = [
+    [3.5, 3.4, 3.3, 3.3, 3.2, 3.1],
+    [4.0, 3.9, 3.7, 3.6, 3.6, 3.4],
+    [4.3, 4.1, 4.0, 3.9, 3.8, 3.6],
+    [4.5, 4.3, 4.1, 4.0, 3.9, 3.9],
+    [4.7, 4.4, 4.3, 4.2, 4.1, 3.9],
+    [4.8, 4.6, 4.4, 4.2, 4.2, 4.1],
+    [4.9, 4.6, 4.5, 4.3, 4.3, 4.2],
+    [5.0, 4.8, 4.6, 4.4, 4.3, 4.2],
+    [5.1, 4.8, 4.6, 4.5, 4.4, 4.3],
+    [5.2, 4.9, 4.7, 4.6, 4.4, 4.3],
+    [5.3, 5.0, 4.8, 4.7, 4.5, 4.4],
+    [5.4, 5.1, 4.8, 4.7, 4.5, 4.3],
+    [5.5, 5.2, 5.0, 4.7, 4.6, 4.5],
+    [5.6, 5.3, 5.0, 4.8, 4.6, 4.5],
+    [5.7, 5.4, 5.1, 4.9, 4.7, 4.5],
+    [5.8, 5.5, 5.2, 5.0, 4.8, 4.6],
+    [6.0, 5.5, 5.3, 5.0, 4.8, 4.6],
+    [6.1, 5.7, 5.3, 5.1, 4.9, 4.7],
+    [6.2, 5.8, 5.4, 5.2, 5.0, 4.7],
+    [6.3, 5.9, 5.6, 5.3, 5.0, 4.8],
+    [6.5, 6.0, 5.7, 5.4, 5.1, 4.8],
+    [6.7, 6.2, 5.8, 5.4, 5.2, 4.9],
+    [6.8, 6.3, 5.9, 5.5, 5.3, 5.0],
+    [7.0, 6.5, 6.0, 5.7, 5.4, 5.1],
+    [7.3, 6.7, 6.2, 5.8, 5.5, 5.2],
+    [7.6, 6.9, 6.4, 6.0, 5.6, 5.3],
+    [8.0, 7.2, 6.6, 6.2, 5.9, 5.4],
+    [8.5, 7.6, 7.0, 6.5, 6.1, 5.6],
+    [9.5, 8.3, 7.5, 7.0, 6.5, 5.9],
+    [11.9, 10.0, 8.8, 8.1, 7.5, 6.7],
+  ];
+  let tgIdx = tgCuts.length - 1;
+  for (let i = 0; i < tgCuts.length; i++) {
+    if (tg <= tgCuts[i]) {
+      tgIdx = i;
+      break;
+    }
+  }
+  return factors[tgIdx][nhIdx];
 }
 
 export const wave2GeneralLabCalcs: Calculator[] = [
@@ -154,14 +187,14 @@ export const wave2GeneralLabCalcs: Calculator[] = [
         ...r,
         details: [
           { label: 'Non-HDL-C', value: `${round(nonHdl, 0)} mg/dL` },
-          { label: 'TG:VLDL factor (approx)', value: String(round(factor, 1)) },
+          { label: 'TG:VLDL factor (180-cell)', value: String(round(factor, 1)) },
         ],
       };
     },
     evidence: {
       summary: 'Martin/Hopkins: LDL = TC − HDL − TG/f, where f is an adjustable factor from TG and non-HDL strata (not fixed 5).',
       formula: 'LDL-C = non-HDL-C − TG/factor(TG, non-HDL)',
-      validation: 'Derived from >1.3M lipid profiles; improves accuracy vs Friedewald at low LDL and higher TG. This tool uses a condensed factor table approximation.',
+      validation: 'Derived from >1.3M lipid profiles; improves accuracy vs Friedewald at low LDL and higher TG. This tool uses the published 180-cell median TG:VLDL-C table (factors increase with TG).',
       references: [
         {
           title: 'Comparison of a novel method vs the Friedewald equation for estimating LDL-C',
@@ -176,7 +209,10 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       { condition: 'Elevated LDL', actions: ['Full ASCVD risk assessment', 'Statin therapy per guidelines'] },
       { condition: 'TG ≥400', actions: ['Direct LDL or Sampson equation', 'Manage hypertriglyceridemia'] },
     ],
-    pearls: ['Factor replaces Friedewald’s fixed 5; typically higher at low TG and lower at high TG.', 'Implementation here approximates the 180-cell table for bedside use.'],
+    pearls: [
+      'TG:VLDL-C factor increases with TG (low TG ~3.1–5; high TG ~6–12). Non-HDL <100 and TG 7–49 → 3.5, not 11.9; TG 293–399 / non-HDL <100 → 9.5; TG ≥400 / non-HDL <100 → 11.9.',
+      'Worked check: TC 200, HDL 50, TG 350, non-HDL 150 → factor 7.5, LDL ≈ 103 mg/dL.',
+    ],
   },
   {
     id: 'non-hdl',

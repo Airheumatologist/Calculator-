@@ -191,7 +191,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
       selectInput('sex', 'Sex for MELD 3.0 calculation', [
         { label: 'Male', value: 'male' },
         { label: 'Female (+1.33 adult points)', value: 'female' },
-      ], 'male', 'OPTN applies the 1.33-point sex term to adult women and to both sexes in candidates aged 12–17.'),
+      ], 'male', 'Adult female: +1.33. Adolescent (12–17) constant is 7.33, which already includes the 1.33 for both sexes; do not add 1.33 again.'),
       numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 1.5, helpText: 'Values below 1.0 mg/dL are set to 1.0 per OPTN policy.' }),
       numberInput('inr', 'INR', { min: 0.8, max: 15, step: 0.01, defaultValue: 1.2, helpText: 'Values below 1.0 are set to 1.0 per OPTN policy.' }),
       numberInput('albumin', 'Serum albumin', { unit: 'g/dL', min: 0.1, max: 6, step: 0.1, defaultValue: 3.0, helpText: 'Bounded to 1.5–3.5 g/dL per OPTN policy.' }),
@@ -221,7 +221,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
         serumNa = Math.max(125, Math.min(137, num(values.na, 135)));
         effAlbumin = Math.max(1.5, Math.min(3.5, num(values.albumin, 3.5)));
 
-        const sexAdjustment = adult ? (sex === 'female' ? 1.33 : 0) : 1.33;
+        const sexAdjustment = adult && sex === 'female' ? 1.33 : 0;
         const ageConstant = adult ? 6 : 7.33;
         rawMeld = sexAdjustment +
           4.56 * Math.log(effBili) +
@@ -249,7 +249,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
       const details = [
         { label: 'MELD 3.0 Score', value: `${meld}` },
         { label: 'Age band', value: adult ? 'Adult (≥18 years at registration)' : 'Adolescent (12–17 years at registration)' },
-        { label: 'Sex term', value: adult ? (sex === 'female' ? '+1.33 points' : 'Not applied') : '+1.33 points (all adolescents)' },
+        { label: 'Sex term', value: adult ? (sex === 'female' ? '+1.33 points' : 'Not applied') : 'Not a separate term; included in adolescent constant 7.33' },
         { label: 'Calculation Mode', value: mode === 'labs' ? 'Primary OPTN Laboratory Values' : 'Precomputed MELD 3.0 Override' },
       ];
 
@@ -273,7 +273,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Current OPTN MELD 3.0 for adults (≥18 at registration) = 1.33 if female + 4.56×ln(bilirubin) + 0.82×(137−sodium) − 0.24×(137−sodium)×ln(bilirubin) + 9.09×ln(INR) + 11.14×ln(creatinine) + 1.85×(3.5−albumin) − 1.83×(3.5−albumin)×ln(creatinine) + 6. For ages 12–17, both sexes receive the 1.33-point term and the constant is 7.33. Values are bounded per OPTN policy, then rounded to the nearest whole number and capped at 6–40.',
+        'Current OPTN MELD 3.0 for adults (≥18 at registration) = 1.33 if female + 4.56×ln(bilirubin) + 0.82×(137−sodium) − 0.24×(137−sodium)×ln(bilirubin) + 9.09×ln(INR) + 11.14×ln(creatinine) + 1.85×(3.5−albumin) − 1.83×(3.5−albumin)×ln(creatinine) + 6. For ages 12–17, use the laboratory terms plus constant 7.33 only (7.33 = 6 + 1.33 already includes the 1.33 for both sexes; do not add 1.33 again). Values are bounded per OPTN policy, then rounded to the nearest whole number and capped at 6–40.',
       formula: 'MELD 3.0 = sex term + 4.56×ln(Bili) + 0.82×(137−Na) − 0.24×(137−Na)×ln(Bili) + 9.09×ln(INR) + 11.14×ln(Cr) + 1.85×(3.5−Alb) − 1.83×(3.5−Alb)×ln(Cr) + age-band constant',
       validation: 'Current OPTN Policy 9.1.D; implemented July 13, 2023. This calculator is an educational aid and does not replace the official OPTN system.',
       references: [

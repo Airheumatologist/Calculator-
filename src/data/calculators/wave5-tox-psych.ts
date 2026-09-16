@@ -1719,14 +1719,24 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Unknown', value: 'unknown', description: 'Titer not available — obtain anti-HBs and treat as unknown pending result' },
       ], undefined, 'Immune = completed HBV series and anti-HBs ≥10 mIU/mL. If titer unknown, choose Unknown and obtain anti-HBs.'),
       yesNo('source_hbsag', 'Source HBsAg positive / high risk HBV', 0, 'Yes if source HBsAg+ or unknown source with high HBV risk (IDU, MSM, endemic region, known HBsAg+ household). Obtain source HBsAg when possible.'),
-      yesNo('within_72h', 'Within 72 hours of exposure', 0, 'HIV PEP is ideally started within 2 hours and is not routinely started after 72 hours. Yes = exposure time is still within that 72-hour window.'),
+      selectInput('within_72h', 'Within 72 hours of exposure', [
+        { label: 'Not specified', value: 'unspecified', description: 'Do not treat an unanswered 72-hour item as an expired window' },
+        { label: 'Yes — still within 72 hours', value: 'yes', description: 'Exposure time is still inside the usual HIV PEP window' },
+        { label: 'No — more than 72 hours ago', value: 'no', description: 'Only an explicit No means the usual 72-hour window has passed' },
+      ], 'unspecified', 'USPHS: start HIV PEP ASAP (ideally within 2 h) for indicated exposures; generally within 72 h. Unanswered timing is unknown — not “window expired.”'),
     ],
     calculate(values) {
       const exp = String(values.exposure_type ?? 'hollow');
       const hiv = String(values.source_hiv ?? 'unknown');
       const hbvImm = String(values.hbv_immune ?? 'unknown');
       const sourceHbv = bool(values.source_hbsag);
-      const within72 = bool(values.within_72h);
+      const timingRaw = values.within_72h;
+      const timingStr = String(timingRaw ?? '').toLowerCase();
+      const windowExpired = timingRaw === false || timingStr === 'no' || timingStr === 'false';
+      const within72 =
+        timingRaw === true || timingStr === 'yes' || timingStr === 'true';
+      const timingUnknown = !windowExpired && !within72;
+      const timingLabel = windowExpired ? 'No' : within72 ? 'Yes' : 'Not specified';
 
       if (exp === 'intact') {
         return {
@@ -1737,10 +1747,16 @@ export const wave5ToxPsychCalcs: Calculator[] = [
           details: [
             { label: 'HIV PEP', value: 'Not indicated' },
             { label: 'Source HBsAg / high-risk HBV', value: sourceHbv ? 'Yes' : 'No' },
-            { label: 'Within 72 h', value: within72 ? 'Yes' : 'No' },
+            { label: 'Within 72 h', value: timingLabel },
           ],
         };
       }
+
+      const pepIfInWindow = (inWindowLabel: string, expiredLabel: string, unknownLabel: string) => {
+        if (windowExpired) return { pep: false, label: expiredLabel };
+        if (timingUnknown) return { pep: true, label: unknownLabel };
+        return { pep: true, label: inWindowLabel };
+      };
 
       let hivPep = false;
       let hivLabel = 'HIV PEP not routinely indicated';
@@ -1748,20 +1764,38 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         hivPep = false;
         hivLabel = 'Source HIV negative — HIV PEP not indicated (confirm testing reliability)';
       } else if (hiv === 'pos_high' || hiv === 'pos_low') {
-        hivPep = within72;
-        hivLabel = within72
-          ? 'HIV PEP indicated — start ASAP (3-drug regimen typical)'
-          : 'HIV PEP window (>72 h) — generally not started; specialist consult';
+        const r = pepIfInWindow(
+          'HIV PEP indicated — start ASAP (3-drug regimen typical)',
+          'HIV PEP window (>72 h) — generally not started; specialist consult',
+          'HIV PEP indicated if still within 72 h — timing not specified; start ASAP and do not assume the window expired'
+        );
+        hivPep = r.pep;
+        hivLabel = r.label;
       } else if (hiv === 'unknown' && exp === 'hollow') {
-        hivPep = within72;
-        hivLabel = within72
-          ? 'Source unknown + higher-risk percutaneous — often start HIV PEP pending source testing'
-          : 'Outside usual PEP window — occupational health / ID consult';
+        const r = pepIfInWindow(
+          'Source unknown + higher-risk percutaneous — often start HIV PEP pending source testing',
+          'Outside usual PEP window — occupational health / ID consult',
+          'Source unknown + higher-risk percutaneous — PEP timing unknown; often start pending source testing if still within 72 h (do not assume expired)'
+        );
+        hivPep = r.pep;
+        hivLabel = r.label;
       } else if (hiv === 'unknown') {
-        hivPep = within72 && exp !== 'solid';
-        hivLabel = within72
-          ? 'Case-by-case HIV PEP — favor start if higher-risk features; stop if source tests negative'
-          : 'Consult specialist regarding delayed presentation';
+        if (exp === 'solid') {
+          hivPep = false;
+          hivLabel = timingUnknown
+            ? 'Case-by-case HIV PEP for solid-needle / lower-risk percutaneous — timing not specified; occupational health / ID'
+            : windowExpired
+              ? 'Consult specialist regarding delayed presentation'
+              : 'Case-by-case HIV PEP — favor start if higher-risk features; stop if source tests negative';
+        } else {
+          const r = pepIfInWindow(
+            'Case-by-case HIV PEP — favor start if higher-risk features; stop if source tests negative',
+            'Consult specialist regarding delayed presentation',
+            'Case-by-case HIV PEP — timing not specified; do not report the 72-hour window as expired'
+          );
+          hivPep = r.pep;
+          hivLabel = r.label;
+        }
       }
 
       let hbvPlan = 'HBV: no additional action if immune';
@@ -1784,16 +1818,16 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         score: hivPep ? 3 : 1,
         label: hivPep ? 'Start exposure management + likely HIV PEP' : 'Exposure lab follow-up ± HBV actions',
         interpretation,
-        riskLevel: within72 || !hivPep ? riskLevel : 'info',
+        riskLevel: windowExpired && !hivPep ? 'info' : riskLevel,
         details: [
           { label: 'Exposure', value: exp },
           { label: 'Source HIV', value: hiv },
-          { label: 'HIV PEP', value: hivPep ? 'Start / indicated' : 'Not indicated or window passed' },
+          { label: 'HIV PEP', value: hivPep ? 'Start / indicated' : windowExpired ? 'Not indicated or window passed' : 'Not routinely indicated' },
           { label: 'Source HBsAg / high-risk HBV', value: sourceHbv ? 'Yes' : 'No' },
           { label: 'HBV plan', value: hbvPlan },
-          { label: 'Within 72 h', value: within72 ? 'Yes' : 'No' },
+          { label: 'Within 72 h', value: timingLabel },
           { label: 'HCV PEP', value: 'None — surveillance only' },
-          { label: 'Ideal HIV PEP start', value: '<2 hours preferred; within 72 h' },
+          { label: 'Ideal HIV PEP start', value: '<2 hours preferred; generally within 72 h (USPHS)' },
         ],
         recommendations: [
           'Wash wound with soap/water; flush mucous membranes',
@@ -1804,7 +1838,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'After BBP exposure: wash wound; evaluate source; HIV PEP ideally ASAP within 72 h for significant exposures; HBV prophylaxis based on immunity and source HBsAg; no HCV PEP — monitor for infection.',
+        'After BBP exposure: wash wound; evaluate source; HIV PEP ideally ASAP (generally within 72 h) for indicated exposures (USPHS Kuhar). Unanswered 72-hour timing is unknown — not treated as an expired window. HBV prophylaxis based on immunity and source HBsAg; no HCV PEP — monitor for infection.',
       formula: 'Exposure severity × source status × timing × HBV immunity',
       validation: 'Educational synthesis of USPHS occupational PEP guidance.',
       references: [

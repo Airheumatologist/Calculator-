@@ -109,13 +109,19 @@ export const extraCalcs: Calculator[] = [
         'strep',
         'Evidence of preceding GAS infection (culture, rapid test, or rising ASO/anti-DNase B)',
         0,
-        'Throat culture, rapid antigen, or rising ASO/anti-DNase B. Isolated Sydenham chorea or indolent carditis may not need GAS evidence clinically — this helper still gates on strep (do not override).',
+        'Throat culture, rapid antigen, or rising ASO/anti-DNase B. Isolated Sydenham chorea or documented indolent carditis may be diagnosed without laboratory GAS evidence.',
       ),
       yesNo(
         'carditis',
         'Major: Carditis',
         0,
         'Clinical valvulitis and/or subclinical echocardiographic carditis (2015 Jones). Do not also count prolonged PR as a minor if carditis is a major.',
+      ),
+      yesNo(
+        'indolentCarditis',
+        'Documented indolent carditis (Jones exception)',
+        0,
+        'Late/indolent rheumatic carditis may be diagnosed without Jones majors/minors and without laboratory GAS evidence. Distinct from counting acute carditis as a major.',
       ),
       yesNo(
         'arthritis',
@@ -167,31 +173,49 @@ export const extraCalcs: Calculator[] = [
       ),
     ],
     calculate(values) {
-      if (!bool(values.strep)) {
-        return {
-          score: 0,
-          label: 'Insufficient (no strep evidence)',
-          interpretation: 'Except for chorea/indolent carditis, evidence of preceding GAS is required.',
-          riskLevel: 'info',
-        };
-      }
+      const carditis = bool(values.carditis);
+      const arthritis = bool(values.arthritis);
+      const chorea = bool(values.chorea);
+      const indolentCarditis = bool(values.indolentCarditis);
+      const strep = bool(values.strep);
+      const jonesException = chorea || indolentCarditis;
       const major =
-        (bool(values.carditis) ? 1 : 0) +
-        (bool(values.arthritis) ? 1 : 0) +
-        (bool(values.chorea) ? 1 : 0) +
+        (carditis ? 1 : 0) +
+        (arthritis ? 1 : 0) +
+        (chorea ? 1 : 0) +
         (bool(values.erythema) ? 1 : 0) +
         (bool(values.nodules) ? 1 : 0);
       const minor =
-        (bool(values.arthralgia) ? 1 : 0) +
+        (!arthritis && bool(values.arthralgia) ? 1 : 0) +
         (bool(values.fever) ? 1 : 0) +
         (bool(values.elevatedAPR) ? 1 : 0) +
-        (bool(values.prolongedPR) ? 1 : 0);
-      const initial = major >= 2 || (major >= 1 && minor >= 2);
-      if (initial) {
+        (!carditis && bool(values.prolongedPR) ? 1 : 0);
+      const initialPattern = major >= 2 || (major >= 1 && minor >= 2);
+      if (!strep && !jonesException) {
+        return {
+          score: `${major} maj / ${minor} min`,
+          label: 'Insufficient (no strep evidence)',
+          interpretation: 'Except for isolated Sydenham chorea or indolent carditis, evidence of preceding GAS is required.',
+          riskLevel: 'info',
+        };
+      }
+      if (jonesException && !initialPattern) {
+        return {
+          score: `${major} maj / ${minor} min`,
+          label: 'Meets Jones exception (chorea / indolent carditis)',
+          interpretation: chorea
+            ? 'Isolated Sydenham chorea may be diagnosed as ARF without other Jones manifestations and without laboratory evidence of preceding GAS.'
+            : 'Indolent carditis may be diagnosed as ARF/RHD without other Jones manifestations and without laboratory evidence of preceding GAS.',
+          riskLevel: 'high',
+        };
+      }
+      if (initialPattern) {
         return {
           score: `${major} maj / ${minor} min`,
           label: 'Meets Jones (initial ARF pattern)',
-          interpretation: 'With GAS evidence: 2 major or 1 major + 2 minor supports initial ARF diagnosis.',
+          interpretation: strep
+            ? 'With GAS evidence: 2 major or 1 major + 2 minor supports initial ARF diagnosis. Arthralgia is not counted if arthritis is a major; prolonged PR is not counted if carditis is a major.'
+            : 'Jones exception (chorea or indolent carditis): 2 major or 1 major + 2 minor supports ARF diagnosis without laboratory GAS evidence. Arthralgia is not counted if arthritis is a major; prolonged PR is not counted if carditis is a major.',
           riskLevel: 'high',
         };
       }
@@ -203,7 +227,8 @@ export const extraCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Jones criteria require GAS evidence plus major/minor manifestations; revised for moderate/high-risk populations.',
+      summary:
+        'Jones criteria (2015 AHA): initial ARF is 2 majors or 1 major + 2 minors plus evidence of preceding GAS. Arthralgia is a minor only if arthritis is not a major; prolonged PR is a minor only if carditis is not a major. Isolated Sydenham chorea and indolent carditis may be diagnosed without laboratory GAS evidence.',
       validation: 'AHA guidelines for ARF diagnosis.',
       references: [{ title: 'Revision of Jones Criteria for ARF', citation: 'Gewitz MH et al. Circulation. 2015', year: 2015, pmid: '25908771',
           doi: '10.1161/CIR.0000000000000205', }],
@@ -213,7 +238,7 @@ export const extraCalcs: Calculator[] = [
     ],
     pearls: [
       'Low-risk = ARF incidence <2/100,000 school-age children or RHD prevalence ≤1/1000; otherwise use moderate/high-risk joint and fever/ESR cutoffs.',
-      'Recurrent ARF 3-minor pathway is not implemented here — initial ARF is 2 major or 1 major + 2 minor with GAS evidence.',
+      'Recurrent ARF 3-minor pathway is not implemented here — initial ARF is 2 major or 1 major + 2 minor with GAS evidence, except isolated chorea or indolent carditis.',
     ],
   },
   {
@@ -262,13 +287,34 @@ export const extraCalcs: Calculator[] = [
     whenToUse: 'Clinical diagnosis of heart failure (historical/epidemiologic criteria).',
     whyUse: 'Classic major/minor framework still taught clinically.',
     inputs: [
-      yesNo('pnd', 'Major: Paroxysmal nocturnal dyspnea (PND)', 1, 'Sudden night-time awakening with orthopnea / need to sit upright to breathe.'),
-      yesNo('orthopnea', 'Major: Orthopnea OR neck-vein distention', 1, 'Tick once if either finding is present. This helper fuses two McKee majors; do not retick the JVD item solely for visible neck veins already counted here.'),
+      yesNo(
+        'pndOrthopnea',
+        'Major: Paroxysmal nocturnal dyspnea (PND) or orthopnea',
+        1,
+        'McKee 1971 treats PND or orthopnea as one major — tick once if either is present (do not double-count).',
+      ),
+      yesNo(
+        'neckVein',
+        'Major: Neck-vein distention',
+        1,
+        'Visible jugular venous distention. Separate from PND/orthopnea and from measured CVP >16 cm H2O.',
+      ),
       yesNo('rales', 'Major: Rales', 1, 'Pulmonary rales/crackles (typically basal).'),
       yesNo('cardiomegaly', 'Major: Cardiomegaly', 1, 'Radiographic cardiomegaly (CXR cardiothoracic ratio >0.5), not physical exam impression alone.'),
       yesNo('edemaPulm', 'Major: Acute pulmonary edema', 1, 'Acute alveolar pulmonary edema (clinical ± radiographic).'),
       yesNo('s3', 'Major: S3 gallop', 1, 'Audible third heart sound.'),
-      yesNo('jvd', 'Major: Increased venous pressure (>16 cm H2O) OR hepatojugular reflux', 1, 'Tick once if either CVP >16 cm H2O or a positive hepatojugular reflux is present.'),
+      yesNo(
+        'cvp',
+        'Major: Increased venous pressure (CVP >16 cm H2O)',
+        1,
+        'Measured central venous pressure >16 cm H2O at the right atrium. Distinct from visible neck-vein distention and from hepatojugular reflux.',
+      ),
+      yesNo(
+        'hjr',
+        'Major: Hepatojugular reflux',
+        1,
+        'Sustained rise in JVP with abdominal/hepatic pressure. Distinct from resting neck-vein distention and from CVP >16 cm H2O.',
+      ),
       yesNo('weightLoss', 'Major: Weight loss >4.5 kg in 5 days with treatment', 1, 'Weight loss >4.5 kg (10 lb) in 5 days in response to HF treatment (not unexplained cachexia).'),
       yesNo('ankleEdema', 'Minor: Ankle edema', 0, 'Bilateral ankle edema. Count minors only if not explained by another disease.'),
       yesNo('nightCough', 'Minor: Night cough', 0, 'Nocturnal cough attributed to HF, not another lung disease, and distinct from paroxysmal nocturnal dyspnea (already a major).'),
@@ -279,7 +325,7 @@ export const extraCalcs: Calculator[] = [
       yesNo('vc', 'Minor: Decrease in vital capacity by 1/3', 0, 'Vital capacity decreased by one-third from the maximum recorded for that patient.'),
     ],
     calculate(values) {
-      const majorKeys = ['pnd', 'orthopnea', 'rales', 'cardiomegaly', 'edemaPulm', 's3', 'jvd', 'weightLoss'];
+      const majorKeys = ['pndOrthopnea', 'neckVein', 'rales', 'cardiomegaly', 'edemaPulm', 's3', 'cvp', 'hjr', 'weightLoss'];
       const minorKeys = ['ankleEdema', 'nightCough', 'doe', 'hepato', 'pleural', 'hr120', 'vc'];
       const major = majorKeys.reduce((s, k) => s + (bool(values[k]) ? 1 : 0), 0);
       const minor = minorKeys.reduce((s, k) => s + (bool(values[k]) ? 1 : 0), 0);
@@ -294,7 +340,8 @@ export const extraCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Framingham criteria diagnose HF using combinations of major and minor clinical features.',
+      summary:
+        'Framingham (McKee 1971) clinical HF: 2 majors or 1 major + 2 minors. PND or orthopnea is a single major. Neck-vein distention, CVP >16 cm H2O, and hepatojugular reflux are separate majors. Minors count only if not explained by another disease.',
       validation: 'Used in epidemiologic studies; modern diagnosis also uses BNP/echo.',
       references: [{ title: 'The natural history of congestive heart failure: the Framingham study', citation: 'McKee PA et al. N Engl J Med. 1971', year: 1971, pmid: '5122894',
           doi: '10.1056/NEJM197112232852601', }],
@@ -304,7 +351,7 @@ export const extraCalcs: Calculator[] = [
     ],
     pearls: [
       'Count minors only if not explained by another condition (pulmonary, renal, venous disease).',
-      'Official McKee grouping treats PND or orthopnea as one major and neck-vein distention, CVP >16 cm H2O, and HJR as separate majors — this helper fuses some of those boxes; do not retune calculate() from the labels.',
+      'McKee 1971: PND or orthopnea is one major; neck-vein distention, CVP >16 cm H2O, and hepatojugular reflux are separate majors.',
     ],
   },
   {

@@ -379,79 +379,80 @@ export const wave3GiHepCalcs: Calculator[] = [
 
   {
     id: 'clif-sofa',
-    name: 'CLIF-SOFA / CLIF-OF (Simplified Sum)',
-    shortName: 'CLIF-SOFA',
-    description: 'Simplified organ-score sum for ACLF grading (liver, kidney, brain, coag, circulation, respiration).',
+    name: 'CLIF-OF (CLIF Organ Failure Score)',
+    shortName: 'CLIF-OF',
+    description:
+      'Jalan 2014 CLIF-OF: 1–3 points per organ (sum 6–18). Route id remains clif-sofa; this is not the original 0–4 CLIF-SOFA (Moreau 2013).',
     category: 'gastroenterology',
-    tags: ['clif', 'sofa', 'aclf', 'organ failure', 'cirrhosis'],
-    whenToUse: 'Bedside educational grading of organ dysfunction in decompensated cirrhosis / ACLF workup.',
-    whyUse: 'Organ-failure count and severity define ACLF grades and feed CLIF-C ACLF.',
+    tags: ['clif', 'sofa', 'aclf', 'organ failure', 'cirrhosis', 'clif-of'],
+    whenToUse: 'Grading organ dysfunction in decompensated cirrhosis / ACLF using EASL-CLIF CLIF-OF cut-points.',
+    whyUse: 'Organ-failure count and CLIF-OF sum define ACLF grades and feed CLIF-C ACLF.',
     inputs: [
       selectInput('liver', 'Liver (bilirubin)', [
         { label: 'Bili <6 mg/dL (1)', value: 1, description: '<6 mg/dL (≈ <102 µmol/L)' },
-        { label: 'Bili 6–12 mg/dL (2)', value: 2, description: '6–12 mg/dL (≈ 102–204 µmol/L)' },
-        { label: 'Bili >12 mg/dL (3)', value: 3, description: '>12 mg/dL (≈ >204 µmol/L) — liver failure-level in this simplified CLIF-OF' },
-      ], 1, '6 mg/dL ≈ 102 µmol/L; 12 mg/dL ≈ 204 µmol/L. Use same-day total bilirubin.'),
+        { label: 'Bili ≥6 and <12 mg/dL (2)', value: 2, description: '≥6 and <12 mg/dL (≈ 102–204 µmol/L)' },
+        { label: 'Bili ≥12 mg/dL (3)', value: 3, description: '≥12 mg/dL (≈ ≥204 µmol/L) — liver failure' },
+      ], 1, '6 mg/dL ≈ 102 µmol/L; 12 mg/dL ≈ 204 µmol/L. Exactly 12 mg/dL scores 3 (Jalan CLIF-OF).'),
       selectInput('kidney', 'Kidney (creatinine / RRT)', [
         { label: 'Cr <2 mg/dL (1)', value: 1, description: '<2 mg/dL (≈ <177 µmol/L), not on RRT' },
-        { label: 'Cr 2–3.5 mg/dL (2)', value: 2, description: '2–3.5 mg/dL (≈ 177–309 µmol/L)' },
-        { label: 'Cr >3.5 or RRT (3)', value: 3, description: '>3.5 mg/dL (≈ >309 µmol/L) or any renal replacement therapy' },
-      ], 1, '2 mg/dL ≈ 177 µmol/L; 3.5 mg/dL ≈ 309 µmol/L. Any RRT scores 3 even if Cr is lower.'),
+        { label: 'Cr ≥2 and <3.5 mg/dL (2)', value: 2, description: '≥2 and <3.5 mg/dL (≈ 177–309 µmol/L)' },
+        { label: 'Cr ≥3.5 mg/dL or RRT (3)', value: 3, description: '≥3.5 mg/dL (≈ ≥309 µmol/L) or any renal replacement therapy' },
+      ], 1, '2 mg/dL ≈ 177 µmol/L; 3.5 mg/dL ≈ 309 µmol/L. Exactly 3.5 mg/dL or any RRT scores 3.'),
       selectInput('brain', 'Brain (HE grade, West Haven)', [
         { label: 'HE 0 (1)', value: 1, description: 'West Haven 0: no encephalopathy — normal consciousness, orientation, and behavior' },
         { label: 'HE I–II (2)', value: 2, description: 'I: trivial unawareness, euphoria/anxiety, shortened attention, impaired addition. II: lethargy/apathy, time disorientation, personality change, inappropriate behavior, asterixis' },
-        { label: 'HE III–IV (3)', value: 3, description: 'III: somnolence/semistupor, responsive to voice, confusion, gross disorientation. IV: coma (unresponsive to verbal or noxious stimuli)' },
-      ], 1, 'Grade with West Haven: 0 none; I trivial unawareness/euphoria/short attention/impaired addition; II lethargy, time disorientation, personality change, asterixis; III somnolence/semistupor, responsive to voice, gross disorientation; IV coma.'),
+        { label: 'HE III–IV or MV for HE (3)', value: 3, description: 'III: somnolence/semistupor, responsive to voice, confusion, gross disorientation. IV: coma. Mechanical ventilation for HE is cerebral failure (3), not automatic respiratory 3.' },
+      ], 1, 'Grade with West Haven. Intubation/MV for HE scores brain = 3; do not also auto-score respiratory 3 unless gas-exchange criteria are met.'),
       selectInput('coag', 'Coagulation (INR)', [
         { label: 'INR <2.0 (1)', value: 1, description: 'INR <2.0' },
-        { label: 'INR 2.0–2.5 (2)', value: 2, description: 'INR 2.0–2.5' },
-        { label: 'INR >2.5 (3)', value: 3, description: 'INR >2.5 — coagulation failure-level in this simplified CLIF-OF' },
-      ], 1, 'Use the same-day INR (not PT seconds).'),
+        { label: 'INR ≥2.0 and <2.5 (2)', value: 2, description: 'INR ≥2.0 and <2.5' },
+        { label: 'INR ≥2.5 (3)', value: 3, description: 'INR ≥2.5 — coagulation failure' },
+      ], 1, 'Use the same-day INR (not PT seconds). Exactly 2.5 scores 3.'),
       selectInput('circ', 'Circulation (MAP / vasopressors)', [
         { label: 'MAP ≥70, no pressors (1)', value: 1, description: 'MAP ≥70 mmHg without vasopressors or terlipressin' },
         { label: 'MAP <70 (2)', value: 2, description: 'MAP <70 mmHg, not yet on vasopressors' },
-        { label: 'Vasopressors (3)', value: 3, description: 'Any vasopressor including norepinephrine, vasopressin, or terlipressin — circulatory failure-level' },
-      ], 1, 'MAP = DBP + (SBP−DBP)/3 if not displayed. Any vasopressor (including terlipressin) scores 3 even if MAP is ≥70.'),
+        { label: 'Vasopressors (3)', value: 3, description: 'Any vasopressor including norepinephrine, vasopressin, or terlipressin — circulatory failure' },
+      ], 1, 'MAP = DBP + (SBP−DBP)/3 if not displayed. MAP of exactly 70 without pressors scores 1 (Jalan: MAP <70 = 2). Any vasopressor (including terlipressin) scores 3 even if MAP is ≥70.'),
       selectInput('resp', 'Respiration (PaO₂/FiO₂ or SpO₂/FiO₂)', [
-        { label: 'PaO₂/FiO₂ >300 (1)', value: 1, description: 'Or SpO₂/FiO₂ >357 when no ABG' },
-        { label: 'PaO₂/FiO₂ 200–300 (2)', value: 2, description: 'Or SpO₂/FiO₂ 215–357 when no ABG' },
-        { label: 'PaO₂/FiO₂ <200 or ventilated (3)', value: 3, description: 'Or SpO₂/FiO₂ ≤214 when no ABG; mechanical ventilation scores 3' },
-      ], 1, 'If no ABG, use SpO₂/FiO₂: >357 (1), 215–357 (2), ≤214 (3). Mechanical ventilation scores 3.'),
+        { label: 'PaO₂/FiO₂ >300 or SpO₂/FiO₂ >357 (1)', value: 1, description: 'Use SpO₂/FiO₂ when no ABG' },
+        { label: 'PaO₂/FiO₂ >200 and ≤300 or SpO₂/FiO₂ >214 and ≤357 (2)', value: 2, description: 'Intermediate hypoxemia' },
+        { label: 'PaO₂/FiO₂ ≤200 or SpO₂/FiO₂ ≤214 (3)', value: 3, description: 'Respiratory failure. MV for HE is brain 3, not automatic resp 3.' },
+      ], 1, 'Jalan: resp 3 = PaO₂/FiO₂ ≤200 or SpO₂/FiO₂ ≤214. MV for HE is cerebral failure (brain = 3). MV for respiratory failure (not HE) scores respiratory 3.'),
     ],
     calculate(values) {
       const organs = ['liver', 'kidney', 'brain', 'coag', 'circ', 'resp'] as const;
       const scores = organs.map((k) => num(values[k], 1));
       const sum = scores.reduce((a, b) => a + b, 0);
-      // Simplified organ failure = score ≥3 in that organ (CLIF-style educational)
+      // CLIF-OF organ failure = subscore 3 (Jalan 2014)
       const failures = scores.filter((s) => s >= 3).length;
-      let aclfGrade = 'No ACLF by simplified OF count';
+      let aclfGrade = 'No ACLF by OF count';
       let riskLevel: 'low' | 'moderate' | 'high' | 'critical' = 'low';
       let interpretation =
-        'Fewer than 2 simplified organ failures — may still be acute decompensation; use full CLIF definitions and clinical judgment.';
+        'Fewer than 2 organ failures — may still be acute decompensation; apply full EASL-CLIF ACLF-1 rules (single kidney failure or single non-kidney failure plus kidney dysfunction/mild HE).';
       if (failures >= 3) {
-        aclfGrade = 'ACLF grade 3 (simplified)';
+        aclfGrade = 'ACLF grade 3';
         riskLevel = 'critical';
-        interpretation = '≥3 organ failures (score ≥3 each) — ACLF-3 range with very high short-term mortality.';
+        interpretation = '≥3 organ failures (CLIF-OF 3 each) — ACLF-3 with very high short-term mortality.';
       } else if (failures === 2) {
-        aclfGrade = 'ACLF grade 2 (simplified)';
+        aclfGrade = 'ACLF grade 2';
         riskLevel = 'high';
-        interpretation = '2 organ failures — ACLF-2 range; aggressive support and precipitant control.';
+        interpretation = '2 organ failures — ACLF-2; aggressive support and precipitant control.';
       } else if (failures === 1) {
-        // Single kidney failure or single non-kidney with kidney dysfunction nuances omitted for education
-        aclfGrade = 'Possible ACLF grade 1 (simplified)';
+        aclfGrade = 'Possible ACLF grade 1';
         riskLevel = 'moderate';
         interpretation =
-          '1 organ at failure-level score — may meet ACLF-1 depending on which organ and renal dysfunction criteria; verify full EASL-CLIF rules.';
+          '1 organ at CLIF-OF 3 — may meet ACLF-1 depending on which organ and renal dysfunction criteria; verify full EASL-CLIF rules.';
       }
       return {
         score: sum,
-        unit: 'CLIF-OFs sum',
+        unit: 'CLIF-OF sum',
         label: aclfGrade,
         interpretation,
         riskLevel,
         details: [
-          { label: 'Organ failures (score ≥3)', value: `${failures} / 6` },
-          { label: 'Use sum in CLIF-C ACLF', value: String(sum) },
+          { label: 'Organ failures (CLIF-OF 3)', value: `${failures} / 6` },
+          { label: 'CLIF-OF sum (use in CLIF-C ACLF)', value: String(sum) },
+          { label: 'Score family', value: 'CLIF-OF 1–3/organ (not 0–4 CLIF-SOFA)' },
         ],
         recommendations: [
           'Treat infection early (common precipitant)',
@@ -461,13 +462,21 @@ export const wave3GiHepCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Simplified CLIF organ scores 1–3 per system; sum approximates CLIF-OFs. Organ failure often score 3. Full CLIF-SOFA uses finer 0–4 grades in original descriptions.',
-      formula: 'CLIF-OFs ≈ sum of 6 organ scores; ACLF grade by number of failures',
-      validation: 'Based on EASL-CLIF CANONIC framework (educational simplification of cut-points).',
+      summary:
+        'This tool is the CLIF-OF score (Jalan J Hepatol 2014): 1–3 per six organs (sum 6–18). Organ failure = subscore 3. Liver 3 is bilirubin ≥12 mg/dL; kidney 3 is creatinine ≥3.5 mg/dL or RRT; respiration 3 is PaO₂/FiO₂ ≤200 or SpO₂/FiO₂ ≤214. Mechanical ventilation for HE is cerebral failure (brain = 3), not automatic respiratory 3. Circulation 2 is MAP <70 mmHg (MAP 70 without pressors = 1). Original CLIF-SOFA (Moreau 2013) uses 0–4 per organ and is a different scale; the route id clif-sofa is retained for compatibility.',
+      formula: 'CLIF-OF = sum of 6 organ scores (1–3 each); ACLF grade by number of organs with score 3',
+      validation: 'CLIF-OF derived from CANONIC / EASL-CLIF and used in CLIF-C ACLF (Jalan 2014).',
       references: [
         {
+          title: 'Development and validation of a prognostic score to predict mortality in patients with acute-on-chronic liver failure',
+          citation: 'Jalan R et al. J Hepatol. 2014;61:1038-1047',
+          year: 2014,
+          pmid: '24950482',
+          doi: '10.1016/j.jhep.2014.06.012',
+        },
+        {
           title: 'Acute-on-chronic liver failure is a distinct syndrome that develops in patients with acute decompensation of cirrhosis',
-          citation: 'Moreau R et al. Gastroenterology. 2013',
+          citation: 'Moreau R et al. Gastroenterology. 2013 (original CLIF-SOFA 0–4 scale)',
           year: 2013,
           pmid: '23474284',
           doi: '10.1053/j.gastro.2013.02.042',
@@ -479,8 +488,9 @@ export const wave3GiHepCalcs: Calculator[] = [
       { condition: '0–1 failure', actions: ['Close monitoring', 'Re-grade serially', 'Manage decompensation'] },
     ],
     pearls: [
-      'This is a teaching simplification — formal CLIF-OF tables have additional cut-points.',
-      'Single renal failure with creatinine 1.5–1.9 plus another organ can define ACLF-1 in full criteria.',
+      'CLIF-OF (this calculator) is 1–3 per organ; CLIF-SOFA is the earlier 0–4 scale — do not mix sums.',
+      'MV for hepatic encephalopathy scores brain 3, not automatic respiratory 3.',
+      'Single renal failure (Cr ≥2) or single non-kidney failure plus Cr 1.5–1.9 and/or HE I–II can define ACLF-1 in full EASL-CLIF rules.',
     ],
   },
 
@@ -844,83 +854,81 @@ export const wave3GiHepCalcs: Calculator[] = [
 
   {
     id: 'pned',
-    name: 'PNED Score (UGIB Mortality, Simplified)',
+    name: 'PNED Score (Nonvariceal UGIB Mortality)',
     shortName: 'PNED',
-    description: 'Educational simplification of the Italian PNED score for upper GI bleed mortality risk.',
+    description:
+      'Italian PNED score (Marmo 2010) for 30-day mortality after nonvariceal upper GI bleeding. Range 0–23.',
     category: 'gastroenterology',
     tags: ['ugib', 'pned', 'bleed', 'mortality', 'endoscopy'],
-    whenToUse: 'Adults with nonvariceal upper GI bleeding for in-hospital mortality risk stratification.',
-    whyUse: 'Includes clinical and post-endoscopy factors (rebleed, failed endoscopic therapy) beyond pure admission scores.',
+    whenToUse: 'Adults with nonvariceal upper GI bleeding for mortality risk stratification (includes post-endoscopy factors).',
+    whyUse: 'Includes ASA, timing, Hb, comorbidities, rebleed, and failed endoscopic therapy beyond pure admission scores.',
     inputs: [
+      yesNo('age80', 'Age ≥80 years', 2),
       selectInput('asa', 'ASA physical status', [
         { label: 'ASA 1–2 (0) — I healthy or II mild systemic disease', value: 0, description: 'ASA I: healthy patient. ASA II: mild systemic disease without substantive functional limitation' },
         { label: 'ASA 3 (+1) — severe systemic disease', value: 1, description: 'ASA III: severe systemic disease with functional limitation' },
         { label: 'ASA 4 (+3) — constant threat to life', value: 3, description: 'ASA IV: severe systemic disease that is a constant threat to life' },
-      ], 0, 'Use pre-bleed ASA class. ASA V (moribund) is not a separate choice here — if ASA V, the ASA 4 row is the closest available (under-scores vs some PNED tables).'),
-      yesNo('time8', 'Time from symptoms to admission < 8 hours', 1),
-      yesNo('hb7', 'Hemoglobin ≤ 7 g/dL', 1),
-      yesNo('instability', 'Hemodynamic instability at admission', 2, 'SBP <90 mmHg, MAP <65 mmHg, and/or vasopressors (educational operationalization of Marmo instability)'),
-      yesNo('renal', 'Renal failure (Cr >1.5 mg/dL or known CKD severe)', 1, 'Keep Cr >1.5 mg/dL. Also score dialysis or eGFR <30 mL/min in place of poorly specified “CKD severe”'),
-      yesNo('mental', 'Altered mental status', 2, 'Not oriented to person/place/time, or GCS <14'),
-      yesNo('cirrhosis', 'Liver cirrhosis', 2),
-      yesNo('cancer', 'Active cancer / malignancy', 2),
-      yesNo('failedEndo', 'Failure of endoscopic treatment', 3, 'Persistent bleeding despite index endoscopic therapy'),
-      yesNo('rebleed', 'Rebleeding', 3, 'Recurrent hematemesis or melena after hemostasis and ≥24 h of stability, with shock or Hb drop ≥2 g/dL (Marmo)'),
+      ], 0, 'Marmo PNED: ASA 3 = 1; ASA 4 = 3. Use pre-bleed ASA class. ASA V is not a separate PNED item.'),
+      yesNo('time8', 'Time from symptoms to admission <8 hours', 1),
+      yesNo('hb7', 'Hemoglobin ≤7 g/dL', 2),
+      yesNo('renal', 'Renal failure', 2, 'Chronic renal failure as in Marmo (typically Cr >1.5 mg/dL, dialysis, or known severe CKD).'),
+      yesNo('cirrhosis', 'Liver cirrhosis', 3),
+      yesNo('cancer', 'Neoplasia / advanced malignancy', 3, 'Advanced neoplasia as in Marmo PNED (not a generic “any cancer” extra item).'),
+      yesNo('failedEndo', 'Failure of endoscopic treatment', 4, 'Failure of endoscopic intention-to-treat / persistent bleeding despite index endoscopic therapy.'),
+      yesNo('rebleed', 'Rebleeding', 3, 'Recurrent hematemesis or melena after hemostasis and ≥24 h of stability, with shock or Hb drop ≥2 g/dL (Marmo).'),
     ],
     calculate(values) {
       const score =
+        (bool(values.age80) ? 2 : 0) +
         num(values.asa) +
         (bool(values.time8) ? 1 : 0) +
-        (bool(values.hb7) ? 1 : 0) +
-        (bool(values.instability) ? 2 : 0) +
-        (bool(values.renal) ? 1 : 0) +
-        (bool(values.mental) ? 2 : 0) +
-        (bool(values.cirrhosis) ? 2 : 0) +
-        (bool(values.cancer) ? 2 : 0) +
-        (bool(values.failedEndo) ? 3 : 0) +
+        (bool(values.hb7) ? 2 : 0) +
+        (bool(values.renal) ? 2 : 0) +
+        (bool(values.cirrhosis) ? 3 : 0) +
+        (bool(values.cancer) ? 3 : 0) +
+        (bool(values.failedEndo) ? 4 : 0) +
         (bool(values.rebleed) ? 3 : 0);
-      // Educational strata adapted from PNED risk bands
       const r = riskFromThresholds(score, [
         {
           max: 4,
           level: 'low',
-          label: 'Lower mortality risk',
-          interpretation: 'Lower PNED-range score — lower predicted in-hospital mortality; still complete standard UGIB care.',
+          label: 'Low risk (PNED 0–4)',
+          interpretation: 'PNED 0–4: lower predicted mortality band. Complete standard nonvariceal UGIB care.',
         },
         {
           max: 8,
           level: 'moderate',
-          label: 'Intermediate risk',
-          interpretation: 'Intermediate risk — inpatient monitoring, optimize resuscitation and rebleed surveillance.',
+          label: 'Intermediate risk (PNED 5–8)',
+          interpretation: 'PNED 5–8: intermediate mortality risk — inpatient monitoring, optimize resuscitation and rebleed surveillance.',
         },
         {
-          max: 12,
+          max: 23,
           level: 'high',
-          label: 'High risk',
-          interpretation: 'High risk of death — ICU consideration, repeat endoscopy/IR/surgery pathways as needed.',
-        },
-        {
-          max: 30,
-          level: 'critical',
-          label: 'Very high risk',
-          interpretation: 'Very high PNED-range score — multidisciplinary bleed control and critical care support.',
+          label: 'High risk (PNED >8)',
+          interpretation: 'PNED >8: high mortality risk (Marmo LR+ ~16). ICU consideration; repeat endoscopy / IR / surgery pathways as needed.',
         },
       ]);
       return {
         score,
         unit: 'points',
         ...r,
-        details: [{ label: 'Note', value: 'Educational point assignment approximating PNED domains' }],
+        details: [
+          { label: 'Range', value: '0–23 (Marmo PNED)' },
+          { label: 'Bands', value: '0–4 low · 5–8 intermediate · >8 high' },
+        ],
       };
     },
     evidence: {
-      summary: 'PNED (Progetto Nazionale Emorragia Digestiva) predicts mortality after nonvariceal UGIB using ASA, timing, Hb, instability, organ disease, failed endoscopy, and rebleeding.',
-      formula: 'Weighted sum of clinical + post-endoscopy factors (simplified educational points)',
-      validation: 'Italian multicenter derivation/validation; useful complement to Rockall/AIMS65. Point weights here are educational.',
+      summary:
+        'PNED (Progetto Nazionale Emorragia Digestiva, Marmo Am J Gastroenterol 2010): age ≥80 = 2; time to admission <8 h = 1; Hb ≤7 g/dL = 2; renal failure = 2; neoplasia = 3; liver cirrhosis = 3; ASA 3 = 1; ASA 4 = 3; rebleeding = 3; failure of endoscopic treatment = 4. Range 0–23. Hemodynamic instability and altered mental status are not PNED items. Mortality bands 0–4 / 5–8 / >8.',
+      formula:
+        'PNED = 2·(age≥80) + 1·(time<8 h) + 2·(Hb≤7) + 2·(renal failure) + 3·(neoplasia) + 3·(cirrhosis) + 1·(ASA 3) + 3·(ASA 4) + 3·(rebleed) + 4·(failed endoscopy)',
+      validation:
+        'Italian multicenter validation vs Rockall (AUC 0.81 vs 0.66). PNED >8 LR+ for death ~16.',
       references: [
         {
           title: 'Predicting mortality in non-variceal upper gastrointestinal bleeders: validation of the Italian PNED Score and Prospective Comparison with the Rockall Score',
-          citation: 'Marmo R et al. Am J Gastroenterol. 2010',
+          citation: 'Marmo R et al. Am J Gastroenterol. 2010;105:1284-1291',
           year: 2010,
           pmid: '20051943',
           doi: '10.1038/ajg.2009.687',
@@ -932,7 +940,8 @@ export const wave3GiHepCalcs: Calculator[] = [
       { condition: 'Lower score', actions: ['Standard PPI and monitoring', 'Early diet as appropriate'] },
     ],
     pearls: [
-      'Post-endoscopy factors heavily drive mortality prediction.',
+      'Hemodynamic instability and altered mental status are not PNED items.',
+      'Failed endoscopic therapy (4) and rebleeding (3) heavily drive the total.',
       'Pair with GBS for need-for-intervention and AIMS65/Rockall for mortality.',
     ],
   },
