@@ -1008,6 +1008,21 @@ export const cardiologyCalcs: Calculator[] = [
       const tc = num(values.tc, 200);
       const hdl = num(values.hdl, 50);
       const sbp = num(values.sbp, 130);
+      const invalidLogInputs = ([
+        ['Age', age],
+        ['Total cholesterol', tc],
+        ['HDL-C', hdl],
+        ['Systolic BP', sbp],
+      ] as [string, number][]).filter(([, value]) => !Number.isFinite(value) || value <= 0).map(([label]) => label);
+      if (invalidLogInputs.length > 0) {
+        return {
+          score: '—',
+          label: 'Invalid ASCVD inputs',
+          interpretation: `${invalidLogInputs.join(', ')} must be greater than 0 to calculate the ASCVD risk estimate.`,
+          riskLevel: 'info' as const,
+          details: [{ label: 'Invalid fields', value: invalidLogInputs.join(', ') }],
+        };
+      }
       const lnAge = Math.log(age);
       const lnTc = Math.log(tc);
       const lnHdl = Math.log(hdl);
@@ -1101,62 +1116,6 @@ export const cardiologyCalcs: Calculator[] = [
     nextSteps: [
       { condition: 'Risk ≥7.5%', actions: ['Discuss moderate- or high-intensity statin', 'Lifestyle therapy', 'Reassess lipids'] },
       { condition: 'Borderline risk', actions: ['Consider CAC scoring', 'Assess risk enhancers (family hx, Lp(a), CKD, etc.)'] },
-    ],
-  },
-  {
-    id: 'centor',
-    name: 'Centor Score (Modified / McIsaac)',
-    shortName: 'Centor/McIsaac',
-    description: 'Estimates likelihood of streptococcal pharyngitis to guide testing/antibiotics.',
-    category: 'infectious-disease',
-    tags: ['pharyngitis', 'strep', 'centor'],
-    whenToUse: 'Patients with sore throat to decide on rapid strep testing / culture.',
-    whyUse: 'Reduces unnecessary antibiotics for viral pharyngitis.',
-    inputs: [
-      yesNo('fever', 'History of fever or measured temp ≥38°C', 1),
-      yesNo('noCough', 'Absence of cough', 1),
-      yesNo('tender', 'Tender anterior cervical lymphadenopathy', 1, 'Palpate the anterior cervical chain; Yes if nodes are enlarged and tender (not posterior-chain or nontender).'),
-      yesNo('exudate', 'Tonsillar exudate or swelling', 1, 'Exudate or swelling of the tonsils on oropharynx exam (not isolated pharyngeal erythema).'),
-      selectInput('age', 'Age (McIsaac modification)', [
-        { label: '< 3 years (0 — testing rarely indicated)', value: 'under_3' },
-        { label: '3–14 years (+1)', value: 1 },
-        { label: '15–44 years (0)', value: 0 },
-        { label: '≥ 45 years (−1)', value: -1 },
-      ], 1),
-    ],
-    calculate(values) {
-      const isUnder3 = values.age === 'under_3';
-      const agePts = isUnder3 ? 0 : num(values.age);
-      const score =
-        (bool(values.fever) ? 1 : 0) +
-        (bool(values.noCough) ? 1 : 0) +
-        (bool(values.tender) ? 1 : 0) +
-        (bool(values.exudate) ? 1 : 0) +
-        agePts;
-      const clamped = Math.max(0, score);
-      const r = riskFromThresholds(clamped, [
-        { max: 1, level: 'low', label: 'Low risk (≤1)', interpretation: 'Strep unlikely (~1–10%). No testing or antibiotics generally needed.' },
-        { max: 3, level: 'moderate', label: 'Intermediate (2–3)', interpretation: 'Consider rapid antigen test or throat culture; treat if positive.' },
-        { max: 5, level: 'high', label: 'High (4–5)', interpretation: 'Higher strep probability (~50%+). Test and/or empiric treatment per local practice.' },
-      ]);
-      const interpretation = isUnder3
-        ? `Child <3 years: GAS pharyngitis is rare in this age group; testing (RADT/culture) and empiric antibiotics are rarely indicated per IDSA guidelines unless specific risk factors (e.g. sibling with GAS). ${r.interpretation}`
-        : r.interpretation;
-      return { score, ...r, interpretation };
-    },
-    evidence: {
-      summary: 'Centor criteria with McIsaac age adjustment estimate group A strep probability.',
-      formula: 'Fever + absence of cough + tender anterior cervical nodes + tonsillar exudate/swelling (+1 each); McIsaac age 3–14 (+1), 15–44 (0), ≥45 (−1). Age <3: age points 0 (testing rarely indicated).',
-      validation: 'Validated in adult and pediatric primary care / ED settings.',
-      references: [
-        { title: 'The diagnosis of strep throat in adults in the emergency room', citation: 'Centor RM et al. Med Decis Making. 1981', year: 1981, pmid: '6763125',
-          doi: '10.1177/0272989X8100100304', },
-        { title: 'The validity of a sore throat score in family practice', citation: 'McIsaac WJ et al. CMAJ. 2000', year: 2000, pmid: '11033707' },
-      ],
-    },
-    nextSteps: [
-      { condition: 'Score ≤1', actions: ['Supportive care', 'No antibiotics'] },
-      { condition: 'Score ≥2', actions: ['RADT ± culture', 'Treat confirmed GAS with penicillin/amoxicillin if no allergy'] },
     ],
   },
 ];

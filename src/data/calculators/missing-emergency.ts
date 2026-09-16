@@ -1244,7 +1244,7 @@ export const missingEmergencyCalcs: Calculator[] = [
       const inhPts = bool(values.inhalation) ? 1 : 0;
       const ftPts = bool(values.fullThickness) ? 1 : 0;
       const tbsa = num(values.tbsa, 0);
-      let tbsaPts = 1;
+      let tbsaPts = 0;
       if (tbsa >= 91) tbsaPts = 10;
       else if (tbsa >= 81) tbsaPts = 9;
       else if (tbsa >= 71) tbsaPts = 8;
@@ -1254,7 +1254,7 @@ export const missingEmergencyCalcs: Calculator[] = [
       else if (tbsa >= 31) tbsaPts = 4;
       else if (tbsa >= 21) tbsaPts = 3;
       else if (tbsa >= 11) tbsaPts = 2;
-      else tbsaPts = 1;
+      else if (tbsa > 0) tbsaPts = 1;
 
       const score = sexPts + agePts + inhPts + ftPts + tbsaPts;
 

@@ -28,7 +28,14 @@ export const nephrologyEndoCalcs: Calculator[] = [
       if (scr <= 0) {
         return { score: '—', label: 'Invalid creatinine', interpretation: 'Serum creatinine must be > 0.', riskLevel: 'info' as const };
       }
-      const crcl = round(((140 - age) * wt * sex) / (72 * scr), 1);
+      if (age <= 0 || wt <= 0) {
+        return { score: '—', unit: 'mL/min', label: 'Invalid inputs', interpretation: 'Age and weight must both be > 0.', riskLevel: 'info' as const };
+      }
+      const rawCrcl = ((140 - age) * wt * sex) / (72 * scr);
+      if (!Number.isFinite(rawCrcl)) {
+        return { score: '—', unit: 'mL/min', label: 'Invalid inputs', interpretation: 'Inputs produce a non-finite creatinine clearance; check the entered values.', riskLevel: 'info' as const };
+      }
+      const crcl = round(rawCrcl, 1);
       const r = riskFromThresholds(crcl, [
         { max: 29, level: 'high', label: 'Severely reduced', interpretation: 'CrCl <30: major dose adjustments / avoid nephrotoxic drugs.' },
         { max: 59, level: 'moderate', label: 'Moderately reduced', interpretation: 'CrCl 30–59: adjust renally cleared medications.' },
@@ -146,7 +153,26 @@ export const nephrologyEndoCalcs: Calculator[] = [
       const age = num(values.age, 50);
       const sex = num(values.sex, 1);
       const race = num(values.race, 1);
-      const egfr = round(175 * scr ** -1.154 * age ** -0.203 * sex * race, 0);
+      if (scr <= 0 || age <= 0) {
+        return {
+          score: '—',
+          unit: 'mL/min/1.73m²',
+          label: 'Invalid inputs',
+          interpretation: 'Serum creatinine and age must both be > 0 for the MDRD equation.',
+          riskLevel: 'info' as const,
+        };
+      }
+      const rawEgfr = 175 * scr ** -1.154 * age ** -0.203 * sex * race;
+      if (!Number.isFinite(rawEgfr)) {
+        return {
+          score: '—',
+          unit: 'mL/min/1.73m²',
+          label: 'Invalid inputs',
+          interpretation: 'Inputs produce a non-finite MDRD eGFR; check the entered values.',
+          riskLevel: 'info' as const,
+        };
+      }
+      const egfr = round(rawEgfr, 0);
       return {
         score: egfr,
         unit: 'mL/min/1.73m²',
@@ -640,7 +666,14 @@ export const nephrologyEndoCalcs: Calculator[] = [
     calculate(values) {
       const w = num(values.weight, 70);
       const h = num(values.height, 170) / 100;
-      const bmi = round(w / (h * h), 1);
+      if (w <= 0 || h <= 0) {
+        return { score: '—', unit: 'kg/m²', label: 'Invalid inputs', interpretation: 'Weight and height must both be > 0 to calculate BMI.', riskLevel: 'info' as const };
+      }
+      const rawBmi = w / (h * h);
+      if (!Number.isFinite(rawBmi)) {
+        return { score: '—', unit: 'kg/m²', label: 'Invalid inputs', interpretation: 'Inputs produce a non-finite BMI; check the entered values.', riskLevel: 'info' as const };
+      }
+      const bmi = round(rawBmi, 1);
       const r = riskFromThresholds(bmi, [
         { max: 18.4, level: 'moderate', label: 'Underweight', interpretation: 'BMI <18.5: underweight — evaluate nutrition and underlying disease.' },
         { max: 24.9, level: 'normal', label: 'Normal', interpretation: 'BMI 18.5–24.9: normal range (WHO).' },
@@ -706,6 +739,9 @@ export const nephrologyEndoCalcs: Calculator[] = [
       }],
     },
     nextSteps: [{ condition: 'Obesity', actions: ['Calculate AdjBW = IBW + 0.4×(TBW−IBW) for selected drugs'] }],
+    pearls: [
+      'Devine IBW is not clinically validated for adults below 5 ft (60 in); interpret it cautiously in this range.',
+    ],
   },
   {
     id: 'abw',
@@ -903,7 +939,17 @@ export const nephrologyEndoCalcs: Calculator[] = [
           riskLevel: 'info',
         };
       }
-      const ldl = round(tc - hdl - tg / 5, 0);
+      const ldlRaw = tc - hdl - tg / 5;
+      if (ldlRaw < 0) {
+        return {
+          score: '—',
+          unit: 'mg/dL',
+          label: 'Negative calculated LDL',
+          interpretation: 'The Friedewald LDL-C estimate is negative; order a direct LDL-C measurement.',
+          riskLevel: 'info',
+        };
+      }
+      const ldl = round(ldlRaw, 0);
       const r = riskFromThresholds(ldl, [
         { max: 99, level: 'normal', label: 'Optimal', interpretation: 'ATP III: LDL <100 mg/dL optimal (many very-high-risk patients still use <70).' },
         { max: 129, level: 'low', label: 'Near optimal / above optimal', interpretation: 'ATP III: LDL 100–129 mg/dL near optimal/above optimal.' },

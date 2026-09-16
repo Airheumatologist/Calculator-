@@ -324,82 +324,83 @@ export const wave4EmIdCalcs: Calculator[] = [
 
   {
     id: 'riete-vte',
-    name: 'Simplified PESI (sPESI)',
-    shortName: 'sPESI',
+    name: 'RIETE Bleeding Risk Score in VTE',
+    shortName: 'RIETE Bleed',
     description:
-      'Simplified Pulmonary Embolism Severity Index for 30-day mortality after acute PE (Jiménez 2010). Route id kept as riete-vte.',
+      'Predicts risk of major bleeding during anticoagulation for acute venous thromboembolism.',
     category: 'hematology',
-    tags: ['pe', 'spesi', 'pesi', 'vte', 'prognosis', 'mortality'],
-    whenToUse: 'Confirmed acute PE for rapid prognostic stratification (low vs high 30-day mortality risk).',
+    tags: ['riete', 'bleeding', 'vte', 'pe', 'dvt', 'anticoagulation'],
+    whenToUse: 'Patients with acute DVT or PE starting or continuing therapeutic anticoagulation.',
     whyUse:
-      'Six binary sPESI items (age >80, cancer, chronic cardiopulmonary disease, HR ≥110, SBP <100, O₂ sat <90%) dichotomize low risk (0) vs high risk (≥1).',
+      'Stratifies 3-month major bleeding risk into low (0), intermediate (1.5–4), and high (>4) bands to guide monitoring and anticoagulation decisions.',
     inputs: [
-      yesNo('age80', 'Age >80 years', 1),
-      yesNo('cancer', 'Cancer', 1, 'History of cancer (active or prior), excluding non-melanoma skin cancer in usual PESI/sPESI practice.'),
-      yesNo(
-        'cpd',
-        'Chronic cardiopulmonary disease',
-        1,
-        'Chronic heart failure and/or chronic lung disease — sPESI combines these as a single 1-point item (not 1 each).',
-      ),
-      yesNo('hr110', 'Pulse ≥110 bpm', 1),
-      yesNo('sbp100', 'Systolic BP <100 mmHg', 1),
-      yesNo('sat90', 'Arterial O₂ saturation <90%', 1),
+      yesNo('recentBleed', 'Recent major bleeding (<30 days)', 2, 'Clinically overt major bleeding within the past 30 days (+2 points).'),
+      yesNo('creatinine', 'Serum creatinine >1.2 mg/dL (>106 µmol/L)', 1.5, 'Elevated serum creatinine (+1.5 points).'),
+      yesNo('anemia', 'Anemia (Hb <13 g/dL for men, <12 g/dL for women)', 1.5, 'Hemoglobin below the sex-specific cutoff (+1.5 points).'),
+      yesNo('cancer', 'Active cancer', 1, 'Active malignancy or metastatic disease (+1 point).'),
+      yesNo('peClinicallyOvert', 'Clinically overt pulmonary embolism at baseline', 1, 'Index VTE presentation included PE rather than DVT alone (+1 point).'),
+      yesNo('ageOver75', 'Age >75 years', 1, 'Patient age older than 75 years (+1 point).'),
     ],
     calculate(values) {
-      const keys = ['age80', 'cancer', 'cpd', 'hr110', 'sbp100', 'sat90'] as const;
-      const score = keys.reduce((s, k) => s + (bool(values[k]) ? 1 : 0), 0);
-
-      if (score === 0) {
-        return {
-          score,
-          label: 'Low risk (sPESI 0)',
-          interpretation:
-            'sPESI 0: low 30-day mortality (~1% in original validation). May support outpatient/early discharge pathways when Hestia/clinical criteria also favorable.',
-          riskLevel: 'low' as const,
-          details: [{ label: 'Items positive', value: '0 / 6' }],
-          recommendations: [
-            'Consider outpatient PE pathway if Hestia/local criteria met',
-            'Ensure reliable follow-up and anticoagulation access',
-          ],
-        };
-      }
+      const score = round(
+        (bool(values.recentBleed) ? 2 : 0) +
+          (bool(values.creatinine) ? 1.5 : 0) +
+          (bool(values.anemia) ? 1.5 : 0) +
+          (bool(values.cancer) ? 1 : 0) +
+          (bool(values.peClinicallyOvert) ? 1 : 0) +
+          (bool(values.ageOver75) ? 1 : 0),
+        1
+      );
+      const r = score === 0
+        ? {
+            label: 'Low bleeding risk (0)',
+            interpretation: 'RIETE 0: low 3-month major bleeding risk in the original registry. Use usual anticoagulation monitoring and clinical judgment.',
+            riskLevel: 'low' as const,
+          }
+        : score > 4
+          ? {
+              label: 'High bleeding risk (>4)',
+              interpretation: `RIETE ${score}: high 3-month major bleeding risk. Reassess modifiable bleeding risks and the intensity, agent, and duration of anticoagulation.`,
+              riskLevel: 'high' as const,
+            }
+          : {
+              label: 'Intermediate bleeding risk (1.5–4)',
+              interpretation: `RIETE ${score}: intermediate 3-month major bleeding risk. Balance VTE recurrence risk against bleeding risk and arrange appropriate monitoring.`,
+              riskLevel: 'moderate' as const,
+            };
       return {
         score,
-        label: 'High risk (sPESI ≥1)',
-        interpretation: `sPESI ${score}: high-risk stratum (≥1). Elevated 30-day mortality (~9–11% in original validation). Admit; further risk-stratify with RV strain and biomarkers. Hypotension may define high-risk PE regardless of remaining items.`,
-        riskLevel: score >= 3 ? ('critical' as const) : ('high' as const),
-        details: [{ label: 'Items positive', value: `${score} / 6` }],
-        recommendations: [
-          'Inpatient management',
-          'Assess RV function / troponin-BNP per protocol',
-          'Reperfusion options if hypotensive/obstructive shock',
+        ...r,
+        details: [
+          { label: 'RIETE points', value: String(score) },
+          { label: 'Score range', value: '0–8' },
         ],
       };
     },
     evidence: {
       summary:
-        'sPESI assigns 1 point each for age >80, cancer, chronic cardiopulmonary disease (HF and chronic lung disease combined), HR ≥110, SBP <100, and O₂ sat <90%. Score 0 = low risk; ≥1 = high risk. Not the RIETE PE score (metastases, CrCl, recent major bleed, immobility, platelets).',
-      formula: 'Sum 0–6; dichotomize 0 vs ≥1',
-      validation: 'Jiménez et al. Arch Intern Med 2010 (simplification of PESI); similar discrimination to full PESI for identifying low-risk PE.',
+        'RIETE assigns 2 points for recent major bleeding, 1.5 for creatinine >1.2 mg/dL, 1.5 for anemia, and 1 point each for active cancer, clinically overt PE, and age >75 years.',
+      formula: 'Recent major bleed 2 + creatinine >1.2 mg/dL 1.5 + anemia 1.5 + active cancer 1 + clinically overt PE 1 + age >75 1; score 0–8',
+      validation: 'Derived and validated in RIETE registry patients with acute VTE receiving anticoagulation for 3-month major bleeding risk.',
       references: [
         {
-          title: 'Simplification of the pulmonary embolism severity index for prognostication in patients with acute symptomatic pulmonary embolism',
-          citation: 'Jiménez D et al. Arch Intern Med. 2010;170:1383-1389',
-          year: 2010,
-          pmid: '20696966',
-          doi: '10.1001/archinternmed.2010.199',
+          title: 'Predictive variables for major bleeding events in patients presenting with documented acute venous thromboembolism. Findings from the RIETE Registry',
+          citation: 'Ruíz-Giménez N et al. Thromb Haemost. 2008;100(1):26-31',
+          year: 2008,
+          pmid: '18612534',
+          doi: '10.1160/TH08-03-0193',
         },
       ],
     },
     nextSteps: [
-      { condition: 'sPESI 0', actions: ['Outpatient eligibility review (Hestia)', 'DOAC education'] },
-      { condition: 'sPESI ≥1', actions: ['Hospital management', 'RV/biomarker severity workup'] },
+      { condition: 'Score 0', actions: ['Standard anticoagulation per guidelines', 'Routine monitoring'] },
+      { condition: 'Score 1.5–4', actions: ['Mitigate modifiable bleeding risks', 'Reassess renal function and hemoglobin', 'Arrange closer follow-up as indicated'] },
+      { condition: 'Score >4', actions: ['Review anticoagulation risk/benefit', 'Select agent and intensity carefully', 'Arrange close monitoring'] },
     ],
     pearls: [
-      'sPESI merges chronic heart failure and chronic lung disease into one cardiopulmonary item.',
-      'This catalog id remains riete-vte for routing; the score implemented is sPESI, not the RIETE PE prognostic score.',
-      'Hypotension alone may define high-risk PE regardless of score.',
+      'This catalog id remains riete-vte for routing compatibility.',
+      'The clinically overt PE item scores PE at baseline versus isolated DVT.',
+      'Use the score as an adjunct; it does not replace individualized assessment of bleeding, recurrence, or treatment indication.',
     ],
   },
 

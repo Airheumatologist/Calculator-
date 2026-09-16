@@ -892,6 +892,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
         score,
         ...r,
         recommendations: si ? ['Item 9 positive: assess suicide risk immediately', 'Safety plan / urgent psych if needed'] : ['Recheck periodically'],
+        alerts: si ? ['Item 9 positive: thoughts of death or self-harm endorsed. Immediate clinical safety evaluation required.'] : undefined,
       };
     },
     evidence: {

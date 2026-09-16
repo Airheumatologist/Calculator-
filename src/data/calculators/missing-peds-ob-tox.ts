@@ -764,10 +764,14 @@ export const missingPedsObToxCalcs: Calculator[] = [
         };
       }
 
-      // Treatment line: 150 µg/mL at 4 h, halves every 4 h (150 × 0.5^((t-4)/4))
-      const treatLine = 150 * Math.pow(0.5, (t - 4) / 4);
+      // Treatment line: 150 µg/mL at 4 h, halves every 4 h (150 × 0.5^((t-4)/4)).
+      // The nomogram is not validated beyond 24 hours; clamp late presentations
+      // and raise an explicit warning rather than extrapolating the line.
+      const nomogramTime = Math.min(t, 24);
+      const latePresentation = t > 24;
+      const treatLine = 150 * Math.pow(0.5, (nomogramTime - 4) / 4);
       // Probable toxicity line starts ~200 at 4 h (original)
-      const probableLine = 200 * Math.pow(0.5, (t - 4) / 4);
+      const probableLine = 200 * Math.pow(0.5, (nomogramTime - 4) / 4);
 
       const ratio = level / treatLine;
       let label: string;
@@ -798,18 +802,22 @@ export const missingPedsObToxCalcs: Calculator[] = [
         label,
         interpretation:
           interpretation +
-          ' Educational approximation only — plot on a validated nomogram or use institutional toxicology decision tools for treatment.',
+          ' Educational approximation only — plot on a validated nomogram or use institutional toxicology decision tools for treatment.' +
+          (latePresentation ? ` Time exceeds 24 hours; line values were clamped to ${nomogramTime} hours because the nomogram is not valid beyond 24 hours.` : ''),
         riskLevel,
         details: [
           { label: 'Approx treatment line', value: `${round(treatLine, 1)} µg/mL` },
           { label: 'Approx probable line', value: `${round(probableLine, 1)} µg/mL` },
           { label: 'Measured level', value: `${level} µg/mL` },
-          { label: 'Time', value: `${t} h` },
+          { label: 'Time', value: latePresentation ? `${t} h (calculation clamped to ${nomogramTime} h)` : `${t} h` },
         ],
         recommendations:
           riskLevel === 'low'
             ? ['Confirm ingestion time', 'LFTs if late presentation']
             : ['Start IV/oral NAC protocol', 'LFTs, INR, chemistry', 'Poison control'],
+        alerts: latePresentation
+          ? ['Time since ingestion exceeds 24 hours. The Rumack–Matthew nomogram is not valid beyond 24 hours; use late-presentation NAC criteria, AST/ALT/INR, and poison-center guidance rather than relying on this estimate.']
+          : undefined,
       };
     },
     evidence: {
@@ -1295,7 +1303,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
       numberInput('cycleLength', 'Cycle length', { unit: 'days', min: 21, max: 45, defaultValue: 28, helpText: 'EDD shifts by (cycle − 28) days. First-trimester ultrasound is preferred if LMP is uncertain.' }),
     ],
     calculate(values) {
-      const lmp = new Date(num(values.lmpYear), num(values.lmpMonth) - 1, num(values.lmpDay));
+      const lmp = new Date(num(values.lmpYear, new Date().getFullYear()), num(values.lmpMonth) - 1, num(values.lmpDay));
       const ref = new Date(num(values.refYear), num(values.refMonth) - 1, num(values.refDay));
       const cycle = num(values.cycleLength, 28);
       const days = Math.round((ref.getTime() - lmp.getTime()) / 86400000);

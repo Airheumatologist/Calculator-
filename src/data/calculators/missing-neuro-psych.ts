@@ -134,7 +134,7 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         { label: 'Thin SAH (focal or diffuse, <1 mm layers)', value: 1, description: 'SAH present but does not completely fill any cistern or fissure; layers <1 mm' },
         { label: 'Thick SAH (completely filling ≥1 cistern/fissure or ≥1 mm layers)', value: 2, description: 'Blood completely filling at least one cistern or fissure, or vertical layers ≥1 mm' },
       ], undefined, 'Use the admission noncontrast CT. Thick vs thin is about filling cisterns/fissures, not about intraparenchymal hematoma (that is not SAH burden).'),
-      yesNo('ivh', 'Intraventricular hemorrhage present', 2,
+      yesNo('ivh', 'Intraventricular hemorrhage present', null,
         'Any IVH on CT (even small) counts. Isolated IVH without cisternal SAH maps to modified Fisher 2 in this tool.'),
     ],
     calculate(values) {
@@ -1078,6 +1078,9 @@ export const missingNeuroPsychCalcs: Calculator[] = [
           'SAD PERSONS is not sufficient alone for discharge decisions',
           'Assess ideation, intent, plan, access to means, protective factors',
         ],
+        alerts: (score >= 7 || bool(values.organized)) ? [
+          'High suicide risk score (≥7) or organized suicide plan endorsed. Immediate psychiatric emergency evaluation required.',
+        ] : undefined,
       };
     },
     evidence: {
@@ -1605,6 +1608,13 @@ export const missingNeuroPsychCalcs: Calculator[] = [
                 'Document risk/benefit of disposition',
               ]
             : ['Safety plan if any ideation', 'Follow-up arranged', 'Provide crisis resources'],
+        alerts: (behavior || ideationLevel >= 4) ? [
+          behavior
+            ? 'CRITICAL SAFETY ALERT: Suicidal behavior within past 3 months reported. Maintain continuous observation and initiate urgent psychiatric emergency evaluation.'
+            : 'CRITICAL SAFETY ALERT: Suicidal ideation with intent or plan endorsed. Maintain observation and initiate urgent psychiatric assessment.',
+        ] : ideationLevel >= 1 ? [
+          'Safety Alert: Suicidal ideation endorsed. Complete a full suicide risk assessment and safety plan before discharge.',
+        ] : undefined,
       };
     },
     evidence: {

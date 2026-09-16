@@ -1291,11 +1291,12 @@ export const emergencyMiscCalcs: Calculator[] = [
       };
       const opioid = String(values.opioid);
       const factor = conversionFactors[opioid] ?? num(values.opioid, 1);
-      const mme = round(daily * factor, 1);
-      const r = riskFromThresholds(mme, [
-        { max: 49, level: 'moderate', label: 'Lower CDC threshold band', interpretation: 'Still risk of OD; use caution, naloxone co-prescribing as appropriate.' },
-        { max: 89, level: 'high', label: '≥50 MME/day', interpretation: 'Increased overdose risk per CDC — justify benefit, offer naloxone, avoid concurrent benzos.' },
-        { max: 10000, level: 'critical', label: '≥90 MME/day', interpretation: 'High-dose opioid therapy — reassess necessity; specialist involvement often warranted.' },
+      const mmeRaw = daily * factor;
+      const mme = round(mmeRaw, 1);
+      const r = riskFromThresholds(mmeRaw, [
+        { max: 49.99, level: 'low', label: '<50 MME/day — lower-dose band', interpretation: 'Lower-dose opioid therapy still carries overdose risk; use the lowest effective dose and consider naloxone when clinically appropriate.' },
+        { max: 89.99, level: 'moderate', label: '50–89.99 MME/day — moderate risk band', interpretation: 'Increased overdose risk per CDC — justify benefit, offer naloxone, avoid concurrent benzodiazepines.' },
+        { max: 10000, level: 'critical', label: '≥90 MME/day — high-dose band', interpretation: 'High-dose opioid therapy — reassess necessity; specialist involvement often warranted.' },
       ]);
       return {
         score: mme,

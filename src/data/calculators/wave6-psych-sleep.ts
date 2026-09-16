@@ -3,6 +3,49 @@ import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, 
 
 const questionnaireMetadata = { questionnaire: true as const };
 
+const eat26ForwardOptions = [
+  { label: 'Always (3 points)', value: 'always', points: 3 },
+  { label: 'Usually (2 points)', value: 'usually', points: 2 },
+  { label: 'Often (1 point)', value: 'often', points: 1 },
+  { label: 'Sometimes (0 points)', value: 'sometimes', points: 0 },
+  { label: 'Rarely (0 points)', value: 'rarely', points: 0 },
+  { label: 'Never (0 points)', value: 'never', points: 0 },
+];
+
+const eat26ReverseOptions = [
+  { label: 'Never (3 points)', value: 'never', points: 3 },
+  { label: 'Rarely (2 points)', value: 'rarely', points: 2 },
+  { label: 'Sometimes (1 point)', value: 'sometimes', points: 1 },
+  { label: 'Often (0 points)', value: 'often', points: 0 },
+  { label: 'Usually (0 points)', value: 'usually', points: 0 },
+  { label: 'Always (0 points)', value: 'always', points: 0 },
+];
+
+const eat26ForwardPoints: Record<string, number> = {
+  always: 3,
+  usually: 2,
+  often: 1,
+  sometimes: 0,
+  rarely: 0,
+  never: 0,
+};
+
+const eat26ReversePoints: Record<string, number> = {
+  never: 3,
+  rarely: 2,
+  sometimes: 1,
+  often: 0,
+  usually: 0,
+  always: 0,
+};
+
+const painDetectPatternPoints: Record<string, number> = {
+  persistent_fluctuations: 0,
+  persistent_attacks: -1,
+  attacks_without_between: 1,
+  attacks_with_between: 1,
+};
+
 export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 1. PDSS (Panic Disorder Severity Scale) ───────────────────────────────
   {
@@ -610,214 +653,36 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         { label: 'Interactive 26-item questionnaire', value: 'survey' },
         { label: 'Direct score override', value: 'direct' },
       ], 'survey'),
-      selectInput('eat_1', '1. Am terrified about being overweight', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_2', '2. Avoid eating when I am hungry', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_3', '3. Find myself preoccupied with food', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_4', '4. Have gone on eating binges where I feel that I may not be able to stop', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_5', '5. Cut my food into small pieces', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_6', '6. Aware of the calorie content of foods that I eat', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_7', '7. Particularly avoid food with a high carbohydrate content', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_8', '8. Feel that others would prefer if I ate more', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_9', '9. Vomit after I have eaten', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_10', '10. Feel extremely guilty after eating', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_11', '11. Am preoccupied with a desire to be thinner', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_12', '12. Think about burning up calories when I exercise', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_13', '13. Other people think that I am too thin', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_14', '14. Am preoccupied with the thought of having fat on my body', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_15', '15. Take longer than others to eat my meals', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_16', '16. Avoid foods with sugar in them', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_17', '17. Eat diet foods', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_18', '18. Feel that food controls my life', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_19', '19. Display self-control around food', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_20', '20. Feel that others pressure me to eat', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_21', '21. Give too much time and thought to food', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_22', '22. Feel uncomfortable after eating sweets', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_23', '23. Engage in dieting behavior', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_24', '24. Like my stomach to be empty', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_25', '25. Have the impulse to vomit after meals', [
-        { label: 'Always (3 points)', value: 3 },
-        { label: 'Usually (2 points)', value: 2 },
-        { label: 'Often (1 point)', value: 1 },
-        { label: 'Sometimes (0 points)', value: 0 },
-        { label: 'Rarely (0 points)', value: 0 },
-        { label: 'Never (0 points)', value: 0 },
-      ], 0),
-      selectInput('eat_26', '26. Enjoy trying new rich foods (reverse scored)', [
-        { label: 'Never (3 points)', value: 3 },
-        { label: 'Rarely (2 points)', value: 2 },
-        { label: 'Sometimes (1 point)', value: 1 },
-        { label: 'Often (0 points)', value: 0 },
-        { label: 'Usually (0 points)', value: 0 },
-        { label: 'Always (0 points)', value: 0 },
-      ], 0),
+      ...[
+        '1. Am terrified about being overweight',
+        '2. Avoid eating when I am hungry',
+        '3. Find myself preoccupied with food',
+        '4. Have gone on eating binges where I feel that I may not be able to stop',
+        '5. Cut my food into small pieces',
+        '6. Aware of the calorie content of foods that I eat',
+        '7. Particularly avoid food with a high carbohydrate content',
+        '8. Feel that others would prefer if I ate more',
+        '9. Vomit after I have eaten',
+        '10. Feel extremely guilty after eating',
+        '11. Am preoccupied with a desire to be thinner',
+        '12. Think about burning up calories when I exercise',
+        '13. Other people think that I am too thin',
+        '14. Am preoccupied with the thought of having fat on my body',
+        '15. Take longer than others to eat my meals',
+        '16. Avoid foods with sugar in them',
+        '17. Eat diet foods',
+        '18. Feel that food controls my life',
+        '19. Display self-control around food',
+        '20. Feel that others pressure me to eat',
+        '21. Give too much time and thought to food',
+        '22. Feel uncomfortable after eating sweets',
+        '23. Engage in dieting behavior',
+        '24. Like my stomach to be empty',
+        '25. Have the impulse to vomit after meals',
+      ].map((title, i) =>
+        selectInput(`eat_${i + 1}`, title, eat26ForwardOptions, 'sometimes'),
+      ),
+      selectInput('eat_26', '26. Enjoy trying new rich foods (reverse scored)', eat26ReverseOptions, 'often'),
       yesNo('b1_binge', 'Behavior: Binge eating with sense of loss of control (past 6 months)', 0),
       yesNo('b2_vomit', 'Behavior: Self-induced vomiting to control weight/shape (past 6 months)', 0),
       yesNo('b3_meds', 'Behavior: Laxatives, diet pills, or diuretics to control weight/shape (past 6 months)', 0),
@@ -853,7 +718,9 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       } else {
         score = 0;
         for (let i = 1; i <= 26; i++) {
-          score += num(values[`eat_${i}`], 0);
+          const rawValue = values[`eat_${i}`];
+          const points = i === 26 ? eat26ReversePoints[String(rawValue)] : eat26ForwardPoints[String(rawValue)];
+          score += points ?? num(rawValue, 0);
         }
       }
 
@@ -2144,11 +2011,11 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         ], i < 3 ? 2 : 1),
       ),
       selectInput('pattern', '8. Pain course pattern diagram', [
-        { label: 'Persistent pain with slight fluctuations (0 points)', value: 0 },
-        { label: 'Persistent pain with pain attacks (−1 point)', value: -1 },
-        { label: 'Pain attacks without pain in between (+1 point)', value: 1 },
-        { label: 'Pain attacks with pain in between (+1 point)', value: 1 },
-      ], 0),
+        { label: 'Persistent pain with slight fluctuations (0 points)', value: 'persistent_fluctuations' },
+        { label: 'Persistent pain with pain attacks (−1 point)', value: 'persistent_attacks' },
+        { label: 'Pain attacks without pain in between (+1 point)', value: 'attacks_without_between' },
+        { label: 'Pain attacks with pain in between (+1 point)', value: 'attacks_with_between' },
+      ], 'persistent_fluctuations'),
       selectInput('radiating', '9. Does your pain radiate to other parts of your body?', [
         { label: 'No (0 points)', value: 0 },
         { label: 'Yes (+2 points)', value: 2 },
@@ -2171,7 +2038,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         for (let i = 1; i <= 7; i++) {
           sensorySum += num(values[`sensory_${i}`], 0);
         }
-        const pattern = num(values.pattern, 0);
+        const pattern = painDetectPatternPoints[String(values.pattern)] ?? num(values.pattern, 0);
         const radiating = num(values.radiating, 0);
         score = sensorySum + pattern + radiating;
       }

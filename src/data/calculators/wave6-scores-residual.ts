@@ -209,7 +209,15 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     tags: ['ndi', 'neck', 'cervical', 'disability', 'spine'],
     whenToUse: 'When evaluating functional impairment and disability in patients with neck pain, whiplash, or cervical radiculopathy.',
     whyUse: 'Standard neck-specific disability PRO; validated counterpart to the Oswestry Low Back Pain Disability Index.',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        survey: ['pain', 'personalCare', 'lifting', 'reading', 'headaches', 'concentration', 'work', 'driving', 'sleeping', 'recreation'],
+        direct: ['pct'],
+      },
+    },
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Complete 10-section questionnaire (recommended)', value: 'survey' },
@@ -418,7 +426,19 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     tags: ['dash', 'upper extremity', 'shoulder', 'hand', 'disability'],
     whenToUse: 'When evaluating disability and symptoms in patients with any musculoskeletal condition of the arm, shoulder, or hand.',
     whyUse: 'Gold-standard region-specific PRO for upper-limb function across diagnoses.',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        survey: [
+          'dash_q1', 'dash_q2', 'dash_q3', 'dash_q4', 'dash_q5', 'dash_q6', 'dash_q7', 'dash_q8', 'dash_q9', 'dash_q10',
+          'dash_q11', 'dash_q12', 'dash_q13', 'dash_q14', 'dash_q15', 'dash_q16', 'dash_q17', 'dash_q18', 'dash_q19', 'dash_q20',
+          'dash_q21', 'dash_q22', 'dash_q23', 'dash_q24', 'dash_q25', 'dash_q26', 'dash_q27', 'dash_q28', 'dash_q29', 'dash_q30',
+        ],
+        direct: ['total'],
+      },
+    },
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 30-item survey (recommended)', value: 'survey' },
@@ -750,7 +770,15 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     tags: ['quickdash', 'dash', 'upper extremity', 'hand', 'shoulder'],
     whenToUse: 'Brief upper-extremity PRO when full DASH is too long; same 0–100 metric family.',
     whyUse: '11-item short form correlates highly with full DASH and is practical in clinic.',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        survey: ['qdash_q1', 'qdash_q2', 'qdash_q3', 'qdash_q4', 'qdash_q5', 'qdash_q6', 'qdash_q7', 'qdash_q8', 'qdash_q9', 'qdash_q10', 'qdash_q11'],
+        direct: ['total'],
+      },
+    },
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 11-item questionnaire (recommended)', value: 'survey' },
@@ -941,7 +969,18 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     tags: ['womac', 'osteoarthritis', 'knee', 'hip', 'function'],
     whenToUse: 'When evaluating hip or knee osteoarthritis symptoms and physical disability.',
     whyUse: 'Core PRO for hip and knee osteoarthritis trials and clinic outcomes endorsed by OMERACT.',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        survey: [
+          'w_p1', 'w_p2', 'w_p3', 'w_p4', 'w_p5', 'w_s1', 'w_s2',
+          'w_f1', 'w_f2', 'w_f3', 'w_f4', 'w_f5', 'w_f6', 'w_f7', 'w_f8', 'w_f9', 'w_f10', 'w_f11', 'w_f12', 'w_f13', 'w_f14', 'w_f15', 'w_f16', 'w_f17',
+        ],
+        direct: ['total', 'pain', 'function'],
+      },
+    },
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 24-item questionnaire (recommended)', value: 'survey' },
@@ -1498,7 +1537,21 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     tags: ['easi', 'eczema', 'atopic dermatitis', 'dermatology', 'severity'],
     whenToUse: 'When evaluating atopic dermatitis severity in clinic or clinical trials.',
     whyUse: 'Core clinician-reported AD severity endpoint in modern dermatology trials and guidelines.',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        survey: [
+          'ageBand',
+          'head_area', 'head_erythema', 'head_induration', 'head_excoriation', 'head_lichenification',
+          'ul_area', 'ul_erythema', 'ul_induration', 'ul_excoriation', 'ul_lichenification',
+          'trunk_area', 'trunk_erythema', 'trunk_induration', 'trunk_excoriation', 'trunk_lichenification',
+          'll_area', 'll_erythema', 'll_induration', 'll_excoriation', 'll_lichenification',
+        ],
+        direct: ['total'],
+      },
+    },
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive regional assessment (recommended)', value: 'survey' },
@@ -1769,7 +1822,18 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     tags: ['scorad', 'eczema', 'atopic dermatitis', 'dermatology'],
     whenToUse: 'When evaluating atopic dermatitis severity including clinical extent, intensity, and subjective pruritus/sleep loss.',
     whyUse: 'Classic European composite AD severity score combining objective signs and patient symptoms.',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        survey: [
+          'extent_a', 'int_erythema', 'int_edema', 'int_oozing', 'int_excoriation', 'int_lichenification', 'int_dryness',
+          'subj_pruritus', 'subj_sleep',
+        ],
+        direct: ['total'],
+      },
+    },
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive components assessment (recommended)', value: 'survey' },
@@ -2175,7 +2239,15 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     tags: ['vhi-10', 'voice', 'dysphonia', 'ent', 'laryngology'],
     whenToUse: 'When evaluating patient-perceived voice handicap for dysphonia, vocal cord pathology, or post-laryngeal treatment follow-up.',
     whyUse: 'Brief, validated voice-related quality-of-life measure widely used in ENT and speech therapy clinics.',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        survey: ['vhi_q1', 'vhi_q2', 'vhi_q3', 'vhi_q4', 'vhi_q5', 'vhi_q6', 'vhi_q7', 'vhi_q8', 'vhi_q9', 'vhi_q10'],
+        direct: ['total'],
+      },
+    },
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 10-item survey (recommended)', value: 'survey' },
@@ -2598,7 +2670,15 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     tags: ['cat', 'copd', 'symptoms', 'gold', 'quality of life'],
     whenToUse: 'Routine COPD visits to quantify symptoms and guide GOLD ABE grouping and treatment escalation.',
     whyUse: '8-item validated symptom score preferred in GOLD guidelines for impact assessment (with mMRC).',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        survey: ['cat_cough', 'cat_phlegm', 'cat_tightness', 'cat_breathlessness', 'cat_activities', 'cat_confidence', 'cat_sleep', 'cat_energy'],
+        direct: ['total'],
+      },
+    },
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 8-item assessment (recommended)', value: 'survey' },
@@ -2957,7 +3037,15 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     tags: ['act', 'asthma', 'control', 'gina'],
     whenToUse: 'Routine asthma clinic visits to assess symptom control and guide step-up / step-down therapy decisions.',
     whyUse: '5-item validated patient questionnaire; cutoff ≤19 identifies uncontrolled asthma with high sensitivity.',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        survey: ['act_q1', 'act_q2', 'act_q3', 'act_q4', 'act_q5'],
+        direct: ['total'],
+      },
+    },
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 5-item questionnaire (recommended)', value: 'survey' },
@@ -3085,7 +3173,15 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     tags: ['acq', 'asthma', 'control', 'juniper'],
     whenToUse: 'When evaluating asthma control continuously in research, specialty asthma clinics, or biologic monitoring.',
     whyUse: 'Juniper ACQ is a standard continuous control metric in asthma clinical trials with well-established cutoffs.',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        survey: ['version', 'acq_q1', 'acq_q2', 'acq_q3', 'acq_q4', 'acq_q5', 'acq_q6', 'acq_q7'],
+        direct: ['total'],
+      },
+    },
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive item-by-item questionnaire (recommended)', value: 'survey' },
@@ -3818,7 +3914,15 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     tags: ['mna', 'mna-sf', 'nutrition', 'malnutrition', 'geriatrics'],
     whenToUse: 'Geriatric nutrition screening in outpatient clinics, acute hospital admission, or long-term care settings.',
     whyUse: 'Validated 6-item short form; rapidly identifies older adults malnourished or at risk of malnutrition.',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        survey: ['mna_a', 'mna_b', 'mna_c', 'mna_d', 'mna_e', 'mna_f'],
+        direct: ['total'],
+      },
+    },
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 6-item screening (recommended)', value: 'survey' },

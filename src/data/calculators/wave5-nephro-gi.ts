@@ -26,6 +26,15 @@ export const wave5NephroGiCalcs: Calculator[] = [
       const scys = num(values.scys, 1);
       const age = num(values.age, 50);
       const female = str(values.sex, 'F') === 'F';
+      if (scr <= 0 || scys <= 0 || age <= 0) {
+        return {
+          score: '—',
+          unit: 'mL/min/1.73 m²',
+          label: 'Invalid inputs',
+          interpretation: 'Serum creatinine, cystatin C, and age must all be > 0 for the combined eGFR equation.',
+          riskLevel: 'info' as const,
+        };
+      }
       const kappa = female ? 0.7 : 0.9;
       const alpha = female ? -0.219 : -0.144;
       const scrRatio = scr / kappa;
@@ -38,6 +47,15 @@ export const wave5NephroGiCalcs: Calculator[] = [
         Math.max(cysRatio, 1) ** -0.778 *
         0.9961 ** age;
       if (female) egfr *= 0.963;
+      if (!Number.isFinite(egfr)) {
+        return {
+          score: '—',
+          unit: 'mL/min/1.73 m²',
+          label: 'Invalid inputs',
+          interpretation: 'Inputs produce a non-finite combined eGFR; check the entered values.',
+          riskLevel: 'info' as const,
+        };
+      }
       egfr = round(egfr, 0);
       let stage = 'G1';
       let riskLevel: 'normal' | 'low' | 'moderate' | 'high' | 'critical' = 'normal';
@@ -241,12 +259,30 @@ export const wave5NephroGiCalcs: Calculator[] = [
       ]),
     ],
     calculate(values) {
-      const scr = Math.max(num(values.scr, 1), 0.1);
+      const scr = num(values.scr, 1);
       const age = num(values.age, 50);
       const female = str(values.sex, 'M') === 'F';
+      if (scr <= 0 || age <= 0) {
+        return {
+          score: '—',
+          unit: 'mL/min/1.73 m²',
+          label: 'Invalid inputs',
+          interpretation: 'Serum creatinine and age must both be > 0 for the Jelliffe equation.',
+          riskLevel: 'info' as const,
+        };
+      }
       // Jelliffe: (98 − 0.8×(age − 20)) / Scr ; ×0.9 if female (mL/min/1.73 m²)
       let crcl = (98 - 0.8 * (age - 20)) / scr;
       if (female) crcl *= 0.9;
+      if (!Number.isFinite(crcl)) {
+        return {
+          score: '—',
+          unit: 'mL/min/1.73 m²',
+          label: 'Invalid inputs',
+          interpretation: 'Inputs produce a non-finite Jelliffe creatinine clearance; check the entered values.',
+          riskLevel: 'info' as const,
+        };
+      }
       crcl = round(Math.max(crcl, 0), 1);
       const r = riskFromThresholds(crcl, [
         { max: 14, level: 'critical', label: 'Very low CrCl', interpretation: `Jelliffe CrCl ≈ ${crcl} mL/min/1.73 m² — kidney failure range if chronic; adjust renally cleared drugs carefully.` },
@@ -309,17 +345,45 @@ export const wave5NephroGiCalcs: Calculator[] = [
       ]),
     ],
     calculate(values) {
-      const scr = Math.max(num(values.scr, 1), 0.1);
+      const scr = num(values.scr, 1);
       const age = num(values.age, 55);
       const wt = num(values.weight, 70);
       const ht = num(values.height, 170);
       const female = str(values.sex, 'M') === 'F';
+      if (scr <= 0 || age <= 0 || wt <= 0 || ht <= 0) {
+        return {
+          score: '—',
+          unit: 'mL/min',
+          label: 'Invalid inputs',
+          interpretation: 'Serum creatinine, age, weight, and height must all be > 0 for the Wright equation.',
+          riskLevel: 'info' as const,
+        };
+      }
       const bsa = round(0.007184 * Math.pow(wt, 0.425) * Math.pow(ht, 0.725), 2); // DuBois (Wright 2001)
+      if (!Number.isFinite(bsa) || bsa <= 0) {
+        return {
+          score: '—',
+          unit: 'mL/min',
+          label: 'Invalid inputs',
+          interpretation: 'Inputs produce an invalid body surface area; check the entered values.',
+          riskLevel: 'info' as const,
+        };
+      }
       const scrUmol = scr * 88.4;
       // Wright 2001 Jaffe (without CK): (6580 − 38.8×age) × BSA × (1 − 0.168×sex) / Scr(µmol/L); sex=1 if female
       const sexTerm = female ? 1 : 0;
       const sexFactor = 1 - 0.168 * sexTerm;
-      const gfr = round(Math.max(((6580 - 38.8 * age) * bsa * sexFactor) / scrUmol, 0), 1);
+      const rawGfr = ((6580 - 38.8 * age) * bsa * sexFactor) / scrUmol;
+      if (!Number.isFinite(rawGfr)) {
+        return {
+          score: '—',
+          unit: 'mL/min',
+          label: 'Invalid inputs',
+          interpretation: 'Inputs produce a non-finite Wright estimate; check the entered values.',
+          riskLevel: 'info' as const,
+        };
+      }
+      const gfr = round(Math.max(rawGfr, 0), 1);
       const r = riskFromThresholds(gfr, [
         { max: 29, level: 'high', label: 'Low estimated GFR', interpretation: `Wright estimate ≈ ${gfr} mL/min — markedly reduced; renally adjust drugs and consider measured GFR for high-stakes dosing.` },
         { max: 59, level: 'moderate', label: 'Moderately reduced', interpretation: `Wright estimate ≈ ${gfr} mL/min — moderately reduced clearance.` },
@@ -935,7 +999,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
     id: 'expected-pco2-chronic-resp',
     name: 'Expected HCO₃ — Chronic Respiratory Acidosis',
     shortName: 'Chronic Resp Acid',
-    description: 'Expected bicarbonate compensation in chronic respiratory acidosis from PaCO₂.',
+    description: 'Compatibility route ID `expected-pco2-chronic-resp`; calculates expected bicarbonate compensation (HCO₃⁻), not expected PaCO₂.',
     category: 'nephrology',
     tags: ['copd', 'respiratory acidosis', 'compensation', 'hco3', 'abg'],
     whenToUse: 'COPD/chronic hypercapnia — is the HCO₃ rise appropriate for chronic CO₂ retention?',
@@ -1014,7 +1078,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
     id: 'expected-pco2-acute-resp',
     name: 'Expected pH / HCO₃ — Acute Respiratory Acidosis',
     shortName: 'Acute Resp Acid',
-    description: 'Expected acute bicarbonate and approximate pH change for an acute rise in PaCO₂.',
+    description: 'Compatibility route ID `expected-pco2-acute-resp`; calculates expected bicarbonate and pH for an acute rise in PaCO₂, not expected PaCO₂.',
     category: 'nephrology',
     tags: ['respiratory acidosis', 'acute', 'abg', 'pco2', 'ph'],
     whenToUse: 'Acute hypoventilation (opiates, airway, NM weakness) — is the ABG consistent with pure acute CO₂ retention?',

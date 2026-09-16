@@ -1104,11 +1104,11 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         { label: '2 — Both sequences correct', value: 2 },
       ], 2),
       selectInput('q8_clock', '9. Clock drawing (set time to ten to eleven: 10:50)', [
-        { label: '0 — Clock incorrect', value: 0 },
-        { label: '2 — Hour numbers placed correctly only', value: 2 },
-        { label: '2b — Hands placed correctly only (2 pts)', value: 2 },
-        { label: '4 — Hour numbers AND hands placed correctly (4 pts)', value: 4 },
-      ], 4),
+        { label: '0 — Clock incorrect', value: '0' },
+        { label: '2 — Hour numbers placed correctly only', value: 'hours_only' },
+        { label: '2b — Hands placed correctly only (2 pts)', value: 'hands_only' },
+        { label: '4 — Hour numbers AND hands placed correctly (4 pts)', value: 'both_correct' },
+      ], 'both_correct'),
       selectInput('q9_shapes', '10a. Place an X in the triangle', [
         { label: '0 — Triangle not selected', value: 0 },
         { label: '1 — X placed in the triangle', value: 1 },
@@ -1138,6 +1138,15 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.q1_day === undefined)) {
         score = Math.max(0, Math.min(30, num(values.score, 27)));
       } else {
+        const clockPoints: Record<string, number> = {
+          '0': 0,
+          hours_only: 2,
+          hands_only: 2,
+          both_correct: 4,
+          // Preserve compatibility with pre-MED-04 numeric API values.
+          '2': 2,
+          '4': 4,
+        };
         score =
           num(values.q1_day, 1) +
           num(values.q2_year, 1) +
@@ -1146,7 +1155,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
           num(values.q5_fluency, 3) +
           num(values.q6_recall, 4) +
           num(values.q7_backward, 2) +
-          num(values.q8_clock, 4) +
+          (clockPoints[String(values.q8_clock ?? 'both_correct')] ?? 4) +
           num(values.q9_shapes, 1) +
           num(values.q10_figures, 1) +
           num(values.q11_story, 4);
@@ -1487,6 +1496,11 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
           { label: 'Common bands', value: '0–6 recovered; 7–19 mild; 20–34 moderate; ≥35 severe' },
           { label: 'Response / remission (trials)', value: 'Often ≥50% reduction = response; ≤10 (or ≤6) = remission' },
         ],
+        alerts: suicideItem >= 4 ? [
+          'CRITICAL SAFETY ALERT: MADRS Item 10 rated ≥4 (frequent suicidal thoughts or active planning). Immediate safety evaluation required.',
+        ] : suicideItem >= 2 ? [
+          'MADRS Item 10 endorsed (weariness of life / passive suicidal thoughts). Clinical safety assessment recommended.',
+        ] : undefined,
       };
     },
     evidence: {
@@ -1649,7 +1663,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         score =
           num(values.hamd1, 2) +
           num(values.hamd2, 1) +
-          num(values.hamd3, 1) +
+          num(values.hamd3, 0) +
           num(values.hamd4, 1) +
           num(values.hamd5, 1) +
           num(values.hamd6, 1) +

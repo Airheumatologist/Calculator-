@@ -164,11 +164,11 @@ export const wave2PulmIdCalcs: Calculator[] = [
   },
   {
     id: 'hall-criteria',
-    name: 'Hall Criteria (IV → Oral Switch, Pneumonia)',
-    shortName: 'Hall Switch',
+    name: 'Halm Criteria (IV → Oral Switch)',
+    shortName: 'Halm Criteria',
     description: 'Clinical stability criteria supporting switch from IV to oral antibiotics in pneumonia.',
     category: 'infectious-disease',
-    tags: ['pneumonia', 'antibiotics', 'stewardship', 'iv to oral', 'hall'],
+    tags: ['pneumonia', 'antibiotics', 'stewardship', 'iv to oral', 'halm'],
     whenToUse: 'Hospitalized pneumonia patients on IV antibiotics being considered for oral step-down.',
     whyUse: 'Early switch when clinically stable shortens LOS without harming outcomes when criteria are met.',
     inputs: [
@@ -191,8 +191,8 @@ export const wave2PulmIdCalcs: Calculator[] = [
           score: met + (stable24 ? 1 : 0),
           label: stable24 ? 'Switch favorable (stable ~24 h)' : 'Clinical stability met',
           interpretation: stable24
-            ? 'All Hall stability criteria met and sustained ~24 h. Reasonable to switch IV → oral if oral agent covers pathogen and social factors allow.'
-            : 'All core stability criteria met. Confirm sustained stability (often ~24 h) and suitable oral option before switching.',
+            ? 'All Halm stability criteria met and sustained ~24 h. Reasonable to switch IV → oral if oral agent covers pathogen and social factors allow.'
+            : 'All core Halm stability criteria met. Confirm sustained stability (often ~24 h) and suitable oral option before switching.',
           riskLevel: 'low',
           details: [
             { label: 'Core criteria met', value: `${met} / 7` },
@@ -208,13 +208,13 @@ export const wave2PulmIdCalcs: Calculator[] = [
       return {
         score: met,
         label: 'Not yet stable for switch',
-        interpretation: `${met}/7 core Hall criteria met. Continue IV therapy and reassess; address unmet vital-sign or functional criteria.`,
+        interpretation: `${met}/7 core Halm criteria met. Continue IV therapy and reassess; address unmet vital-sign or functional criteria.`,
         riskLevel: met >= 5 ? 'moderate' : 'high',
         details: [{ label: 'Core criteria met', value: `${met} / 7` }],
       };
     },
     evidence: {
-      summary: 'Hall and related clinical stability criteria identify when CAP patients can safely transition from IV to oral antibiotics.',
+      summary: 'Halm and related clinical stability criteria identify when CAP patients can safely transition from IV to oral antibiotics.',
       formula: 'Temp≤37.8 + HR≤100 + RR≤24 + SBP≥90 + O₂ sat≥90% (or baseline) + normal mentation + can take PO',
       validation: 'Early switch strategies using stability criteria reduce length of stay without increasing failure in selected CAP patients.',
       references: [
@@ -292,7 +292,7 @@ export const wave2PulmIdCalcs: Calculator[] = [
       references: [
         {
           title: 'MuLBSTA score for predicting mortality in viral pneumonia',
-          citation: 'Guo L et al. related viral pneumonia scoring literature',
+          citation: 'Guo L, Wei D, Zhang X, et al. Front Microbiol. 2019;10:2752',
           year: 2019, pmid: '31849894',
           doi: '10.3389/fmicb.2019.02752', },
       ],
@@ -300,6 +300,62 @@ export const wave2PulmIdCalcs: Calculator[] = [
     nextSteps: [
       { condition: 'Score <12', actions: ['Supportive care', 'Antivirals when indicated', 'Ward care per overall status'] },
       { condition: 'Score ≥12', actions: ['Consider step-up monitoring or ICU', 'Cover bacterial coinfection if suspected', 'Serial labs and gas exchange'] },
+    ],
+  },
+  {
+    id: 'centor',
+    name: 'Centor Score (Modified / McIsaac)',
+    shortName: 'Centor/McIsaac',
+    description: 'Estimates likelihood of streptococcal pharyngitis to guide testing/antibiotics.',
+    category: 'infectious-disease',
+    tags: ['pharyngitis', 'strep', 'centor'],
+    whenToUse: 'Patients with sore throat to decide on rapid strep testing / culture.',
+    whyUse: 'Reduces unnecessary antibiotics for viral pharyngitis.',
+    inputs: [
+      yesNo('fever', 'History of fever or measured temp ≥38°C', 1),
+      yesNo('noCough', 'Absence of cough', 1),
+      yesNo('tender', 'Tender anterior cervical lymphadenopathy', 1, 'Palpate the anterior cervical chain; Yes if nodes are enlarged and tender (not posterior-chain or nontender).'),
+      yesNo('exudate', 'Tonsillar exudate or swelling', 1, 'Exudate or swelling of the tonsils on oropharynx exam (not isolated pharyngeal erythema).'),
+      selectInput('age', 'Age (McIsaac modification)', [
+        { label: '< 3 years (0 — testing rarely indicated)', value: 'under_3' },
+        { label: '3–14 years (+1)', value: 1 },
+        { label: '15–44 years (0)', value: 0 },
+        { label: '≥ 45 years (−1)', value: -1 },
+      ], 1),
+    ],
+    calculate(values) {
+      const isUnder3 = values.age === 'under_3';
+      const agePts = isUnder3 ? 0 : num(values.age);
+      const score =
+        (bool(values.fever) ? 1 : 0) +
+        (bool(values.noCough) ? 1 : 0) +
+        (bool(values.tender) ? 1 : 0) +
+        (bool(values.exudate) ? 1 : 0) +
+        agePts;
+      const clamped = Math.max(0, score);
+      const r = riskFromThresholds(clamped, [
+        { max: 1, level: 'low', label: 'Low risk (≤1)', interpretation: 'Strep unlikely (~1–10%). No testing or antibiotics generally needed.' },
+        { max: 3, level: 'moderate', label: 'Intermediate (2–3)', interpretation: 'Consider rapid antigen test or throat culture; treat if positive.' },
+        { max: 5, level: 'high', label: 'High (4–5)', interpretation: 'Higher strep probability (~50%+). Test and/or empiric treatment per local practice.' },
+      ]);
+      const interpretation = isUnder3
+        ? `Child <3 years: GAS pharyngitis is rare in this age group; testing (RADT/culture) and empiric antibiotics are rarely indicated per IDSA guidelines unless specific risk factors (e.g. sibling with GAS). ${r.interpretation}`
+        : r.interpretation;
+      return { score, ...r, interpretation };
+    },
+    evidence: {
+      summary: 'Centor criteria with McIsaac age adjustment estimate group A strep probability.',
+      formula: 'Fever + absence of cough + tender anterior cervical nodes + tonsillar exudate/swelling (+1 each); McIsaac age 3–14 (+1), 15–44 (0), ≥45 (−1). Age <3: age points 0 (testing rarely indicated).',
+      validation: 'Validated in adult and pediatric primary care / ED settings.',
+      references: [
+        { title: 'The diagnosis of strep throat in adults in the emergency room', citation: 'Centor RM et al. Med Decis Making. 1981', year: 1981, pmid: '6763125',
+          doi: '10.1177/0272989X8100100304', },
+        { title: 'The validity of a sore throat score in family practice', citation: 'McIsaac WJ et al. CMAJ. 2000', year: 2000, pmid: '11033707' },
+      ],
+    },
+    nextSteps: [
+      { condition: 'Score ≤1', actions: ['Supportive care', 'No antibiotics'] },
+      { condition: 'Score ≥2', actions: ['RADT ± culture', 'Treat confirmed GAS with penicillin/amoxicillin if no allergy'] },
     ],
   },
   {
