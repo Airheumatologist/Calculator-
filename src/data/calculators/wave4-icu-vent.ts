@@ -303,24 +303,21 @@ export const wave4IcuVentCalcs: Calculator[] = [
     id: 'ventilation-index',
     name: 'Ventilation Index (VI)',
     shortName: 'VI',
-    description: 'VI = [RR × (PIP − PEEP) × PaCO₂] / 1000 — intensity of mechanical ventilation for a given PaCO₂.',
+    description: 'VI = [RR × PIP × PaCO₂] / 1000 — intensity of mechanical ventilation for a given PaCO₂.',
     category: 'critical-care',
     tags: ['ventilation', 'vi', 'ards', 'pediatrics', 'icu'],
     whenToUse: 'Ventilated patients (classically pediatric) when grading ventilatory support intensity.',
-    whyUse: 'Integrates rate, driving pressure component (PIP−PEEP), and CO₂; higher VI = more intense support.',
+    whyUse: 'Integrates rate, peak airway pressure, and CO₂; higher VI = more intense support.',
     inputs: [
       numberInput('rr', 'Respiratory rate', { unit: '/min', min: 5, max: 80, defaultValue: 20 }),
       numberInput('pip', 'Peak inspiratory pressure (PIP)', { unit: 'cm H₂O', min: 5, max: 60, defaultValue: 25 }),
-      numberInput('peep', 'PEEP', { unit: 'cm H₂O', min: 0, max: 30, defaultValue: 5 }),
       numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 15, max: 120, defaultValue: 45 }),
     ],
     calculate(values) {
       const rr = num(values.rr, 20);
       const pip = num(values.pip, 25);
-      const peep = num(values.peep, 5);
       const paco2 = num(values.paco2, 45);
-      const delta = pip - peep;
-      const vi = round((rr * delta * paco2) / 1000, 1);
+      const vi = round((rr * pip * paco2) / 1000, 1);
       const r = riskFromThresholds(vi, [
         {
           max: 20,
@@ -352,14 +349,14 @@ export const wave4IcuVentCalcs: Calculator[] = [
         unit: 'VI',
         ...r,
         details: [
-          { label: 'PIP − PEEP', value: `${round(delta, 1)} cm H₂O` },
-          { label: 'Formula', value: 'VI = RR × (PIP − PEEP) × PaCO₂ / 1000' },
+          { label: 'PIP', value: `${round(pip, 1)} cm H₂O` },
+          { label: 'Formula', value: 'VI = RR × PIP × PaCO₂ / 1000' },
         ],
       };
     },
     evidence: {
-      summary: 'Ventilation index quantifies how much pressure-rate product is required to achieve a given PaCO₂.',
-      formula: 'VI = [RR × (PIP − PEEP) × PaCO₂] / 1000',
+      summary: 'Ventilation index quantifies how much peak-pressure-rate product is required to achieve a given PaCO₂.',
+      formula: 'VI = [RR × PIP × PaCO₂] / 1000',
       validation: 'Used in neonatal/pediatric respiratory failure literature; adult use is adjunctive to driving pressure and mechanical power concepts.',
       references: [
         {
@@ -1397,7 +1394,7 @@ export const wave4IcuVentCalcs: Calculator[] = [
           title: 'Early lactate clearance is associated with improved outcome in severe sepsis and septic shock',
           citation: 'Nguyen HB et al. Crit Care Med. 2004',
           year: 2004,
-          pmid: '15307513',
+          pmid: '15286537',
           doi: '10.1097/01.ccm.0000132904.35713.a7',
         },
         {
@@ -1698,8 +1695,9 @@ export const wave4IcuVentCalcs: Calculator[] = [
       selectInput('mental', 'AVPU mental status', [
         { label: 'N/A walker', value: 'na', description: 'Skip if walker or already tagged Immediate/Deceased' },
         { label: 'A or V (Alert / Voice)', value: 'av', description: 'A = eyes open, appropriate; V = responds to voice. If RR and pulse OK → Delayed (Yellow)' },
-        { label: 'P or U (Pain / Unresponsive)', value: 'pu', description: 'P = responds only to pain; U = unresponsive → Immediate (Red)' },
-      ], undefined, 'AVPU: Alert, Voice, Pain, Unresponsive. P or U = Immediate. A or V with RR 15–45 and a pulse = Delayed.'),
+        { label: 'Appropriate P (withdrawal to pain)', value: 'p', description: 'Appropriate withdrawal from pain with no posturing → Delayed (Yellow)' },
+        { label: 'Inappropriate P (posturing) or U (unresponsive)', value: 'pu', description: 'Inappropriate response to pain (posturing) or no response → Immediate (Red)' },
+      ], undefined, 'AVPU: Alert, Voice, Pain, Unresponsive. A, V, or appropriate P (withdrawal) with RR 15–45 and a pulse = Delayed; inappropriate P (posturing) or U = Immediate.'),
     ],
     calculate(values) {
       const ambulate = String(values.ambulate ?? 'no');
@@ -1726,7 +1724,7 @@ export const wave4IcuVentCalcs: Calculator[] = [
         },
         {
           label: 'Mental status (AVPU)',
-          value: mental === 'av' ? 'A/V' : mental === 'pu' ? 'P/U' : mental === 'na' ? 'N/A' : mental,
+          value: mental === 'av' ? 'A/V' : mental === 'p' ? 'Appropriate P' : mental === 'pu' ? 'Inappropriate P/U' : mental === 'na' ? 'N/A' : mental,
         },
       ];
 
@@ -1806,16 +1804,16 @@ export const wave4IcuVentCalcs: Calculator[] = [
         return {
           score: 'Immediate',
           label: 'Immediate (Red)',
-          interpretation: 'Postures to pain or unresponsive (P/U) — JumpSTART Immediate.',
+          interpretation: 'Inappropriate response to pain (posturing) or unresponsive — JumpSTART Immediate.',
           riskLevel: 'critical',
           details: branchDetails,
         };
       }
-      if (rr === 'ok' && perfusion === 'yes' && mental === 'av') {
+      if (rr === 'ok' && perfusion === 'yes' && (mental === 'av' || mental === 'p')) {
         return {
           score: 'Delayed',
           label: 'Delayed (Yellow)',
-          interpretation: 'Non-ambulatory but RR 15–45, pulse present, A/V mentation — JumpSTART Delayed.',
+          interpretation: 'Non-ambulatory but RR 15–45, pulse present, and A/V or appropriate P (withdrawal) mentation — JumpSTART Delayed.',
           riskLevel: 'moderate',
           details: branchDetails,
         };

@@ -1203,18 +1203,20 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       const brady = bool(values.bradycardia);
 
       const mildNoBronch = sev === 'mild' && !bronch;
+      const weightBasedStart = round(0.05 * wt, 2);
       let startMg: number;
       let riskLevel: 'moderate' | 'high' | 'critical';
       let label: string;
       if (wt < 50) {
-        const k = mildNoBronch ? 0.02 : 0.05;
-        startMg = clamp(round(k * wt, 2), 0.1, 2);
-      } else if (mildNoBronch) {
-        startMg = 1;
+        // Use the usual organophosphate poisoning pediatric start; do not cap
+        // larger children at 2 mg or substitute bradycardia dosing.
+        startMg = weightBasedStart;
+      } else if (sev === 'severe') {
+        startMg = clamp(round(weightBasedStart, 1), 2, 3);
       } else if (sev === 'moderate' || (sev === 'mild' && bronch)) {
-        startMg = 2;
+        startMg = clamp(round(weightBasedStart, 1), 1, 3);
       } else {
-        startMg = 3;
+        startMg = clamp(round(weightBasedStart, 1), 1, 3);
       }
 
       if (mildNoBronch) {
@@ -1235,7 +1237,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
 
       const interpretation =
         `Severity: ${sev}. Suggested educational initial atropine ≈${startMg} mg IV` +
-        (wt < 50 ? ' (pediatric weight-based 0.02–0.05 mg/kg, min 0.1 mg)' : ' (adult start often 1–3 mg)') +
+        (wt < 50 ? ' (weight-based 0.05 mg/kg)' : sev === 'severe' ? ' (adult severe start often 2–3 mg)' : ' (adult start often 1–3 mg)') +
         '. Double dose q3–5 min until secretions dry and ventilation improves (endpoint is drying secretions, not HR alone). Add pralidoxime/oxime per protocol for OP; benzos for seizures. Decontaminate and protect staff.';
 
       return {
@@ -1249,6 +1251,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
           { label: 'Weight', value: `${wt} kg` },
           { label: 'Bronchorrhea', value: bronch ? 'Yes' : 'No' },
           { label: 'Bradycardia', value: brady ? 'Yes' : 'No' },
+          { label: 'Typical weight-based start', value: `0.05 mg/kg ≈${weightBasedStart} mg` },
           { label: 'Titration note', value: 'May require very large cumulative doses in severe OP' },
         ],
         recommendations: [
@@ -1260,8 +1263,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Organophosphate toxicity causes cholinergic crisis (DUMBBELS/SLUDGE). Atropine is titrated to drying of secretions; oximes regenerate AChE for many OPs. Doses may be massive in severe poisoning.',
-      formula: 'Severity → initial atropine estimate; double q few minutes to effect',
+        'Organophosphate toxicity causes cholinergic crisis (DUMBBELS/SLUDGE). Atropine is titrated to drying of secretions; oximes regenerate AChE for many OPs. A typical initial dose is 0.05 mg/kg in children or 1–3 mg IV in adults (often 2–3 mg in severe adult poisoning), then doses are doubled to effect.',
+      formula: 'Typical initial atropine: 0.05 mg/kg in children; 1–3 mg in adults (severe often 2–3 mg); double q few minutes to effect',
       validation: 'Educational dosing — follow poison control / local chemical casualty protocols.',
       references: [
         {
@@ -2740,7 +2743,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
 
       const item19Answered = mode === 'survey' && !isMissingValue(values.sds19) && String(values.sds19).toLowerCase() !== 'unanswered';
       const item19Val = item19Answered ? Math.max(1, Math.min(4, num(values.sds19, 1))) : undefined;
-      const deathThoughts = item19Val !== undefined && item19Val >= 1;
+      const deathThoughts = item19Val !== undefined && item19Val >= 2;
 
       return {
         score: index,
@@ -2749,12 +2752,12 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         details: [
           { label: 'SDS Index', value: `${index} (= raw / 80 × 100)` },
           { label: 'Raw Total', value: `${raw} / 80` },
-          { label: 'Item 19 (death-related endorsement)', value: item19Val !== undefined ? `${item19Val}/4 — endorsed; assess suicide risk independently` : mode === 'survey' ? 'Not answered' : 'Unavailable from direct total' },
+          { label: 'Item 19 (death-related thoughts)', value: item19Val !== undefined ? `${item19Val}/4 — ${item19Val >= 2 ? 'endorsed; assess suicide risk independently' : 'a little of the time (normal pole)'}` : mode === 'survey' ? 'Not answered' : 'Unavailable from direct total' },
           { label: 'Index bands', value: '<50 Normal · 50–59 Mild · 60–69 Moderate · ≥70 Severe' },
           { label: 'Entry mode', value: mode === 'survey' ? '20-item questionnaire' : 'Direct override' },
         ],
         alerts: deathThoughts ? [
-          'Item 19 endorsed (thoughts that others would be better off if dead): Full suicide risk assessment recommended.'
+          'Item 19 endorsed at some of the time or more (thoughts that others would be better off if dead): Full suicide risk assessment recommended.'
         ] : undefined,
       };
     },
@@ -2945,31 +2948,31 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         }
       }
 
-      const index = round((raw / 80) * 100, 0);
-      const r = riskFromThresholds(raw, [
+      const index = round(raw * 1.25, 0);
+      const r = riskFromThresholds(index, [
         {
           max: 44,
           level: 'normal',
-          label: 'Normal / Below anxiety cutoff (Raw <45)',
-          interpretation: `Raw ${raw}/80 (SAS index ≈${index}). Within normal anxiety range on standard Zung SAS bands (raw <45, index <56).`,
+          label: 'Normal / Below anxiety cutoff (Index <45)',
+          interpretation: `Raw ${raw}/80 converts to SAS index ${index}. Within normal anxiety range on standard Zung SAS bands (index <45; raw <36).`,
         },
         {
           max: 59,
           level: 'low',
-          label: 'Mild to moderate anxiety (Raw 45–59)',
-          interpretation: `Raw ${raw}/80 (SAS index ≈${index}). Mild to moderate anxiety level. Consider cognitive-behavioral therapy, relaxation training, and lifestyle evaluation.`,
+          label: 'Mild to moderate anxiety (Index 45–59)',
+          interpretation: `Raw ${raw}/80 converts to SAS index ${index}. Mild to moderate anxiety level. Consider cognitive-behavioral therapy, relaxation training, and lifestyle evaluation.`,
         },
         {
           max: 74,
           level: 'moderate',
-          label: 'Marked to severe anxiety (Raw 60–74)',
-          interpretation: `Raw ${raw}/80 (SAS index ≈${index}). Marked to severe anxiety symptoms. Diagnostic clarification (GAD, panic disorder, agoraphobia) and active pharmacotherapy/psychotherapy indicated.`,
+          label: 'Marked to severe anxiety (Index 60–74)',
+          interpretation: `Raw ${raw}/80 converts to SAS index ${index}. Marked to severe anxiety symptoms. Diagnostic clarification (GAD, panic disorder, agoraphobia) and active pharmacotherapy/psychotherapy indicated.`,
         },
         {
           max: 80,
           level: 'critical',
-          label: 'Extreme anxiety level (Raw ≥75)',
-          interpretation: `Raw ${raw}/80 (SAS index ≈${index}). Extreme anxiety state. Comprehensive psychiatric care, crisis stabilization, and rule out panic disorder or acute distress.`,
+          label: 'Extreme anxiety level (Index ≥75)',
+          interpretation: `Raw ${raw}/80 converts to SAS index ${index}. Extreme anxiety state. Comprehensive psychiatric care, crisis stabilization, and rule out panic disorder or acute distress.`,
         },
       ]);
       return {
@@ -2978,16 +2981,16 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         ...r,
         details: [
           { label: 'Raw Total', value: `${raw} / 80` },
-          { label: 'SAS Index', value: `${index} (= raw / 80 × 100)` },
-          { label: 'Raw severity bands', value: '<45 Normal · 45–59 Mild–Mod · 60–74 Marked–Sev · ≥75 Extreme' },
+          { label: 'SAS Index', value: `${index} (= raw × 1.25)` },
+          { label: 'Index severity bands', value: '<45 Normal · 45–59 Mild–Mod · 60–74 Marked–Sev · ≥75 Extreme' },
           { label: 'Entry mode', value: mode === 'survey' ? '20-item questionnaire' : 'Direct override' },
         ],
       };
     },
     evidence: {
       summary:
-        'Zung Self-Rating Anxiety Scale (SAS): 20 items assessing affective and somatic symptoms of anxiety (each 1–4; 5 items reverse-scored). Raw score 20–80; SAS Index = (Raw / 80) × 100. Raw cutoff <45 reflects normal, 45–59 mild–moderate, 60–74 marked–severe, and ≥75 extreme.',
-      formula: 'Sum of 20 items (raw 20–80); SAS Index = (Raw / 80) × 100',
+        'Zung Self-Rating Anxiety Scale (SAS): 20 items assessing affective and somatic symptoms of anxiety (each 1–4; 5 items reverse-scored). Raw score 20–80; SAS Index = Raw × 1.25. Index <45 reflects normal, 45–59 mild–moderate, 60–74 marked–severe, and ≥75 extreme.',
+      formula: 'Sum of 20 items (raw 20–80); SAS Index = Raw × 1.25',
       validation: 'Zung WWK. Widely employed in psychopharmacology and clinical trials for quantifying subjective anxiety severity.',
       references: [
         {
@@ -3001,7 +3004,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     },
     nextSteps: [
       {
-        condition: 'Raw ≥45',
+        condition: 'SAS Index ≥45 (raw ≥36)',
         actions: [
           'Diagnostic evaluation for Generalized Anxiety Disorder, Panic Disorder, or Phobias',
           'Rule out medical precipitants (hyperthyroidism, arrhythmia, caffeine/stimulants, withdrawal)',

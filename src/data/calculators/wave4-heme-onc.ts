@@ -1800,7 +1800,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
     id: 'sle-dai',
     name: 'SLEDAI-2K (Lupus Disease Activity Index 2000)',
     shortName: 'SLEDAI-2K',
-    description: 'Assesses systemic lupus erythematosus disease activity across 24 clinical and laboratory descriptors over the prior 10–30 days.',
+    description: 'Assesses systemic lupus erythematosus disease activity across 24 clinical and laboratory descriptors present at the visit or during the preceding 10 days.',
     category: 'rheumatology',
     tags: ['sledai', 'sle', 'lupus', 'disease activity', 'autoimmune', 'rheumatology'],
     whenToUse: 'When evaluating SLE disease activity at diagnosis or monitoring response to immunosuppressive and biologic therapies.',
@@ -1819,7 +1819,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
       }),
 
       // Weight 8 Descriptors (Central Nervous System & Vascular)
-      yesNo('seizure', 'Seizure (recent onset past 10–30 days, exclude metabolic/drugs)', 8),
+      yesNo('seizure', 'Seizure (recent onset at visit or in preceding 10 days, exclude metabolic/drugs)', 8),
       yesNo('psychosis', 'Psychosis (severe disturbance in ability to function, hallucinations/delusions)', 8),
       yesNo('organicBrain', 'Organic brain syndrome (altered mental function, impaired memory/orientation)', 8),
       yesNo('visual', 'Visual disturbance (retinal cytoid bodies, optic neuritis, retinal hemorrhage)', 8),
@@ -1829,16 +1829,16 @@ export const wave4HemeOncCalcs: Calculator[] = [
       yesNo('vasculitis', 'Vasculitis (ulceration, gangrene, tender periungual infarcts, splinter hemorrhages)', 8),
 
       // Weight 4 Descriptors (Musculoskeletal & Renal)
-      yesNo('arthritis', 'Arthritis (>2 joints with pain and signs of inflammation: swelling/effusion)', 4),
+      yesNo('arthritis', 'Arthritis (≥2 joints with pain and signs of inflammation: swelling/effusion)', 4),
       yesNo('myositis', 'Myositis (proximal muscle weakness/ache with elevated CPK/aldolase or EMG)', 4),
       yesNo('urinaryCasts', 'Urinary casts (granular or red blood cell casts)', 4),
       yesNo('hematuria', 'Hematuria (>5 red blood cells/hpf, exclude stone, infection, menses)', 4),
-      yesNo('proteinuria', 'Proteinuria (>0.5 g/24h new onset or recent increase)', 4),
+      yesNo('proteinuria', 'Proteinuria (>0.5 g/24h; persistent/ongoing, new, or increased)', 4, 'Score if present at the visit or during the preceding 10 days. SLEDAI-2K permits persistent/ongoing proteinuria, not only new onset or recent increase.'),
       yesNo('pyuria', 'Pyuria (>5 white blood cells/hpf, exclude infection)', 4),
 
       // Weight 2 Descriptors (Mucocutaneous, Serosal & Immunologic)
-      yesNo('rash', 'New or recurrent inflammatory lupus rash (malar, maculopapular)', 2),
-      yesNo('alopecia', 'Alopecia (new abnormal patchy or diffuse hair loss)', 2),
+      yesNo('rash', 'Inflammatory lupus rash (malar or maculopapular; persistent, new, or recurrent)', 2, 'Score if present at the visit or during the preceding 10 days. SLEDAI-2K permits persistent/ongoing rash.'),
+      yesNo('alopecia', 'Alopecia (abnormal patchy or diffuse hair loss; persistent, new, or recurrent)', 2, 'Score if present at the visit or during the preceding 10 days. SLEDAI-2K permits persistent/ongoing alopecia.'),
       yesNo('mucosalUlcers', 'Mucosal ulcers (oral or nasal ulcerations)', 2),
       yesNo('pleurisy', 'Pleurisy (pleuritic chest pain with pleural rub, effusion, or thickening)', 2),
       yesNo('pericarditis', 'Pericarditis (pericardial pain with rub, effusion, or ECG confirmation)', 2),
@@ -1920,7 +1920,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'SLEDAI-2K scores 24 defined descriptors across 4 weight tiers (8, 4, 2, and 1 point) based on manifestation presence over the preceding 10–30 days. Validated cutoffs: 0 (no activity), 1–5 (mild), 6–10 (moderate), 11–19 (high), ≥20 (very high).',
+        'SLEDAI-2K scores 24 defined descriptors across 4 weight tiers (8, 4, 2, and 1 point) based on manifestation presence at the visit or during the preceding 10 days; persistent/ongoing rash, alopecia, and proteinuria count. Validated cutoffs: 0 (no activity), 1–5 (mild), 6–10 (moderate), 11–19 (high), ≥20 (very high).',
       formula: 'SLEDAI-2K = Σ (Weight × Descriptor)',
       validation: 'Gladman et al. updates to SLEDAI; widely used in SLE RCTs.',
       references: [

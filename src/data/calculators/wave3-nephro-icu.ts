@@ -1363,6 +1363,8 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       let factor = 0.16;
       let riskLevel: 'info' | 'moderate' | 'high' | 'critical' = 'info';
       // Clark 1995: mild 2.3–3.0 → 0.16; moderate 1.6–2.2 → 0.32; severe <1.5 → 0.64 mmol/kg (single IV dose).
+      // Map the small 1.5–1.59 mg/dL boundary gap to the moderate dose rather
+      // than exposing a patient to the severe dose at the default precision.
       if (phosMg > 3.0) {
         return {
           score: 0,
@@ -1376,7 +1378,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         severity = 'mild';
         factor = 0.16;
         riskLevel = 'info';
-      } else if (phosMg >= 1.6) {
+      } else if (phosMg >= 1.5) {
         severity = 'moderate';
         factor = 0.32;
         riskLevel = 'moderate';
@@ -1405,8 +1407,8 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Clark Crit Care Med 1995 (PMID 7664552): single IV phosphorus bolus — mild 2.3–3.0 mg/dL → 0.16 mmol/kg; moderate 1.6–2.2 mg/dL → 0.32 mmol/kg; severe <1.5 mg/dL → 0.64 mmol/kg. Not overlapping 0.08-start ranges.',
-      formula: 'Dose (mmol) = Clark factor × weight; 0.16 / 0.32 / 0.64 mmol/kg',
+      summary: 'Clark Crit Care Med 1995 (PMID 7664552): single IV phosphorus bolus — mild 2.3–3.0 mg/dL → 0.16 mmol/kg; moderate 1.6–2.2 mg/dL → 0.32 mmol/kg; severe <1.5 mg/dL → 0.64 mmol/kg. This calculator maps the small 1.5–1.59 mg/dL boundary gap to the moderate 0.32 mmol/kg dose rather than the severe dose.',
+      formula: 'Dose (mmol) = Clark factor × weight; 0.16 / 0.32 / 0.64 mmol/kg (1.5–1.59 mg/dL uses the moderate factor)',
       validation: 'Prospective trial in specialized nutrition support; product concentrations vary — verify local formulation and renal function.',
       references: [
         {

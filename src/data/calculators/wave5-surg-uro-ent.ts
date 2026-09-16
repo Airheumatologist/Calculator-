@@ -843,7 +843,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
     name: 'Rogers Postoperative VTE Risk Score',
     shortName: 'Rogers VTE',
     description:
-      'Simplified Rogers score for venous thromboembolism risk after general / vascular / thoracic surgery.',
+      'Rogers Table 5 weighted-factor subset for venous thromboembolism risk after general / vascular / thoracic surgery.',
     category: 'hematology',
     tags: ['rogers', 'vte', 'dvt', 'pe', 'postoperative', 'prophylaxis'],
     whenToUse:
@@ -852,34 +852,38 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
       'Rogers model was developed from Patient Safety in Surgery Study / NSQIP data for 30-day VTE.',
     inputs: [
       selectInput('opType', 'Operation type risk', [
-        { label: 'Lower risk general (e.g., hernia) (0)', value: 0, description: 'Hernia/breast-type general surgery typically lower band' },
-        { label: 'Respiratory / hemic (2–3 approx) (3)', value: 3, description: 'Pick closest NSQIP organ-system band (respiratory, hemic/lymphatic)' },
-        { label: 'Thoracoabdominal aneurysm / major vascular (4)', value: 4, description: 'Aortic / thoracoabdominal / major vascular — highest band' },
-        { label: 'Mouth/palate or endocrine higher band (2)', value: 2, description: 'Mouth/palate or endocrine procedures in the mid band' },
-      ], 0, 'Pick closest NSQIP organ-system band; hernia/breast typically lower; aortic/thoracoabdominal highest.'),
+        { label: 'Hernia / lower-risk general (2)', value: 2, description: 'Hernia or lower-risk general operation' },
+        { label: 'Respiratory / hemic (9)', value: 9, description: 'Respiratory or hemic/lymphatic operation' },
+        { label: 'Thoracoabdominal aneurysm / major vascular (7)', value: 7, description: 'Thoracoabdominal aneurysm, embolectomy/thrombectomy, venous reconstruction, or endovascular repair' },
+        { label: 'Mouth / palate (4)', value: 4, description: 'Mouth or palate operation' },
+      ], 2, 'Rogers Table 5 operation points: respiratory/hemic 9; thoracoabdominal aneurysm or major vascular 7; mouth/palate 4; hernia/lower-risk general 2.'),
       selectInput('asaWork', 'ASA class', [
         { label: 'ASA 1 (0)', value: 0 },
         { label: 'ASA 2 (1)', value: 1 },
-        { label: 'ASA 3 (2)', value: 2 },
-        { label: 'ASA 4–5 (3)', value: 3 },
+        { label: 'ASA 3–5 (2)', value: 2 },
       ]),
       yesNo('female', 'Female sex', 1),
       selectInput('workRvu', 'Work RVU band (complexity)', [
         { label: '<10 (0)', value: 0, description: 'Hernia / cholecystectomy often <10' },
-        { label: '10–17 (1)', value: 1 },
-        { label: '>17 (2)', value: 2, description: 'Colectomy often >17' },
+        { label: '10–17 (2)', value: 2 },
+        { label: '>17 (3)', value: 3, description: 'Colectomy often >17' },
       ], 0, 'CMS work RVU of the principal CPT (not total RVU); hernia/chole often <10, colectomy often >17.'),
       yesNo('disseminatedCancer', 'Disseminated cancer', 2,
         'Metastatic / disseminated solid cancer present at surgery (NSQIP definition).'),
       yesNo('chemo', 'Chemotherapy for malignancy within 30 days', 2,
         'Chemotherapy for cancer in the 30 days before surgery.'),
-      yesNo('preopSepsis', 'Preoperative sepsis / SIRS / septic shock', 2,
-        'SIRS, sepsis, or septic shock present at surgery (NSQIP definitions).'),
       yesNo('preopDyspnea', 'Dyspnea (moderate or at rest)', 1,
         'Dyspnea on moderate exertion (e.g. one flight of stairs) or at rest — not only with extreme effort.'),
       yesNo('ventilator', 'Ventilator dependent preop', 2,
         'Requiring mechanical ventilation at the time of surgery (not routine intraoperative intubation).'),
-      yesNo('maleGenital', 'Male genital system procedure', 2),
+      yesNo('transfusion', '≥4 units packed RBCs in the 72 hours before or during operation', 2,
+        'Rogers Table 5 transfusion factor: ≥4 units of packed red blood cells within 72 hours before or during the operation.'),
+      yesNo('emergency', 'Emergency operation', 1,
+        'Emergency rather than elective operation.'),
+      selectInput('woundClass', 'Wound class', [
+        { label: 'Clean (0)', value: 0 },
+        { label: 'Clean-contaminated (1)', value: 1 },
+      ], 0, 'Rogers Table 5 assigns 1 point for a clean-contaminated wound.'),
       selectInput('albumin', 'Albumin', [
         { label: '≥3.5 g/dL (0)', value: 0 },
         { label: '<3.5 g/dL (1)', value: 1 },
@@ -889,8 +893,8 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: '>1.0 mg/dL (1)', value: 1 },
       ]),
       selectInput('sodium', 'Sodium', [
-        { label: '>135 mEq/L (0)', value: 0 },
-        { label: '≤135 mEq/L (1)', value: 1 },
+        { label: '≤145 mEq/L (0)', value: 0 },
+        { label: '>145 mEq/L (2)', value: 2 },
       ]),
       selectInput('hct', 'Hematocrit', [
         { label: '>38% (0)', value: 0 },
@@ -905,10 +909,11 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         num(values.workRvu) +
         (bool(values.disseminatedCancer) ? 2 : 0) +
         (bool(values.chemo) ? 2 : 0) +
-        (bool(values.preopSepsis) ? 2 : 0) +
         (bool(values.preopDyspnea) ? 1 : 0) +
         (bool(values.ventilator) ? 2 : 0) +
-        (bool(values.maleGenital) ? 2 : 0) +
+        (bool(values.transfusion) ? 2 : 0) +
+        (bool(values.emergency) ? 1 : 0) +
+        num(values.woundClass) +
         num(values.albumin) +
         num(values.bilirubin) +
         num(values.sodium) +
@@ -918,34 +923,33 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
           max: 6,
           level: 'low',
           label: 'Lower Rogers-style VTE risk',
-          interpretation: `Simplified Rogers points ${score} (original low-risk band often ≤7 with ~0.1–0.5% VTE). Use institutional Caprini/Rogers protocol; early ambulation ± mechanical prophylaxis.`,
+          interpretation: `Rogers points ${score} (low-risk band <7; historical VTE risk ~0.1–0.5%). Use institutional Caprini/Rogers protocol; early ambulation ± mechanical prophylaxis.`,
         },
         {
           max: 10,
           level: 'moderate',
           label: 'Moderate Rogers-style VTE risk',
-          interpretation: `Points ${score}: intermediate band in original work (~1% VTE range). Pharmacologic prophylaxis usually indicated if bleeding risk acceptable.`,
+          interpretation: `Points ${score}: intermediate band (7–10; historical VTE risk ~0.5–1.5%). Pharmacologic prophylaxis usually indicated if bleeding risk acceptable.`,
         },
         {
           max: 50,
           level: 'high',
           label: 'Higher Rogers-style VTE risk',
-          interpretation: `Points ${score}: higher risk band (original high often ≥11 with ~1.5%+ VTE). Dual prophylaxis and extended duration per specialty guidelines.`,
+          interpretation: `Points ${score}: higher risk band (>10; historical VTE risk ~1.5%+). Dual prophylaxis and extended duration per specialty guidelines.`,
         },
       ]);
       return {
         score,
         ...r,
         details: [
-          { label: 'Note', value: 'Simplified subset of full Rogers variables' },
-          { label: 'Typical bands', value: 'Low ≤7; medium 8–10; high ≥11 (full score)' },
+          { label: 'Typical bands', value: 'Low <7; medium 7–10; high >10' },
         ],
       };
     },
     evidence: {
       summary:
-        'Rogers et al. developed a VTE risk score after general/vascular/thoracic surgery using procedure type, ASA, labs, cancer, sepsis, and other NSQIP variables.',
-      formula: 'Sum of weighted factors (this app uses a reduced educational item set)',
+        'Rogers Table 5 assigns points for operation type, ASA class, female sex, work RVU, cancer, chemotherapy, sodium, transfusion, ventilator dependence, wound class, hematocrit, bilirubin, dyspnea, albumin, and emergency operation.',
+      formula: 'Sum of Rogers Table 5 weighted factors represented in the inputs',
       validation:
         'Derived from >180,000 patients in PSS/NSQIP; prefer full score or Caprini per local policy.',
       references: [
@@ -964,7 +968,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
     ],
     pearls: [
       'Complementary to Caprini; different variable sets.',
-      'Cancer, sepsis, and high-complexity procedures drive risk.',
+      'Cancer, transfusion, emergency status, and high-complexity procedures drive risk.',
     ],
   },
 
@@ -1183,10 +1187,15 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: 'No (0)', value: 0, description: 'Pain did not migrate to the right lower quadrant' },
         { label: 'Yes (2)', value: 2, description: 'Pain started periumbilical or epigastric and later moved to the RLQ' },
       ], undefined, 'Classic migration: periumbilical/epigastric onset later localizing to the right lower quadrant.'),
-      selectInput('rlqPain', 'RLQ pain / tenderness intensity', [
-        { label: 'Mild (2)', value: 2, description: 'Mild RLQ tenderness — winces but allows full palpation' },
-        { label: 'Moderate / severe (3)', value: 3, description: 'Moderate or severe RLQ tenderness — limits palpation or patient prefers to lie still' },
-      ], 2, 'Intensity of right-lower-quadrant pain/tenderness (AAS has no “none” row — if no RLQ pain this score is not applicable).'),
+      selectInput('rlqPain', 'RLQ pain (patient-reported)', [
+        { label: 'No (0)', value: 0, description: 'No patient-reported pain localized to the right lower quadrant' },
+        { label: 'Yes (2)', value: 2, description: 'Patient-reported pain localized to the right lower quadrant' },
+      ], 0, 'Sammalkorpi Table 2 scores patient-reported RLQ pain +2. Score this separately from objective RLQ tenderness.'),
+      selectInput('rlqTenderness', 'RLQ tenderness on examination', [
+        { label: 'None (0)', value: 0, description: 'No objective tenderness in the right lower quadrant' },
+        { label: 'Present — men or women ≥50 years (+3)', value: 3, description: 'Objective RLQ tenderness in a man or woman aged ≥50 years' },
+        { label: 'Present — women 16–49 years (+1)', value: 1, description: 'Objective RLQ tenderness in a woman aged 16–49 years' },
+      ], 0, 'Sammalkorpi Table 2 scores objective RLQ tenderness +3 for men and women ≥50 years, or +1 for women aged 16–49 years. This is separate from RLQ pain.'),
       selectInput('guarding', 'Guarding / muscular defense', [
         { label: 'None (0)', value: 0, description: 'Soft abdomen; no voluntary or involuntary guarding' },
         { label: 'Mild (2)', value: 2, description: 'Voluntary guarding' },
@@ -1194,15 +1203,15 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
       ], 0, 'Mild = voluntary guarding; moderate/severe = involuntary muscular defense/rigidity.'),
       selectInput('wbcBand', 'WBC (×10⁹/L)', [
         { label: '<7.2 (0)', value: 0 },
-        { label: '7.2–10.9 (1)', value: 1 },
-        { label: '11.0–14.9 (2)', value: 2 },
-        { label: '≥15.0 (3)', value: 3 },
+        { label: '≥7.2 and <10.9 (1)', value: 1 },
+        { label: '≥10.9 and <14.0 (2)', value: 2 },
+        { label: '≥14.0 (3)', value: 3 },
       ]),
       selectInput('neutPct', 'Neutrophils %', [
         { label: '<62 (0)', value: 0 },
-        { label: '62–74.9 (1)', value: 1 },
-        { label: '75–83.9 (2)', value: 2 },
-        { label: '≥84 (3)', value: 3 },
+        { label: '≥62 and <75 (2)', value: 2 },
+        { label: '≥75 and <83 (3)', value: 3 },
+        { label: '≥83 (4)', value: 4 },
       ]),
       selectInput('symptomDuration', 'Symptom duration', [
         { label: '<24 hours', value: 'lt24', description: 'Onset to assessment <24 h — early CRP table (high CRP can score 5 or drop to 1)' },
@@ -1217,10 +1226,6 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         helpText:
           'Official AAS (mg/L). <24 h: <4 = 0; ≥4 and <11 = 2; ≥11 and <25 = 3; ≥25 and <83 = 5; ≥83 = 1. >24 h: <12 = 0; ≥12 and <152 = 2; ≥152 = 1 (high-CRP point drop).',
       }),
-      selectInput('sexAge', 'Sex / age adjustment', [
-        { label: 'Male or age ≥40 (0 extra)', value: 0 },
-        { label: 'Female age <40 (−3 if applying full AAS discount)', value: -3 },
-      ], 0, 'Young women receive negative points in full AAS to reduce false positives'),
     ],
     calculate(values) {
       const crp = num(values.crp);
@@ -1236,11 +1241,11 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
       const score =
         num(values.painMigration) +
         num(values.rlqPain) +
+        num(values.rlqTenderness) +
         num(values.guarding) +
         num(values.wbcBand) +
         num(values.neutPct) +
-        crpPts +
-        num(values.sexAge);
+        crpPts;
       const r = riskFromThresholds(score, [
         {
           max: 10,
@@ -1266,6 +1271,8 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         ...r,
         details: [
           { label: 'Typical cutoffs', value: '≤10 low; 11–15 intermediate; ≥16 high' },
+          { label: 'RLQ pain points', value: String(num(values.rlqPain)) },
+          { label: 'RLQ tenderness points', value: String(num(values.rlqTenderness)) },
           { label: 'Symptom duration', value: gt24 ? '>24 h' : '<24 h' },
           { label: 'CRP points', value: String(crpPts) },
         ],
@@ -1273,7 +1280,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Adult Appendicitis Score (Sammalkorpi et al.) combines migration, RLQ pain, guarding, WBC, neutrophils, duration-specific CRP (including the high-CRP point drop), with lower points for young women.',
+        'Adult Appendicitis Score (Sammalkorpi et al.) combines migration, separate RLQ pain and sex/age-specific RLQ tenderness, guarding, WBC, neutrophils, duration-specific CRP (including the high-CRP point drop), and the published probability cutoffs.',
       formula:
         'Sum of clinical + laboratory points. CRP <24 h: <4=0, 4–<11=2, 11–<25=3, 25–<83=5, ≥83=1. CRP >24 h: <12=0, 12–<152=2, ≥152=1.',
       validation:

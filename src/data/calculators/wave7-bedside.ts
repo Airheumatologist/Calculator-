@@ -44,9 +44,11 @@ function hacorGcsPts(gcs: number): number {
 }
 function hacorPfPts(pf: number): number {
   if (pf >= 201) return 0;
-  if (pf >= 151) return 2;
-  if (pf >= 101) return 3;
-  return 4;
+  if (pf >= 176) return 2;
+  if (pf >= 151) return 3;
+  if (pf >= 126) return 4;
+  if (pf >= 101) return 5;
+  return 6;
 }
 function hacorRrPts(rr: number): number {
   if (rr <= 30) return 0;
@@ -429,7 +431,7 @@ export const wave7BedsideCalcs: Calculator[] = [
       numberInput('hr', 'Heart rate', { unit: '/min', min: 40, max: 180, step: 1, defaultValue: 90, helpText: 'Use values after ~1 hour of optimized NIV (Duan 2017), not the pre-NIV gas. HACOR is for NIV — not already-intubated patients. HR ≥120 = 1 point.' }),
       numberInput('ph', 'Arterial pH', { min: 6.8, max: 7.6, step: 0.01, defaultValue: 7.36, helpText: 'Arterial pH after ~1 h NIV. ≥7.35 = 0; 7.30–7.34 = 2; 7.25–7.29 = 3; <7.25 = 4.' }),
       numberInput('gcs', 'Glasgow Coma Scale', { min: 3, max: 15, step: 1, defaultValue: 15, helpText: 'Total GCS 3–15. Not for already-intubated patients. 15 = 0; 13–14 = 2; 11–12 = 5; ≤10 = 10.' }),
-      numberInput('pf', 'PaO₂/FiO₂', { unit: 'mmHg', min: 40, max: 600, step: 1, defaultValue: 220, helpText: 'PaO₂/FiO₂ after ~1 h NIV. ≥201 = 0; 151–200 = 2; 101–150 = 3; ≤100 = 4.' }),
+      numberInput('pf', 'PaO₂/FiO₂', { unit: 'mmHg', min: 40, max: 600, step: 1, defaultValue: 220, helpText: 'PaO₂/FiO₂ after ~1 h NIV. ≥201 = 0; 176–200 = 2; 151–175 = 3; 126–150 = 4; 101–125 = 5; ≤100 = 6.' }),
       numberInput('rr', 'Respiratory rate', { unit: '/min', min: 8, max: 60, step: 1, defaultValue: 24, helpText: 'RR after ~1 h NIV. ≤30 = 0; 31–35 = 1; 36–40 = 2; 41–45 = 3; ≥46 = 4.' }),
     ],
     calculate(values) {
@@ -458,7 +460,7 @@ export const wave7BedsideCalcs: Calculator[] = [
           interpretation: `HACOR ${score}: ≥5 at 1–2 h predicted NIV failure (~50% in derivation). Reassess for intubation; treat reversible causes.`,
         },
         {
-          max: 18,
+          max: 25,
           level: 'critical',
           label: 'HACOR ≥8 — high NIV failure risk',
           interpretation: `HACOR ${score}: high likelihood of NIV failure. Prepare for intubation unless a rapidly reversible cause is being treated.`,
@@ -479,8 +481,8 @@ export const wave7BedsideCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'HACOR (Duan 2017): HR <120 = 0, ≥120 = 1; pH ≥7.35 = 0, 7.30–7.34 = 2, 7.25–7.29 = 3, <7.25 = 4; GCS 15 = 0, 13–14 = 2, 11–12 = 5, ≤10 = 10; PaO₂/FiO₂ ≥201 = 0, 151–200 = 2, 101–150 = 3, ≤100 = 4; RR ≤30 = 0, 31–35 = 1, 36–40 = 2, 41–45 = 3, ≥46 = 4. Range 0–18. ≥5 at 1 h predicts NIV failure.',
-      formula: 'Sum of HR + pH + GCS + P/F + RR category points (max 18)',
+        'HACOR (Duan 2017): HR <120 = 0, ≥120 = 1; pH ≥7.35 = 0, 7.30–7.34 = 2, 7.25–7.29 = 3, <7.25 = 4; GCS 15 = 0, 13–14 = 2, 11–12 = 5, ≤10 = 10; PaO₂/FiO₂ ≥201 = 0, 176–200 = 2, 151–175 = 3, 126–150 = 4, 101–125 = 5, ≤100 = 6; RR ≤30 = 0, 31–35 = 1, 36–40 = 2, 41–45 = 3, ≥46 = 4. Range 0–25. ≥5 at 1 h predicts NIV failure.',
+      formula: 'Sum of HR + pH + GCS + P/F + RR category points (max 25)',
       validation: 'Derived/validated in hypoxemic NIV (Intensive Care Med 2017); a related 2019 score applied HACOR in COPD NIV. Later updates add baseline variables.',
       references: [
         {

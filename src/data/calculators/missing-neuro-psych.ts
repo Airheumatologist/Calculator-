@@ -1040,25 +1040,32 @@ export const missingNeuroPsychCalcs: Calculator[] = [
       const score = keys.reduce((s, k) => s + (bool(values[k]) ? 1 : 0), 0);
       const r = riskFromThresholds(score, [
         {
-          max: 4,
+          max: 2,
           level: 'low',
-          label: 'Low (0–4)',
+          label: 'Low (0–2)',
           interpretation:
-            'Original banding: lower risk category. Still complete a full clinical suicide assessment if any concerning features (ideation, plan, intent, behavior).',
+            'Patterson action band: send home with follow-up when clinically appropriate. Still complete a full clinical suicide assessment if any concerning features (ideation, plan, intent, behavior).',
+        },
+        {
+          max: 4,
+          level: 'moderate',
+          label: 'Consider hospitalization (3–4)',
+          interpretation:
+            'Patterson action band: close follow-up and consider hospitalization; use a comprehensive assessment and clinical judgment for disposition.',
         },
         {
           max: 6,
-          level: 'moderate',
-          label: 'Moderate (5–6)',
+          level: 'high',
+          label: 'Strongly consider hospitalization (5–6)',
           interpretation:
-            'Original banding: intermediate risk — close follow-up; consider psychiatric consultation and safety planning.',
+            'Patterson action band: strongly consider hospitalization with urgent psychiatric evaluation and a protective environment as indicated.',
         },
         {
           max: 10,
-          level: 'high',
-          label: 'High (7–10)',
+          level: 'critical',
+          label: 'Hospitalize (7–10)',
           interpretation:
-            'Original banding: high risk — urgent psychiatric evaluation; consider protective environment / hospitalization criteria.',
+            'Patterson action band: hospitalize; provide immediate safety precautions and urgent psychiatric evaluation.',
         },
       ]);
       return {
@@ -1098,8 +1105,12 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         ],
       },
       {
+        condition: 'Score 3–4',
+        actions: ['Close follow-up', 'Collateral history', 'Consider hospitalization', 'Safety planning'],
+      },
+      {
         condition: 'Score ≥5',
-        actions: ['Safety plan', 'Close follow-up', 'Collateral history', 'Consider higher level of care'],
+        actions: ['Urgent psychiatric evaluation', 'Protective environment', 'Collateral history', 'Strongly consider hospitalization'],
       },
     ],
     pearls: [

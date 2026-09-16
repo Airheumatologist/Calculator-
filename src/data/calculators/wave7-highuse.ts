@@ -15,10 +15,10 @@ function logitProb(lp: number): number {
 // ─── MAGGIC integer tables (Pocock Eur Heart J 2013) ─────────────────────────
 function maggicEfPts(ef: number): number {
   if (ef >= 40) return 0;
-  if (ef >= 35) return 1;
-  if (ef >= 30) return 2;
-  if (ef >= 25) return 3;
-  if (ef >= 20) return 5;
+  if (ef >= 35) return 2;
+  if (ef >= 30) return 3;
+  if (ef >= 25) return 5;
+  if (ef >= 20) return 6;
   return 7;
 }
 
@@ -75,7 +75,7 @@ function maggicBmiPts(bmi: number): number {
   if (bmi < 15) return 6;
   if (bmi < 20) return 5;
   if (bmi < 25) return 3;
-  if (bmi < 30) return 1;
+  if (bmi < 30) return 2;
   return 0;
 }
 

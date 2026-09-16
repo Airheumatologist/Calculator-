@@ -68,11 +68,11 @@ export const wave7FillinsCalcs: Calculator[] = [
         0.3364 * (Math.log(acr) - 5.137) +
         -0.3444 * (alb - 3.997) +
         0.2604 * (phos - 3.916) +
-        -0.0494 * (hco3 - 25.57) +
-        -0.1474 * (ca - 9.355);
+        -0.07354 * (hco3 - 25.57) +
+        -0.2228 * (ca - 9.355);
       const expLp = Math.exp(Math.max(-20, Math.min(20, lp)));
-      const risk2 = round((1 - Math.pow(0.975, expLp)) * 100, 1);
-      const risk5 = round((1 - Math.pow(0.9365, expLp)) * 100, 1);
+      const risk2 = round((1 - Math.pow(0.9780, expLp)) * 100, 1);
+      const risk5 = round((1 - Math.pow(0.9301, expLp)) * 100, 1);
       const primary = risk5;
       let riskLevel: 'low' | 'moderate' | 'high' | 'critical' = 'low';
       let label = 'Lower 5-year kidney failure risk';
@@ -107,7 +107,7 @@ export const wave7FillinsCalcs: Calculator[] = [
           { label: 'ACR', value: `${acr} mg/g` },
           { label: 'Albumin / phosphorus', value: `${alb} g/dL / ${phos} mg/dL` },
           { label: 'Bicarbonate / calcium', value: `${hco3} mEq/L / ${ca} mg/dL` },
-          { label: 'Model', value: '8-variable Tangri (educational NA baseline S₀ 2y 0.975, 5y 0.9365)' },
+          { label: 'Model', value: '8-variable Tangri (educational NA baseline S₀ 2y 0.9780, 5y 0.9301)' },
         ],
         recommendations: [
           'Regional KFRE calibrations (North America vs non-NA) differ — use local/official tool when available for counseling.',
@@ -117,9 +117,9 @@ export const wave7FillinsCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        '8-variable KFRE adds serum albumin, phosphorus, bicarbonate, and calcium to age, sex, eGFR, and ln(ACR). Coefficients from Tangri 2011; variables centered on the development-cohort means. Educational NA-style baseline survivals 2-year 0.975 and 5-year 0.9365 (same S₀ family as the 4-variable tool in this app).',
+        '8-variable KFRE adds serum albumin, phosphorus, bicarbonate, and calcium to age, sex, eGFR, and ln(ACR). Coefficients from Tangri 2011; variables centered on the development-cohort means. Educational North America 8-variable baseline survivals are 2-year 0.9780 and 5-year 0.9301.',
       formula:
-        'LP = −0.1992(age/10−7.036)+0.1602(male−0.5642)−0.4919(eGFR/5−7.222)+0.3364(ln ACR−5.137)−0.3444(alb−3.997)+0.2604(phos−3.916)−0.0494(HCO₃−25.57)−0.1474(Ca−9.355); Risk = 1 − S₀^exp(LP)',
+        'LP = −0.1992(age/10−7.036)+0.1602(male−0.5642)−0.4919(eGFR/5−7.222)+0.3364(ln ACR−5.137)−0.3444(alb−3.997)+0.2604(phos−3.916)−0.07354(HCO₃−25.57)−0.2228(Ca−9.355); Risk = 1 − S₀^exp(LP)',
       validation:
         'Tangri et al. JAMA 2011 (development) and JAMA 2016 (multinational). 8-variable improvement over 4-variable is modest; 4-variable is more widely implemented. Educational — prefer official regional calculator for formal counseling.',
       references: [

@@ -1988,13 +1988,18 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         { label: 'No — cannot classify', value: 'no' },
       ]),
       selectInput('msu', 'MSU crystals in symptomatic joint/bursa (or tophus)', [
+        { label: 'Not positive / not done', value: 'no', points: 0 },
         { label: 'Yes — sufficient for classification', value: 'pos', points: 100 },
-        { label: 'Not done / negative', value: 'no', points: 0 },
-      ]),
+      ], 'no'),
       selectInput(
         'pattern',
         'Pattern of joint/bursa involvement (ever)',
         [
+          {
+            label: 'Other joint only / none of above',
+            value: 0,
+            description: 'Neither 1st MTP nor ankle/midfoot in a typical episode',
+          },
           {
             label: 'Ankle or midfoot (not 1st MTP)',
             value: 1,
@@ -2005,13 +2010,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
             value: 2,
             description: '1st MTP involved ever in a typical episode (use this even if ankle/midfoot also involved)',
           },
-          {
-            label: 'Other joint only / none of above',
-            value: 0,
-            description: 'Neither 1st MTP nor ankle/midfoot in a typical episode',
-          },
         ],
-        undefined,
+        0,
         'Ever, as part of a mono- or oligoarticular episode. If 1st MTP was involved, use the 2-point row even if ankle/midfoot also involved.',
       ),
       selectInput(
@@ -2051,14 +2051,15 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         'sua',
         'Serum urate (ideally off urate-lowering Rx; highest value)',
         [
+          { label: 'Not measured', value: 'not-measured', points: 0, description: 'No serum urate available — contributes 0 points' },
           { label: '<4 mg/dL (<0.24 mmol/L)', value: -4, description: 'Highest SUA <4 mg/dL — negative points' },
           { label: '4–<6 mg/dL (0.24–<0.36)', value: 0, description: 'Highest SUA 4 to <6 mg/dL' },
           { label: '6–<8 mg/dL (0.36–<0.48)', value: 2, description: 'Highest SUA 6 to <8 mg/dL' },
           { label: '8–<10 mg/dL (0.48–<0.60)', value: 3, description: 'Highest SUA 8 to <10 mg/dL' },
           { label: '≥10 mg/dL (≥0.60 mmol/L)', value: 4, description: 'Highest SUA ≥10 mg/dL' },
         ],
-        undefined,
-        'Use the highest serum urate, ideally off urate-lowering therapy. Urate can be normal during a flare — do not use a flare-only low value if a higher off-treatment value exists.',
+        'not-measured',
+        'Use the highest serum urate, ideally off urate-lowering therapy. Choose Not measured when no SUA is available; it contributes 0 points. Urate can be normal during a flare — do not use a flare-only low value if a higher off-treatment value exists.',
       ),
       selectInput('synovial', 'Synovial fluid MSU microscopy by trained examiner (if performed)', [
         { label: 'Not done', value: 'not-done' },
@@ -2093,7 +2094,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
       const charPts = num(values.charCount, 0);
       const timePts = num(values.timeCourse, 0);
       const tophusPts = num(values.tophus, 0);
-      const suaPts = num(values.sua, 0);
+      const suaPts = values.sua === 'not-measured' ? 0 : num(values.sua, 0);
       const synovialPoints: Record<string, number> = { 'not-done': 0, negative: -2, positive: 0 };
       const imagingPoints: Record<string, number> = {
         neither: 0,
@@ -2103,6 +2104,9 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
       };
       const synovialPts = synovialPoints[String(values.synovial)] ?? num(values.synovial, 0);
       const imagingPts = imagingPoints[String(values.imaging)] ?? num(values.imaging, 0);
+      const msuPositive = values.msu === 'pos';
+      const synovialPositive = values.synovial === 'positive';
+      const msuSufficient = msuPositive || synovialPositive;
       const additive =
         patternPts + charPts + timePts + tophusPts + suaPts + synovialPts + imagingPts;
       const domainDetails = (scored: boolean) => [
@@ -2132,16 +2136,25 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
           ],
         };
       }
-      if (values.msu === 'pos') {
+      if (msuSufficient) {
         return {
           score: 'MSU+',
           label: 'Classifies as gout (crystal proven)',
           interpretation:
-            'Presence of MSU crystals in a symptomatic joint/bursa (or tophus) is sufficient for classification as gout regardless of score.',
+            'Positive MSU crystals in a symptomatic joint/bursa (or tophus), including a positive trained-examiner synovial fluid result, is sufficient for classification as gout regardless of score.',
           riskLevel: 'high',
           details: [
             { label: 'Entry criterion', value: 'Met' },
-            { label: 'MSU crystals', value: 'Positive — sufficient' },
+            {
+              label: 'Crystal evidence',
+              value: [
+                msuPositive ? 'MSU crystal field positive' : null,
+                synovialPositive ? 'trained-examiner synovial microscopy positive' : null,
+              ]
+                .filter(Boolean)
+                .join('; ')
+                .concat(' — sufficient'),
+            },
             ...domainDetails(false),
           ],
           recommendations: ['Acute therapy as indicated', 'Long-term urate-lowering plan', 'Lifestyle counseling'],

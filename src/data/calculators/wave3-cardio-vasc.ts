@@ -992,7 +992,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
     name: 'Smith-Modified Sgarbossa Criteria',
     shortName: 'Modified Sgarbossa',
     description:
-      'Smith-modified Sgarbossa criteria for acute coronary occlusion in LBBB/paced rhythm using proportional discordant STE (ST/S ≤ −0.25).',
+      'Smith-modified Sgarbossa criteria for acute coronary occlusion in LBBB/paced rhythm using proportional discordant STE (ST ≥1 mm and ST/S ≤ −0.25).',
     category: 'cardiology',
     tags: ['sgarbossa', 'smith', 'lbbb', 'mi', 'ecg', 'stemi'],
     whenToUse: 'Suspected occlusion MI with LBBB or ventricular paced rhythm when original Sgarbossa is negative/indeterminate.',
@@ -1014,16 +1014,16 @@ export const wave3CardioVascCalcs: Calculator[] = [
         max: 50,
         step: 0.5,
         defaultValue: 20,
-        helpText: 'Absolute depth of the S wave in the same lead as the discordant STE (positive millimetres). Ratio uses −STE/S; ≤ −0.25 is excessive discordance.',
+        helpText: 'Absolute depth of the S wave in the same lead as the discordant STE (positive millimetres). Excessive discordance requires ST elevation ≥1 mm and rounded −STE/S ≤ −0.25.',
       }),
     ],
     calculate(values) {
       const st = num(values.stMm, 3);
       const s = Math.max(num(values.sMm, 20), 0.1);
       // ST is elevation (positive); S depth is positive magnitude of negative S.
-      // Ratio ST/S is negative when ST is opposite S: use −ST/S convention → ≤ −0.25 is positive.
+      // Ratio ST/S is negative when ST is opposite S: use −ST/S convention → rounded ≤ −0.25 is positive only with ST elevation ≥1 mm.
       const ratio = round(-st / s, 3);
-      const excessive = ratio <= -0.25;
+      const excessive = st >= 1 && ratio <= -0.25;
       const concordant =
         (bool(values.concordantSte) ? 1 : 0) + (bool(values.concordantStd) ? 1 : 0);
       const positive = bool(values.concordantSte) || bool(values.concordantStd) || excessive;
@@ -1040,7 +1040,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
           riskLevel: 'critical',
           details: [
             { label: 'ST/S ratio (modified)', value: String(ratio) },
-            { label: 'Excessive discordance', value: excessive ? 'Yes (≤ −0.25)' : 'No' },
+            { label: 'Excessive discordance', value: excessive ? 'Yes (ST ≥1 mm; ratio ≤ −0.25)' : 'No' },
             { label: 'ST elevation / S depth', value: `${st} / ${s} mm` },
           ],
           recommendations: [
@@ -1053,11 +1053,11 @@ export const wave3CardioVascCalcs: Calculator[] = [
       return {
         score: 0,
         label: 'Modified Sgarbossa negative',
-        interpretation: `No concordant STE/STD and ST/S ratio ${ratio} (threshold ≤ −0.25). Does not rule out occlusion MI — limited sensitivity; use clinical judgment, serial ECGs, ultrasound, troponin.`,
+        interpretation: `No concordant STE/STD and no excessive discordance (requires ST elevation ≥1 mm with rounded ST/S ratio ≤ −0.25; observed ratio ${ratio}). Does not rule out occlusion MI — limited sensitivity; use clinical judgment, serial ECGs, ultrasound, troponin.`,
         riskLevel: 'moderate',
         details: [
           { label: 'ST/S ratio', value: String(ratio) },
-          { label: 'Positive threshold', value: '≤ −0.25' },
+          { label: 'Positive threshold', value: 'ST ≥1 mm and rounded ST/S ≤ −0.25' },
         ],
         recommendations: [
           'Continue ACS evaluation',
@@ -1068,8 +1068,8 @@ export const wave3CardioVascCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Smith modification replaces absolute ≥5 mm discordant STE with ST/S ratio ≤ −0.25 (and retains concordant STE ≥1 mm and concordant STD ≥1 mm in V1–V3).',
-      formula: 'Positive if concordant STE≥1 mm OR concordant STD V1–V3 ≥1 mm OR discordant ST/S ≤ −0.25',
+        'Smith modification replaces absolute ≥5 mm discordant STE with discordant ST elevation ≥1 mm plus rounded ST/S ratio ≤ −0.25 (and retains concordant STE ≥1 mm and concordant STD ≥1 mm in V1–V3).',
+      formula: 'Positive if concordant STE≥1 mm OR concordant STD V1–V3 ≥1 mm OR (discordant ST elevation ≥1 mm AND rounded ST/S ≤ −0.25)',
       validation: 'Derived/validated by Smith et al.; improved sensitivity vs original Sgarbossa with preserved specificity.',
       references: [
         {
@@ -1774,7 +1774,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
           title: 'C-reactive protein and parental history improve global cardiovascular risk prediction: the Reynolds Risk Score for men',
           citation: 'Ridker PM et al. Circulation. 2008',
           year: 2008,
-          pmid: '18514522',
+          pmid: '18997194',
           doi: '10.1161/CIRCULATIONAHA.108.814251',
         },
       ],

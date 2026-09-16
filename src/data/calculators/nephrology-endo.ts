@@ -163,7 +163,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
           title: 'Expressing the Modification of Diet in Renal Disease Study equation for estimating GFR with standardized serum creatinine values',
           citation: 'Levey AS et al. Clin Chem. 2007 (IDMS-traceable 175 × Scr^−1.154 equation)',
           year: 2007,
-          pmid: '16705032',
+          pmid: '17332152',
           doi: '10.1373/clinchem.2006.077180',
         },
         {

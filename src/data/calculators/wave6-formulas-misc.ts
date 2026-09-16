@@ -1755,10 +1755,10 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
           interpretation: `Calculated pH ${phR} from HCO₃ ${hco3} / (0.03×PCO₂ ${pco2}). Ratio HCO₃:dissolved CO₂ = ${round(ratio, 2)}:1 (normal ~20:1). Severe acidemia territory.`,
         },
         {
-          max: 7.35,
+          max: 7.349,
           level: 'high',
           label: 'Acidemia (calc)',
-          interpretation: `Calculated pH ${phR}. Below normal (7.35–7.45). Ratio ${round(ratio, 2)} (normal ~20).`,
+          interpretation: `Calculated pH ${phR}. Below normal (<7.35). Ratio ${round(ratio, 2)} (normal ~20).`,
         },
         {
           max: 7.45,

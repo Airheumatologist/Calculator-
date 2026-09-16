@@ -470,7 +470,7 @@ export const wave5CardioCalcs: Calculator[] = [
     category: 'cardiology',
     tags: ['ecg', 'lvh', 'cornell', 'voltage'],
     whenToUse: 'ECG LVH assessment using Cornell voltage (often more sensitive than Sokolow–Lyon alone).',
-    whyUse: 'Sex-specific thresholds improve performance; Cornell product adds QRS duration.',
+    whyUse: 'Sex-specific thresholds improve performance; the LIFE Cornell product adds 6 mm for women before multiplying by QRS duration.',
     inputs: [
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M', description: 'Cornell voltage positive if R aVL + S V3 >28 mm' },
@@ -483,7 +483,7 @@ export const wave5CardioCalcs: Calculator[] = [
         min: 60,
         max: 200,
         defaultValue: 90,
-        helpText: 'Product = voltage(mm) × QRS(ms); threshold often >2440 mm·ms',
+        helpText: 'LIFE product = (voltage + 6 mm for women) × QRS(ms); threshold >2440 mm·ms',
         required: false,
       }),
     ],
@@ -496,8 +496,14 @@ export const wave5CardioCalcs: Calculator[] = [
       const voltage = round(rAvl + sV3, 1);
       const threshold = sex === 'F' ? 20 : 28;
       const voltagePos = voltage > threshold;
-      const product = qrsProvided ? round(voltage * qrs, 0) : null;
+      const productAdjustment = sex === 'F' ? 6 : 0;
+      const productVoltage = round(voltage + productAdjustment, 1);
+      const product = qrsProvided ? round(productVoltage * qrs, 0) : null;
       const productPos = product != null && product > 2440;
+      const productVoltageText =
+        sex === 'F'
+          ? `LIFE product voltage ${voltage} + 6 mm (women) = ${productVoltage} mm`
+          : `LIFE product voltage ${productVoltage} mm (no +6 mm adjustment for men)`;
 
       const positive = voltagePos || productPos;
       return {
@@ -506,19 +512,24 @@ export const wave5CardioCalcs: Calculator[] = [
         label: positive ? 'Meets Cornell LVH criteria' : 'Does not meet Cornell criteria',
         interpretation: voltagePos
           ? `Cornell voltage ${voltage} mm > ${threshold} mm (${sex === 'F' ? 'women' : 'men'}). LVH by Cornell voltage. ${
-              product != null ? `Cornell product ${product} mm·ms ${productPos ? '(also >2440)' : ''}.` : 'Cornell product not computed — QRS duration not entered.'
+              product != null
+                ? `${productVoltageText}; Cornell product ${product} mm·ms ${productPos ? '(also >2440)' : '(≤2440)'}.`
+                : `${productVoltageText}; Cornell product not computed — QRS duration not entered.`
             }`
           : productPos
-            ? `Voltage ${voltage} mm not above ${threshold} mm threshold, but Cornell product ${product} mm·ms >2440 — positive by product criterion.`
+            ? `Voltage ${voltage} mm not above ${threshold} mm threshold, but ${productVoltageText}; Cornell product ${product} mm·ms >2440 — positive by the LIFE product criterion.`
             : `Cornell voltage ${voltage} mm (≤${threshold} mm for ${sex === 'F' ? 'women' : 'men'}); ${
-                product != null ? `product ${product} mm·ms (≤2440)` : 'product not computed because QRS duration was not entered'
+                product != null
+                  ? `${productVoltageText}; product ${product} mm·ms (≤2440)`
+                  : `${productVoltageText}; product not computed because QRS duration was not entered`
               }. Criteria not met.`,
         riskLevel: positive ? 'moderate' : 'normal',
         details: [
           { label: 'R aVL + S V3', value: `${voltage} mm` },
           { label: 'Sex-specific cutoff', value: `>${threshold} mm` },
-          { label: 'Cornell product', value: product != null ? `${product} mm·ms` : 'Not calculated — QRS duration not entered' },
-          { label: 'Product criterion', value: product == null ? 'Not assessed' : productPos ? 'Positive (>2440)' : 'Negative' },
+          { label: 'LIFE product voltage', value: `${productVoltage} mm${sex === 'F' ? ' (includes +6 mm for women)' : ' (no +6 mm adjustment for men)'}` },
+          { label: 'Cornell product', value: product != null ? `${productVoltage} mm × ${qrs} ms = ${product} mm·ms` : 'Not calculated — QRS duration not entered' },
+          { label: 'Product criterion', value: product == null ? 'Not assessed' : productPos ? 'Positive (>2440)' : 'Negative (≤2440)' },
         ],
         recommendations: positive
           ? ['Correlate with imaging', 'Assess hypertensive heart disease / AS / HCM as indicated']
@@ -527,9 +538,9 @@ export const wave5CardioCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Cornell voltage: R aVL + S V3 >28 mm (men) or >20 mm (women) (Casale 1987: exceeds 2.8 / 2.0 mV). Cornell product (voltage × QRS ms) >2440 mm·ms is an alternate criterion.',
-      formula: 'Voltage = R_aVL + S_V3; + if >28 mm (♂) or >20 mm (♀); product = voltage × QRS_ms',
-      validation: 'Derived and validated against echo LV mass; used in hypertension trials (e.g. LIFE).',
+        'Cornell voltage: R aVL + S V3 >28 mm (men) or >20 mm (women) (Casale 1987: exceeds 2.8 / 2.0 mV). LIFE Cornell product: (R aVL + S V3 + 6 mm for women) × QRS duration >2440 mm·ms.',
+      formula: 'Voltage = R_aVL + S_V3; + if >28 mm (♂) or >20 mm (♀); LIFE product = (voltage + 6 mm if female) × QRS_ms; + if >2440 mm·ms',
+      validation: 'Voltage criteria were derived and validated against echo LV mass; the sex-adjusted Cornell product was used in the LIFE hypertension trial.',
       references: [
         {
           title: 'Improved sex-specific criteria of left ventricular hypertrophy for clinical and computer interpretation of electrocardiograms',
@@ -965,22 +976,21 @@ export const wave5CardioCalcs: Calculator[] = [
 
       if (drug === 'apix') {
         const criteria = [age >= 80, weight <= 60, cr >= 1.5].filter(Boolean).length;
-        if (crcl < 15 && ind === 'af') {
-          dose = 'Avoid / not recommended (CrCl <15)';
-          riskLevel = 'critical';
-          label = 'Apixaban — avoid (severe renal impairment)';
-          interpretation = 'Labeling generally avoids apixaban for AF when CrCl <15 mL/min; use alternative per specialist.';
-        } else if (ind === 'af') {
+        if (ind === 'af') {
+          const severeRenalCaution =
+            crcl < 15
+              ? ' CrCl <15 mL/min / ESRD: US ELIQUIS labeling provides dosing based on pharmacokinetic/pharmacodynamic data rather than clinical efficacy/safety trials in this population; this is not an automatic contraindication, but specialist review and current local labeling are advised.'
+              : '';
           if (criteria >= 2) {
             dose = '2.5 mg BID';
             label = 'Apixaban AF reduced dose';
-            interpretation = `Meets ≥2 ABC criteria (Age ≥80, Body weight ≤60 kg, Creatinine ≥1.5 mg/dL): reduced dose 2.5 mg BID. Criteria met: ${criteria}/3.`;
-            riskLevel = 'moderate';
+            interpretation = `Meets ≥2 ABC criteria (Age ≥80, Body weight ≤60 kg, Creatinine ≥1.5 mg/dL): reduced dose 2.5 mg BID. Criteria met: ${criteria}/3.${severeRenalCaution}`;
+            riskLevel = crcl < 15 ? 'high' : 'moderate';
           } else {
             dose = '5 mg BID';
             label = 'Apixaban AF standard dose';
-            interpretation = `Standard AF dose 5 mg BID (${criteria}/3 dose-reduction criteria). ESRD/dialysis dosing is specialized — verify label.`;
-            riskLevel = 'low';
+            interpretation = `Standard AF dose 5 mg BID (${criteria}/3 dose-reduction criteria).${severeRenalCaution}`;
+            riskLevel = crcl < 15 ? 'high' : 'low';
           }
         } else {
           // VTE simplified: 10 mg BID ×7d then 5 mg BID; reduction rules differ
@@ -1100,6 +1110,9 @@ export const wave5CardioCalcs: Calculator[] = [
           { label: 'CrCl', value: `${crcl} mL/min` },
           { label: 'Weight', value: `${weight} kg` },
           { label: 'Suggested label band', value: dose },
+          ...(drug === 'apix' && ind === 'af' && crcl < 15
+            ? [{ label: 'Severe renal context', value: 'US ELIQUIS dosing is PK/PD-based; clinical outcomes were not studied — specialist review advised' }]
+            : []),
         ],
         recommendations: [
           'Verify weight, interacting drugs (P-gp/CYP3A), and bleed risk',
@@ -1110,7 +1123,7 @@ export const wave5CardioCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'DOAC doses depend on CrCl (and for apixaban AF: age/weight/creatinine criteria). US edoxaban (Savaysa): AF avoid CrCl >95, 51–95 → 60 mg, 15–50 → 30 mg; VTE 60 mg after parenteral lead-in, reduce to 30 mg if CrCl 15–50, weight ≤60 kg, or selected P-gp inhibitors (no CrCl >95 ban). Labels differ by region.',
+        'DOAC doses depend on CrCl (and for apixaban AF: age/weight/creatinine criteria). For apixaban AF at CrCl <15 mL/min / ESRD, US ELIQUIS labeling does not impose a standalone avoid rule; dosing is based on PK/PD data because clinical efficacy/safety studies did not enroll this population, so specialist and local-label review are important. US edoxaban (Savaysa): AF avoid CrCl >95, 51–95 → 60 mg, 15–50 → 30 mg; VTE 60 mg after parenteral lead-in, reduce to 30 mg if CrCl 15–50, weight ≤60 kg, or selected P-gp inhibitors (no CrCl >95 ban). Labels differ by region.',
       formula:
         'Drug + indication + CrCl (± apixaban ABC; edoxaban VTE also weight ≤60 kg and selected P-gp inhibitors) → label dose band',
       validation: 'Educational synthesis of US/EU product characteristics; always confirm latest label.',
@@ -1127,6 +1140,12 @@ export const wave5CardioCalcs: Calculator[] = [
           citation: 'Daiichi Sankyo. US FDA label',
           year: 2015,
           url: 'https://www.accessdata.fda.gov/drugsatfda_docs/label/2015/206316s002lbl.pdf',
+        },
+        {
+          title: 'ELIQUIS (apixaban) prescribing information',
+          citation: 'Bristol-Myers Squibb / Pfizer. US FDA label',
+          year: 2026,
+          url: 'https://www.accessdata.fda.gov/drugsatfda_docs/label/2026/202155s042lbl.pdf',
         },
       ],
     },

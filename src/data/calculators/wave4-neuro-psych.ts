@@ -812,8 +812,9 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       let grade = 1;
       if (gcs >= 3 && gcs <= 6) grade = 5;
       else if (gcs >= 7 && gcs <= 12) grade = 4;
-      else if (gcs >= 13 && gcs <= 15 && deficit) grade = 3;
+      else if (gcs >= 13 && gcs <= 14 && deficit) grade = 3;
       else if (gcs >= 13 && gcs <= 14 && !deficit) grade = 2;
+      else if (gcs === 15 && deficit) grade = 2;
       else grade = 1; // GCS 15, no motor deficit
 
       const r = riskFromThresholds(grade, [
@@ -827,13 +828,13 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
           max: 2,
           level: 'moderate',
           label: 'WFNS II',
-          interpretation: 'GCS 13–14 without motor deficit. Intermediate severity — monitor for hydrocephalus and rebleeding.',
+          interpretation: 'GCS 13–14 without motor deficit or GCS 15 with major motor deficit. Intermediate severity — monitor for hydrocephalus and rebleeding.',
         },
         {
           max: 3,
           level: 'high',
           label: 'WFNS III',
-          interpretation: 'GCS 13–15 with major focal motor deficit (including GCS 15 with deficit). Higher morbidity; urgent aneurysm treatment and ICU care.',
+          interpretation: 'GCS 13–14 with major focal motor deficit. Higher morbidity; urgent aneurysm treatment and ICU care.',
         },
         {
           max: 4,
@@ -857,14 +858,14 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
           { label: 'Motor deficit', value: deficit ? 'Yes' : 'No' },
           {
             label: 'WFNS map',
-            value: 'I: GCS 15 no deficit · II: GCS 13–14 no deficit · III: GCS 13–15 with deficit · IV: GCS 7–12 · V: GCS 3–6',
+            value: 'I: GCS 15 no deficit · II: GCS 13–14 no deficit or GCS 15 with deficit · III: GCS 13–14 with deficit · IV: GCS 7–12 · V: GCS 3–6',
           },
         ],
       };
     },
     evidence: {
       summary:
-        'WFNS grades SAH: I = GCS 15 no motor deficit; II = GCS 13–14 no motor deficit; III = GCS 13–15 with motor deficit; IV = GCS 7–12; V = GCS 3–6.',
+        'WFNS grades SAH: I = GCS 15 no motor deficit; II = GCS 13–14 no motor deficit or GCS 15 with motor deficit; III = GCS 13–14 with motor deficit; IV = GCS 7–12; V = GCS 3–6.',
       formula: 'Map GCS + presence of major motor deficit → grade I–V',
       validation: 'International standard grading system for aSAH severity and outcome communication.',
       references: [
@@ -1726,9 +1727,9 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       ),
       yesNo(
         'f2',
-        'Feature 2 — Inattention (e.g., months backwards / digit span errors)',
+        'Feature 2 — Inattention (e.g., ≥2 months-backwards errors / digit span errors)',
         1,
-        'Say: “Name the months backwards from December to July.” Inattention = any error, a pause >15 s or perseveration, or cannot start.',
+        'Say: “Name the months backwards from December to July.” Inattention = ≥2 months-backwards errors, a pause >15 s or perseveration, or cannot start.',
       ),
       yesNo(
         'f3',

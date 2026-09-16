@@ -268,22 +268,24 @@ export const wave6EmPedsCalcs: Calculator[] = [
     id: 'nec-bell-stage',
     name: 'Bell Staging for Necrotizing Enterocolitis',
     shortName: 'Bell NEC',
-    description: 'Modified Bell staging (I–III) for suspected or confirmed neonatal necrotizing enterocolitis.',
+    description:
+      'Modified Bell staging (I–III) for suspected or confirmed neonatal necrotizing enterocolitis, with stage IIIA requiring advanced systemic illness plus an advanced intestinal or non-perforating radiographic finding.',
     category: 'pediatrics',
     tags: ['nec', 'bell stage', 'neonate', 'necrotizing enterocolitis', 'nicu'],
     whenToUse: 'Preterm or at-risk neonates with feeding intolerance, bloody stools, abdominal findings, or radiographic concern for NEC.',
-    whyUse: 'Standard communication framework for NEC severity guiding medical vs surgical pathways.',
+    whyUse:
+      'Standard communication framework for NEC severity guiding medical vs surgical pathways; severe systemic illness alone is flagged urgently but does not establish advanced NEC.',
     inputs: [
       selectInput('systemic', 'Systemic signs', [
         { label: 'None / mild temp or apnea instability only', value: 1, description: 'Bell I: temperature instability, mild apnea/bradycardia, or lethargy only — infant still reasonably stable' },
         { label: 'Moderate systemic illness (lethargy, apnea, bradycardia)', value: 2, description: 'Bell II: as I plus more prominent lethargy, recurrent apnea/bradycardia, mild metabolic acidosis, and/or thrombocytopenia' },
-        { label: 'Severe (shock, DIC, marked metabolic acidosis)', value: 3, description: 'Bell III: hypotension/shock, severe apnea, mixed respiratory + metabolic acidosis, DIC, neutropenia, or anuria' },
-      ], 1, 'Modified Bell (Walsh/Kliegman): pick the worst systemic band. I = temp instability/mild apnea; II = plus acidosis/thrombocytopenia; III = shock, DIC, marked acidosis.'),
+        { label: 'Advanced systemic findings (shock, DIC, marked metabolic acidosis)', value: 3, description: 'Advanced systemic illness used for Bell IIIA only when stage-II intestinal/radiographic findings are also present; isolated shock remains a separate critical alert.' },
+      ], 1, 'Modified Bell (Walsh/Kliegman): I = temp instability/mild apnea; II = plus acidosis/thrombocytopenia; IIIA requires advanced systemic findings plus an advanced intestinal or non-perforating radiographic finding; stage-II abdominal findings alone do not establish IIIA; IIIB requires perforation.'),
       selectInput('abdominal', 'Intestinal / abdominal signs', [
         { label: 'Gastric residuals, mild distension, or occult blood', value: 1, description: 'Bell I: increased residuals, mild distension, emesis, or occult blood in stool' },
         { label: 'Marked distension, absent bowel sounds, gross blood', value: 2, description: 'Bell II: marked distension, absent bowel sounds, abdominal tenderness, and/or grossly bloody stool' },
-        { label: 'Peritonitis, tenderness, mass, or discoloration of wall', value: 3, description: 'Bell III: peritonitis, marked tenderness and distension, abdominal-wall erythema/discoloration, or a palpable mass (often RLQ)' },
-      ], 1, 'Examine the abdomen and stool. Occult blood/mild distension = I; marked distension, silent belly, or gross blood = II; peritonitis/wall discoloration/mass = III.'),
+        { label: 'Severe intestinal findings (peritonitis, mass, or wall discoloration)', value: 3, description: 'Advanced intestinal findings: peritonitis, marked tenderness and distension, abdominal-wall erythema/discoloration, or a palpable mass (often RLQ); with advanced systemic findings, this can support Bell IIIA.' },
+      ], 1, 'Examine the abdomen and stool. Occult blood/mild distension = I; marked distension, silent belly, or gross blood = II; peritonitis/wall discoloration/mass is an advanced intestinal finding that can support IIIA only with advanced systemic illness.'),
       selectInput('imaging', 'Radiographic / imaging findings', [
         { label: 'Normal or mild ileus / intestinal dilation', value: 1, description: 'Bell I: normal film or mild ileus/dilation without pneumatosis' },
         { label: 'Pneumatosis intestinalis and/or portal venous gas', value: 2, description: 'Bell II: intramural gas (pneumatosis) and/or portal venous gas — definite NEC radiographically' },
@@ -296,30 +298,45 @@ export const wave6EmPedsCalcs: Calculator[] = [
       const sys = num(values.systemic, 1);
       const abd = num(values.abdominal, 1);
       const img = num(values.imaging, 1);
-      const stageNum = Math.max(sys, abd, img);
+      const perforation = bool(values.freeAir) || img === 3;
+      const stageIIBaseline = bool(values.definitePneumatosis) || abd >= 2 || img >= 2;
+      const advancedIIIABaseline = bool(values.definitePneumatosis) || abd >= 3 || img === 2;
+      const advancedSystemic = sys === 3;
       let stage = 'I';
       let label = 'Bell Stage I (suspected NEC)';
       let riskLevel: 'low' | 'moderate' | 'high' | 'critical' = 'moderate';
       let interpretation = '';
 
-      if (bool(values.freeAir) || img === 3) {
+      if (perforation) {
         stage = 'IIIB';
         label = 'Bell Stage IIIB (advanced NEC with perforation)';
         riskLevel = 'critical';
         interpretation =
           'Findings consistent with advanced NEC and perforation. Emergent surgical consultation, resuscitation, NPO, NG decompression, broad antibiotics, and operative/percutaneous management per surgeon.';
-      } else if (stageNum >= 3 || (bool(values.definitePneumatosis) && sys === 3)) {
+      } else if (advancedSystemic && advancedIIIABaseline) {
         stage = 'IIIA';
         label = 'Bell Stage IIIA (advanced NEC, intact bowel wall)';
         riskLevel = 'critical';
         interpretation =
-          'Advanced medical NEC pattern (severe systemic illness ± pneumatosis without free air). ICU-level care, medical NEC protocol, serial exams/films; surgery if deteriorates or perforation develops.';
-      } else if (bool(values.definitePneumatosis) || img === 2 || (stageNum === 2 && abd >= 2)) {
+          'Advanced medical NEC pattern: severe systemic illness is accompanied by an advanced intestinal or non-perforating radiographic finding without free air. ICU-level care, medical NEC protocol, serial exams/films; surgery if deterioration or perforation develops.';
+      } else if (advancedSystemic && stageIIBaseline) {
+        stage = 'II';
+        label = 'Bell Stage II (definite NEC; severe systemic illness without IIIA baseline)';
+        riskLevel = 'critical';
+        interpretation =
+          'Definite stage-II NEC pattern with severe systemic illness, but no advanced intestinal or non-perforating radiographic finding required for modified Bell IIIA. Treat as an urgent critical illness with NPO, decompression, antibiotics, ICU-level monitoring, and serial reassessment for progression.';
+      } else if (stageIIBaseline) {
         stage = 'II';
         label = 'Bell Stage II (definite NEC)';
         riskLevel = 'high';
         interpretation =
-          'Definite NEC (classic pneumatosis/portal gas or clear clinical–radiographic correlation). NPO, decompression, antibiotics, supportive care, serial assessment for progression.';
+          'Definite stage-II NEC pattern based on intestinal and/or radiographic findings (including pneumatosis or portal venous gas). NPO, decompression, antibiotics, supportive care, and serial assessment for progression.';
+      } else if (advancedSystemic) {
+        stage = 'I';
+        label = 'Bell Stage I (suspected NEC; severe systemic illness without stage-II baseline)';
+        riskLevel = 'critical';
+        interpretation =
+          'Severe systemic illness or shock is present, but without stage-II intestinal or radiographic findings this does not meet modified Bell IIIA. Resuscitate and evaluate shock or other causes urgently, continue NEC workup, and repeat abdominal/radiographic assessment; do not interpret the Bell stage as reassuring.';
       } else {
         stage = 'I';
         label = 'Bell Stage I (suspected NEC)';
@@ -338,18 +355,24 @@ export const wave6EmPedsCalcs: Calculator[] = [
           { label: 'Systemic domain', value: String(sys) },
           { label: 'Abdominal domain', value: String(abd) },
           { label: 'Imaging domain', value: String(img) },
+          { label: 'Stage-II intestinal/radiographic baseline', value: stageIIBaseline ? 'Yes' : 'No' },
+          { label: 'Advanced IIIA intestinal/radiographic finding', value: advancedIIIABaseline ? 'Yes' : 'No' },
+          { label: 'Advanced systemic findings', value: advancedSystemic ? 'Yes' : 'No' },
+          { label: 'Perforation', value: perforation ? 'Yes' : 'No' },
         ],
         recommendations: [
           'NPO + gastric decompression for ≥ stage II',
           'Blood culture and broad antibiotics covering bowel flora',
           'Surgical consult early for stage III or fixed loop/portal gas with instability',
+          'If advanced systemic findings occur without a stage-II baseline, resuscitate/evaluate shock independently and reassess for evolving NEC',
         ],
       };
     },
     evidence: {
       summary:
-        'Bell staging (modified) classifies NEC from suspected (I) to definite (II) to advanced (III A/B), integrating systemic, intestinal, and radiographic criteria.',
-      formula: 'Highest-domain severity + perforation flags → Stage I / II / IIIA / IIIB',
+        'Modified Bell staging classifies NEC from suspected (I) to definite (II) to advanced (III A/B) by integrating systemic, intestinal, and radiographic criteria. Stage IIIA requires advanced systemic findings plus an advanced intestinal or non-perforating radiographic finding; stage-II abdominal findings alone are not sufficient. IIIB requires perforation.',
+      formula:
+        'IIIB = perforation/free air; IIIA = advanced systemic findings + advanced intestinal/radiographic baseline (severe intestinal signs or pneumatosis/portal gas); II = stage-II baseline without IIIA/IIIB; otherwise I',
       validation: 'Widely used clinical-radiographic staging; guides communication more than precise prognosis alone.',
       references: [
         {
@@ -372,10 +395,12 @@ export const wave6EmPedsCalcs: Calculator[] = [
       { condition: 'Stage I', actions: ['Hold feeds', 'Close observation', 'Reimage if worsens'] },
       { condition: 'Stage II', actions: ['Medical NEC pathway', 'Antibiotics', 'Serial exams'] },
       { condition: 'Stage III', actions: ['Resuscitate', 'Surgical consult', 'OR/drain as indicated'] },
+      { condition: 'Severe systemic findings without stage-II baseline', actions: ['Resuscitate/evaluate shock', 'Continue NEC workup', 'Repeat abdominal/imaging assessment'] },
     ],
     pearls: [
       'Pneumatosis defines definite NEC for most practical purposes.',
       'Free air = IIIB until proven otherwise; do not wait for perfect labs.',
+      'Shock without an advanced intestinal or non-perforating radiographic finding is not, by itself, Bell IIIA; stage-II abdominal findings alone remain an urgent Stage II pattern.',
     ],
   },
 
@@ -385,11 +410,12 @@ export const wave6EmPedsCalcs: Calculator[] = [
     name: 'Pediatric SIRS Criteria',
     shortName: 'Peds SIRS',
     description:
-      'Age-adjusted systemic inflammatory response syndrome (SIRS) criteria used historically in pediatric sepsis definitions (Goldstein 2005 framework).',
+      'Age-adjusted systemic inflammatory response syndrome (SIRS) criteria used historically in pediatric sepsis definitions (Goldstein 2005 framework); newborns 0–7 days use WBC >34 only for the leukocyte threshold.',
     category: 'pediatrics',
     tags: ['sirs', 'pediatric sepsis', 'fever', 'tachycardia', 'goldstein'],
     whenToUse: 'Children with suspected infection when applying classic SIRS-based sepsis definitions (educational / legacy pathways).',
-    whyUse: 'SIRS ≥2 criteria (must include temp or leukocyte abnormality in many pediatric definitions) flagged systemic inflammation; note Phoenix/Sepsis-3 evolution in newer frameworks.',
+    whyUse:
+      'SIRS ≥2 criteria (must include temp or leukocyte abnormality in many pediatric definitions) flags systemic inflammation. The 0–7-day newborn band uses WBC >34 only, without a leukopenia <5 trigger; note Phoenix/Sepsis-3 evolution in newer frameworks.',
     inputs: [
       selectInput('ageBand', 'Age band (for vital thresholds)', [
         { label: 'Newborn 0 days to 1 week', value: '0-7d' },
@@ -398,11 +424,11 @@ export const wave6EmPedsCalcs: Calculator[] = [
         { label: 'Toddler/preschool 2–5 years', value: 'toddler' },
         { label: 'School age 6–12 years', value: 'school' },
         { label: 'Adolescent 13 to <18 years', value: 'teen' },
-      ], undefined, 'Goldstein 2005 age groups (no 1–5 year band). Map 12–23 mo to the infant band — do not use 2–5 y vitals. Newborn 0 d–1 wk: HR >180 or <100, RR >50, WBC >34. Neonate 1 wk–1 mo: HR >180 or <100, RR >40, WBC >19.5 or <5. Infant 1 mo–1 y (and 12–23 mo here): HR >180 or <90, RR >34, WBC >17.5 or <5. Toddler/preschool 2–5 y: HR >140, RR >22, WBC >15.5 or <6. School 6–12 y: HR >130, RR >18, WBC >13.5 or <4.5. Adolescent 13 to <18 y: HR >110, RR >14, WBC >11 or <4.5. Bradycardia is a CV SIRS criterion for children <1 year.'),
+      ], undefined, 'Goldstein 2005 age groups (no 1–5 year band). Map 12–23 mo to the infant band — do not use 2–5 y vitals. Newborn 0 d–1 wk: HR >180 or <100, RR >50, WBC >34 only (no <5 leukopenia criterion). Neonate 1 wk–1 mo: HR >180 or <100, RR >40, WBC >19.5 or <5. Infant 1 mo–1 y (and 12–23 mo here): HR >180 or <90, RR >34, WBC >17.5 or <5. Toddler/preschool 2–5 y: HR >140, RR >22, WBC >15.5 or <6. School 6–12 y: HR >130, RR >18, WBC >13.5 or <4.5. Adolescent 13 to <18 y: HR >110, RR >14, WBC >11 or <4.5. Bradycardia is a CV SIRS criterion for children <1 year.'),
       numberInput('temp', 'Core temperature', { unit: '°C', min: 30, max: 43, step: 0.1, defaultValue: 38.5, helpText: 'Abnormal if >38.5°C or <36.0°C (Goldstein). Pediatric SIRS usually requires temperature or WBC abnormality among the ≥2 criteria.' }),
       numberInput('hr', 'Heart rate', { unit: 'bpm', min: 40, max: 280, defaultValue: 140, helpText: 'Tachycardia if above the age-band cutoff. Bradycardia counts as the CV criterion for children <1 year (newborn/neonate <100; infant including 12–23 mo <90), not only 0–30 days.' }),
       numberInput('rr', 'Respiratory rate', { unit: '/min', min: 5, max: 120, defaultValue: 30, helpText: 'Tachypnea if above the age-band cutoff. Mechanical ventilation for an acute process also fulfills the respiratory criterion.' }),
-      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 100, step: 0.1, defaultValue: 14, helpText: 'Leukocyte criterion: WBC above or below the age-band range, or bands >10%.' }),
+      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 100, step: 0.1, defaultValue: 14, helpText: 'Leukocyte criterion: WBC above or below the age-band range, or bands >10%. For newborns 0–7 days, only WBC >34 counts; WBC <5 does not.' }),
       yesNo('bands', 'Immature neutrophils (bands) >10%', 0),
       yesNo('mechVent', 'Mechanical ventilation for acute process (counts as respiratory criterion)', 1),
     ],
@@ -413,8 +439,8 @@ export const wave6EmPedsCalcs: Calculator[] = [
       const rr = num(values.rr, 30);
       const wbc = num(values.wbc, 14);
       // Goldstein 2005 Table 3. Infant band includes 12–23 mo (no official 1–5 y group).
-      const cut: Record<string, { hr: number; hrLo: number | null; rr: number; wbcLo: number; wbcHi: number }> = {
-        '0-7d': { hr: 180, hrLo: 100, rr: 50, wbcLo: 5, wbcHi: 34 },
+      const cut: Record<string, { hr: number; hrLo: number | null; rr: number; wbcLo: number | null; wbcHi: number }> = {
+        '0-7d': { hr: 180, hrLo: 100, rr: 50, wbcLo: null, wbcHi: 34 },
         '8-30d': { hr: 180, hrLo: 100, rr: 40, wbcLo: 5, wbcHi: 19.5 },
         infant: { hr: 180, hrLo: 90, rr: 34, wbcLo: 5, wbcHi: 17.5 },
         toddler: { hr: 140, hrLo: null, rr: 22, wbcLo: 6, wbcHi: 15.5 },
@@ -426,7 +452,12 @@ export const wave6EmPedsCalcs: Calculator[] = [
       const hrAbn = hr > c.hr;
       const bradycardia = c.hrLo != null && hr < c.hrLo;
       const rrAbn = rr > c.rr || bool(values.mechVent);
-      const wbcAbn = wbc > c.wbcHi || wbc < c.wbcLo || bool(values.bands);
+      const wbcAbn = wbc > c.wbcHi || (c.wbcLo != null && wbc < c.wbcLo) || bool(values.bands);
+      const wbcCutoff = c.wbcLo != null ? `>${c.wbcHi} or <${c.wbcLo} ×10³/µL` : `>${c.wbcHi} ×10³/µL only`;
+      const newbornWbcNote =
+        age === '0-7d'
+          ? ' For newborns 0–7 days, WBC <5 does not count as the leukocyte SIRS criterion; only WBC >34 (or bands >10%) does.'
+          : '';
       let criteria = 0;
       if (tempAbn) criteria++;
       if (hrAbn || bradycardia) criteria++;
@@ -438,21 +469,21 @@ export const wave6EmPedsCalcs: Calculator[] = [
           max: 1,
           level: 'low',
           label: 'SIRS criteria not met',
-          interpretation: `${criteria}/4 classic SIRS domains abnormal. Pediatric SIRS typically requires ≥2 criteria with at least abnormal temperature or leukocyte count.`,
+          interpretation: `${criteria}/4 classic SIRS domains abnormal. Pediatric SIRS typically requires ≥2 criteria with at least abnormal temperature or leukocyte count.${newbornWbcNote}`,
         },
         {
           max: 2,
           level: 'moderate',
           label: sirs ? 'SIRS present (2 criteria)' : '2 domains but missing temp/WBC rule',
           interpretation: sirs
-            ? `SIRS criteria met (${criteria}/4). With suspected infection this was historically sepsis; evaluate organ dysfunction (SOFA/pSOFA/Phoenix) for severity.`
-            : `Two domains abnormal but pediatric definitions often require temperature or WBC abnormality — confirm full criteria.`,
+            ? `SIRS criteria met (${criteria}/4). With suspected infection this was historically sepsis; evaluate organ dysfunction (SOFA/pSOFA/Phoenix) for severity.${newbornWbcNote}`
+            : `Two domains abnormal but pediatric definitions often require temperature or WBC abnormality — confirm full criteria.${newbornWbcNote}`,
         },
         {
           max: 4,
           level: 'high',
           label: 'SIRS present (≥3 criteria)',
-          interpretation: `SIRS with ${criteria}/4 domains. Assess perfusion, lactate, mental status, and infection source; apply modern pediatric sepsis criteria (e.g., Phoenix) for organ dysfunction.`,
+          interpretation: `SIRS with ${criteria}/4 domains. Assess perfusion, lactate, mental status, and infection source; apply modern pediatric sepsis criteria (e.g., Phoenix) for organ dysfunction.${newbornWbcNote}`,
         },
       ]);
       return {
@@ -469,6 +500,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
           { label: 'Bands >10%', value: bool(values.bands) ? 'Yes' : 'No' },
           { label: 'Age HR cutoff used', value: c.hrLo != null ? `>${c.hr} or <${c.hrLo} bpm` : `>${c.hr} bpm` },
           { label: 'Age RR cutoff used', value: `>${c.rr}/min` },
+          { label: 'Age WBC cutoff used', value: wbcCutoff },
         ],
         recommendations: [
           'SIRS alone ≠ need for antibiotics — integrate infection likelihood',
@@ -479,8 +511,8 @@ export const wave6EmPedsCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Goldstein 2005 pediatric sepsis consensus age groups: newborn 0 d–1 wk; neonate 1 wk–1 mo; infant 1 mo–1 y; toddler/preschool 2–5 y; school age 6–12 y; adolescent 13 to <18 y (no 1–5 year band). 12–23 month olds are mapped to the infant vital band here. Bradycardia is a CV SIRS criterion for children <1 year. Sepsis = SIRS + infection; newer Phoenix criteria shift away from SIRS-centric definitions.',
-      formula: '≥2 of: temp, HR, RR/vent, WBC/bands (with temp or WBC required)',
+        'Goldstein 2005 pediatric sepsis consensus age groups: newborn 0 d–1 wk; neonate 1 wk–1 mo; infant 1 mo–1 y; toddler/preschool 2–5 y; school age 6–12 y; adolescent 13 to <18 y (no 1–5 year band). 12–23 month olds are mapped to the infant vital band here. For newborns 0–7 days, the WBC threshold is >34 only; leukopenia <5 is not a SIRS trigger in that table. Bradycardia is a CV SIRS criterion for children <1 year. Sepsis = SIRS + infection; newer Phoenix criteria shift away from SIRS-centric definitions.',
+      formula: '≥2 of: temp, HR, RR/vent, WBC/bands (with temp or WBC required); newborn 0–7 d WBC criterion is >34 only',
       validation: 'Historical standard; sensitive but nonspecific. Supplemented/superseded in research by organ-dysfunction scores.',
       references: [
         {
@@ -499,6 +531,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
     pearls: [
       'Fever from viral illness commonly meets SIRS — clinical context is essential.',
       'Bradycardia counts toward the CV SIRS criterion for children <1 year (not only 0–30 days).',
+      'For newborns 0–7 days, WBC <5 is not a leukocyte SIRS trigger; use WBC >34 only (or bands >10%).',
     ],
   },
 

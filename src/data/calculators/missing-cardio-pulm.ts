@@ -504,7 +504,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
       const score =
         agePts +
         num(values.sex) +
-        (bool(values.riskCad) ? 4 : 0) +
+        (bool(values.riskCad) && age >= 18 && age <= 50 ? 4 : 0) +
         (bool(values.diaphoresis) ? 3 : 0) +
         (bool(values.radiates) ? 5 : 0) +
         (bool(values.pleuritic) ? -4 : 0) +

@@ -541,7 +541,7 @@ export const wave3PedsObCalcs: Calculator[] = [
     whyUse: 'Illustrates how physiology + perinatal factors stratify neonatal mortality risk.',
     inputs: [
       numberInput('map', 'Lowest mean arterial pressure', { unit: 'mmHg', min: 10, max: 80, defaultValue: 35, helpText: 'Worst (lowest) MAP in the first 12 hours of life (SNAP-II epoch).' }),
-      numberInput('temp', 'Lowest temperature', { unit: '°C', min: 30, max: 40, step: 0.1, defaultValue: 36.6, helpText: 'Worst (lowest) temperature in the first 12 hours of life. SNAP-II: <35.5 °C = 15; 35.5–36.5 °C = 8; >36.5 °C = 0.' }),
+      numberInput('temp', 'Lowest temperature', { unit: '°C', min: 30, max: 40, step: 0.1, defaultValue: 36.6, helpText: 'Worst (lowest) temperature in the first 12 hours of life. UI remains in °C; official SNAP-II bands are >96 °F (>35.6 °C) = 0, 95–96 °F (35.0–35.6 °C) = 8, and <95 °F (<35.0 °C) = 15.' }),
       numberInput('pao2', 'Lowest PaO₂', { unit: 'mmHg', min: 20, max: 500, defaultValue: 80, helpText: 'Paired with FiO₂ from the same blood gas. SNAP-II oxygenation is PO₂ (mmHg) ÷ FiO₂ as percent (e.g. 80 mmHg on 40% O₂ = 2.0), not the ARDS P/F in mmHg.' }),
       numberInput('fio2', 'FiO₂ at that PaO₂', { unit: 'fraction', min: 0.21, max: 1, step: 0.01, defaultValue: 0.4, helpText: 'Enter as a fraction (0.21–1.00). SNAP-II ratio = PaO₂ / (FiO₂ × 100). Example: PaO₂ 80 on FiO₂ 0.40 → 80/40 = 2.0.' }),
       numberInput('ph', 'Lowest serum pH', { min: 6.5, max: 7.6, step: 0.01, defaultValue: 7.25, helpText: 'Worst (lowest) pH in the first 12 hours of life.' }),
@@ -561,6 +561,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       let pts = 0;
       const map = num(values.map, 35);
       const temp = num(values.temp, 36.6);
+      const tempF = temp * 9 / 5 + 32;
       const pao2 = num(values.pao2, 80);
       const fio2Frac = Math.min(1, Math.max(0.21, num(values.fio2, 0.4)));
       const snapO2 = pao2 / (fio2Frac * 100);
@@ -574,8 +575,10 @@ export const wave3PedsObCalcs: Calculator[] = [
       if (map < 20) pts += 19;
       else if (map < 30) pts += 9;
 
-      if (temp < 35.5) pts += 15;
-      else if (temp <= 36.5) pts += 8;
+      // SNAP-II publishes temperature in Fahrenheit: >96°F = 0, 95–96°F = 8,
+      // and <95°F = 15. Convert the Celsius UI value before applying bands.
+      if (tempF < 95) pts += 15;
+      else if (tempF <= 96) pts += 8;
 
       if (snapO2 < 0.3) pts += 28;
       else if (snapO2 < 1.0) pts += 16;
@@ -623,7 +626,7 @@ export const wave3PedsObCalcs: Calculator[] = [
           ' Educational approximation of SNAPPE-II domains only — not the validated official calculator.',
         riskLevel: r.riskLevel,
         details: [
-          { label: 'MAP / temp / SNAP-II PO₂/FiO₂', value: `${map} / ${temp}°C / ${round(snapO2, 2)}` },
+          { label: 'MAP / temp / SNAP-II PO₂/FiO₂', value: `${map} / ${temp}°C (${round(tempF, 1)}°F) / ${round(snapO2, 2)}` },
           { label: 'pH / UOP', value: `${ph} / ${uop} mL/kg/h` },
           { label: 'BW / Apgar5 / SGA', value: `${bw} g / ${apgar5} / ${sga ? 'yes' : 'no'}` },
         ],
@@ -631,8 +634,8 @@ export const wave3PedsObCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'SNAPPE-II combines SNAP-II physiology (first 12 h) with birth weight, SGA, and low 5-min Apgar. SNAP-II oxygenation is lowest PO₂ (mmHg) / FiO₂ (as percent): <0.3 = 28, 0.3–0.99 = 16, 1.0–2.49 = 5. Temperature: <35.5 °C = 15, 35.5–36.5 °C = 8. This app uses those official SNAP-II bands plus educational perinatal add-ons.',
-      formula: 'SNAP-II: MAP <20=19, 20–29=9; temp <35.5=15, 35.5–36.5=8; PO₂/FiO₂% <0.3=28, 0.3–0.99=16, 1.0–2.49=5; pH <7.10=16, 7.10–7.19=7; multiple seizures=19; UOP <0.1=18, 0.1–0.9=5. SNAPPE-II adds BW <750=17, 750–999=10; SGA=12; Apgar5 <7=18.',
+        'SNAPPE-II combines SNAP-II physiology (first 12 h) with birth weight, SGA, and low 5-min Apgar. SNAP-II oxygenation is lowest PO₂ (mmHg) / FiO₂ (as percent): <0.3 = 28, 0.3–0.99 = 16, 1.0–2.49 = 5. Temperature is published in °F: >96 °F = 0, 95–96 °F = 8, and <95 °F = 15; this calculator accepts Celsius in the UI and converts it to Fahrenheit for scoring.',
+      formula: 'SNAP-II: MAP <20=19, 20–29=9; temp >96°F=0, 95–96°F=8, <95°F=15; PO₂/FiO₂% <0.3=28, 0.3–0.99=16, 1.0–2.49=5; pH <7.10=16, 7.10–7.19=7; multiple seizures=19; UOP <0.1=18, 0.1–0.9=5. SNAPPE-II adds BW <750=17, 750–999=10; SGA=12; Apgar5 <7=18.',
       validation: 'Original SNAPPE-II validated for NICU mortality prediction; use research/clinical software for formal scoring.',
       references: [
         { title: 'SNAP-II and SNAPPE-II: Simplified newborn illness severity and mortality risk scores', citation: 'Richardson DK et al. J Pediatr. 2001', year: 2001, pmid: '11148519',

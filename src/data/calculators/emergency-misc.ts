@@ -121,7 +121,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     inputs: [
       yesNo('age55', 'Age ≥ 55 years', 1,
         'Patient age ≥55 years at the time of injury.'),
-      yesNo('fibula', 'Isolated tenderness of fibular head', 1,
+      yesNo('fibula', 'Tenderness of fibular head', 1,
         'Tenderness of the fibular head (need not be the sole site of bony tenderness).'),
       yesNo('patella', 'Isolated tenderness of patella', 1,
         'Patellar tenderness only if there is no other bony tenderness of the knee.'),
@@ -472,8 +472,9 @@ export const emergencyMiscCalcs: Calculator[] = [
     calculate(values) {
       const score = num(values.dilation) + num(values.effacement) + num(values.station) + num(values.consistency) + num(values.position);
       const r = riskFromThresholds(score, [
-        { max: 5, level: 'moderate', label: 'Unfavorable cervix', interpretation: 'Bishop ≤5: unfavorable — consider cervical ripening before oxytocin induction.' },
-        { max: 13, level: 'low', label: 'Favorable cervix', interpretation: 'Bishop ≥6–8: more favorable for induction success.' },
+        { max: 6, level: 'moderate', label: 'Unfavorable cervix', interpretation: 'Bishop ≤6: unfavorable — consider cervical ripening before oxytocin induction.' },
+        { max: 8, level: 'moderate', label: 'Intermediate cervix', interpretation: 'Bishop 7–8: intermediate favorability — assess the induction plan and need for ripening per protocol.' },
+        { max: 13, level: 'low', label: 'Favorable cervix', interpretation: 'Bishop >8: favorable and comparable to a spontaneous-labor cervix for induction success.' },
       ]);
       return { score, ...r };
     },
@@ -484,6 +485,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'Unfavorable', actions: ['Mechanical or prostaglandin ripening per protocol'] },
+      { condition: 'Intermediate', actions: ['Assess cervical favorability', 'Consider ripening or induction plan per protocol'] },
       { condition: 'Favorable', actions: ['Oxytocin induction as indicated'] },
     ],
   },
@@ -1022,8 +1024,8 @@ export const emergencyMiscCalcs: Calculator[] = [
       references: [
         { title: 'Thrombosis risk assessment as a guide to quality patient care', citation: 'Caprini JA. Dis Mon. 2005', year: 2005, pmid: '15900257',
           doi: '10.1016/j.disamonth.2005.02.003', },
-        { title: 'A validation study of a retrospective venous thromboembolism risk scoring method', citation: 'Bahl V et al. Ann Surg. 2010', year: 2010, pmid: '20160639',
-          doi: '10.1097/SLA.0b013e3181b7bb90', },
+        { title: 'A validation study of a retrospective venous thromboembolism risk scoring method', citation: 'Bahl V et al. Ann Surg. 2010', year: 2010, pmid: '19779324',
+          doi: '10.1097/SLA.0b013e3181b7fca6', },
       ],
     },
     nextSteps: [
@@ -1270,7 +1272,7 @@ export const emergencyMiscCalcs: Calculator[] = [
         { label: 'Tramadol', value: 'tramadol' },
         { label: 'Tapentadol', value: 'tapentadol' },
         { label: 'Fentanyl patch (mcg/hr → special)', value: 'fentanyl_patch', description: 'Enter patch mcg/h as the dose and set doses/day = 1. CDC MME/day = mcg/h × 2.4.' },
-        { label: 'Methadone (CDC dose-stratified 4 / 8 / 10 / 12)', value: 'methadone', description: 'Factor applies to total daily methadone mg: 1–20 mg/day ×4; 21–40 ×8; 41–60 ×10; ≥61 ×12. Not for converting between opioids.' },
+        { label: 'Methadone (CDC 2022 ×4.7)', value: 'methadone', description: 'Apply the CDC 2022 flat conversion factor of 4.7 to total daily oral methadone mg. Not for converting between opioids.' },
       ]),
     ],
     calculate(values) {
@@ -1280,21 +1282,15 @@ export const emergencyMiscCalcs: Calculator[] = [
         hydrocodone: 1,
         oxycodone: 1.5,
         oxymorphone: 3,
-        hydromorphone: 4,
+        hydromorphone: 5,
         codeine: 0.15,
-        tramadol: 0.1,
+        tramadol: 0.2,
         tapentadol: 0.4,
         fentanyl_patch: 2.4,
+        methadone: 4.7,
       };
       const opioid = String(values.opioid);
-      const methadoneFactor = (dailyMg: number): number => {
-        if (dailyMg <= 20) return 4;
-        if (dailyMg <= 40) return 8;
-        if (dailyMg <= 60) return 10;
-        return 12;
-      };
-      const factor =
-        opioid === 'methadone' ? methadoneFactor(daily) : (conversionFactors[opioid] ?? num(values.opioid, 1));
+      const factor = conversionFactors[opioid] ?? num(values.opioid, 1);
       const mme = round(daily * factor, 1);
       const r = riskFromThresholds(mme, [
         { max: 49, level: 'moderate', label: 'Lower CDC threshold band', interpretation: 'Still risk of OD; use caution, naloxone co-prescribing as appropriate.' },
@@ -1308,18 +1304,12 @@ export const emergencyMiscCalcs: Calculator[] = [
         details: [
           { label: 'Daily opioid amount', value: `${round(daily, 1)} ${opioid === 'fentanyl_patch' ? 'mcg/h (×1)' : 'mg/day'}` },
           { label: 'CDC conversion factor', value: String(factor) },
-          {
-            label: 'Methadone strata',
-            value:
-              opioid === 'methadone'
-                ? `Daily methadone ${round(daily, 1)} mg → factor ${factor} (1–20×4, 21–40×8, 41–60×10, ≥61×12)`
-                : 'n/a',
-          },
+          { label: 'Methadone rule', value: opioid === 'methadone' ? 'CDC 2022 flat factor ×4.7' : 'n/a' },
         ],
       };
     },
     evidence: {
-      summary: 'MME uses CDC conversion factors to standardize opioid intensity. Methadone is dose-stratified (4 / 8 / 10 / 12 by daily mg), not a flat ×4.',
+      summary: 'MME uses CDC 2022 conversion factors to standardize opioid intensity, including a flat methadone factor of ×4.7.',
       validation: 'Public health tool for risk; not exact equianalgesia for switching (use caution).',
       references: [{ title: 'CDC Clinical Practice Guideline for Prescribing Opioids', citation: 'Dowell D et al. MMWR. 2022', year: 2022, pmid: '36327391',
           doi: '10.15585/mmwr.rr7103a1', }],

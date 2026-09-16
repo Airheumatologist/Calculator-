@@ -1644,7 +1644,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         { label: '3 — Weekly', value: 3 },
         { label: '4 — Daily or almost daily', value: 4 },
       ], 1),
-      selectInput('cudit8', '8. Has a relative or friend or doctor or other health worker been concerned about your cannabis use or suggested you cut down?', [
+      selectInput('cudit8', '8. Have you ever thought about cutting down or stopping your use of cannabis?', [
         { label: '0 — No', value: 0 },
         { label: '2 — Yes, but not in the past 6 months', value: 2 },
         { label: '4 — Yes, during the past 6 months', value: 4 },
@@ -1771,7 +1771,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     calculate(values) {
       // Approximate oral equivalents: mg of drug ≈ 10 mg diazepam
       // alprazolam 0.5, clonazepam 0.5, lorazepam 1, diazepam 10, temazepam 20,
-      // oxazepam 20, chlordiazepoxide 25, triazolam 0.25
+      // oxazepam 20, chlordiazepoxide 25, triazolam 0.125
       const factors: Record<string, { toDiazepam10: number; name: string }> = {
         alprazolam: { toDiazepam10: 0.5, name: 'Alprazolam' },
         clonazepam: { toDiazepam10: 0.5, name: 'Clonazepam' },
@@ -1780,7 +1780,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         temazepam: { toDiazepam10: 20, name: 'Temazepam' },
         oxazepam: { toDiazepam10: 20, name: 'Oxazepam' },
         chlordiazepoxide: { toDiazepam10: 25, name: 'Chlordiazepoxide' },
-        triazolam: { toDiazepam10: 0.25, name: 'Triazolam' },
+        triazolam: { toDiazepam10: 0.125, name: 'Triazolam' },
       };
       const drug = String(values.drug ?? 'alprazolam');
       const dose = num(values.dose_mg, 2);
@@ -1830,7 +1830,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Simplified oral benzodiazepine equivalence relative to diazepam 10 mg (e.g., alprazolam 0.5 mg, lorazepam 1 mg, clonazepam 0.5 mg). Educational only — pharmacokinetics and clinical response vary.',
+        'Simplified oral benzodiazepine equivalence relative to diazepam 10 mg (e.g., alprazolam 0.5 mg, lorazepam 1 mg, clonazepam 0.5 mg, triazolam 0.25 mg ≈ 20 mg diazepam). Educational only — pharmacokinetics and clinical response vary.',
       formula: 'diazepam_eq_mg = (dose_mg / agent_mg_per_10mg_diazepam) × 10',
       validation:
         'Based on commonly published approximate equivalence tables (Ashton and clinical references); not a substitute for formal taper protocols.',
@@ -2952,14 +2952,14 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 17. SAPS III simplified educational ───────────────────────────────────
   {
     id: 'saps-iii-simp',
-    name: 'SAPS 3',
-    shortName: 'SAPS 3',
+    name: 'SAPS 3–Style Admission Points (Educational)',
+    shortName: 'SAPS 3–Style',
     description:
-      'SAPS 3 admission score (Moreno/Metnitz 2005) expanded toward official boxes: patient characteristics, admission circumstances, and first-hour physiology, plus the 16-point offset. Predicted hospital mortality uses the published global equation.',
+      'Educational SAPS 3–style admission point helper using selected patient characteristics, admission circumstances, and first-hour physiology. It omits required surgery-site Box II inputs and does not calculate hospital mortality.',
     category: 'critical-care',
-    tags: ['saps-iii', 'saps 3', 'icu', 'severity', 'mortality', 'critical care'],
-    whenToUse: 'ICU admission severity using data from 1 hour before to 1 hour after admission.',
-    whyUse: 'Admission-window physiology (unlike APACHE worst-in-24h). Global logistic equation estimates hospital mortality.',
+    tags: ['saps-iii', 'saps 3', 'icu', 'severity', 'educational', 'critical care'],
+    whenToUse: 'Educational review of selected ICU admission variables from 1 hour before to 1 hour after admission; not for mortality prediction or benchmarking.',
+    whyUse: 'Shows how selected admission-window variables contribute to a point total while making clear that this is not the complete SAPS 3 model.',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 16, max: 120, defaultValue: 70, helpText: 'SAPS 3 age points: <40 = 0; 40–59 = 5; 60–69 = 9; 70–74 = 13; 75–79 = 15; ≥80 = 18.' }),
       selectInput('los_before', 'Hospital LOS before ICU', [
@@ -2994,7 +2994,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         { label: 'Focal deficit (+7)', value: 7, description: 'Focal neurologic deficit as the primary reason.' },
         { label: 'Severe pancreatitis (+9)', value: 9, description: 'Severe acute pancreatitis as the primary reason.' },
         { label: 'Intracranial mass effect (+10)', value: 10, description: 'Intracranial mass effect (shift/herniation physiology) as the primary reason — data-dictionary Box II item.' },
-      ], undefined, 'Most severe listed Box II reason. This helper does not add missing SAPS 3 reasons or surgery-site items.'),
+      ], undefined, 'Most severe listed Box II reason. This educational helper omits other SAPS 3 reasons and required surgery-site items; do not use it for the official score or mortality prediction.'),
       selectInput('infection', 'Infection at ICU admission', [
         { label: 'None', value: 0, description: 'No infection at ICU admission.' },
         { label: 'Nosocomial', value: 4, description: 'Nosocomial infection (not respiratory).' },
@@ -3071,50 +3071,34 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       const box3 = gcsPts + sbpPts + hrPts + biliPts + crPts + wbcPts + phPts + tempPts + pltPts + oxPts;
 
       const score = 16 + box1 + box2 + box3;
-      const logit = -32.6659 + Math.log(Math.max(0.1, score + 20.5958)) * 7.3068;
-      const mort = round((Math.exp(logit) / (1 + Math.exp(logit))) * 100, 1);
-      const r = riskFromThresholds(mort, [
-        {
-          max: 10,
-          level: 'low',
-          label: 'Lower predicted hospital mortality',
-          interpretation: `SAPS 3 points ${score}; global-equation mortality ≈ ${mort}%. Educational estimate — official software/custom equations for benchmarking.`,
-        },
-        {
-          max: 25,
-          level: 'moderate',
-          label: 'Moderate predicted mortality',
-          interpretation: `SAPS 3 points ${score}; predicted mortality ≈ ${mort}%.`,
-        },
-        {
-          max: 50,
-          level: 'high',
-          label: 'High predicted mortality',
-          interpretation: `SAPS 3 points ${score}; predicted mortality ≈ ${mort}%. High illness burden at ICU admission.`,
-        },
-        {
-          max: 100,
-          level: 'critical',
-          label: 'Very high predicted mortality',
-          interpretation: `SAPS 3 points ${score}; predicted mortality ≈ ${mort}%. Do not equate to futility without the clinical context and custom SAPS 3 equations.`,
-        },
-      ]);
+      const r = {
+        riskLevel: 'info' as const,
+        label: 'Educational SAPS 3–style point total',
+        interpretation: `SAPS 3–style admission points: ${score}. This partial educational score omits required surgery-site Box II inputs and does not estimate hospital mortality.`,
+      };
       return {
-        score: mort,
-        unit: '% hospital mortality',
+        score,
+        unit: 'points',
         ...r,
         details: [
-          { label: 'SAPS 3 points', value: `${score} (16 + I ${box1} + II ${box2} + III ${box3})` },
+          { label: 'SAPS 3–style points', value: `${score} (16 + I ${box1} + II ${box2} + III ${box3})` },
           { label: 'Age / comorbidity', value: `${agePts} / ${comorbid}` },
           { label: 'GCS / SBP', value: `${gcs} / ${sbp}` },
+          { label: 'Omitted model terms', value: 'Required surgery-site Box II inputs and other unimplemented SAPS 3 variables' },
+          { label: 'Use', value: 'Educational point framing only; not a mortality prediction' },
+        ],
+        recommendations: [
+          'Use a complete validated SAPS 3 implementation for official scoring or mortality benchmarking',
+          'Do not infer hospital mortality from this partial point total',
+          'Interpret alongside the full ICU assessment and local case mix',
         ],
       };
     },
     evidence: {
       summary:
-        'SAPS 3 estimates hospital mortality from admission data within the first hour of ICU care. Score = 16 + Box I + Box II + Box III. Global logit = −32.6659 + ln(score+20.5958)×7.3068. This implementation expands the prior educational stub toward official Moreno/Metnitz boxes.',
-      formula: 'Mortality = exp(logit)/(1+exp(logit)); logit = −32.6659 + ln(SAPS3+20.5958)×7.3068',
-      validation: 'Original SAPS 3 developed on a multinational ICU cohort (Metnitz/Moreno 2005). Use official calculators and custom equations operationally.',
+        'The official SAPS 3 model uses admission data within the first hour of ICU care and complete Box I, Box II, and Box III inputs, including surgery-site terms, to estimate hospital mortality. This helper returns only an educational point total from selected inputs, omits required surgery-site Box II terms, and intentionally does not apply a mortality equation.',
+      formula: 'Educational point total = 16 + selected Box I + selected Box II + selected Box III points; no mortality equation is applied',
+      validation: 'The source SAPS 3 model was developed on a multinational ICU cohort (Metnitz/Moreno 2005). This partial point helper is not validated as the complete SAPS 3 score or as a mortality model; use an official implementation for clinical or benchmarking purposes.',
       references: [
         {
           title: 'SAPS 3—From evaluation of the patient to evaluation of the intensive care unit. Part 2: Development of a prognostic model for hospital mortality at ICU admission',
@@ -3134,12 +3118,12 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     },
     nextSteps: [
       {
-        condition: 'Elevated predicted mortality',
-        actions: ['Comprehensive ICU assessment', 'Avoid futility decisions from a single score', 'Document severity with approved systems if benchmarking'],
+        condition: 'Any clinical decision or benchmarking use',
+        actions: ['Use a complete validated SAPS 3 implementation with all required Box II surgery-site terms', 'Do not infer hospital mortality from this partial score', 'Interpret alongside comprehensive ICU assessment and local calibration'],
       },
     ],
     pearls: [
-      'SAPS 3 performance depends on case-mix and custom equations.',
+      'The official SAPS 3 mortality model requires complete Box I, II, and III data, including surgery-site terms; this helper intentionally omits them.',
       'Early physiology window differs from APACHE worst-in-24h and from SAPS II.',
       'Comorbidities use the single highest-weighted condition (metastatic cancer 11, cirrhosis/AIDS 8, heme cancer/NYHA IV 6).',
     ],
@@ -3574,7 +3558,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       yesNo('hematuria', 'Hematuria / occult blood on UA (3)', 3, 'Fukuhara occult blood: dipstick ≥trace or microscopy. Gross hematuria also counts. Absence does not exclude stone.'),
       yesNo('history', 'History of urolithiasis (1)', 1),
       yesNo('male', 'Male sex (1)', 1),
-      yesNo('crp', 'CRP ≤0.5 mg/dL (2)', 2),
+      yesNo('pain_duration', 'Pain duration <6 hours (2)', 2, 'Pain began less than 6 hours before evaluation (Fukuhara).'),
       yesNo('age', 'Age ≤60 years (1)', 1),
     ],
     calculate(values) {
@@ -3584,7 +3568,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         (bool(values.hematuria) ? 3 : 0) +
         (bool(values.history) ? 1 : 0) +
         (bool(values.male) ? 1 : 0) +
-        (bool(values.crp) ? 2 : 0) +
+        (bool(values.pain_duration) ? 2 : 0) +
         (bool(values.age) ? 1 : 0);
       const r = riskFromThresholds(score, [
         {
@@ -3607,7 +3591,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         details: [
           { label: 'Hydronephrosis (4)', value: bool(values.hydro) ? 'Yes' : 'No' },
           { label: 'Hematuria (3)', value: bool(values.hematuria) ? 'Yes' : 'No' },
-          { label: 'CRP ≤0.5 (2)', value: bool(values.crp) ? 'Yes' : 'No' },
+          { label: 'Pain duration <6 h (2)', value: bool(values.pain_duration) ? 'Yes' : 'No' },
           { label: 'N/V, Hx, Male, Age≤60 (1 each)', value: 'See inputs' },
           { label: 'Common cutoff', value: '≥6 suggests stone' },
         ],
@@ -3615,9 +3599,9 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'CHOKAI score: nausea/vomiting (1), hydronephrosis (4), hematuria (3), stone history (1), male (1), CRP ≤0.5 mg/dL (2), age ≤60 (1). Total 0–13; ≥6 associated with higher ureterolithiasis probability.',
-      formula: 'Sum component points (0–13)',
-      validation: 'Developed and validated in Japanese ED cohorts; performance may vary by population and CRP availability.',
+        'CHOKAI score: nausea/vomiting (1), hydronephrosis (4), hematuria (3), stone history (1), male (1), pain duration <6 hours (2), age ≤60 (1). Total 0–13; ≥6 associated with higher ureterolithiasis probability.',
+      formula: 'Nausea/vomiting (1) + hydronephrosis (4) + hematuria (3) + stone history (1) + male (1) + pain duration <6 h (2) + age ≤60 (1) = 0–13',
+      validation: 'Developed and validated in Japanese ED cohorts; performance may vary by population and by the reliability of symptom timing, ultrasound, and urinalysis findings.',
       references: [
         {
           title: 'Internal validation of a scoring system to evaluate the probability of ureteral stones: The CHOKAI score',

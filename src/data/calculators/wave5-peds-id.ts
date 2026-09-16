@@ -1446,10 +1446,10 @@ export const wave5PedsIdCalcs: Calculator[] = [
         { label: 'Severely elevated (3)', value: 3, description: '<6 y: >60 bpm; ≥6 y: >50 bpm' },
       ], undefined, 'Smith 2002 age-specific RR (count 1 full minute at rest): <6 y — 0 ≤30, 1 = 31–45, 2 = 46–60, 3 >60; ≥6 y — 0 ≤20, 1 = 21–35, 2 = 36–50, 3 >50.'),
       selectInput('wheeze', 'Wheezing', [
-        { label: 'None / end-expiratory only (0)', value: 0, description: 'None, or terminal expiration with stethoscope only' },
-        { label: 'Expiratory (1)', value: 1, description: 'Wheeze throughout expiration (stethoscope)' },
-        { label: 'Inspiratory + expiratory (2)', value: 2, description: 'Inspiratory and expiratory wheeze, audible without stethoscope' },
-        { label: 'Diminished breath sounds / quiet chest (3)', value: 3, description: 'Diminished breath sounds / silent chest (ominous)' },
+        { label: 'None (0)', value: 0, description: 'No wheeze' },
+        { label: 'End-expiratory (1)', value: 1, description: 'Terminal expiratory wheeze heard with a stethoscope' },
+        { label: 'Expiratory throughout (2)', value: 2, description: 'Wheeze throughout expiration heard with a stethoscope' },
+        { label: 'Inspiratory + expiratory (3)', value: 3, description: 'Wheeze during inspiration and expiration, audible without a stethoscope; or a quiet chest from minimal air exchange' },
       ]),
       selectInput('accessory', 'Accessory muscle use', [
         { label: 'None — no apparent SCM increase (0)', value: 0, description: 'No apparent sternocleidomastoid activity' },

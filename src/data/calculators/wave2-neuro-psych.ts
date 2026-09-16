@@ -1103,26 +1103,26 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         { label: '1 — One sequence correct', value: 1 },
         { label: '2 — Both sequences correct', value: 2 },
       ], 2),
-      selectInput('q8_clock', '8. Clock drawing (set time to ten to eleven: 10:50)', [
+      selectInput('q8_clock', '9. Clock drawing (set time to ten to eleven: 10:50)', [
         { label: '0 — Clock incorrect', value: 0 },
         { label: '2 — Hour numbers placed correctly only', value: 2 },
         { label: '2b — Hands placed correctly only (2 pts)', value: 2 },
         { label: '4 — Hour numbers AND hands placed correctly (4 pts)', value: 4 },
       ], 4),
-      selectInput('q9_shapes', '9. Visual recognition: select largest geometric triangle', [
-        { label: '0 — Incorrect', value: 0 },
-        { label: '1 — Correct', value: 1 },
+      selectInput('q9_shapes', '10a. Place an X in the triangle', [
+        { label: '0 — Triangle not selected', value: 0 },
+        { label: '1 — X placed in the triangle', value: 1 },
       ], 1),
-      selectInput('q10_figures', '10. Shape discrimination: number of figures inside shape', [
+      selectInput('q10_figures', '10b. Which of the above figures is largest? (the square)', [
         { label: '0 — Incorrect', value: 0 },
-        { label: '1 — Correct', value: 1 },
+        { label: '1 — Square identified as largest', value: 1 },
       ], 1),
-      selectInput('q11_story', '11. Story recall (Jill was a successful stockbroker... 4 questions, 2 points each)', [
+      selectInput('q11_story', '11. Story recall (Jill, a successful stockbroker... 4 questions, 2 points each)', [
         { label: '0 — 0 questions correct', value: 0 },
         { label: '2 — 1 question correct', value: 2 },
         { label: '4 — 2 questions correct', value: 4 },
         { label: '6 — 3 questions correct', value: 6 },
-        { label: '8 — All 4 questions correct (work, money loss, state, return to work)', value: 8 },
+        { label: '8 — All 4 questions correct (name Jill, stockbroker, returned when children were teenagers, Illinois)', value: 8 },
       ], 8),
       numberInput('score', 'Direct SLUMS total score override (0–30)', {
         min: 0,

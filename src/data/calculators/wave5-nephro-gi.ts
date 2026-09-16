@@ -1917,21 +1917,24 @@ export const wave5NephroGiCalcs: Calculator[] = [
         undefined,
         'Walmsley general well-being (0–4). Patient global, current symptoms.',
       ),
-      yesNo(
-        'exColitis',
-        'Extracolonic features present (arthritis, uveitis, erythema nodosum, pyoderma, etc.)',
-        1,
-        'Walmsley: 1 point if any of arthritis, uveitis, erythema nodosum, or pyoderma gangrenosum is present (binary, not counted per site).',
-      ),
+      yesNo('arthritis', 'Arthritis', 1, 'Inflammatory arthritis attributed to ulcerative colitis. 1 point if present.'),
+      yesNo('uveitis', 'Uveitis', 1, 'Inflammatory eye disease (uveitis/iritis) attributed to ulcerative colitis. 1 point if present.'),
+      yesNo('erythemaNodosum', 'Erythema nodosum', 1, 'Tender pretibial erythematous nodules attributed to ulcerative colitis. 1 point if present.'),
+      yesNo('pyoderma', 'Pyoderma gangrenosum', 1, 'Ulcerating neutrophilic dermatosis attributed to ulcerative colitis. 1 point if present.'),
     ],
     calculate(values) {
+      const extracolonicPts =
+        (bool(values.arthritis) ? 1 : 0) +
+        (bool(values.uveitis) ? 1 : 0) +
+        (bool(values.erythemaNodosum) ? 1 : 0) +
+        (bool(values.pyoderma) ? 1 : 0);
       const score =
         num(values.dayFreq, 0) +
         num(values.nightFreq, 0) +
         num(values.urgency, 0) +
         num(values.blood, 0) +
         num(values.wellbeing, 0) +
-        (bool(values.exColitis) ? 1 : 0);
+        extracolonicPts;
       const r = riskFromThresholds(score, [
         {
           max: 2,
@@ -1962,8 +1965,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'SCCAI sums day frequency (0–3), night frequency (0–2), urgency (0–3), blood (0–3), well-being (0–4), plus 1 if extracolonic features. Remission often <3.',
-      formula: 'SCCAI = day + night + urgency + blood + wellbeing + extracolonic',
+        'SCCAI sums day frequency (0–3), night frequency (0–2), urgency (0–3), blood (0–3), well-being (0–4), plus 1 point each for arthritis, uveitis, erythema nodosum, and pyoderma gangrenosum when present. Remission often <3.',
+      formula: 'SCCAI = day + night + urgency + blood + wellbeing + arthritis + uveitis + erythema nodosum + pyoderma gangrenosum',
       validation: 'Walmsley 1998; correlates with other UC activity indices.',
       references: [
         {
@@ -1978,7 +1981,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
     nextSteps: [
       { condition: 'SCCAI ≥5', actions: ['Calprotectin/CRP', 'Therapy review', 'Infection screen if flare'] },
     ],
-    pearls: ['Extracolonic point is binary in original scoring (present/absent), not per manifestation count in this simplified tool.'],
+    pearls: ['Each listed extracolonic manifestation is scored independently at 1 point when present.'],
   },
 
   // 22. Harvey-Bradshaw Index

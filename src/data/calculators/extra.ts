@@ -514,7 +514,7 @@ export const extraCalcs: Calculator[] = [
           title: 'AHA/ACCF/HRS recommendations for the standardization and interpretation of the electrocardiogram: part IV: the ST segment, T and U waves, and the QT interval',
           citation: 'Rautaharju PM et al. Circulation. 2009 (prolonged QTc >450 ms men, >460 ms women)',
           year: 2009,
-          pmid: '19188556',
+          pmid: '19228821',
           doi: '10.1161/circulationaha.108.191096',
         },
       ],
