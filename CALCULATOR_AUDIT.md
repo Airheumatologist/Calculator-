@@ -260,6 +260,174 @@ Search results can place legacy tools next to current alternatives without a con
 
 Add first-class metadata such as `status: current | legacy | superseded | research-only` and render that status prominently in search cards and calculator headers.
 
+## Calculator-level clinical logic and evidence findings
+
+This section is a second-pass clinical audit of individual definitions. The review was split into independent streams for executable formula/branch logic, threshold/interpretation wording, evidence/reference currency, and high-risk specialty calculators, then reconciled. Each item below is tied to a specific calculator ID and was checked against an external primary/guideline source before being labeled confirmed.
+
+This still should **not** be interpreted as an independent re-derivation of every equation in all 1004 calculators. The full corpus was statically screened for suspicious definitions and claims; source-by-source verification was concentrated on flagged calculators. The durable solution remains source-linked golden vectors for every calculator.
+
+### P0 — `ascvd-risk`: current-guideline claim and treatment bands are obsolete
+
+**File:** `src/data/calculators/cardiology.ts`
+
+**Finding**
+
+The calculator implements the 2013 ACC/AHA Pooled Cohort Equations (PCE) and presents the classic PCE categories (<5%, 5–7.4%, 7.5–19.9%, ≥20%) as an ACC/AHA tool for statin decision-making. The executable PCE equation can remain useful as a historical/legacy calculator, but its current-guideline framing and downstream statin recommendations are no longer current as of 2026.
+
+**Why this is confirmed**
+
+The 2026 ACC/AHA multisociety dyslipidemia guideline explicitly replaces the PCE with the AHA PREVENT-ASCVD equations for primary-prevention lipid-lowering decisions in the appropriate population. The guideline uses new 10-year PREVENT-ASCVD categories: low <3%, borderline 3% to <5%, intermediate 5% to <10%, high ≥10%.
+
+**Recommended fix**
+
+- Mark `ascvd-risk` as **legacy / 2013 PCE**.
+- Remove wording implying that its PCE bands are the current ACC/AHA statin-decision framework.
+- Add/identify a PREVENT-ASCVD calculator for current US primary-prevention lipid decisions.
+- Keep PCE output only for historical comparison or contexts that explicitly still call for it.
+
+**Source:** 2026 ACC/AHA/AACVPR/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA Guideline on the Management of Dyslipidemia; Circulation/JACC, published March 13, 2026, DOI 10.1161/CIR.0000000000001423.
+
+### P0 — `psi-port`: does not implement the validated PSI class-I first stage
+
+**File:** `src/data/calculators/critical-care.ts`
+
+**Finding**
+
+The calculator directly computes the PSI point total and then maps low scores to a combined `I–II` / `II` output. That is not the published two-stage PSI algorithm. In the validated rule, **Class I is assigned before the point score** using age, comorbidity, mental status, and vital-sign criteria; only patients who fail that screen proceed to point scoring for Classes II–V.
+
+A patient cannot be accurately labeled Class I solely because the eventual point score is low. Conversely, simply combining `I–II` loses an important validated branch of the rule.
+
+**Recommended fix**
+
+Implement Step 1 explicitly:
+
+- age ≤50,
+- no neoplastic, liver, CHF, cerebrovascular, or renal disease,
+- normal mental status,
+- pulse <125/min,
+- respiratory rate <30/min,
+- SBP ≥90 mmHg,
+- temperature ≥35°C and <40°C.
+
+If every Step-1 condition is satisfied, return Class I. Otherwise perform the published point calculation and assign Class II (≤70), III (71–90), IV (91–130), or V (>130).
+
+**Source:** Fine MJ et al. *A Prediction Rule to Identify Low-Risk Patients with Community-Acquired Pneumonia.* N Engl J Med. 1997;336:243-250; and IDSA CAP guideline description of the two-step PSI algorithm.
+
+### P0 — `apgar`: score is being used to drive resuscitation wording
+
+**File:** `src/data/calculators/emergency-misc.ts`
+
+**Finding**
+
+The calculator maps low Apgar totals to action-oriented text such as `0–3: severely depressed — ongoing NRP resuscitation`, and the `nextSteps` block tells users to `Continue NRP` when the 5-minute score is <7.
+
+The score is appropriate for documenting neonatal condition and response to resuscitation, and a score <7 at 5 minutes is a reason to repeat scoring at 5-minute intervals. It should **not** be the trigger that determines whether resuscitation is initiated, which resuscitative steps are used, or when those steps occur.
+
+**Recommended fix**
+
+- Replace score-driven resuscitation instructions with: “Continue/adjust resuscitation according to the NRP physiologic algorithm (heart rate, respirations, oxygenation), not the Apgar total.”
+- Keep the valid instruction to repeat Apgar every 5 minutes to 20 minutes when the 5-minute score is <7.
+- Explicitly state in the interpretation that resuscitation begins before the 1-minute score and should not wait for or be dictated by Apgar.
+
+**Source:** AAP Committee on Fetus and Newborn / ACOG Committee on Obstetric Practice. *The Apgar Score.* Pediatrics. 2015;136:819-822. DOI 10.1542/peds.2015-2651.
+
+### P1 — `ckd-epi`: eGFR category is mislabeled as a CKD stage without establishing CKD
+
+**File:** `src/data/calculators/nephrology-endo.ts`
+
+**Finding**
+
+The 2021 CKD-EPI creatinine equation itself appears correctly implemented, but the result labels `G1`, `G2`, etc. as `CKD stage G1`, `CKD stage G2`, and so forth based on a single eGFR value.
+
+A single eGFR establishes a **GFR category**, not necessarily chronic kidney disease. G1 and G2 in particular require evidence of kidney damage and chronicity to diagnose CKD. Full CKD classification also incorporates albuminuria/cause.
+
+**Recommended fix**
+
+- Change the output label to `GFR category G1/G2/G3a/...` rather than `CKD stage` unless CKD is already established.
+- Add explicit wording: “A single eGFR does not establish CKD; chronicity and/or other markers of kidney damage are required.”
+- Preserve the note that albuminuria is needed for CGA risk classification.
+
+**Source:** KDIGO 2024 CKD Guideline and KDIGO nomenclature guidance: use `GFR categories` rather than `CKD stages` when CKD or both GFR/albuminuria status has not been established.
+
+### P1 — `qtc-bazett`: interpretation thresholds are not sex-specific
+
+**File:** `src/data/calculators/cardiology.ts`
+
+**Finding**
+
+The Bazett formula calculation is straightforward, but its interpretation applies fixed bands (`≥460` prolonged, `≥440` borderline) without a sex input, even though the calculator’s own evidence text acknowledges sex-dependent QTc thresholds.
+
+Widely cited adult thresholds define prolonged QTc as >450 ms in males and >460 ms in females; >500 ms is a substantially higher-risk range. A single universal `≥460` “prolonged” threshold undercalls male QTc values in the 451–459 ms range.
+
+**Recommended fix**
+
+Either:
+
+- add sex and use sex-specific adult interpretation bands, or
+- remove categorical “normal/borderline/prolonged” labeling and return the corrected QTc with a clearly stated reference-range caveat.
+
+Also retain the existing warning that Bazett overcorrects at high heart rates and undercorrects at low heart rates.
+
+**Source:** Giudicessi JR et al. *The QT Interval.* Circulation. 2019; adult prolonged-QTc thresholds >450 ms (male), >460 ms (female), with particular concern at >500 ms.
+
+### P1 — `rcri`: help text contradicts the original RCRI high-risk-surgery definition
+
+**File:** `src/data/calculators/missing-cardio-pulm.ts`
+
+**Finding**
+
+The input correctly states that Lee RCRI “high-risk surgery” includes **intraperitoneal, intrathoracic, or suprainguinal vascular surgery**, but its help text then says `Do not score laparoscopic cholecystectomy`.
+
+Laparoscopic cholecystectomy is an intraperitoneal operation. If the calculator is intended to reproduce the original Lee RCRI predictor, the blanket exclusion conflicts with the source definition.
+
+**Recommended fix**
+
+- Remove the categorical exclusion of laparoscopic cholecystectomy from the original-RCRI input help.
+- If the intent is to adapt RCRI to a newer perioperative framework, do not silently change a source variable; create a separately named modern perioperative risk pathway and document the guideline source.
+
+**Source:** Lee TH et al. *Derivation and prospective validation of a simple index for prediction of cardiac risk of major noncardiac surgery.* Circulation. 1999;100:1043-1049. Original high-risk surgery predictor: intraperitoneal, intrathoracic, or suprainguinal vascular surgery.
+
+### P1 — `duke-criteria`: legacy 2000-style helper is not clearly distinguished from the 2023 Duke-ISCVID criteria
+
+**File:** `src/data/calculators/extra.ts`
+
+**Finding**
+
+The calculator is a simplified major/minor count implementation of the classic Modified Duke clinical criteria. Its basic count logic for definite/possible is consistent with the older framework, but the current Duke-ISCVID criteria were substantially updated in 2023.
+
+The 2023 revision adds/changes, among other items:
+
+- expanded “typical” organisms,
+- molecular diagnostics,
+- cardiac CT and FDG-PET/CT criteria,
+- an intraoperative surgical major criterion,
+- updated predisposing conditions and vascular/immunologic definitions.
+
+A generic title `Modified Duke Criteria (IE Helper)` can therefore be mistaken for the current diagnostic classification.
+
+**Recommended fix**
+
+Choose one of two approaches:
+
+1. rename the existing calculator `Modified Duke Criteria (2000 — legacy helper)` and explicitly state that it does not implement Duke-ISCVID 2023; or
+2. implement the 2023 Duke-ISCVID criteria as a separate current calculator, retaining the old tool only for historical comparison.
+
+**Source:** Fowler VG et al. *The 2023 Duke-International Society for Cardiovascular Infectious Diseases Criteria for Infective Endocarditis: Updating the Modified Duke Criteria.* Clin Infect Dis. 2023;77:518-526. DOI 10.1093/cid/ciad271.
+
+## Additional calculator-specific wording/evidence items to queue
+
+These were identified during the static sweep but should be treated as lower priority than the confirmed items above:
+
+- **`gestational-age` / Naegele rule:** the evidence/usage text should explicitly state the usual assumptions behind LMP dating (reliable LMP and approximately regular cycle; cycle length can shift the LMP-based estimate) and continue to prioritize first-trimester ultrasound when dating is uncertain.
+- **Legacy/current status across the registry:** calculators already labeled `legacy`, `educational`, or `style` are generally much safer than older formulas presented without such a status. Apply the same metadata consistently to PCE, MDRD, older Duke criteria, and any other superseded model.
+- **Educational approximations:** definitions such as `SMART2-style` and `QRISK3-style` appropriately warn that they are educational approximations. Add automated checks so any calculator whose name contains `style`, `simplified`, or `educational` cannot emit language such as `validated`, `official`, or `recommended` unless explicitly qualified.
+
+## What was not found in this pass
+
+The review did **not** identify a broad pattern of obvious arithmetic transcription errors in the core formulas inspected (for example, Cockcroft-Gault, 2021 CKD-EPI creatinine, CHA₂DS₂-VASc, HAS-BLED, HEART, qSOFA/SOFA, CURB-65, Wells, Ottawa rules). That is reassuring but is **not equivalent to validation**. Without golden fixtures, the remaining long-tail calculators cannot be certified from static inspection alone.
+
+The next highest-value step is therefore not another prose review: it is to generate a source-linked fixture manifest for all 1004 IDs and make CI execute it.
+
 ## Representative implementation observations
 
 These are examples of the systemic findings above, not an exhaustive list of calculator-specific defects:
@@ -272,11 +440,13 @@ These are examples of the systemic findings above, not an exhaustive list of cal
 
 ## Suggested implementation order
 
-1. **Introduce registry validation + test runner** and make CI fail on duplicate IDs, invalid input metadata, and execution exceptions.
-2. **Remove patient-dependent numeric defaults** and make missing inputs fail closed globally.
-3. **Add golden clinical fixtures** for every calculator, prioritizing high-use/high-risk calculators first (anticoagulation, emergency decision rules, ICU scores, renal dosing, pediatrics/obstetrics, toxicology).
-4. **Add source/version/review metadata** and distinguish formula validation from management-guidance validation.
-5. **Add legacy/current status metadata**, unit handling, and documentation cleanup.
+1. **Correct the P0 calculator-level issues first:** PCE current-guideline framing, PSI class-I logic, and Apgar resuscitation wording.
+2. **Correct the P1 calculator-level issues:** CKD-EPI labeling, QTc interpretation, RCRI surgery help text, and legacy Duke status/current alternative.
+3. **Introduce registry validation + test runner** and make CI fail on duplicate IDs, invalid input metadata, and execution exceptions.
+4. **Remove patient-dependent numeric defaults** and make missing inputs fail closed globally.
+5. **Add golden clinical fixtures** for every calculator, prioritizing high-use/high-risk calculators first (anticoagulation, emergency decision rules, ICU scores, renal dosing, pediatrics/obstetrics, toxicology).
+6. **Add source/version/review metadata** and distinguish formula validation from management-guidance validation.
+7. **Add legacy/current status metadata**, unit handling, and documentation cleanup.
 
 ## Minimum acceptance criteria for the next audit
 
@@ -289,8 +459,13 @@ A subsequent audit should be able to assert all of the following automatically:
 - invalid select values, ranges, and steps are rejected before calculation;
 - every calculator can execute its valid fixtures without throwing;
 - every clinical management recommendation has a review date and source/version;
+- current-vs-legacy status is explicit for every superseded score/model;
 - CI runs calculator tests on every pull request.
 
 ## Overall assessment
 
-The repository has a strong centralized architecture and already includes useful safeguards for missing questionnaire items, numeric ranges, and numeric step validation. The primary weakness is **verification discipline at scale**: with 1004 calculators, manual review and TypeScript correctness are not enough. The highest-value fix is to turn calculator correctness into machine-enforced data: schema validation, source-linked golden vectors, and CI failures for any registry or execution inconsistency.
+The repository has a strong centralized architecture and already includes useful safeguards for missing questionnaire items, numeric ranges, and numeric step validation. The primary weakness is **verification discipline at scale**: with 1004 calculators, manual review and TypeScript correctness are not enough.
+
+The second-pass clinical review confirms that individual calculator issues do exist, including both executable-logic omissions (PSI class I) and clinically material evidence/interpretation drift (PCE/PREVENT, Apgar, CKD terminology, QTc bands, RCRI definition, Duke criteria generation). These are exactly the failure modes that source-linked golden vectors plus versioned clinical metadata should prevent.
+
+The highest-value long-term fix is to turn calculator correctness into machine-enforced data: schema validation, source-linked golden vectors, current/legacy metadata, and CI failures for any registry or execution inconsistency.
