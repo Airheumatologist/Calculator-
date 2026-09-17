@@ -989,7 +989,7 @@ export const cardiologyCalcs: Calculator[] = [
       validation: 'Standard ECG teaching; interpretation uses sex-specific adult bands rather than a single universal cutoff.',
       references: [
         { title: 'An analysis of the time-relations of electrocardiograms', citation: 'Bazett HC. Heart. 1920;7:353-370', year: 1920 },
-        { title: 'The QT Interval', citation: 'Giudicessi JR et al. Circulation. 2019', year: 2019, pmid: '31136210', doi: '10.1161/CIRCULATIONAHA.118.038584' },
+        { title: 'The QT Interval', citation: 'Giudicessi JR et al. Circulation. 2019', year: 2019, pmid: '31180747', doi: '10.1161/CIRCULATIONAHA.119.039598' },
       ],
     },
     nextSteps: [

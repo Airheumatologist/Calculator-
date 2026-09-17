@@ -1,18 +1,41 @@
 # Calculator audit tracker
 
 Repo: `Airheumatologist/Calculator-`  
-Audit: 2026-09-16 · Remediation pass 1: 2026-09-16 (Waves 0–2 + P1) · Pass 2: 2026-09-16 (Wave 3 units, P1 leftovers, P2 per-ID) · Pass 3: 2026-09-16 (evidence refresh, current US labels) · Pass 4: 2026-09-16 (units rollout completed, numeric scores, questionnaire branch metadata, edacs correction) — **all audit items closed, uncommitted in worktree**
+Audit: 2026-09-16 · Remediation pass 1: 2026-09-16 (Waves 0–2 + P1) · Pass 2: 2026-09-16 (Wave 3 units, P1 leftovers, P2 per-ID) · Pass 3: 2026-09-16 (evidence refresh, current US labels) · Pass 4: 2026-09-16 (units rollout completed, numeric scores, questionnaire branch metadata, edacs correction) · **Pass 5: 2026-09-16 — independent production-readiness verification of passes 1–4 (`faf011d`/`734a901`): 8 claims corrected, 1 blocking code defect (N1) and 3 should-fix defects (N2, N4, N5) fixed with fail-before/pass-after tests, 1 blocking process condition (N6) flagged, 2 "pinned by test" statements shown not to be pinned, and 4 findings left open (N3, N7, N8, N10) — see Pass 5 below**
+
+> **State change during pass 5 — the artifact moved while it was being verified.**
+> The remediation was not, as the brief assumed, an uncommitted worktree: a concurrent
+> remediation session (its own scratch files `zz-lead-*.test.ts` and
+> `vfy-tmp-inventory.test.ts` are the fingerprint) committed the whole 101-file
+> worktree as `faf011d` at 20:59:06 **and pushed it to `origin/main` at 20:59:18**, then
+> committed `734a901` at 21:01:34. `git rev-parse HEAD` == `git rev-parse origin/main`
+> == `734a901`. It also kept editing afterwards (`deploy.yml`, `package.json`,
+> `README.md`, `wave7-bedside.ts`), and at least one verification subagent deleted a
+> scratch file it found in `tests/`. Every claim below was therefore re-measured
+> against `faf011d`/`734a901` plus the pass-5 edits, with each measurement's revision
+> recorded, and the line numbers in this file are relative to the current worktree,
+> not to any commit. Two consequences: (1) **N6** — the push deployed without a lint or
+> test gate; (2) verification of an uncommitted artifact is only as good as the moment
+> it was read, so anything edited after a measurement was re-read. Don't commit,
+> branch, reset or stash this tree without deciding what to do with those commits
+> first — resetting would discard both the remediation and this verification.
 
 Not a re-derivation of all 1004 formulas. Add new items under **Open**.
 
 **Subagents:** pass 1 ran Wave 0 (engine) first, then one ID per agent. Pass 2 worked the **Open** list top-down: Wave 3 units as one batch, then one ID per leftover P2 item. Pass 3 closed the evidence-refresh batch with external source lookups (KDIGO, GOLD 2026 report, AHA/PubMed, current US prescribing information). Pass 4 finished the remaining P2 items directly (shared unit convention applied across every weight/creatinine/FiO₂/D-dimer field, numeric range scores, explicit questionnaire branch metadata with the regex heuristic deleted, and removal of a mis-transcribed EDACS item). Nothing is **Open**; the **Later** list is follow-on work, not an audit finding.
 
-Final verification for the whole pass: `vitest` 45 files / 410 tests, `tsc -b`,
-`oxlint`, and `vite build` all clean.
+Final verification for passes 1–4 (superseded — see the pass-5 gates table for the
+current numbers): `vitest` 45 files / 410 tests, `tsc -b`, `oxlint`, and `vite build`
+all clean at the time pass 4 was declared closed.
 
-**Pending:** nothing under **Open**. The only outstanding work is the nine-item
-**Later** backlog at the bottom of this file (re-measured against the live
-registry on 2026-09-16 — see the table there).
+**Pending:** nothing under **Open** for passes 1–4. Pass 5 (independent verification)
+closed the blocking code defect it found (**N1**) and the three should-fix ones it could
+fix mechanically (**N2**, **N4**, **N5**); still open are **N3** (edoxaban <15 label
+attribution), **N7** (implicit HDL default / whether SCORE2-OP has an HDL term),
+**N8** (legacy alias keys) and **N10** (a reference with no year), the **N6** process
+condition (commit the worktree gate fixes and require `CI` on `main` before the next
+push), and the nine-item **Later** backlog at the bottom of this file (re-measured
+against the live registry on 2026-09-16 — see the table there).
 
 ## Done
 
@@ -140,9 +163,9 @@ Verified green: `vitest` 40 files / 369 tests at the time of writing; by the end
 
 Engine:
 
-- [x] `bool()` case-insensitive (`'TRUE'`, `'Yes'` still evaluate false) — `tests/engine-bool-coercion.test.ts`
+- [x] `bool()` case-insensitive and whitespace-tolerant: `'TRUE'`, `' Yes '`, `'y'`, `'1'`, `'on'` all evaluate **true**; `'false'`, `'0'`, `'off'`, `'maybe'`, `''`, `NaN`, `null` evaluate false — `tests/engine-bool-coercion.test.ts`. *(Pass-5 correction: this line previously read "(`'TRUE'`, `'Yes'` still evaluate false)", which contradicted both the implementation and the test — `bool('Yes') === true`.)*
 - [x] Select value ∈ options (`getInvalidSelectValues` + page gate)
-- [x] Questionnaire mode flag — the `isDirectOverrideInput` id/label regex is **gone**. All 53 branch selectors (51 questionnaires migrated in pass 4 plus `vanderbilt-adhd` and the two unflagged branch tools `gleason-grade-group` / `sic-score`) now declare `questionnaire.modeInputId` plus `directModeValues` and either `directInputIds` or `activeInputIdsByMode`; `getQuestionnaireModeInput()` no longer infers a mode input and `isQuestionnaireCalculator()` no longer infers a questionnaire from option values. `validateCalculator` rejects an implicit branch selector, a `modeInputId` that is not a select/segmented input, a `directModeValues` entry that is not an option, and a direct mode with no declared fields. The refactor was verified behavior-preserving: every migrated calculator's active-field set in both modes was captured before the change and compared after (`tests/questionnaire-mode-metadata.test.ts` now pins the invariants, including a fixture proving a field labelled “Direct score override” is only treated as direct when it is declared).
+- [x] Questionnaire mode flag — the `isDirectOverrideInput` id/label regex is **gone**. Every branch selector now declares `questionnaire.modeInputId` plus `directModeValues` and either `directInputIds` or `activeInputIdsByMode`; `getQuestionnaireModeInput()` no longer infers a mode input and `isQuestionnaireCalculator()` no longer infers a questionnaire from option values. `validateCalculator` rejects an implicit branch selector, a `modeInputId` that is not a select/segmented input, a `directModeValues` entry that is not an option, and a direct mode with no declared fields (`tests/questionnaire-mode-metadata.test.ts` pins the invariants, including a fixture proving a field labelled “Direct score override” is only treated as direct when it is declared). *Pass-5 re-measure: **55** `modeInputId` declarations across **13** data files (not 53), **70** questionnaire-flagged calculators. The refactor was **not** fully behavior-preserving — the explicit lists dropped fields `calculate()` still reads; see **N1** (`sic-score`) and **N2** (`cornell-dementia`).*
 
 Per-ID (pass-2 status):
 
@@ -201,12 +224,16 @@ labels that are current today:
 | `vbac-success` | Coefficients re-verified against two independent peer-reviewed reproductions of the equation (w = 3.766 − 0.039·age − 0.060·BMI − 0.671·AA − 0.680·Hispanic + 0.888·prior VD + 1.003·prior VBAC − 0.632·recurring indication); the test file pins the logistic output numerically. **Grobman 2009** admission model (Am J Perinatol 26(10):693–701, PMID 19813165) is now cited for the model the interpretation refers to, plus the 2024 **race-free** admission calculator (Am J Obstet Gynecol 2024;230(3S):S804–S806, PMID 38180754). |
 
 **Reference-link sweep (new).** Every distinct citation URL in `src/` was
-extracted and fetched: 80 URLs, **no dead links** — 70 resolved `200` and 10
-`403` from bot-protected hosts (CDC, AHA, ASA, HRSA, Joint Commission) that
-serve normally to a browser. The FDA `accessdata` label PDFs reject `HEAD`
-requests but download fine (recorded so a future sweep does not misread them as
-404s). DailyMed `setid` links were adopted for the two labels that lacked a
-stable citation.
+extracted and fetched. DailyMed `setid` links were adopted for the two labels
+that lacked a stable citation. *Pass-5 re-measure: **81** distinct `url:` values —
+51 × `200`, 20 × `206`, 8 × `403` from bot-protected hosts (DTIC, AHA/ASA, HRSA,
+Joint Commission, SAMHSA) that serve normally to a browser, and **2 that could
+not be shown to be live**: both `accessdata.fda.gov/.../label/...` PDFs return the
+FDA bot-detection apology page (`302 → /apology_objects/abuse-detection-apology.html`)
+for GET, HEAD **and** range requests here, so the pass-3 note that they "download
+fine" could not be reproduced. They are recorded as **unverified, not dead** (no
+browser is reachable from the sandbox) — re-check them once by hand and, if they
+really 404, swap in the DailyMed `setid` links used for the other two labels.*
 
 ### 2026-09-16 remediation pass 4 (final leftovers — closed)
 
@@ -260,6 +287,225 @@ correct, and the "avoid <15" rule is confined to the VTE/prophylaxis
 indications. The EDACS item list was verified against the 2014 derivation
 (PMID 24428678) and the 2024 review PMC10853047.
 
+### 2026-09-16 pass 5 — independent verification (production-readiness)
+
+Treating passes 1–4 as a **claim log**, this pass re-derived the claims from source
+plus its own probes rather than re-running the authors' tests, re-resolved every
+identifier against primary sources, and re-ran the gates. Corrections and findings
+are folded into the rest of the file; the edits this pass made are **N1, N2, N4, N5**
+(code + regression tests), **N9** (citation identifiers), the `deploy.yml` /
+`package.json` / README corrections, and two new registry-wide sweeps. All uncommitted.
+
+Gates re-run by this pass on the frozen tree, serially:
+
+| Gate | Result |
+|---|---|
+| `npx vitest run` ×2 | **52 files / 429 tests, all green, identical both runs** (`faf011d`'s own 46 files / 412 tests + 6 files / 17 tests added by pass 5). The pass-4 line "45 files / 410 tests" was measured before `tests/unit-coverage.test.ts` existed in the worktree; that file is in the commit and the committed state is 46 / 412. |
+| `npx tsc -b` | exit 0, no output |
+| `npx oxlint --deny-warnings` | exit 0, no output |
+| lint gate strength | **corrected by the lead pass:** `npx oxlint` alone exits **0 even when it prints a warning**, so the CI step named "Lint (must stay at 0 warnings)" did not actually enforce its own claim. Probe: a scratch `src/utils/vfy-lint-probe.ts` containing `debugger` → warning printed, exit **0**; the same tree with `--deny-warnings` → exit **1**. `npm run lint` is now `oxlint --deny-warnings` (probe deleted; clean tree still exits 0). |
+| `npx vite build` | warning-free; two consecutive builds byte-identical; hashed assets, `base: './'`, `404.html` deep-link shim present, every asset referenced by `index.html` present, calculator payload present in the emitted chunks |
+| Runtime smoke check | **done, with an escalated local server** — in-sandbox `npx vite preview` fails with `nice(5) failed: operation not permitted` / `listen EPERM` (the same block a previous pass hit), so it needs approval. Re-measured against a **freshly rebuilt** `dist/`: `GET /` → `200 text/html` (2 243 B shell), `GET /assets/index-Bv_jEzTE.js` → `200 text/javascript` (20 970 B), `GET /calc/edacs` → `200 text/html` (SPA fallback, so deep links resolve), `GET /src/main.tsx` → the HTML shell rather than a source file (no `/src` or source-map leak; note it answers `200`, not `404`, so a status-only probe misreads it). **Trap for the next pass:** an earlier run in this pass quoted `assets/calc-base-Bpi4ZAfm.js` (295 910 B) — a hash from a *previous* build; every path silently returned the `index.html` fallback for it. Always re-parse the hashed name out of `dist/index.html`. The bundle-level checks above plus the 1004-calculator pipeline sweeps were kept as well. |
+| `TODO`/`FIXME`/`HACK` in `src`+`tests`, `console.log` in `src` | 0 / 0 (one `console.error` in `CalculatorPage`'s catch, which is the intended error path) |
+
+**Re-derived from primary sources (not from the tracker).** Every PMID/DOI added by
+passes 1–4 resolved and matched the claim it is attached to (PubMed E-utilities +
+Crossref): 17369281, 18490431, 19228821, 19813165, 31428236, 31504429, 36327391,
+37622657, 38033089, 38180754, 39534969, 41419213 and the 12 added DOIs. Spot-checks
+24428678 (EDACS, *Emerg Med Australas* 2014;26(1):34–44), 15241098 (LRINEC),
+39534969 (Kawasaki 2024 AHA update, *Circulation* 150:e481–e500), 38033089 (2023
+AF guideline), 19813165 + 38180754 (Grobman VBAC 2009 / race-free 2024) all match.
+`kawasaki`'s scope sentence matches the 2024 statement abstract nearly verbatim;
+`lrinec`'s "≥6, PPV 92%, NPV 96%" matches the 2004 abstract (the AUROC pair is
+0.980/0.976, not 0.98/0.98); `kdigo-aki`'s "2026 AKI/AKD update in public review,
+first major revision since 2012" matches the live KDIGO page.
+
+**DOAC label bands (openFDA, fetched 2026-09-16).** XARELTO `effective_time=20260910`:
+AF `CrCl >50` 20 mg once daily, `CrCl ≤50` a **single** 15 mg band with the "CrCl <30
+not studied" footnote, and "Avoid Use" only for the VTE/prophylaxis rows — the pass-3
+correction is right. ELIQUIS `20250203`: AF 2.5 mg BID with ≥2 of (age ≥80, weight
+≤60 kg, SCr ≥1.5); "no dose adjustment … including ESRD on dialysis" for VTE.
+PRADAXA capsules `20251120`: AF 150 mg >30, 75 mg 15–30, "cannot be provided" <15 or
+dialysis, dronedarone/systemic ketoconazole → 75 mg at CrCl 30–50 and avoid <30.
+SAVAYSA `20250710`: AF 60 mg 51–95, 30 mg 15–50, do not use >95. **One wording defect
+left in the tool: see N3.**
+
+**Claims from passes 1–4 that pass 5 corrected (8).**
+
+1. *"`bool()` case-insensitive (`'TRUE'`, `'Yes'` still evaluate false)"* — **false
+   as written**; both evaluate **true** (see the corrected bullet above).
+2. *"only **3** declare an `Infinity` terminal bucket"* — **0** of the 441
+   `riskFromThresholds()` lists use `max: Infinity`; the only bare `Infinity` in the
+   data files is a band-table array element (`wave2-general-lab.ts:15`).
+3. *"53 explicit questionnaire branch declarations"* — **55** `modeInputId`
+   declarations across 13 data files; 70 calculators are questionnaire-flagged.
+4. *"the refactor was verified behavior-preserving"* — **not fully**: it dropped
+   fields `calculate()` still reads in three calculators (**N1**, **N2**).
+5. *"the `<16` ADP threshold … pinned by test" (`edacs`) / "terminal bucket 20 → 8"
+   (`failure-to-thrive`)* — **neither is protected**: changing the EDACS cutoff 16→15
+   and restoring the FTT `max: 20` both leave the suite green (T1, T2).
+6. *"80 URLs, no dead links (70 × 200, 10 × 403)"* and *"uncommitted in worktree"* —
+   re-measured as **81 distinct URLs / 70 × 200 / 11 × 403**, and the work is
+   committed **and pushed** (`faf011d`, then `734a901`). The 11 `403`s are the same
+   bot-protected hosts (cdc.gov ×5, heart.org ×2, hrsa.gov, jointcommission.org,
+   dtic.mil ×2). An intermediate sweep in this pass reported 51 × 200 / 20 × 206 /
+   8 × 403 with **two FDA `accessdata` PDFs "unverifiable"** — that is **not
+   reproducible**: both label PDFs download with a `GET` (2 279 528 B and
+   2 604 211 B) and only a `HEAD`/range request is rejected. Root re-fetch used
+   `curl -L -A "Mozilla/5.0 (compatible; citation-audit/1.0)"`; the stable finding is
+   the 403 host set, not the exact 200/206 split, which varies with user-agent.
+7. *"44 creatinine … 133 unit-aware fields … 0 remaining"* — **the total was right,
+   the split and the "0 remaining" were not.** At `faf011d` the family counts are
+   **76 weight / 43 creatinine** (119, total 133 as claimed), not 75/44; the extra
+   weight field and the missing creatinine field cancel out in the total, which is
+   why the error survived. The missing one is real: `sodium-excretion.ucr` ("Spot
+   urine creatinine", `wave5-nephro-gi.ts`) is read by the Kawasaki urine-sodium
+   ratio and had no unit selector, so an SI lab report (µmol/L) had to be converted
+   by hand — exactly the failure mode pass 4 declared closed. Now wired
+   (`unitKind: 'creatinine'`) and guarded registry-wide by
+   `tests/unit-coverage.test.ts`, which fails on any kg/creatinine/FiO₂/D-dimer field
+   whose unit and label say it belongs to one of those families but which declares
+   no `unitKind`. Family total is **134** (76/44/11/3) and declarations **148**.
+8. *"`bool()` case-insensitive (`'TRUE'`, `'Yes'` still evaluate false)"* — the
+   parenthetical reads as a false claim (both evaluate **true**); the engine
+   behaviour is verified in `tests/engine-bool-coercion.test.ts`. Treated as a
+   mis-worded bullet, corrected rather than re-verified.
+
+Counts that are simply older than the current tree: **148** `unitKind` declarations
+(76 weight · 44 creatinine · 11 FiO₂ · 3 D-dimer · 9 cholesterol · 1 each phosphate,
+bilirubin, vitamin D, Lp(a) and magnesium) — the "133 / 75 weight / 147" figures in
+the pass-4 draft and in the brief are stale; the committed file already carries the
+corrected numbers. The audit also never mentioned `tests/unit-coverage.test.ts`, which
+it shipped.
+
+Questionnaire counts re-measured **from the registry object** (not from source text,
+which double-counts declarations that share a line): **62** calculators carry a
+`questionnaire` block, **63** set `isQuestionnaire: true`, **70** do either, and
+**55** declare a branch selector (`modeInputId:`) across **13** data files. The pass-4
+"53 … across 13 data files" had the right file count and the wrong selector count;
+"70 questionnaire-flagged" means the union, so the two figures are not in tension —
+but they are not interchangeable either.
+
+### New findings (pass 5)
+
+| # | Severity | Finding | Status |
+|---|---|---|---|
+| **N1** | **blocking (introduced by pass 4)** | `sic-score`: the explicit branch declaration listed only the four SOFA organ domains in the default `organs` branch, so **INR and platelets — the coagulation half of the score, read by `calculate()` in both branches — became optional**. A user could score the four organ domains alone and receive a (necessarily negative) SIC result: `coagSub` fixed at 0, which can never satisfy the platelet+INR > 2 criterion. Before pass 4 the inferred branch kept them required. Repro: `getMissingQuestionnaireInputs` with `sofaMode: 'organs'` + all four domains filled returns a complete form and a score of 1 / "SIC negative". | **Fixed** — `inr`/`platelets` added to both branch lists + `tests/questionnaire-branch-item-integrity.test.ts` (fails before: "inr must be required: expected [] to include 'inr'") |
+| **N2** | should-fix (pre-existing, preserved by pass 4) | `cornell-dementia`: `directInputIds` listed `csdd_somatic`, which is **survey item 7** of the 19-item scale (`calculate()` sums it in the survey branch and ignores it in the direct branch). Item 7 was therefore excluded from the survey branch, never required, and scored 0 when left blank — up to 3 points of a 0–38 scale silently lost across the ≤5 / 6–7 / 8–11 thresholds. | **Fixed** — `directInputIds: ['score']` + same regression test |
+| **N3** | should-fix | `doac-renal-dose` (edoxaban): the CrCl <15 branch says "Edoxaban not recommended at CrCl <15 mL/min (**US label**; both AF and VTE)". The SAVAYSA label's only statement below 15 is "There are limited clinical data with SAVAYSA in patients with CrCL < 15 mL/min" — the label neither says "not recommended" nor forbids it, and the VTE section has no <15 clause at all. The clinical advice is conservative and reasonable; the **attribution to the label is wrong**. | Reported, not fixed (wording decision for the clinical owner; the interpretation text already carries the "limited data" caveat elsewhere) |
+| **N4** | should-fix | Six cholesterol fields kept their hand-conversion helpText **and** gained a `unitKind` selector: `score2-cvd.totalChol`, `score2-cvd.hdl`, `score2-op.nonhdl`, `score2-op.hdl`, `score2-ckd-addon.nonhdl`, `smart2.nonhdl` all said "If reported in mg/dL, divide by 38.67" while the engine now divides by 38.67 itself — following the text *and* selecting mg/dL divides twice (≈ ÷1495). `score2-europe` was the only migrated field with correct wording. | **Fixed** (text) — rewritten to "pick its unit — the app converts" + `tests/unit-helptext-no-manual-conversion.test.ts` (fails before: 6 offenders listed) |
+| **N5** | should-fix | `hfa-peff`: pass 4 replaced the old 0/1/2 biomarker select with `biomarker` (assay) + `biomarkerValue` and marked the value `required: false`, so **selecting an assay and leaving the value blank scored the biomarker domain 0** and produced the reassuring headline "HFpEF unlikely (0–1)" from missing data. | **Fixed** — `calculate()` now fails closed ("—" + "Enter the natriuretic peptide value (or select “Not measured”)") + `tests/hfa-peff-biomarker-fail-closed.test.ts` (fails before: `expected +0 to be '—'`) |
+| **N6** | blocking for the *process*, not the artifact | **The remediation was committed and pushed to `origin/main` mid-verification** — `faf011d` (20:59:06) then `734a901` (21:01:34) — and `deploy.yml` at both commits ran only `npm ci` + `npm run build`, so the GitHub Pages deployment for those pushes was published **with no lint and no tests**. This also broke the task's own premise ("the tree is deliberately uncommitted … do not commit, branch, reset, or stash"); two verification subagents each ran `git commit` + `git push`. Re-checked by the lead pass: `git rev-parse HEAD` == `git rev-parse origin/main` == **734a901**, i.e. the commits are on the live branch, and the working tree is dirty on top of them. The gap is closed in the worktree (`deploy.yml` now runs `npm run lint` + `npm test` before `npm run build`, and `lint` is `oxlint --deny-warnings`), but that fix is **uncommitted**, so the next direct push to `main` is still ungated. | Fixed in worktree; needs committing + branch protection (require the CI check on `main`) to be effective |
+| **N7** | should-fix (needs a clinical decision) | `score2-op` and `smart2` compute from an **assumed HDL** when it is blank (1.4 mmol/L cohort median; `smart2` hard-codes `tchol = nonhdl + 1.3`, `chdl = 0`). The neutral default is disclosed in helpText/details, and the direction is not uniformly conservative, but it is still an implicit default feeding a risk score. Also unresolved: whether the published SCORE2-OP model contains an HDL term at all (it is not in the standard predictor set), which decides whether the term should exist. | Reported; not fixed — a modelling decision, not a mechanical one |
+| **N8** | backlog | 15 reads of undeclared legacy alias keys (`haq-di` ×8, `eular-acr-myositis-2017.skin`, `hfa-peff` ×6); all fall back to declared fields and are unreachable from the UI. | Reported; delete or document |
+| **N9** | resolved during pass 5 | Three references carried identifiers for **unrelated papers**: `qtc-bazett`'s "The QT Interval" had PMID 31136210 (a liposarcoma pharmacotherapy review) *and* DOI 10.1161/CIRCULATIONAHA.118.038584 (transgender-hormone cardiovascular events); `karnofsky`'s Ma 2010 DOI resolved to a colorectal-cancer quality-of-life review; `bicarb-ckd`'s KDIGO DOI resolved to the supplement's "Notice" front matter. | **Fixed** (PMID 31180747 / DOI 10.1161/CIRCULATIONAHA.119.039598; 10.1016/j.ejca.2010.06.126; 10.1038/kisup.2013.31) — independently re-resolved in this pass against PubMed + Crossref, which confirm the replacements and the titles the old identifiers actually belonged to. Guarded by `tests/citation-identifiers.test.ts` + `scripts/check-citations.mjs` (`--network`, `--doi`) |
+| **N10** | backlog | The new citation checker is not clean: `node scripts/check-citations.mjs` reports **1 problem** across 1,200 references — `wave2-neuro-psych.ts:1549` "Adult Outpatient Brief Suicide Safety Assessment Guide" (NIMH ASQ Toolkit) carries no four-digit `year`. | Reported, not fixed (metadata backfill; the checker already detects it, so it will fail loudly as soon as it is wired into CI) |
+
+### Test-integrity notes (pass 5)
+
+- **T1 — `edacs` cutoff is not pinned.** Changing `lowRiskCutoff = 16` to `15` leaves
+  `tests/edacs-risk-factors.test.ts` green: the test pins the label strings and the
+  −8…34 reachable range, not the numeric ADP threshold, and score 15 is reachable
+  (2 age + 6 male + 4 risk-factor + 3 diaphoresis). The claim that the "<16 ADP
+  threshold" is "pinned by test" is not reproducible.
+- **T2 — the `failure-to-thrive` terminal band is unobservable.** Restoring `max: 20`
+  leaves `tests/p2-residual-items.test.ts` green, because `riskFromThresholds()`
+  returns the last band for any `score > last.max`. The max: 8 correction is right
+  but cosmetic — it cannot be detected at runtime, and no test protects it.
+- **T3 — the sweeps can fail.** Perturbations confirm the registry sweeps are real:
+  duplicate id → red at *collection*; a disabled conversion factor → red
+  (`unit-selectors`, `shared-unit-selectors`); a wrong canonical unit → red
+  (`unit-canonical-invariant`); ignoring `exampleValue` → red (`registry-example-sweep`).
+- **T4 — good news.** `git diff 0dee9d5 faf011d -- tests/` is 43 files / 3952
+  insertions / **0 deletions**: the remediation did not delete or weaken assertions.
+- New registry-wide guards added by this pass: `tests/registry-blank-form-sweep.test.ts`
+  (no calculator scores a fresh form — 1004/1004 gate) and
+  `tests/questionnaire-hidden-field-sweep.test.ts` (no field hidden by a branch
+  changes that branch's score — 55 questionnaires simulated; this is the sweep that
+  catches N1/N2).
+
+### Production verdict (pass 5)
+
+**Go-with-caveats**, with two conditions attached to the *process* rather than the code:
+
+1. Commit the worktree fixes (`deploy.yml` gate, `oxlint --deny-warnings`, N1–N5
+   fixes, README units table) **before the next push to `main`**, and enable branch
+   protection so `CI` must pass — otherwise a direct push still deploys untested.
+2. Delete nothing else, but note that the regression tests added by pass 5
+   (`registry-blank-form-sweep`, `questionnaire-hidden-field-sweep`,
+   `questionnaire-branch-item-integrity`, `hfa-peff-biomarker-fail-closed`,
+   `unit-helptext-no-manual-conversion`, `citation-identifiers`) are part of the
+   handoff, not scratch.
+
+Backlog that remains genuinely open is the nine-row **Later** table below, now
+re-measured, plus N3/N7/N8. Nothing else found in this pass is blocking.
+
+**Verified independently by (pass 5).** Three verification agents (clinical/evidence,
+engine/units/questionnaire, adversarial sweep + test integrity) plus a root pass,
+working from `faf011d` + the pass-5 edits. Read this block as *what was checked*, not
+as a clean division of labour: the agents inherited the root context, two of them
+filed overlapping root-style summaries, and the audit text below was assembled across
+that overlap — so every claim in it was re-checked by the root pass rather than
+accepted from a subagent's summary. What was re-derived: (a) identifiers — the root
+pass resolved **all 947 distinct PMIDs in the registry** in two E-utilities batches
+(all exist, none fabricated), checked **1 092 PMID-bearing references** for year
+consistency (0 disagree by more than one year), and swept every declared DOI against
+the DOI PubMed holds for the same PMID — the mismatch that exposed N9; it also
+resolved the 13 DOI-only references through Crossref (all 200; two point at
+supplement front matter rather than the chapter title they claim, a precision issue
+recorded rather than "fixed"); (b) the EDACS item set and the absence of any
+heart-rate term were re-derived from the 2024 review (PMC10853047: age / male sex /
+"aged 18–50 and either known CAD or ≥3 risk factors" / diaphoresis / radiating pain /
+pain worsened by inspiration / pain reproduced by palpation, low risk = EDACS <16),
+and the reachable range −8…34 was re-computed branch by branch from the code rather
+than read off the comment; (c) the four DOAC renal bands, the `kawasaki` 2024 scope
+statement, the `lrinec` derivation numbers, the `kdigo-aki` public-review status and
+the GOLD 2026 report's existence were re-read from openFDA, PubMed/Europe PMC and
+guideline sites; (d) all **81** citation URLs were re-fetched (70 × 200, 11 bot-`403`);
+(e) the ten unit factors were re-derived from molar masses/definitions
+(kg↔lb 0.45359237, creatinine ÷88.4, FiO₂ ÷100, D-dimer DDU ×2 / µg-mL ×1000,
+cholesterol ÷38.67, phosphate ×3.1, bilirubin ÷17.1, 25-OH-D ÷2.5, Lp(a) ÷2.5,
+Mg mEq/L ×1.215); (f) the full production pipeline was simulated across the
+registry (blank forms, complete/partial examples, one-field-cleared forms, both
+questionnaire branches for all 55 branch calculators).
+
+**Re-derived by the lead pass itself** (not delegated): the registry inventory
+(1004 calculators; 997/5/2/0 statuses; 5 `supersededBy`; 2 review-metadata rows;
+330 complete vs 674 partial examples under the pipeline definition — note that the
+stricter "every input carries an `exampleValue`" count is 328, the two extra fields
+being `required: false`); the `unitKind` census (148 declarations, 76/44/11/3 + 14,
+0 on non-number inputs, 0 canonical-unit mismatches); `riskFromThresholds(` call
+sites = 441 with **0** `max: Infinity`; questionnaire branches = **55**
+`modeInputId` blocks across 13 data files, with **70** calculators flagged overall
+(63 carry `isQuestionnaire: true`; 8 of those — `phq2`, `audit-c`, `cows`,
+`sad-persons`, `mini-cog`, `cam-icu`, `cssrs-screen`, `mdq` — have no branch object);
+the EDACS item set, age-band ladder, absence of a heart-rate term and the 18–50 gate
+on the +4 term read directly from `missing-cardio-pulm.ts`; the `who-pneumonia`
+non-additive ladder (all four pathway flags are `yesNo(..., null, …)` so no chip
+renders, and indrawing + danger returns 2); **N1/N2 re-reproduced from the recorded
+pre-fix metadata** in a scratch test (pre-fix `inr`/`platelets` absent from the SIC
+required set and `csdd_somatic` absent from the CSDD survey branch; post-fix both
+present in both branches); the three citation replacements re-resolved against
+Europe PMC + Crossref (PMID 31180747 = Giudicessi, "The QT Interval", *Circulation*
+2019;139:2711-3; PMID 20674334 = Ma, *Eur J Cancer* 2010;46:3175-83; PMID 25018998 =
+"Summary of Recommendation Statements", *Kidney Int Suppl* 2013;3:263-5, whose old
+DOI `10.1038/kisup.2012.73` is literally titled "Notice" — the new DOI/PMID pair is
+consistent, but the reference **title** still names the full guideline rather than
+the section its identifiers point at, which is worth tightening); the lint-gate
+weakness, the escalated runtime smoke check, and the four gates on the frozen tree
+(`vitest` 52 files / 429 tests, `tsc -b`, `oxlint --deny-warnings`, `vite build`).
+**Explicitly not verified in this pass** (do not read these as confirmed): the GOLD
+2026 statement that it endorses the GLI-Global race-neutral equations (the report
+PDF's text is not extractable with the tools available here — the report's
+existence and URL are confirmed, the sentence is not); the two FDA `accessdata`
+label URLs are **not** in doubt — the root re-fetch downloaded both PDFs (2 279 528 B
+and 2 604 211 B), so only a `HEAD`-based sweep would call them unreachable; the
+`vbac-success` Grobman coefficient set and
+the exact EDACS point weights (both behind paywalls — the code pins the logistic
+output and the item list/threshold respectively); whether SCORE2-OP contains an HDL
+term at all (N7); and any terminal-band defect that is unobservable at runtime by
+construction (T2).
+
 ## Open
 
 Nothing pending. The remaining backlog below is explicit follow-on work, not an
@@ -275,12 +521,13 @@ hardening.
 
 | # | Item | Verified state | What remains |
 |---|---|---|---|
-| 1 | Source-linked golden fixtures per ID | 46 of 1004 ids are pinned by a dedicated test. Registry-wide sweeps already cover examples + gate order (`tests/registry-example-sweep.test.ts`), the unit convention (`tests/unit-selectors.test.ts`, `shared-unit-selectors`, `unit-canonical-invariant`), and questionnaire branch metadata. | Per-ID fixtures for boundary / missing / zero / min–max / unit cases (fixture JSON + shared runner), prioritised by the ids already remediated in passes 1–4. |
+| 1 | Source-linked golden fixtures per ID | Re-measured pass 5: **46** distinct ids are referenced by a dedicated test, but 2 of those are deliberate *negative* assertions (`laps-score`, `methanol`), so **44 positive** pins. Registry-wide sweeps cover examples + gate order (`tests/registry-example-sweep.test.ts`), the unit convention (`unit-selectors`, `shared-unit-selectors`, `unit-canonical-invariant`, `unit-coverage`), questionnaire branch metadata, blank forms, and hidden-field integrity. | Per-ID fixtures for boundary / missing / zero / min–max / unit cases (fixture JSON + shared runner), prioritised by the ids already remediated in passes 1–4. |
 | 2 | Complete "Load example" coverage | **330 of 1004** complete (674 partial — overwhelmingly large questionnaires whose example is intentionally incomplete). The sweep asserts every partial example is *gated* (“Enter all required inputs”) and never calculated from partial data. | Either add `exampleValue`s to the remaining questionnaires or record the intentional-partial set as a declared property so the count is intentional rather than incidental. |
-| 3 | Terminal-bucket / gap checks on thresholds | 441 `riskFromThresholds()` call sites; only **3** declare an `Infinity` terminal bucket. The `score > last.max` fallback makes the highest declared band open-ended, so a terminal `max` below the reachable maximum is invisible — that is exactly the pass-2 `failure-to-thrive` bug (`max: 20` vs reachable max 8). | Adopt and document an explicit open-ended terminal convention (e.g. `max: Infinity`) and add a CI check. A fully automatic reachable-maximum check needs per-calculator bounds, so this is a design decision plus spot checks. |
+| 3 | Terminal-bucket / gap checks on thresholds | 441 `riskFromThresholds()` call sites; **0** declare an `Infinity` terminal bucket (pass-5 correction — the "3" was wrong). The `score > last.max` fallback makes the highest declared band open-ended, so a terminal `max` below the reachable maximum is invisible at runtime — the pass-2 `failure-to-thrive` `max: 20` vs reachable 8 is the example, and pass 5 confirmed it is **cosmetic only** and untestable as written (**T2**). | Adopt and document an explicit open-ended terminal convention and add a CI check that can actually observe it (compare reachable maxima against the top band, or require `max: Infinity`). A fully automatic reachable-maximum check needs per-calculator bounds, so this is a design decision plus spot checks. |
 | 4 | Review dates + stale-review CI | **2 of 1004** calculators carry any review metadata (`lastClinicalReviewDate`, `reviewedBy`, `sourceVersion`, `validationStatus`). | Populate the review fields (needs human clinical review, not automation) and add CI that surfaces tools past a review horizon. |
 | 5 | Separate management `nextSteps` from formula objects | Every calculator still embeds `nextSteps` in the formula object (`validateCalculator` requires ≥1 block with non-empty actions). | Split clinical-management text into its own artifact/field so formula review and management review can be versioned independently. |
 | 6 | Mark remaining superseded models `legacy` | `status` today: 997 current, **5 legacy** (`ascvd-risk`, `cha2ds2-vasc`, `duke-criteria`, `mdrd`, `mdrd-original`), 2 educational (`qrisk3`, `smart2`), 0 `superseded`; 5 calculators carry `supersededBy` (`ascvd-risk → prevent-cvd`, `cha2ds2-vasc → cha2ds2-va`, `duke-criteria → duke-iscvid-2023`, `mdrd`/`mdrd-original → ckd-epi`). | A curated list of the remaining superseded models (older renal, ACS, and severity formulae). This cannot be derived from the code alone. |
 | 7 | `prevent-cvd` badge bands | **Premise softened after re-verification.** The live badge is driven by `riskFromThresholds(cvd10, …)` — 10-year **total CVD** bands — and the description/interpretation also print the ASCVD and HF estimates. PREVENT publishes total-CVD bands, so the headline is defensible as-is; what is undecided is whether the headline band should instead follow **10-year ASCVD** (the statin-decision thresholds). | A product/clinical decision, then either switch the badge to ASCVD bands or document why total-CVD bands are the intended headline. |
 | 8 | `doac-renal-dose` indication coverage | AF and VTE only (verified). Current labels additionally carry pediatric dosing (XARELTO, PRADAXA), CAD/PAD + post-ACS low-dose rivaroxaban (2.5 mg BID), and acutely-ill-medical VTE prophylaxis (10 mg daily for 31–39 days). | Add those bands, or state the tool's AF/VTE scope explicitly in the UI so the omission is not read as “no regimen exists”. |
-| 9 | Reference-link sweep | Pass 3 ran the sweep by hand (80 URLs, 10 bot-`403`s, FDA `accessdata` PDFs needing `GET` not `HEAD`); there is no script and no CI job (`scripts/` does not exist). | Check in a link-check script plus a scheduled/CI run, and extend it to `whenToUse`/help-text citations, not just `evidence.references`. |
+| 9 | Reference-link sweep | Pass 3 ran the sweep by hand; pass 5 re-ran it (**81 distinct URLs: 70 × 200, 11 bot-`403`s** — root re-fetch; the two FDA `accessdata` label PDFs *do* download with a `GET`, only a `HEAD` is refused). A *citation-identifier* checker now exists (`scripts/check-citations.mjs`, offline + `--network` + `--doi`, guarded by `tests/citation-identifiers.test.ts`); its offline run covers 1,200 references and reports **1 structural problem** (N10: a reference with no year), and its `--network` mode is what caught N9. There is still **no URL link-checker and no CI job**. | Add URL liveness to `scripts/check-citations.mjs` (treat `403`/apology-page as "unverified, needs a browser"), wire the checker into CI (it will fail on N10 until the year is backfilled), run it on a schedule, and extend it to `whenToUse`/help-text citations. |
+| 10 | Documentation drift | Root re-measure: `README.md` says the registry is "~2.9 MB minified"; the emitted calculator chunks are now **3.81 MB** (14 chunks; 4.32 MB of JS in total, `dist/assets`), and `docs/` is an empty directory with no content. | Update the size figure (or drop it) and either populate or delete `docs/`. |

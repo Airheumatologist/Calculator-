@@ -1368,7 +1368,7 @@ export const wave2OncologyCalcs: Calculator[] = [
           citation: 'Ma C et al. Eur J Cancer. 2010',
           year: 2010,
           pmid: '20674334',
-          doi: '10.1016/j.ejca.2010.06.010',
+          doi: '10.1016/j.ejca.2010.06.126',
         },
       ],
     },

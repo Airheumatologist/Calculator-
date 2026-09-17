@@ -261,8 +261,15 @@ export const wave6HemeOncCalcs: Calculator[] = [
       modeInputId: 'sofaMode',
       directModeValues: ['direct'],
       activeInputIdsByMode: {
-        organs: ['respSofa', 'cvSofa', 'hepSofa', 'renalSofa'],
-        direct: ['directSofa'],
+        // INR and platelets are the coagulation half of the SIC score and are
+        // read by `calculate()` in BOTH branches (score = INR points + platelet
+        // points + SOFA points, and "SIC positive" additionally requires the
+        // coagulation subscore > 2). Listing them here keeps them required in
+        // whichever SOFA branch is chosen; omitting them let a user score the
+        // four organ domains alone and still receive a (necessarily negative)
+        // SIC result.
+        organs: ['inr', 'platelets', 'respSofa', 'cvSofa', 'hepSofa', 'renalSofa'],
+        direct: ['inr', 'platelets', 'directSofa'],
       },
     },
     name: 'SIC Score (Sepsis-Induced Coagulopathy)',

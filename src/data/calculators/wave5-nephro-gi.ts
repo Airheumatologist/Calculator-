@@ -1646,7 +1646,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
           citation: 'Kidney Disease: Improving Global Outcomes (KDIGO) CKD Work Group. Kidney Int Suppl. 2013 (Chapter 3: suggested treating metabolic acidosis if HCO₃ <22 mEq/L)',
           year: 2013,
           pmid: '25018998',
-          doi: '10.1038/kisup.2012.73',
+          doi: '10.1038/kisup.2013.31',
           url: 'https://kdigo.org/guidelines/ckd-evaluation-and-management/',
         },
         {

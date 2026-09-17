@@ -2267,7 +2267,12 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     questionnaire: {
       modeInputId: 'entryMode',
       directModeValues: ['direct'],
-      directInputIds: ['score', 'csdd_somatic'],
+      // `csdd_somatic` is survey item 7 (a scored item of the 19-item scale),
+      // not a direct-entry summary: `calculate()` sums it in the survey branch
+      // and ignores it in the direct branch. Listing it here excluded the item
+      // from the survey branch, so it was never required and a blank answer
+      // silently scored 0 out of 38.
+      directInputIds: ['score'],
     },
     name: 'Cornell Scale for Depression in Dementia (CSDD)',
     shortName: 'CSDD',

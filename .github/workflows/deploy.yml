@@ -30,6 +30,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # `main` can be pushed to directly, so the deploy job cannot rely on the
+      # pull_request CI workflow having run: it re-runs lint and the calculator
+      # tests itself before anything is published.
+      - name: Lint (must stay at 0 warnings)
+        run: npm run lint
+
+      - name: Calculator tests
+        run: npm test
+
       - name: Build production site
         run: npm run build
 

@@ -826,6 +826,31 @@ export const wave7BedsideCalcs: Calculator[] = [
         assay === 'bnp' ? (rhythm === 'af' ? 105 : 35) : rhythm === 'af' ? 375 : 125;
       const majorCutoff = assay === 'bnp' ? (rhythm === 'af' ? 240 : 80) : rhythm === 'af' ? 660 : 220;
       let biomarker = 0;
+      if (assay !== 'none' && biomarkerValue == null) {
+        // Fail closed. Scoring an assay with no entered value as "0 points"
+        // would move the total into the reassuring "HFpEF unlikely" band, so
+        // the tool refuses to score until the value is entered or the assay is
+        // set to "Not measured" (the documented way to score the domain 0).
+        return {
+          score: '—',
+          unit: '/6',
+          label: 'Enter the natriuretic peptide value (or select “Not measured”)',
+          interpretation:
+            `The biomarker domain cannot be scored while ${assayLabel} is selected with no value. Enter the reported BNP/NT-proBNP in pg/mL, or set the assay to “Not measured” to score the biomarker domain as 0 points. The functional + morphological domains alone give ${functional + morphological}/6, which is not a complete HFA-PEFF step-2 score.`,
+          riskLevel: 'info',
+          details: [
+            { label: 'Functional', value: String(functional) },
+            { label: 'Morphological', value: String(morphological) },
+            { label: 'Rhythm', value: rhythmLabel },
+            { label: 'Natriuretic peptide assay', value: assayLabel },
+            { label: 'Natriuretic peptide value', value: 'Not entered' },
+            {
+              label: 'HFA-PEFF NP cutoffs',
+              value: `Minor ${minorCutoff}–${majorCutoff}; major >${majorCutoff} pg/mL`,
+            },
+          ],
+        };
+      }
       if (assay !== 'none' && biomarkerValue != null) {
         biomarker = biomarkerValue > majorCutoff ? 2 : biomarkerValue >= minorCutoff ? 1 : 0;
       }

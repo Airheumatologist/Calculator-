@@ -207,9 +207,23 @@ Calculator
 ### Units
 
 Clinical formulas are written in one canonical unit each; the user may enter
-another. A numeric input opts into a unit selector with `unitKind` (`weight`,
-`creatinine`, `fio2`, `ddimer`, `cholesterol`) and keeps `unit` as the canonical
-unit (`kg`, `mg/dL`, `fraction`, `ng/mL FEU`, `mmol/L`). `src/utils/units.ts`
+another. A numeric input opts into a unit selector with `unitKind` and keeps
+`unit` as the canonical unit its formula is written in:
+
+| `unitKind` | canonical `unit` | selectable entry units |
+| --- | --- | --- |
+| `weight` | `kg` | kg, lb |
+| `creatinine` | `mg/dL` | mg/dL, µmol/L |
+| `fio2` | `fraction` | fraction, % |
+| `ddimer` | `ng/mL FEU` | ng/mL FEU, µg/mL FEU, ng/mL DDU, µg/mL DDU |
+| `cholesterol` | `mmol/L` | mmol/L, mg/dL |
+| `phosphate` | `mg/dL` | mg/dL, mmol/L |
+| `bilirubin` | `mg/dL` | mg/dL, µmol/L |
+| `vitaminD` | `ng/mL` | ng/mL, nmol/L |
+| `lpa` | `mg/dL` | mg/dL, nmol/L |
+| `magnesium` | `mg/dL` | mg/dL, mEq/L |
+
+`src/utils/units.ts`
 owns the option sets and conversion factors, `CalculatorForm` renders the
 inline selector, and `getCanonicalValues()` converts the entry before range
 validation and before `calculate()` runs — so a formula never sees pounds or
