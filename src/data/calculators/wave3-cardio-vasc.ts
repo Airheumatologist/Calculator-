@@ -236,7 +236,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'Adults with cardiogenic shock to estimate in-hospital mortality risk strata.',
     whyUse: 'Simple 7-variable score from a prospective European CS cohort; bedside applicable.',
     inputs: [
-      yesNo('age75', 'Age > 75 years', 1),
+      yesNo('age75', 'Age > 75 years', 1, 'Age above 75 years at shock onset; scores 1 point. Age is the only demographic item in CardShock.'),
       yesNo('confusion', 'Confusion / altered mental status at presentation', 1, 'New disorientation, inappropriate behavior, or reduced consciousness as a hypoperfusion sign — not chronic dementia without acute change. No GCS cutoff was used in the derivation.'),
       yesNo('priorMiCabg', 'Previous MI or CABG', 1, 'Prior myocardial infarction or coronary bypass — not PCI alone unless there was also MI/CABG.'),
       yesNo('acs', 'ACS etiology of shock', 1, 'Shock caused by acute coronary syndrome (STEMI/NSTEMI/UA), not isolated acute-on-chronic HF without ACS.'),
@@ -340,11 +340,11 @@ export const wave3CardioVascCalcs: Calculator[] = [
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, exampleValue: 130, helpText: 'Admission systolic BP (mmHg).' }),
       yesNo('hf', 'Signs of heart failure at presentation', 7, 'Killip class II–IV: rales, S3, or radiographic pulmonary congestion at presentation (not remote compensated HF alone).'),
       yesNo('vascular', 'Prior vascular disease (PAD / stroke)', 6, 'Prior peripheral artery disease or stroke/TIA (CRUSADE “vascular disease”).'),
-      yesNo('dm', 'Diabetes mellitus', 6),
+      yesNo('dm', 'Diabetes mellitus', 6, 'Diabetes mellitus (treated or untreated) scores 6 points in the CRUSADE bleeding table. Exclude uncomplicated type 2 by diet alone only if your local protocol says so.'),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
-      ]),
+      ], undefined, 'In CRUSADE, female sex scores 8 points and male sex 0; sex is a scored item in the published table, not a model input.'),
     ],
     calculate(values) {
       const hct = num(values.hct, 40);
@@ -480,12 +480,12 @@ export const wave3CardioVascCalcs: Calculator[] = [
         { label: '≥ 75 years (−2)', value: -2, points: -2 },
         { label: '65–74 years (−1)', value: -1, points: -1 },
         { label: '< 65 years (0)', value: 0, points: 0 },
-      ]),
-      yesNo('smoker', 'Cigarette smoker (within past 2 years)', 1),
-      yesNo('dm', 'Diabetes mellitus', 1),
+      ], undefined, 'Age band: 75 years or older -2 points, 65-74 years -1 point, under 65 years 0 points.'),
+      yesNo('smoker', 'Cigarette smoker (within past 2 years)', 1, 'Current cigarette smoker, or quit within the past 2 years, scores 1 point.'),
+      yesNo('dm', 'Diabetes mellitus', 1, 'Diabetes mellitus (treated or untreated) scores 1 point toward prolonged-DAPT benefit.'),
       yesNo('miPresentation', 'MI at presentation', 1, 'Index PCI was for MI (STEMI or NSTEMI), not elective PCI for stable CAD.'),
       yesNo('priorPciMi', 'Prior PCI or prior MI', 1, 'PCI or MI before the index procedure.'),
-      yesNo('stentSmall', 'Stent diameter < 3 mm', 1),
+      yesNo('stentSmall', 'Stent diameter < 3 mm', 1, 'Index PCI stent diameter under 3 mm scores 1 point; larger stents score 0.'),
       yesNo('paclitaxel', 'Paclitaxel-eluting stent', 1, 'First-generation paclitaxel-eluting stent (historical DAPT-trial variable; uncommon with contemporary DES).'),
       yesNo('chfEf', 'CHF or LVEF < 30%', 2, 'Clinical heart failure or LVEF <30%.'),
       yesNo('veinGraft', 'Vein graft stent', 2, 'Index stent in a saphenous vein graft.'),
@@ -968,13 +968,13 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'Chest pain patients with biphasic or deeply inverted precordial T waves after pain resolves.',
     whyUse: 'Recognizing Wellens pattern prompts urgent angiography rather than stress testing.',
     inputs: [
-      yesNo('anginaHx', 'Recent anginal chest pain (often resolved at time of ECG)', 1),
+      yesNo('anginaHx', 'Recent anginal chest pain (often resolved at time of ECG)', 1, 'Recent anginal chest pain, characteristically resolved or improving by the time the ECG is recorded; scores 1 point.'),
       yesNo('patternA', 'Type A: biphasic T waves in V2–V3 (±V1–V4)', 2, 'Biphasic T: initial positive then terminal negative, typically when pain-free.'),
       yesNo('patternB', 'Type B: deep symmetric inverted T waves in V2–V3 (±V1–V6)', 2, 'Deep, symmetric, inverted precordial T waves (often >5 mm), typically when pain-free. More common than type A.'),
-      yesNo('isoelectric', 'Isoelectric or minimally elevated ST (<1 mm) in precordials', 1),
-      yesNo('noQ', 'No precordial pathologic Q waves', 1),
+      yesNo('isoelectric', 'Isoelectric or minimally elevated ST (<1 mm) in precordials', 1, 'Precordial ST segment isoelectric or elevated by less than 1 mm; scores 1 point. Marked ST elevation indicates STEMI, not Wellens.'),
+      yesNo('noQ', 'No precordial pathologic Q waves', 1, 'No pathologic precordial Q waves; scores 1 point. Established Q waves indicate completed infarction rather than the Wellens pattern.'),
       yesNo('tropNormal', 'Normal or only slightly elevated cardiac troponin', 1, 'Normal or minimally above URL (classic series often <2× ULN).'),
-      yesNo('preservedR', 'Preserved R-wave progression (e.g. R in V3 ≥3 mm)', 1),
+      yesNo('preservedR', 'Preserved R-wave progression (e.g. R in V3 ≥3 mm)', 1, 'Preserved R-wave progression, for example an R wave of 3 mm or more in V3, scores 1 point. Poor R progression argues against Wellens.'),
     ],
     calculate(values) {
       const pattern = bool(values.patternA) || bool(values.patternB);
@@ -1263,7 +1263,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
         undefined,
         'BOVA was derived for normotensive PE. SBP 90–100 mmHg scores 2 points; SBP <90 mmHg is outside BOVA staging and requires the high-risk PE pathway.',
       ),
-      yesNo('hr', 'Heart rate ≥ 110 bpm', 1),
+      yesNo('hr', 'Heart rate ≥ 110 bpm', 1, 'Heart rate 110 bpm or higher on admission scores 1 point; 0 points below 110 bpm.'),
       yesNo('rv', 'RV dysfunction (echo or CT)', 2, 'RV dilation (EDD >30 mm PLAX or RV>LV / RV:LV ≥0.9–1.0), free-wall hypokinesis, or peak TR velocity ≥2.6 m/s.'),
       yesNo('trop', 'Elevated cardiac troponin', 2, 'Any cardiac troponin above the local 99th percentile URL.'),
     ],
@@ -1381,12 +1381,12 @@ export const wave3CardioVascCalcs: Calculator[] = [
       numberInput('ivsd', 'IVS thickness (diastole)', { unit: 'cm', min: 0.4, max: 3, step: 0.1, exampleValue: 1.0, helpText: 'Enter centimeters (e.g. 1.0 cm), not millimetres (not 10). End-diastolic septal thickness.' }),
       numberInput('lvidd', 'LVID diastole', { unit: 'cm', min: 2, max: 8, step: 0.1, exampleValue: 5.0, helpText: 'Left ventricular internal diameter in diastole, in centimeters (e.g. 5.0 cm, not 50 mm).' }),
       numberInput('pwt', 'Posterior wall thickness (diastole)', { unit: 'cm', min: 0.4, max: 3, step: 0.1, exampleValue: 1.0, helpText: 'End-diastolic posterior wall thickness in centimeters (e.g. 1.0 cm, not 10 mm).' }),
-      numberInput('height', 'Height (for BSA)', { unit: 'cm', min: 100, max: 230, exampleValue: 170 }),
-      numberInput('weight', 'Weight (for BSA)', { unit: 'kg', unitKind: 'weight', min: 30, max: 250, exampleValue: 70 }),
+      numberInput('height', 'Height (for BSA)', { helpText: 'Height in centimetres, used only for the Mosteller BSA that indexes LV mass.', unit: 'cm', min: 100, max: 230, exampleValue: 170 }),
+      numberInput('weight', 'Weight (for BSA)', { helpText: 'Weight for the BSA index; choose kg or lb and the app converts before the Mosteller formula runs.', unit: 'kg', unitKind: 'weight', min: 30, max: 250, exampleValue: 70 }),
       selectInput('sex', 'Sex (reference ranges)', [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
-      ]),
+      ], undefined, 'Sex selects the sex-specific LV mass index reference ranges used in the pattern comment; it does not change the mass calculation.'),
     ],
     calculate(values) {
       const ivs = num(values.ivsd, 1);
@@ -1471,11 +1471,11 @@ export const wave3CardioVascCalcs: Calculator[] = [
       selectInput('sex', 'Sex (waist threshold)', [
         { label: 'Male (waist > 102 cm / 40 in)', value: 'male' },
         { label: 'Female (waist > 88 cm / 35 in)', value: 'female' },
-      ]),
+      ], undefined, 'Sex sets the waist criterion: above 102 cm (40 in) in men, above 88 cm (35 in) in women.'),
       yesNo('waist', 'Elevated waist circumference (sex-specific ATP III threshold)', 1, 'ATP III: >102 cm (40 in) men, >88 cm (35 in) women. Treated dyslipidemia/HTN/hyperglycemia still count. IDF ethnicity-specific waist is not this tool.'),
-      yesNo('tg', 'Triglycerides ≥ 150 mg/dL (1.7 mmol/L) or on treatment', 1),
-      yesNo('hdl', 'Low HDL-C (men <40, women <50 mg/dL) or on treatment', 1),
-      yesNo('bp', 'BP ≥ 130/85 mmHg or on antihypertensive therapy', 1),
+      yesNo('tg', 'Triglycerides ≥ 150 mg/dL (1.7 mmol/L) or on treatment', 1, 'Fasting triglycerides 150 mg/dL (1.7 mmol/L) or higher, or already on a triglyceride-lowering drug, counts as one criterion.'),
+      yesNo('hdl', 'Low HDL-C (men <40, women <50 mg/dL) or on treatment', 1, 'Low HDL-C: under 40 mg/dL in men or under 50 mg/dL in women, or already on a drug for low HDL-C.'),
+      yesNo('bp', 'BP ≥ 130/85 mmHg or on antihypertensive therapy', 1, 'BP 130/85 mmHg or higher, or on antihypertensive therapy, counts as the blood-pressure criterion.'),
       yesNo('glucose', 'Fasting glucose ≥ 100 mg/dL (5.6 mmol/L) or on treatment', 1, 'AHA/NHLBI 2005 lowered the ATP III glucose cut-point from 110 to 100 mg/dL (ADA impaired fasting glucose). Original 2002 ATP III used ≥110.'),
     ],
     calculate(values) {
@@ -1552,17 +1552,21 @@ export const wave3CardioVascCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
-      ], 'male'),
+      ], 'male', 'Sex selects the published SCORE2 coefficient set; women and men have separate equations.'),
       yesNo('smoker', 'Current smoker', null, 'Current tobacco smoker. Former smokers are scored as non-smokers in SCORE2.', false),
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, exampleValue: 140, helpText: 'Office SBP (mmHg), treated or untreated.' }),
       numberInput('totalChol', 'Total cholesterol', {
         unit: 'mmol/L', unitKind: 'cholesterol',
+        min: 2,
+        max: 12,
         step: 0.001,
         exampleValue: 5.5,
         helpText: 'The published SCORE2 model uses mmol/L; select mg/dL if that is how the lab reports it.',
       }),
       numberInput('hdl', 'HDL cholesterol', {
         unit: 'mmol/L', unitKind: 'cholesterol',
+        min: 0.5,
+        max: 3.5,
         step: 0.001,
         exampleValue: 1.3,
         helpText: 'The published SCORE2 model uses mmol/L; select mg/dL if that is how the lab reports it.',
@@ -1780,14 +1784,14 @@ export const wave3CardioVascCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Female (Ridker 2007 Women’s Health Study)', value: 'female' },
         { label: 'Male (Ridker 2008 Physicians’ Health Study II)', value: 'male' },
-      ]),
+      ], undefined, 'Sex selects the Reynolds model derived in the Women\'s Health Study or the Physicians\' Health Study II.'),
       numberInput('age', 'Age', { unit: 'years', min: 45, max: 80, exampleValue: 55, helpText: 'Women model derived at age ≥45. Men model used initially healthy men (typically ≥50).' }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 220, exampleValue: 130 }),
-      numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 100, max: 400, exampleValue: 210 }),
-      numberInput('hdl', 'HDL-C', { unit: 'mg/dL', min: 15, max: 120, exampleValue: 50 }),
+      numberInput('sbp', 'Systolic BP', { helpText: 'Systolic BP in mmHg at the risk assessment; treated hypertension is entered as the current treated value.', unit: 'mmHg', min: 90, max: 220, exampleValue: 130 }),
+      numberInput('tc', 'Total cholesterol', { helpText: 'Total cholesterol in mg/dL; if the lab reports mmol/L, multiply by 38.67 (this field has no unit selector).', unit: 'mg/dL', min: 100, max: 400, exampleValue: 210 }),
+      numberInput('hdl', 'HDL-C', { helpText: 'HDL cholesterol in mg/dL; if the lab reports mmol/L, multiply by 38.67 (this field has no unit selector).', unit: 'mg/dL', min: 15, max: 120, exampleValue: 50 }),
       numberInput('hscrp', 'hsCRP', { unit: 'mg/L', min: 0.1, max: 20, step: 0.1, exampleValue: 2, helpText: 'High-sensitivity CRP (mg/L). Do not measure during acute illness/infection — wait until baseline.' }),
-      yesNo('smoker', 'Current smoker', 0),
-      yesNo('parentMi', 'Parental MI before age 60', 0),
+      yesNo('smoker', 'Current smoker', 0, 'Current cigarette smoker at the time of assessment; former smokers score 0 in the Reynolds model.'),
+      yesNo('parentMi', 'Parental MI before age 60', 0, 'Parental myocardial infarction before age 60 in a first-degree relative; scores 1 point.'),
       yesNo('dm', 'Diabetes', 0, 'Women: HbA1c term applies only if diabetic. Men: Ridker 2008 was derived in non-diabetic men — diabetes is not in that equation.'),
       numberInput('hba1c', 'HbA1c if diabetes (women)', {
         unit: '%',
@@ -1940,18 +1944,18 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'Primary prevention when a CAC Agatston score is available and age/sex known.',
     whyUse: 'Absolute CAC and rough percentile bands refine statin/aspirin discussions beyond risk estimators alone.',
     inputs: [
-      numberInput('cac', 'CAC Agatston score', { unit: 'AU', min: 0, max: 5000, exampleValue: 0 }),
-      numberInput('age', 'Age', { unit: 'years', min: 45, max: 85, exampleValue: 60 }),
+      numberInput('cac', 'CAC Agatston score', { helpText: 'Total Agatston score from the CAC report; enter 0 when the score is reported as zero or absent calcification.', unit: 'AU', min: 0, max: 5000, exampleValue: 0 }),
+      numberInput('age', 'Age', { helpText: 'Age in years at the time of the CT; MESA percentiles are age- and sex-specific, so a score means different things at 45 and 75.', unit: 'years', min: 45, max: 85, exampleValue: 60 }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
-      ]),
+      ], undefined, 'Sex selects the MESA percentile table used to place the Agatston score; it does not change the score itself.'),
       selectInput('ethnicity', 'Race/ethnicity (MESA categories — educational)', [
         { label: 'White', value: 'white' },
         { label: 'Chinese', value: 'chinese' },
         { label: 'Black', value: 'black' },
         { label: 'Hispanic', value: 'hispanic' },
-      ]),
+      ], undefined, 'Race/ethnicity in the MESA categories, used to select the percentile table this educational helper reports against.'),
     ],
     calculate(values) {
       const cac = num(values.cac, 0);
@@ -2049,7 +2053,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'When an Agatston CAC score is reported and absolute category interpretation is needed.',
     whyUse: 'Standard absolute cut-points used in reports and prevention pathways.',
     inputs: [
-      numberInput('cac', 'Agatston CAC score', { unit: 'AU', min: 0, max: 10000, exampleValue: 0 }),
+      numberInput('cac', 'Agatston CAC score', { helpText: 'Total Agatston score as reported; 0 means no detectable calcification, and each band (1-99, 100-399, 400+) carries a different absolute risk category.', unit: 'AU', min: 0, max: 10000, exampleValue: 0 }),
     ],
     calculate(values) {
       const cac = num(values.cac, 0);
@@ -2134,11 +2138,11 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whyUse: 'First-line noninvasive test for lower-extremity PAD diagnosis and severity.',
     inputs: [
       numberInput('rightBrachial', 'Right brachial SBP', { unit: 'mmHg', min: 50, max: 300, exampleValue: 130, helpText: 'Supine, rest 5–10 min. Doppler SBP. Use the higher of the two brachials as the denominator for both legs.' }),
-      numberInput('leftBrachial', 'Left brachial SBP', { unit: 'mmHg', min: 50, max: 300, exampleValue: 128 }),
+      numberInput('leftBrachial', 'Left brachial SBP', { helpText: 'Highest of the left and right brachial systolic pressures is used as the denominator for both ankle indices, not the left arm alone.', unit: 'mmHg', min: 50, max: 300, exampleValue: 128 }),
       numberInput('rightPtp', 'Right posterior tibial SBP', { unit: 'mmHg', min: 0, max: 300, exampleValue: 120, helpText: 'Doppler PT SBP. ABI uses the higher of PT or DP on that side.' }),
-      numberInput('rightDp', 'Right dorsalis pedis SBP', { unit: 'mmHg', min: 0, max: 300, exampleValue: 118 }),
-      numberInput('leftPtp', 'Left posterior tibial SBP', { unit: 'mmHg', min: 0, max: 300, exampleValue: 122 }),
-      numberInput('leftDp', 'Left dorsalis pedis SBP', { unit: 'mmHg', min: 0, max: 300, exampleValue: 120 }),
+      numberInput('rightDp', 'Right dorsalis pedis SBP', { helpText: 'Right dorsalis pedis systolic pressure by Doppler; a value above 1.4 times the brachial pressure suggests a non-compressible vessel.', unit: 'mmHg', min: 0, max: 300, exampleValue: 118 }),
+      numberInput('leftPtp', 'Left posterior tibial SBP', { helpText: 'Left posterior tibial systolic pressure by Doppler; the higher of the dorsalis pedis and posterior tibial pressures is used as the limb numerator.', unit: 'mmHg', min: 0, max: 300, exampleValue: 122 }),
+      numberInput('leftDp', 'Left dorsalis pedis SBP', { helpText: 'Left dorsalis pedis systolic pressure by Doppler; the higher of the two left ankle vessels is the one that counts.', unit: 'mmHg', min: 0, max: 300, exampleValue: 120 }),
     ],
     calculate(values) {
       const rb = num(values.rightBrachial, 130);
@@ -2308,7 +2312,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'Patients with cancer-associated VTE when estimating recurrence risk on anticoagulation.',
     whyUse: 'Identifies lower vs higher recurrence risk while anticoagulated; informs counseling and intensity discussions (not a stop rule).',
     inputs: [
-      yesNo('female', 'Female sex', 1),
+      yesNo('female', 'Female sex', 1, 'Female sex scores 1 point in the Ottawa recurrence score; male sex scores 0.'),
       yesNo('lung', 'Lung cancer', 1, 'Primary lung cancer as the cancer associated with this VTE.'),
       yesNo('breast', 'Breast cancer', -1, 'Breast cancer as the cancer associated with this VTE (negative points — lower recurrence stratum).'),
       yesNo('tnm1', 'TNM stage I disease', -2, 'TNM stage I of the current cancer (not a remote treated in-situ lesion of another site).'),
@@ -2393,8 +2397,8 @@ export const wave3CardioVascCalcs: Calculator[] = [
     inputs: [
       yesNo('hyperpig', 'Hyperpigmentation, edema, or redness in either lower extremity', 1, 'Post-thrombotic skin changes (hyperpigmentation, edema, or redness) in either leg — not acute cellulitis alone.'),
       yesNo('ddimer', 'Vidas D-dimer ≥ 250 µg/L while on anticoagulation', 1, 'Assay-specific threshold from derivation'),
-      yesNo('obesity', 'BMI ≥ 30 kg/m²', 1),
-      yesNo('older', 'Age ≥ 65 years', 1),
+      yesNo('obesity', 'BMI ≥ 30 kg/m²', 1, 'BMI 30 kg/m² or higher counts as one HERDOO2 item.'),
+      yesNo('older', 'Age ≥ 65 years', 1, 'Age 65 years or older counts as one HERDOO2 item; a total of 0-1 identifies low recurrence risk in women.'),
     ],
     calculate(values) {
       const score =

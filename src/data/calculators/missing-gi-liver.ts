@@ -67,10 +67,10 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'Outpatient risk stratification for advanced fibrosis in viral hepatitis, NAFLD/MASLD, and other chronic liver disease.',
     whyUse: 'Simple labs; dual cutoffs triage who needs elastography/biopsy vs low-risk follow-up.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 1, max: 120, exampleValue: 50 }),
-      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, step: 1, exampleValue: 40 }),
-      numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 2000, step: 1, exampleValue: 40 }),
-      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 1000, step: 1, exampleValue: 200 }),
+      numberInput('age', 'Age', { helpText: 'Age in years at the time of the labs; the formula multiplies age, so FIB-4 drifts upward with age even without fibrosis progression.', unit: 'years', min: 1, max: 120, exampleValue: 50 }),
+      numberInput('ast', 'AST', { helpText: 'Serum AST in U/L; use the same draw as the ALT and platelets.', unit: 'U/L', min: 1, max: 2000, step: 1, exampleValue: 40 }),
+      numberInput('alt', 'ALT', { helpText: 'Serum ALT in U/L; the formula takes the square root, so the value must be greater than zero.', unit: 'U/L', min: 1, max: 2000, step: 1, exampleValue: 40 }),
+      numberInput('plt', 'Platelets', { helpText: 'Platelet count in ×10⁹/L (equivalent to thousands/µL); the formula divides by platelets.', unit: '×10⁹/L', min: 1, max: 1000, step: 1, exampleValue: 200 }),
     ],
     calculate(values) {
       const age = num(values.age, 50);
@@ -137,9 +137,9 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'Noninvasive fibrosis staging aid, especially viral hepatitis and resource-limited settings.',
     whyUse: 'Uses only AST, AST ULN, and platelets; WHO-endorsed in some HCV pathways.',
     inputs: [
-      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, exampleValue: 60 }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, exampleValue: 60, helpText: 'Serum AST in U/L; use the same draw as the platelet count.' }),
       numberInput('astUln', 'AST upper limit of normal', { unit: 'U/L', min: 20, max: 80, exampleValue: 40, helpText: 'Use local lab ULN' }),
-      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 1000, exampleValue: 180 }),
+      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 1000, exampleValue: 180, helpText: 'Platelet count in ×10⁹/L (thousands/µL); the ratio divides by platelets, so a low count raises APRI.' }),
     ],
     calculate(values) {
       const ast = num(values.ast, 60);
@@ -189,11 +189,11 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'Adults with acute upper GI bleeding for early mortality risk stratification.',
     whyUse: 'Five binary admission variables; easy bedside mortality estimate complementary to GBS/Rockall.',
     inputs: [
-      yesNo('albumin', 'Albumin < 3.0 g/dL', 1),
-      yesNo('inr', 'INR > 1.5', 1),
+      yesNo('albumin', 'Albumin < 3.0 g/dL', 1, 'Serum albumin below 3.0 g/dL on presentation; scores 1 point toward the mortality total.'),
+      yesNo('inr', 'INR > 1.5', 1, 'INR above 1.5 on presentation; scores 1 point.'),
       yesNo('mental', 'Altered mental status (GCS <14)', 1, 'Saltzman AIMS65: GCS <14 or disorientation at presentation.'),
-      yesNo('sbp', 'Systolic BP ≤ 90 mmHg', 1),
-      yesNo('age', 'Age > 65 years', 1),
+      yesNo('sbp', 'Systolic BP ≤ 90 mmHg', 1, 'Systolic blood pressure 90 mmHg or lower on presentation; scores 1 point.'),
+      yesNo('age', 'Age > 65 years', 1, 'Age over 65 years; scores 1 point. Age is scored as a single binary item here, not by band.'),
     ],
     calculate(values) {
       const score =
@@ -235,12 +235,12 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'Day 7 of corticosteroid therapy for severe alcoholic hepatitis (usually DF ≥32 or equivalent).',
     whyUse: 'Identifies non-responders (Lille ≥0.45) who may not benefit from continued steroids.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 50 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 50, helpText: 'Age in years at admission; the survival term uses age directly, so older age lowers predicted 6-month survival.' }),
       numberInput('albumin', 'Albumin day 0', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, exampleValue: 2.5, helpText: 'Converted to g/L in formula' }),
-      numberInput('bili0', 'Bilirubin day 0', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, exampleValue: 12 }),
-      numberInput('bili7', 'Bilirubin day 7', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, exampleValue: 10 }),
+      numberInput('bili0', 'Bilirubin day 0', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, exampleValue: 12, helpText: 'Total bilirubin at day 0 (before or at steroid start) in mg/dL; 1 mg/dL = 17.1 µmol/L.' }),
+      numberInput('bili7', 'Bilirubin day 7', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, exampleValue: 10, helpText: 'Total bilirubin on day 7 of corticosteroid therapy in mg/dL; pair it with the day-0 value from the same assay.' }),
       numberInput('pt', 'Prothrombin time', { unit: 'sec', min: 8, max: 120, step: 0.1, exampleValue: 20, helpText: 'PT in seconds (Louvet model), not INR. Same-day as the day-0/7 bilirubin pair as specified in the original paper (typically day 0).' }),
-      yesNo('renal', 'Renal insufficiency (Cr >1.3 mg/dL or renal support at day 0)', null),
+      yesNo('renal', 'Renal insufficiency (Cr >1.3 mg/dL or renal support at day 0)', null, 'Renal insufficiency at day 0 — creatinine above 1.3 mg/dL or renal replacement therapy — subtracts 0.206 from the linear predictor, lowering the predicted 6-month survival.'),
     ],
     calculate(values) {
       const age = num(values.age, 50);
@@ -331,8 +331,8 @@ export const missingGiLiverCalcs: Calculator[] = [
       yesNo('inr65', 'INR > 6.5 (or PT > 100 sec)', 0, 'Both pathways: APAP triad item, and standalone non-APAP listing criterion.'),
       yesNo('cr34', 'Creatinine > 3.4 mg/dL (>300 μmol/L)', 0, 'Acetaminophen pathway only (APAP triad with INR >6.5 and grade III–IV HE). Not scored in non-APAP mode.'),
       yesNo('inr35', 'INR > 3.5 (or PT > 50 sec)', 0, 'Non-acetaminophen pathway only — one of five accessory poor-prognosis factors (≥3 of 5, or INR >6.5 alone).'),
-      yesNo('bili175', 'Bilirubin > 17.5 mg/dL (>300 μmol/L)', 0, 'Non-acetaminophen pathway only — accessory factor.'),
-      yesNo('ageExtreme', 'Age <10 or >40 years', 0, 'Non-acetaminophen pathway only — accessory factor.'),
+      yesNo('bili175', 'Bilirubin > 17.5 mg/dL (>300 μmol/L)', 0, 'Non-acetaminophen pathway only — accessory factor: peak total bilirubin above 17.5 mg/dL (300 µmol/L).'),
+      yesNo('ageExtreme', 'Age <10 or >40 years', 0, 'Non-acetaminophen pathway only — accessory factor: age under 10 years or over 40 years at presentation.'),
       yesNo('unfavEtiol', 'Unfavorable etiology (idiosyncratic drug, seronegative, Wilson, Budd-Chiari, etc.)', 0, 'Non-acetaminophen pathway only — accessory factor (idiosyncratic drug, seronegative hepatitis, Wilson, Budd-Chiari; not HAV/HBV or pregnancy-related).'),
       yesNo('jaundiceEnceph7', 'Jaundice to encephalopathy interval > 7 days', 0, 'Non-acetaminophen pathway only — accessory factor: time from first jaundice to onset of HE >7 days.'),
     ],
@@ -420,11 +420,11 @@ export const missingGiLiverCalcs: Calculator[] = [
       selectInput('age', 'Age', [
         { label: '<50 years (1)', value: 1 },
         { label: '≥50 years (2)', value: 2 },
-      ]),
+      ], undefined, 'Age band: under 50 years scores 1 point, 50 years or older scores 2 points.'),
       selectInput('wcc', 'White cell count', [
         { label: '<15 ×10⁹/L (1)', value: 1 },
         { label: '≥15 ×10⁹/L (2)', value: 2 },
-      ]),
+      ], undefined, 'White cell count: below 15 ×10⁹/L scores 1 point, 15 or above scores 2 points.'),
       selectInput('urea', 'Urea', [
         { label: '<5 mmol/L (<14 mg/dL BUN) (1)', value: 1 },
         { label: '≥5 mmol/L (≥14 mg/dL BUN) (2)', value: 2 },
@@ -433,12 +433,12 @@ export const missingGiLiverCalcs: Calculator[] = [
         { label: '<1.5 (1)', value: 1 },
         { label: '1.5–2.0 (2)', value: 2 },
         { label: '>2.0 (3)', value: 3 },
-      ]),
+      ], undefined, 'PT ratio or INR: below 1.5 = 1 point, 1.5–2.0 = 2 points, above 2.0 = 3 points.'),
       selectInput('bili', 'Bilirubin', [
         { label: '<125 μmol/L (<7.3 mg/dL) (1)', value: 1 },
         { label: '125–250 μmol/L (7.3–14.6 mg/dL) (2)', value: 2 },
         { label: '>250 μmol/L (>14.6 mg/dL) (3)', value: 3 },
-      ]),
+      ], undefined, 'Total bilirubin: below 125 µmol/L (<7.3 mg/dL) = 1 point, 125–250 µmol/L = 2 points, above 250 µmol/L = 3 points.'),
     ],
     calculate(values) {
       const score = num(values.age) + num(values.wcc) + num(values.urea) + num(values.ptRatio) + num(values.bili);
@@ -731,7 +731,7 @@ export const missingGiLiverCalcs: Calculator[] = [
         { label: 'Medium (2)', value: 2, description: 'Obvious guarding, still examinable' },
         { label: 'Strong (3)', value: 3, description: 'Board-like or generalized defense; cannot tolerate palpation' },
       ], undefined, 'Press slowly in the right iliac fossa then release, or grade muscular defense. Light = grimace/localized; medium = obvious guarding, still examinable; strong = board-like/generalized, cannot tolerate palpation.'),
-      yesNo('temp', 'Body temperature ≥38.5°C', 1),
+      yesNo('temp', 'Body temperature ≥38.5°C', 1, 'Axillary or oral temperature of 38.5 °C or higher; scores 1 point.'),
       selectInput('pmn', 'Polymorphonuclear leukocytes', [
         { label: '<70% (0)', value: 0, description: 'Neutrophil percentage of WBC <70%' },
         { label: '70–84% (1)', value: 1, description: 'Neutrophils 70–84% of WBC' },
@@ -741,7 +741,7 @@ export const missingGiLiverCalcs: Calculator[] = [
         { label: '<10 ×10⁹/L (0)', value: 0, description: 'WBC <10 ×10⁹/L (10,000/µL)' },
         { label: '10–14.9 ×10⁹/L (1)', value: 1, description: 'WBC 10.0–14.9 ×10⁹/L' },
         { label: '≥15 ×10⁹/L (2)', value: 2, description: 'WBC ≥15 ×10⁹/L (15,000/µL)' },
-      ]),
+      ], undefined, 'WBC count: below 10 ×10⁹/L = 0 points, 10–14.9 = 1 point, 15 or above = 2 points.'),
       selectInput('crp', 'CRP', [
         { label: '<10 mg/L (0)', value: 0, description: 'CRP <10 mg/L' },
         { label: '10–49 mg/L (1)', value: 1, description: 'CRP 10–49 mg/L' },
@@ -806,24 +806,24 @@ export const missingGiLiverCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Male (1.0)', value: 1 },
         { label: 'Female (0.5)', value: 0.5 },
-      ]),
+      ], undefined, 'RIPASA weights sex: male scores 1.0, female scores 0.5.'),
       selectInput('age', 'Age', [
         { label: '<40 years (1.0)', value: 1 },
         { label: '≥40 years (0.5)', value: 0.5 },
-      ]),
-      yesNo('rlqPain', 'RLQ pain', 0.5),
-      yesNo('migration', 'Migration of pain to RLQ', 0.5),
-      yesNo('anorexia', 'Anorexia', 1),
-      yesNo('nausea', 'Nausea / vomiting', 1),
+      ], undefined, 'Age band: under 40 years scores 1.0, 40 years or older scores 0.5.'),
+      yesNo('rlqPain', 'RLQ pain', 0.5, 'Pain localized to the right lower quadrant; scores 0.5.'),
+      yesNo('migration', 'Migration of pain to RLQ', 0.5, 'Pain that migrated from the periumbilical region to the right lower quadrant; scores 0.5.'),
+      yesNo('anorexia', 'Anorexia', 1, 'Loss of appetite before presentation; scores 1 point.'),
+      yesNo('nausea', 'Nausea / vomiting', 1, 'Nausea or vomiting; scores 1 point.'),
       selectInput('duration', 'Duration of symptoms', [
         { label: '<48 hours (1.0)', value: 1 },
         { label: '≥48 hours (0.5)', value: 0.5 },
-      ]),
+      ], undefined, 'Symptom duration before presentation: under 48 hours scores 1.0, 48 hours or more scores 0.5.'),
       yesNo('rlqTender', 'RLQ tenderness', 1, 'Tenderness on palpation of the right lower quadrant / McBurney region.'),
       yesNo('guarding', 'Guarding', 2, 'Involuntary abdominal wall muscle contraction over the RLQ (not voluntary tensing).'),
       yesNo('rebound', 'Rebound tenderness', 1, 'Pain on sudden release of RLQ palpation (Blumberg). Distinct from Rovsing (LLQ press → RLQ pain).'),
       yesNo('rovsing', "Rovsing's sign", 2, 'Press deeply in the left lower quadrant; positive if pain is referred to the right lower quadrant.'),
-      yesNo('fever', 'Fever ≥37.5°C (or >37°C per local RIPASA variant)', 1, 'Original RIPASA often used a 37–39°C band. Pick the local convention (≥37.5°C is the label default; some sites score >37°C).'),
+      yesNo('fever', 'Fever ≥37.5°C (or >37°C per local RIPASA variant)', 1, 'Fever during the illness scores 1 RIPASA point. Published RIPASA reproductions differ on the exact cut-off, so apply the local convention and score every patient the same way.'),
       yesNo('wbc', 'Raised WBC', 1, 'WBC >10 ×10⁹/L (10,000/µL).'),
       yesNo('negUA', 'Negative urinalysis', 1, 'No RBCs, WBCs, or bacteria/nitrites on urinalysis (helps exclude UTI/stone as the pain source).'),
       yesNo('foreign', 'Foreign national (original score context)', 1, '+1 only in the original Brunei/Singapore derivation context. Otherwise score No.'),
@@ -899,13 +899,13 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'Patients with NAFLD/MASLD to estimate likelihood of bridging fibrosis/cirrhosis.',
     whyUse: 'Dual cutoffs identify low- and high-risk groups and reduce unnecessary biopsy.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 50 }),
-      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 70, step: 0.1, exampleValue: 32 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 50, helpText: 'Age in years at the time of the labs; the score adds 0.037 × age.' }),
+      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 70, step: 0.1, exampleValue: 32, helpText: 'BMI in kg/m² from measured height and weight; the score adds 0.094 × BMI.' }),
       yesNo('ifg', 'Impaired fasting glucose or diabetes', null, 'Yes if known diabetes or IFG. Original Angulo NFS: fasting glucose ≥110 mg/dL (6.1 mmol/L). ADA later IFG ≥100 mg/dL — use the local definition; diabetes always Yes.'),
-      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, exampleValue: 45 }),
-      numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 2000, exampleValue: 50 }),
-      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 1000, exampleValue: 220 }),
-      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, exampleValue: 4.0 }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, exampleValue: 45, helpText: 'Serum AST in U/L from the same draw as the ALT; the score uses the AST/ALT ratio.' }),
+      numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 2000, exampleValue: 50, helpText: 'Serum ALT in U/L from the same draw as the AST, so the ratio reflects one time point.' }),
+      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 1000, exampleValue: 220, helpText: 'Platelet count in ×10⁹/L (thousands/µL); lower counts raise the score.' }),
+      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, exampleValue: 4.0, helpText: 'Serum albumin in g/dL; higher albumin lowers the score (the model subtracts 0.66 × albumin).' }),
     ],
     calculate(values) {
       const age = num(values.age, 50);
@@ -968,10 +968,10 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'Prognostication in PSC using age, bilirubin, AST, albumin, and history of variceal bleeding.',
     whyUse: 'Estimates relative risk of death or transplant need; complements MELD for listing decisions.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 1, max: 100, exampleValue: 40 }),
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 40, step: 0.1, exampleValue: 1.5 }),
-      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, exampleValue: 80 }),
-      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, exampleValue: 3.8 }),
+      numberInput('age', 'Age', { unit: 'years', min: 1, max: 100, exampleValue: 40, helpText: 'Age in years when the score is applied; contributes 0.03 × age to the risk score.' }),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 40, step: 0.1, exampleValue: 1.5, helpText: 'Total bilirubin in mg/dL (divide µmol/L by 17.1); the model takes its natural log.' }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, exampleValue: 80, helpText: 'Serum AST in U/L; the model uses the natural log, so the score rises non-linearly with AST.' }),
+      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, exampleValue: 3.8, helpText: 'Serum albumin in g/dL; the revised Mayo model subtracts 0.84 × albumin (linear, not logarithmic), so higher values lower the risk score.' }),
       yesNo('variceal', 'History of variceal bleeding', null, 'Any prior esophageal or gastric variceal bleed (not just varices on imaging).'),
     ],
     calculate(values) {
@@ -1035,13 +1035,13 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'Acute pancreatitis severity prediction during the first 48 hours of admission.',
     whyUse: 'Simple multi-parameter count; ≥3 criteria suggests predicted severe disease and higher-level monitoring.',
     inputs: [
-      yesNo('age', 'Age > 55 years'),
-      yesNo('wbc', 'WBC > 15 ×10⁹/L'),
-      yesNo('glucose', 'Blood glucose > 10 mmol/L (>180 mg/dL) without known diabetes'),
-      yesNo('urea', 'Urea > 16 mmol/L (BUN > 45 mg/dL) after rehydration'),
-      yesNo('pao2', 'PaO₂ < 60 mmHg (<8 kPa)'),
-      yesNo('calcium', 'Serum calcium < 2.0 mmol/L (<8 mg/dL)'),
-      yesNo('albumin', 'Albumin < 32 g/L (<3.2 g/dL)'),
+      yesNo('age', 'Age > 55 years', undefined, 'Age over 55 years during the first 48 hours of admission; scores 1 point.'),
+      yesNo('wbc', 'WBC > 15 ×10⁹/L', undefined, 'WBC above 15 ×10⁹/L; scores 1 point.'),
+      yesNo('glucose', 'Blood glucose > 10 mmol/L (>180 mg/dL) without known diabetes', undefined, 'Blood glucose above 10 mmol/L (>180 mg/dL) without known diabetes; scores 1 point.'),
+      yesNo('urea', 'Urea > 16 mmol/L (BUN > 45 mg/dL) after rehydration', undefined, 'Urea above 16 mmol/L (BUN above 45 mg/dL) after rehydration; scores 1 point.'),
+      yesNo('pao2', 'PaO₂ < 60 mmHg (<8 kPa)', undefined, 'PaO₂ below 60 mmHg (about 8 kPa) on room air; scores 1 point.'),
+      yesNo('calcium', 'Serum calcium < 2.0 mmol/L (<8 mg/dL)', undefined, 'Serum calcium below 2.0 mmol/L (<8 mg/dL); scores 1 point.'),
+      yesNo('albumin', 'Albumin < 32 g/L (<3.2 g/dL)', undefined, 'Serum albumin below 32 g/L (<3.2 g/dL); scores 1 point.'),
       yesNo('ldh', 'LDH > 600 IU/L', 1, 'Modified Glasgow-Imrie (Blamey 8-factor) uses LDH >600 IU/L. Do not score AST here. Original 9-factor Imrie listed AST >200 U/L as a separate item.'),
     ],
     calculate(values) {

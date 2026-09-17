@@ -16,7 +16,7 @@ export const wave4EmIdCalcs: Calculator[] = [
       'Integrates D-dimer, age, sex, and hormone-associated VTE into a simple recurrence risk score (Tosetto et al.).',
     inputs: [
       yesNo('ddimerPos', 'Abnormal D-dimer after stopping anticoagulation (~3–5 weeks off therapy)', 2, 'Measure off anticoagulation ~3–5 weeks after stopping. Abnormal = above the local assay cutoff (qualitative positive or quantitative above the lab’s post-treatment threshold).'),
-      yesNo('age50orLess', 'Age ≤50 years', 1),
+      yesNo('age50orLess', 'Age ≤50 years', 1, 'Age 50 years or younger scores 1 point; older than 50 scores 0 — the DASH age item is dichotomous, not banded. Total ≥2 marks the higher recurrence band.'),
       selectInput('sex', 'Sex', [
         { label: 'Female (0)', value: 'F', points: 0 },
         { label: 'Male (+1)', value: 'M', points: 1 },
@@ -128,18 +128,18 @@ export const wave4EmIdCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
-      ]),
+      ], undefined, 'Female sex is favorable and male unfavorable in the Vienna model; the coefficient applies within the continuous nomogram.'),
       selectInput('location', 'Index VTE location', [
         { label: 'Distal DVT only', value: 'distal' },
         { label: 'Proximal DVT', value: 'proximal' },
         { label: 'Pulmonary embolism (± DVT)', value: 'pe' },
-      ]),
+      ], undefined, 'Index event location: distal DVT is lowest risk, proximal DVT intermediate, pulmonary embolism (with or without DVT) highest.'),
       selectInput('ddimer', 'D-dimer after anticoagulation (qualitative helper)', [
         { label: 'Low / negative', value: 'low', description: 'Below the local post-treatment cutoff (often ~500 µg/L FEU; DDU labs use ~half that numeric cutoff).' },
         { label: 'Intermediate', value: 'mid', description: 'Educational band: around the local cutoff up to ~1000 µg/L FEU. Vienna uses quantitative D-dimer — this is not the published nomogram.' },
         { label: 'High / positive', value: 'high', description: 'Clearly elevated (educational: above ~1000 µg/L FEU or markedly above the local cutoff).' },
-      ]),
-      numberInput('age', 'Age (optional context)', { unit: 'years', min: 18, max: 100, step: 1, exampleValue: 55, required: false }),
+      ], undefined, 'D-dimer measured after stopping anticoagulation: low/negative is favorable, high/positive unfavorable. The published model uses the continuous assay value, so this is a qualitative approximation.'),
+      numberInput('age', 'Age (optional context)', { unit: 'years', min: 18, max: 100, step: 1, exampleValue: 55, required: false, helpText: 'Optional age in years for context; age is not one of the three model predictors, so it does not change the estimate here.' }),
     ],
     calculate(values) {
       const sex = String(values.sex ?? 'F');
@@ -237,7 +237,7 @@ export const wave4EmIdCalcs: Calculator[] = [
       yesNo('maleHtn', 'Male with uncontrolled hypertension', 1, 'Male with SBP ≥140 mmHg at baseline; women do not score this item.'),
       yesNo('anemia', 'Anemia', 1.5, 'Hb <13 g/dL men or <12 g/dL women (derivation definition)'),
       yesNo('priorBleed', 'History of bleeding', 1.5, 'Prior major or clinically relevant non-major bleeding (CRNMB), rectal bleeding, frequent epistaxis, or hematuria.'),
-      yesNo('age60', 'Age ≥60 years', 1.5),
+      yesNo('age60', 'Age ≥60 years', 1.5, 'Age 60 years or older scores 1.5 points in VTE-BLEED, on a scale where 2 or more defines the higher bleeding-risk stratum.'),
       selectInput('renal', 'Renal function (Cockcroft–Gault CrCl)', [
         { label: 'CrCl >60 mL/min (0)', value: 'gt60', points: 0 },
         { label: 'CrCl 30–60 mL/min (+1.5)', value: '30-60', points: 1.5 },
@@ -447,7 +447,7 @@ export const wave4EmIdCalcs: Calculator[] = [
       yesNo('bullae', 'Bullae, ecchymosis, or skin necrosis', 2, 'Hemorrhagic bullae, purple ecchymosis, or frank skin necrosis (hard sign).'),
       yesNo('sensory', 'Sensory changes / anesthesia of overlying skin', 2, 'Hypoesthesia or anesthesia of the overlying skin (cutaneous nerve infarction) — hard sign.'),
       yesNo('systemic', 'Systemic toxicity (fever, tachycardia, shock, altered mentation)', 2, 'Fever, HR >100, shock, or altered mentation.'),
-      yesNo('riskFactor', 'High-risk host (diabetes, cirrhosis, IVDU, immunocompromise, trauma/surgery)', 1),
+      yesNo('riskFactor', 'High-risk host (diabetes, cirrhosis, IVDU, immunocompromise, trauma/surgery)', 1, 'High-risk host factors — diabetes, cirrhosis, injection drug use, immunocompromise, recent trauma or surgery — add 1 point and lower the threshold for surgical exploration.'),
       yesNo('failureAbx', 'Failure to improve on appropriate antibiotics', 1, 'No improvement after ≥24–48 h of appropriate IV antibiotics for presumed cellulitis.'),
     ],
     calculate(values) {
@@ -733,7 +733,7 @@ export const wave4EmIdCalcs: Calculator[] = [
       yesNo('drooling', 'Drooling', 2, 'Cannot swallow saliva. Do not agitate to examine the throat if present with stridor/tripod.'),
       yesNo('benignPharynx', 'Pharynx relatively benign vs symptom severity', 1, 'Oropharynx looks deceptively normal relative to odynophagia — classic supraglottitis cue.'),
       yesNo('feverTox', 'Fever / toxicity', 1, 'Temperature ≥38.0 °C or ill/toxic appearance.'),
-      yesNo('adultRisk', 'Adult risk factors (smoking, diabetes, immunocompromise) or unimmunized child', 1),
+      yesNo('adultRisk', 'Adult risk factors (smoking, diabetes, immunocompromise) or unimmunized child', 1, 'Yes for adult risk factors (smoking, diabetes, immunocompromise) or an unimmunized child; epiglottitis is no longer limited to young children, and a normal-looking pharynx does not exclude it.'),
     ],
     calculate(values) {
       const airway =
@@ -824,7 +824,7 @@ export const wave4EmIdCalcs: Calculator[] = [
       yesNo('stridor', 'Stridor, stertor, or respiratory distress', 3, 'Noisy breathing or work of breathing — protect the airway before imaging.'),
       yesNo('bulge', 'Posterior pharyngeal wall bulge (if safely visualized)', 2, 'Only if the airway is stable — do not force a tongue-blade exam in a distressed child.'),
       yesNo('toxicity', 'Toxic appearance / sepsis physiology', 2, 'Lethargy, delayed cap refill, tachycardia, or hypotension.'),
-      yesNo('recentUri', 'Recent URI, trauma, or foreign body history', 1),
+      yesNo('recentUri', 'Recent URI, trauma, or foreign body history', 1, 'Yes for a recent upper respiratory infection, neck trauma, or foreign-body history; these precede many pediatric retropharyngeal abscesses.'),
     ],
     calculate(values) {
       const airway = bool(values.stridor);
@@ -908,10 +908,10 @@ export const wave4EmIdCalcs: Calculator[] = [
     whyUse: 'Score of 0 identifies a very low-risk group that may avoid prolonged antibiotics in validated settings.',
     inputs: [
       yesNo('gramStain', 'Positive CSF Gram stain', 1, 'Apply BMS only to non-neonatal children with CSF pleocytosis who are not critically ill and do not have purpura. Antibiotic pretreatment blunts Gram stain/culture — do not use BMS 0 to stop therapy in those cases.'),
-      yesNo('csfAnc', 'CSF absolute neutrophil count ≥1000 cells/µL', 1),
-      yesNo('csfProtein', 'CSF protein ≥80 mg/dL', 1),
-      yesNo('periphAnc', 'Peripheral blood ANC ≥10,000 cells/µL', 1),
-      yesNo('seizure', 'Seizure at or before presentation', 1),
+      yesNo('csfAnc', 'CSF absolute neutrophil count ≥1000 cells/µL', 1, 'CSF absolute neutrophil count 1000 cells/µL or higher scores 1 of the 4 points; compute it from the CSF WBC × neutrophil percentage.'),
+      yesNo('csfProtein', 'CSF protein ≥80 mg/dL', 1, 'CSF protein 80 mg/dL or higher scores 1 point; use the same tube and assay reported with the cell count.'),
+      yesNo('periphAnc', 'Peripheral blood ANC ≥10,000 cells/µL', 1, 'Peripheral blood ANC 10,000 cells/µL or higher scores 1 point; calculate it from the WBC and the neutrophil/band differential.'),
+      yesNo('seizure', 'Seizure at or before presentation', 1, 'A seizure at or before presentation scores 1 point, even if it was brief and the child has returned to baseline.'),
     ],
     calculate(values) {
       const keys = ['gramStain', 'csfAnc', 'csfProtein', 'periphAnc', 'seizure'] as const;
@@ -998,15 +998,15 @@ export const wave4EmIdCalcs: Calculator[] = [
     whyUse:
       'Structures common reasons that favor hospitalization; antimicrobial selection remains a current-guideline, culture-, resistance-, and patient-factor decision.',
     inputs: [
-      yesNo('sepsis', 'Sepsis / septic shock physiology', 3),
+      yesNo('sepsis', 'Sepsis / septic shock physiology', 3, 'Sepsis or septic shock physiology scores 3 points — the strongest admission indicator. Resuscitate and admit regardless of the rest of the checklist.'),
       yesNo('unstable', 'Hemodynamic instability or high fever with instability risk', 2, 'Hypotension, high fever with ill appearance, or inability to maintain perfusion — not an isolated low-grade fever in a well patient.'),
-      yesNo('persistentVomiting', 'Intractable vomiting / unable to tolerate oral meds', 2),
-      yesNo('obstruction', 'Known or suspected urinary obstruction / stone with infection', 3),
-      yesNo('complicated', 'Complicated host (pregnancy, transplant, severe CKD, poorly controlled diabetes, immunosuppression)', 2),
-      yesNo('maleAnatomic', 'Male sex with concern for complicated UTI / prostatitis requiring IV course', 1),
-      yesNo('failedOutpt', 'Failed outpatient therapy', 2),
-      yesNo('social', 'Unreliable follow-up / social barriers to oral therapy', 1),
-      yesNo('imagingConcern', 'Imaging concern for abscess / emphysematous / gas-forming infection', 3),
+      yesNo('persistentVomiting', 'Intractable vomiting / unable to tolerate oral meds', 2, 'Intractable vomiting or inability to keep oral medication down scores 2 points; a single episode that resolves with antiemetics is weaker.'),
+      yesNo('obstruction', 'Known or suspected urinary obstruction / stone with infection', 3, 'Known or suspected urinary obstruction, especially an obstructing stone with infection, scores 3 points and needs urgent decompression.'),
+      yesNo('complicated', 'Complicated host (pregnancy, transplant, severe CKD, poorly controlled diabetes, immunosuppression)', 2, 'Complicated host (pregnancy, transplant, severe CKD, poorly controlled diabetes, immunosuppression) scores 2 points.'),
+      yesNo('maleAnatomic', 'Male sex with concern for complicated UTI / prostatitis requiring IV course', 1, 'Male sex with concern for complicated UTI or prostatitis needing an IV course scores 1 point.'),
+      yesNo('failedOutpt', 'Failed outpatient therapy', 2, 'Failure of outpatient therapy scores 2 points; also recheck cultures and resistance patterns before re-dosing.'),
+      yesNo('social', 'Unreliable follow-up / social barriers to oral therapy', 1, 'Unreliable follow-up or social barriers to completing oral therapy scores 1 point.'),
+      yesNo('imagingConcern', 'Imaging concern for abscess / emphysematous / gas-forming infection', 3, 'Imaging showing an abscess or emphysematous/gas-forming infection scores 3 points and usually means drainage plus IV therapy.'),
     ],
     calculate(values) {
       const critical =
@@ -1106,11 +1106,11 @@ export const wave4EmIdCalcs: Calculator[] = [
     whenToUse: 'Adults with confirmed CDI when classifying mild vs severe disease for therapy intensity.',
     whyUse: 'Simple bedside/lab score; ≥2 points defines severe CDI in the original Zar study.',
     inputs: [
-      yesNo('age60', 'Age >60 years', 1),
-      yesNo('temp', 'Temperature >38.3°C (100.9°F)', 1),
-      yesNo('albumin', 'Albumin <2.5 g/dL', 1),
-      yesNo('wbc', 'WBC >15,000 cells/µL', 1),
-      yesNo('icuOrPmc', 'ICU care for CDI OR endoscopic pseudomembranous colitis', 2),
+      yesNo('age60', 'Age >60 years', 1, 'Age over 60 years scores 1 Zar point.'),
+      yesNo('temp', 'Temperature >38.3°C (100.9°F)', 1, 'Temperature above 38.3°C (100.9°F) scores 1 point; use the peak value in the first 24 hours.'),
+      yesNo('albumin', 'Albumin <2.5 g/dL', 1, 'Albumin below 2.5 g/dL scores 1 point.'),
+      yesNo('wbc', 'WBC >15,000 cells/µL', 1, 'WBC above 15,000 cells/µL scores 1 point; a count below 1,500/µL does not score in the Zar model.'),
+      yesNo('icuOrPmc', 'ICU care for CDI OR endoscopic pseudomembranous colitis', 2, 'ICU care for the CDI episode or endoscopic pseudomembranous colitis scores 2 points — enough on its own to exceed the ≥2 severe threshold.'),
     ],
     calculate(values) {
       const score =
@@ -1289,15 +1289,15 @@ export const wave4EmIdCalcs: Calculator[] = [
         { label: 'Non-endemic / no exposure', value: 0, description: 'No geography or travel risk for Ixodes/Borrelia.' },
         { label: 'Possible exposure / travel', value: 1, description: 'Travel through Northeast, mid-Atlantic, or upper Midwest (or known endemic counties) without clear outdoor exposure.' },
         { label: 'Highly endemic area + outdoor exposure', value: 2, description: 'Northeast, mid-Atlantic, or upper Midwest (and known highly endemic counties) with outdoor/tick exposure.' },
-      ]),
+      ], undefined, 'Exposure risk category: non-endemic with no travel, possible exposure/travel, or a highly endemic area with outdoor exposure. Serology predictive value rises steeply with this field.'),
       yesNo('emRash', 'Classic erythema migrans rash (≥5 cm expanding)', 3, 'Expanding erythematous patch ≥5 cm, often with central clearing. Early serology is often negative — treat classic EM.'),
-      yesNo('tickBite', 'Documented Ixodes tick bite in endemic area', 1),
+      yesNo('tickBite', 'Documented Ixodes tick bite in endemic area', 1, 'A documented Ixodes tick bite in an endemic area adds 1 point; tick attachment under 24 hours markedly lowers transmission risk.'),
       yesNo('summer', 'Season consistent with local transmission', 1, 'US Ixodes transmission typically late spring–summer (often May–August); use local epidemiology.'),
-      yesNo('facialPalsy', 'Acute facial nerve palsy', 2),
-      yesNo('oligoarthritis', 'Oligoarthritis (esp. knee) with compatible course', 2),
-      yesNo('carditis', 'AV block / Lyme carditis features', 2),
-      yesNo('fluLike', 'Summer flu-like illness without alternate source', 1),
-      yesNo('altDx', 'Convincing alternate diagnosis more likely', -3),
+      yesNo('facialPalsy', 'Acute facial nerve palsy', 2, 'Acute facial nerve palsy adds 2 points and is a common manifestation of early disseminated Lyme.'),
+      yesNo('oligoarthritis', 'Oligoarthritis (esp. knee) with compatible course', 2, 'Oligoarthritis, especially of the knee, with a compatible course adds 2 points and suggests late Lyme arthritis.'),
+      yesNo('carditis', 'AV block / Lyme carditis features', 2, 'AV block or other Lyme carditis features add 2 points and warrant admission with telemetry.'),
+      yesNo('fluLike', 'Summer flu-like illness without alternate source', 1, 'A summer flu-like illness without another source adds 1 point.'),
+      yesNo('altDx', 'Convincing alternate diagnosis more likely', -3, 'A convincing alternative diagnosis subtracts 3 points; it is the only negative item and reflects how much pretest probability drives test interpretation.'),
     ],
     calculate(values) {
       let score =
@@ -1399,7 +1399,7 @@ export const wave4EmIdCalcs: Calculator[] = [
     whyUse:
       'Age × 10 µg/L FEU (age × 0.01 mg/L) after age 50 improves specificity without major sensitivity loss (ADJUST-PE).',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, step: 1, exampleValue: 65 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, step: 1, exampleValue: 65, helpText: 'Age in years; the adjusted cutoff is age × 10 µg/L FEU (age × 0.01 mg/L) and applies only above age 50.' }),
       numberInput('ddimer', 'Measured D-dimer', {
         unit: 'ng/mL FEU', unitKind: 'ddimer',
         min: 0,
@@ -1412,7 +1412,7 @@ export const wave4EmIdCalcs: Calculator[] = [
         { label: 'Low / PE unlikely (Wells/PERC pathway eligible)', value: 'low' },
         { label: 'Intermediate / PE unlikely YEARS-style', value: 'inter' },
         { label: 'High pretest (do not use D-dimer to exclude)', value: 'high' },
-      ]),
+      ], undefined, 'The adjusted cutoff is only validated in non-high pretest probability: low/unlikely (Wells or PERC pathway) or the YEARS-style intermediate group. Do not use D-dimer to exclude VTE in the high-pretest branch.'),
     ],
     calculate(values) {
       const age = num(values.age, 65);
@@ -1523,11 +1523,11 @@ export const wave4EmIdCalcs: Calculator[] = [
     whenToUse: 'Primary care / outpatient suspected lower-extremity DVT when ultrasound access is gated by risk.',
     whyUse: 'Score ≤3 safely withholds ultrasound in validation studies; integrates D-dimer into the rule.',
     inputs: [
-      yesNo('male', 'Male sex', 1),
-      yesNo('ocp', 'Oral contraceptive use', 1),
-      yesNo('cancer', 'Presence of active malignancy (within 6 months)', 1),
-      yesNo('surgery', 'Surgery in previous month', 1),
-      yesNo('noTrauma', 'Absence of trauma explaining symptoms', 1),
+      yesNo('male', 'Male sex', 1, 'Male sex scores 1 point in the Oudega primary care rule.'),
+      yesNo('ocp', 'Oral contraceptive use', 1, 'Oral contraceptive use scores 1 point; include combined oral contraceptives started within the last months.'),
+      yesNo('cancer', 'Presence of active malignancy (within 6 months)', 1, 'Active malignancy diagnosed within the past 6 months scores 1 point.'),
+      yesNo('surgery', 'Surgery in previous month', 1, 'Surgery in the previous month scores 1 point, including procedures under regional anesthesia.'),
+      yesNo('noTrauma', 'Absence of trauma explaining symptoms', 1, 'Absence of trauma that explains the symptoms scores 1 point — note the rule scores the absence, so answer Yes when the presentation is atraumatic. At ≤3 points ultrasound may be withheld.'),
       yesNo('veinDistension', 'Vein distension', 1, 'Collateral (non-varicose) superficial vein distension of the symptomatic leg — not ordinary varicose veins.'),
       yesNo('calf3', 'Calf circumference difference ≥3 cm', 2, 'Measure 10 cm below the tibial tuberosity; ≥3 cm vs the asymptomatic calf.'),
       yesNo('ddimerPos', 'Abnormal D-dimer', 6, 'Positive/abnormal on the local assay (derivation used a qualitative point-of-care D-dimer).'),
@@ -1609,7 +1609,7 @@ export const wave4EmIdCalcs: Calculator[] = [
       'Alert patients ≥15 years with new severe nontraumatic headache peaking within 1 hour — SAH not already confirmed.',
     whyUse: 'High sensitivity rule: any criterion positive → investigate; all negative → SAH extremely unlikely.',
     inputs: [
-      yesNo('age40', 'Age ≥40 years', 1),
+      yesNo('age40', 'Age ≥40 years', 1, 'Age 40 years or older is one of the Ottawa SAH criteria (with neck pain/stiffness, witnessed loss of consciousness, onset during exertion, thunderclap headache, or limited neck flexion). Any single criterion warrants SAH investigation.'),
       yesNo('neckPain', 'Neck pain or stiffness', 1, 'Patient-reported neck pain or stiffness — distinct from the limited-flexion exam item below.'),
       yesNo('loc', 'Witnessed loss of consciousness', 1, 'Witnessed LOC (not lightheaded near-syncope without witnessed loss of consciousness).'),
       yesNo('exertion', 'Onset during exertion', 1, 'Onset during physical exercise (sexual intercourse counted in the original rule).'),
@@ -1683,10 +1683,10 @@ export const wave4EmIdCalcs: Calculator[] = [
     whenToUse: 'Adults with syncope when estimating likelihood of cardiac etiology.',
     whyUse: 'Point score from history distinguishing cardiac vs non-cardiac syncope (EGSYS).',
     inputs: [
-      yesNo('palpitations', 'Palpitations preceding syncope (+4)', 4),
+      yesNo('palpitations', 'Palpitations preceding syncope (+4)', 4, 'Palpitations preceding the syncope add 4 points, the largest EGSYS weight.'),
       yesNo('heartOrEcg', 'Heart disease and/or abnormal ECG (+3)', 3, 'Heart disease = ischemic, valvular, cardiomyopathy, congenital, or HF. Abnormal ECG = sinus bradycardia, AV block, BBB, acute or old MI, SVT/VT, ventricular pacing, LVH/RVH, pre-excitation, long QT, or Brugada — not isolated minor nonspecific ST-T change.'),
-      yesNo('effort', 'Syncope during effort (+3)', 3),
-      yesNo('supine', 'Syncope while supine (+2)', 2),
+      yesNo('effort', 'Syncope during effort (+3)', 3, 'Syncope during effort adds 3 points and points toward a cardiac mechanism.'),
+      yesNo('supine', 'Syncope while supine (+2)', 2, 'Syncope while supine adds 2 points; positional triggers such as standing suggest reflex causes instead.'),
       yesNo('autonomic', 'Autonomic prodromes (nausea, warmth, sweating) (−1)', -1, 'Nausea, warmth, or sweating before syncope (vasovagal-type prodrome).'),
       yesNo('precipitating', 'Precipitating or predisposing factors (−1)', -1,
         'e.g., warm crowded place, prolonged standing, fear/pain/emotion'),
@@ -1763,9 +1763,9 @@ export const wave4EmIdCalcs: Calculator[] = [
     whenToUse: 'Adult ED syncope patients for simple mortality risk banding.',
     whyUse: 'Four binary items; scores ≥2 associate with higher 12-month mortality in derivation.',
     inputs: [
-      yesNo('age65', 'Age >65 years', 1),
+      yesNo('age65', 'Age >65 years', 1, 'Age over 65 years scores 1 OESIL point.'),
       yesNo('cvHistory', 'History of cardiovascular disease', 1, 'Prior MI, CAD, HF, significant valvular disease, cardiomyopathy, PVD, or stroke/TIA.'),
-      yesNo('noProdrome', 'Syncope without prodrome', 1),
+      yesNo('noProdrome', 'Syncope without prodrome', 1, 'Syncope without any prodrome scores 1 point; a clear warning (nausea, warmth, visual change) argues against a cardiac cause.'),
       yesNo('abnormalEcg', 'Abnormal ECG', 1, 'AF, sinus bradycardia, sinoatrial block/pause, AV block, bundle-branch block, LVH, or old/new Q-wave MI — not isolated minor ST-T nonspecific change.'),
     ],
     calculate(values) {
@@ -1833,13 +1833,13 @@ export const wave4EmIdCalcs: Calculator[] = [
     whenToUse: 'Adult ED patients with syncope for short-term serious outcome risk (BRACES mnemonic).',
     whyUse: 'Any positive ROSE criterion classifies higher risk; includes BNP which other rules omit.',
     inputs: [
-      yesNo('bnp', 'BNP ≥300 pg/mL (B)', 1),
-      yesNo('brady', 'Bradycardia ≤50 bpm in ED (R — rate)', 1),
-      yesNo('fobt', 'Rectal exam fecal occult blood positive (A — anemia workup cue)', 1),
-      yesNo('anemia', 'Anemia with hemoglobin ≤90 g/L (9 g/dL) (A)', 1),
-      yesNo('chestPain', 'Chest pain associated with syncope (C)', 1),
+      yesNo('bnp', 'BNP ≥300 pg/mL (B)', 1, 'BNP 300 pg/mL or higher scores 1 ROSE criterion; NT-proBNP requires a different cutoff and should not be substituted directly.'),
+      yesNo('brady', 'Bradycardia ≤50 bpm in ED (R — rate)', 1, 'Bradycardia of 50 bpm or below in the ED scores 1 criterion.'),
+      yesNo('fobt', 'Rectal exam fecal occult blood positive (A — anemia workup cue)', 1, 'A positive fecal occult blood test on rectal exam scores 1 criterion, prompting anemia evaluation.'),
+      yesNo('anemia', 'Anemia with hemoglobin ≤90 g/L (9 g/dL) (A)', 1, 'Hemoglobin 90 g/L (9 g/dL) or lower scores 1 criterion.'),
+      yesNo('chestPain', 'Chest pain associated with syncope (C)', 1, 'Chest pain associated with the syncope scores 1 criterion and raises concern for a cardiac cause.'),
       yesNo('qWave', 'ECG Q wave (not in lead III) (E)', 1, 'Pathologic Q (typically ≥40 ms or ≥25% of R-wave height) in a lead other than III — not a minor septal Q.'),
-      yesNo('sat', 'Oxygen saturation ≤94% on room air (S)', 1),
+      yesNo('sat', 'Oxygen saturation ≤94% on room air (S)', 1, 'Oxygen saturation 94% or lower on room air scores 1 criterion.'),
     ],
     calculate(values) {
       const keys = ['bnp', 'brady', 'fobt', 'anemia', 'chestPain', 'qWave', 'sat'] as const;
@@ -1906,11 +1906,11 @@ export const wave4EmIdCalcs: Calculator[] = [
       yesNo('acsSigns', 'Signs/symptoms of acute coronary syndrome', 1, 'Chest pain, ischemic ECG, or unexplained ischemic dyspnea (Grossman ACS category).'),
       yesNo('conduction', 'Worrisome cardiac conduction disease (e.g., severe bradycardia, bundle blocks of concern)', 1, 'VT/VF, pacemaker/ICD, pause ≥2 s, 2nd/3rd-degree AV block, or HR <50.'),
       yesNo('historyCad', 'History of CAD or structural heart disease / risk factors constellation per rule', 1, 'Prior CAD, CHF, VT, or cardiomyopathy — not a general atherosclerotic risk-factor count (smoking/lipids alone do not score).'),
-      yesNo('valvular', 'History of valvular heart disease (e.g., AS concern)', 1),
+      yesNo('valvular', 'History of valvular heart disease (e.g., AS concern)', 1, 'History of valvular heart disease (for example aortic stenosis concern) counts as a Boston high-risk predictor.'),
       yesNo('familyHx', 'Family history of sudden death', 1, 'First-degree relative with sudden death.'),
       yesNo('persistentAbnVitals', 'Persistent abnormal vital signs in ED', 1, 'SBP <90, HR <50 or >100, or RR >24 — persistent in the ED, not a single isolated reading that corrected.'),
       yesNo('volume', 'Volume depletion / bleeding / profound anemia concern', 1, 'GI bleed, dehydration, or hematocrit ≤30%.'),
-      yesNo('primaryCns', 'Primary CNS event as cause (stroke/SAH etc.)', 1),
+      yesNo('primaryCns', 'Primary CNS event as cause (stroke/SAH etc.)', 1, 'A primary CNS event as the cause of the episode (stroke, subarachnoid hemorrhage) counts as a Boston high-risk predictor and needs its own workup.'),
     ],
     calculate(values) {
       const keys = [
@@ -2001,6 +2001,7 @@ export const wave4EmIdCalcs: Calculator[] = [
         max: 100000,
         step: 0.1,
         exampleValue: 20,
+        helpText: 'Later troponin value in ng/L from the same assay as the earlier draw; the absolute difference matters most at low concentrations, and thresholds are assay-specific.',
       }),
       numberInput('hours', 'Interval between draws', {
         unit: 'hours',
@@ -2008,12 +2009,13 @@ export const wave4EmIdCalcs: Calculator[] = [
         max: 24,
         step: 0.5,
         exampleValue: 3,
+        helpText: 'Interval between the two draws in hours (0.5–24); a short interval with a small delta is less informative than the same delta over 3 hours.',
       }),
       selectInput('sexUrl', 'Sex-specific URL context (optional)', [
         { label: 'Not specified', value: 'na' },
         { label: 'Male URL higher', value: 'M' },
         { label: 'Female URL lower', value: 'F' },
-      ]),
+      ], undefined, 'Optional sex-specific upper reference limit context: female URLs are lower, so the same absolute value is more significant in women.'),
       numberInput('absCutoff', 'Assay absolute delta threshold (educational)', {
         unit: 'ng/L',
         min: 1,
@@ -2132,12 +2134,12 @@ export const wave4EmIdCalcs: Calculator[] = [
     whenToUse: 'Anterior ischemic symptoms with upsloping ST depression and tall peaked precordial T waves.',
     whyUse: 'de Winter pattern is an occlusion MI equivalent — activate reperfusion without waiting for classic STEMI.',
     inputs: [
-      yesNo('symptoms', 'Symptoms of acute coronary occlusion (chest pain / equivalent)', 1),
-      yesNo('upslopeStd', '1–3 mm upsloping ST depression at J point in precordials (V1–V6)', null),
+      yesNo('symptoms', 'Symptoms of acute coronary occlusion (chest pain / equivalent)', 1, 'Yes for symptoms of acute coronary occlusion (chest pain or an anginal equivalent); the de Winter pattern without symptoms is a different question.'),
+      yesNo('upslopeStd', '1–3 mm upsloping ST depression at J point in precordials (V1–V6)', null, '1–3 mm upsloping ST depression at the J point in the precordial leads V1–V6 — the core de Winter finding.'),
       yesNo('tallT', 'Tall, peaked, symmetric T waves in the same precordial leads', null, 'Tall, positive, symmetric T waves in the same leads as the upsloping STD (T waves continue from the depressed J point — not hyperkalemia’s narrow peaked T).'),
-      yesNo('slightSteavr', 'Slight ST elevation in aVR (0.5–1 mm) often present', 1),
+      yesNo('slightSteavr', 'Slight ST elevation in aVR (0.5–1 mm) often present', 1, 'Slight ST elevation in aVR (0.5–1 mm) often accompanies the pattern and supports it.'),
       yesNo('noOvertSte', 'No frank STEMI criteria in precordial leads', 1, 'Precordial STE does not meet conventional STEMI millimetre criteria (e.g. ≥1 mm in two contiguous leads; V2–V3 ≥2 mm men ≥40, ≥2.5 mm men <40, ≥1.5 mm women).'),
-      yesNo('dynamic', 'Pattern recognized in ACS time window (acute presentation)', 1),
+      yesNo('dynamic', 'Pattern recognized in ACS time window (acute presentation)', 1, 'Yes when the ECG was obtained during the acute presentation; de Winter is an occlusion-MI equivalent and should trigger reperfusion without waiting for troponin.'),
     ],
     calculate(values) {
       const core = bool(values.upslopeStd) && bool(values.tallT);
@@ -2225,8 +2227,8 @@ export const wave4EmIdCalcs: Calculator[] = [
       yesNo('lmain', 'Diffuse STD with STE in aVR (possible LM/3VD ischemia pattern)', 1, 'aVR STE with widespread ST depression (LM/3-vessel ischemia pattern — urgent evaluation, not automatically “left main STEMI”).'),
       yesNo('hyperacute', 'Hyperacute T waves with reciprocal change / clear OMI context', 1, 'Broad bulky T waves, often taller than the QRS, with reciprocal change in ACS context.'),
       yesNo('rvMi', 'Right ventricular MI pattern with inferior occlusion (V4R STE)', 1, 'Inferior OMI plus V4R STE ≥1 mm. Record right-sided leads in inferior OMI.'),
-      yesNo('newLbbb', 'New LBBB with compatible symptoms (context-dependent; not solely diagnostic)', 1),
-      yesNo('refractory', 'Refractory ischemic symptoms ± hemodynamic instability with subtle ECG', 1),
+      yesNo('newLbbb', 'New LBBB with compatible symptoms (context-dependent; not solely diagnostic)', 1, 'New left bundle branch block with compatible symptoms is context-dependent — it is no longer treated as automatically diagnostic, but it should be compared with prior ECGs and the clinical picture.'),
+      yesNo('refractory', 'Refractory ischemic symptoms ± hemodynamic instability with subtle ECG', 1, 'Refractory ischemic symptoms with or without hemodynamic instability, even with subtle ECG changes, is an occlusion-MI pattern that warrants urgent cardiology involvement.'),
     ],
     calculate(values) {
       const keys = [

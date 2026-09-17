@@ -235,7 +235,7 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
         { label: 'No increase (0)', value: 0, description: 'Within laboratory reference range' },
         { label: 'Moderate increase (2)', value: 2, description: '≈ >3× ULN (or ~0.4–4 µg/mL FEU in older cohorts); use lab ULN' },
         { label: 'Strong increase (3)', value: 3, description: '≈ >7× ULN (or >4 µg/mL FEU); use lab ULN' },
-      ], 2, 'Use lab-specific cutoffs for moderate vs strong elevation. ISTH SSC 2025 proposal: moderate ≈ ×3 ULN, strong ≈ ×7 ULN.'),
+      ], 2, 'Use lab-specific cutoffs for moderate vs strong elevation (e.g. the D-dimer or FDP reference ranges reported by your laboratory); the score records the grade, not an absolute value.'),
       selectInput('pt', 'Prolonged PT', [
         { label: '< 3 seconds prolonged (0)', value: 0 },
         { label: '3–6 seconds prolonged (1)', value: 1 },

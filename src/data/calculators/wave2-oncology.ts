@@ -12,18 +12,14 @@ export const wave2OncologyCalcs: Calculator[] = [
     whenToUse: 'Fever or suspected CRS after CAR-T, bispecifics, or other T-cell engagers to assign ASTCT CRS grade.',
     whyUse: 'Standardizes severity for tocilizumab/steroids decisions and trial reporting; grade drives escalation of care.',
     inputs: [
-      yesNo(
-        'fever',
+      yesNo('fever',
         'Fever ≥ 38.0 °C attributed to CRS',
         1,
-        'Onset fever ≥38.0 °C not solely infection. After antipyretics, tocilizumab, or steroids, fever is no longer required to continue grading — set “Fever already treated” and grade remaining hypotension/hypoxia.',
-      ),
-      yesNo(
-        'crsTreated',
+        'Onset fever ≥38.0 °C not solely infection. After antipyretics, tocilizumab, or steroids, fever is no longer required to continue grading — set “Fever already treated” and grade remaining hypotension/hypoxia.', true),
+      yesNo('crsTreated',
         'Fever already treated (antipyretics / tocilizumab / steroids)',
         null,
-        'If CRS treatment removed the fever, grade remaining hypotension/hypoxia anyway.',
-      ),
+        'If CRS treatment removed the fever, grade remaining hypotension/hypoxia anyway.', false),
       selectInput(
         'hypotension',
         'Hypotension / cardiovascular',
@@ -186,19 +182,17 @@ export const wave2OncologyCalcs: Calculator[] = [
         0,
         'ASTCT consciousness domain. If unarousable, enter ICE 0 and select this grade-4 option — do not leave ICE 0–2 mapped as grade 3.',
       ),
-      selectInput(
-        'seizure',
+      selectInput('seizure',
         'Seizures',
         [
           { label: 'None', value: 0, description: 'No clinical or electrographic seizure' },
           { label: 'Any clinical seizure, rapid resolution; or non-convulsive seizure on EEG resolving with intervention', value: 3, description: 'Any clinical seizure that resolves rapidly, or NCSE/electrographic seizure that stops with intervention (ASTCT grade 3)' },
           { label: 'Life-threatening prolonged seizure (>5 min) or repetitive clinical/electrical seizures without return to baseline', value: 4, description: 'Seizure >5 min or repeated seizures without recovery to baseline (ASTCT grade 4)' },
-        ],
-      ),
+        ], 0, 'Any clinical seizure that resolves rapidly, or a non-convulsive seizure on EEG that resolves with intervention, is grade 3; a prolonged (>5 min) or repetitive seizure without return to baseline is grade 4.'),
       selectInput('motor', 'Motor findings', [
         { label: 'None', value: 0, description: 'No deep focal motor weakness' },
         { label: 'Deep focal motor weakness (e.g., hemiparesis, paraparesis)', value: 4, description: 'Deep focal weakness only — not mild weakness or isolated cranial-nerve palsy' },
-      ]),
+      ], 0, 'Deep focal motor weakness such as hemiparesis or paraparesis is a grade 3 feature. Subtle tremor or myoclonus does not qualify.'),
       selectInput('raisedIcp', 'Elevated ICP / cerebral edema', [
         { label: 'None', value: 0, description: 'No imaging or clinical signs of cerebral edema / raised ICP' },
         { label: 'Focal/local edema on neuroimaging', value: 3, description: 'Focal or local edema on CT/MRI without diffuse edema or herniation signs (ASTCT grade 3)' },
@@ -207,7 +201,7 @@ export const wave2OncologyCalcs: Calculator[] = [
           value: 4,
           description: 'Diffuse edema or clinical raised-ICP signs (posturing, CN VI, papilledema, Cushing triad) — ASTCT grade 4',
         },
-      ]),
+      ], 0, 'Focal or local edema on neuroimaging is grade 3; diffuse cerebral edema, decerebrate/decorticate posturing, CN VI palsy, papilledema, or Cushing triad is grade 4 and an ICU-level emergency.'),
     ],
     calculate(values) {
       const ice = num(values.ice, 10);
@@ -527,8 +521,8 @@ export const wave2OncologyCalcs: Calculator[] = [
         helpText: 'Leave 0 to compute Mosteller BSA from height/weight',
         required: false,
       }),
-      numberInput('height', 'Height', { unit: 'cm', min: 30, max: 250, step: 0.1, exampleValue: 170 }),
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 10, max: 300, step: 0.1, exampleValue: 70 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 30, max: 250, step: 0.1, exampleValue: 170, helpText: 'Height in cm for the optional Mosteller BSA (√(height × weight ÷ 3600)); use it only when the BSA field is left to the calculator rather than entered directly.' }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 10, max: 300, step: 0.1, exampleValue: 70, helpText: 'Weight in kg for the Mosteller BSA; select lb if the chart is imperial. Drug-specific caps and AUC rules still apply after the mg/m² conversion.' }),
       numberInput('pctDose', 'Percent of full dose', {
         unit: '%',
         min: 1,
@@ -617,7 +611,7 @@ export const wave2OncologyCalcs: Calculator[] = [
         exampleValue: 70,
         helpText: 'Many protocols cap GFR at 125 mL/min for Calvert',
       }),
-      { ...yesNo('capGfr', 'Cap GFR at 125 mL/min (FDA/common practice)', null), exampleValue: true },
+      { ...yesNo('capGfr', 'Cap GFR at 125 mL/min (FDA/common practice)', null, 'Yes caps GFR at 125 mL/min, the common FDA/practice convention when using calculated creatinine clearance in the Calvert formula. Leave No only if your protocol specifies an uncapped measured GFR.'), exampleValue: true },
     ],
     calculate(values) {
       const auc = num(values.auc, 5);
@@ -674,10 +668,10 @@ export const wave2OncologyCalcs: Calculator[] = [
     whenToUse: 'Historical/educational staging of HCC when assessing tumor extent plus hepatic reserve.',
     whyUse: 'Simple four-factor stage that combines anatomy and function; largely superseded by BCLC but still referenced.',
     inputs: [
-      yesNo('tumorHalf', 'Tumor involving >50% of liver', 1),
-      yesNo('ascites', 'Ascites present', 1, 'Clinically detectable ascites (including diuretic-controlled). Imaging-only trace fluid without clinical ascites is generally not counted.'),
-      yesNo('albumin', 'Albumin ≤ 3 g/dL (≤30 g/L)', 1),
-      yesNo('bili', 'Total bilirubin ≥ 3 mg/dL (≥51 µmol/L)', 1),
+      yesNo('tumorHalf', 'Tumor involving >50% of liver', 1, 'Tumor involving more than 50% of the liver scores 1 adverse factor — a classic Okuda anatomic criterion, not a BCLC variable.', false),
+      yesNo('ascites', 'Ascites present', 1, 'Clinically detectable ascites (including diuretic-controlled). Imaging-only trace fluid without clinical ascites is generally not counted.', false),
+      yesNo('albumin', 'Albumin ≤ 3 g/dL (≤30 g/L)', 1, 'Albumin 3 g/dL (30 g/L) or lower scores 1 adverse factor.', false),
+      yesNo('bili', 'Total bilirubin ≥ 3 mg/dL (≥51 µmol/L)', 1, 'Total bilirubin 3 mg/dL (51 µmol/L) or higher scores 1 adverse factor. Zero factors is stage I, one or two is stage II, and three or four is stage III.', false),
     ],
     calculate(values) {
       const score =
@@ -749,19 +743,16 @@ export const wave2OncologyCalcs: Calculator[] = [
         { label: 'Child-Pugh A (well compensated)', value: 'A', description: 'Child-Pugh 5–6 points' },
         { label: 'Child-Pugh B', value: 'B', description: 'Child-Pugh 7–9 points' },
         { label: 'Child-Pugh C', value: 'C', description: 'Child-Pugh 10–15 points' },
-      ], undefined, 'Child-Pugh A 5–6 / B 7–9 / C 10–15 from bilirubin, albumin, INR, ascites, and encephalopathy (use the Child-Pugh calculator).'),
-      selectInput(
-        'tumor',
+      ], "A", 'Child-Pugh A 5–6 / B 7–9 / C 10–15 from bilirubin, albumin, INR, ascites, and encephalopathy (use the Child-Pugh calculator).'),
+      selectInput('tumor',
         'Tumor burden / extent',
         [
           { label: 'Single nodule <2 cm, no invasion/extrahepatic', value: 'very_early', description: 'BCLC 0 candidate: one HCC <2 cm, no vascular invasion, no extrahepatic disease' },
           { label: 'Single nodule or ≤3 nodules ≤3 cm (early), no invasion/EHD', value: 'early', description: 'BCLC A: single HCC (any size if resectable/transplantable context) or ≤3 nodules each ≤3 cm; no invasion or extrahepatic disease' },
           { label: 'Multinodular, unresectable, no invasion/EHD (intermediate)', value: 'intermediate', description: 'BCLC B: multinodular beyond early criteria, still no vascular invasion or extrahepatic spread' },
           { label: 'Portal invasion, N1, and/or M1 (advanced tumor)', value: 'advanced', description: 'BCLC C tumor: portal (or hepatic) vein invasion, nodal disease, and/or distant metastases' },
-        ],
-        undefined,
-        'Use quality multiphase imaging. Extrahepatic disease (EHD) = nodes or distant mets. Invasion = macrovascular (portal/hepatic vein).',
-      ),
+        ], "early",
+        'Use quality multiphase imaging. Extrahepatic disease (EHD) = nodes or distant mets. Invasion = macrovascular (portal/hepatic vein).'),
     ],
     calculate(values) {
       const ps = num(values.ps);
@@ -880,23 +871,20 @@ export const wave2OncologyCalcs: Calculator[] = [
         { label: 'A (0 points)', value: 0, description: 'Child-Pugh 5–6' },
         { label: 'B (1 point)', value: 1, description: 'Child-Pugh 7–9' },
         { label: 'C (2 points)', value: 2, description: 'Child-Pugh 10–15' },
-      ], undefined, 'Child-Pugh A 5–6 / B 7–9 / C 10–15 from bilirubin, albumin, INR, ascites, and encephalopathy (use the Child-Pugh calculator).'),
-      selectInput(
-        'morphology',
+      ], 0, 'Child-Pugh class sets the CLIP points: A (5–6) = 0, B (7–9) = 1, C (10–15) = 2. Score it with the Child-Pugh calculator — bilirubin, albumin, INR, ascites, and encephalopathy.'),
+      selectInput('morphology',
         'Tumor morphology',
         [
           { label: 'Uninodular and extension ≤50% (0)', value: 0, description: 'Single nodule occupying ≤50% of the liver' },
           { label: 'Multinodular and extension ≤50% (1)', value: 1, description: 'More than one nodule, combined extent still ≤50% of the liver' },
           { label: 'Massive or extension >50% (2)', value: 2, description: 'Massive tumor or any pattern occupying >50% of the liver' },
-        ],
-        undefined,
-        'CLIP morphology from imaging: uninodular ≤50% vs multinodular ≤50% vs massive/>50% involvement.',
-      ),
+        ], 1,
+        'CLIP morphology from imaging: uninodular ≤50% vs multinodular ≤50% vs massive/>50% involvement.'),
       selectInput('afp', 'AFP (ng/mL)', [
         { label: '< 400 (0)', value: 0, description: 'AFP <400 ng/mL' },
         { label: '≥ 400 (1)', value: 1, description: 'AFP ≥400 ng/mL (CLIP point)' },
-      ]),
-      yesNo('pvt', 'Portal vein thrombosis', 1, 'Macroscopic portal vein tumor thrombosis (or bland PVT counted as in original CLIP if recorded as PVT).'),
+      ], 1, 'AFP below 400 ng/mL scores 0; 400 or higher scores 1 point on the CLIP score.'),
+      yesNo('pvt', 'Portal vein thrombosis', 1, 'Macroscopic portal vein tumor thrombosis (or bland PVT counted as in original CLIP if recorded as PVT).', false),
     ],
     calculate(values) {
       const score = num(values.child) + num(values.morphology) + num(values.afp) + (bool(values.pvt) ? 1 : 0);
@@ -966,11 +954,11 @@ export const wave2OncologyCalcs: Calculator[] = [
         { label: 'Single tumor', value: 'single' },
         { label: 'Multiple tumors (2–3)', value: 'multi' },
         { label: 'More than 3 tumors', value: 'many' },
-      ]),
-      numberInput('largest', 'Largest tumor diameter', { unit: 'cm', min: 0.1, max: 30, step: 0.1, exampleValue: 3 }),
-      numberInput('count', 'Number of tumors (if multiple)', { min: 1, max: 20, step: 1, exampleValue: 2 }),
-      yesNo('vascular', 'Macrovascular invasion', -1),
-      yesNo('extrahepatic', 'Extrahepatic disease', -1),
+      ], "multi", 'Single tumor, 2–3 tumors, or more than 3 tumors. Classic Milan requires a single lesion ≤5 cm or up to three lesions each ≤3 cm.'),
+      numberInput('largest', 'Largest tumor diameter', { unit: 'cm', min: 0.1, max: 30, step: 0.1, exampleValue: 3, helpText: 'Largest tumor diameter in cm on the explant or imaging used for staging; the Milan limit is 5 cm for a solitary tumor and 3 cm for each of up to three lesions.' }),
+      numberInput('count', 'Number of tumors (if multiple)', { min: 1, max: 20, step: 1, exampleValue: 2, helpText: 'Number of tumors when multiple; more than 3 lesions falls outside classic Milan regardless of size.' }),
+      yesNo('vascular', 'Macrovascular invasion', -1, 'Yes for macrovascular invasion (portal or hepatic vein) excludes the patient from classic Milan criteria.', false),
+      yesNo('extrahepatic', 'Extrahepatic disease', -1, 'Yes for extrahepatic disease excludes classic Milan; regional nodal involvement and distant metastases both disqualify.', false),
     ],
     calculate(values) {
       const pattern = String(values.pattern ?? 'single');
@@ -1090,8 +1078,8 @@ export const wave2OncologyCalcs: Calculator[] = [
         exampleValue: -25,
         helpText: 'Negative = decrease vs baseline (or nadir for PD rules). (current − baseline) / baseline × 100',
       }),
-      yesNo('newLesions', 'New lesions present', 1),
-      yesNo('completeDisappearance', 'All target lesions disappeared (and nodes <10 mm short axis if applicable)', 1),
+      yesNo('newLesions', 'New lesions present', 1, 'Yes for any new lesion means progressive disease regardless of how much the target lesions shrank.', false),
+      yesNo('completeDisappearance', 'All target lesions disappeared (and nodes <10 mm short axis if applicable)', 1, 'Yes when all target lesions have vanished (and lymph nodes have regressed to under 10 mm short axis); with non-target disease resolved this is a complete response.', false),
       numberInput('absIncreaseMm', 'Absolute increase in sum vs nadir (if progressing)', {
         unit: 'mm',
         min: 0,
@@ -1304,7 +1292,7 @@ export const wave2OncologyCalcs: Calculator[] = [
         { label: '20 — Very sick; hospital admission necessary; active supportive treatment', value: 20 },
         { label: '10 — Moribund; fatal processes progressing rapidly', value: 10 },
         { label: '0 — Dead', value: 0 },
-      ]),
+      ], 90, 'Choose the band that best matches function: 100 normal, 90 minor symptoms, 80 normal activity with effort, 70 independent but unable to work, 60 occasional help, 50 considerable help, 40 disabled, 30 severely disabled, 20 very sick, 10 moribund, 0 dead. KPS <80 is the Motzer/IMDC adverse cut point.'),
     ],
     calculate(values) {
       const kps = num(values.kps, 80);
@@ -1387,49 +1375,43 @@ export const wave2OncologyCalcs: Calculator[] = [
     whenToUse: 'Teaching relative contribution of reproductive/family/biopsy factors to 5-year breast cancer risk discussion.',
     whyUse: 'Highlights who may warrant formal Gail/Tyrer-Cuzick calculation, genetic counseling, or preventive therapy discussion.',
     inputs: [
-      numberInput('age', 'Current age', { unit: 'years', min: 20, max: 90, step: 1, exampleValue: 45 }),
+      numberInput('age', 'Current age', { unit: 'years', min: 20, max: 90, step: 1, exampleValue: 45, helpText: 'Current age in years; 5-year risk rises with age, and official Gail/NCI models require age 35 or older for their risk tables.' }),
       selectInput('menarche', 'Age at menarche', [
         { label: '≥14 years (lower risk)', value: 0, description: 'Menarche at age 14 or later (Gail lower-risk band)' },
         { label: '12–13 years', value: 1, description: 'Menarche at age 12 or 13' },
         { label: '<12 years (higher risk)', value: 2, description: 'Menarche before age 12 (Gail higher-risk band)' },
-      ]),
+      ], 1, 'Age at menarche: 14 years or later is lower risk, 12–13 intermediate, and under 12 higher risk (longer lifetime estrogen exposure).'),
       selectInput('firstBirth', 'Age at first live birth', [
         { label: 'Nulliparous', value: 'nulliparous', description: 'Never had a live birth' },
         { label: '<20 years', value: 'lt20', description: 'First live birth before age 20 (lowest band)' },
         { label: '20–24 years', value: '20-24', description: 'First live birth at age 20–24' },
         { label: '25–29 years', value: '25-29', description: 'First live birth at age 25–29 (same educational weight as nulliparous in this tally)' },
         { label: '≥30 years', value: 'ge30', description: 'First live birth at age 30 or later' },
-      ]),
-      selectInput(
-        'biopsies',
+      ], "25-29", 'Age at first live birth, or nulliparous. First birth before 20 is the lowest-risk band and 30 or older or nulliparous the highest.'),
+      selectInput('biopsies',
         'Prior breast biopsies',
         [
           { label: 'None', value: 0, description: 'No prior breast biopsies' },
           { label: '1', value: 1, description: 'One prior core or surgical breast biopsy' },
           { label: '≥2', value: 2, description: 'Two or more prior core or surgical breast biopsies' },
-        ],
-        undefined,
-        'Count prior breast biopsies (typically core or excisional). Atypia is a separate item below — do not double-count it here.',
-      ),
-      yesNo('atypia', 'Atypical hyperplasia on biopsy', 2, 'Atypical ductal or lobular hyperplasia on a prior biopsy (separate from biopsy count).'),
-      selectInput(
-        'relatives',
+        ], 0,
+        'Count prior breast biopsies (typically core or excisional). Atypia is a separate item below — do not double-count it here.'),
+      yesNo('atypia', 'Atypical hyperplasia on biopsy', 2, 'Atypical ductal or lobular hyperplasia on a prior biopsy (separate from biopsy count).', false),
+      selectInput('relatives',
         'First-degree relatives with breast cancer',
         [
           { label: '0', value: 0, description: 'No mother, sister, or daughter with breast cancer' },
           { label: '1', value: 1, description: 'Exactly one first-degree female relative (mother, sister, or daughter) with breast cancer' },
           { label: '≥2', value: 2, description: 'Two or more first-degree female relatives with breast cancer' },
-        ],
-        undefined,
-        'Female first-degree only (mother, sisters, daughters). Do not count father or second-degree relatives (grandmothers/aunts). Strong hereditary pattern → genetic counseling / Tyrer-Cuzick, not this educational tally.',
-      ),
+        ], 1,
+        'Female first-degree only (mother, sisters, daughters). Do not count father or second-degree relatives (grandmothers/aunts). Strong hereditary pattern → genetic counseling / Tyrer-Cuzick, not this educational tally.'),
       selectInput('race', 'Race/ethnicity (educational strata)', [
         { label: 'White / other (reference educational weight)', value: 'white' },
         { label: 'Black / African American', value: 'black' },
         { label: 'Hispanic / Latina', value: 'hispanic' },
         { label: 'Asian / Pacific Islander', value: 'asian' },
         { label: 'American Indian / Alaska Native', value: 'aian' },
-      ]),
+      ], "white", 'Race/ethnicity strata for the educational weights only; the official NCI tool uses its own incidence and competing-mortality tables by race.'),
     ],
     calculate(values) {
       const age = num(values.age, 45);
@@ -1549,11 +1531,11 @@ export const wave2OncologyCalcs: Calculator[] = [
         exampleValue: 3,
         helpText: 'Patient self-report of distress in the past week, including today (0 = none, 10 = extreme). NCCN commonly uses ≥4 as referral cut-off. Do not reprint the official NCCN problem list — complete it on paper/EHR if screening positive.',
       }),
-      yesNo('practical', 'Practical problems (housing, bills, transport, work)', 0),
-      yesNo('family', 'Family problems', 0),
-      yesNo('emotional', 'Emotional problems (worry, depression, nervousness)', 0),
-      yesNo('spiritual', 'Spiritual / religious concerns', 0),
-      yesNo('physical', 'Physical problems contributing to distress', 0),
+      yesNo('practical', 'Practical problems (housing, bills, transport, work)', 0, 'Practical problems (housing, finances, transport, work) — any checked item is a target for social work referral even when the thermometer score is below 4.', false),
+      yesNo('family', 'Family problems', 0, 'Family problems (partner, children, communication) should trigger caregiver and family-support resources.', false),
+      yesNo('emotional', 'Emotional problems (worry, depression, nervousness)', 0, 'Emotional problems (worry, sadness, nervousness, fear of recurrence) — most relevant to the ≥4 referral threshold.', true),
+      yesNo('spiritual', 'Spiritual / religious concerns', 0, 'Spiritual or religious concerns warrant chaplaincy or spiritual-care referral.', false),
+      yesNo('physical', 'Physical problems contributing to distress', 0, 'Physical problems contributing to distress (pain, fatigue, sleep, nausea) should be listed with the thermometer score for the oncology team.', true),
     ],
     calculate(values) {
       const score = num(values.score, 3);
@@ -1632,12 +1614,12 @@ export const wave2OncologyCalcs: Calculator[] = [
     whenToUse: 'Treatment-naive or previously treated metastatic clear-cell RCC risk stratification for systemic therapy discussions.',
     whyUse: 'Guides prognosis and historically regimen intensity (favorable vs intermediate vs poor).',
     inputs: [
-      yesNo('timeToSys', 'Time from diagnosis to systemic therapy < 1 year', 1),
-      yesNo('kps', 'Karnofsky performance status < 80', 1, 'KPS <80 = unable to carry on normal activity or work (KPS ≤70). KPS 80 = normal activity with effort; some signs/symptoms.'),
-      yesNo('hb', 'Hemoglobin < lower limit of normal', 1),
-      yesNo('calcium', 'Corrected calcium > upper limit of normal', 1),
-      yesNo('neutrophils', 'Neutrophils > upper limit of normal', 1),
-      yesNo('platelets', 'Platelets > upper limit of normal', 1),
+      yesNo('timeToSys', 'Time from diagnosis to systemic therapy < 1 year', 1, 'Time from diagnosis to systemic therapy under 1 year scores 1 point; longer intervals are favorable.', false),
+      yesNo('kps', 'Karnofsky performance status < 80', 1, 'KPS <80 = unable to carry on normal activity or work (KPS ≤70). KPS 80 = normal activity with effort; some signs/symptoms.', false),
+      yesNo('hb', 'Hemoglobin < lower limit of normal', 1, 'Hemoglobin below the laboratory\'s lower limit of normal scores 1 point; the threshold is lab-relative, not a fixed value.', true),
+      yesNo('calcium', 'Corrected calcium > upper limit of normal', 1, 'Corrected calcium above the upper limit of normal scores 1 point; correct for albumin before applying it.', false),
+      yesNo('neutrophils', 'Neutrophils > upper limit of normal', 1, 'Neutrophils above the upper limit of normal score 1 point — the item that distinguishes IMDC from the older MSKCC model.', false),
+      yesNo('platelets', 'Platelets > upper limit of normal', 1, 'Platelets above the upper limit of normal score 1 point; also unique to IMDC versus MSKCC.', false),
     ],
     calculate(values) {
       const score =
@@ -1708,11 +1690,11 @@ export const wave2OncologyCalcs: Calculator[] = [
     whenToUse: 'Classic risk stratification of metastatic RCC (cytokine and early targeted-therapy era model).',
     whyUse: 'Five-factor model still cited; compare with IMDC (which adds neutrophils/platelets, drops LDH).',
     inputs: [
-      yesNo('timeToSys', 'Time from diagnosis to systemic therapy < 1 year', 1),
-      yesNo('kps', 'Karnofsky performance status < 80', 1, 'KPS <80 = unable to carry on normal activity or work (KPS ≤70). KPS 80 = normal activity with effort; some signs/symptoms.'),
-      yesNo('hb', 'Hemoglobin < lower limit of normal', 1),
-      yesNo('ldh', 'LDH > 1.5 × upper limit of normal', 1),
-      yesNo('calcium', 'Corrected calcium > upper limit of normal', 1),
+      yesNo('timeToSys', 'Time from diagnosis to systemic therapy < 1 year', 1, 'Time from diagnosis to systemic therapy under 1 year scores 1 point in the Motzer model.', false),
+      yesNo('kps', 'Karnofsky performance status < 80', 1, 'KPS <80 = unable to carry on normal activity or work (KPS ≤70). KPS 80 = normal activity with effort; some signs/symptoms.', false),
+      yesNo('hb', 'Hemoglobin < lower limit of normal', 1, 'Hemoglobin below the lower limit of normal scores 1 point; use the same local reference range for every patient.', true),
+      yesNo('ldh', 'LDH > 1.5 × upper limit of normal', 1, 'LDH above 1.5 times the upper limit of normal scores 1 point; a mildly elevated LDH does not count. IMDC drops this item and adds neutrophils and platelets.', false),
+      yesNo('calcium', 'Corrected calcium > upper limit of normal', 1, 'Corrected calcium above the upper limit of normal scores 1 point; correct for the albumin level first.', false),
     ],
     calculate(values) {
       const score =
@@ -1773,13 +1755,13 @@ export const wave2OncologyCalcs: Calculator[] = [
     whenToUse: 'Newly diagnosed advanced classical Hodgkin lymphoma risk stratification.',
     whyUse: 'Seven clinical/lab factors predict freedom from progression; informs intensity discussions historically.',
     inputs: [
-      yesNo('male', 'Male sex', 1),
-      yesNo('age', 'Age ≥ 45 years', 1),
-      yesNo('stageIv', 'Stage IV disease', 1),
-      yesNo('albumin', 'Albumin < 4.0 g/dL', 1),
-      yesNo('hb', 'Hemoglobin < 10.5 g/dL', 1),
-      yesNo('wbc', 'WBC ≥ 15 × 10⁹/L', 1),
-      yesNo('lymphopenia', 'Lymphocytopenia (ALC < 0.6 × 10⁹/L or <8% of WBC)', 1),
+      yesNo('male', 'Male sex', 1, 'Male sex scores 1 of the 7 IPS points.', true),
+      yesNo('age', 'Age ≥ 45 years', 1, 'Age 45 years or older scores 1 point.', false),
+      yesNo('stageIv', 'Stage IV disease', 1, 'Ann Arbor stage IV disease scores 1 point.', false),
+      yesNo('albumin', 'Albumin < 4.0 g/dL', 1, 'Albumin below 4.0 g/dL scores 1 point.', true),
+      yesNo('hb', 'Hemoglobin < 10.5 g/dL', 1, 'Hemoglobin below 10.5 g/dL scores 1 point.', false),
+      yesNo('wbc', 'WBC ≥ 15 × 10⁹/L', 1, 'WBC 15 ×10⁹/L or higher scores 1 point.', false),
+      yesNo('lymphopenia', 'Lymphocytopenia (ALC < 0.6 × 10⁹/L or <8% of WBC)', 1, 'Lymphocytopenia — absolute lymphocyte count below 0.6 ×10⁹/L or under 8% of the WBC — scores 1 point.', false),
     ],
     calculate(values) {
       const score =
@@ -1854,11 +1836,11 @@ export const wave2OncologyCalcs: Calculator[] = [
     whenToUse: 'Newly diagnosed follicular lymphoma risk stratification (FLIPI; consider FLIPI-2/m7-FLIPI for research).',
     whyUse: 'Five-factor score estimates overall survival risk groups and frames observation vs treatment discussions.',
     inputs: [
-      yesNo('age', 'Age > 60 years', 1),
-      yesNo('stage', 'Ann Arbor stage III–IV', 1),
-      yesNo('hb', 'Hemoglobin < 12 g/dL', 1),
-      yesNo('nodal', 'More than 4 nodal areas', 1, 'FLIPI areas = cervical, axillary, inguino-crural (count left and right separately), para-aortic/iliac, celiac/mesenteric, other ancillary. Positive if >4 involved areas (≥5). Spleen is extranodal, not a nodal area.'),
-      yesNo('ldh', 'LDH > upper limit of normal', 1),
+      yesNo('age', 'Age > 60 years', 1, 'Age over 60 years scores 1 FLIPI point.', true),
+      yesNo('stage', 'Ann Arbor stage III–IV', 1, 'Ann Arbor stage III or IV scores 1 point.', true),
+      yesNo('hb', 'Hemoglobin < 12 g/dL', 1, 'Hemoglobin below 12 g/dL scores 1 point.', false),
+      yesNo('nodal', 'More than 4 nodal areas', 1, 'Count involved nodal areas as the original FLIPI defines them: five or more involved areas (i.e. more than 4) scores 1 point. Splenic and other extranodal involvement is not a nodal area.', false),
+      yesNo('ldh', 'LDH > upper limit of normal', 1, 'LDH above the upper limit of normal scores 1 point; FLIPI also counts nodal areas (not entered here), so use the full index for a formal risk group.', false),
     ],
     calculate(values) {
       const score =
@@ -1923,11 +1905,11 @@ export const wave2OncologyCalcs: Calculator[] = [
     whenToUse: 'Newly diagnosed aggressive NHL / DLBCL before or at start of immunochemotherapy.',
     whyUse: 'Classic five-factor OS model; foundation for R-IPI and CNS-IPI.',
     inputs: [
-      yesNo('age', 'Age > 60 years', 1),
-      yesNo('ldh', 'Serum LDH > upper limit of normal', 1),
-      yesNo('ecog', 'ECOG performance status ≥ 2', 1, 'ECOG ≥2 = all self-care, unable to work, up >50% of waking hours, or worse (bed/chair >50% or disabled). PS 1 (light/sedentary work OK) does not score this point.'),
-      yesNo('stage', 'Ann Arbor stage III or IV', 1),
-      yesNo('extranodal', 'More than one extranodal site', 1, '>1 distinct extranodal organ/site (BM, GI, liver, lung, bone, CNS, skin). Spleen counts as extranodal in classic IPI. Contiguous extension from a nodal mass is not extra sites.'),
+      yesNo('age', 'Age > 60 years', 1, 'Age over 60 years scores 1 IPI point.', true),
+      yesNo('ldh', 'Serum LDH > upper limit of normal', 1, 'Serum LDH above the upper limit of normal scores 1 point.', true),
+      yesNo('ecog', 'ECOG performance status ≥ 2', 1, 'ECOG ≥2 = all self-care, unable to work, up >50% of waking hours, or worse (bed/chair >50% or disabled). PS 1 (light/sedentary work OK) does not score this point.', false),
+      yesNo('stage', 'Ann Arbor stage III or IV', 1, 'Ann Arbor stage III or IV scores 1 point; the full IPI also counts extranodal sites and performance status, so enter those in the companion fields.', true),
+      yesNo('extranodal', 'More than one extranodal site', 1, '>1 distinct extranodal organ/site (BM, GI, liver, lung, bone, CNS, skin). Spleen counts as extranodal in classic IPI. Contiguous extension from a nodal mass is not extra sites.', false),
     ],
     calculate(values) {
       const score =

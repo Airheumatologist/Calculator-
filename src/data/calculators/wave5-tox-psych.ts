@@ -23,11 +23,11 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         exampleValue: 10000,
         helpText: 'Sum all APAP sources; convert g→mg (1 g = 1000 mg)',
       }),
-      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 3, max: 250, step: 0.1, exampleValue: 70 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 3, max: 250, step: 0.1, exampleValue: 70, helpText: 'Body weight in kg used to convert the reported milligrams into mg/kg; use a measured weight, since the mg/kg band decides disposition. Select lb if the chart is imperial.' }),
       selectInput('age_group', 'Age group (threshold frame)', [
         { label: 'Adult / adolescent', value: 'adult' },
         { label: 'Child (<6 y often higher mg/kg tolerance classically)', value: 'child' },
-      ]),
+      ], 'adult', 'Adult/adolescent uses the classic ~150 mg/kg acute toxic threshold; children under 6 often tolerate more per kg, so the child frame raises the threshold.'),
     ],
     calculate(values) {
       const dose = num(values.dose_mg, 10000);
@@ -129,8 +129,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Acute ibuprofen overdose with estimated dose and weight (bands are ibuprofen-specific, not all NSAIDs).',
     whyUse: 'Most single acute ibuprofen ODs are mild; bands help disposition and need for labs/observation.',
     inputs: [
-      numberInput('dose_mg', 'Ingested ibuprofen dose', { unit: 'mg', min: 0, max: 100000, exampleValue: 6000 }),
-      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 5, max: 250, step: 0.1, exampleValue: 70 }),
+      numberInput('dose_mg', 'Ingested ibuprofen dose', { unit: 'mg', min: 0, max: 100000, exampleValue: 6000, helpText: 'Total ingested ibuprofen in mg (tablet strength × number of tablets); include all formulations and assume the maximum possible count when the history is uncertain.' }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 5, max: 250, step: 0.1, exampleValue: 70, helpText: 'Body weight in kg for the mg/kg comparison; select lb if needed. Doses below 100 mg/kg are usually asymptomatic, and 100–200 mg/kg warrants observation.' }),
     ],
     calculate(values) {
       const dose = num(values.dose_mg, 6000);
@@ -222,8 +222,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Ferrous sulfate (~20% elemental)', value: 0.2 },
         { label: 'Ferrous gluconate (~12% elemental)', value: 0.12 },
         { label: 'Already elemental iron / carbonyl / known elemental mg', value: 1 },
-      ]),
-      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 5, max: 200, step: 0.1, exampleValue: 20 }),
+      ], 0.2, 'Select the product form: ferrous fumarate ~33% elemental iron, ferrous sulfate ~20%, ferrous gluconate ~12%. Choose \'already elemental\' if the elemental milligrams are stated directly.'),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 5, max: 200, step: 0.1, exampleValue: 20, helpText: 'Body weight in kg for the elemental mg/kg bands; select lb if the chart is imperial. Under 20 mg/kg is usually well tolerated, 20–60 mg/kg warrants labs, and above 60 mg/kg is serious toxicity.' }),
     ],
     calculate(values) {
       const saltMg = num(values.dose_mg, 3000);
@@ -307,14 +307,14 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Known lithium concentration with suspected toxicity or therapeutic drug monitoring concern.',
     whyUse: 'Chronic toxicity is severe at lower levels than acute overdose; clinical neurotoxicity drives dialysis decisions.',
     inputs: [
-      numberInput('level', 'Serum lithium', { unit: 'mEq/L', min: 0, max: 10, step: 0.1, exampleValue: 1.8 }),
+      numberInput('level', 'Serum lithium', { unit: 'mEq/L', min: 0, max: 10, step: 0.1, exampleValue: 1.8, helpText: 'Serum lithium in mEq/L (equivalent to mmol/L) drawn as a trough at least 12 hours after the last dose for maintenance interpretation.' }),
       selectInput('context', 'Context', [
         { label: 'Acute overdose (not on lithium chronically)', value: 'acute', description: 'Single acute ingestion in a patient not taking lithium chronically' },
         { label: 'Chronic / therapeutic use toxicity', value: 'chronic', description: 'On maintenance lithium; toxicity from accumulation, dehydration, or interacting drugs' },
         { label: 'Acute-on-chronic', value: 'aoc', description: 'Acute extra ingestion on top of chronic lithium use' },
-      ], undefined, 'Chronic and acute-on-chronic toxicity are more dangerous at a given level than naive acute OD. Draw a trough for TDM; OD needs serial levels.'),
-      yesNo('neuro', 'Significant neurotoxicity (AMS, severe tremor, myoclonus, seizure)', 0),
-      yesNo('renal', 'AKI / impaired lithium clearance', 0),
+      ], 'chronic', 'Chronic and acute-on-chronic toxicity are more dangerous at a given level than naive acute OD. Draw a trough for TDM; OD needs serial levels.'),
+      yesNo('neuro', 'Significant neurotoxicity (AMS, severe tremor, myoclonus, seizure)', 0, 'Yes for significant neurotoxicity — confusion, severe tremor, myoclonus, or seizures. Neurotoxicity at a modest level argues for dialysis regardless of the number.', false),
+      yesNo('renal', 'AKI / impaired lithium clearance', 0, 'Yes for AKI or reduced lithium clearance (dehydration, NSAIDs, ACE inhibitors, thiazides); impaired clearance lengthens the half-life and lowers the dialysis threshold.', false),
     ],
     calculate(values) {
       const level = num(values.level, 1.8);
@@ -429,13 +429,13 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Therapeutic drug monitoring or suspected valproate toxicity/overdose.',
     whyUse: 'Levels frame toxicity risk; hyperammonemia and clinical status may be severe even when total VPA is not extreme.',
     inputs: [
-      numberInput('level', 'Total serum VPA', { unit: 'µg/mL', min: 0, max: 1000, step: 1, exampleValue: 120 }),
+      numberInput('level', 'Total serum VPA', { unit: 'µg/mL', min: 0, max: 1000, step: 1, exampleValue: 120, helpText: 'Total serum valproate in µg/mL (mcg/mL); the usual total therapeutic range is about 50–100 µg/mL, and hypoalbuminemia makes the free fraction higher than the total suggests.' }),
       selectInput('context', 'Context', [
         { label: 'Therapeutic monitoring', value: 'tdm' },
         { label: 'Overdose / toxicity evaluation', value: 'od' },
-      ]),
-      yesNo('ams', 'Altered mental status / significant CNS depression', 0),
-      yesNo('hyperNH3', 'Hyperammonemia present / suspected', 0),
+      ], 'tdm', 'Therapeutic monitoring compares against the 50–100 µg/mL band; the overdose/toxicity branch applies higher severity bands with a lower threshold for intervention.'),
+      yesNo('ams', 'Altered mental status / significant CNS depression', 0, 'Yes for altered mental status or significant CNS depression — treat clinically, since coma can occur at levels that look only mildly elevated.', false),
+      yesNo('hyperNH3', 'Hyperammonemia present / suspected', 0, 'Yes for hyperammonemia present or suspected; it can cause encephalopathy with a normal total level and is treated with carnitine and lactulose.', false),
     ],
     calculate(values) {
       const level = num(values.level, 120);
@@ -540,9 +540,9 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Carbamazepine therapeutic monitoring or suspected toxicity/overdose.',
     whyUse: 'Levels correlate roughly with toxicity (nystagmus, ataxia, coma, seizures, Na channel effects).',
     inputs: [
-      numberInput('level', 'Serum carbamazepine', { unit: 'µg/mL', min: 0, max: 100, step: 0.1, exampleValue: 14 }),
-      yesNo('ams', 'Significant CNS depression / coma', 0),
-      yesNo('seizure', 'Seizure / status risk features', 0),
+      numberInput('level', 'Serum carbamazepine', { unit: 'µg/mL', min: 0, max: 100, step: 0.1, exampleValue: 14, helpText: 'Total serum carbamazepine in µg/mL drawn as a trough; the usual therapeutic range is about 4–12 µg/mL, and autoinduction lowers levels over the first weeks.' }),
+      yesNo('ams', 'Significant CNS depression / coma', 0, 'Yes for significant CNS depression or coma — carbamazepine toxicity is graded clinically as much as by the level.', false),
+      yesNo('seizure', 'Seizure / status risk features', 0, 'Yes for seizures or features of sodium-channel blockade (wide QRS, hypotension); this shifts management toward aggressive supportive care and bicarbonate for wide-complex conduction delay.', false),
     ],
     calculate(values) {
       const level = num(values.level, 14);
@@ -637,13 +637,13 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Patients on theophylline/aminophylline with levels, or methylxanthine overdose.',
     whyUse: 'Narrow therapeutic index; chronic toxicity is dangerous at lower levels than acute OD.',
     inputs: [
-      numberInput('level', 'Serum theophylline', { unit: 'µg/mL', min: 0, max: 200, step: 0.1, exampleValue: 28 }),
+      numberInput('level', 'Serum theophylline', { unit: 'µg/mL', min: 0, max: 200, step: 0.1, exampleValue: 28, helpText: 'Serum theophylline in µg/mL; the usual range is 10–20 µg/mL, and chronic elevations cause toxicity at lower values than acute overdose.' }),
       selectInput('context', 'Context', [
         { label: 'Acute overdose', value: 'acute' },
         { label: 'Chronic / repeated supratherapeutic', value: 'chronic' },
-      ]),
-      yesNo('seizure', 'Seizures', 0),
-      yesNo('unstable', 'Hypotension / life-threatening dysrhythmia', 0),
+      ], 'chronic', 'Chronic or repeated supratherapeutic use is the higher-risk context (seizures at lower levels); acute overdose has a more predictable level-to-effect gradient.'),
+      yesNo('seizure', 'Seizures', 0, 'Yes for seizures — they mark severe toxicity and warrant aggressive treatment with benzodiazepines and consideration of hemodialysis.', false),
+      yesNo('unstable', 'Hypotension / life-threatening dysrhythmia', 0, 'Yes for hypotension or life-threatening dysrhythmia; hemodialysis is generally indicated for hypotension, refractory arrhythmias, or seizures.', false),
     ],
     calculate(values) {
       const level = num(values.level, 28);
@@ -757,9 +757,9 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: '48 hours', value: 48 },
         { label: '72 hours', value: 72 },
         { label: 'Other / not standard time', value: 0 },
-      ]),
-      yesNo('aki', 'AKI / delayed clearance risk factors', 0),
-      yesNo('third_space', 'Third-spacing / effusion / ascites', 0),
+      ], 24, 'Select the protocol time point for the reported level: 24-hour levels above ~10 µmol/L, 48-hour above ~1 µmol/L, and 72-hour above ~0.1 µmol/L generally prompt intensified rescue.'),
+      yesNo('aki', 'AKI / delayed clearance risk factors', 0, 'Yes for AKI or delayed-clearance risk (crCl low, nephrotoxic co-medications) — clearance drives toxicity, so rescue escalation and glucarpidase consideration follow.', false),
+      yesNo('third_space', 'Third-spacing / effusion / ascites', 0, 'Yes for effusion, ascites, or other third-spacing, which acts as a reservoir and prolongs methotrexate exposure even when early levels look acceptable.', false),
     ],
     calculate(values) {
       const level = num(values.level, 10);
@@ -870,14 +870,14 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Known or suspected CO exposure with co-oximetry COHb result.',
     whyUse: 'COHb frames exposure magnitude; treatment (O₂ ± HBO) depends heavily on symptoms, pregnancy, and source.',
     inputs: [
-      numberInput('cohb', 'Carboxyhemoglobin', { unit: '%', min: 0, max: 80, step: 0.1, exampleValue: 15 }),
+      numberInput('cohb', 'Carboxyhemoglobin', { unit: '%', min: 0, max: 80, step: 0.1, exampleValue: 15, helpText: 'Carboxyhemoglobin percentage from a co-oximetry blood gas (not a standard pulse oximeter); smokers can have a 5–10% baseline that complicates interpretation.' }),
       selectInput('smoker', 'Baseline smoking status', [
         { label: 'Nonsmoker', value: 'no' },
         { label: 'Smoker (higher baseline COHb)', value: 'yes' },
-      ]),
-      yesNo('neuro', 'Syncope, coma, seizure, or focal neuro deficit', 0),
-      yesNo('cardiac', 'Chest pain, ischemia, or significant dysrhythmia', 0),
-      yesNo('pregnant', 'Pregnant', 0),
+      ], 'no', 'Smokers run a higher baseline COHb (5–10%) than nonsmokers (<2–3%), so a modestly elevated value in a smoker may be normal.'),
+      yesNo('neuro', 'Syncope, coma, seizure, or focal neuro deficit', 0, 'Yes for syncope, coma, seizure, or focal deficit — these mark severe poisoning and support hyperbaric oxygen consultation.', false),
+      yesNo('cardiac', 'Chest pain, ischemia, or significant dysrhythmia', 0, 'Yes for chest pain, ischemia, or significant dysrhythmia; cardiac involvement is a hyperbaric oxygen indication.', false),
+      yesNo('pregnant', 'Pregnant', 0, 'Yes for pregnancy — the fetal hemoglobin binds CO more avidly, so hyperbaric oxygen is considered at lower maternal COHb levels.', false),
     ],
     calculate(values) {
       const cohb = num(values.cohb, 15);
@@ -974,10 +974,10 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Suspected methemoglobinemia (cyanosis refractory to O₂, chocolate blood, drug exposures) with co-oximetry MetHb.',
     whyUse: 'Severity bands guide urgency of methylene blue and ICU care.',
     inputs: [
-      numberInput('methb', 'Methemoglobin', { unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 25 }),
-      yesNo('symptomatic', 'Symptoms (dyspnea, headache, tachycardia, AMS)', 0),
-      yesNo('severe', 'Severe features (coma, seizure, ischemia, profound hypoxia symptoms)', 0),
-      yesNo('g6pd', 'Known G6PD deficiency', 0),
+      numberInput('methb', 'Methemoglobin', { unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 25, helpText: 'Methemoglobin percentage from co-oximetry; normal is under 1–2%, and levels above 30% with symptoms or above 50% regardless of symptoms warrant urgent treatment.' }),
+      yesNo('symptomatic', 'Symptoms (dyspnea, headache, tachycardia, AMS)', 0, 'Yes for dyspnea, headache, tachycardia, or altered mental status; symptoms are relative to the level, and anemia or cardiac disease lowers the threshold.', true),
+      yesNo('severe', 'Severe features (coma, seizure, ischemia, profound hypoxia symptoms)', 0, 'Yes for coma, seizure, ischemia, or profound hypoxemia — methylene blue is generally indicated at these features even when the percentage looks modest.', false),
+      yesNo('g6pd', 'Known G6PD deficiency', 0, 'Yes for known G6PD deficiency: methylene blue is ineffective and can cause hemolysis, so treat with oxygen, exchange transfusion, or alternative agents.', false),
     ],
     calculate(values) {
       const methb = num(values.methb, 25);
@@ -1087,11 +1087,11 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'House fire / smoke inhalation', value: 'smoke', description: 'Closed-space fire or smoke inhalation (CO + cyanide risk)' },
         { label: 'Industrial / lab cyanide', value: 'industrial', description: 'Known or suspected cyanide salt, gas, or laboratory exposure' },
         { label: 'Unknown / other', value: 'other', description: 'No clear fire or industrial cyanide source' },
-      ]),
+      ], 'smoke', 'House fire/smoke inhalation is the classic setting (with CO and cyanide co-exposure); industrial or lab exposure gives a more definite history; unknown exposure relies on the clinical picture.'),
       numberInput('lactate', 'Serum lactate', { unit: 'mmol/L', min: 0, max: 30, step: 0.1, exampleValue: 8, helpText: 'Smoke/CN teaching: lactate ≥8–10 mmol/L raises suspicion, especially with AMS or shock. Do not wait for a cyanide level.' }),
-      yesNo('ams', 'Altered mental status / coma / seizure', 2),
-      yesNo('shock', 'Hypotension / cardiovascular collapse', 2),
-      yesNo('soot', 'Soot in airway / severe smoke exposure signs'),
+      yesNo('ams', 'Altered mental status / coma / seizure', 2, 'Altered mental status, coma, or seizure adds 2 points — cyanide poisoning is treated clinically, since levels rarely return in time.', true),
+      yesNo('shock', 'Hypotension / cardiovascular collapse', 2, 'Hypotension or cardiovascular collapse adds 2 points; cyanide causes vasodilatory shock with a narrowed arteriovenous oxygen difference.', false),
+      yesNo('soot', 'Soot in airway / severe smoke exposure signs', undefined, 'Soot in the airway or severe smoke-exposure signs add 1 point and raise pretest suspicion when a fire victim has lactic acidosis.', true),
     ],
     calculate(values) {
       const lactate = num(values.lactate, 8);
@@ -1191,10 +1191,10 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Mild (SLUDGE features, normal mentation, mild secretions)', value: 'mild', description: 'Alert; mild salivation/lacrimation/GI symptoms; no hypoxia or weakness requiring support' },
         { label: 'Moderate (prominent secretions, wheeze, GI, weakness)', value: 'moderate', description: 'Copious secretions, wheeze/bronchorrhea, vomiting/diarrhea, or muscle weakness without respiratory failure' },
         { label: 'Severe (respiratory failure, profound bronchorrhea, coma, seizures)', value: 'severe', description: 'Need for intubation/ventilatory support, coma, seizures, or life-threatening bronchorrhea' },
-      ], undefined, 'SLUDGE = salivation, lacrimation, urination, defecation, GI upset, emesis. Also DUMBBELS (diarrhea, urination, miosis, bronchorrhea/bradycardia/bronchospasm, emesis, lacrimation, salivation). Titrate atropine to dry secretions, not HR alone.'),
-      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 5, max: 200, step: 0.1, exampleValue: 70 }),
-      yesNo('bronchorrhea', 'Significant bronchorrhea / hypoxia from secretions', null),
-      yesNo('bradycardia', 'Symptomatic bradycardia / AV block', 0),
+      ], 'moderate', 'SLUDGE = salivation, lacrimation, urination, defecation, GI upset, emesis. Also DUMBBELS (diarrhea, urination, miosis, bronchorrhea/bradycardia/bronchospasm, emesis, lacrimation, salivation). Titrate atropine to dry secretions, not HR alone.'),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 5, max: 200, step: 0.1, exampleValue: 70, helpText: 'Body weight in kg for the starting atropine dose (0.05 mg/kg, rounded to available vials); select lb if the recorded weight is imperial.' }),
+      yesNo('bronchorrhea', 'Significant bronchorrhea / hypoxia from secretions', null, 'Yes for significant bronchorrhea or hypoxia from secretions: this is the feature that drives aggressive atropine titration and early airway suctioning.', true),
+      yesNo('bradycardia', 'Symptomatic bradycardia / AV block', 0, 'Yes for symptomatic bradycardia or AV block, which supports atropine and suggests a nicotinic/cholinergic cardiac effect.', true),
     ],
     calculate(values) {
       const sev = String(values.severity ?? 'moderate');
@@ -1304,33 +1304,33 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Mild pain/swelling local (1)', value: 1, description: 'Pain or swelling confined near fang marks; leading edge typically ≤7.5 cm' },
         { label: 'Moderate swelling beyond local area (2)', value: 2, description: 'Swelling typically 7.5–15 cm from fang marks or past the nearest joint, not the entire limb' },
         { label: 'Severe swelling, ecchymosis, threatened limb (3)', value: 3, description: 'Swelling typically >15 cm, entire limb, bullae/ecchymosis, cyanosis, or threatened compartment' },
-      ], undefined, 'Mark the leading edge of swelling in cm from fang marks and remeasure serially. Do not add points beyond the listed 0–3 maximum.'),
+      ], 2, 'Mark the leading edge of swelling in cm from fang marks and remeasure serially. Do not add points beyond the listed 0–3 maximum.'),
       selectInput('pulmonary', 'Pulmonary symptoms', [
         { label: 'None (0)', value: 0, description: 'No dyspnea; RR typically <20' },
         { label: 'Dyspnea / mild symptoms (1)', value: 1, description: 'Subjective dyspnea or chest tightness; RR typically 20–25 without accessory-muscle use or failure' },
         { label: 'Respiratory failure (2)', value: 2, description: 'Cyanosis, accessory-muscle use, hypoxemic/hypercapnic failure, or need for ventilatory support' },
-      ], undefined, 'Score the worst respiratory finding. This simplified scale caps at 2 (do not add a 3rd pulmonary point).'),
+      ], 0, 'Score the worst respiratory finding. This simplified scale caps at 2 (do not add a 3rd pulmonary point).'),
       selectInput('cv', 'Cardiovascular', [
         { label: 'Normal (0)', value: 0, description: 'HR <100 bpm and SBP ≥100 mmHg without hypoperfusion' },
         { label: 'Tachycardia / mild hypotension (1)', value: 1, description: 'HR 100–125 bpm or SBP 90–100 mmHg, without shock' },
         { label: 'Shock (2)', value: 2, description: 'HR >125 bpm, SBP <90 mmHg, or signs of hypoperfusion (cool/clammy, oliguria, altered mentation)' },
-      ], undefined, 'Use simultaneous HR and SBP. This simplified scale caps at 2.'),
+      ], 1, 'Use simultaneous HR and SBP. This simplified scale caps at 2.'),
       selectInput('heme', 'Bleeding / coagulopathy', [
         { label: 'None (0)', value: 0, description: 'Normal PT/PTT, platelets, and fibrinogen; no oozing' },
         { label: 'Mild labs / oozing (1)', value: 1, description: 'PT mildly prolonged (typically <20 s) or PTT mildly up; platelets 100–150×10³/µL; fibrinogen 100–150 mg/dL; or puncture-site oozing' },
         { label: 'Significant coagulopathy / bleeding (2)', value: 2, description: 'PT typically 20–50 s, PTT 50–75 s, platelets 50–100×10³/µL, fibrinogen 50–100 mg/dL, or frank bleeding' },
         { label: 'Severe uncontrolled bleeding (3)', value: 3, description: 'PT typically >50 s, platelets <50×10³/µL, fibrinogen <50 mg/dL, or uncontrolled hemorrhage' },
-      ], undefined, 'Use the worst of PT/PTT, platelet count, fibrinogen, or clinical bleeding. Do not add points beyond the listed 0–3 maximum.'),
+      ], 1, 'Use the worst of PT/PTT, platelet count, fibrinogen, or clinical bleeding. Do not add points beyond the listed 0–3 maximum.'),
       selectInput('cns', 'CNS', [
         { label: 'Normal (0)', value: 0, description: 'Alert, oriented, no fasciculations or weakness' },
         { label: 'Mild (dizziness, lethargy) (1)', value: 1, description: 'Dizziness, headache, fasciculations, lethargy, or mild weakness' },
         { label: 'Severe (coma, paralysis) (2)', value: 2, description: 'Coma, seizures, or paralysis' },
-      ], undefined, 'Score the worst neurologic finding. This simplified scale caps at 2.'),
+      ], 0, 'Score the worst neurologic finding. This simplified scale caps at 2.'),
       selectInput('gi', 'GI', [
         { label: 'None (0)', value: 0, description: 'No nausea, pain, or vomiting' },
         { label: 'Nausea / pain (1)', value: 1, description: 'Nausea or abdominal pain without repeated vomiting' },
         { label: 'Repeated vomiting / severe (2)', value: 2, description: 'Repeated vomiting, diarrhea, or hematemesis' },
-      ], undefined, 'Score the worst GI finding. This simplified scale caps at 2.'),
+      ], 1, 'Score the worst GI finding. This simplified scale caps at 2.'),
     ],
     calculate(values) {
       const score =
@@ -1421,18 +1421,18 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       selectInput('wound', 'Wound classification', [
         { label: 'Clean, minor wound', value: 'clean', description: 'Clean lacerations or abrasions — not contaminated, not punctures, not burns/frostbite/crush/missiles/avulsions' },
         { label: 'All other wounds (dirty, puncture, burns, crush, etc.)', value: 'dirty', description: 'Contaminated with dirt, feces, soil, or saliva; or puncture, avulsion, missile, crush, burn, or frostbite' },
-      ], undefined, 'Dirty/tetanus-prone = contaminated, puncture, crush, burn, frostbite, missile, or avulsion. Clean minor = superficial laceration/abrasion only.'),
+      ], 'dirty', 'Dirty/tetanus-prone = contaminated, puncture, crush, burn, frostbite, missile, or avulsion. Clean minor = superficial laceration/abrasion only.'),
       selectInput('history', 'Prior tetanus toxoid doses', [
         { label: 'Unknown or <3 doses', value: 'incomplete', description: 'Never vaccinated, incomplete primary series, or records unavailable' },
         { label: '≥3 doses', value: 'complete', description: 'Completed a primary tetanus toxoid series (≥3 doses)' },
-      ]),
+      ], 'complete', 'Choose \'unknown or fewer than 3 doses\' for incomplete or undocumented primary series; 3 or more documented doses means a booster decision only.'),
       selectInput('last_dose_years', 'Years since last tetanus-containing vaccine (if ≥3 doses)', [
         { label: 'Not applicable / unknown incomplete series', value: 'na' },
         { label: '<5 years', value: 'lt5' },
         { label: '5–9 years', value: '5to9' },
         { label: '≥10 years', value: 'ge10' },
-      ]),
-      yesNo('immunocompromised', 'HIV or severe immunodeficiency', null, 'CDC: people with HIV or severe immunodeficiency who have dirty/major wounds should receive TIG even after a complete toxoid series. TIG is never indicated for clean minor wounds.'),
+      ], 'ge10', 'Time since the last tetanus-containing vaccine: under 5 years needs nothing for clean or dirty wounds, 5–9 years needs a booster for dirty wounds, and 10 years or more needs a booster for any wound.'),
+      yesNo('immunocompromised', 'HIV or severe immunodeficiency', null, 'CDC: people with HIV or severe immunodeficiency who have dirty/major wounds should receive TIG even after a complete toxoid series. TIG is never indicated for clean minor wounds.', false),
     ],
     calculate(values) {
       const dirty = String(values.wound ?? 'dirty') === 'dirty';
@@ -1565,18 +1565,18 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Raccoon / skunk / fox / other wild carnivore', value: 'wild', description: 'High-risk wild carnivore; regard as rabid unless brain tests negative' },
         { label: 'Livestock / horse / other', value: 'other', description: 'Livestock or uncommon species — case-by-case with public health' },
         { label: 'Rodent / rabbit (rarely indicates PEP)', value: 'rodent', description: 'Small rodents and lagomorphs rarely transmit rabies in the US' },
-      ]),
+      ], 'bat', 'Bat exposure counts as an indication even without a clear bite; raccoon, skunk, fox, and other wild carnivores are high risk; rodents and rabbits rarely transmit rabies.'),
       selectInput('exposure', 'Exposure type', [
         { label: 'Bite / saliva into wound or mucosa', value: 'bite', description: 'Percutaneous bite, or saliva into an open wound or mucous membrane (category III)' },
         { label: 'Nonbite (scratch with saliva, open wound contamination)', value: 'nonbite', description: 'Scratch, abrasion, or open-wound contamination with saliva without a clear bite' },
         { label: 'Bat in room with possible unrecognized contact', value: 'batroom', description: 'Bat found in a room with an unattended child, deep sleeper, or intoxicated person — bite cannot be excluded' },
         { label: 'No contact / intact skin only', value: 'none', description: 'Petting, intact-skin contact, or no exposure' },
-      ], undefined, 'ACIP: bites and saliva-to-mucosa/open-wound are exposures. Intact skin is not. Bat-in-room with possible unrecognized bite is treated as an exposure.'),
+      ], 'batroom', 'ACIP: bites and saliva-to-mucosa/open-wound are exposures. Intact skin is not. Bat-in-room with possible unrecognized bite is treated as an exposure.'),
       selectInput('prior_vax', 'Prior rabies vaccination', [
         { label: 'Not previously vaccinated', value: 'none', description: 'No complete pre- or post-exposure rabies vaccine series — give HRIG + 4-dose vaccine' },
         { label: 'Previously vaccinated (pre- or post-exposure series complete)', value: 'prior', description: 'Prior complete cell-culture series — vaccine days 0 and 3 only; no HRIG' },
-      ]),
-      yesNo('available_observe', 'Healthy dog/cat available for 10-day observation / testing plan', 0, 'Yes only for a currently healthy dog, cat, or ferret that can be confined and observed 10 days (or tested).'),
+      ], 'none', 'Previously vaccinated patients get vaccine-only PEP on days 0 and 3 (no HRIG); unvaccinated patients need HRIG plus the 4- or 5-dose series.'),
+      yesNo('available_observe', 'Healthy dog/cat available for 10-day observation / testing plan', 0, 'Yes only for a currently healthy dog, cat, or ferret that can be confined and observed 10 days (or tested).', false),
     ],
     calculate(values) {
       const animal = String(values.animal ?? 'dogcat');
@@ -1735,19 +1735,19 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Percutaneous hollow-bore, deep, visible blood, vessel', value: 'hollow', description: 'Hollow-bore needle, deep puncture, visible blood on the device, or into an artery/vein — highest percutaneous HIV risk' },
         { label: 'Mucous membrane / non-intact skin splash', value: 'mucosa', description: 'Splash to eyes, mouth, or non-intact skin (chapped, abraded, or dermatitis)' },
         { label: 'Intact skin only', value: 'intact', description: 'Blood/body-fluid contact with intact skin only — generally not a blood-borne pathogen exposure' },
-      ], undefined, 'Highest percutaneous risk = hollow-bore, deep, visible blood, or vessel. Mucosal/non-intact skin is intermediate. Intact skin does not warrant HIV PEP.'),
+      ], 'hollow', 'Highest percutaneous risk = hollow-bore, deep, visible blood, or vessel. Mucosal/non-intact skin is intermediate. Intact skin does not warrant HIV PEP.'),
       selectInput('source_hiv', 'Source HIV status', [
         { label: 'Unknown', value: 'unknown', description: 'Source not tested or result pending — obtain rapid HIV; do not delay PEP if the exposure is high-risk' },
         { label: 'HIV negative', value: 'neg', description: 'Documented negative HIV Ag/Ab (ideally a recent/rapid test); confirm test reliability' },
         { label: 'HIV positive, controlled / low VL', value: 'pos_low', description: 'Known HIV on ART with suppressed or low viral load (typically undetectable or <1,000 copies/mL)' },
         { label: 'HIV positive, high VL / acute / untreated', value: 'pos_high', description: 'Untreated HIV, acute/primary infection, or known high viral load (typically ≥1,000 copies/mL or AIDS-defining illness)' },
-      ], undefined, 'High VL / acute / untreated = higher transmission risk than suppressed VL on ART. Prefer source rapid HIV testing; do not delay PEP if clearly indicated.'),
+      ], 'pos_low', 'High VL / acute / untreated = higher transmission risk than suppressed VL on ART. Prefer source rapid HIV testing; do not delay PEP if clearly indicated.'),
       selectInput('hbv_immune', 'Exposed person HBV immunity', [
         { label: 'Immune (anti-HBs adequate)', value: 'immune', description: 'Completed HBV vaccine series and anti-HBs ≥10 mIU/mL' },
         { label: 'Unvaccinated / non-immune', value: 'nonimmune', description: 'Never vaccinated, incomplete series, or anti-HBs <10 mIU/mL' },
         { label: 'Unknown', value: 'unknown', description: 'Titer not available — obtain anti-HBs and treat as unknown pending result' },
-      ], undefined, 'Immune = completed HBV series and anti-HBs ≥10 mIU/mL. If titer unknown, choose Unknown and obtain anti-HBs.'),
-      yesNo('source_hbsag', 'Source HBsAg positive / high risk HBV', 0, 'Yes if source HBsAg+ or unknown source with high HBV risk (IDU, MSM, endemic region, known HBsAg+ household). Obtain source HBsAg when possible.'),
+      ], 'immune', 'Immune = completed HBV series and anti-HBs ≥10 mIU/mL. If titer unknown, choose Unknown and obtain anti-HBs.'),
+      yesNo('source_hbsag', 'Source HBsAg positive / high risk HBV', 0, 'Yes if source HBsAg+ or unknown source with high HBV risk (IDU, MSM, endemic region, known HBsAg+ household). Obtain source HBsAg when possible.', false),
       selectInput('within_72h', 'Within 72 hours of exposure', [
         { label: 'Not specified', value: 'unspecified', description: 'Do not treat an unanswered 72-hour item as an expired window' },
         { label: 'Yes — still within 72 hours', value: 'yes', description: 'Exposure time is still inside the usual HIV PEP window' },
@@ -1903,14 +1903,14 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Acute allergic reaction when deciding if anaphylaxis criteria are met.',
     whyUse: 'Anaphylaxis is clinical — early IM epinephrine when criteria met saves lives.',
     inputs: [
-      yesNo('acute_onset', 'Acute onset of illness (minutes to hours)', 0, 'Typical allergic time course: minutes to a few hours after exposure (not days).'),
-      yesNo('skin_mucosa', 'Skin/mucosal involvement (hives, pruritus, flushing, swollen lips/tongue/uvula)', 0),
-      yesNo('resp', 'Respiratory compromise (dyspnea, wheeze, stridor, hypoxemia)', 0, 'Dyspnea, wheeze, stridor, or hypoxemia (SpO2 <92% or cyanosis).'),
-      yesNo('hypotension_endorgan', 'Hypotension or end-organ dysfunction (collapse, syncope, incontinence)', 0, 'Adults: SBP <90 mmHg or >30% fall from baseline. Children: 1 mo–1 y SBP <70; 1–10 y <70+(2×age in years); 11–17 y <90; or >30% fall. End-organ = collapse, syncope, or incontinence.'),
-      yesNo('gi_cramp', 'Persistent GI symptoms (crampy abdominal pain, vomiting) — for criterion 2', 0, 'Persistent (not a single emesis) crampy abdominal pain or vomiting.'),
-      yesNo('likely_allergen', 'Likely allergen exposure for this patient', 0, 'Criterion 2: suspected culprit this episode (food, drug, insect, etc.), even if not previously confirmed.'),
-      yesNo('known_allergen', 'Known allergen exposure for this patient', 0, 'Criterion 3: previously identified allergen (prior reaction or documented allergy).'),
-      yesNo('hypotension_only', 'Hypotension after known allergen (even without skin findings)', 0, 'Adults: SBP <90 mmHg or >30% fall from baseline. Children: 1 mo–1 y SBP <70; 1–10 y <70+(2×age); 11–17 y <90; or >30% fall. Known = previously identified allergen.'),
+      yesNo('acute_onset', 'Acute onset of illness (minutes to hours)', 0, 'Typical allergic time course: minutes to a few hours after exposure (not days).', true),
+      yesNo('skin_mucosa', 'Skin/mucosal involvement (hives, pruritus, flushing, swollen lips/tongue/uvula)', 0, 'Yes for hives, pruritus, flushing, or swelling of lips/tongue/uvula; skin involvement plus either respiratory compromise or hypotension alone satisfies criterion 1 of the NIAID/FAAN framework.', true),
+      yesNo('resp', 'Respiratory compromise (dyspnea, wheeze, stridor, hypoxemia)', 0, 'Dyspnea, wheeze, stridor, or hypoxemia (SpO2 <92% or cyanosis).', true),
+      yesNo('hypotension_endorgan', 'Hypotension or end-organ dysfunction (collapse, syncope, incontinence)', 0, 'Adults: SBP <90 mmHg or >30% fall from baseline. Children: 1 mo–1 y SBP <70; 1–10 y <70+(2×age in years); 11–17 y <90; or >30% fall. End-organ = collapse, syncope, or incontinence.', false),
+      yesNo('gi_cramp', 'Persistent GI symptoms (crampy abdominal pain, vomiting) — for criterion 2', 0, 'Persistent (not a single emesis) crampy abdominal pain or vomiting.', false),
+      yesNo('likely_allergen', 'Likely allergen exposure for this patient', 0, 'Criterion 2: suspected culprit this episode (food, drug, insect, etc.), even if not previously confirmed.', true),
+      yesNo('known_allergen', 'Known allergen exposure for this patient', 0, 'Criterion 3: previously identified allergen (prior reaction or documented allergy).', false),
+      yesNo('hypotension_only', 'Hypotension after known allergen (even without skin findings)', 0, 'Adults: SBP <90 mmHg or >30% fall from baseline. Children: 1 mo–1 y SBP <70; 1–10 y <70+(2×age); 11–17 y <90; or >30% fall. Known = previously identified allergen.', false),
     ],
     calculate(values) {
       const acute = bool(values.acute_onset);
@@ -1999,11 +1999,11 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Anaphylaxis treatment dosing for IM epinephrine by weight.',
     whyUse: 'Correct dose and thigh IM route are critical; delay increases mortality.',
     inputs: [
-      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 3, max: 200, step: 0.1, exampleValue: 70 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 3, max: 200, step: 0.1, exampleValue: 70, helpText: 'Body weight in kg for 0.01 mg/kg IM (maximum 0.5 mg per dose) into the mid-anterolateral thigh; select lb if the chart is imperial. Autoinjector sizes are 0.1, 0.15, and 0.3 mg.' }),
       selectInput('concentration', 'Concentration available', [
         { label: '1 mg/mL (1:1000) IM/SC — correct for anaphylaxis IM', value: '1in1000', description: 'Draw 0.01 mg/kg (max 0.5 mg) IM in the mid-anterolateral thigh. Do not use 1:10,000 (0.1 mg/mL) for IM anaphylaxis.' },
         { label: 'Using autoinjector only', value: 'auto', description: '0.15 mg junior typically 15–30 kg; 0.3 mg adult ≥30 kg; 0.1 mg infant autoinjector if available <15 kg' },
-      ], undefined, 'Anaphylaxis IM is 1 mg/mL (1:1000). 0.1 mg/mL (1:10,000) is the cardiac-arrest IV concentration — not first-line IM anaphylaxis.'),
+      ], '1in1000', 'Anaphylaxis IM is 1 mg/mL (1:1000). 0.1 mg/mL (1:10,000) is the cardiac-arrest IV concentration — not first-line IM anaphylaxis.'),
     ],
     calculate(values) {
       const wt = num(values.weight, 70);
@@ -2088,16 +2088,16 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Triage of burn injuries for possible burn center referral/transfer.',
     whyUse: 'ABA criteria identify injuries that benefit from specialized burn care.',
     inputs: [
-      yesNo('partial_gt10', 'Partial-thickness burns >10% TBSA', 1, 'Partial-thickness only; do not count isolated first-degree erythema. Rule of Nines (adult) or Lund–Browder (children); palmar surface including fingers ≈ 1% TBSA.'),
-      yesNo('face_hands_feet', 'Burns involving face, hands, feet, genitalia, perineum, or major joints'),
-      yesNo('third_degree', 'Any third-degree (full-thickness) burns', 1, 'Full-thickness: white, leathery, or charred skin that is insensate. Any amount meets ABA referral.'),
-      yesNo('electrical', 'Electrical burns including lightning'),
-      yesNo('chemical', 'Chemical burns'),
-      yesNo('inhalation', 'Inhalation injury', 1, 'Closed-space fire, singed nasal hair, carbonaceous sputum, voice change, or stridor.'),
-      yesNo('comorbid', 'Burn injury in patients with preexisting medical disorders that could complicate management'),
-      yesNo('concomitant_trauma', 'Burns with concomitant trauma where burn poses greatest risk (coordinate trauma/burn)'),
-      yesNo('children_no_peds', 'Burned children in hospitals without qualified personnel/equipment for pediatric burn care'),
-      yesNo('special_social', 'Burn injury in patients who will require special social, emotional, or rehabilitative intervention'),
+      yesNo('partial_gt10', 'Partial-thickness burns >10% TBSA', 1, 'Partial-thickness only; do not count isolated first-degree erythema. Rule of Nines (adult) or Lund–Browder (children); palmar surface including fingers ≈ 1% TBSA.', true),
+      yesNo('face_hands_feet', 'Burns involving face, hands, feet, genitalia, perineum, or major joints', undefined, 'Burns of the face, hands, feet, genitalia, perineum, or major joints meet ABA referral criteria because of functional and cosmetic consequences.', false),
+      yesNo('third_degree', 'Any third-degree (full-thickness) burns', 1, 'Full-thickness: white, leathery, or charred skin that is insensate. Any amount meets ABA referral.', true),
+      yesNo('electrical', 'Electrical burns including lightning', undefined, 'Electrical burns, including lightning injury, meet referral criteria regardless of surface area because of deep-tissue and cardiac risk.', false),
+      yesNo('chemical', 'Chemical burns', undefined, 'Chemical burns meet referral criteria, including apparently small exposures that continue to injure until fully decontaminated.', false),
+      yesNo('inhalation', 'Inhalation injury', 1, 'Closed-space fire, singed nasal hair, carbonaceous sputum, voice change, or stridor.', true),
+      yesNo('comorbid', 'Burn injury in patients with preexisting medical disorders that could complicate management', undefined, 'Yes when preexisting medical disorders could complicate management, prolong recovery, or affect mortality.', false),
+      yesNo('concomitant_trauma', 'Burns with concomitant trauma where burn poses greatest risk (coordinate trauma/burn)', undefined, 'Yes when burns are combined with trauma and the burn poses the greatest risk — coordinate trauma and burn center care before transfer.', false),
+      yesNo('children_no_peds', 'Burned children in hospitals without qualified personnel/equipment for pediatric burn care', undefined, 'Yes for burned children in hospitals without qualified personnel or equipment for pediatric burn care.', false),
+      yesNo('special_social', 'Burn injury in patients who will require special social, emotional, or rehabilitative intervention', undefined, 'Yes when the injury will require special social, emotional, or rehabilitative intervention (abuse concern, psychiatric history, or lacking home support).', false),
     ],
     calculate(values) {
       const flags = [
@@ -2175,68 +2175,68 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       selectInput('entryMode', 'Entry mode', [
         { label: 'Complete 9-item PHQ-A questionnaire', value: 'survey' },
         { label: 'Direct total score override', value: 'direct' },
-      ]),
+      ], 'survey', 'Questionnaire mode sums the 9 items; direct override accepts a pre-computed PHQ-A total. Switch to direct mode only when you already have a validated total.'),
       numberInput('score', 'PHQ-A total (0–27, direct mode)', {
         min: 0,
         max: 27,
         exampleValue: 12,
         helpText: 'Used only if direct override is selected.',
       }),
-      yesNo('item9', 'Item 9 positive (thoughts of self-harm / better off dead — direct mode)', 0),
+      yesNo('item9', 'Item 9 positive (thoughts of self-harm / better off dead — direct mode)', 0, 'Item 9 in direct mode: thoughts of self-harm or being better off dead. Any positive answer triggers the safety alert and prompts a suicide-risk assessment.'),
       selectInput('phqa1', '1. Feeling down, depressed, irritable, or hopeless?', [
         { label: '0 — Not at all', value: 0 },
         { label: '1 — Several days', value: 1 },
         { label: '2 — More than half the days', value: 2 },
         { label: '3 — Nearly every day', value: 3 },
-      ]),
+      ], 2, 'Over the last 2 weeks, how often the symptom occurred: 0 not at all, 1 several days, 2 more than half the days, 3 nearly every day. In adolescents irritability counts alongside depressed mood.'),
       selectInput('phqa2', '2. Little interest or pleasure in doing things?', [
         { label: '0 — Not at all', value: 0 },
         { label: '1 — Several days', value: 1 },
         { label: '2 — More than half the days', value: 2 },
         { label: '3 — Nearly every day', value: 3 },
-      ]),
+      ], 2, 'Over the last 2 weeks: 0 not at all to 3 nearly every day. Score anhedonia regardless of how much the teen attributes it to sleep or screen use.'),
       selectInput('phqa3', '3. Trouble falling asleep, staying asleep, or sleeping too much?', [
         { label: '0 — Not at all', value: 0 },
         { label: '1 — Several days', value: 1 },
         { label: '2 — More than half the days', value: 2 },
         { label: '3 — Nearly every day', value: 3 },
-      ]),
+      ], 2, 'Sleep disturbance over the last 2 weeks, 0–3. Count both insomnia and hypersomnia; if the answer flips between the two, score the predominant pattern.'),
       selectInput('phqa4', '4. Feeling tired, or having little energy?', [
         { label: '0 — Not at all', value: 0 },
         { label: '1 — Several days', value: 1 },
         { label: '2 — More than half the days', value: 2 },
         { label: '3 — Nearly every day', value: 3 },
-      ]),
+      ], 2, 'Fatigue or low energy over the last 2 weeks, 0–3. Rate the sensation itself, not the amount of activity that provokes it.'),
       selectInput('phqa5', '5. Poor appetite, weight loss, or overeating?', [
         { label: '0 — Not at all', value: 0 },
         { label: '1 — Several days', value: 1 },
         { label: '2 — More than half the days', value: 2 },
         { label: '3 — Nearly every day', value: 3 },
-      ]),
+      ], 1, 'Appetite change over the last 2 weeks, 0–3; either decreased intake with weight loss or overeating with weight gain scores.'),
       selectInput('phqa6', '6. Feeling bad about yourself — or that you are a failure or have let yourself or your family down?', [
         { label: '0 — Not at all', value: 0 },
         { label: '1 — Several days', value: 1 },
         { label: '2 — More than half the days', value: 2 },
         { label: '3 — Nearly every day', value: 3 },
-      ]),
+      ], 2, 'Negative self-evaluation over the last 2 weeks, 0–3: feeling like a failure or having let family down. Ask directly — teens may minimize unless prompted.'),
       selectInput('phqa7', '7. Trouble concentrating on things like school work, reading, or watching TV?', [
         { label: '0 — Not at all', value: 0 },
         { label: '1 — Several days', value: 1 },
         { label: '2 — More than half the days', value: 2 },
         { label: '3 — Nearly every day', value: 3 },
-      ]),
+      ], 1, 'Concentration difficulty over the last 2 weeks, 0–3, framed around schoolwork, reading, or watching TV.'),
       selectInput('phqa8', '8. Moving or speaking so slowly that other people could have noticed? Or the opposite — being so fidgety or restless that you have been moving around a lot more than usual?', [
         { label: '0 — Not at all', value: 0 },
         { label: '1 — Several days', value: 1 },
         { label: '2 — More than half the days', value: 2 },
         { label: '3 — Nearly every day', value: 3 },
-      ]),
+      ], 0, 'Psychomotor change over the last 2 weeks, 0–3: both observable slowing and the opposite agitation/restlessness count. Corroborate with a parent or teacher when possible.'),
       selectInput('phqa9', '9. Thoughts that you would be better off dead, or of hurting yourself in some way?', [
         { label: '0 — Not at all', value: 0 },
         { label: '1 — Several days', value: 1 },
         { label: '2 — More than half the days', value: 2 },
         { label: '3 — Nearly every day', value: 3 },
-      ]),
+      ], 0, 'Suicidal ideation over the last 2 weeks, 0–3. Any score above 0 triggers the safety alert and requires direct suicide-risk assessment before the visit ends.'),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');
@@ -2370,10 +2370,10 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Universal or targeted suicide risk screening in medical settings (commonly youth; also used more broadly).',
     whyUse: 'Brief validated screen; any “yes” to items 1–4 is a positive screen requiring further assessment.',
     inputs: [
-      yesNo('q1', '1. In the past few weeks, have you wished you were dead?'),
-      yesNo('q2', '2. In the past few weeks, have you felt that you or your family would be better off if you were dead?'),
-      yesNo('q3', '3. In the past week, have you been having thoughts about killing yourself?'),
-      yesNo('q4', '4. Have you ever tried to kill yourself?'),
+      yesNo('q1', '1. In the past few weeks, have you wished you were dead?', undefined, 'In the past few weeks, have you wished you were dead? Any \'yes\' to items 1–4 is a positive screen; proceed to the acuity question and full risk assessment.', false),
+      yesNo('q2', '2. In the past few weeks, have you felt that you or your family would be better off if you were dead?', undefined, 'In the past few weeks, have you felt that you or your family would be better off if you were dead? A yes is a positive screen regardless of the patient\'s explanation.', false),
+      yesNo('q3', '3. In the past week, have you been having thoughts about killing yourself?', undefined, 'In the past week, have you been having thoughts about killing yourself? This narrower 1-week window is still a positive screen.', false),
+      yesNo('q4', '4. Have you ever tried to kill yourself?', undefined, 'Have you ever tried to kill yourself? Lifetime attempt is a positive screen and the strongest single predictor of future attempt.', false),
       {
         ...selectInput('q5', '5. Are you having thoughts of killing yourself right now? (acuity — ask if any of 1–4 yes)', [
           { label: 'Not answered / not asked', value: 'unanswered' },
@@ -2581,7 +2581,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       selectInput('entryMode', 'Entry mode', [
         { label: 'Complete 20-item SDS questionnaire', value: 'survey' },
         { label: 'Direct raw score override', value: 'direct' },
-      ]),
+      ], 'survey', 'Questionnaire mode sums all 20 items with the 10 reverse-scored items reversed; direct mode accepts a raw 20–80 total. Use direct override only with a validated paper total.'),
       numberInput('score', 'Zung SDS raw total (20–80, direct mode)', {
         min: 20,
         max: 80,
@@ -2593,122 +2593,122 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 2, 'Rate how you have felt during the past several days: a little to most or all of the time (1–4 points). Depressed mood or sadness.'),
       selectInput('sds2', '2. Morning is when I feel the best (reversed)', [
         { label: 'A little of the time (4 pts - reversed)', value: 4 },
         { label: 'Some of the time (3 pts - reversed)', value: 3 },
         { label: 'Good part of the time (2 pts - reversed)', value: 2 },
         { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
-      ]),
+      ], 3, 'Reverse-scored item: \'a little of the time\' scores 4 and \'most or all of the time\' scores 1. Morning diurnal variation is a classic somatic symptom item.'),
       selectInput('sds3', '3. I have crying spells or feel like it', [
         { label: 'A little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 2, 'Rate over the past several days, 1–4 points. Crying spells or feeling like crying.'),
       selectInput('sds4', '4. I have trouble sleeping at night', [
         { label: 'A little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 3, 'Rate over the past several days, 1–4 points. Insomnia — difficulty initiating or maintaining sleep.'),
       selectInput('sds5', '5. I eat as much as I used to (reversed)', [
         { label: 'A little of the time (4 pts - reversed)', value: 4 },
         { label: 'Some of the time (3 pts - reversed)', value: 3 },
         { label: 'Good part of the time (2 pts - reversed)', value: 2 },
         { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
-      ]),
+      ], 3, 'Reverse-scored: \'a little of the time\' scores 4, \'most or all of the time\' scores 1. Appetite is preserved or increased.'),
       selectInput('sds6', '6. I still enjoy sex / intimacy (reversed)', [
         { label: 'A little of the time (4 pts - reversed)', value: 4 },
         { label: 'Some of the time (3 pts - reversed)', value: 3 },
         { label: 'Good part of the time (2 pts - reversed)', value: 2 },
         { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
-      ]),
+      ], 3, 'Reverse-scored item, 4 points at lowest frequency down to 1 point at highest. Sexual interest and enjoyment are retained.'),
       selectInput('sds7', '7. I notice that I am losing weight', [
         { label: 'A little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 1, 'Rate over the past several days, 1–4 points. Weight loss; use the patient\'s report plus any measured change.'),
       selectInput('sds8', '8. I have trouble with constipation', [
         { label: 'A little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 1, 'Rate over the past several days, 1–4 points. Constipation and slowed GI transit.'),
       selectInput('sds9', '9. My heart beats faster than usual', [
         { label: 'A little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 2, 'Rate over the past several days, 1–4 points. Palpitations or tachycardia.'),
       selectInput('sds10', '10. I get tired for no reason', [
         { label: 'A little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 3, 'Rate over the past several days, 1–4 points. Fatigue without an obvious cause.'),
       selectInput('sds11', '11. My mind is as clear as it used to be (reversed)', [
         { label: 'A little of the time (4 pts - reversed)', value: 4 },
         { label: 'Some of the time (3 pts - reversed)', value: 3 },
         { label: 'Good part of the time (2 pts - reversed)', value: 2 },
         { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
-      ]),
+      ], 3, 'Reverse-scored: \'a little of the time\' scores 4, \'most or all of the time\' scores 1. Mental clarity is retained.'),
       selectInput('sds12', '12. I find it easy to do the things I used to (reversed)', [
         { label: 'A little of the time (4 pts - reversed)', value: 4 },
         { label: 'Some of the time (3 pts - reversed)', value: 3 },
         { label: 'Good part of the time (2 pts - reversed)', value: 2 },
         { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
-      ]),
+      ], 3, 'Reverse-scored item (4 → 1 points). Capacity to do usual activities without difficulty.'),
       selectInput('sds13', '13. I am restless and cannot keep still', [
         { label: 'A little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 1, 'Rate over the past several days, 1–4 points. Psychomotor agitation and restlessness — the counterpart to item 12.'),
       selectInput('sds14', '14. I feel hopeful about the future (reversed)', [
         { label: 'A little of the time (4 pts - reversed)', value: 4 },
         { label: 'Some of the time (3 pts - reversed)', value: 3 },
         { label: 'Good part of the time (2 pts - reversed)', value: 2 },
         { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
-      ]),
+      ], 3, 'Reverse-scored: 4 points at the lowest frequency, 1 point at the highest. Hopefulness about the future.'),
       selectInput('sds15', '15. I am more irritable than usual', [
         { label: 'A little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 2, 'Rate over the past several days, 1–4 points. Increased irritability.'),
       selectInput('sds16', '16. I find it easy to make decisions (reversed)', [
         { label: 'A little of the time (4 pts - reversed)', value: 4 },
         { label: 'Some of the time (3 pts - reversed)', value: 3 },
         { label: 'Good part of the time (2 pts - reversed)', value: 2 },
         { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
-      ]),
+      ], 2, 'Reverse-scored item (4 → 1 points). Decisional capacity is unimpaired.'),
       selectInput('sds17', '17. I feel that I am useful and needed (reversed)', [
         { label: 'A little of the time (4 pts - reversed)', value: 4 },
         { label: 'Some of the time (3 pts - reversed)', value: 3 },
         { label: 'Good part of the time (2 pts - reversed)', value: 2 },
         { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
-      ]),
+      ], 2, 'Reverse-scored item (4 → 1 points). Feeling useful and needed by others.'),
       selectInput('sds18', '18. My life is pretty full (reversed)', [
         { label: 'A little of the time (4 pts - reversed)', value: 4 },
         { label: 'Some of the time (3 pts - reversed)', value: 3 },
         { label: 'Good part of the time (2 pts - reversed)', value: 2 },
         { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
-      ]),
+      ], 3, 'Reverse-scored item (4 → 1 points). Life feels full and engaging.'),
       selectInput('sds19', '19. I feel that others would be better off if I were dead', [
         { label: 'Not answered', value: '' },
         { label: 'A little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 1, 'Rate over the past several days, 1–4 points. Suicidal ideation — any score above \'a little of the time\' should prompt a direct suicide-risk assessment.'),
       selectInput('sds20', '20. I still enjoy the things I used to do (reversed)', [
         { label: 'A little of the time (4 pts - reversed)', value: 4 },
         { label: 'Some of the time (3 pts - reversed)', value: 3 },
         { label: 'Good part of the time (2 pts - reversed)', value: 2 },
         { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
-      ]),
+      ], 3, 'Reverse-scored item (4 → 1 points). Interest and pleasure in usual activities, which is the anhedonia counterpart.'),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');
@@ -2823,7 +2823,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       selectInput('entryMode', 'Entry mode', [
         { label: 'Complete 20-item SAS questionnaire', value: 'survey' },
         { label: 'Direct raw total override', value: 'direct' },
-      ]),
+      ], 'survey', 'Questionnaire mode sums all 20 items with the 5 reverse-scored items reversed; direct mode accepts a raw 20–80 total. Use a validated paper total in direct mode.'),
       numberInput('score', 'Zung SAS raw total (20–80, direct mode)', {
         min: 20,
         max: 80,
@@ -2835,121 +2835,121 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 3, 'Rate over the past week: none/a little of the time 1 point up to most or all of the time 4 points. Feeling more nervous or anxious than usual.'),
       selectInput('sas2', '2. I feel afraid for no reason at all', [
         { label: 'None or a little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 3, 'Rate over the past week, 1–4 points. Fear without a specific trigger.'),
       selectInput('sas3', '3. I get upset easily or feel panicky', [
         { label: 'None or a little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 3, 'Rate over the past week, 1–4 points. Feeling upset easily or panicky.'),
       selectInput('sas4', '4. I feel like I am falling apart and going to pieces', [
         { label: 'None or a little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 2, 'Rate over the past week, 1–4 points. Fear of losing control or falling apart.'),
       selectInput('sas5', '5. I feel that everything is all right and nothing bad will happen (reversed)', [
         { label: 'None or a little of the time (4 pts - reversed)', value: 4 },
         { label: 'Some of the time (3 pts - reversed)', value: 3 },
         { label: 'Good part of the time (2 pts - reversed)', value: 2 },
         { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
-      ]),
+      ], 3, 'Reverse-scored: \'none or a little\' scores 4 points and \'most or all of the time\' scores 1 point. Feeling that things are all right.'),
       selectInput('sas6', '6. My arms and legs shake and tremble', [
         { label: 'None or a little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 2, 'Rate over the past week, 1–4 points. Tremor of the arms and legs — a somatic autonomic item.'),
       selectInput('sas7', '7. I am bothered by headaches, neck and back pains', [
         { label: 'None or a little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 2, 'Rate over the past week, 1–4 points. Headaches or neck and back pain.'),
       selectInput('sas8', '8. I feel weak and get tired easily', [
         { label: 'None or a little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 3, 'Rate over the past week, 1–4 points. Weakness and fatigability.'),
       selectInput('sas9', '9. I feel calm and can sit still easily (reversed)', [
         { label: 'None or a little of the time (4 pts - reversed)', value: 4 },
         { label: 'Some of the time (3 pts - reversed)', value: 3 },
         { label: 'Good part of the time (2 pts - reversed)', value: 2 },
         { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
-      ]),
+      ], 3, 'Reverse-scored: \'none or a little\' scores 4, \'most or all of the time\' scores 1. Feeling calm and able to sit still.'),
       selectInput('sas10', '10. I can feel my heart beating fast', [
         { label: 'None or a little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 3, 'Rate over the past week, 1–4 points. Palpitations or awareness of a fast heartbeat.'),
       selectInput('sas11', '11. I am bothered by dizzy spells', [
         { label: 'None or a little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 2, 'Rate over the past week, 1–4 points. Dizziness.'),
       selectInput('sas12', '12. I have fainting spells or feel like it', [
         { label: 'None or a little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 1, 'Rate over the past week, 1–4 points. Fainting spells or near-fainting.'),
       selectInput('sas13', '13. I can breathe in and out easily (reversed)', [
         { label: 'None or a little of the time (4 pts - reversed)', value: 4 },
         { label: 'Some of the time (3 pts - reversed)', value: 3 },
         { label: 'Good part of the time (2 pts - reversed)', value: 2 },
         { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
-      ]),
+      ], 3, 'Reverse-scored: 4 points at the lowest frequency, 1 point at the highest. Breathing feels easy — a key respiratory anxiety item.'),
       selectInput('sas14', '14. I get feelings of numbness and tingling in my fingers/toes', [
         { label: 'None or a little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 2, 'Rate over the past week, 1–4 points. Numbness and tingling of the fingers or toes.'),
       selectInput('sas15', '15. I am bothered by stomachaches or indigestion', [
         { label: 'None or a little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 2, 'Rate over the past week, 1–4 points. Stomachaches or indigestion.'),
       selectInput('sas16', '16. I have to empty my bladder often', [
         { label: 'None or a little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 2, 'Rate over the past week, 1–4 points. Urinary frequency.'),
       selectInput('sas17', '17. My hands are usually warm and dry (reversed)', [
         { label: 'None or a little of the time (4 pts - reversed)', value: 4 },
         { label: 'Some of the time (3 pts - reversed)', value: 3 },
         { label: 'Good part of the time (2 pts - reversed)', value: 2 },
         { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
-      ]),
+      ], 3, 'Reverse-scored item (4 → 1 points). Hands are warm and dry, reflecting low sympathetic arousal.'),
       selectInput('sas18', '18. My face gets hot and blushes', [
         { label: 'None or a little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 2, 'Rate over the past week, 1–4 points. Facial flushing or blushing.'),
       selectInput('sas19', '19. I fall asleep easily and get a good night’s rest (reversed)', [
         { label: 'None or a little of the time (4 pts - reversed)', value: 4 },
         { label: 'Some of the time (3 pts - reversed)', value: 3 },
         { label: 'Good part of the time (2 pts - reversed)', value: 2 },
         { label: 'Most or all of the time (1 pt - reversed)', value: 1 },
-      ]),
+      ], 3, 'Reverse-scored: 4 points at the lowest frequency, 1 point at the highest. Falling asleep easily and sleeping well.'),
       selectInput('sas20', '20. I have nightmares', [
         { label: 'None or a little of the time (1 pt)', value: 1 },
         { label: 'Some of the time (2 pts)', value: 2 },
         { label: 'Good part of the time (3 pts)', value: 3 },
         { label: 'Most or all of the time (4 pts)', value: 4 },
-      ]),
+      ], 2, 'Rate over the past week, 1–4 points. Nightmares.'),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');
@@ -3054,85 +3054,85 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       selectInput('entryMode', 'Entry mode', [
         { label: 'Complete 10-item Y-BOCS interview', value: 'survey' },
         { label: 'Direct total score override', value: 'direct' },
-      ]),
+      ], 'survey', 'Interview mode sums the ten clinician-rated items into obsession and compulsion subscores; direct mode accepts an existing Y-BOCS total (0–40).'),
       numberInput('score', 'Y-BOCS total (0–40, direct mode)', {
         min: 0,
         max: 40,
         exampleValue: 20,
         helpText: 'Used only if direct override is selected.',
       }),
-      numberInput('obsessions', 'Obsession subtotal (0–20, optional direct)', { min: 0, max: 20, required: false }),
-      numberInput('compulsions', 'Compulsion subtotal (0–20, optional direct)', { min: 0, max: 20, required: false }),
+      numberInput('obsessions', 'Obsession subtotal (0–20, optional direct)', { min: 0, max: 20, required: false, helpText: 'Direct-mode obsession subtotal 0–20 (items 1–5). Treatment response is usually defined as a 35% or greater fall in total score.' }),
+      numberInput('compulsions', 'Compulsion subtotal (0–20, optional direct)', { min: 0, max: 20, required: false, helpText: 'Direct-mode compulsion subtotal 0–20 (items 6–10). Enter it only when bypassing the ten-item interview.' }),
       selectInput('ybocs1', '1. Time occupied by obsessive thoughts', [
         { label: '0 — None', value: 0 },
         { label: '1 — Mild (<1 hr/day or occasional intrusion)', value: 1 },
         { label: '2 — Moderate (1–3 hrs/day or frequent intrusion)', value: 2 },
         { label: '3 — Severe (3–8 hrs/day or very frequent intrusion)', value: 3 },
         { label: '4 — Extreme (>8 hrs/day or near constant intrusion)', value: 4 }
-      ]),
+      ], 3, 'Time occupied by obsessions: 0 none, 1 under 1 hour or occasional intrusion, 2 one to three hours or frequent, 3 three to eight hours or very frequent, 4 over eight hours or near-constant.'),
       selectInput('ybocs2', '2. Interference due to obsessive thoughts', [
         { label: '0 — None', value: 0 },
         { label: '1 — Mild (slight interference with activities)', value: 1 },
         { label: '2 — Moderate (definite impairment of performance)', value: 2 },
         { label: '3 — Severe (substantial impairment of activities)', value: 3 },
         { label: '4 — Extreme (incapacitating)', value: 4 }
-      ]),
+      ], 2, 'Interference from obsessions: 0 none, 1 slight, 2 definite impairment, 3 substantial impairment, 4 incapacitating.'),
       selectInput('ybocs3', '3. Distress associated with obsessive thoughts', [
         { label: '0 — None', value: 0 },
         { label: '1 — Mild (infrequent and not disturbing)', value: 1 },
         { label: '2 — Moderate (frequent and disturbing, but manageable)', value: 2 },
         { label: '3 — Severe (very frequent and very disturbing)', value: 3 },
         { label: '4 — Extreme (near constant and disabling distress)', value: 4 }
-      ]),
+      ], 3, 'Distress from obsessions: 0 none, 1 infrequent and not disturbing, 2 frequent but manageable, 3 very frequent and very disturbing, 4 near-constant and disabling.'),
       selectInput('ybocs4', '4. Resistance against obsessions', [
         { label: '0 — Always makes an effort to resist (or minimal obsessions)', value: 0 },
         { label: '1 — Tries to resist most of the time', value: 1 },
         { label: '2 — Makes some effort to resist', value: 2 },
         { label: '3 — Yields to all obsessions with reluctance', value: 3 },
         { label: '4 — Completely and willingly yields to all obsessions', value: 4 }
-      ]),
+      ], 2, 'Resistance to obsessions: 0 always resists (or minimal obsessions), 1 resists most of the time, 2 some effort, 3 yields to all with reluctance, 4 completely and willingly yields.'),
       selectInput('ybocs5', '5. Degree of control over obsessive thoughts', [
         { label: '0 — Complete control', value: 0 },
         { label: '1 — Much control (usually able to stop or divert)', value: 1 },
         { label: '2 — Moderate control (sometimes able to stop or divert)', value: 2 },
         { label: '3 — Little control (rarely successful in stopping)', value: 3 },
         { label: '4 — No control (completely involuntary)', value: 4 }
-      ]),
+      ], 2, 'Control over obsessive thoughts: 0 complete control, 1 much control, 2 moderate control, 3 little control, 4 no control at all.'),
       selectInput('ybocs6', '6. Time spent performing compulsive behaviors', [
         { label: '0 — None', value: 0 },
         { label: '1 — Mild (<1 hr/day or occasional compulsions)', value: 1 },
         { label: '2 — Moderate (1–3 hrs/day or frequent compulsions)', value: 2 },
         { label: '3 — Severe (3–8 hrs/day or very frequent compulsions)', value: 3 },
         { label: '4 — Extreme (>8 hrs/day or near constant compulsions)', value: 4 }
-      ]),
+      ], 2, 'Time spent on compulsions: 0 none, 1 under 1 hour or occasional, 2 one to three hours or frequent, 3 three to eight hours or very frequent, 4 over eight hours or near-constant.'),
       selectInput('ybocs7', '7. Interference due to compulsive behaviors', [
         { label: '0 — None', value: 0 },
         { label: '1 — Mild (slight interference with activities)', value: 1 },
         { label: '2 — Moderate (definite impairment of performance)', value: 2 },
         { label: '3 — Severe (substantial impairment of activities)', value: 3 },
         { label: '4 — Extreme (incapacitating)', value: 4 }
-      ]),
+      ], 1, 'Interference from compulsions: 0 none, 1 slight, 2 definite impairment of performance, 3 substantial impairment, 4 incapacitating.'),
       selectInput('ybocs8', '8. Distress associated with compulsive behaviors / if prevented', [
         { label: '0 — None', value: 0 },
         { label: '1 — Mild (slight anxiety if compulsions prevented)', value: 1 },
         { label: '2 — Moderate (manageable anxiety if compulsions prevented)', value: 2 },
         { label: '3 — Severe (prominent and very disturbing anxiety)', value: 3 },
         { label: '4 — Extreme (incapacitating anxiety if compulsions prevented)', value: 4 }
-      ]),
+      ], 2, 'Distress if compulsions are prevented: 0 none, 1 slight anxiety, 2 manageable anxiety, 3 prominent and very disturbing, 4 incapacitating anxiety.'),
       selectInput('ybocs9', '9. Resistance against compulsions', [
         { label: '0 — Always makes an effort to resist (or minimal compulsions)', value: 0 },
         { label: '1 — Tries to resist most of the time', value: 1 },
         { label: '2 — Makes some effort to resist', value: 2 },
         { label: '3 — Yields to almost all compulsions with reluctance', value: 3 },
         { label: '4 — Completely and willingly yields to all compulsions', value: 4 }
-      ]),
+      ], 1, 'Resistance to compulsions: 0 always resists (or minimal compulsions), 1 resists most of the time, 2 some effort, 3 yields to almost all with reluctance, 4 completely and willingly yields.'),
       selectInput('ybocs10', '10. Degree of control over compulsive behavior', [
         { label: '0 — Complete control', value: 0 },
         { label: '1 — Much control (experienced pressure but able to control)', value: 1 },
         { label: '2 — Moderate control (can control only with difficulty)', value: 2 },
         { label: '3 — Little control (must be carried to completion)', value: 3 },
         { label: '4 — No control (completely involuntary and overpowering)', value: 4 }
-      ]),
+      ], 2, 'Control over compulsive behavior: 0 complete control, 1 much control, 2 control only with difficulty, 3 must carry the compulsion to completion, 4 completely involuntary and overpowering.'),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');

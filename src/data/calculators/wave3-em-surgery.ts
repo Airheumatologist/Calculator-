@@ -15,18 +15,18 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     whyUse:
       'Structures the Rome IV definition (≥1 day/week pain for 3 months + ≥2 of 3 stool-related criteria; onset ≥6 months).',
     inputs: [
-      yesNo('recurrentPain', 'Recurrent abdominal pain ≥1 day/week in the last 3 months', 0, 'Rome IV: on average ≥1 day per week during the last 3 months. Pain, not just bloating or discomfort (Rome III).'),
-      yesNo('onset6mo', 'Symptom onset ≥6 months before diagnosis', 0, 'Criteria must have been fulfilled for the last 3 months with symptom onset at least 6 months before diagnosis.'),
-      yesNo('relatedDefecation', 'Pain related to defecation', 1, 'Pain related to (not necessarily improved by) defecation — Rome IV dropped “improvement with defecation.” Need ≥2 of these 3 associated features.'),
-      yesNo('changeFrequency', 'Associated with change in stool frequency', 1, 'Pain associated with a change in how often stools occur (more or less frequent). Need ≥2 of 3 associated features.'),
-      yesNo('changeForm', 'Associated with change in stool form (appearance)', 1, 'Pain associated with a change in Bristol stool type (harder or looser). Need ≥2 of 3 associated features.'),
+      yesNo('recurrentPain', 'Recurrent abdominal pain ≥1 day/week in the last 3 months', 0, 'Rome IV: on average ≥1 day per week during the last 3 months. Pain, not just bloating or discomfort (Rome III).', true),
+      yesNo('onset6mo', 'Symptom onset ≥6 months before diagnosis', 0, 'Criteria must have been fulfilled for the last 3 months with symptom onset at least 6 months before diagnosis.', true),
+      yesNo('relatedDefecation', 'Pain related to defecation', 1, 'Pain related to (not necessarily improved by) defecation — Rome IV dropped “improvement with defecation.” Need ≥2 of these 3 associated features.', true),
+      yesNo('changeFrequency', 'Associated with change in stool frequency', 1, 'Pain associated with a change in how often stools occur (more or less frequent). Need ≥2 of 3 associated features.', true),
+      yesNo('changeForm', 'Associated with change in stool form (appearance)', 1, 'Pain associated with a change in Bristol stool type (harder or looser). Need ≥2 of 3 associated features.', true),
       selectInput('subtype', 'Predominant stool pattern (optional helper)', [
         { label: 'Not specified', value: 'na', description: 'Subtype not classified here' },
         { label: 'IBS-C (constipation predominant)', value: 'c', description: '>25% of stools Bristol 1–2 and <25% Bristol 6–7 (on days with abnormal stool)' },
         { label: 'IBS-D (diarrhea predominant)', value: 'd', description: '>25% of stools Bristol 6–7 and <25% Bristol 1–2' },
         { label: 'IBS-M (mixed)', value: 'm', description: '>25% Bristol 1–2 AND >25% Bristol 6–7' },
         { label: 'IBS-U (unclassified)', value: 'u', description: 'Meets IBS criteria but stool pattern does not fit C, D, or M' },
-      ], undefined, 'Optional. Subtype by Bristol form on days with abnormal stool (Rome IV). Not required to meet IBS criteria.'),
+      ], "d", 'Optional. Subtype by Bristol form on days with abnormal stool (Rome IV). Not required to meet IBS criteria.'),
     ],
     calculate(values) {
       const pain = bool(values.recurrentPain);
@@ -139,7 +139,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: 'Type 5 — Soft blobs with clear edges', value: 5, description: 'Soft blobs with clear-cut edges (passed easily) — lacking fiber / looser' },
         { label: 'Type 6 — Fluffy pieces, ragged edges, mushy', value: 6, description: 'Fluffy pieces with ragged edges, a mushy stool — mild diarrhea' },
         { label: 'Type 7 — Watery, no solid pieces', value: 7, description: 'Watery, no solid pieces; entirely liquid' },
-      ], undefined, 'Ask about the most common recent stool form, not a single outlier. Pair with Rome criteria for IBS-C/D/M subtyping.'),
+      ], 6, 'Ask about the most common recent stool form, not a single outlier. Pair with Rome criteria for IBS-C/D/M subtyping.'),
     ],
     calculate(values) {
       const t = num(values.type, 4);
@@ -232,7 +232,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: '≤59 years (0)', value: 0 },
         { label: '60–74 years (1)', value: 1 },
         { label: '≥75 years (2)', value: 2 },
-      ], undefined, 'Age at presentation with UGIB.'),
+      ], 1, 'Age at presentation with UGIB.'),
       selectInput('urea', 'Blood urea (BUN-related)', [
         { label: 'Urea ≤10 mmol/L (~BUN ≤28 mg/dL) (0)', value: 0 },
         { label: 'Urea >10 mmol/L (~BUN >28 mg/dL) (1)', value: 1 },
@@ -246,9 +246,9 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: '100–150 µmol/L (~1.1–1.7 mg/dL) (1)', value: 1 },
         { label: '>150 µmol/L (>~1.7 mg/dL) (2)', value: 2 },
       ], 0, '100 µmol/L ≈ 1.1 mg/dL; 150 µmol/L ≈ 1.7 mg/dL.'),
-      yesNo('ams', 'Altered mental status', 2, 'Altered = GCS <14 or new disorientation/confusion at presentation (AIMS65-style UGIB operationalization).'),
-      yesNo('cirrhosis', 'Cirrhosis', 2, 'Known cirrhosis or clear clinical/imaging evidence of cirrhosis (not isolated fatty liver).'),
-      yesNo('malignancy', 'Disseminated malignancy', 4, 'Disseminated / metastatic cancer (not a fully resected local tumor in remission).'),
+      yesNo('ams', 'Altered mental status', 2, 'Altered = GCS <14 or new disorientation/confusion at presentation (AIMS65-style UGIB operationalization).', false),
+      yesNo('cirrhosis', 'Cirrhosis', 2, 'Known cirrhosis or clear clinical/imaging evidence of cirrhosis (not isolated fatty liver).', false),
+      yesNo('malignancy', 'Disseminated malignancy', 4, 'Disseminated / metastatic cancer (not a fully resected local tumor in remission).', false),
       selectInput('asa', 'ASA grade', [
         { label: 'ASA I–II (0)', value: 0, description: 'I — normal healthy patient; II — mild systemic disease' },
         { label: 'ASA III (1)', value: 1, description: 'III — severe systemic disease' },
@@ -337,26 +337,26 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: '<40 years (0)', value: 0 },
         { label: '40–69 years (1)', value: 1 },
         { label: '≥70 years (2)', value: 2 },
-      ]),
+      ], 1, 'Age band: under 40 years = 0, 40–69 = 1 point, 70 or older = 2 points.'),
       selectInput('sex', 'Sex', [
         { label: 'Female (0)', value: 0 },
         { label: 'Male (1)', value: 1 },
-      ]),
-      yesNo('priorAdmit', 'Previous LGIB admission', 1, 'Prior hospital admission for lower GI bleeding (not a prior outpatient bleed only).'),
-      yesNo('dreBlood', 'Blood on digital rectal exam', 1, 'Fresh blood on DRE at this presentation (not a history of hematochezia alone).'),
+      ], 0, 'Male sex scores 1 point in the Oakland score; female scores 0.'),
+      yesNo('priorAdmit', 'Previous LGIB admission', 1, 'Prior hospital admission for lower GI bleeding (not a prior outpatient bleed only).', false),
+      yesNo('dreBlood', 'Blood on digital rectal exam', 1, 'Fresh blood on DRE at this presentation (not a history of hematochezia alone).', false),
       selectInput('hr', 'Heart rate', [
         { label: '<70 (0)', value: 0 },
         { label: '70–89 (1)', value: 1 },
         { label: '90–109 (2)', value: 2 },
         { label: '≥110 (3)', value: 3 },
-      ]),
+      ], 0, 'Heart rate at presentation: below 70 = 0, 70–89 = 1 point, 90–109 = 2 points, 110 or above = 3 points.'),
       selectInput('sbp', 'Systolic BP', [
         { label: '≥160 (0)', value: 0 },
         { label: '130–159 (2)', value: 2 },
         { label: '120–129 (3)', value: 3 },
         { label: '90–119 (4)', value: 4 },
         { label: '50–89 (5)', value: 5 },
-      ], undefined, 'Oakland Table 2: ≥160 = 0, 130–159 = 2, 120–129 = 3, 90–119 = 4, 50–89 = 5. Treat SBP <50 as 5.'),
+      ], 0, 'Oakland Table 2: ≥160 = 0, 130–159 = 2, 120–129 = 3, 90–119 = 4, 50–89 = 5. Treat SBP <50 as 5.'),
       selectInput('hb', 'Hemoglobin (g/dL)', [
         { label: '≥16.0 (0)', value: 0 },
         { label: '13.0–15.9 (4)', value: 4 },
@@ -364,7 +364,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: '9.0–10.9 (13)', value: 13 },
         { label: '7.0–8.9 (17)', value: 17 },
         { label: '<7.0 (22)', value: 22 },
-      ], undefined, 'Published g/dL bands (g/L ÷ 10): ≥16.0 = 0, 13.0–15.9 = 4, 11.0–12.9 = 8, 9.0–10.9 = 13, 7.0–8.9 = 17, <7.0 (3.6–6.9) = 22.'),
+      ], 4, 'Published g/dL bands (g/L ÷ 10): ≥16.0 = 0, 13.0–15.9 = 4, 11.0–12.9 = 8, 9.0–10.9 = 13, 7.0–8.9 = 17, <7.0 (3.6–6.9) = 22.'),
     ],
     calculate(values) {
       const score =
@@ -444,14 +444,14 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     whenToUse: 'Adhesive or other SBO when estimating risk of ischemia/strangulation needing urgent surgery.',
     whyUse: 'No single finding is definitive; accumulating systemic and peritoneal signs raise concern for strangulation.',
     inputs: [
-      yesNo('continuousPain', 'Continuous (not intermittent) abdominal pain', 1, 'Pain that is constant rather than classic colicky/intermittent SBO pain — a concerning ischemia clue.'),
-      yesNo('fever', 'Fever ≥38 °C', 1, 'Temperature ≥38.0 °C.'),
-      yesNo('tachycardia', 'Tachycardia (HR >100)', 1, 'HR >100 /min.'),
-      yesNo('peritonitis', 'Peritonitis / rebound / guarding', 1, 'Rebound tenderness, involuntary guarding, or rigid abdomen — surgical emergency until proven otherwise.'),
-      yesNo('leukocytosis', 'Leukocytosis (WBC >12 × 10³/µL)', 1, 'Teaching cutoff WBC >12 × 10³/µL (pick one threshold; drop the 10–12k span).'),
-      yesNo('lactate', 'Elevated lactate or base deficit', 1, 'Typically lactate >2 mmol/L or worsening base deficit; normal lactate does not exclude early ischemia.'),
-      yesNo('sirs', 'SIRS / systemic toxicity', 1, 'Yes if ≥2 of: T <36 or >38 °C; HR >90; RR >20 or PaCO2 <32 mmHg; WBC <4 or >12 × 10³/µL or >10% bands.'),
-      yesNo('ctIschemia', 'CT signs of ischemia (reduced wall enhancement, closed loop, pneumatosis, etc.)', 1, 'Yes if reduced wall enhancement, closed-loop morphology, pneumatosis, portal venous gas, or mesenteric edema/whirl — closed loop is a surgical emergency even if vitals are initially normal.'),
+      yesNo('continuousPain', 'Continuous (not intermittent) abdominal pain', 1, 'Pain that is constant rather than classic colicky/intermittent SBO pain — a concerning ischemia clue.', true),
+      yesNo('fever', 'Fever ≥38 °C', 1, 'Temperature ≥38.0 °C.', false),
+      yesNo('tachycardia', 'Tachycardia (HR >100)', 1, 'HR >100 /min.', true),
+      yesNo('peritonitis', 'Peritonitis / rebound / guarding', 1, 'Rebound tenderness, involuntary guarding, or rigid abdomen — surgical emergency until proven otherwise.', false),
+      yesNo('leukocytosis', 'Leukocytosis (WBC >12 × 10³/µL)', 1, 'Teaching cutoff WBC >12 × 10³/µL (pick one threshold; drop the 10–12k span).', true),
+      yesNo('lactate', 'Elevated lactate or base deficit', 1, 'Typically lactate >2 mmol/L or worsening base deficit; normal lactate does not exclude early ischemia.', true),
+      yesNo('sirs', 'SIRS / systemic toxicity', 1, 'Yes if ≥2 of: T <36 or >38 °C; HR >90; RR >20 or PaCO2 <32 mmHg; WBC <4 or >12 × 10³/µL or >10% bands.', true),
+      yesNo('ctIschemia', 'CT signs of ischemia (reduced wall enhancement, closed loop, pneumatosis, etc.)', 1, 'Yes if reduced wall enhancement, closed-loop morphology, pneumatosis, portal venous gas, or mesenteric edema/whirl — closed loop is a surgical emergency even if vitals are initially normal.', false),
     ],
     calculate(values) {
       const keys = [
@@ -537,13 +537,13 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: 'C — Intrinsic abnormality + mild peripancreatic (2)', value: 2, description: 'Intrinsic pancreatic abnormalities plus hazy/streaky inflammatory change in peripancreatic fat (mild peripancreatic inflammation); no discrete fluid collection' },
         { label: 'D — Single fluid collection (3)', value: 3, description: 'Single ill-defined fluid collection (typically lesser sac or anterior pararenal space)' },
         { label: 'E — ≥2 collections and/or gas in pancreas/retroperitoneum (4)', value: 4, description: 'Two or more poorly defined fluid collections, or gas in/adjacent to the pancreas (infection or fistula possible)' },
-      ], undefined, 'Contrast-enhanced CT. Balthazar A–E grades pancreatic/peripancreatic inflammation (0–4). Score CT typically ≥72 h after onset unless diagnosis is unclear or the patient is deteriorating.'),
+      ], 2, 'Contrast-enhanced CT. Balthazar A–E grades pancreatic/peripancreatic inflammation (0–4). Score CT typically ≥72 h after onset unless diagnosis is unclear or the patient is deteriorating.'),
       selectInput('necrosis', 'Pancreatic necrosis extent', [
         { label: 'None (0)', value: 0, description: 'No non-enhancing pancreatic parenchyma on CECT (homogeneous enhancement)' },
         { label: '<30% (2)', value: 2, description: 'Non-enhancement of <30% of the pancreatic parenchyma' },
         { label: '30–50% (4)', value: 4, description: 'Non-enhancement of 30–50% of the pancreatic parenchyma' },
         { label: '>50% (6)', value: 6, description: 'Non-enhancement of >50% of the pancreatic parenchyma' },
-      ], undefined, 'Necrosis = lack of parenchymal enhancement on CECT (not just peripancreatic fluid). Unenhanced CT cannot grade necrosis. Points are 0/2/4/6, not 0–3.'),
+      ], 0, 'Necrosis = lack of parenchymal enhancement on CECT (not just peripancreatic fluid). Unenhanced CT cannot grade necrosis. Points are 0/2/4/6, not 0–3.'),
     ],
     calculate(values) {
       const score = num(values.balthazar) + num(values.necrosis);
@@ -708,18 +708,18 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     whenToUse: 'Secondary peritonitis / intra-abdominal sepsis risk stratification perioperatively.',
     whyUse: 'Weighted clinical factors estimate mortality risk and support ICU triage decisions.',
     inputs: [
-      yesNo('age50', 'Age >50 years', 5, 'Age >50 at the time of peritonitis.'),
-      yesNo('female', 'Female sex', 5, 'Female sex (MPI weighted predictor).'),
-      yesNo('organFailure', 'Organ failure', 7, 'MPI organ failure if any: kidney Cr >177 µmol/L (>2.0 mg/dL) or urea >16.7 mmol/L or oliguria <20 mL/h; lung PaO2 <50 mmHg or PaCO2 >50 mmHg; shock (hypo- or hyperdynamic, SBP <90 without inotropes); intestinal obstruction/paralysis ≥24 h or complete mechanical obstruction.'),
-      yesNo('malignancy', 'Malignancy present', 4, 'Malignancy present at this operation (not remote treated cancer in remission).'),
-      yesNo('duration24', 'Preoperative duration of peritonitis >24 h', 4, 'Time from onset of peritonitis to operation >24 hours.'),
-      yesNo('nonColonic', 'Origin not colonic', 4, 'Source is not the colon (e.g. gastroduodenal, small bowel, appendix, biliary, other). Colonic origin scores 0 on this item.'),
-      yesNo('diffuse', 'Diffuse generalized peritonitis', 6, 'Generalized = purulent/fecal contamination of >2 abdominal quadrants (not a single-quadrant abscess).'),
+      yesNo('age50', 'Age >50 years', 5, 'Age >50 at the time of peritonitis.', true),
+      yesNo('female', 'Female sex', 5, 'Female sex (MPI weighted predictor).', false),
+      yesNo('organFailure', 'Organ failure', 7, 'MPI organ failure if any: kidney Cr >177 µmol/L (>2.0 mg/dL) or urea >16.7 mmol/L or oliguria <20 mL/h; lung PaO2 <50 mmHg or PaCO2 >50 mmHg; shock (hypo- or hyperdynamic, SBP <90 without inotropes); intestinal obstruction/paralysis ≥24 h or complete mechanical obstruction.', false),
+      yesNo('malignancy', 'Malignancy present', 4, 'Malignancy present at this operation (not remote treated cancer in remission).', false),
+      yesNo('duration24', 'Preoperative duration of peritonitis >24 h', 4, 'Time from onset of peritonitis to operation >24 hours.', false),
+      yesNo('nonColonic', 'Origin not colonic', 4, 'Source is not the colon (e.g. gastroduodenal, small bowel, appendix, biliary, other). Colonic origin scores 0 on this item.', true),
+      yesNo('diffuse', 'Diffuse generalized peritonitis', 6, 'Generalized = purulent/fecal contamination of >2 abdominal quadrants (not a single-quadrant abscess).', true),
       selectInput('exudate', 'Exudate character', [
         { label: 'Clear (0)', value: 0, description: 'Clear / serous peritoneal fluid' },
         { label: 'Cloudy / purulent (6)', value: 6, description: 'Cloudy, turbid, or frankly purulent exudate' },
         { label: 'Fecal (12)', value: 12, description: 'Feculent contamination (stool in the peritoneum)' },
-      ], undefined, 'Intraoperative or documented exudate character. Clear = serous; cloudy/purulent = pus; fecal = feculent.'),
+      ], 6, 'Intraoperative or documented exudate character. Clear = serous; cloudy/purulent = pus; fecal = feculent.'),
     ],
     calculate(values) {
       const score =
@@ -787,9 +787,9 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     whenToUse: 'Patients with perforated peptic ulcer for perioperative mortality risk.',
     whyUse: 'Simple 0–3 score from medical illness, shock, and delayed presentation.',
     inputs: [
-      yesNo('medicalIllness', 'Major concurrent medical illness', 1, 'Major medical illness in Boey series: severe cardiac, pulmonary, renal, or hepatic disease, or disseminated malignancy — not well-controlled mild comorbidity. Original shock was often SBP <100 mmHg; this form keeps on-screen shock as SBP <90.'),
-      yesNo('shock', 'Preoperative shock (SBP <90 or poor perfusion)', 1, 'SBP <90 mmHg or clear poor perfusion (cool, mottled, lactate rise) before the operation. Original Boey series often used SBP <100 — this form keeps <90.'),
-      yesNo('delay24', 'Presentation / perforation >24 hours', 1, 'Time from perforation (or symptom onset of perforation) to presentation/operation >24 hours.'),
+      yesNo('medicalIllness', 'Major concurrent medical illness', 1, 'Major medical illness in Boey series: severe cardiac, pulmonary, renal, or hepatic disease, or disseminated malignancy — not well-controlled mild comorbidity. Original shock was often SBP <100 mmHg; this form keeps on-screen shock as SBP <90.', false),
+      yesNo('shock', 'Preoperative shock (SBP <90 or poor perfusion)', 1, 'SBP <90 mmHg or clear poor perfusion (cool, mottled, lactate rise) before the operation. Original Boey series often used SBP <100 — this form keeps <90.', false),
+      yesNo('delay24', 'Presentation / perforation >24 hours', 1, 'Time from perforation (or symptom onset of perforation) to presentation/operation >24 hours.', true),
     ],
     calculate(values) {
       const score =
@@ -870,13 +870,13 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: '≤60 (1)', value: 1, description: 'Age ≤60 years' },
         { label: '61–70 (2)', value: 2, description: 'Age 61–70 years (Copeland POSSUM = 2; CR-POSSUM uses 3 in this band)' },
         { label: '≥71 (4)', value: 4, description: 'Age ≥71 years' },
-      ], undefined, 'Copeland POSSUM exponential 1/2/4/8: ≤60 = 1, 61–70 = 2, ≥71 = 4. The 3-point 61–70 band is CR-POSSUM, not Copeland POSSUM.'),
+      ], 2, 'Copeland POSSUM exponential 1/2/4/8: ≤60 = 1, 61–70 = 2, ≥71 = 4. The 3-point 61–70 band is CR-POSSUM, not Copeland POSSUM.'),
       selectInput('cardiac', 'Cardiac status', [
         { label: 'No failure (1)', value: 1, description: 'No cardiac failure; no cardiac meds for failure/angina' },
         { label: 'Diuretic/digoxin/antianginal (2)', value: 2, description: 'On diuretic, digoxin, antianginal, or antihypertensive therapy (compensated)' },
         { label: 'Peripheral edema / warfarin (4)', value: 4, description: 'Peripheral edema, warfarin therapy, or borderline cardiomegaly' },
         { label: 'Raised JVP / cardiomegaly (8)', value: 8, description: 'Raised jugular venous pressure or cardiomegaly (overt failure)' },
-      ], undefined, 'Copeland physiologic cardiac categories. Score current/compensated status, not remote history alone.'),
+      ], 1, 'Copeland physiologic cardiac categories. Score current/compensated status, not remote history alone.'),
       selectInput('resp', 'Respiratory status', [
         { label: 'No dyspnea (1)', value: 1, description: 'No dyspnea on exertion; CXR not showing COPD/fibrosis/consolidation' },
         { label: 'Dyspnea on exertion / mild COPD (2)', value: 2, description: 'Dyspnea on exertion (e.g. hurrying or hills) or mild COPD on CXR' },
@@ -888,26 +888,26 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: '100–109 or 131–170 (2)', value: 2, description: 'SBP 100–109 or 131–170 mmHg' },
         { label: '≥171 or 90–99 (4)', value: 4, description: 'SBP ≥171 or 90–99 mmHg' },
         { label: '≤89 (8)', value: 8, description: 'SBP ≤89 mmHg' },
-      ], undefined, 'Use current preoperative SBP (mmHg).'),
+      ], 2, 'Use current preoperative SBP (mmHg).'),
       selectInput('hr', 'Heart rate', [
         { label: '50–80 (1)', value: 1, description: 'HR 50–80 /min' },
         { label: '40–49 or 81–100 (2)', value: 2, description: 'HR 40–49 or 81–100 /min' },
         { label: '101–120 (4)', value: 4, description: 'HR 101–120 /min' },
         { label: '≥121 or ≤39 (8)', value: 8, description: 'HR ≥121 or ≤39 /min' },
-      ], undefined, 'Use current preoperative heart rate.'),
+      ], 1, 'Use current preoperative heart rate.'),
       selectInput('gcs', 'GCS', [
         { label: '15 (1)', value: 1, description: 'GCS 15' },
         { label: '12–14 (2)', value: 2, description: 'GCS 12–14' },
         { label: '9–11 (4)', value: 4, description: 'GCS 9–11' },
         { label: '≤8 (8)', value: 8, description: 'GCS ≤8' },
-      ], undefined, 'Eye + verbal + motor (3–15). Intubated: score best motor and eye; do not invent a verbal of 5.'),
+      ], 1, 'Eye + verbal + motor (3–15). Intubated: score best motor and eye; do not invent a verbal of 5.'),
       selectInput('opMagnitude', 'Operation magnitude (surgical factor)', [
         { label: 'Minor (1)', value: 1, description: 'Hernia, varicose veins, minor perianal/scrotal' },
         { label: 'Moderate (2)', value: 2, description: 'Appendectomy, cholecystectomy, mastectomy, TURP' },
         { label: 'Major (4)', value: 4, description: 'Laparotomy, bowel resection, CBD exploration, major amputation, peripheral vascular' },
         { label: 'Major+ (8)', value: 8, description: 'Aortic, APR, Whipple, liver resection, esophagectomy' },
-      ]),
-      yesNo('emergency', 'Emergency surgery', 4, 'Yes if the operation is not elective (urgent/emergency). Copeland urgency: elective = 1; emergency with time to resuscitate = 4; immediate (<2 h) = 8. This educational helper adds 4 for any emergency (no 8-point immediate band).'),
+      ], 2, 'Operative magnitude in this simplified POSSUM tally: minor = 1, moderate = 2, major = 4, major+ = 8.'),
+      yesNo('emergency', 'Emergency surgery', 4, 'Yes if the operation is not elective (urgent/emergency). Copeland urgency: elective = 1; emergency with time to resuscitate = 4; immediate (<2 h) = 8. This educational helper adds 4 for any emergency (no 8-point immediate band).', false),
     ],
     calculate(values) {
       const phys =
@@ -993,7 +993,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: 'IV', value: 4, description: 'Constant threat to life' },
         { label: 'V', value: 5, description: 'Moribund, not expected to survive without operation' },
       ], 1, 'I healthy; II mild systemic disease; III severe systemic disease; IV constant threat to life; V moribund, not expected to survive without operation.'),
-      yesNo('emergency', 'Emergency case', 2, 'NSQIP emergency = operation required within a short interval because delay would threaten life or limb (not merely unscheduled add-on).'),
+      yesNo('emergency', 'Emergency case', 2, 'NSQIP emergency = operation required within a short interval because delay would threaten life or limb (not merely unscheduled add-on).', false),
       selectInput('functional', 'Functional status', [
         { label: 'Independent', value: 0, description: 'No assistance from another person for any ADL (devices OK)' },
         { label: 'Partially dependent', value: 1, description: 'Some help with ADLs (bathing, dressing, feeding, toileting, transfer)' },
@@ -1004,7 +1004,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: 'Moderate (e.g., lap cholecystectomy)', value: 1, description: 'Laparoscopic cholecystectomy, appendectomy, TURP, hernia with mesh, breast lumpectomy' },
         { label: 'High (e.g., colectomy, major vascular)', value: 2, description: 'Colectomy, hysterectomy, major vascular reconstruction, THA/TKA, open cholecystectomy with CBD exploration' },
         { label: 'Very high (e.g., ruptured aneurysm, damage control)', value: 3, description: 'Ruptured AAA, damage-control laparotomy, esophagectomy, Whipple, liver resection, major trauma laparotomy' },
-      ], undefined, 'Educational intensity only — not CPT-specific ACS-NSQIP. Pick the closest example; do not use this index for consent percentages.'),
+      ], 2, 'Educational intensity only — not CPT-specific ACS-NSQIP. Pick the closest example; do not use this index for consent percentages.'),
     ],
     calculate(values) {
       const age = num(values.age, 65);
@@ -1083,8 +1083,8 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: 'IV — Severe systemic disease, constant threat to life', value: 4, description: 'Recent (<3 months) MI/CVA/TIA/stents, ongoing ischemia, severe valve/EF, sepsis, DIC, ARDS, or ESRD not on regular dialysis' },
         { label: 'V — Moribund, not expected to survive without operation', value: 5, description: 'Ruptured aneurysm, massive trauma, intracranial bleed with mass effect' },
         { label: 'VI — Declared brain-dead organ donor', value: 6, description: 'Declared brain-dead; organs being removed for donor purposes' },
-      ]),
-      yesNo('emergency', 'Emergency modifier (E)', 0, 'E = delay would significantly increase threat to life or body part.'),
+      ], 3, 'ASA Physical Status I–VI describing pre-anesthesia comorbidity (I = healthy, VI = declared brain-dead organ donor); it reflects the patient, not the operation.'),
+      yesNo('emergency', 'Emergency modifier (E)', 0, 'E = delay would significantly increase threat to life or body part.', false),
     ],
     calculate(values) {
       const asa = num(values.asa, 1);
@@ -1162,10 +1162,10 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     whenToUse: 'Adults before surgery to guide PONV prophylaxis intensity.',
     whyUse: 'Four binary predictors; risk rises ~20% per point — informs multimodal antiemetic prophylaxis.',
     inputs: [
-      yesNo('female', 'Female sex', 1, 'Assigned female sex (Apfel predictor).'),
-      yesNo('nonsmoker', 'Nonsmoker', 1, 'Current nonsmoker. Smoking is protective against PONV — smokers score 0 on this item.'),
-      yesNo('history', 'History of PONV or motion sickness', 1, 'Prior postoperative nausea/vomiting OR motion sickness (either counts).'),
-      yesNo('opioids', 'Postoperative opioids planned/used', 1, 'Postoperative opioids planned or already given (not just intraoperative fentanyl).'),
+      yesNo('female', 'Female sex', 1, 'Assigned female sex (Apfel predictor).', true),
+      yesNo('nonsmoker', 'Nonsmoker', 1, 'Current nonsmoker. Smoking is protective against PONV — smokers score 0 on this item.', true),
+      yesNo('history', 'History of PONV or motion sickness', 1, 'Prior postoperative nausea/vomiting OR motion sickness (either counts).', false),
+      yesNo('opioids', 'Postoperative opioids planned/used', 1, 'Postoperative opioids planned or already given (not just intraoperative fentanyl).', true),
     ],
     calculate(values) {
       const score =
@@ -1245,27 +1245,27 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: 'Moves 0 extremities (0)', value: 0, description: 'Unable to move any extremity voluntarily or on command' },
         { label: 'Moves 2 extremities (1)', value: 1, description: 'Moves two extremities (often residual neuraxial or nerve block)' },
         { label: 'Moves 4 extremities (2)', value: 2, description: 'Moves all four extremities voluntarily or on command' },
-      ], undefined, 'On command or spontaneously. 2 = all four limbs; 1 = two limbs; 0 = none. Residual spinal/epidural block commonly scores 1 until receding.'),
+      ], 2, 'On command or spontaneously. 2 = all four limbs; 1 = two limbs; 0 = none. Residual spinal/epidural block commonly scores 1 until receding.'),
       selectInput('respiration', 'Respiration', [
         { label: 'Apneic / ventilated (0)', value: 0, description: 'Apneic or still mechanically ventilated' },
         { label: 'Dyspnea or limited breathing (1)', value: 1, description: 'Dyspneic, shallow, or limited breathing; can maintain airway but cannot take a deep breath and cough freely' },
         { label: 'Able to breathe deeply and cough (2)', value: 2, description: 'Breathes deeply and coughs freely' },
-      ], undefined, '2 = deep breath and cough; 1 = dyspneic, shallow, or obstructed but breathing; 0 = apnea or still ventilated.'),
+      ], 2, '2 = deep breath and cough; 1 = dyspneic, shallow, or obstructed but breathing; 0 = apnea or still ventilated.'),
       selectInput('circulation', 'Circulation (BP vs baseline)', [
         { label: 'BP ± ≥50% of preanesthetic level (0)', value: 0, description: 'Current SBP differs from preanesthetic SBP by ≥50%' },
         { label: 'BP ± 20–49% of preanesthetic level (1)', value: 1, description: 'Current SBP differs from preanesthetic SBP by 20–49%' },
         { label: 'BP ± <20% of preanesthetic level (2)', value: 2, description: 'Current SBP within 20% of preanesthetic (baseline) SBP' },
-      ], undefined, 'Compare current SBP to the preanesthetic (baseline) SBP. ± <20% = 2; 20–49% = 1; ≥50% = 0. Direction (high or low) both count.'),
+      ], 2, 'Compare current SBP to the preanesthetic (baseline) SBP. ± <20% = 2; 20–49% = 1; ≥50% = 0. Direction (high or low) both count.'),
       selectInput('consciousness', 'Consciousness', [
         { label: 'Unresponsive (0)', value: 0, description: 'Not responding to voice (may still grimace to pain)' },
         { label: 'Arousable on calling (1)', value: 1, description: 'Opens eyes and/or responds to voice but is not fully awake or oriented' },
         { label: 'Fully awake (2)', value: 2, description: 'Fully awake, oriented, conversant' },
-      ], undefined, '2 = fully awake (oriented, conversant). 1 = arousable on calling — opens eyes/responds to voice but not fully awake. 0 = unresponsive to voice.'),
+      ], 2, '2 = fully awake (oriented, conversant). 1 = arousable on calling — opens eyes/responds to voice but not fully awake. 0 = unresponsive to voice.'),
       selectInput('o2', 'Oxygen saturation', [
         { label: 'SpO₂ <90% even with O₂ (0)', value: 0, description: 'SpO₂ remains <90% despite supplemental oxygen' },
         { label: 'Needs O₂ to maintain SpO₂ >90% (1)', value: 1, description: 'Requires supplemental O₂ to keep SpO₂ >90%' },
         { label: 'SpO₂ >92% on room air (2)', value: 2, description: 'Maintains SpO₂ >92% on room air' },
-      ], undefined, 'Modified Aldrete uses SpO₂, not color. 2 = SpO₂ >92% on room air; 1 = needs O₂ to keep SpO₂ >90%; 0 = SpO₂ <90% even on O₂. Many units require total ≥9 with no domain of 0 before PACU discharge.'),
+      ], 2, 'Modified Aldrete uses SpO₂, not color. 2 = SpO₂ >92% on room air; 1 = needs O₂ to keep SpO₂ >90%; 0 = SpO₂ <90% even on O₂. Many units require total ≥9 with no domain of 0 before PACU discharge.'),
     ],
     calculate(values) {
       const score =
@@ -1336,12 +1336,12 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     whenToUse: 'Before emergency RSI / intubation to anticipate difficulty and prepare backups.',
     whyUse: 'Mnemonic captures hypoxemia, body habitus extremes, anatomic disruption, contaminants, exsanguination, and neck issues.',
     inputs: [
-      yesNo('hypoxemia', 'H — Hypoxemia (SpO₂ ≤93% at time of attempt)', 1, 'SpO₂ ≤93% at the time of the intubation attempt (despite preoxygenation if already applied).'),
-      yesNo('extremes', 'E — Extremes of size (pediatric, obese, acromegaly, etc.)', 1, 'HEAVEN: age ≤8 years or clinical obesity (some in-hospital series use BMI >35); acromegaly also counts.'),
-      yesNo('anatomic', 'A — Anatomic challenge (trauma, mass, foreign body, angioedema)', 1, 'Trauma, tumor/mass, foreign body, angioedema, or other distortion of the airway anatomy.'),
-      yesNo('vomit', 'V — Vomit / blood / fluid in airway', 1, 'Vomit, blood, or other fluid contaminating the airway at the time of attempt.'),
-      yesNo('exsanguination', 'E — Exsanguination / anemia / shock affecting O₂ reserve', 1, 'Suspected acute blood loss or chronic anemia that could accelerate desaturation during RSI apnea (one in-hospital series used Hb <10 g/dL).'),
-      yesNo('neck', 'N — Neck mobility limited or C-spine immobilization', 1, 'Limited cervical mobility or a C-collar / spinal precautions in place.'),
+      yesNo('hypoxemia', 'H — Hypoxemia (SpO₂ ≤93% at time of attempt)', 1, 'SpO₂ ≤93% at the time of the intubation attempt (despite preoxygenation if already applied).', true),
+      yesNo('extremes', 'E — Extremes of size (pediatric, obese, acromegaly, etc.)', 1, 'HEAVEN: age ≤8 years or clinical obesity (some in-hospital series use BMI >35); acromegaly also counts.', true),
+      yesNo('anatomic', 'A — Anatomic challenge (trauma, mass, foreign body, angioedema)', 1, 'Trauma, tumor/mass, foreign body, angioedema, or other distortion of the airway anatomy.', false),
+      yesNo('vomit', 'V — Vomit / blood / fluid in airway', 1, 'Vomit, blood, or other fluid contaminating the airway at the time of attempt.', true),
+      yesNo('exsanguination', 'E — Exsanguination / anemia / shock affecting O₂ reserve', 1, 'Suspected acute blood loss or chronic anemia that could accelerate desaturation during RSI apnea (one in-hospital series used Hb <10 g/dL).', false),
+      yesNo('neck', 'N — Neck mobility limited or C-spine immobilization', 1, 'Limited cervical mobility or a C-collar / spinal precautions in place.', true),
     ],
     calculate(values) {
       const keys = ['hypoxemia', 'extremes', 'anatomic', 'vomit', 'exsanguination', 'neck'] as const;
@@ -1415,7 +1415,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: 'Grade 2b — Arytenoids/posterior cords only', value: 3, description: 'Only arytenoids and/or the posterior-most vocal cords; no view of the anterior glottis (Cook modification)' },
         { label: 'Grade 3 — Only epiglottis visible', value: 4, description: 'Epiglottis visible but no part of the glottis or arytenoids (cannot see through the laryngeal inlet)' },
         { label: 'Grade 4 — Neither glottis nor epiglottis visible', value: 5, description: 'Neither glottis nor epiglottis seen (soft palate / posterior pharynx only)' },
-      ], undefined, 'Score the best view with optimal positioning (sniffing or ramped) and external laryngeal manipulation (BURP/ELM) allowed. Document device (direct vs video laryngoscopy) — VL views are not always equivalent to classic DL grades. POGO (% of glottic opening) is a useful complement.'),
+      ], 2, 'Score the best view with optimal positioning (sniffing or ramped) and external laryngeal manipulation (BURP/ELM) allowed. Document device (direct vs video laryngoscopy) — VL views are not always equivalent to classic DL grades. POGO (% of glottic opening) is a useful complement.'),
     ],
     calculate(values) {
       const g = num(values.grade, 1);
@@ -1507,13 +1507,13 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     whenToUse: 'Before intubation of critically ill adults in ICU/ED-ICU settings.',
     whyUse: 'Identifies high-risk ICU intubations (score ≥3) to trigger experienced operators and preparation.',
     inputs: [
-      yesNo('mallampati', 'Mallampati III or IV', 5, 'Modified Mallampati, mouth fully open, tongue out, no phonation. III = only soft palate + base of uvula; IV = hard palate only. ICU: estimate in a cooperative supine patient if sitting is impossible; if unassessable, do not guess III/IV.'),
-      yesNo('osa', 'Obstructive sleep apnea', 2, 'Known OSA or high clinical suspicion (loud snoring, witnessed apneas, STOP-BANG high).'),
-      yesNo('cervical', 'Reduced cervical spine mobility', 1, 'Limited neck extension/flexion (arthritis, ankylosis, collar, trauma).'),
-      yesNo('mouth', 'Limited mouth opening <3 cm', 1, 'Inter-incisor distance <3 cm (about 2 fingerbreadths).'),
-      yesNo('coma', 'Coma', 1, 'GCS ≤8 (De Jong).'),
-      yesNo('hypoxemia', 'Severe hypoxemia', 1, 'SpO2 <80% (De Jong).'),
-      yesNo('nonAnesth', 'Non-anesthesiologist operator', 1, 'Intubating operator is not an anesthesiologist (De Jong).'),
+      yesNo('mallampati', 'Mallampati III or IV', 5, 'Modified Mallampati, mouth fully open, tongue out, no phonation. III = only soft palate + base of uvula; IV = hard palate only. ICU: estimate in a cooperative supine patient if sitting is impossible; if unassessable, do not guess III/IV.', true),
+      yesNo('osa', 'Obstructive sleep apnea', 2, 'Known OSA or high clinical suspicion (loud snoring, witnessed apneas, STOP-BANG high).', false),
+      yesNo('cervical', 'Reduced cervical spine mobility', 1, 'Limited neck extension/flexion (arthritis, ankylosis, collar, trauma).', true),
+      yesNo('mouth', 'Limited mouth opening <3 cm', 1, 'Inter-incisor distance <3 cm (about 2 fingerbreadths).', false),
+      yesNo('coma', 'Coma', 1, 'GCS ≤8 (De Jong).', true),
+      yesNo('hypoxemia', 'Severe hypoxemia', 1, 'SpO2 <80% (De Jong).', true),
+      yesNo('nonAnesth', 'Non-anesthesiologist operator', 1, 'Intubating operator is not an anesthesiologist (De Jong).', true),
     ],
     calculate(values) {
       const score =
@@ -1581,13 +1581,13 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     whenToUse: 'Children with minor head injury (GCS 13–15) when deciding on CT — Canadian CATCH rule framework.',
     whyUse: 'High-sensitivity rule with high- and medium-risk features guiding imaging urgency.',
     inputs: [
-      yesNo('gcsLow', 'GCS <15 at 2 hours after injury (high risk)', 1, 'CATCH inclusion: age <16, GCS 13–15, injury within 24 h with LOC/amnesia/disorientation/vomiting/irritability.'),
-      yesNo('suspectedOpen', 'Suspected open or depressed skull fracture (high risk)', 1, 'Palpable skull depression, suspected open fracture, or penetrating injury.'),
-      yesNo('worseningHa', 'History of worsening headache (high risk)', 1, 'Headache that is worsening after the injury (not a stable mild headache).'),
-      yesNo('irritability', 'Irritability on examination (high risk)', 1, 'Persistent irritability on ED exam, not consolable; CATCH inclusion also used persistent irritability in children <2 years as a minor-head-injury entry criterion. Not a fussy toddler who calms with the parent.'),
-      yesNo('boggy', 'Any sign of basal skull fracture (medium risk)', 1, 'Hemotympanum, raccoon eyes, CSF otorrhea/rhinorrhea, or Battle sign.'),
-      yesNo('largeHematoma', 'Large boggy scalp hematoma (medium risk)', 1, 'CATCH does not use a cm cutoff; large/boggy hematoma of the scalp as judged on exam.'),
-      yesNo('dangerousMech', 'Dangerous mechanism (MVC, fall ≥3 ft/5 stairs, fall from bike without helmet) (medium risk)', 1, 'MVC; fall from elevation ≥3 ft (≥0.91 m) or 5 stairs; or fall from a bicycle with no helmet.'),
+      yesNo('gcsLow', 'GCS <15 at 2 hours after injury (high risk)', 1, 'CATCH inclusion: age <16, GCS 13–15, injury within 24 h with LOC/amnesia/disorientation/vomiting/irritability.', false),
+      yesNo('suspectedOpen', 'Suspected open or depressed skull fracture (high risk)', 1, 'Palpable skull depression, suspected open fracture, or penetrating injury.', false),
+      yesNo('worseningHa', 'History of worsening headache (high risk)', 1, 'Headache that is worsening after the injury (not a stable mild headache).', true),
+      yesNo('irritability', 'Irritability on examination (high risk)', 1, 'Persistent irritability on ED exam, not consolable; CATCH inclusion also used persistent irritability in children <2 years as a minor-head-injury entry criterion. Not a fussy toddler who calms with the parent.', false),
+      yesNo('boggy', 'Any sign of basal skull fracture (medium risk)', 1, 'Hemotympanum, raccoon eyes, CSF otorrhea/rhinorrhea, or Battle sign.', false),
+      yesNo('largeHematoma', 'Large boggy scalp hematoma (medium risk)', 1, 'CATCH does not use a cm cutoff; large/boggy hematoma of the scalp as judged on exam.', false),
+      yesNo('dangerousMech', 'Dangerous mechanism (MVC, fall ≥3 ft/5 stairs, fall from bike without helmet) (medium risk)', 1, 'MVC; fall from elevation ≥3 ft (≥0.91 m) or 5 stairs; or fall from a bicycle with no helmet.', true),
     ],
     calculate(values) {
       const high =
@@ -1677,18 +1677,18 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     whenToUse: 'Children with head injury when applying CHALICE-style CT decision support (UK-derived).',
     whyUse: 'Lists history, examination, and mechanism features that historically triggered CT recommendation.',
     inputs: [
-      yesNo('witnessedLoc', 'Witnessed loss of consciousness >5 min', 1, 'Witnessed LOC lasting more than 5 minutes.'),
-      yesNo('amnesia', 'Amnesia >5 min (antegrade)', 1, 'Anterograde amnesia lasting more than 5 minutes after the injury.'),
-      yesNo('drowsiness', 'Abnormal drowsiness', 1, 'Drowsiness in excess of that expected by the examining doctor (Dunning) — do not over-call ordinary post-injury sleepiness.'),
-      yesNo('ge3Vomits', '≥3 vomits after head injury', 1, 'Three or more discrete episodes of vomiting after the injury.'),
-      yesNo('suspicionNai', 'Suspicion of non-accidental injury', 1, 'Any safeguarding concern for non-accidental injury.'),
-      yesNo('seizure', 'Seizure after head injury (no history of epilepsy)', 1, 'Post-traumatic seizure in a child without known epilepsy.'),
-      yesNo('gcsLow', 'GCS <14 (or <15 if <1 year)', 1, 'GCS <14, or GCS <15 if age <1 year.'),
-      yesNo('suspicionPenetrating', 'Suspicion of penetrating or depressed skull injury / tense fontanelle', 1, 'Suspected penetrating injury, depressed fracture, or a tense fontanelle in an infant.'),
-      yesNo('basalSigns', 'Signs of basal skull fracture', 1, 'Blood or CSF from ear/nose, panda/raccoon eyes, Battle sign, hemotympanum, facial crepitus, or serious facial injury.'),
-      yesNo('focalNeuro', 'Positive focal neurology', 1, 'Any motor, sensory, coordination, or reflex abnormality.'),
-      yesNo('bruiseSwell', 'Bruise/swelling/laceration >5 cm if <1 year', 1, 'Only for infants <1 year: bruise, swelling, or laceration >5 cm on the head.'),
-      yesNo('dangerousMech', 'Dangerous mechanism (high-speed RTC, fall >3 m, high-speed injury from projectile)', 1, 'High-speed RTC (>40 mph / >64 km/h) as pedestrian, cyclist, or occupant; fall >3 m; high-speed projectile/object.'),
+      yesNo('witnessedLoc', 'Witnessed loss of consciousness >5 min', 1, 'Witnessed LOC lasting more than 5 minutes.', false),
+      yesNo('amnesia', 'Amnesia >5 min (antegrade)', 1, 'Anterograde amnesia lasting more than 5 minutes after the injury.', false),
+      yesNo('drowsiness', 'Abnormal drowsiness', 1, 'Drowsiness in excess of that expected by the examining doctor (Dunning) — do not over-call ordinary post-injury sleepiness.', true),
+      yesNo('ge3Vomits', '≥3 vomits after head injury', 1, 'Three or more discrete episodes of vomiting after the injury.', false),
+      yesNo('suspicionNai', 'Suspicion of non-accidental injury', 1, 'Any safeguarding concern for non-accidental injury.', false),
+      yesNo('seizure', 'Seizure after head injury (no history of epilepsy)', 1, 'Post-traumatic seizure in a child without known epilepsy.', false),
+      yesNo('gcsLow', 'GCS <14 (or <15 if <1 year)', 1, 'GCS <14, or GCS <15 if age <1 year.', false),
+      yesNo('suspicionPenetrating', 'Suspicion of penetrating or depressed skull injury / tense fontanelle', 1, 'Suspected penetrating injury, depressed fracture, or a tense fontanelle in an infant.', false),
+      yesNo('basalSigns', 'Signs of basal skull fracture', 1, 'Blood or CSF from ear/nose, panda/raccoon eyes, Battle sign, hemotympanum, facial crepitus, or serious facial injury.', false),
+      yesNo('focalNeuro', 'Positive focal neurology', 1, 'Any motor, sensory, coordination, or reflex abnormality.', false),
+      yesNo('bruiseSwell', 'Bruise/swelling/laceration >5 cm if <1 year', 1, 'Only for infants <1 year: bruise, swelling, or laceration >5 cm on the head.', false),
+      yesNo('dangerousMech', 'Dangerous mechanism (high-speed RTC, fall >3 m, high-speed injury from projectile)', 1, 'High-speed RTC (>40 mph / >64 km/h) as pedestrian, cyclist, or occupant; fall >3 m; high-speed projectile/object.', true),
     ],
     calculate(values) {
       const keys = [
@@ -1770,9 +1770,9 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: 'Axial load to head (diving)', value: 'axial', description: 'Axial load to the head (diving, spearing) — C-spine concern' },
         { label: 'Penetrating trauma to head/neck/torso', value: 'penetrating', description: 'GSW/stab/other penetrating injury to head, neck, or torso' },
         { label: 'Blast / high-energy industrial crush', value: 'blast', description: 'Blast or high-energy industrial crush' },
-      ], undefined, 'Dangerous mechanisms appear across Canadian C-spine, CATCH/PECARN, and CDC field triage. Mechanism alone does not mandate imaging if a high-sensitivity rule is fully negative and the exam is reliable.'),
-      yesNo('elderly', 'Age ≥65 years (mechanism more dangerous at same energy)', 1, 'Age ≥65 — lower-energy mechanisms still cause serious injury.'),
-      yesNo('anticoag', 'Anticoagulated or bleeding diathesis', 1, 'Warfarin, DOAC, therapeutic heparin, or known bleeding diathesis — raises ICH risk even with low-energy mechanism.'),
+      ], "fall", 'Dangerous mechanisms appear across Canadian C-spine, CATCH/PECARN, and CDC field triage. Mechanism alone does not mandate imaging if a high-sensitivity rule is fully negative and the exam is reliable.'),
+      yesNo('elderly', 'Age ≥65 years (mechanism more dangerous at same energy)', 1, 'Age ≥65 — lower-energy mechanisms still cause serious injury.', false),
+      yesNo('anticoag', 'Anticoagulated or bleeding diathesis', 1, 'Warfarin, DOAC, therapeutic heparin, or known bleeding diathesis — raises ICH risk even with low-energy mechanism.', false),
     ],
     calculate(values) {
       const m = String(values.mechanism ?? 'low');
@@ -1868,13 +1868,13 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: 'Mildly anxious', value: 'mild', description: 'ATLS Class II — mildly anxious' },
         { label: 'Anxious / confused', value: 'confused', description: 'ATLS Class III — anxious and confused' },
         { label: 'Confused / lethargic', value: 'lethargic', description: 'ATLS Class IV — confused and lethargic' },
-      ], undefined, 'Classic ATLS teaching bands. Beta-blockers and elderly may not mount tachycardia — do not wait for HR if hypotensive.'),
+      ], "mild", 'Classic ATLS teaching bands. Beta-blockers and elderly may not mount tachycardia — do not wait for HR if hypotensive.'),
       selectInput('urine', 'Urine output estimate', [
         { label: '>30 mL/h', value: 'normal', description: 'Class I — >30 mL/h' },
         { label: '20–30 mL/h', value: 'mild', description: 'Class II — 20–30 mL/h' },
         { label: '5–15 mL/h', value: 'low', description: 'Class III — 5–15 mL/h' },
         { label: 'Negligible', value: 'anuric', description: 'Class IV — negligible / anuric' },
-      ], undefined, 'Hourly urine output when a catheter is in place; otherwise estimate. Pattern-match with HR/SBP/RR/mentation — treat the patient, not the class.'),
+      ], "mild", 'Hourly urine output when a catheter is in place; otherwise estimate. Pattern-match with HR/SBP/RR/mentation — treat the patient, not the class.'),
     ],
     calculate(values) {
       const hr = num(values.hr, 100);
@@ -1985,10 +1985,10 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     whenToUse: 'Major trauma patients when deciding early activation of massive transfusion protocol.',
     whyUse: 'Four binary ED variables; score ≥2 predicts massive transfusion need with good balance of sensitivity/specificity.',
     inputs: [
-      yesNo('penetrating', 'Penetrating mechanism', 1, 'Penetrating trauma (GSW/stab) as the injury mechanism.'),
-      yesNo('sbp90', 'ED SBP ≤90 mmHg', 1, 'First ED systolic BP ≤90 mmHg.'),
-      yesNo('hr120', 'ED HR ≥120 bpm', 1, 'First ED heart rate ≥120 /min.'),
-      yesNo('fast', 'Positive FAST', 1, 'Any FAST window positive for free fluid (RUQ, LUQ, pelvis, or pericardium as used locally).'),
+      yesNo('penetrating', 'Penetrating mechanism', 1, 'Penetrating trauma (GSW/stab) as the injury mechanism.', false),
+      yesNo('sbp90', 'ED SBP ≤90 mmHg', 1, 'First ED systolic BP ≤90 mmHg.', true),
+      yesNo('hr120', 'ED HR ≥120 bpm', 1, 'First ED heart rate ≥120 /min.', true),
+      yesNo('fast', 'Positive FAST', 1, 'Any FAST window positive for free fluid (RUQ, LUQ, pelvis, or pericardium as used locally).', false),
     ],
     calculate(values) {
       const score =

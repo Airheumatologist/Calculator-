@@ -13,13 +13,13 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Confirm eGFR when creatinine alone is unreliable, or when a more accurate estimate would change management.',
     whyUse: 'Combined Cr+CysC equation is more accurate than either marker alone across body composition extremes.',
     inputs: [
-      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.01, exampleValue: 1.0 }),
-      numberInput('scys', 'Serum cystatin C', { unit: 'mg/L', min: 0.2, max: 10, step: 0.01, exampleValue: 1.0 }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 50 }),
+      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.01, exampleValue: 1.0, helpText: 'Serum creatinine from the same draw as the cystatin C; select µmol/L for SI lab reports, and use a steady-state value.' }),
+      numberInput('scys', 'Serum cystatin C', { unit: 'mg/L', min: 0.2, max: 10, step: 0.01, exampleValue: 1.0, helpText: 'Serum cystatin C from a standardized assay on that same draw — the combined equation needs both markers, not one substituted later.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 50, helpText: 'Age in years at the draw; the race-free 2021 combined equation is validated in adults (≥18 years).' }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
-      ]),
+      ], undefined, 'Sex used for the combined equation\'s sex coefficient; there is no race term in the 2021 revision.'),
     ],
     calculate(values) {
       const scr = num(values.scr, 1);
@@ -128,12 +128,12 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Adults with CKD (typically eGFR <60) to estimate 2- and 5-year risk of treated kidney failure.',
     whyUse: 'Guides referral urgency, patient counseling, and planning; validated internationally with regional calibrations.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 65 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 65, helpText: 'Age in years at the time of the eGFR and ACR; older age raises both the 2- and 5-year predicted risk.' }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
-      ]),
-      numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 5, max: 90, exampleValue: 45 }),
+      ], undefined, 'Sex as used by the Tangri equation — the male coefficient raises predicted risk at the same eGFR and ACR.'),
+      numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 5, max: 90, exampleValue: 45, helpText: 'eGFR in mL/min/1.73 m² from the same visit as the ACR; the 4-variable KFRE is intended for use when eGFR is below 60.' }),
       numberInput('acr', 'Urine ACR', { unit: 'mg/g', min: 0.1, max: 10000, step: 0.1, exampleValue: 30, helpText: 'Albumin/creatinine ratio; convert mg/mmol × 8.84 ≈ mg/g' }),
       selectInput(
         'region',
@@ -251,12 +251,12 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Historical or alternative CrCl estimate when Cockcroft–Gault is not preferred; educational comparison.',
     whyUse: 'Simple age/sex/Scr formula historically used for drug dosing; does not require weight.',
     inputs: [
-      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.01, exampleValue: 1.0 }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 50 }),
+      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.01, exampleValue: 1.0, helpText: 'Steady-state serum creatinine in mg/dL (select µmol/L for SI reports); a value drawn during a rising AKI trend invalidates the estimate.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 50, helpText: 'Age in years at the draw; the Jelliffe equation subtracts age, so it is only meaningful for adults.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
-      ]),
+      ], undefined, 'Sex used for the female correction factor in the Jelliffe equation.'),
     ],
     calculate(values) {
       const scr = num(values.scr, 1);
@@ -335,14 +335,14 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Alternative GFR estimate when BSA-based formulas are desired (e.g., historical oncology contexts).',
     whyUse: 'Incorporates BSA; sometimes compared with Cockcroft–Gault and measured GFR in chemo dosing literature.',
     inputs: [
-      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.01, exampleValue: 1.0 }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 55 }),
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 250, step: 0.1, exampleValue: 70 }),
-      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, exampleValue: 170 }),
+      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.01, exampleValue: 1.0, helpText: 'Steady-state serum creatinine in mg/dL (select µmol/L for SI reports) — the estimate assumes stable renal function.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 55, helpText: 'Age in years at the draw; the Wright estimate is age-dependent and indexed to body surface area.' }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 250, step: 0.1, exampleValue: 70, helpText: 'Actual body weight in kg from the same visit as the height; the two together give the BSA that scales the result.' }),
+      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, exampleValue: 170, helpText: 'Height in cm; paired with weight to compute BSA, which multiplies the estimate.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
-      ]),
+      ], undefined, 'Sex selects the sex coefficient in the Wright estimate.'),
     ],
     calculate(values) {
       const scr = num(values.scr, 1);
@@ -439,7 +439,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
       selectInput('mode', 'Input mode', [
         { label: 'Concentration × 24h volume', value: 'calc' },
         { label: 'Already measured total (g/day)', value: 'total' },
-      ]),
+      ], undefined, 'Choose whether you have the measured 24-h total in g/day or a urine protein concentration with the collection volume.'),
       numberInput('conc', 'Urine protein concentration', {
         unit: 'mg/dL',
         min: 0,
@@ -544,7 +544,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Spot quantification of proteinuria when 24h collection is impractical.',
     whyUse: 'UPCR approximates daily protein excretion (g/day ≈ ratio in g/g) for monitoring and nephrotic-range classification.',
     inputs: [
-      numberInput('uprot', 'Urine protein', { unit: 'mg/dL', min: 0, max: 5000, step: 1, exampleValue: 100 }),
+      numberInput('uprot', 'Urine protein', { unit: 'mg/dL', min: 0, max: 5000, step: 1, exampleValue: 100, helpText: 'Spot urine protein in mg/dL from the same specimen as the urine creatinine; the resulting g/g ratio approximates daily excretion in g/day.' }),
       numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 1, max: 500, step: 1, exampleValue: 100, helpText: 'Select µmol/L for SI lab reports.' }),
     ],
     calculate(values) {
@@ -620,13 +620,13 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'CKD staging (CGA), diabetes screening for albuminuria, and cardiovascular/CKD risk stratification.',
     whyUse: 'Albuminuria category strongly predicts CKD progression and CV events independent of eGFR.',
     inputs: [
-      numberInput('ualb', 'Urine albumin', { unit: 'mg/dL', min: 0, max: 2000, step: 0.1, exampleValue: 3 }),
+      numberInput('ualb', 'Urine albumin', { unit: 'mg/dL', min: 0, max: 2000, step: 0.1, exampleValue: 3, helpText: 'Spot urine albumin in mg/dL from the same specimen as the urine creatinine; the tool converts the pair into the mg/g ratio used for A1–A3.' }),
       numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 1, max: 500, step: 1, exampleValue: 100, helpText: 'Select µmol/L for SI lab reports; the ratio is taken in mg/dL.' }),
       selectInput('sex', 'Sex (optional microalbumin cutoffs context)', [
         { label: 'Not specified', value: 'U' },
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
-      ]),
+      ], undefined, 'Optional: selecting sex shows the historical sex-specific microalbuminuria cut-offs. The KDIGO A1–A3 categories themselves are defined in mg/g and do not change with sex.'),
     ],
     calculate(values) {
       const ualb = num(values.ualb, 3);
@@ -708,15 +708,15 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Estimate daily sodium excretion / dietary salt when full 24h collection is unavailable.',
     whyUse: 'Spot estimates support HTN and edema counseling; 24h collection remains more accurate when feasible.',
     inputs: [
-      numberInput('una', 'Spot urine sodium', { unit: 'mEq/L', min: 1, max: 300, exampleValue: 80 }),
+      numberInput('una', 'Spot urine sodium', { unit: 'mEq/L', min: 1, max: 300, exampleValue: 80, helpText: 'Spot urine sodium in mEq/L, ideally from a morning specimen; the Kawasaki estimate converts it using predicted 24-h creatinine excretion.' }),
       numberInput('ucr', 'Spot urine creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 1, max: 400, exampleValue: 100, helpText: 'Select µmol/L for SI lab reports; the Kawasaki ratio is taken in mg/dL.' }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 50 }),
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 200, step: 0.1, exampleValue: 70 }),
-      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, exampleValue: 170 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 50, helpText: 'Age in years, used in the predicted creatinine excretion term of the Kawasaki equation.' }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 200, step: 0.1, exampleValue: 70, helpText: 'Body weight in kg, part of the predicted creatinine excretion term.' }),
+      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, exampleValue: 170, helpText: 'Height in cm, also part of the predicted creatinine excretion term.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
-      ]),
+      ], undefined, 'Sex selects the sex-specific predicted creatinine excretion coefficients.'),
     ],
     calculate(values) {
       const una = num(values.una, 80);
@@ -803,8 +803,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Hyponatremia workup and hypertonic states — assess tonicity that drives water shifts across cell membranes.',
     whyUse: 'Urea is an ineffective osmole; tonicity (not total osm) determines cellular hydration.',
     inputs: [
-      numberInput('na', 'Serum sodium', { unit: 'mEq/L', min: 90, max: 190, step: 1, exampleValue: 138 }),
-      numberInput('glucose', 'Serum glucose', { unit: 'mg/dL', min: 20, max: 2000, exampleValue: 100 }),
+      numberInput('na', 'Serum sodium', { unit: 'mEq/L', min: 90, max: 190, step: 1, exampleValue: 138, helpText: 'Serum sodium in mEq/L from the same draw as the glucose; tonicity is 2 × Na + glucose/18 and deliberately excludes urea.' }),
+      numberInput('glucose', 'Serum glucose', { unit: 'mg/dL', min: 20, max: 2000, exampleValue: 100, helpText: 'Serum glucose in mg/dL from the same draw; divided by 18 to convert to mOsm/kg.' }),
     ],
     calculate(values) {
       const na = num(values.na, 138);
@@ -882,9 +882,9 @@ export const wave5NephroGiCalcs: Calculator[] = [
         { label: 'Chronic respiratory acidosis', value: 'ch_resp_acid' },
         { label: 'Acute respiratory alkalosis', value: 'ac_resp_alk' },
         { label: 'Chronic respiratory alkalosis', value: 'ch_resp_alk' },
-      ]),
-      numberInput('hco3', 'Measured HCO₃⁻', { unit: 'mEq/L', min: 1, max: 60, step: 0.1, exampleValue: 18 }),
-      numberInput('pco2', 'Measured PCO₂', { unit: 'mmHg', min: 5, max: 120, exampleValue: 40 }),
+      ], undefined, 'The primary disorder you believe is present — the expected-compensation rule differs for each option and between acute and chronic respiratory states.'),
+      numberInput('hco3', 'Measured HCO₃⁻', { unit: 'mEq/L', min: 1, max: 60, step: 0.1, exampleValue: 18, helpText: 'Measured bicarbonate in mEq/L from the same panel as the gas; used with the primary disorder to compute the expected PCO₂.' }),
+      numberInput('pco2', 'Measured PCO₂', { unit: 'mmHg', min: 5, max: 120, exampleValue: 40, helpText: 'Measured PCO₂ in mmHg from the same sample; the tool compares it against the rule-predicted value.' }),
     ],
     calculate(values) {
       const disorder = str(values.disorder, 'met_acid');
@@ -1005,8 +1005,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'COPD/chronic hypercapnia — is the HCO₃ rise appropriate for chronic CO₂ retention?',
     whyUse: 'Distinguishes pure chronic compensation from concurrent metabolic acid–base disorders.',
     inputs: [
-      numberInput('pco2', 'PaCO₂', { unit: 'mmHg', min: 40, max: 120, exampleValue: 60 }),
-      numberInput('hco3', 'Measured HCO₃⁻ (optional compare)', { unit: 'mEq/L', min: 10, max: 60, step: 0.1, exampleValue: 32, required: false }),
+      numberInput('pco2', 'PaCO₂', { unit: 'mmHg', min: 40, max: 120, exampleValue: 60, helpText: 'PaCO₂ in mmHg from the ABG; the chronic rule adds 0.4 mEq/L of bicarbonate per 1 mmHg above 40 (0.35 is the alternate teaching coefficient).' }),
+      numberInput('hco3', 'Measured HCO₃⁻ (optional compare)', { unit: 'mEq/L', min: 10, max: 60, step: 0.1, exampleValue: 32, required: false, helpText: 'Measured HCO₃⁻ in mEq/L, optional — entering it shows the deviation from the expected chronic-compensation value.' }),
     ],
     calculate(values) {
       const pco2 = num(values.pco2, 60);
@@ -1084,9 +1084,9 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Acute hypoventilation (opiates, airway, NM weakness) — is the ABG consistent with pure acute CO₂ retention?',
     whyUse: 'Acute buffering only slightly raises HCO₃; larger rises imply chronicity or metabolic alkalosis.',
     inputs: [
-      numberInput('pco2', 'PaCO₂', { unit: 'mmHg', min: 40, max: 120, exampleValue: 60 }),
-      numberInput('hco3', 'Measured HCO₃⁻', { unit: 'mEq/L', min: 10, max: 50, step: 0.1, exampleValue: 26 }),
-      numberInput('ph', 'Measured pH (optional)', { unit: '', min: 6.8, max: 7.8, step: 0.01, exampleValue: 7.25, required: false }),
+      numberInput('pco2', 'PaCO₂', { unit: 'mmHg', min: 40, max: 120, exampleValue: 60, helpText: 'PaCO₂ in mmHg from the ABG; the acute rule adds only 0.1 mEq/L of bicarbonate per 1 mmHg above 40.' }),
+      numberInput('hco3', 'Measured HCO₃⁻', { unit: 'mEq/L', min: 10, max: 50, step: 0.1, exampleValue: 26, helpText: 'Measured HCO₃⁻ in mEq/L from the same sample; requirements: it is compared with 24 + 0.1 × (PaCO₂ − 40).' }),
+      numberInput('ph', 'Measured pH (optional)', { unit: '', min: 6.8, max: 7.8, step: 0.01, exampleValue: 7.25, required: false, helpText: 'Measured pH, optional; the acute estimate falls about 0.008 pH units per 1 mmHg of PaCO₂ rise, so entering pH shows the observed deviation.' }),
     ],
     calculate(values) {
       const pco2 = num(values.pco2, 60);
@@ -1164,14 +1164,14 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Structured differential for HAGMA after confirming elevated anion gap.',
     whyUse: 'Mnemonic-based systematic review reduces missed toxic and metabolic causes.',
     inputs: [
-      yesNo('methanol', 'Methanol (or other toxic alcohol) suspected'),
-      yesNo('uremia', 'Uremia / advanced CKD'),
-      yesNo('dka', 'Diabetic / alcoholic / starvation ketoacidosis'),
-      yesNo('paraldehyde', 'Paraldehyde / phenformin (historical) / pyroglutamic (5-oxoproline)'),
-      yesNo('iron_isoniazid', 'Iron or isoniazid toxicity'),
-      yesNo('lactate', 'Lactic acidosis (type A or B)'),
-      yesNo('ethylene', 'Ethylene glycol'),
-      yesNo('salicylate', 'Salicylates'),
+      yesNo('methanol', 'Methanol (or other toxic alcohol) suspected', undefined, 'MUDPILES M: methanol or another toxic alcohol suspected — an osmolar gap may already have closed, so treat on suspicion.'),
+      yesNo('uremia', 'Uremia / advanced CKD', undefined, 'MUDPILES U: uraemia from advanced CKD or AKI contributing to the anion gap.'),
+      yesNo('dka', 'Diabetic / alcoholic / starvation ketoacidosis', undefined, 'MUDPILES D: diabetic, alcoholic or starvation ketoacidosis — confirm with ketones rather than glucose alone.'),
+      yesNo('paraldehyde', 'Paraldehyde / phenformin (historical) / pyroglutamic (5-oxoproline)', undefined, 'MUDPILES P: paraldehyde or phenformin historically, and pyroglutamic acid (5-oxoproline) in chronic acetaminophen use.'),
+      yesNo('iron_isoniazid', 'Iron or isoniazid toxicity', undefined, 'MUDPILES I: iron or isoniazid ingestion, which widens the gap independently of lactate.'),
+      yesNo('lactate', 'Lactic acidosis (type A or B)', undefined, 'MUDPILES L: lactic acidosis, type A from hypoperfusion or type B from drugs, malignancy or liver failure.'),
+      yesNo('ethylene', 'Ethylene glycol', undefined, 'MUDPILES E: ethylene glycol — by the time the gap acidosis is established the osmolar gap may already have normalised.'),
+      yesNo('salicylate', 'Salicylates', undefined, 'MUDPILES S: salicylates, classically presenting as a high-gap acidosis with a respiratory alkalosis.'),
     ],
     calculate(values) {
       const items: { id: string; label: string }[] = [
@@ -1238,12 +1238,12 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Differential diagnosis after confirming NAGMA (normal AG metabolic acidosis).',
     whyUse: 'Structures workup between GI bicarb loss, RTA, dilutions, and drugs.',
     inputs: [
-      yesNo('hyperalimentation', 'Hyperalimentation / TPN chloride load / dilution'),
-      yesNo('acetazolamide', 'Acetazolamide or other carbonic anhydrase inhibitor'),
-      yesNo('rta', 'Renal tubular acidosis (or hypoaldosteronism type 4)'),
-      yesNo('diarrhea', 'Diarrhea / pancreaticobiliary / fistula GI HCO₃ loss'),
-      yesNo('uretero', 'Uretero-sigmoidostomy / ureteric diversion'),
-      yesNo('pancreatic', 'Pancreatic fistula / high-output ileostomy (GI HCO₃ loss)'),
+      yesNo('hyperalimentation', 'Hyperalimentation / TPN chloride load / dilution', undefined, 'HARDUP H: a large chloride load from hyperalimentation/TPN, or dilution from aggressive saline resuscitation.'),
+      yesNo('acetazolamide', 'Acetazolamide or other carbonic anhydrase inhibitor', undefined, 'HARDUP A: acetazolamide or another carbonic anhydrase inhibitor causing renal bicarbonate loss.'),
+      yesNo('rta', 'Renal tubular acidosis (or hypoaldosteronism type 4)', undefined, 'HARDUP R: renal tubular acidosis, including type 4 hypoaldosteronism — a renal rather than gastrointestinal cause.'),
+      yesNo('diarrhea', 'Diarrhea / pancreaticobiliary / fistula GI HCO₃ loss', undefined, 'HARDUP D: diarrhoea, the commonest gastrointestinal bicarbonate loss.'),
+      yesNo('uretero', 'Uretero-sigmoidostomy / ureteric diversion', undefined, 'HARDUP U: uretero-sigmoidostomy or another urinary diversion, where urine chloride reabsorption generates the acidosis.'),
+      yesNo('pancreatic', 'Pancreatic fistula / high-output ileostomy (GI HCO₃ loss)', undefined, 'HARDUP P: pancreatic fistula or high-output ileostomy, i.e. bicarbonate-rich gastrointestinal loss.'),
     ],
     calculate(values) {
       const items: { id: string; label: string }[] = [
@@ -1303,11 +1303,11 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'NAGMA: estimate renal NH₄⁺ excretion when direct NH₄ assay is unavailable.',
     whyUse: 'High estimated NH₄⁺ favors extrarenal HCO₃ loss; low NH₄⁺ favors RTA or impaired ammoniagenesis. The teaching estimate is max(UOG/2, 0), not the full UOG.',
     inputs: [
-      numberInput('uosm', 'Measured urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1200, exampleValue: 400 }),
-      numberInput('una', 'Urine Na', { unit: 'mEq/L', min: 1, max: 300, exampleValue: 40 }),
-      numberInput('uk', 'Urine K', { unit: 'mEq/L', min: 1, max: 200, exampleValue: 20 }),
-      numberInput('uurea', 'Urine urea nitrogen', { unit: 'mg/dL', min: 0, max: 2000, exampleValue: 200 }),
-      numberInput('uglu', 'Urine glucose', { unit: 'mg/dL', min: 0, max: 1000, exampleValue: 0 }),
+      numberInput('uosm', 'Measured urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1200, exampleValue: 400, helpText: 'Measured urine osmolality in mOsm/kg from a spot specimen taken during the acidosis; it is the minuend of the osmolal gap.' }),
+      numberInput('una', 'Urine Na', { unit: 'mEq/L', min: 1, max: 300, exampleValue: 40, helpText: 'Urine sodium in mEq/L from that same specimen; the calculated osmolality term is 2 × (Na + K) mEq/L.' }),
+      numberInput('uk', 'Urine K', { unit: 'mEq/L', min: 1, max: 200, exampleValue: 20, helpText: 'Urine potassium in mEq/L from the same specimen; it enters the calculated osmolality as part of 2 × (Na + K).' }),
+      numberInput('uurea', 'Urine urea nitrogen', { unit: 'mg/dL', min: 0, max: 2000, exampleValue: 200, helpText: 'Urine urea nitrogen in mg/dL from that same specimen; divided by 2.8 to convert to mOsm/kg.' }),
+      numberInput('uglu', 'Urine glucose', { unit: 'mg/dL', min: 0, max: 1000, exampleValue: 0, helpText: 'Urine glucose in mg/dL from the same specimen; divided by 18. Enter 0 when the dipstick is negative.' }),
     ],
     calculate(values) {
       const uosm = num(values.uosm, 400);
@@ -1486,14 +1486,14 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'CKD-MBD monitoring — frame iPTH versus stage-based goals and assay upper limit of normal.',
     whyUse: 'Avoids over-treating modest elevations in non-dialysis CKD and anchors dialysis targets to 2–9× ULN.',
     inputs: [
-      numberInput('ipth', 'Intact PTH', { unit: 'pg/mL', min: 1, max: 3000, exampleValue: 120 }),
+      numberInput('ipth', 'Intact PTH', { unit: 'pg/mL', min: 1, max: 3000, exampleValue: 120, helpText: 'Intact PTH in pg/mL (the same as ng/L) from the assay your lab uses; targets are expressed as multiples of that assay\'s upper limit of normal.' }),
       numberInput('uln', 'Assay upper limit of normal', { unit: 'pg/mL', min: 20, max: 100, exampleValue: 65, helpText: 'Lab-specific ULN' }),
       selectInput('stage', 'CKD stage context', [
         { label: 'G3a–G3b (not on dialysis)', value: 'g3' },
         { label: 'G4 (not on dialysis)', value: 'g4' },
         { label: 'G5 not on dialysis', value: 'g5nd' },
         { label: 'G5D (dialysis)', value: 'g5d' },
-      ]),
+      ], undefined, 'CKD stage context: dialysis targets are higher (roughly 2–9× ULN) than in non-dialysis CKD, where a modest elevation should not be routinely suppressed.'),
     ],
     calculate(values) {
       const ipth = num(values.ipth, 120);
@@ -1584,14 +1584,14 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'CKD patients with low or borderline total CO₂/HCO₃ to decide on alkali therapy consideration.',
     whyUse: 'Frames alkali consideration in CKD; hard-outcome benefit is uncertain. KDIGO 2024 dropped the 2012 graded <22 recommendation and uses <18 mmol/L as a practice-point example.',
     inputs: [
-      numberInput('hco3', 'Serum HCO₃⁻ or total CO₂', { unit: 'mEq/L', min: 5, max: 40, step: 0.1, exampleValue: 20 }),
+      numberInput('hco3', 'Serum HCO₃⁻ or total CO₂', { unit: 'mEq/L', min: 5, max: 40, step: 0.1, exampleValue: 20, helpText: 'Serum bicarbonate or total CO₂ in mEq/L from a venous or arterial panel; avoid an air-exposed or delayed sample.' }),
       selectInput('stage', 'CKD stage (context)', [
         { label: 'G3', value: 'g3' },
         { label: 'G4', value: 'g4' },
         { label: 'G5 ND', value: 'g5' },
         { label: 'Dialysis', value: 'dialysis' },
-      ]),
-      yesNo('symptoms', 'Symptoms possibly related to acidosis (fatigue, dyspnea)', 0),
+      ], undefined, 'CKD stage context — the argument for alkali therapy is strongest in advanced non-dialysis CKD.'),
+      yesNo('symptoms', 'Symptoms possibly related to acidosis (fatigue, dyspnea)', 0, 'Yes if fatigue, dyspnoea or another symptom could plausibly be attributed to the acidosis; symptoms alone do not establish the indication.'),
     ],
     calculate(values) {
       const hco3 = num(values.hco3, 20);
@@ -2218,25 +2218,25 @@ export const wave5NephroGiCalcs: Calculator[] = [
         { label: '1 — Aphthous ulcers (0.1–0.5 cm)', value: 1, points: 1 },
         { label: '2 — Large ulcers (0.5–2.0 cm)', value: 2, points: 2 },
         { label: '3 — Very large ulcers (>2.0 cm)', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Score the largest ulcer seen in the terminal ileum, using the open biopsy forceps as a size reference (0.1–0.5 cm versus 0.5–2 cm versus >2 cm).'),
       selectInput('ileum_ulcerSurface', 'Ileum: Ulcerated surface', [
         { label: '0 — None (0%)', value: 0, points: 0 },
         { label: '1 — <10% of segment surface', value: 1, points: 1 },
         { label: '2 — 10%–30% of segment surface', value: 2, points: 2 },
         { label: '3 — >30% of segment surface', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Estimate the share of the ileal mucosa that is ulcerated; the bands are under 10%, 10–30% and over 30%.'),
       selectInput('ileum_affectedSurface', 'Ileum: Affected surface', [
         { label: '0 — Unaffected (0%)', value: 0, points: 0 },
         { label: '1 — <50% of segment surface', value: 1, points: 1 },
         { label: '2 — 50%–75% of segment surface', value: 2, points: 2 },
         { label: '3 — >75% of segment surface', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Share of the ileal surface affected by any Crohn lesion (ulcers, erythema, oedema) — bands of <50%, 50–75% and >75%.'),
       selectInput('ileum_stenosis', 'Ileum: Presence of narrowings / stenosis', [
         { label: '0 — None', value: 0, points: 0 },
         { label: '1 — Single passable stenosis', value: 1, points: 1 },
         { label: '2 — Multiple passable stenoses', value: 2, points: 2 },
         { label: '3 — Cannot be passed (non-passable stenosis)', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Worst narrowing in the ileum: a single passable stricture scores 1, multiple passable 2, and a stricture that cannot be passed 3.'),
 
       // Segment 2: Right Colon
       selectInput('right_ulcers', 'Right Colon: Size of ulcers', [
@@ -2244,25 +2244,25 @@ export const wave5NephroGiCalcs: Calculator[] = [
         { label: '1 — Aphthous ulcers (0.1–0.5 cm)', value: 1, points: 1 },
         { label: '2 — Large ulcers (0.5–2.0 cm)', value: 2, points: 2 },
         { label: '3 — Very large ulcers (>2.0 cm)', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Largest ulcer in the right colon; aphthous ulcers are 0.1–0.5 cm, large 0.5–2 cm, very large over 2 cm.'),
       selectInput('right_ulcerSurface', 'Right Colon: Ulcerated surface', [
         { label: '0 — None (0%)', value: 0, points: 0 },
         { label: '1 — <10% of segment surface', value: 1, points: 1 },
         { label: '2 — 10%–30% of segment surface', value: 2, points: 2 },
         { label: '3 — >30% of segment surface', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Proportion of the right colon\'s mucosa that is ulcerated (<10%, 10–30%, >30%).'),
       selectInput('right_affectedSurface', 'Right Colon: Affected surface', [
         { label: '0 — Unaffected (0%)', value: 0, points: 0 },
         { label: '1 — <50% of segment surface', value: 1, points: 1 },
         { label: '2 — 50%–75% of segment surface', value: 2, points: 2 },
         { label: '3 — >75% of segment surface', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Proportion of the right colon bearing any Crohn lesion — the bands are <50%, 50–75% and >75% of the segment.'),
       selectInput('right_stenosis', 'Right Colon: Presence of narrowings / stenosis', [
         { label: '0 — None', value: 0, points: 0 },
         { label: '1 — Single passable stenosis', value: 1, points: 1 },
         { label: '2 — Multiple passable stenoses', value: 2, points: 2 },
         { label: '3 — Cannot be passed (non-passable stenosis)', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Narrowings in the right colon: 1 single passable, 2 multiple passable, 3 non-passable.'),
 
       // Segment 3: Transverse Colon
       selectInput('trans_ulcers', 'Transverse Colon: Size of ulcers', [
@@ -2270,25 +2270,25 @@ export const wave5NephroGiCalcs: Calculator[] = [
         { label: '1 — Aphthous ulcers (0.1–0.5 cm)', value: 1, points: 1 },
         { label: '2 — Large ulcers (0.5–2.0 cm)', value: 2, points: 2 },
         { label: '3 — Very large ulcers (>2.0 cm)', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Largest ulcer in the transverse colon, measured against the forceps (aphthous 0.1–0.5 cm, large 0.5–2 cm, very large >2 cm).'),
       selectInput('trans_ulcerSurface', 'Transverse Colon: Ulcerated surface', [
         { label: '0 — None (0%)', value: 0, points: 0 },
         { label: '1 — <10% of segment surface', value: 1, points: 1 },
         { label: '2 — 10%–30% of segment surface', value: 2, points: 2 },
         { label: '3 — >30% of segment surface', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Proportion of transverse colon mucosa that is ulcerated; score under 10%, 10–30% or over 30%.'),
       selectInput('trans_affectedSurface', 'Transverse Colon: Affected surface', [
         { label: '0 — Unaffected (0%)', value: 0, points: 0 },
         { label: '1 — <50% of segment surface', value: 1, points: 1 },
         { label: '2 — 50%–75% of segment surface', value: 2, points: 2 },
         { label: '3 — >75% of segment surface', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Proportion of the transverse colon affected by any Crohn lesion (<50%, 50–75%, >75%).'),
       selectInput('trans_stenosis', 'Transverse Colon: Presence of narrowings / stenosis', [
         { label: '0 — None', value: 0, points: 0 },
         { label: '1 — Single passable stenosis', value: 1, points: 1 },
         { label: '2 — Multiple passable stenoses', value: 2, points: 2 },
         { label: '3 — Cannot be passed (non-passable stenosis)', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Stenoses in the transverse colon: 1 if a single one passes, 2 if several pass, 3 if none can be passed.'),
 
       // Segment 4: Left Colon
       selectInput('left_ulcers', 'Left Colon: Size of ulcers', [
@@ -2296,25 +2296,25 @@ export const wave5NephroGiCalcs: Calculator[] = [
         { label: '1 — Aphthous ulcers (0.1–0.5 cm)', value: 1, points: 1 },
         { label: '2 — Large ulcers (0.5–2.0 cm)', value: 2, points: 2 },
         { label: '3 — Very large ulcers (>2.0 cm)', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Largest ulcer in the left colon: aphthous ulcers 0.1–0.5 cm score 1, 0.5–2 cm score 2, larger than 2 cm score 3.'),
       selectInput('left_ulcerSurface', 'Left Colon: Ulcerated surface', [
         { label: '0 — None (0%)', value: 0, points: 0 },
         { label: '1 — <10% of segment surface', value: 1, points: 1 },
         { label: '2 — 10%–30% of segment surface', value: 2, points: 2 },
         { label: '3 — >30% of segment surface', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Share of the left colon\'s surface that is ulcerated (<10%, 10–30%, >30%).'),
       selectInput('left_affectedSurface', 'Left Colon: Affected surface', [
         { label: '0 — Unaffected (0%)', value: 0, points: 0 },
         { label: '1 — <50% of segment surface', value: 1, points: 1 },
         { label: '2 — 50%–75% of segment surface', value: 2, points: 2 },
         { label: '3 — >75% of segment surface', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Share of the left colon affected by any Crohn lesion — under 50%, 50–75% or over 75%.'),
       selectInput('left_stenosis', 'Left Colon: Presence of narrowings / stenosis', [
         { label: '0 — None', value: 0, points: 0 },
         { label: '1 — Single passable stenosis', value: 1, points: 1 },
         { label: '2 — Multiple passable stenoses', value: 2, points: 2 },
         { label: '3 — Cannot be passed (non-passable stenosis)', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Narrowings in the left colon: a single passable stricture scores 1, multiple passable 2, non-passable 3.'),
 
       // Segment 5: Rectum
       selectInput('rectum_ulcers', 'Rectum: Size of ulcers', [
@@ -2322,25 +2322,25 @@ export const wave5NephroGiCalcs: Calculator[] = [
         { label: '1 — Aphthous ulcers (0.1–0.5 cm)', value: 1, points: 1 },
         { label: '2 — Large ulcers (0.5–2.0 cm)', value: 2, points: 2 },
         { label: '3 — Very large ulcers (>2.0 cm)', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Largest ulcer in the rectum, sized against the biopsy forceps (0.1–0.5 cm, 0.5–2 cm, >2 cm).'),
       selectInput('rectum_ulcerSurface', 'Rectum: Ulcerated surface', [
         { label: '0 — None (0%)', value: 0, points: 0 },
         { label: '1 — <10% of segment surface', value: 1, points: 1 },
         { label: '2 — 10%–30% of segment surface', value: 2, points: 2 },
         { label: '3 — >30% of segment surface', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Proportion of the rectal mucosa that is ulcerated — under 10%, 10–30% or over 30%.'),
       selectInput('rectum_affectedSurface', 'Rectum: Affected surface', [
         { label: '0 — Unaffected (0%)', value: 0, points: 0 },
         { label: '1 — <50% of segment surface', value: 1, points: 1 },
         { label: '2 — 50%–75% of segment surface', value: 2, points: 2 },
         { label: '3 — >75% of segment surface', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Proportion of the rectum affected by any Crohn lesion (<50%, 50–75%, >75%).'),
       selectInput('rectum_stenosis', 'Rectum: Presence of narrowings / stenosis', [
         { label: '0 — None', value: 0, points: 0 },
         { label: '1 — Single passable stenosis', value: 1, points: 1 },
         { label: '2 — Multiple passable stenoses', value: 2, points: 2 },
         { label: '3 — Cannot be passed (non-passable stenosis)', value: 3, points: 3 },
-      ], 0),
+      ], 0, 'Stenoses in the rectum: 1 single passable, 2 multiple passable, 3 non-passable; a non-passable segment also limits how much of the score can be completed.'),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');

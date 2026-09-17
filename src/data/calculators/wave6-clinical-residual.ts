@@ -281,7 +281,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
           { label: 'Primary prevention (never bled)', value: 'primary', description: 'Known or suspected varices; no prior variceal hemorrhage.' },
           { label: 'Active / recent variceal bleed', value: 'active', description: 'Index hospitalization for variceal hemorrhage, or still in the acute-bleed window.' },
           { label: 'Secondary prevention (prior bleed, not active)', value: 'secondary', description: 'Prior variceal bleed, now stable — NSBB + banding until eradication.' },
-        ],
+        ], undefined, 'Choose whether the patient has never bled (primary prevention), is actively or recently bleeding, or had a prior bleed and is now stable (secondary prevention) — the framing changes with each.',
       ),
       selectInput('varices', 'Largest varices (if known)', [
         { label: 'None / eradicated', value: 'none' },
@@ -502,8 +502,8 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
-      ]),
-      yesNo('dialysis', 'Dialysis ≥2× in past week (or continuous RRT)', null),
+      ], undefined, 'Sex used for the MELD 3.0 female coefficient, which adds points; the OPTN calculator asks for it because listing scores are sex-adjusted.'),
+      yesNo('dialysis', 'Dialysis ≥2× in past week (or continuous RRT)', null, 'Yes if the patient had ≥2 dialysis sessions in the past week or is on continuous RRT — creatinine is then fixed at 3.0 mg/dL (the older MELD rule used 4.0).'),
     ],
     calculate(values) {
       let bili = Math.max(num(values.bili, 2), 1);
@@ -613,16 +613,16 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Interpreting older lab reports that used MDRD, or teaching why race-based eGFR was abandoned.',
     whyUse: 'Shows the classic 175 equation and documents that the Black race multiplier is no longer recommended for clinical care.',
     inputs: [
-      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.01, exampleValue: 1.0 }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 50 }),
+      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.01, exampleValue: 1.0, helpText: 'Steady-state serum creatinine; select µmol/L for SI lab reports — the equation is calibrated on mg/dL values.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 50, helpText: 'Age in years at the time of the draw; MDRD is validated in adults (≥18 years) and loses accuracy above roughly 70 years.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
-      ]),
+      ], undefined, 'Sex used for the equation\'s sex coefficient (×0.742 for female); it is applied independently of the legacy race term below.'),
       selectInput('raceLegacy', 'Legacy race coefficient (historical only)', [
         { label: 'Do not apply race coefficient (recommended display)', value: 'none' },
         { label: 'Historical “Black” multiplier ×1.212 (obsolete)', value: 'black' },
-      ]),
+      ], undefined, 'Historical dial only. Choose \'Do not apply race coefficient\' for current practice: the ×1.212 Black multiplier is obsolete and no longer recommended.'),
     ],
     calculate(values) {
       const scr = Math.max(num(values.scr, 1), 0.1);
@@ -717,17 +717,17 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Oliguric or rising-creatinine AKI when sorting volume-responsive pre-renal physiology from intrinsic ATN.',
     whyUse: 'Structures history, exam, urine indices, and sediment; does not replace clinical judgment or FeUrea on diuretics.',
     inputs: [
-      yesNo('hypovol', 'Clear hypovolemia / low effective arterial blood volume history', 1),
-      yesNo('response', 'Creatinine improving after fluids or improved perfusion', 1),
+      yesNo('hypovol', 'Clear hypovolemia / low effective arterial blood volume history', 1, '1 point toward pre-renal: a clear history of hypovolaemia or low effective arterial volume — haemorrhage, GI losses, over-diuresis, heart failure, cirrhosis.'),
+      yesNo('response', 'Creatinine improving after fluids or improved perfusion', 1, '1 point toward pre-renal: creatinine falls or urine output improves once volume and perfusion are restored.'),
       yesNo('dryMucosa', 'Dry mucosa / orthostasis / low JVP (volume down)', 1, 'Orthostasis typically SBP fall ≥20 mmHg or HR rise ≥20 on standing, or low JVP / dry mucosa supporting hypovolemia.'),
-      yesNo('fenaLow', 'FENa <1% (or FeUrea <35% if on diuretics)', 1),
-      yesNo('unaLow', 'Urine Na <20 mEq/L', 1),
+      yesNo('fenaLow', 'FENa <1% (or FeUrea <35% if on diuretics)', 1, '1 point toward pre-renal: FENa <1%, or FeUrea <35% when the patient is on diuretics.'),
+      yesNo('unaLow', 'Urine Na <20 mEq/L', 1, '1 point toward pre-renal: spot urine sodium <20 mEq/L, interpretable only when the patient is not on diuretics.'),
       yesNo('highSpGrav', 'High urine specific gravity / osmolality (concentrated)', 1, 'Pre-renal pattern: urine SG typically ≥1.020 or Uosm ≥500 mOsm/kg (kidneys concentrating). ATN urine is often isosthenuric (~1.010 / ~300 mOsm/kg).'),
       yesNo('blandSed', 'Bland urine sediment', 1, 'Few or no cells or casts on microscopy. Muddy-brown / RTE casts argue ATN; RBC casts / dysmorphic RBCs argue glomerulonephritis — do not call those bland.'),
-      yesNo('shockIschemia', 'Prolonged shock, sepsis, or nephrotoxin exposure', 0),
-      yesNo('fenaHigh', 'FENa >2% (not on diuretics)', 0),
-      yesNo('muddy', 'Muddy brown casts / renal tubular epithelial cells', 0),
-      yesNo('noFluidResponse', 'No improvement after adequate volume/perfusion rescue', 0),
+      yesNo('shockIschemia', 'Prolonged shock, sepsis, or nephrotoxin exposure', 0, 'Counts in the ATN column (unweighted): prolonged shock, sepsis, or a significant nephrotoxin exposure such as contrast, aminoglycoside or cisplatinum.'),
+      yesNo('fenaHigh', 'FENa >2% (not on diuretics)', 0, 'Counts in the ATN column (unweighted): FENa >2% in a patient not receiving diuretics.'),
+      yesNo('muddy', 'Muddy brown casts / renal tubular epithelial cells', 0, 'Counts in the ATN column (unweighted): muddy brown granular casts or renal tubular epithelial cells on urine microscopy.'),
+      yesNo('noFluidResponse', 'No improvement after adequate volume/perfusion rescue', 0, 'Counts in the ATN column (unweighted): no improvement after adequate volume and perfusion rescue.'),
       yesNo('ckRise', 'CK markedly elevated / pigment nephropathy context', 0, 'Rhabdomyolysis-range CK typically >5,000 IU/L (often much higher) or overt myoglobinuria / crush / prolonged down time.'),
     ],
     calculate(values) {
@@ -803,10 +803,10 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     inputs: [
       numberInput('hours', 'Hours since contrast exposure', { unit: 'h', min: 0, max: 168, exampleValue: 24, helpText: 'CA-AKI creatinine typically rises 24–48 h and peaks 48–72 h after intravascular iodinated contrast. Ongoing rise after 72 h suggests another insult.' }),
       numberInput('fena', 'Measured FENa (if available)', { unit: '%', min: 0, max: 20, step: 0.1, exampleValue: 0.8, required: false, helpText: 'FENa = (UNa/PNa) ÷ (UCr/PCr) × 100. <1% = avid Na retention (pre-renal or contrast-associated); ≥2% suggests ATN. Unreliable on diuretics — use FeUrea (<35% pre-renal).' }),
-      yesNo('fenaKnown', 'FENa value entered / available', 0),
-      yesNo('creatinineUp', 'Creatinine rise ≥0.3 mg/dL or ≥1.5× baseline after contrast', 0),
-      yesNo('otherCause', 'Strong alternate AKI cause (hypotension, sepsis, obstruction, meds)', 0),
-      yesNo('onDiuretic', 'On diuretics (FENa unreliable)', 0),
+      yesNo('fenaKnown', 'FENa value entered / available', 0, 'Yes once a calculated FENa is available; with it the helper weighs the value, without it it reasons from timing and the creatinine trajectory alone.'),
+      yesNo('creatinineUp', 'Creatinine rise ≥0.3 mg/dL or ≥1.5× baseline after contrast', 0, 'Yes if creatinine rose ≥0.3 mg/dL within 48 h or ≥1.5× baseline within 7 days of contrast — without that rise there is no AKI to attribute.'),
+      yesNo('otherCause', 'Strong alternate AKI cause (hypotension, sepsis, obstruction, meds)', 0, 'Yes if a competing cause is present (hypotension, sepsis, obstruction, nephrotoxic drugs), which weakens the causal link to contrast.'),
+      yesNo('onDiuretic', 'On diuretics (FENa unreliable)', 0, 'Yes if loop or thiazide diuretics were given recently — they invalidate FENa, so a low value cannot be read as pre-renal.'),
     ],
     calculate(values) {
       const hours = num(values.hours, 24);
@@ -1028,7 +1028,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         { label: 'Completed protocol / weight loss limit', value: 'complete', description: 'Ran to protocol end (often 3–5% body-weight loss or a preset time) with supervised no-water conditions.' },
         { label: 'Stopped for hypernatremia / hemodynamic concern', value: 'safety', description: 'Aborted for Na/Posm rising into a danger zone or instability — still interpretable if Posm was high enough.' },
         { label: 'Early stop — incomplete', value: 'incomplete', description: 'Stopped before an adequate stimulus; do not diagnose from this run.' },
-      ]),
+      ], undefined, 'Whether the protocol reached its endpoint (osmolar plateau or 3–5% weight loss), was stopped early for safety, or was incomplete; the pattern interpretation only holds for a completed test.'),
     ],
     calculate(values) {
       const posm = num(values.posm, 300);
@@ -1113,14 +1113,14 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Euvolemic hyponatremia when evaluating for SIADH after excluding hypothyroidism and glucocorticoid deficiency.',
     whyUse: 'Forces explicit documentation of Posm, Uosm, UNa, volume status, and normal adrenal/thyroid function.',
     inputs: [
-      yesNo('hypoNa', 'Hyponatremia (typically Na <135 mmol/L)', 1),
-      yesNo('lowPosm', 'Low plasma osmolality (<275 mOsm/kg)', 1),
-      yesNo('inapUosm', 'Inappropriately high urine osmolality (>100 mOsm/kg) with low Posm', 1),
+      yesNo('hypoNa', 'Hyponatremia (typically Na <135 mmol/L)', 1, '1 criterion: serum sodium below the lab reference range, typically <135 mmol/L on a non-hyperglycaemic, non-artefactual sample.'),
+      yesNo('lowPosm', 'Low plasma osmolality (<275 mOsm/kg)', 1, '1 criterion: measured plasma osmolality <275 mOsm/kg, which must also be lower than the urine osmolality.'),
+      yesNo('inapUosm', 'Inappropriately high urine osmolality (>100 mOsm/kg) with low Posm', 1, '1 criterion: urine osmolality >100 mOsm/kg while plasma osmolality is low — antidiuresis that is not physiologically appropriate.'),
       yesNo('euvolemia', 'Clinical euvolemia', 1, 'No edema, no elevated JVP, and no orthostasis or dry mucosa. Not hypovolemic (GI loss, diuretics, third-space) and not hypervolemic (HF, cirrhosis, nephrosis).'),
-      yesNo('highUna', 'Urine Na >30–40 mmol/L on normal salt intake', 1),
-      yesNo('normalAdrenalThyroid', 'Normal thyroid and adrenal (glucocorticoid) function', 1),
-      yesNo('noDiuretics', 'Not on recent diuretics (or interpreted cautiously)', 1),
-      yesNo('normalRenal', 'No advanced renal failure explaining findings', 1),
+      yesNo('highUna', 'Urine Na >30–40 mmol/L on normal salt intake', 1, '1 criterion: urine sodium >30–40 mmol/L on a normal salt intake, consistent with euvolemic volume expansion.'),
+      yesNo('normalAdrenalThyroid', 'Normal thyroid and adrenal (glucocorticoid) function', 1, '1 criterion: TSH/free T4 and glucocorticoid function are normal — hypothyroidism and adrenal insufficiency must be excluded first.'),
+      yesNo('noDiuretics', 'Not on recent diuretics (or interpreted cautiously)', 1, '1 criterion: no recent diuretics, which lower urine osmolality and sodium and can mimic or mask the SIADH pattern.'),
+      yesNo('normalRenal', 'No advanced renal failure explaining findings', 1, '1 criterion: renal function adequate — advanced kidney failure alone can explain the urine findings and disqualifies SIADH.'),
     ],
     calculate(values) {
       const keys = [
@@ -1208,10 +1208,10 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       numberInput('posm', 'Plasma osmolality (measured or calculated)', { unit: 'mOsm/kg', min: 250, max: 360, exampleValue: 295, helpText: 'Measured preferred. ≥295 supports DI; <280 supports primary polydipsia.' }),
       numberInput('uosm', 'Spot urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1200, exampleValue: 150, helpText: 'Inappropriately dilute (<200) with polyuria supports DI; >400 argues some concentrating ability.' }),
       numberInput('uvol', 'Approximate urine output', { unit: 'L/day', min: 1, max: 20, step: 0.5, exampleValue: 6, helpText: 'Pathologic polyuria commonly >3–3.5 L/day. This helper will not score DI vs polydipsia if volume is not clearly in that range.' }),
-      yesNo('prefersCold', 'Prefers ice-cold water (classic DI anecdote)', 1),
-      yesNo('nocturia', 'Prominent nocturia / night water drinking', 1),
-      yesNo('lithium', 'Lithium or known nephrogenic risk drugs', 1),
-      yesNo('psych', 'Primary psychiatric polydipsia context', 1),
+      yesNo('prefersCold', 'Prefers ice-cold water (classic DI anecdote)', 1, '1 point: a strong preference for ice-cold water, a classic anecdote in DI; it is a soft pointer, not diagnostic.'),
+      yesNo('nocturia', 'Prominent nocturia / night water drinking', 1, '1 point: prominent nocturia with night-time drinking, which favours true polyuria over psychogenic water loading.'),
+      yesNo('lithium', 'Lithium or known nephrogenic risk drugs', 1, '1 point: current lithium or another drug causing ADH resistance (amphotericin, demeclocycline, cisplatin) — makes nephrogenic DI likely.'),
+      yesNo('psych', 'Primary psychiatric polydipsia context', 1, '1 point: an established psychiatric context of compulsive water drinking, pointing towards primary polydipsia rather than DI.'),
     ],
     calculate(values) {
       const na = num(values.na, 142);
@@ -1514,9 +1514,9 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Patients with high morning glucose on insulin when deciding whether overnight hypo vs dawn physiology is likely.',
     whyUse: '3 a.m. glucose (or CGM) distinguishes nocturnal hypoglycemia with rebound from dawn-related rise without hypo.',
     inputs: [
-      numberInput('glu_bed', 'Bedtime glucose', { unit: 'mg/dL', min: 40, max: 500, exampleValue: 140 }),
+      numberInput('glu_bed', 'Bedtime glucose', { unit: 'mg/dL', min: 40, max: 500, exampleValue: 140, helpText: 'Bedtime glucose in mg/dL from the same night as the fasting sample; use the CGM nadir instead if continuous data are available.' }),
       numberInput('glu_3am', 'Glucose ~3 a.m. (or overnight nadir)', { unit: 'mg/dL', min: 40, max: 500, exampleValue: 110, helpText: 'Check ~3 a.m. or the CGM overnight nadir. <70 mg/dL (or documented CGM hypo) favors nocturnal hypoglycemia, not dawn phenomenon.' }),
-      numberInput('glu_am', 'Pre-breakfast / fasting glucose', { unit: 'mg/dL', min: 40, max: 500, exampleValue: 200 }),
+      numberInput('glu_am', 'Pre-breakfast / fasting glucose', { unit: 'mg/dL', min: 40, max: 500, exampleValue: 200, helpText: 'Pre-breakfast fasting glucose in mg/dL from that same night; compare it with the 3 a.m./CGM nadir to separate nocturnal hypoglycaemia from a dawn rise.' }),
       yesNo('nightSweats', 'Night sweats / nightmares / symptoms of nocturnal hypo', 0, 'Sweats, nightmares, morning headache, or a partner witnessing overnight symptoms. Supportive of nocturnal hypo but not required if the 3 a.m. glucose is <70.'),
       yesNo('cgmHypo', 'CGM confirms nocturnal hypoglycemia', 0, 'CGM or sensor glucose <70 mg/dL (Level 1) or <54 (Level 2) overnight. Treat documented nocturnal hypo regardless of the Somogyi eponym.'),
     ],
@@ -1609,7 +1609,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       numberInput('bicarb', 'Serum bicarbonate', { unit: 'mEq/L', min: 1, max: 40, step: 0.1, exampleValue: 16, helpText: 'Resolution component: HCO₃ ≥15 mEq/L (need ≥2 of HCO₃, pH, AG)' }),
       numberInput('ph', 'Venous or arterial pH', { min: 6.6, max: 7.6, step: 0.01, exampleValue: 7.32, helpText: 'Resolution component: pH >7.3' }),
       numberInput('ag', 'Anion gap', { unit: 'mEq/L', min: 4, max: 40, step: 0.1, exampleValue: 11, helpText: 'Resolution component: AG ≤12 mEq/L' }),
-      yesNo('ableEat', 'Able to eat / transition plan ready', 1),
+      yesNo('ableEat', 'Able to eat / transition plan ready', 1, '1 criterion: the patient can eat and a subcutaneous insulin transition plan is ready — biochemical resolution alone does not licence stopping the infusion.'),
       yesNo('sqOverlap', 'SQ basal insulin overlapped ≥1–2 h before stopping IV', 1, 'Do not stop IV insulin until basal SQ has been given with ≥1–2 h overlap.'),
     ],
     calculate(values) {
@@ -1810,10 +1810,10 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       numberInput('ph', 'pH', { min: 6.5, max: 7.8, step: 0.01, exampleValue: 7.28, helpText: 'Normal 7.35–7.45. Acidemia <7.35; alkalemia >7.45. A “normal” pH can still hide mixed disorders.' }),
       numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 120, exampleValue: 40, helpText: 'Normal ~35–45 mmHg. High CO₂ = respiratory acidosis; low = respiratory alkalosis.' }),
       numberInput('hco3', 'HCO₃⁻', { unit: 'mEq/L', min: 2, max: 60, step: 0.1, exampleValue: 18, helpText: 'Normal ~22–26 mEq/L. Low = metabolic acidosis; high = metabolic alkalosis.' }),
-      numberInput('na', 'Na (for AG)', { unit: 'mEq/L', min: 110, max: 170, exampleValue: 140 }),
-      numberInput('cl', 'Cl (for AG)', { unit: 'mEq/L', min: 70, max: 140, exampleValue: 104 }),
-      numberInput('albumin', 'Albumin (optional AG adjust)', { unit: 'g/dL', min: 1, max: 5.5, step: 0.1, exampleValue: 4, required: false }),
-      yesNo('checkGap', 'Compute anion gap', 0),
+      numberInput('na', 'Na (for AG)', { unit: 'mEq/L', min: 110, max: 170, exampleValue: 140, helpText: 'Serum sodium in mEq/L from the same draw as the gas; paired with chloride and bicarbonate to compute the anion gap.' }),
+      numberInput('cl', 'Cl (for AG)', { unit: 'mEq/L', min: 70, max: 140, exampleValue: 104, helpText: 'Serum chloride in mEq/L from that same panel; the gap is Na − (Cl + HCO₃⁻).' }),
+      numberInput('albumin', 'Albumin (optional AG adjust)', { unit: 'g/dL', min: 1, max: 5.5, step: 0.1, exampleValue: 4, required: false, helpText: 'Optional serum albumin in g/dL: add 2.5 mEq/L to the calculated gap for every 1 g/dL the albumin is below 4.0.' }),
+      yesNo('checkGap', 'Compute anion gap', 0, 'Yes to compute the anion gap and check for a hidden high-gap acidosis once the primary process is identified.'),
     ],
     calculate(values) {
       const ph = num(values.ph, 7.28);
@@ -1964,9 +1964,9 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         { label: 'Respiratory alkalosis (acute)', value: 'resp_alk_acute', description: 'Low PaCO₂ of minutes–hours. Expected ΔHCO₃ ≈ −2 per −10 mmHg PaCO₂.' },
         { label: 'Respiratory alkalosis (chronic)', value: 'resp_alk_chronic', description: 'Low PaCO₂ of days. Expected ΔHCO₃ ≈ −5 per −10 mmHg PaCO₂.' },
       ], undefined, 'Pick the disorder you believe is primary; the tool flags a second process if the compensating value is outside the expected band.'),
-      numberInput('hco3', 'Measured HCO₃⁻', { unit: 'mEq/L', min: 2, max: 60, step: 0.1, exampleValue: 12 }),
-      numberInput('paco2', 'Measured PaCO₂', { unit: 'mmHg', min: 10, max: 120, exampleValue: 28 }),
-      numberInput('ph', 'pH (context)', { min: 6.5, max: 7.8, step: 0.01, exampleValue: 7.28 }),
+      numberInput('hco3', 'Measured HCO₃⁻', { unit: 'mEq/L', min: 2, max: 60, step: 0.1, exampleValue: 12, helpText: 'Measured serum bicarbonate in mEq/L from the chem panel or the gas; Winter\'s formula uses 1.5 × HCO₃⁻ + 8 ± 2.' }),
+      numberInput('paco2', 'Measured PaCO₂', { unit: 'mmHg', min: 10, max: 120, exampleValue: 28, helpText: 'Measured PaCO₂ in mmHg; the detector compares it with the PaCO₂ expected for the measured bicarbonate.' }),
+      numberInput('ph', 'pH (context)', { min: 6.5, max: 7.8, step: 0.01, exampleValue: 7.28, helpText: 'pH from the same sample, used only as context for which primary disorder the detector assumes.' }),
     ],
     calculate(values) {
       const primary = str(values.primary, 'met_acid');
@@ -2101,15 +2101,15 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Severe hypoxemia workup when estimating shunt fraction educationally from ABG and assumed contents.',
     whyUse: 'Qs/Qt helps frame true shunt vs V/Q mismatch (shunt responds poorly to FiO₂ alone).',
     inputs: [
-      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 60 }),
-      numberInput('fio2', 'FiO₂', { unit: 'fraction', unitKind: 'fio2', min: 0.21, max: 1, step: 0.01, exampleValue: 1.0 }),
-      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 100, exampleValue: 40 }),
-      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 5, max: 20, step: 0.1, exampleValue: 12 }),
-      numberInput('pvO2', 'Mixed venous PO₂ (required for content method)', { unit: 'mmHg', min: 20, max: 50, exampleValue: 40, required: false }),
+      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 60, helpText: 'Arterial PaO₂ in mmHg from a gas drawn on the stated FiO₂, after at least 15–20 minutes on that stable FiO₂.' }),
+      numberInput('fio2', 'FiO₂', { unit: 'fraction', unitKind: 'fio2', min: 0.21, max: 1, step: 0.01, exampleValue: 1.0, helpText: 'Inspired oxygen as a decimal (0.21 room air, 1.0 on a non-rebreather); select the FiO₂-mode the gas was actually drawn on.' }),
+      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 100, exampleValue: 40, helpText: 'Arterial PaCO₂ in mmHg from the same gas; it feeds the alveolar gas equation and the assumed respiratory quotient.' }),
+      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 5, max: 20, step: 0.1, exampleValue: 12, helpText: 'Hemoglobin in g/dL at the time of the gas; the content method uses Hb × 1.34 × saturation for both arterial and venous content.' }),
+      numberInput('pvO2', 'Mixed venous PO₂ (required for content method)', { unit: 'mmHg', min: 20, max: 50, exampleValue: 40, required: false, helpText: 'Mixed venous PO₂ in mmHg from a pulmonary artery catheter — required by the content method, and ignored by the P/F iso-shunt approximation.' }),
       selectInput('mode', 'Method', [
         { label: 'Simplified content shunt (educational)', value: 'content' },
         { label: 'Rough iso-shunt from P/F only', value: 'pf' },
-      ]),
+      ], undefined, 'Choose the simplified content shunt (needs Hb and mixed venous PO₂) or the rough P/F iso-shunt approximation.'),
     ],
     calculate(values) {
       const pao2 = num(values.pao2, 60);
@@ -2237,7 +2237,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Quick sanity check of room-air ABG values at sea level or rough expected PaO₂ from PaCO₂.',
     whyUse: 'On room air, PaO₂ ≈ 150 − PaCO₂ (simplified alveolar gas). Large shortfalls suggest A–a gradient elevation.',
     inputs: [
-      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 100, exampleValue: 40 }),
+      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 100, exampleValue: 40, helpText: 'PaCO₂ in mmHg from a sea-level room-air gas; expected PaO₂ ≈ 150 − PaCO₂, and an alternate teaching form uses 150 − 1.25 × PaCO₂.' }),
       numberInput('pao2', 'Measured PaO₂ (optional)', {
         unit: 'mmHg',
         min: 0,
@@ -2249,7 +2249,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       selectInput('fio2', 'FiO₂ context', [
         { label: 'Room air (0.21) — rule applies', value: 'ra' },
         { label: 'Supplemental O₂ — rule invalid', value: 'o2' },
-      ]),
+      ], undefined, 'Room air only: the rule assumes FiO₂ 0.21 at sea level and does not apply to any supplemental oxygen.'),
     ],
     calculate(values) {
       const paco2 = num(values.paco2, 40);
@@ -2339,15 +2339,16 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Travel/medicine or interpreting hypoxemia at elevation; teaching alveolar gas equation at low PB.',
     whyUse: 'Barometric pressure falls with altitude, lowering PIO₂ and expected PaO₂ even in healthy lungs.',
     inputs: [
-      numberInput('altitude', 'Altitude', { unit: 'm', min: 0, max: 9000, exampleValue: 2500 }),
+      numberInput('altitude', 'Altitude', { unit: 'm', min: 0, max: 9000, exampleValue: 2500, helpText: 'Altitude above sea level in metres; barometric pressure is derived from it (about 760 mmHg at 0 m).' }),
       numberInput('paco2', 'PaCO₂ (assume lower at altitude if hyperventilating)', {
         unit: 'mmHg',
         min: 10,
         max: 50,
         exampleValue: 32,
+        helpText: 'Assumed or measured PaCO₂ in mmHg — use a lower value at altitude, because hypoxic ventilatory drive lowers CO₂.',
       }),
-      numberInput('fio2', 'FiO₂', { unit: 'fraction', unitKind: 'fio2', min: 0.21, max: 1, step: 0.01, exampleValue: 0.21 }),
-      numberInput('aa', 'Assumed A–a gradient', { unit: 'mmHg', min: 0, max: 60, exampleValue: 10 }),
+      numberInput('fio2', 'FiO₂', { unit: 'fraction', unitKind: 'fio2', min: 0.21, max: 1, step: 0.01, exampleValue: 0.21, helpText: 'Inspired oxygen as a decimal (0.21 for room air at altitude); supplemental oxygen raises the expected PaO₂.' }),
+      numberInput('aa', 'Assumed A–a gradient', { unit: 'mmHg', min: 0, max: 60, exampleValue: 10, helpText: 'Assumed A–a gradient in mmHg: about 5–15 in a young healthy adult, rising with age, smoking and lung disease.' }),
     ],
     calculate(values) {
       const alt = num(values.altitude, 2500);
@@ -2434,12 +2435,12 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Fire/smoke exposure patients in ED or burn triage for inhalation injury risk.',
     whyUse: 'Inhalation injury drives mortality in burns; early airway protection decisions are critical.',
     inputs: [
-      yesNo('closedSpace', 'Closed-space fire exposure', 1),
-      yesNo('facialBurns', 'Facial burns', 1),
-      yesNo('singed', 'Singed nasal hair / carbonaceous sputum', 1),
-      yesNo('hoarse', 'Hoarseness / stridor / voice change', 1),
-      yesNo('wheeze', 'Wheeze / dyspnea / hypoxia', 1),
-      yesNo('ams', 'Altered mental status', 1),
+      yesNo('closedSpace', 'Closed-space fire exposure', 1, '1 point: fire in an enclosed space (building, vehicle, room), which raises the risk of carbon monoxide and cyanide exposure.'),
+      yesNo('facialBurns', 'Facial burns', 1, '1 point: burns involving the face, including singed eyebrows or blistered lips.'),
+      yesNo('singed', 'Singed nasal hair / carbonaceous sputum', 1, '1 point: singed nasal hairs, or carbonaceous sputum/soot around the mouth or nose.'),
+      yesNo('hoarse', 'Hoarseness / stridor / voice change', 1, '1 point: hoarseness, stridor or any voice change — the strongest early predictor of airway oedema.'),
+      yesNo('wheeze', 'Wheeze / dyspnea / hypoxia', 1, '1 point: wheeze, dyspnoea or hypoxaemia at presentation.'),
+      yesNo('ams', 'Altered mental status', 1, '1 point: altered mental status, which raises concern for carbon monoxide, cyanide or hypoxic injury.'),
       yesNo('highCo', 'COHb >10% (or above smoker baseline) or cyanide concern', 1, 'Elevated COHb is not a smoker 5–10% baseline; many pathways flag COHb >10%. Cyanide concern: industrial/plastic fire, unexplained high lactate, soot with shock.'),
       yesNo('largeTbsa', 'Large TBSA burns (≥20% adults; ≥10% children) or burns plus inhalation', 1, 'ABA-style large cutaneous burn, or any significant burn plus inhalation injury.'),
     ],
@@ -2516,18 +2517,19 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'CO poisoning management counseling on expected COHb clearance with oxygen therapy.',
     whyUse: 'Illustrates why 100% NRB oxygen is mandatory and when HBO is considered to accelerate clearance.',
     inputs: [
-      numberInput('cohb', 'Current COHb', { unit: '%', min: 0, max: 70, step: 0.1, exampleValue: 25 }),
+      numberInput('cohb', 'Current COHb', { unit: '%', min: 0, max: 70, step: 0.1, exampleValue: 25, helpText: 'Measured carboxyhaemoglobin as a percentage of total haemoglobin; non-smokers are usually <2% and smokers 5–10%.' }),
       selectInput('therapy', 'Oxygen therapy', [
         { label: 'Room air', value: 'ra' },
         { label: '100% NRB / high-flow O₂', value: 'nrb' },
         { label: 'Hyperbaric oxygen (HBO)', value: 'hbo' },
-      ]),
+      ], undefined, 'Therapy actually being delivered: room air (half-life ~4–6 h), 100% via non-rebreather/high-flow (~60–90 min), or hyperbaric oxygen (~20–30 min).'),
       numberInput('hours', 'Hours on selected therapy (estimate remaining)', {
         unit: 'h',
         min: 0,
         max: 24,
         step: 0.5,
         exampleValue: 1.5,
+        helpText: 'Hours already elapsed on that therapy; the remaining COHb is estimated with a simple monoexponential decay model.',
       }),
     ],
     calculate(values) {
@@ -2610,17 +2612,17 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     inputs: [
       yesNo('bradycardia', 'Symptomatic bradycardia', 1, 'Hypoperfusion attributed to bradycardia, usually HR <50–60. Atropine-refractory bradycardia is the separate “refractory” item.'),
       yesNo('hypotension', 'Hypotension / shock', 1, 'SBP <90 mmHg, MAP <65, or clinical shock/hypoperfusion.'),
-      yesNo('ams', 'Altered mental status / seizure (esp. propranolol)', 1),
-      yesNo('hypoglycemia', 'Hypoglycemia (glucose <70 mg/dL or symptomatic)', 1),
-      yesNo('qrsWide', 'QRS ≥120 ms (membrane-stabilizing agents, e.g. propranolol)', 1),
-      yesNo('bronchospasm', 'Bronchospasm', 1),
-      yesNo('refractory', 'Refractory to fluids + atropine + standard pressors', 1),
+      yesNo('ams', 'Altered mental status / seizure (esp. propranolol)', 1, '1 point: altered mental status or seizure — typical of lipophilic agents, especially propranolol.'),
+      yesNo('hypoglycemia', 'Hypoglycemia (glucose <70 mg/dL or symptomatic)', 1, '1 point: glucose <70 mg/dL or symptomatic hypoglycaemia, which beta blockade can mask by hiding the adrenergic warning signs.'),
+      yesNo('qrsWide', 'QRS ≥120 ms (membrane-stabilizing agents, e.g. propranolol)', 1, '1 point: QRS ≥120 ms — sodium-channel blockade, seen with propranolol and other membrane-stabilising agents.'),
+      yesNo('bronchospasm', 'Bronchospasm', 1, '1 point: wheeze or bronchospasm, which may be the presenting feature and limits further beta-agonist use.'),
+      yesNo('refractory', 'Refractory to fluids + atropine + standard pressors', 1, '1 point: hypotension persisting despite fluids, atropine and standard vasopressors — the point at which glucagon and high-dose insulin are considered.'),
       selectInput('agent', 'Agent class (if known)', [
         { label: 'Unknown / mixed', value: 'unknown' },
         { label: 'Propranolol / lipophilic + membrane stabilizing', value: 'propranolol' },
         { label: 'Sotalol (Class III) — QT/torsades risk', value: 'sotalol' },
         { label: 'Other selective β1', value: 'selective' },
-      ]),
+      ], undefined, 'Agent class if known: propranolol/lipophilic, sotalol (QT and torsades risk), another selective β1 agent, or unknown/mixed.'),
     ],
     calculate(values) {
       const keys = ['bradycardia', 'hypotension', 'ams', 'hypoglycemia', 'qrsWide', 'bronchospasm', 'refractory'] as const;

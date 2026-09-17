@@ -207,10 +207,10 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Adult chronic liver disease when estimating transplant benefit using UK-style labs (includes sodium).',
     whyUse: 'UK listing threshold historically UKELD ≥49; incorporates INR, creatinine, bilirubin, and sodium.',
     inputs: [
-      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, exampleValue: 1.5 }),
+      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, exampleValue: 1.5, helpText: 'INR from the same draw as the bilirubin, creatinine and sodium; UKELD enters it as a logarithmic term, so warfarin or recent vitamin K distorts the score.' }),
       numberInput('creat', 'Creatinine', { unit: 'µmol/L', min: 20, max: 1000, step: 1, exampleValue: 90, helpText: 'SI units — mg/dL × 88.4' }),
       numberInput('bili', 'Total bilirubin', { unit: 'µmol/L', min: 1, max: 1000, step: 1, exampleValue: 50, helpText: 'SI units — mg/dL × 17.1' }),
-      numberInput('na', 'Serum sodium', { unit: 'mmol/L', min: 110, max: 150, step: 1, exampleValue: 135 }),
+      numberInput('na', 'Serum sodium', { unit: 'mmol/L', min: 110, max: 150, step: 1, exampleValue: 135, helpText: 'Serum sodium in mmol/L (numerically identical to mEq/L) from that same panel; the sodium term is subtracted, so hyponatremia raises UKELD.' }),
     ],
     calculate(values) {
       const inr = Math.max(num(values.inr, 1.5), 0.8);
@@ -299,29 +299,29 @@ export const wave3GiHepCalcs: Calculator[] = [
       selectInput('entryMode', 'Input method', [
         { label: 'Score 6 CLIF organ failure domains (recommended)', value: 'domains' },
         { label: 'Enter precomputed CLIF-OFs total (6–18)', value: 'direct' },
-      ], 'domains'),
+      ], 'domains', 'Choose whether you will score the CLIF organ-failure domains yourself or paste a CLIF-OF total (6–18) produced elsewhere.'),
 
       // 6 CLIF Organ Failure Domains
       selectInput('liver', '1. Liver: Total Bilirubin', [
         { label: '1 pt — Bilirubin <6 mg/dL (<103 µmol/L)', value: 1, points: 1 },
         { label: '2 pts — Bilirubin ≥6 to <12 mg/dL (≥103 to <205 µmol/L)', value: 2, points: 2 },
         { label: '3 pts — Bilirubin ≥12 mg/dL (≥205 µmol/L) [Liver Failure]', value: 3, points: 3 },
-      ], 1),
+      ], 1, 'Total bilirubin band: 1 point <6 mg/dL, 2 points 6 to <12, 3 points ≥12 mg/dL (≥12 counts as liver failure).'),
       selectInput('kidney', '2. Kidney: Serum Creatinine', [
         { label: '1 pt — Creatinine <2 mg/dL (<177 µmol/L)', value: 1, points: 1 },
         { label: '2 pts — Creatinine 2 to <3.5 mg/dL (177–309 µmol/L)', value: 2, points: 2 },
         { label: '3 pts — Creatinine ≥3.5 mg/dL or Renal Replacement Therapy [Kidney Failure]', value: 3, points: 3 },
-      ], 1),
+      ], 1, 'Serum creatinine band: 1 point <2 mg/dL, 2 points 2 to <3.5, 3 points ≥3.5 mg/dL or any renal replacement therapy — RRT alone scores 3.'),
       selectInput('brain', '3. Brain: Hepatic Encephalopathy (West Haven)', [
         { label: '1 pt — Grade 0 (No encephalopathy)', value: 1, points: 1 },
         { label: '2 pts — Grade 1–2 (Mild to moderate encephalopathy)', value: 2, points: 2 },
         { label: '3 pts — Grade 3–4 (Severe encephalopathy / coma) [Brain Failure]', value: 3, points: 3 },
-      ], 1),
+      ], 1, 'West Haven encephalopathy grade: 1 point grade 0, 2 points grades 1–2, 3 points grades 3–4 (grade 3–4 counts as brain failure).'),
       selectInput('coag', '4. Coagulation: INR', [
         { label: '1 pt — INR <2.0', value: 1, points: 1 },
         { label: '2 pts — INR 2.0 to <2.5', value: 2, points: 2 },
         { label: '3 pts — INR ≥2.5 [Coagulation Failure]', value: 3, points: 3 },
-      ], 1),
+      ], 1, 'INR band: 1 point <2.0, 2 points 2.0 to <2.5, 3 points ≥2.5 (≥2.5 counts as coagulation failure).'),
       selectInput('circ', '5. Circulation: Blood Pressure / Vasopressors', [
         { label: '1 pt — MAP ≥70 mmHg without vasopressors', value: 1, points: 1, description: 'MAP of exactly 70 without vasopressors scores 1' },
         { label: '2 pts — MAP <70 mmHg without vasopressors', value: 2, points: 2, description: 'Jalan CLIF-OF: MAP <70 (not ≤70). MAP 70 is the 1-point band.' },
@@ -331,7 +331,7 @@ export const wave3GiHepCalcs: Calculator[] = [
         { label: '1 pt — PaO₂/FiO₂ >300 or SpO₂/FiO₂ >357', value: 1, points: 1 },
         { label: '2 pts — PaO₂/FiO₂ >200 to ≤300 or SpO₂/FiO₂ >214 to ≤357', value: 2, points: 2 },
         { label: '3 pts — PaO₂/FiO₂ ≤200 or SpO₂/FiO₂ ≤214 [Respiratory Failure]', value: 3, points: 3 },
-      ], 1),
+      ], 1, 'Oxygenation band: 1 point PaO₂/FiO₂ >300 or SpO₂/FiO₂ >357, 2 points 200–300 or 214–357, 3 points ≤200 or ≤214 (failure band).'),
 
       numberInput('directClifOfs', 'Precomputed CLIF-OFs total', {
         min: 6,
@@ -340,8 +340,8 @@ export const wave3GiHepCalcs: Calculator[] = [
         exampleValue: 8,
         helpText: 'Only used when "Enter precomputed CLIF-OFs total" is selected.',
       }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 55 }),
-      numberInput('wbc', 'White blood cell count', { unit: '×10⁹/L', min: 0.5, max: 100, step: 0.1, exampleValue: 8.0 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 55, helpText: 'Age in completed years at admission; age enters as a continuous term, so each additional year adds risk.' }),
+      numberInput('wbc', 'White blood cell count', { unit: '×10⁹/L', min: 0.5, max: 100, step: 0.1, exampleValue: 8.0, helpText: 'Admission white cell count in ×10⁹/L (1,000/µL = 1.0); the score uses its logarithm, so both leucopenia and leucocytosis raise it.' }),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'domains');
@@ -567,9 +567,9 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Confirmed or probable alcoholic hepatitis for risk stratification (complements Maddrey, GAHS, MELD).',
     whyUse: 'Continuous score with low/intermediate/high 90-day mortality strata.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 50 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 50, helpText: 'Age in years; ABIC adds age × 0.1, so every decade of age adds 1 point to the score.' }),
       numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, exampleValue: 10, helpText: 'mg/dL (divide µmol/L by 17.1).' }),
-      numberInput('inr', 'INR', { min: 0.8, max: 10, step: 0.1, exampleValue: 1.8 }),
+      numberInput('inr', 'INR', { min: 0.8, max: 10, step: 0.1, exampleValue: 1.8, helpText: 'INR (not PT seconds); ABIC adds INR × 0.66, so an INR of 2 contributes about 1.3 points.' }),
       numberInput('creat', 'Creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 15, step: 0.1, exampleValue: 1.0, helpText: 'Serum creatinine; select µmol/L for SI lab reports.' }),
     ],
     calculate(values) {
@@ -631,8 +631,8 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Interpreting aminotransferase pattern in suspected alcoholic liver disease, cirrhosis, or mixed injury.',
     whyUse: 'Ratio >1 (especially >2) supports alcohol-related injury or advanced fibrosis; <1 common in viral/NAFLD hepatitis without cirrhosis.',
     inputs: [
-      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 10000, exampleValue: 80 }),
-      numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 10000, exampleValue: 40 }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 10000, exampleValue: 80, helpText: 'AST in U/L from the same draw as the ALT; non-hepatic sources (muscle, haemolysis) inflate the numerator and the ratio.' }),
+      numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 10000, exampleValue: 40, helpText: 'ALT in U/L from the same draw; the ratio is only informative when at least one enzyme is above the reference range.' }),
     ],
     calculate(values) {
       const ast = num(values.ast, 80);
@@ -697,7 +697,7 @@ export const wave3GiHepCalcs: Calculator[] = [
     whyUse: 'SAAG ≥1.1 g/dL indicates portal hypertension with high accuracy; guides differential and therapy.',
     inputs: [
       numberInput('serumAlb', 'Serum albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, exampleValue: 2.8, helpText: 'Draw the same day as paracentesis' }),
-      numberInput('ascitesAlb', 'Ascites albumin', { unit: 'g/dL', min: 0.1, max: 6, step: 0.1, exampleValue: 1.0 }),
+      numberInput('ascitesAlb', 'Ascites albumin', { unit: 'g/dL', min: 0.1, max: 6, step: 0.1, exampleValue: 1.0, helpText: 'Ascites albumin in g/dL from the diagnostic paracentesis; the serum albumin must be drawn on the same day or the gradient is invalid.' }),
       numberInput('ascitesProtein', 'Ascites total protein (optional)', {
         unit: 'g/dL',
         min: 0,
@@ -863,8 +863,8 @@ export const wave3GiHepCalcs: Calculator[] = [
     whyUse: 'Absence of peritonitis signs, hemoconcentration, and renal failure predicts mild course with high NPV.',
     inputs: [
       yesNo('peritonitis', 'Rebound tenderness or guarding (peritonitis signs)', 1, 'Involuntary guarding or rebound tenderness on abdominal exam (not voluntary tightness)'),
-      yesNo('hemoconcentration', 'Abnormal hematocrit (male ≥43% or female ≥39.6%)', 1, 'Hemoconcentration threshold from original HAPS'),
-      yesNo('renal', 'Creatinine ≥ 2 mg/dL (177 µmol/L)'),
+      yesNo('hemoconcentration', 'Abnormal hematocrit (male ≥43% or female ≥39.6%)', 1, 'Original HAPS uses the sex-specific hematocrit cutoffs shown: a value at or above them counts against a "harmless" course and adds 1 point here.'),
+      yesNo('renal', 'Creatinine ≥ 2 mg/dL (177 µmol/L)', undefined, 'Yes if the admission creatinine is ≥2 mg/dL (177 µmol/L) or the patient is in established renal failure; any present HAPS criterion removes the \'harmless\' label.'),
     ],
     calculate(values) {
       const bad =
@@ -926,16 +926,16 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Adults with nonvariceal upper GI bleeding for mortality risk stratification (includes post-endoscopy factors).',
     whyUse: 'Includes ASA, timing, Hb, comorbidities, rebleed, and failed endoscopic therapy beyond pure admission scores.',
     inputs: [
-      yesNo('age80', 'Age ≥80 years', 2),
+      yesNo('age80', 'Age ≥80 years', 2, '2 points if the patient is 80 years or older at presentation.'),
       selectInput('asa', 'ASA physical status', [
         { label: 'ASA 1–2 (0) — I healthy or II mild systemic disease', value: 0, description: 'ASA I: healthy patient. ASA II: mild systemic disease without substantive functional limitation' },
         { label: 'ASA 3 (+1) — severe systemic disease', value: 1, description: 'ASA III: severe systemic disease with functional limitation' },
         { label: 'ASA 4 (+3) — constant threat to life', value: 3, description: 'ASA IV: severe systemic disease that is a constant threat to life' },
       ], 0, 'Marmo PNED: ASA 3 = 1; ASA 4 = 3. Use pre-bleed ASA class. ASA V is not a separate PNED item.'),
-      yesNo('time8', 'Time from symptoms to admission <8 hours', 1),
-      yesNo('hb7', 'Hemoglobin ≤7 g/dL', 2),
+      yesNo('time8', 'Time from symptoms to admission <8 hours', 1, '1 point if bleeding began less than 8 hours before admission — a short interval scores, unlike most UGIB scores.'),
+      yesNo('hb7', 'Hemoglobin ≤7 g/dL', 2, '2 points if the admission hemoglobin is ≤7 g/dL, the lowest PNED hemoglobin band.'),
       yesNo('renal', 'Renal failure', 2, 'Chronic renal failure as in Marmo (typically Cr >1.5 mg/dL, dialysis, or known severe CKD).'),
-      yesNo('cirrhosis', 'Liver cirrhosis', 3),
+      yesNo('cirrhosis', 'Liver cirrhosis', 3, '3 points for documented or clinically evident cirrhosis; it is the heaviest single item in PNED.'),
       yesNo('cancer', 'Neoplasia / advanced malignancy', 3, 'Advanced neoplasia as in Marmo PNED (not a generic “any cancer” extra item).'),
       yesNo('failedEndo', 'Failure of endoscopic treatment', 4, 'Failure of endoscopic intention-to-treat / persistent bleeding despite index endoscopic therapy.'),
       yesNo('rebleed', 'Rebleeding', 3, 'Recurrent hematemesis or melena after hemostasis and ≥24 h of stability, with shock or Hb drop ≥2 g/dL (Marmo).'),
@@ -1019,14 +1019,14 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Children with suspected appendicitis to structure probability and imaging decisions.',
     whyUse: 'Pediatric-specific alternative/complement to Alvarado; includes hop tenderness and neutrophilia.',
     inputs: [
-      yesNo('migration', 'Migration of pain to RLQ (starts periumbilical/epigastric, then moves to RLQ)', 1),
+      yesNo('migration', 'Migration of pain to RLQ (starts periumbilical/epigastric, then moves to RLQ)', 1, '1 point if the pain began periumbilical or epigastric and then migrated to the right lower quadrant.'),
       yesNo('anorexia', 'Anorexia', 1, 'In children: refuses favorite foods / not eating'),
-      yesNo('nausea', 'Nausea / vomiting', 1),
-      yesNo('fever', 'Fever ≥ 38.0°C (100.4°F)', 1),
+      yesNo('nausea', 'Nausea / vomiting', 1, '1 point for nausea or vomiting as part of the presenting illness.'),
+      yesNo('fever', 'Fever ≥ 38.0°C (100.4°F)', 1, '1 point for a temperature of ≥38.0 °C (100.4 °F) before or during assessment.'),
       yesNo('coughHop', 'Cough / percussion / hopping tenderness in RLQ', 2, 'Pain in RLQ on cough, hop on the right foot, or percussion of the abdomen'),
       yesNo('rlq', 'Tenderness over right lower quadrant', 2, 'Maximal tenderness at McBurney’s point / RLQ'),
-      yesNo('wbc', 'Leukocytosis > 10,000/µL', 1),
-      yesNo('neut', 'Neutrophilia > 75% neutrophils', 1),
+      yesNo('wbc', 'Leukocytosis > 10,000/µL', 1, '1 point for a white cell count above 10,000/µL (10.0 ×10⁹/L).'),
+      yesNo('neut', 'Neutrophilia > 75% neutrophils', 1, '1 point if neutrophils exceed 75% on the differential.'),
     ],
     calculate(values) {
       const score =
@@ -1093,14 +1093,14 @@ export const wave3GiHepCalcs: Calculator[] = [
     inputs: [
       yesNo('dysfnCv', 'Cardiovascular dysfunction (hypotension requiring dopamine ≥5 or any norepinephrine)', 1, 'Dopamine ≥5 µg/kg/min, or any dose of norepinephrine (TG18 organ dysfunction).'),
       yesNo('dysfnNeuro', 'Neurologic dysfunction (disturbance of consciousness)', 1, 'New disturbance of consciousness: somnolence, disorientation, or unresponsiveness'),
-      yesNo('dysfnResp', 'Respiratory dysfunction (PaO₂/FiO₂ <300)'),
+      yesNo('dysfnResp', 'Respiratory dysfunction (PaO₂/FiO₂ <300)', undefined, '1 point for PaO₂/FiO₂ <300 (or SpO₂/FiO₂ ≤357) — one of the Grade III organ-dysfunction criteria.'),
       yesNo('dysfnRenal', 'Renal dysfunction (oliguria or Cr >2.0 mg/dL)', 1, 'Oliguria ≈ <0.5 mL/kg/h, or creatinine >2.0 mg/dL'),
-      yesNo('dysfnHepatic', 'Hepatic dysfunction (INR >1.5)'),
-      yesNo('dysfnHeme', 'Hematologic dysfunction (platelet <100,000/µL)'),
-      yesNo('wbcAbn', 'WBC >12,000 or <4,000 /µL'),
-      yesNo('feverHigh', 'Fever ≥39°C (102.2°F)'),
-      yesNo('age75', 'Age ≥ 75 years'),
-      yesNo('bili5', 'Total bilirubin ≥ 5 mg/dL'),
+      yesNo('dysfnHepatic', 'Hepatic dysfunction (INR >1.5)', undefined, '1 point for INR >1.5, the hepatic dysfunction criterion for Grade III.'),
+      yesNo('dysfnHeme', 'Hematologic dysfunction (platelet <100,000/µL)', undefined, '1 point for platelets <100,000/µL (100 ×10⁹/L), the hematologic dysfunction criterion.'),
+      yesNo('wbcAbn', 'WBC >12,000 or <4,000 /µL', undefined, '1 point if the WBC is >12,000/µL or <4,000/µL — a Grade II criterion.'),
+      yesNo('feverHigh', 'Fever ≥39°C (102.2°F)', undefined, '1 point if the temperature is ≥39 °C (102.2 °F), a Grade II criterion.'),
+      yesNo('age75', 'Age ≥ 75 years', undefined, '1 point if the patient is 75 years or older, a Grade II criterion.'),
+      yesNo('bili5', 'Total bilirubin ≥ 5 mg/dL', undefined, '1 point if total bilirubin is ≥5 mg/dL, a Grade II criterion.'),
       yesNo('albuminLow', 'Hypoalbuminemia (<0.7 × lower limit of normal)', 1, 'Example: if LLN is 3.5 g/dL, albumin <2.45 g/dL meets the criterion'),
     ],
     calculate(values) {
@@ -1179,15 +1179,15 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Acute cholecystitis once diagnostic criteria are met, to grade severity and plan intervention.',
     whyUse: 'Grade III organ dysfunction and Grade II local/inflammatory markers change operative risk and need for drainage.',
     inputs: [
-      yesNo('dysfnCv', 'Cardiovascular dysfunction (hypotension requiring dopamine ≥5 µg/kg/min or any norepinephrine)'),
+      yesNo('dysfnCv', 'Cardiovascular dysfunction (hypotension requiring dopamine ≥5 µg/kg/min or any norepinephrine)', undefined, '1 point for hypotension requiring dopamine ≥5 µg/kg/min or any norepinephrine — a Grade III organ-dysfunction criterion.'),
       yesNo('dysfnNeuro', 'Neurologic dysfunction (altered consciousness)', 1, 'New disturbance of consciousness: somnolence, disorientation, or unresponsiveness'),
-      yesNo('dysfnResp', 'Respiratory dysfunction (PaO₂/FiO₂ <300)'),
+      yesNo('dysfnResp', 'Respiratory dysfunction (PaO₂/FiO₂ <300)', undefined, '1 point for PaO₂/FiO₂ <300, one of the Grade III organ-dysfunction criteria.'),
       yesNo('dysfnRenal', 'Renal dysfunction (oliguria or Cr >2.0 mg/dL)', 1, 'Oliguria ≈ <0.5 mL/kg/h, or creatinine >2.0 mg/dL'),
-      yesNo('dysfnHepatic', 'Hepatic dysfunction (INR >1.5)'),
-      yesNo('dysfnHeme', 'Hematologic dysfunction (platelets <100,000/µL)'),
-      yesNo('wbc18', 'WBC > 18,000/µL'),
-      yesNo('palpable', 'Palpable tender RUQ mass'),
-      yesNo('duration72', 'Duration of symptoms > 72 hours'),
+      yesNo('dysfnHepatic', 'Hepatic dysfunction (INR >1.5)', undefined, '1 point for INR >1.5, the hepatic Grade III criterion.'),
+      yesNo('dysfnHeme', 'Hematologic dysfunction (platelets <100,000/µL)', undefined, '1 point for platelets <100,000/µL (100 ×10⁹/L), the hematologic Grade III criterion.'),
+      yesNo('wbc18', 'WBC > 18,000/µL', undefined, '1 point for WBC >18,000/µL — a Grade II local/inflammatory criterion (note the threshold is higher than in cholangitis).'),
+      yesNo('palpable', 'Palpable tender RUQ mass', undefined, '1 point for a palpable, tender right upper quadrant mass on examination.'),
+      yesNo('duration72', 'Duration of symptoms > 72 hours', undefined, '1 point when symptoms have lasted more than 72 hours before presentation.'),
       yesNo('markedLocal', 'Marked local inflammation (gangrene, abscess, biliary peritonitis, emphysematous GB)', 1, 'Imaging or operative findings: gangrenous cholecystitis, pericholecystic abscess, biliary peritonitis, or emphysematous gallbladder.'),
     ],
     calculate(values) {
@@ -1363,10 +1363,10 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'PBC prognosis discussions and transplant timing context (educational R score).',
     whyUse: 'Classic model using age, bilirubin, albumin, PT, and edema; higher R → worse survival.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 55 }),
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 30, step: 0.1, exampleValue: 1.5 }),
-      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, exampleValue: 3.5 }),
-      numberInput('pt', 'Prothrombin time', { unit: 'sec', min: 8, max: 60, step: 0.1, exampleValue: 12 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 55, helpText: 'Age in years at the time of the labs; the model adds 0.039 × age, so older age raises R.' }),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 30, step: 0.1, exampleValue: 1.5, helpText: 'Total bilirubin in mg/dL; the model uses 0.871 × ln(bilirubin), so each doubling adds a fixed increment to R.' }),
+      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, exampleValue: 3.5, helpText: 'Serum albumin in g/dL from the same panel; the term is −2.53 × ln(albumin), so a low albumin raises R.' }),
+      numberInput('pt', 'Prothrombin time', { unit: 'sec', min: 8, max: 60, step: 0.1, exampleValue: 12, helpText: 'Prothrombin time in seconds (not INR); the model uses 2.38 × ln(PT seconds), so a prolonged PT raises R sharply.' }),
       selectInput('edema', 'Edema', [
         { label: 'No edema (0)', value: 0, description: 'No ankle, pretibial, or sacral edema and no diuretic therapy for edema' },
         { label: 'Edema present, no diuretics (0.5)', value: 0.5, description: 'Edema present without diuretics. Original Mayo also codes 0.5 if edema is controlled on diuretics' },
@@ -1453,7 +1453,7 @@ export const wave3GiHepCalcs: Calculator[] = [
         { label: 'Low-grade dysplasia', value: 'lgd' },
         { label: 'High-grade dysplasia', value: 'hgd' },
         { label: 'Adenocarcinoma', value: 'ca' },
-      ]),
+      ], undefined, 'Worst grade seen on biopsy or endoscopy — nondysplastic, indefinite, low-grade dysplasia, high-grade dysplasia or adenocarcinoma; surveillance interval and referral differ.'),
     ],
     calculate(values) {
       const c = num(values.c, 2);
@@ -1626,8 +1626,8 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Compensated advanced chronic liver disease (cACLD) when deciding need for screening EGD for varices needing treatment.',
     whyUse: 'LSM <20 kPa and platelets >150×10⁹/L identify patients at very low risk of varices needing treatment who can defer endoscopy.',
     inputs: [
-      numberInput('lsm', 'Liver stiffness (VCTE)', { unit: 'kPa', min: 1, max: 75, step: 0.1, exampleValue: 15 }),
-      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 600, exampleValue: 180 }),
+      numberInput('lsm', 'Liver stiffness (VCTE)', { unit: 'kPa', min: 1, max: 75, step: 0.1, exampleValue: 15, helpText: 'Median liver stiffness by vibration-controlled transient elastography in kPa; the rule is validated in compensated cACLD with ≥10 valid measurements and IQR/median ≤30%.' }),
+      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 600, exampleValue: 180, helpText: 'Platelet count in ×10⁹/L (150,000/µL = 150); the cut-off for avoiding endoscopy is >150 ×10⁹/L with LSM <20 kPa.' }),
       selectInput(
         'compensated',
         'Disease stage',
@@ -1717,7 +1717,7 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Interpreting measured HVPG from hepatic vein catheterization.',
     whyUse: 'HVPG thresholds define CSPH, variceal bleeding risk, and treatment response targets.',
     inputs: [
-      numberInput('hvpg', 'HVPG', { unit: 'mmHg', min: 0, max: 40, step: 0.5, exampleValue: 12 }),
+      numberInput('hvpg', 'HVPG', { unit: 'mmHg', min: 0, max: 40, step: 0.5, exampleValue: 12, helpText: 'Wedged minus free hepatic venous pressure in mmHg, measured in a steady state; <6 is normal, ≥10 defines clinically significant portal hypertension, and ≥20 predicts variceal bleeding risk.' }),
     ],
     calculate(values) {
       const hvpg = num(values.hvpg, 12);
@@ -1797,7 +1797,7 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Diagnostic paracentesis in ascites — especially cirrhosis with symptoms, admission, or GI bleed.',
     whyUse: 'PMN ≥250/µL diagnoses SBP and warrants prompt antibiotics without waiting for culture.',
     inputs: [
-      numberInput('pmn', 'Ascites PMN (neutrophil) count', { unit: 'cells/µL', min: 0, max: 50000, exampleValue: 100 }),
+      numberInput('pmn', 'Ascites PMN (neutrophil) count', { unit: 'cells/µL', min: 0, max: 50000, exampleValue: 100, helpText: 'Absolute polymorphonuclear count in ascitic fluid (cells/µL); for a bloody tap subtract 1 PMN per 250 red cells before comparing with the 250/µL threshold.' }),
       numberInput('rbc', 'Ascites RBC count (optional)', {
         unit: 'cells/µL',
         min: 0,
@@ -1902,9 +1902,9 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Serial MELD scores in decompensated cirrhosis or waitlist monitoring.',
     whyUse: 'Rising MELD (positive ΔMELD) associates with higher mortality beyond static MELD alone.',
     inputs: [
-      numberInput('meldNow', 'Current MELD (or MELD-Na)', { min: 6, max: 40, exampleValue: 20 }),
-      numberInput('meldPrior', 'Prior MELD (or MELD-Na)', { min: 6, max: 40, exampleValue: 15 }),
-      numberInput('days', 'Interval between scores', { unit: 'days', min: 1, max: 365, exampleValue: 30 }),
+      numberInput('meldNow', 'Current MELD (or MELD-Na)', { min: 6, max: 40, exampleValue: 20, helpText: 'Most recent MELD (or MELD-Na, range 6–40) computed the same way as the earlier value.' }),
+      numberInput('meldPrior', 'Prior MELD (or MELD-Na)', { min: 6, max: 40, exampleValue: 15, helpText: 'The earlier MELD/MELD-Na you are comparing against; the size of the interval decides whether the change is clinically meaningful.' }),
+      numberInput('days', 'Interval between scores', { unit: 'days', min: 1, max: 365, exampleValue: 30, helpText: 'Days between the two scores, counted from the actual specimen dates rather than the report dates.' }),
     ],
     calculate(values) {
       const now = num(values.meldNow, 20);
@@ -1975,13 +1975,13 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Interpreting vibration-controlled transient elastography (FibroScan) LSM in chronic liver disease.',
     whyUse: 'Etiology-aware kPa cut-offs triage advanced fibrosis/cirrhosis risk for clinical pathways.',
     inputs: [
-      numberInput('lsm', 'Liver stiffness', { unit: 'kPa', min: 1, max: 75, step: 0.1, exampleValue: 8 }),
+      numberInput('lsm', 'Liver stiffness', { unit: 'kPa', min: 1, max: 75, step: 0.1, exampleValue: 8, helpText: 'Median liver stiffness in kPa (not the IQR); interpret only with ≥10 valid measurements and IQR/median ≤30%.' }),
       selectInput('etiology', 'Dominant etiology', [
         { label: 'Viral hepatitis (HBV/HCV)', value: 'viral' },
         { label: 'NAFLD / MASLD', value: 'nafld' },
         { label: 'Alcohol-related liver disease', value: 'alcohol' },
         { label: 'Cholestatic / mixed / unspecified', value: 'other' },
-      ]),
+      ], undefined, 'Dominant liver disease sets the kPa cut-offs: viral hepatitis, NAFLD/MASLD, alcohol-related, or cholestatic/other.'),
       numberInput('iqrMed', 'IQR/median ratio (optional quality)', {
         unit: '%',
         min: 0,
@@ -2097,8 +2097,8 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'When calculating Maddrey DF and labs report INR more readily than PT/control.',
     whyUse: 'Original DF uses PT in seconds vs control; INR-based shortcuts are imperfect and lab-dependent.',
     inputs: [
-      numberInput('pt', 'Patient PT', { unit: 'sec', min: 8, max: 120, step: 0.1, exampleValue: 18 }),
-      numberInput('control', 'Control / mean normal PT', { unit: 'sec', min: 8, max: 20, step: 0.1, exampleValue: 12 }),
+      numberInput('pt', 'Patient PT', { unit: 'sec', min: 8, max: 120, step: 0.1, exampleValue: 18, helpText: 'Patient prothrombin time in seconds from the admission panel; Maddrey DF uses PT prolongation, not the INR.' }),
+      numberInput('control', 'Control / mean normal PT', { unit: 'sec', min: 8, max: 20, step: 0.1, exampleValue: 12, helpText: 'The laboratory\'s own control/mean normal PT for that reagent (usually 11–13 s); using a remembered value rather than the lab\'s own changes the DF.' }),
       numberInput('bili', 'Total bilirubin', {
         unit: 'mg/dL',
         unitKind: 'bilirubin',
@@ -2108,7 +2108,7 @@ export const wave3GiHepCalcs: Calculator[] = [
         exampleValue: 8,
         helpText: 'DF requires mg/dL; select µmol/L to enter SI units (17.1 µmol/L = 1 mg/dL).',
       }),
-      numberInput('inr', 'INR (optional, for note only)', { min: 0.8, max: 10, step: 0.1, exampleValue: 1.5, required: false }),
+      numberInput('inr', 'INR (optional, for note only)', { min: 0.8, max: 10, step: 0.1, exampleValue: 1.5, required: false, helpText: 'Optional: recorded for context only. Substituting INR for PT prolongation is a common shortcut but is not equivalent to the original discriminant function.' }),
     ],
     calculate(values) {
       const pt = num(values.pt, 18);

@@ -612,11 +612,11 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     inputs: [
       numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 300, step: 0.1, exampleValue: 70, helpText: 'Weight in kg for the revised Harris–Benedict equation; select lb if needed. Use the patient\'s current weight rather than an admission or historical value.' }),
       numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, exampleValue: 170, helpText: 'Height in cm; it enters the BMR equation additively, so a stale height shifts the whole estimate.' }),
-      numberInput('age', 'Age', { unit: 'years', min: 15, max: 100, exampleValue: 40, helpText: 'Age in years; the revised Harris–Benedict equation subtracts 5 × age, so older patients get a lower BMR.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 15, max: 100, exampleValue: 40, helpText: 'Age in years; the revised Harris–Benedict age term is −5.677 × age for men and −4.330 × age for women, so older patients get a lower BMR.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
-      ], 'M', 'Sex selects the sex-specific constants (+5 for men, −161 for women) in the revised Harris–Benedict equation.'),
+      ], 'M', 'Sex selects the constant term of the revised Harris–Benedict equation: +88.362 for men and +447.593 for women.'),
       selectInput(
         'activity',
         'Activity / lifestyle factor',

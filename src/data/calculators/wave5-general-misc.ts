@@ -15,8 +15,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Microcytic anemia workup when distinguishing iron deficiency from thalassemia trait is relevant.',
     whyUse: 'Simple bedside ratio; Mentzer <13 favors thalassemia trait, >13 favors iron deficiency (imperfect).',
     inputs: [
-      numberInput('mcv', 'MCV', { unit: 'fL', min: 40, max: 120, step: 0.1, exampleValue: 70 }),
-      numberInput('rbc', 'RBC count', { unit: '×10⁶/µL', min: 1, max: 8, step: 0.01, exampleValue: 5.5 }),
+      numberInput('mcv', 'MCV', { unit: 'fL', min: 40, max: 120, step: 0.1, exampleValue: 70, helpText: 'MCV in fL from the same CBC as the RBC count; a ratio above 13 favors iron deficiency and below 13 favors thalassemia trait (imperfect in mixed deficiency).' }),
+      numberInput('rbc', 'RBC count', { unit: '×10⁶/µL', min: 1, max: 8, step: 0.01, exampleValue: 5.5, helpText: 'RBC count in ×10⁶/µL from the same CBC; a preserved or high RBC with a low MCV pushes the ratio toward thalassemia trait.' }),
     ],
     calculate(values) {
       const mcv = num(values.mcv, 70);
@@ -95,6 +95,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         max: 200,
         step: 0.1,
         exampleValue: 15,
+        helpText: 'Reported automated WBC in ×10³/µL before correction (equivalent to ×10⁹/L); the tool subtracts the nRBC contribution using the nRBC count entered in the companion field.',
       }),
       numberInput('nrbc', 'nRBCs per 100 WBCs', {
         unit: '/100 WBC',
@@ -160,12 +161,12 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Drug dosing or PK estimates that scale to lean mass (e.g., some anesthetics, research equations).',
     whyUse: 'Classic sex-specific LBW formulas; can fail at high BMI (prefer Janmahasatian).',
     inputs: [
-      numberInput('weight', 'Total body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 300, step: 0.1, exampleValue: 80 }),
-      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, exampleValue: 170 }),
+      numberInput('weight', 'Total body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 300, step: 0.1, exampleValue: 80, helpText: 'Total body weight in kg; James LBW = 1.1 × weight − 128 × (weight ÷ height in cm)² for men. Select lb if the chart is imperial.' }),
+      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, exampleValue: 170, helpText: 'Height in cm from the same visit as the weight; obesity makes the James formula unreliable, so prefer Janmahasatian in that setting.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
-      ]),
+      ], undefined, 'Sex selects the James coefficients (male 1.1/128, female 1.07/148), so the same height and weight give a lower LBW in women.'),
     ],
     calculate(values) {
       const w = num(values.weight, 80);
@@ -229,12 +230,12 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Quick educational guide when choosing weight scalar for common inpatient drug classes.',
     whyUse: 'Obesity dosing is drug-specific; this summarizes common practice patterns (always verify monographs).',
     inputs: [
-      numberInput('tbw', 'Total body weight (TBW)', { unit: 'kg', unitKind: 'weight', min: 30, max: 400, step: 0.1, exampleValue: 100 }),
-      numberInput('height', 'Height', { unit: 'cm', min: 140, max: 220, exampleValue: 170 }),
+      numberInput('tbw', 'Total body weight (TBW)', { unit: 'kg', unitKind: 'weight', min: 30, max: 400, step: 0.1, exampleValue: 100, helpText: 'Total body weight in kg, used both directly and to compute adjusted body weight alongside the Devine IBW. Select lb if the recorded value is imperial.' }),
+      numberInput('height', 'Height', { unit: 'cm', min: 140, max: 220, exampleValue: 170, helpText: 'Height in cm for the Devine IBW that feeds the AdjBW calculation; heights below 5 ft use the sex-specific base only.' }),
       selectInput('sex', 'Sex (for Devine IBW)', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
-      ]),
+      ], undefined, 'Sex sets the Devine IBW base (male 50 kg, female 45.5 kg plus 2.3 kg per inch over 5 ft).'),
       selectInput('drugClass', 'Drug / scenario', [
         { label: 'Aminoglycosides (gent/tobra)', value: 'amino' },
         { label: 'Vancomycin', value: 'vanco' },
@@ -246,7 +247,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         { label: 'Rocuronium / vecuronium', value: 'roc' },
         { label: 'Most mg/kg chemo (protocol)', value: 'chemo' },
         { label: 'General hydrophilic antibiotic (default)', value: 'hydrophilic' },
-      ]),
+      ], undefined, 'Pick the drug class to see the conventional weight scalar: aminoglycosides and vancomycin often use AdjBW in obesity, heparin infusions use TBW, and propofol induction frequently uses LBW or TBW depending on protocol. Always confirm in the drug monograph.'),
       numberInput('abwFactor', 'AdjBW factor (if used)', {
         min: 0.2,
         max: 0.5,
@@ -389,11 +390,11 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Exercise prescription, stress testing context, or educational fitness targets.',
     whyUse: 'Quick population estimate; individual max HR varies widely.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 10, max: 100, exampleValue: 40 }),
+      numberInput('age', 'Age', { unit: 'years', min: 10, max: 100, exampleValue: 40, helpText: 'Age in years; both formulas subtract age, so the estimate falls about 0.7–1 beat per year.' }),
       selectInput('formula', 'Primary formula', [
         { label: 'Fox: 220 − age', value: 'fox' },
         { label: 'Tanaka: 208 − 0.7×age', value: 'tanaka' },
-      ]),
+      ], undefined, 'Fox (220 − age) is the classic, Tanaka (208 − 0.7 × age) is often closer to measured maxima in adults. Individual values vary by roughly ±10–12 bpm.'),
     ],
     calculate(values) {
       const age = num(values.age, 40);
@@ -444,8 +445,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Aerobic training zones using heart-rate reserve (HRR).',
     whyUse: 'Accounts for resting HR; preferred over simple %HRmax for many exercise prescriptions.',
     inputs: [
-      numberInput('resting', 'Resting HR', { unit: 'bpm', min: 30, max: 120, exampleValue: 70 }),
-      numberInput('hrmax', 'Max HR (measured or estimated)', { unit: 'bpm', min: 80, max: 220, exampleValue: 180 }),
+      numberInput('resting', 'Resting HR', { unit: 'bpm', min: 30, max: 120, exampleValue: 70, helpText: 'Resting heart rate in bpm, ideally measured on waking; the Karvonen target = resting + (reserve × intensity).' }),
+      numberInput('hrmax', 'Max HR (measured or estimated)', { unit: 'bpm', min: 80, max: 220, exampleValue: 180, helpText: 'Maximum heart rate in bpm — measured from a graded test or estimated (220 − age / Tanaka). A measured value is preferable for prescription.' }),
       numberInput('lowPct', 'Lower intensity', {
         unit: '% HRR',
         min: 20,
@@ -523,8 +524,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Exercise testing, perioperative or ICU context when estimating myocardial workload.',
     whyUse: 'Simple correlate of myocardial oxygen consumption (MVO₂).',
     inputs: [
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 60, max: 300, exampleValue: 120 }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 250, exampleValue: 80 }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 60, max: 300, exampleValue: 120, helpText: 'Systolic BP in mmHg from the same reading as the heart rate; RPP = SBP × HR and approximates myocardial oxygen demand.' }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 250, exampleValue: 80, helpText: 'Heart rate in bpm at the same moment as the BP; use a resting value for rest comparisons and a peak value during stress testing.' }),
     ],
     calculate(values) {
       const sbp = num(values.sbp, 120);
@@ -606,8 +607,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Sepsis, distributive shock, or when diastolic hypotension may signal low vascular tone.',
     whyUse: 'May flag high-risk physiology when classic SI is borderline; studied in septic shock cohorts.',
     inputs: [
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 20, max: 300, exampleValue: 100 }),
-      numberInput('dbp', 'Diastolic BP', { unit: 'mmHg', min: 20, max: 200, exampleValue: 50 }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 20, max: 300, exampleValue: 100, helpText: 'Heart rate in bpm from the same vitals set as the diastolic BP; DSI = HR ÷ DBP.' }),
+      numberInput('dbp', 'Diastolic BP', { unit: 'mmHg', min: 20, max: 200, exampleValue: 50, helpText: 'Diastolic BP in mmHg; a low diastolic pressure with a high heart rate produces the elevated index associated with vasodilatory shock.' }),
     ],
     calculate(values) {
       const hr = num(values.hr, 100);
@@ -692,8 +693,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Expressing BMI relative to the upper normal WHO threshold (25 kg/m²).',
     whyUse: 'Values >1.0 indicate BMI above normal range; easy comparison across populations.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 400, step: 0.1, exampleValue: 80 }),
-      numberInput('height', 'Height', { unit: 'cm', min: 100, max: 250, exampleValue: 170 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 400, step: 0.1, exampleValue: 80, helpText: 'Weight in kg for the BMI calculation that BMI Prime then divides by 25; select lb if the chart is imperial.' }),
+      numberInput('height', 'Height', { unit: 'cm', min: 100, max: 250, exampleValue: 170, helpText: 'Height in cm; BMI Prime above 1.0 means BMI exceeds the WHO upper-normal limit of 25 kg/m².' }),
     ],
     calculate(values) {
       const w = num(values.weight, 80);
@@ -784,11 +785,11 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         exampleValue: 100,
         helpText: 'Widest hip/buttock circumference',
       }),
-      numberInput('height', 'Height', { unit: 'cm', min: 100, max: 250, exampleValue: 170 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 100, max: 250, exampleValue: 170, helpText: 'Height in cm; BAI = hip circumference ÷ height^1.5 − 18, so both measurements must use the same units and technique.' }),
       selectInput('sex', 'Sex (for interpretation bands)', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
-      ]),
+      ], undefined, 'Sex selects the interpretation bands only; the BAI formula itself has no sex term, but women carry more fat at the same index.'),
     ],
     calculate(values) {
       const hip = num(values.hip, 100);
@@ -896,8 +897,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Anthropometry when a height-cubed index is preferred (neonatal/pediatric or comparative research contexts).',
     whyUse: 'Less height-dependent than BMI in some populations; used historically and in neonatal assessment variants.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 0.5, max: 400, step: 0.1, exampleValue: 70 }),
-      numberInput('height', 'Height', { unit: 'cm', min: 40, max: 250, exampleValue: 170 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 0.5, max: 400, step: 0.1, exampleValue: 70, helpText: 'Weight in kg for the weight ÷ height³ index; select lb if needed. Neonatal variants use the same index with centimeter and gram inputs.' }),
+      numberInput('height', 'Height', { unit: 'cm', min: 40, max: 250, exampleValue: 170, helpText: 'Height (or length) in cm; cubing amplifies measurement error, so a recumbent length and a standing height are not interchangeable.' }),
     ],
     calculate(values) {
       const w = num(values.weight, 70);
@@ -983,8 +984,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'When a protocol specifies DuBois BSA rather than Mosteller.',
     whyUse: 'Historical gold-standard BSA equation still referenced in physiology and some dosing tables.',
     inputs: [
-      numberInput('height', 'Height', { unit: 'cm', min: 50, max: 250, step: 0.1, exampleValue: 170 }),
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 10, max: 400, step: 0.1, exampleValue: 70 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 50, max: 250, step: 0.1, exampleValue: 170, helpText: 'Height in cm; the DuBois formula uses 0.007184 × weight^0.425 × height^0.725, so document which BSA formula the regimen uses.' }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 10, max: 400, step: 0.1, exampleValue: 70, helpText: 'Weight in kg; select lb if the chart is imperial — the engine converts before the exponential terms are applied.' }),
     ],
     calculate(values) {
       const h = num(values.height, 170);
@@ -1037,8 +1038,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Pediatric BSA estimation for dosing or physiologic indexing when Haycock is preferred.',
     whyUse: 'Better performance than some adult formulas at low body size / pediatrics.',
     inputs: [
-      numberInput('height', 'Height / length', { unit: 'cm', min: 30, max: 200, step: 0.1, exampleValue: 100 }),
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 1, max: 150, step: 0.1, exampleValue: 15 }),
+      numberInput('height', 'Height / length', { unit: 'cm', min: 30, max: 200, step: 0.1, exampleValue: 100, helpText: 'Height or length in cm from the same measurement as the weight; Haycock is preferred in infants and small children.' }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 1, max: 150, step: 0.1, exampleValue: 15, helpText: 'Weight in kg (select lb if needed); Haycock BSA ≈ 0.024265 × weight^0.5378 × height^0.3964 and differs modestly from Mosteller at small body sizes.' }),
     ],
     calculate(values) {
       const h = num(values.height, 100);
@@ -1091,11 +1092,11 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'When comparing IBW formulas or a reference cites Robinson rather than Devine.',
     whyUse: 'Slightly different height increments than Devine; sometimes used in anesthesia/PK literature.',
     inputs: [
-      numberInput('height', 'Height', { unit: 'cm', min: 140, max: 220, exampleValue: 170 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 140, max: 220, exampleValue: 170, helpText: 'Height in cm; Robinson is poorly defined below 152 cm (5 ft), so use clinical judgment or another formula in short adults.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
-      ]),
+      ], undefined, 'Robinson basis: male 52 kg + 1.9 kg per inch over 5 ft; female 49 kg + 1.7 kg per inch.'),
     ],
     calculate(values) {
       const inches = num(values.height, 170) / 2.54;
@@ -1147,11 +1148,11 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Alternative IBW estimate when literature or local practice references Miller.',
     whyUse: 'Another commonly cited IBW equation for comparison with Devine/Robinson/Hamwi.',
     inputs: [
-      numberInput('height', 'Height', { unit: 'cm', min: 140, max: 220, exampleValue: 170 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 140, max: 220, exampleValue: 170, helpText: 'Height in cm from the same measurement used for the reference formula; Miller tends to estimate higher than Devine at average heights.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
-      ]),
+      ], undefined, 'Miller basis: male 56.2 kg + 1.41 kg per inch over 5 ft; female 53.1 kg + 1.36 kg per inch.'),
     ],
     calculate(values) {
       const inches = num(values.height, 170) / 2.54;
@@ -1203,12 +1204,12 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'LBW estimation in normal-weight and obese adults for PK/dosing equations.',
     whyUse: 'Performs better than James LBW across BMI range; widely used in modern PK.',
     inputs: [
-      numberInput('weight', 'Total body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 300, step: 0.1, exampleValue: 90 }),
-      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, exampleValue: 170 }),
+      numberInput('weight', 'Total body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 300, step: 0.1, exampleValue: 90, helpText: 'Total body weight in kg; the formula uses BMI as its input, so it stays usable at high body weights where James breaks down.' }),
+      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, exampleValue: 170, helpText: 'Height in cm for the BMI term; LBW rises with weight but plateaus as BMI increases, which is why it is preferred for obese PK dosing.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
-      ]),
+      ], undefined, 'Sex selects the coefficients (male 9270 × weight ÷ (6680 + 216 × BMI); female 9270 × weight ÷ (8780 + 244 × BMI)).'),
     ],
     calculate(values) {
       const w = num(values.weight, 90);
@@ -1522,135 +1523,135 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 20-item HAQ-DI (recommended)', value: 'survey' },
         { label: 'Direct HAQ-DI score override (0–3)', value: 'direct' },
-      ], 'survey'),
+      ], 'survey', 'Interactive mode scores the 20 items with category worst-item and aids rules; direct mode accepts an existing HAQ-DI (0–3). Use direct mode only with a completed questionnaire.'),
       selectInput('haq_dress', 'Dressing: Dress yourself, including tying shoelaces and doing buttons', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
+      ], 0, 'Dressing (including tying shoelaces and doing buttons): 0 without any difficulty, 1 with some, 2 with much, 3 unable. Category score is the worst item.'),
       selectInput('haq_shampoo', 'Dressing: Shampoo your hair', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
-      yesNo('haq_c1_aid', 'Dressing aids/help (button hook, zipper pull, or personal assistance)?'),
+      ], 0, 'Shampooing hair: 0 without any difficulty to 3 unable. Rate what the patient actually does, not what they believe they could do.'),
+      yesNo('haq_c1_aid', 'Dressing aids/help (button hook, zipper pull, or personal assistance)?', undefined, 'Yes for any dressing aid or personal help (button hook, zipper pull); aids/default devices raise a category score of 0 or 1 to 2.'),
       selectInput('haq_chair', 'Arising: Stand up from an armless straight chair', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
+      ], 0, 'Standing from an armless straight chair: 0 without any difficulty to 3 unable.'),
       selectInput('haq_bed', 'Arising: Get in and out of bed', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
-      yesNo('haq_c2_aid', 'Arising aids/help (built-up or special chair, or personal assistance)?'),
+      ], 0, 'Getting in and out of bed: 0 without any difficulty to 3 unable — the second item in the arising category.'),
+      yesNo('haq_c2_aid', 'Arising aids/help (built-up or special chair, or personal assistance)?', undefined, 'Yes for arising aids or personal help (a special or built-up chair counts); this raises the arising category score to 2 when it was 0 or 1.'),
       selectInput('haq_cut', 'Eating: Cut your meat', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
+      ], 0, 'Cutting meat: 0 without any difficulty to 3 unable.'),
       selectInput('haq_cup', 'Eating: Lift a full cup or glass to your mouth', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
+      ], 0, 'Lifting a full cup or glass to the mouth: 0 without any difficulty to 3 unable.'),
       selectInput('haq_carton', 'Eating: Open a new milk carton', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
-      yesNo('haq_c3_aid', 'Eating aids/help (built-up or special utensils, or personal assistance)?'),
+      ], 0, 'Opening a new milk carton: 0 without any difficulty to 3 unable — the third item in the eating category.'),
+      yesNo('haq_c3_aid', 'Eating aids/help (built-up or special utensils, or personal assistance)?', undefined, 'Yes for eating aids or help (special or built-up utensils count); this raises the eating category score to 2 when it was 0 or 1.'),
       selectInput('haq_walk', 'Walking: Walk outdoors on flat ground', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
+      ], 0, 'Walking outdoors on flat ground: 0 without any difficulty to 3 unable.'),
       selectInput('haq_steps', 'Walking: Climb up five steps', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
-      yesNo('haq_c4_aid', 'Walking aids/help (cane, crutches, walker, or personal assistance)?'),
+      ], 0, 'Climbing five steps: 0 without any difficulty to 3 unable.'),
+      yesNo('haq_c4_aid', 'Walking aids/help (cane, crutches, walker, or personal assistance)?', undefined, 'Yes for walking aids or help (cane, crutches, walker, or personal assistance); this raises the walking category score to 2 when it was 0 or 1.'),
       selectInput('haq_wash', 'Hygiene: Wash and dry your entire body', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
+      ], 0, 'Washing and drying the entire body: 0 without any difficulty to 3 unable.'),
       selectInput('haq_tub', 'Hygiene: Take a tub bath', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
+      ], 0, 'Taking a tub bath: 0 without any difficulty to 3 unable — often the most limited hygiene item.'),
       selectInput('haq_toilet', 'Hygiene: Get on and off the toilet', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
-      yesNo('haq_c5_aid', 'Hygiene aids/help (raised toilet seat, bathtub seat, long-handled appliances, or personal assistance)?'),
+      ], 0, 'Getting on and off the toilet: 0 without any difficulty to 3 unable.'),
+      yesNo('haq_c5_aid', 'Hygiene aids/help (raised toilet seat, bathtub seat, long-handled appliances, or personal assistance)?', undefined, 'Yes for hygiene aids or help (raised toilet seat, bath seat, long-handled appliances, or personal assistance); this raises the hygiene category score to 2 when it was 0 or 1.'),
       selectInput('haq_reach', 'Reach: Reach and get down a 5 lb object from just above your head', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
+      ], 0, 'Reaching down a 5 lb object from just above the head: 0 without any difficulty to 3 unable.'),
       selectInput('haq_bend', 'Reach: Bend down to pick up clothing from the floor', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
-      yesNo('haq_c6_aid', 'Reach aids/help (long-handled appliances, or personal assistance)?'),
+      ], 0, 'Bending to pick clothing up from the floor: 0 without any difficulty to 3 unable.'),
+      yesNo('haq_c6_aid', 'Reach aids/help (long-handled appliances, or personal assistance)?', undefined, 'Yes for reach aids or help (long-handled appliances or personal assistance); this raises the reach category score to 2 when it was 0 or 1.'),
       selectInput('haq_cardoor', 'Grip: Open car doors', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
+      ], 0, 'Opening car doors: 0 without any difficulty to 3 unable.'),
       selectInput('haq_jars', 'Grip: Open jars which have been previously opened', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
+      ], 0, 'Opening previously opened jars: 0 without any difficulty to 3 unable.'),
       selectInput('haq_faucets', 'Grip: Turn faucets on and off', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
-      yesNo('haq_c7_aid', 'Grip aids/help (jar opener, or personal assistance)?'),
+      ], 0, 'Turning faucets on and off: 0 without any difficulty to 3 unable — the third item in the grip category.'),
+      yesNo('haq_c7_aid', 'Grip aids/help (jar opener, or personal assistance)?', undefined, 'Yes for grip aids or help (jar opener or personal assistance); this raises the grip category score to 2 when it was 0 or 1.'),
       selectInput('haq_errands', 'Activities: Run errands and shop', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
+      ], 0, 'Running errands and shopping: 0 without any difficulty to 3 unable.'),
       selectInput('haq_car', 'Activities: Get in and out of a car', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
+      ], 0, 'Getting in and out of a car: 0 without any difficulty to 3 unable.'),
       selectInput('haq_chores', 'Activities: Do chores such as vacuuming or yardwork', [
         { label: '0 - Without ANY difficulty', value: 0 },
         { label: '1 - With SOME difficulty', value: 1 },
         { label: '2 - With MUCH difficulty', value: 2 },
         { label: '3 - UNABLE to do', value: 3 },
-      ], 0),
-      yesNo('haq_c8_aid', 'Activities aids/help (personal assistance with chores, shopping, or errands)?'),
+      ], 0, 'Doing chores such as vacuuming or yardwork: 0 without any difficulty to 3 unable — the third item in the activities category.'),
+      yesNo('haq_c8_aid', 'Activities aids/help (personal assistance with chores, shopping, or errands)?', undefined, 'Yes for activity aids or personal help with chores, shopping, or errands; this raises the activities category score to 2 when it was 0 or 1.'),
       numberInput('total', 'Direct HAQ-DI total override (0–3)', {
         min: 0,
         max: 3,
@@ -1768,7 +1769,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 10-item functional questionnaire (recommended)', value: 'survey' },
         { label: 'Direct BASFI mean override (0–10)', value: 'direct' },
-      ], 'survey'),
+      ], 'survey', 'Interactive mode averages the 10 BASFI activity items; direct mode accepts an existing mean score (0–10). Higher scores mean more functional limitation.'),
       numberInput('basfi_q1', '1. Putting on socks or tights without help or aids', { min: 0, max: 10, step: 0.5, exampleValue: 4, helpText: '0 = easy, 10 = impossible' }),
       numberInput('basfi_q2', '2. Bending forward from waist to pick up pen from floor without aid', { min: 0, max: 10, step: 0.5, exampleValue: 4, helpText: '0 = easy, 10 = impossible' }),
       numberInput('basfi_q3', '3. Reaching up to a high shelf without help or aids', { min: 0, max: 10, step: 0.5, exampleValue: 3, helpText: '0 = easy, 10 = impossible' }),
@@ -1877,25 +1878,25 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 13-site examination (recommended)', value: 'survey' },
         { label: 'Direct tender site count override (0–13)', value: 'direct' },
-      ], 'survey'),
-      yesNo('mases_r1cc', 'Right 1st costochondral joint tenderness'),
-      yesNo('mases_l1cc', 'Left 1st costochondral joint tenderness'),
-      yesNo('mases_r7cc', 'Right 7th costochondral joint tenderness'),
-      yesNo('mases_l7cc', 'Left 7th costochondral joint tenderness'),
-      yesNo('mases_rasis', 'Right Anterior Superior Iliac Spine (ASIS) tenderness'),
-      yesNo('mases_lasis', 'Left Anterior Superior Iliac Spine (ASIS) tenderness'),
-      yesNo('mases_rpsis', 'Right Posterior Superior Iliac Spine (PSIS) tenderness'),
-      yesNo('mases_lpsis', 'Left Posterior Superior Iliac Spine (PSIS) tenderness'),
-      yesNo('mases_rcrest', 'Right Iliac Crest tenderness'),
-      yesNo('mases_lcrest', 'Left Iliac Crest tenderness'),
-      yesNo('mases_l5spin', '5th Lumbar (L5) spinous process tenderness'),
-      yesNo('mases_rachilles', 'Right Achilles tendon insertion tenderness'),
-      yesNo('mases_lachilles', 'Left Achilles tendon insertion tenderness'),
+      ], 'survey', 'Interactive mode counts tender sites among the 13 examined; direct mode accepts an existing count (0–13).'),
+      yesNo('mases_r1cc', 'Right 1st costochondral joint tenderness', undefined, 'Tenderness at the right first costochondral joint; each tender site adds 1 point.'),
+      yesNo('mases_l1cc', 'Left 1st costochondral joint tenderness', undefined, 'Tenderness at the left first costochondral joint.'),
+      yesNo('mases_r7cc', 'Right 7th costochondral joint tenderness', undefined, 'Tenderness at the right seventh costochondral joint.'),
+      yesNo('mases_l7cc', 'Left 7th costochondral joint tenderness', undefined, 'Tenderness at the left seventh costochondral joint.'),
+      yesNo('mases_rasis', 'Right Anterior Superior Iliac Spine (ASIS) tenderness', undefined, 'Tenderness at the right anterior superior iliac spine.'),
+      yesNo('mases_lasis', 'Left Anterior Superior Iliac Spine (ASIS) tenderness', undefined, 'Tenderness at the left anterior superior iliac spine.'),
+      yesNo('mases_rpsis', 'Right Posterior Superior Iliac Spine (PSIS) tenderness', undefined, 'Tenderness at the right posterior superior iliac spine; often the most clinically relevant site in axial SpA.'),
+      yesNo('mases_lpsis', 'Left Posterior Superior Iliac Spine (PSIS) tenderness', undefined, 'Tenderness at the left posterior superior iliac spine.'),
+      yesNo('mases_rcrest', 'Right Iliac Crest tenderness', undefined, 'Tenderness at the right iliac crest.'),
+      yesNo('mases_lcrest', 'Left Iliac Crest tenderness', undefined, 'Tenderness at the left iliac crest.'),
+      yesNo('mases_l5spin', '5th Lumbar (L5) spinous process tenderness', undefined, 'Tenderness over the L5 spinous process (the only midline site).'),
+      yesNo('mases_rachilles', 'Right Achilles tendon insertion tenderness', undefined, 'Tenderness at the right Achilles tendon insertion.'),
+      yesNo('mases_lachilles', 'Left Achilles tendon insertion tenderness', undefined, 'Tenderness at the left Achilles tendon insertion.'),
       numberInput('total', 'Direct MASES total (tender sites override)', {
         min: 0,
         max: 13,
         exampleValue: 2,
-        helpText: 'Used if Direct score override mode is selected.',
+        helpText: 'Direct-entry mode only: enter an existing MASES count of tender entheseal sites (0–13). Ignored when the 13-site checklist is scored instead.',
       }),
     ],
     calculate(values) {
@@ -1990,11 +1991,11 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
       selectInput('entry', 'Entry criterion: ≥1 episode of swelling, pain, or tenderness in a peripheral joint/bursa?', [
         { label: 'Yes (required to classify)', value: 'yes' },
         { label: 'No — cannot classify', value: 'no' },
-      ]),
+      ], undefined, 'Entry criterion: at least one episode of swelling, pain, or tenderness in a peripheral joint or bursa. Answering No means the patient cannot be classified by these criteria.'),
       selectInput('msu', 'MSU crystals in symptomatic joint/bursa (or tophus)', [
         { label: 'Not positive / not done', value: 'no', points: 0 },
         { label: 'Yes — sufficient for classification', value: 'pos', points: 100 },
-      ], 'no'),
+      ], 'no', 'MSU crystals in the symptomatic joint/bursa or a tophus is sufficient for classification (scored as 100 points here) and makes the additive domains unnecessary.'),
       selectInput(
         'pattern',
         'Pattern of joint/bursa involvement (ever)',
@@ -2069,7 +2070,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         { label: 'Not done', value: 'not-done' },
         { label: 'Negative', value: 'negative' },
         { label: 'Positive (use MSU sufficient above)', value: 'positive' },
-      ]),
+      ], undefined, 'Synovial fluid MSU microscopy result if a trained examiner performed it; a negative result feeds the additive scoring rather than excluding gout.'),
       selectInput(
         'imaging',
         'Imaging: urate deposition (DECT/US double contour) in symptomatic region OR gouty erosion',
@@ -2090,7 +2091,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
             value: 'both',
             description: 'Both US/DECT urate deposition and typical gouty erosion (not DIP OA)',
           },
-        ],
+        ], undefined, 'Imaging evidence of urate deposition (DECT or double-contour ultrasound) or a gout-related erosion on X-ray; both findings score higher than either alone.',
       ),
     ],
     calculate(values) {
@@ -2240,92 +2241,92 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 13-item assessment (recommended)', value: 'survey' },
         { label: 'Direct Kujala score override (0–100)', value: 'direct' },
-      ], 'survey'),
+      ], 'survey', 'Interactive mode sums the 13 items to a 0–100 total; direct mode accepts an existing Kujala score. Higher scores mean better patellofemoral function.'),
       selectInput('kuj_limp', '1. Limp', [
         { label: '5 - None', value: 5 },
         { label: '3 - Slight or periodical', value: 3 },
         { label: '0 - Constant', value: 0 },
-      ], 5),
+      ], 5, 'Limp: 5 none, 3 slight or periodic, 0 constant.'),
       selectInput('kuj_support', '2. Support / Weight-bearing', [
         { label: '5 - Full support without pain', value: 5 },
         { label: '3 - Painful', value: 3 },
         { label: '0 - Unable to bear weight', value: 0 },
-      ], 5),
+      ], 5, 'Support/weight-bearing: 5 full support without pain, 3 painful, 0 unable to bear weight.'),
       selectInput('kuj_walking', '3. Walking', [
         { label: '5 - Unlimited', value: 5 },
         { label: '3 - More than 2 km', value: 3 },
         { label: '2 - 1 to 2 km', value: 2 },
         { label: '0 - Unable to walk', value: 0 },
-      ], 5),
+      ], 5, 'Walking: 5 unlimited, 3 more than 2 km, 2 one to two km, 0 unable to walk.'),
       selectInput('kuj_stairs', '4. Stairs', [
         { label: '10 - No difficulty', value: 10 },
         { label: '8 - Slight pain when descending', value: 8 },
         { label: '5 - Pain both descending and ascending', value: 5 },
         { label: '0 - Unable to use stairs', value: 0 },
-      ], 8),
+      ], 8, 'Stairs: 10 no difficulty, 8 slight pain descending, 5 pain both directions, 0 unable.'),
       selectInput('kuj_squatting', '5. Squatting', [
         { label: '5 - No difficulty', value: 5 },
         { label: '4 - Repeated squatting painful', value: 4 },
         { label: '3 - Painful each time', value: 3 },
         { label: '2 - Possible with partial weight', value: 2 },
         { label: '0 - Unable to squat', value: 0 },
-      ], 4),
+      ], 4, 'Squatting: 5 no difficulty, 4 repeated squatting painful, 3 painful each time, 2 possible only with partial weight, 0 unable.'),
       selectInput('kuj_running', '6. Running', [
         { label: '10 - No difficulty', value: 10 },
         { label: '8 - Pain after more than 2 km', value: 8 },
         { label: '6 - Slight pain from beginning', value: 6 },
         { label: '3 - Severe pain', value: 3 },
         { label: '0 - Unable to run', value: 0 },
-      ], 8),
+      ], 8, 'Running: 10 no difficulty, 8 pain after more than 2 km, 6 slight pain from the start, 3 severe pain, 0 unable.'),
       selectInput('kuj_jumping', '7. Jumping', [
         { label: '10 - No difficulty', value: 10 },
         { label: '7 - Slight difficulty', value: 7 },
         { label: '2 - Constant pain', value: 2 },
         { label: '0 - Unable to jump', value: 0 },
-      ], 7),
+      ], 7, 'Jumping: 10 no difficulty, 7 slight difficulty, 2 constant pain, 0 unable.'),
       selectInput('kuj_sitting', '8. Prolonged sitting with knees flexed ("movie-theater sign")', [
         { label: '10 - No difficulty', value: 10 },
         { label: '8 - Pain after exercise', value: 8 },
         { label: '6 - Constant pain', value: 6 },
         { label: '4 - Pain forces extension of legs', value: 4 },
         { label: '0 - Unable to sit with knees bent', value: 0 },
-      ], 8),
+      ], 8, 'Prolonged sitting with the knees flexed (movie-theater sign): 10 no difficulty, 8 pain after exercise, 6 constant pain, 4 pain forces extension, 0 unable.'),
       selectInput('kuj_pain', '9. Pain', [
         { label: '10 - None', value: 10 },
         { label: '8 - Slight and occasional', value: 8 },
         { label: '6 - Interferes with sleep', value: 6 },
         { label: '3 - Occasionally severe', value: 3 },
         { label: '0 - Constant and severe', value: 0 },
-      ], 8),
+      ], 8, 'Pain: 10 none, 8 slight and occasional, 6 interferes with sleep, 3 occasionally severe, 0 constant and severe.'),
       selectInput('kuj_swelling', '10. Swelling', [
         { label: '10 - None', value: 10 },
         { label: '8 - After severe exertion', value: 8 },
         { label: '6 - After daily activities', value: 6 },
         { label: '4 - Every evening', value: 4 },
         { label: '0 - Constant', value: 0 },
-      ], 10),
+      ], 10, 'Swelling: 10 none, 8 after severe exertion, 6 after daily activities, 4 every evening, 0 constant.'),
       selectInput('kuj_subluxation', '11. Abnormal painful kneecap (patellar) movements (subluxations)', [
         { label: '10 - None', value: 10 },
         { label: '6 - Occasionally in sports activities', value: 6 },
         { label: '4 - Occasionally in daily activities', value: 4 },
         { label: '2 - At least one documented dislocation', value: 2 },
         { label: '0 - More than two dislocations', value: 0 },
-      ], 10),
+      ], 10, 'Abnormal painful patellar movements: 10 none, 6 occasionally in sport, 4 occasionally in daily activities, 2 one documented dislocation, 0 more than two dislocations.'),
       selectInput('kuj_atrophy', '12. Atrophy of thigh', [
         { label: '5 - None', value: 5 },
         { label: '3 - Slight (1–2 cm difference)', value: 3 },
         { label: '0 - Severe (>2 cm difference)', value: 0 },
-      ], 5),
+      ], 5, 'Thigh atrophy: 5 none, 3 slight (1–2 cm side difference), 0 severe (over 2 cm).'),
       selectInput('kuj_flexion', '13. Flexion deficiency', [
         { label: '5 - None', value: 5 },
         { label: '3 - Slight (5–15° loss)', value: 3 },
         { label: '0 - Severe (>15° loss)', value: 0 },
-      ], 5),
+      ], 5, 'Flexion deficiency: 5 none, 3 slight (5–15° loss), 0 severe (over 15° loss).'),
       numberInput('total', 'Direct Kujala total score override (0–100)', {
         min: 0,
         max: 100,
         exampleValue: 70,
-        helpText: 'Used if Direct score override mode is selected.',
+        helpText: 'Direct-entry mode only: enter an existing Kujala total (0–100, higher is better). Ignored when the 13-item assessment is scored instead.',
       }),
     ],
     calculate(values) {
@@ -2426,24 +2427,24 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 8-domain questionnaire (recommended)', value: 'survey' },
         { label: 'Direct Lysholm score override (0–100)', value: 'direct' },
-      ], 'survey'),
+      ], 'survey', 'Interactive mode sums the 8 domains to a 0–100 total; direct mode accepts an existing Lysholm score. The instability and pain domains carry the largest weights.'),
       selectInput('lys_limp', '1. Limp', [
         { label: '5 - None', value: 5 },
         { label: '3 - Slight or periodical', value: 3 },
         { label: '0 - Severe and constant', value: 0 },
-      ], 5),
+      ], 5, 'Limp: 5 none, 3 slight or periodic, 0 severe and constant.'),
       selectInput('lys_support', '2. Support / Walking aid', [
         { label: '5 - None', value: 5 },
         { label: '2 - Stick or crutch', value: 2 },
         { label: '0 - Weight-bearing impossible', value: 0 },
-      ], 5),
+      ], 5, 'Support/walking aid: 5 none, 2 stick or crutch, 0 weight-bearing impossible.'),
       selectInput('lys_locking', '3. Locking', [
         { label: '15 - No locking and no catching sensations', value: 15 },
         { label: '10 - Catching sensations but no locking', value: 10 },
         { label: '6 - Locking occasionally', value: 6 },
         { label: '2 - Locking frequently', value: 2 },
         { label: '0 - Locked joint on examination', value: 0 },
-      ], 15),
+      ], 15, 'Locking: 15 none or no catching, 10 catching without locking, 6 occasional locking, 2 frequent locking, 0 locked on examination.'),
       selectInput('lys_instability', '4. Instability (giving way)', [
         { label: '25 - Never gives way', value: 25 },
         { label: '20 - Rarely during athletics or other severe exertion', value: 20 },
@@ -2451,7 +2452,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         { label: '10 - Occasionally in daily activities', value: 10 },
         { label: '5 - Often in daily activities', value: 5 },
         { label: '0 - Every step', value: 0 },
-      ], 20),
+      ], 20, 'Instability (giving way), weighted 25: 25 never, 20 rarely with severe exertion, 15 frequently with athletics, 10 occasionally in daily life, 5 often in daily life, 0 every step.'),
       selectInput('lys_pain', '5. Pain', [
         { label: '25 - None', value: 25 },
         { label: '20 - Inconstant and slight during severe exertion', value: 20 },
@@ -2459,30 +2460,30 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         { label: '10 - Marked on or after walking more than 2 km', value: 10 },
         { label: '5 - Marked on or after walking less than 2 km', value: 5 },
         { label: '0 - Constant and severe', value: 0 },
-      ], 20),
+      ], 20, 'Pain, weighted 25: 25 none, 20 inconstant during severe exertion, 15 marked during severe exertion, 10 marked after more than 2 km, 5 marked after less than 2 km, 0 constant and severe.'),
       selectInput('lys_swelling', '6. Swelling', [
         { label: '10 - None', value: 10 },
         { label: '6 - On severe exertion', value: 6 },
         { label: '2 - On ordinary exertion', value: 2 },
         { label: '0 - Constant', value: 0 },
-      ], 6),
+      ], 6, 'Swelling: 10 none, 6 on severe exertion, 2 on ordinary exertion, 0 constant.'),
       selectInput('lys_stairs', '7. Stair climbing', [
         { label: '10 - No problems', value: 10 },
         { label: '6 - Slightly impaired', value: 6 },
         { label: '2 - One step at a time', value: 2 },
         { label: '0 - Impossible', value: 0 },
-      ], 6),
+      ], 6, 'Stair climbing: 10 no problems, 6 slightly impaired, 2 one step at a time, 0 impossible.'),
       selectInput('lys_squatting', '8. Squatting', [
         { label: '5 - No problems', value: 5 },
         { label: '4 - Slightly impaired', value: 4 },
         { label: '2 - Not beyond 90 degrees', value: 2 },
         { label: '0 - Impossible', value: 0 },
-      ], 4),
+      ], 4, 'Squatting: 5 no problems, 4 slightly impaired, 2 not beyond 90 degrees, 0 impossible.'),
       numberInput('total', 'Direct Lysholm total override (0–100)', {
         min: 0,
         max: 100,
         exampleValue: 75,
-        helpText: 'Used if Direct score override mode is selected.',
+        helpText: 'Direct-entry mode only: enter an existing Lysholm total (0–100, higher is better). Ignored when the 8-domain questionnaire is scored instead.',
       }),
     ],
     calculate(values) {
@@ -2578,9 +2579,9 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         1,
         'Count detached epidermis only (blisters, erosions, Nikolsky-positive skin) — not isolated erythema. Estimate %BSA with Lund-Browder or Wallace rule of nines. Recalculate day 1 and day 3.',
       ),
-      yesNo('bun', 'BUN >28 mg/dL (>10 mmol/L)', 1),
-      yesNo('glucose', 'Glucose >252 mg/dL (>14 mmol/L)', 1),
-      yesNo('bicarb', 'Bicarbonate <20 mEq/L', 1),
+      yesNo('bun', 'BUN >28 mg/dL (>10 mmol/L)', 1, 'BUN above 28 mg/dL (10 mmol/L) scores 1 SCORTEN point; use the admission value from the first day of scoring.'),
+      yesNo('glucose', 'Glucose >252 mg/dL (>14 mmol/L)', 1, 'Glucose above 252 mg/dL (14 mmol/L) scores 1 point; both hyperglycemia and stress response are captured.'),
+      yesNo('bicarb', 'Bicarbonate <20 mEq/L', 1, 'Bicarbonate below 20 mEq/L scores 1 point; SCORTEN 0 predicts about 3% mortality, and 5 or more exceeds 90%.'),
     ],
     calculate(values) {
       const score =

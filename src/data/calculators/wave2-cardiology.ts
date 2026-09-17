@@ -17,17 +17,17 @@ export const wave2CardiologyCalcs: Calculator[] = [
         { label: 'Slightly suspicious', value: 0, points: 0, description: 'Mostly atypical features (pleuritic, positional, or reproducible chest wall pain)' },
         { label: 'Moderately suspicious', value: 1, points: 1, description: 'Mixed typical and atypical features' },
         { label: 'Highly suspicious', value: 2, points: 2, description: 'Mostly typical (exertional pressure, radiation, diaphoresis, NTG relief)' },
-      ]),
+      ], undefined, 'History suspiciousness: slightly 0, moderately 1, highly 2 points (highly = multiple risk factors, known CAD, or exertional symptoms).'),
       selectInput('ecg', 'ECG', [
         { label: 'Normal', value: 0, points: 0, description: 'Entirely normal tracing' },
         { label: 'Non-specific repolarization disturbance', value: 1, points: 1, description: 'LBBB, LVH strain, digoxin effect, RV pacemaker, or unchanged known repolarization' },
         { label: 'Significant ST deviation', value: 2, points: 2, description: 'Significant ST depression or elevation (typically ≥1 mm / 0.1 mV), not TIMI ≥0.5 mm' },
-      ]),
+      ], undefined, 'ECG: normal 0, non-specific repolarization changes 1, significant ST deviation 2 points. Compare with any prior tracing.'),
       selectInput('age', 'Age', [
         { label: '< 45 years', value: 0, points: 0 },
         { label: '45–64 years', value: 1, points: 1 },
         { label: '≥ 65 years', value: 2, points: 2 },
-      ]),
+      ], undefined, 'Age: under 45 scores 0, 45–64 scores 1, and 65 or older scores 2 points. A HEART score of 3 or less with negative serial troponins is the early-discharge pathway.'),
       selectInput('risk', 'Risk factors', [
         { label: 'No known risk factors', value: 0, points: 0 },
         { label: '1–2 risk factors', value: 1, points: 1 },
@@ -139,8 +139,8 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'Adults hospitalized with acute decompensated heart failure for in-hospital mortality risk stratification.',
     whyUse: 'Simple bedside tree from a large US registry; identifies low- vs high-risk groups using three variables.',
     inputs: [
-      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, step: 1, exampleValue: 30 }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, exampleValue: 120 }),
+      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, step: 1, exampleValue: 30, helpText: 'BUN in mg/dL on admission; the ADHERE tree splits at 43 mg/dL, so a value above it moves the patient into a higher-risk branch regardless of BP.' }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, exampleValue: 120, helpText: 'Systolic BP in mmHg on admission; the tree uses 115 mmHg as its second split, with systolic hypotension marking the highest-risk stratum.' }),
       numberInput('cr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.2, max: 20, step: 0.1, exampleValue: 1.2, helpText: 'Select µmol/L for SI lab reports.' }),
     ],
     calculate(values) {
@@ -234,16 +234,16 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'Adults admitted with heart failure when estimating 30-day mortality risk from admission variables.',
     whyUse: 'Published 30-day integer model (age, RR, SBP credits, BUN, Na, comorbidities). Hemoglobin is in the 1-year model only.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 75 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 75, helpText: 'Age at admission in years; the 30-day EFFECT index adds age directly (1 point per year), alongside respiratory rate and BUN.' }),
       numberInput('rr', 'Respiratory rate', { unit: '/min', min: 8, max: 60, exampleValue: 20, helpText: 'Table 4 adds RR after clamping to 20–45 /min (RR <20 counts as 20).' }),
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, exampleValue: 120, helpText: 'SBP contributes negative credits (higher SBP lowers the score).' }),
       numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, exampleValue: 30, helpText: 'Added 1 point per mg/dL, capped at 60.' }),
       numberInput('na', 'Sodium', { unit: 'mEq/L', min: 110, max: 160, exampleValue: 138, helpText: 'Na <136 mEq/L adds +10. Hemoglobin is not in the 30-day model.' }),
-      yesNo('cvd', 'Cerebrovascular disease', 10),
-      yesNo('dementia', 'Dementia', 20),
-      yesNo('copd', 'COPD', 10),
-      yesNo('cirrhosis', 'Hepatic cirrhosis', 25),
-      yesNo('cancer', 'Cancer', 15),
+      yesNo('cvd', 'Cerebrovascular disease', 10, 'Cerebrovascular disease (prior stroke or TIA) adds 10 points in the EFFECT 30-day model.'),
+      yesNo('dementia', 'Dementia', 20, 'Dementia adds 20 points, the second-highest EFFECT weight.'),
+      yesNo('copd', 'COPD', 10, 'COPD adds 10 points.'),
+      yesNo('cirrhosis', 'Hepatic cirrhosis', 25, 'Hepatic cirrhosis adds 25 points, the largest comorbidity weight in the 30-day model.'),
+      yesNo('cancer', 'Cancer', 15, 'Cancer adds 15 points; any active malignancy, not only metastatic disease.'),
     ],
     calculate(values) {
       const age = num(values.age, 75);
@@ -364,12 +364,12 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'Adults admitted with acute HF for in-hospital mortality risk estimate from admission variables.',
     whyUse: 'Published integer point tables (age, SBP, BUN, heart rate, sodium, COPD +2, non-black race +3).',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 72 }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, exampleValue: 130 }),
-      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, exampleValue: 25 }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 200, exampleValue: 80 }),
-      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 110, max: 160, exampleValue: 138 }),
-      yesNo('copd', 'COPD', 2),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 72, helpText: 'Age in years; the GWTG-HF nomogram awards points per decade of age, with the largest increment after 80.' }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, exampleValue: 130, helpText: 'Systolic BP in mmHg on admission; lower values score progressively more points, and values under 100 carry the largest credits.' }),
+      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, exampleValue: 25, helpText: 'BUN in mg/dL on admission; points step upward with each band above roughly 20 mg/dL.' }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 200, exampleValue: 80, helpText: 'Heart rate per minute on admission; both low and high rates add points in the nomogram.' }),
+      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 110, max: 160, exampleValue: 138, helpText: 'Sodium in mEq/L on admission; hyponatremia adds points, with the largest credit below 130 mEq/L.' }),
+      yesNo('copd', 'COPD', 2, 'COPD adds 2 points; non-black race adds 3 points in this model and is captured by the race field, not here.'),
       selectInput('race', 'Race category (GWTG variable)', [
         { label: 'Black (0)', value: 'black', points: 0, description: 'Black race as coded in GWTG-HF (0 points; lower in-hospital mortality in derivation)' },
         { label: 'Non-black (+3)', value: 'nonblack', points: 3, description: 'All other race categories add +3 in the published nomogram' },
@@ -646,9 +646,9 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'When EDV and ESV are known from echocardiography, ventriculography, or other imaging.',
     whyUse: 'Fundamental relationships: SV = EDV − ESV; EF = SV/EDV; CO = SV × HR.',
     inputs: [
-      numberInput('edv', 'End-diastolic volume (EDV)', { unit: 'mL', min: 20, max: 500, exampleValue: 120 }),
-      numberInput('esv', 'End-systolic volume (ESV)', { unit: 'mL', min: 5, max: 400, exampleValue: 50 }),
-      numberInput('hr', 'Heart rate (optional, for CO)', { unit: 'bpm', min: 30, max: 220, exampleValue: 70, required: false }),
+      numberInput('edv', 'End-diastolic volume (EDV)', { unit: 'mL', min: 20, max: 500, exampleValue: 120, helpText: 'End-diastolic volume in mL from the same study as the ESV; stroke volume is EDV − ESV, so a mismatch between studies inflates the result.' }),
+      numberInput('esv', 'End-systolic volume (ESV)', { unit: 'mL', min: 5, max: 400, exampleValue: 50, helpText: 'End-systolic volume in mL at end-expiration if a respiratory maneuver is used; use the same modality and beats for both volumes.' }),
+      numberInput('hr', 'Heart rate (optional, for CO)', { unit: 'bpm', min: 30, max: 220, exampleValue: 70, required: false, helpText: 'Heart rate in bpm for the optional cardiac output (CO = SV × HR); leave it blank when only SV and EF are needed.' }),
     ],
     calculate(values) {
       const edv = num(values.edv, 120);
@@ -752,8 +752,8 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'When CO and BSA are known (PA catheter, echo estimates, pulse contour) for perfusion assessment.',
     whyUse: 'Indexes CO to body size; used in Forrester classification, shock algorithms, and transplant/MCS evaluation.',
     inputs: [
-      numberInput('co', 'Cardiac output (CO)', { unit: 'L/min', min: 0.5, max: 15, step: 0.1, exampleValue: 5.0 }),
-      numberInput('bsa', 'Body surface area (BSA)', { unit: 'm²', min: 0.5, max: 3.5, step: 0.01, exampleValue: 1.9 }),
+      numberInput('co', 'Cardiac output (CO)', { unit: 'L/min', min: 0.5, max: 15, step: 0.1, exampleValue: 5.0, helpText: 'Cardiac output in L/min from thermodilution, echo, or pulse contour; CI = CO ÷ BSA, and the two values must come from the same measurement.' }),
+      numberInput('bsa', 'Body surface area (BSA)', { unit: 'm²', min: 0.5, max: 3.5, step: 0.01, exampleValue: 1.9, helpText: 'Body surface area in m² (Mosteller is typical); CI ≤2.2 L/min/m² with congestion defines the classic cardiogenic shock threshold.' }),
     ],
     calculate(values) {
       const co = num(values.co, 5);
@@ -833,9 +833,9 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'When MAP, CVP (or RAP), and CO are available to characterize vasomotor tone.',
     whyUse: 'Distinguishes vasodilatory vs vasoconstricted shock and guides pressor/vasodilator therapy.',
     inputs: [
-      numberInput('map', 'Mean arterial pressure (MAP)', { unit: 'mmHg', min: 20, max: 200, exampleValue: 70 }),
-      numberInput('cvp', 'CVP / RAP', { unit: 'mmHg', min: 0, max: 40, exampleValue: 8 }),
-      numberInput('co', 'Cardiac output (CO)', { unit: 'L/min', min: 0.5, max: 15, step: 0.1, exampleValue: 5.0 }),
+      numberInput('map', 'Mean arterial pressure (MAP)', { unit: 'mmHg', min: 20, max: 200, exampleValue: 70, helpText: 'Mean arterial pressure in mmHg from an arterial line or from (SBP + 2 × DBP) ÷ 3; use simultaneous values with CVP and CO.' }),
+      numberInput('cvp', 'CVP / RAP', { unit: 'mmHg', min: 0, max: 40, exampleValue: 8, helpText: 'Central venous pressure (or right atrial pressure) in mmHg from the same PA catheter set; the difference MAP − CVP drives the resistance calculation.' }),
+      numberInput('co', 'Cardiac output (CO)', { unit: 'L/min', min: 0.5, max: 15, step: 0.1, exampleValue: 5.0, helpText: 'Cardiac output in L/min from the same thermodilution or Fick measurement; a rising SVR with falling CO suggests a vasoconstricted/low-output state.' }),
     ],
     calculate(values) {
       // Do not silently substitute illustrative values when this calculator is
@@ -966,9 +966,9 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'Right heart catheterization interpretation for pulmonary hypertension and transplant evaluation.',
     whyUse: 'Defines precapillary component of PH; guides PAH vs left-heart disease physiology.',
     inputs: [
-      numberInput('mpap', 'Mean pulmonary artery pressure (mPAP)', { unit: 'mmHg', min: 5, max: 80, exampleValue: 25 }),
-      numberInput('pcwp', 'PCWP / PAWP', { unit: 'mmHg', min: 0, max: 50, exampleValue: 12 }),
-      numberInput('co', 'Cardiac output (CO)', { unit: 'L/min', min: 0.5, max: 15, step: 0.1, exampleValue: 5.0 }),
+      numberInput('mpap', 'Mean pulmonary artery pressure (mPAP)', { unit: 'mmHg', min: 5, max: 80, exampleValue: 25, helpText: 'Mean pulmonary artery pressure in mmHg from right heart catheterization; PVR = 80 × (mPAP − PCWP) ÷ CO.' }),
+      numberInput('pcwp', 'PCWP / PAWP', { unit: 'mmHg', min: 0, max: 50, exampleValue: 12, helpText: 'PCWP (PAWP) in mmHg from the same catheter set; a normal wedge pressure with elevated PVR indicates precapillary pulmonary hypertension.' }),
+      numberInput('co', 'Cardiac output (CO)', { unit: 'L/min', min: 0.5, max: 15, step: 0.1, exampleValue: 5.0, helpText: 'Cardiac output in L/min, ideally from the Fick method for transplant evaluation; the result is also reported in Wood units.' }),
     ],
     calculate(values) {
       const mpap = num(values.mpap, 25);
@@ -1050,8 +1050,8 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'QT correction when an alternative to Bazett/Fridericia is desired; Framingham performs well across HR ranges.',
     whyUse: 'Linear formula derived from Framingham Heart Study; less HR-biased than Bazett at extremes.',
     inputs: [
-      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, exampleValue: 400 }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, exampleValue: 70 }),
+      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, exampleValue: 400, helpText: 'QT interval in ms measured in lead II or V5/V6 from QRS onset to the end of the T wave (excluding the U wave); measure over several beats.' }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, exampleValue: 70, helpText: 'Heart rate in bpm at the time of the ECG; Framingham uses QTc = QT + 154 × (1 − 60/HR).' }),
     ],
     calculate(values) {
       const qt = num(values.qt, 400);
@@ -1243,16 +1243,16 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'Hospitalized adults starting QT-prolonging drugs or with multiple TdP risk factors.',
     whyUse: 'Validated score to identify patients at low/moderate/high risk of QTc >500 ms or large QTc increase.',
     inputs: [
-      yesNo('age68', 'Age ≥ 68 years', 1),
-      yesNo('female', 'Female sex', 1),
-      yesNo('loop', 'Loop diuretic', 1),
-      yesNo('kLow', 'Serum K⁺ ≤ 3.5 mEq/L', 2),
-      yesNo('qtc450', 'Admission QTc ≥ 450 ms', 2),
-      yesNo('ami', 'Acute MI', 2),
+      yesNo('age68', 'Age ≥ 68 years', 1, 'Age 68 years or older scores 1 point in the Tisdale model.'),
+      yesNo('female', 'Female sex', 1, 'Female sex scores 1 point (longer baseline QTc).'),
+      yesNo('loop', 'Loop diuretic', 1, 'A loop diuretic in use scores 1 point, reflecting potassium and magnesium wasting.'),
+      yesNo('kLow', 'Serum K⁺ ≤ 3.5 mEq/L', 2, 'Serum potassium 3.5 mEq/L or lower scores 2 points; correct K and Mg before attributing QTc change to a drug.'),
+      yesNo('qtc450', 'Admission QTc ≥ 450 ms', 2, 'Admission QTc 450 ms or longer scores 2 points.'),
+      yesNo('ami', 'Acute MI', 2, 'Acute myocardial infarction scores 2 points.'),
       yesNo('oneQtDrug', '1 QTc-prolonging medication (+3)', 3, 'Count drugs with known/possible TdP risk on CredibleMeds (crediblemeds.org). Do not reprint the full list. Select 1 OR ≥2 — not both (calculate() already prefers ≥2). Loop diuretic is a separate +1 — do not also count it here unless independently QT-listed.'),
       yesNo('twoQtDrugs', '≥2 QTc-prolonging medications (+6 total)', 6, 'Count drugs with known/possible TdP risk on CredibleMeds (crediblemeds.org). Select 1 OR ≥2 — not both. Loop diuretic is a separate +1 — do not also count it here unless independently QT-listed.'),
-      yesNo('sepsis', 'Sepsis', 3),
-      yesNo('hf', 'Heart failure', 3),
+      yesNo('sepsis', 'Sepsis', 3, 'Sepsis scores 3 points, one of the two highest weights.'),
+      yesNo('hf', 'Heart failure', 3, 'Heart failure scores 3 points; total ≥11 marks high risk of QTc >500 ms in the derivation cohort.'),
     ],
     calculate(values) {
       // Tisdale: 1 QT drug = +3; ≥2 QT drugs = +3 (for 1) + +3 (for ≥2) = +6 total
@@ -1343,9 +1343,9 @@ export const wave2CardiologyCalcs: Calculator[] = [
         { label: 'Heart failure rate/symptom adjunct', value: 'hf' },
         { label: 'Atrial fibrillation rate control', value: 'af' },
         { label: 'Suspected toxicity', value: 'tox' },
-      ]),
+      ], undefined, 'Heart failure uses the 0.5–0.9 ng/mL target range; AF rate control tolerates slightly higher levels; suspected toxicity interprets any level against symptoms and potassium.'),
       yesNo('symptoms', 'Symptoms concerning for digoxin toxicity', 0, 'Nausea, visual changes, confusion, new arrhythmias, etc.'),
-      yesNo('renalImpair', 'Significant renal impairment / acute kidney injury', 0),
+      yesNo('renalImpair', 'Significant renal impairment / acute kidney injury', 0, 'Yes for significant renal impairment or AKI — digoxin is renally cleared, so toxicity occurs at lower levels and the half-life lengthens.'),
     ],
     calculate(values) {
       const level = num(values.level, 0.8);
@@ -1462,14 +1462,14 @@ export const wave2CardiologyCalcs: Calculator[] = [
         { label: '65–74 years', value: '65_74' },
         { label: '75–84 years', value: '75_84' },
         { label: '≥ 85 years', value: 'ge85' },
-      ]),
+      ], undefined, 'Age band: under 65, 65–74, 75–84, or 85 and older. ATRIA weights age more heavily than CHA₂DS₂-VASc, with the largest increment at 85+.'),
       yesNo('priorStroke', 'Prior stroke / TIA', null, 'Does not add a fixed point total — switches age weights (e.g. <65 → 8 pts if prior stroke)'),
-      yesNo('female', 'Female sex', 1),
-      yesNo('dm', 'Diabetes mellitus', 1),
-      yesNo('chf', 'Congestive heart failure', 1),
-      yesNo('htn', 'Hypertension', 1),
+      yesNo('female', 'Female sex', 1, 'Female sex adds 1 ATRIA point.'),
+      yesNo('dm', 'Diabetes mellitus', 1, 'Diabetes mellitus adds 1 point.'),
+      yesNo('chf', 'Congestive heart failure', 1, 'Congestive heart failure adds 1 point.'),
+      yesNo('htn', 'Hypertension', 1, 'Hypertension adds 1 point.'),
       yesNo('proteinuria', 'Proteinuria', 1, 'Urine dipstick ≥1+ (ATRIA: none/trace = no). ACR ≥30 mg/g is a reasonable equivalent if dipstick unavailable.'),
-      yesNo('renal', 'eGFR < 45 mL/min/1.73 m² or ESRD', 1),
+      yesNo('renal', 'eGFR < 45 mL/min/1.73 m² or ESRD', 1, 'eGFR below 45 mL/min/1.73 m² or ESRD adds 1 point — the variable that distinguishes ATRIA from CHA₂DS₂-VASc.'),
     ],
     calculate(values) {
       const age = String(values.age ?? 'lt65');
@@ -1570,8 +1570,8 @@ export const wave2CardiologyCalcs: Calculator[] = [
         { label: '< 65 years', value: 0, points: 0 },
         { label: '65–74 years', value: 1, points: 1 },
         { label: '≥ 75 years', value: 2, points: 2 },
-      ]),
-      yesNo('priorStroke', 'Prior stroke / TIA / systemic embolism', 2),
+      ], undefined, 'Age band: under 65 scores 0, 65–74 scores 1, and 75 or older scores 2 in this simplified version; the full ABC model uses age continuously.'),
+      yesNo('priorStroke', 'Prior stroke / TIA / systemic embolism', 2, 'Prior stroke, TIA, or systemic embolism adds 2 points, the largest single item here.'),
       selectInput('ntprobnp', 'NT-proBNP category (biomarker)', [
         { label: 'Low / normal (≤300 ng/L)', value: 0, points: 0, description: 'Educational tertile proxy from ARISTOTLE-range values; NT-proBNP ≤300 ng/L (pg/mL)' },
         { label: 'Moderately elevated (~300–1000 ng/L)', value: 1, points: 1, description: 'Around ARISTOTLE mid-tertile (median ~713 ng/L)' },
@@ -1650,8 +1650,8 @@ export const wave2CardiologyCalcs: Calculator[] = [
         { label: '< 65 years', value: 0, points: 0 },
         { label: '65–74 years', value: 1, points: 1 },
         { label: '≥ 75 years', value: 2, points: 2 },
-      ]),
-      yesNo('priorBleed', 'Prior major bleeding', 2),
+      ], undefined, 'Age band: under 65 scores 0, 65–74 scores 1, and 75 or older scores 2 in the simplified version.'),
+      yesNo('priorBleed', 'Prior major bleeding', 2, 'Prior major bleeding adds 2 points and is the strongest single predictor in the simplified version.'),
       selectInput('hb', 'Hemoglobin category', [
         { label: 'Normal (≥13 g/dL men / ≥12 g/dL women)', value: 0, points: 0, description: 'WHO non-anemic: Hb ≥13 g/dL (men) or ≥12 g/dL (women)' },
         { label: 'Mild anemia (11–12.9 men / 11–11.9 women)', value: 1, points: 1, description: 'WHO mild anemia: 11.0–12.9 g/dL (men) or 11.0–11.9 g/dL (women)' },
@@ -1661,7 +1661,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
         { label: 'Low / near LoD (hs-cTnT typically ≤7 ng/L)', value: 0, points: 0, description: 'Near assay LoD; ARISTOTLE lower quartile ~7.5 ng/L' },
         { label: 'Moderately elevated (around URL, hs-cTnT ~8–14 ng/L)', value: 1, points: 1, description: 'Around 99th-percentile URL (~14 ng/L hs-cTnT)' },
         { label: 'Markedly elevated (several-fold URL, hs-cTnT typically >14 ng/L)', value: 2, points: 2, description: 'Above URL; ARISTOTLE upper quartile and higher' },
-      ]),
+      ], undefined, 'hs-Troponin category as a biomarker proxy: low/near the limit of detection scores 0, around the URL scores 1, and several-fold elevated scores 2. The full ABC-bleed uses continuous hs-Tn, GDF-15, and hemoglobin.'),
       selectInput('gdf', 'GDF-15 category (if known)', [
         { label: 'Unknown / low (≤977 ng/L or not measured)', value: 0, points: 0, description: 'ARISTOTLE lower tertile ~≤977 ng/L, or GDF-15 not available' },
         { label: 'Moderately elevated (~978–1470 ng/L)', value: 1, points: 1, description: 'ARISTOTLE mid-tertile / around median ~1383 ng/L' },
@@ -1819,7 +1819,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'm' },
         { label: 'Female', value: 'f' },
-      ]),
+      ], undefined, 'Sex sets the EuroSCORE II constant (female carries a higher coefficient than male).'),
       numberInput('renal', 'Creatinine clearance (Cockcroft–Gault)', {
         unit: 'mL/min',
         min: 5,
@@ -1827,20 +1827,20 @@ export const wave2CardiologyCalcs: Calculator[] = [
         exampleValue: 90,
         helpText: '>85 normal; 51–85 moderate; ≤50 severe (ignored if on dialysis)',
       }),
-      yesNo('dialysis', 'On dialysis', null),
+      yesNo('dialysis', 'On dialysis', null, 'Yes for dialysis dependence raises the predicted mortality substantially in EuroSCORE II.'),
       yesNo('extracardiac', 'Extracardiac arteriopathy', null, 'Claudication, carotid occlusion or >50% stenosis, amputation for arterial disease, or previous/planned intervention on the abdominal aorta, limb arteries, or carotids.'),
       yesNo('poorMobility', 'Poor mobility (neurologic or musculoskeletal)', null, 'Severe impairment of mobility secondary to musculoskeletal or neurologic dysfunction.'),
       yesNo('prevCardiacSx', 'Previous cardiac surgery', null, 'One or more previous operations on the heart or great vessels involving opening the pericardium.'),
       yesNo('copd', 'Chronic lung disease', null, 'Long-term use of bronchodilators or steroids for lung disease.'),
       yesNo('endocarditis', 'Active endocarditis', null, 'Patient still on antibiotic treatment for endocarditis at the time of surgery.'),
       yesNo('critical', 'Critical preoperative state', null, 'VT/VF or aborted sudden cardiac death, cardiac massage, ventilation before arrival in the anaesthetic room, inotropes, IABP or VAD, or anuria/oliguria <10 mL/h this admission.'),
-      yesNo('dmInsulin', 'Diabetes on insulin', null),
+      yesNo('dmInsulin', 'Diabetes on insulin', null, 'Diabetes requiring insulin adds points; diet- or oral-treated diabetes does not count in this model.'),
       selectInput('nyha', 'NYHA class', [
         { label: 'I', value: 1, description: 'No limitation of physical activity. Ordinary activity does not cause undue fatigue, palpitations, or dyspnea.' },
         { label: 'II', value: 2, description: 'Slight limitation. Comfortable at rest; ordinary activity causes fatigue, palpitations, or dyspnea.' },
         { label: 'III', value: 3, description: 'Marked limitation. Comfortable at rest; less than ordinary activity causes symptoms.' },
         { label: 'IV', value: 4, description: 'Unable to carry on any physical activity without discomfort. Symptoms at rest.' },
-      ]),
+      ], undefined, 'NYHA class I–IV as documented before surgery; class IV carries the largest symptom coefficient.'),
       yesNo('ccs4', 'CCS class 4 angina', null, 'Angina at rest or with any physical activity (CCS IV: inability to perform any activity without angina; angina may be present at rest).'),
       selectInput(
         'lvef',
@@ -1859,20 +1859,20 @@ export const wave2CardiologyCalcs: Calculator[] = [
         { label: '<31 mmHg', value: 'n', description: 'PASP <31 mmHg (normal EuroSCORE II band)' },
         { label: '31–54 mmHg', value: 'm', description: 'PASP 31–54 mmHg (moderate PH band)' },
         { label: '≥55 mmHg', value: 's', description: 'PASP ≥55 mmHg (severe PH band)' },
-      ]),
+      ], undefined, 'PA systolic pressure: under 31 mmHg is the reference, 31–54 adds a modest penalty, and 55 or higher the largest.'),
       selectInput('urgency', 'Urgency', [
         { label: 'Elective', value: 0, description: 'Routine admission for operation' },
         { label: 'Urgent', value: 1, description: 'Not electively admitted; requires surgery this admission and cannot go home' },
         { label: 'Emergency', value: 2, description: 'Operation before the beginning of the next working day' },
         { label: 'Salvage', value: 3, description: 'CPR en route to the operating theatre or before induction of anesthesia' },
-      ]),
+      ], undefined, 'Elective, urgent, emergency, or salvage — each step raises predicted mortality sharply; salvage status carries the heaviest coefficient.'),
       selectInput('procedure', 'Weight of procedure', [
         { label: 'Isolated CABG', value: 0, description: 'CABG only (one major procedure)' },
         { label: 'Single non-CABG', value: 1, description: 'One major procedure other than isolated CABG (e.g. single valve)' },
         { label: '2 procedures', value: 2, description: 'Two major procedures (e.g. CABG + valve = 2)' },
         { label: '3+ procedures', value: 3, description: 'Three or more major procedures' },
-      ]),
-      yesNo('thoracicAorta', 'Thoracic aorta surgery', null),
+      ], undefined, 'Procedure weight: isolated CABG is the reference, single non-CABG, two procedures, and three or more procedures each add more.'),
+      yesNo('thoracicAorta', 'Thoracic aorta surgery', null, 'Yes for surgery involving the thoracic aorta adds a specific coefficient in EuroSCORE II.'),
       yesNo('vsd', 'Post-infarct VSD (original EuroSCORE factor)', null, 'Insufficient cases in EuroSCORE II derivation; original logistic coefficient applied and labelled'),
     ],
     calculate(values) {
@@ -1995,19 +1995,19 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'Patients undergoing PCI when estimating contrast-induced nephropathy and dialysis risk.',
     whyUse: 'Widely used validated score for contrast-induced nephropathy risk stratification.',
     inputs: [
-      yesNo('hypotension', 'Hypotension (SBP <80 for ≥1h requiring support)', 5),
-      yesNo('iabp', 'Intra-aortic balloon pump', 5),
-      yesNo('chf', 'CHF (NYHA III/IV or acute pulmonary edema)', 5),
-      yesNo('age75', 'Age > 75 years', 4),
-      yesNo('anemia', 'Anemia (Hct <39% men / <36% women)', 3),
-      yesNo('dm', 'Diabetes mellitus', 3),
-      numberInput('contrast', 'Contrast volume', { unit: 'mL', min: 0, max: 1000, step: 10, exampleValue: 200 }),
+      yesNo('hypotension', 'Hypotension (SBP <80 for ≥1h requiring support)', 5, 'Hypotension — systolic BP below 80 mmHg for at least 1 hour requiring inotropes, vasopressors, or IABP — scores 5 points.'),
+      yesNo('iabp', 'Intra-aortic balloon pump', 5, 'Intra-aortic balloon pump support scores 5 points.'),
+      yesNo('chf', 'CHF (NYHA III/IV or acute pulmonary edema)', 5, 'CHF (NYHA class III/IV or acute pulmonary edema) scores 5 points.'),
+      yesNo('age75', 'Age > 75 years', 4, 'Age over 75 years scores 4 points.'),
+      yesNo('anemia', 'Anemia (Hct <39% men / <36% women)', 3, 'Anemia — hematocrit below 39% in men or below 36% in women — scores 3 points; use the baseline value before the procedure.'),
+      yesNo('dm', 'Diabetes mellitus', 3, 'Diabetes mellitus scores 3 points.'),
+      numberInput('contrast', 'Contrast volume', { unit: 'mL', min: 0, max: 1000, step: 10, exampleValue: 200, helpText: 'Contrast volume in mL given during the procedure; each 100 mL adds 1 point, so the total load is directly modifiable.' }),
       selectInput('egfr', 'eGFR category (mL/min/1.73 m²)', [
         { label: '≥ 60', value: 0, points: 0 },
         { label: '40–59', value: 2, points: 2 },
         { label: '20–39', value: 4, points: 4 },
         { label: '< 20', value: 6, points: 6 },
-      ]),
+      ], undefined, 'eGFR category: 60 or higher scores 0, 40–59 scores 2, 20–39 scores 4, and below 20 scores 6 points.'),
     ],
     calculate(values) {
       const contrast = num(values.contrast, 200);

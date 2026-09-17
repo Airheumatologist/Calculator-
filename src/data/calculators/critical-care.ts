@@ -98,9 +98,9 @@ export const criticalCareCalcs: Calculator[] = [
     whenToUse: 'Outside ICU, patients with suspected infection.',
     whyUse: 'Bedside mortality/organ-dysfunction risk prompt; not a sole sepsis screen (SSC 2021) or diagnostic criterion alone.',
     inputs: [
-      yesNo('rr', 'Respiratory rate ≥ 22/min', 1),
+      yesNo('rr', 'Respiratory rate ≥ 22/min', 1, 'Respiratory rate 22/min or faster at the bedside; scores 1 point, whether or not the patient is on oxygen.'),
       yesNo('ams', 'Altered mentation (GCS <15)', 1, 'Sepsis-3 qSOFA mentation is GCS <15 (any drop from 15) or new disorientation/confusion. If baseline dementia, score only an acute change.'),
-      yesNo('sbp', 'SBP ≤ 100 mmHg', 1),
+      yesNo('sbp', 'SBP ≤ 100 mmHg', 1, 'Systolic BP 100 mmHg or lower at assessment; scores 1 point. Use the lowest reading taken with the vitals set used for the score.'),
     ],
     calculate(values) {
       const score = (bool(values.rr) ? 1 : 0) + (bool(values.ams) ? 1 : 0) + (bool(values.sbp) ? 1 : 0);
@@ -275,14 +275,14 @@ export const criticalCareCalcs: Calculator[] = [
         { label: '36.1–38.0 (0)', value: 'temp_36_1_38' },
         { label: '38.1–39.0 (1)', value: 'temp_38_1_39' },
         { label: '≥39.1 (2)', value: 'temp_ge_39_1' },
-      ]),
+      ], undefined, 'Core temperature in °C: ≤35.0 scores 3; 35.1–36.0 scores 1; 36.1–38.0 scores 0; 38.1–39.0 scores 1; ≥39.1 scores 2.'),
       selectInput('sbp', 'Systolic BP (mmHg)', [
         { label: '≤90 (3)', value: 'sbp_le_90' },
         { label: '91–100 (2)', value: 'sbp_91_100' },
         { label: '101–110 (1)', value: 'sbp_101_110' },
         { label: '111–219 (0)', value: 'sbp_111_219' },
         { label: '≥220 (3)', value: 'sbp_ge_220' },
-      ]),
+      ], undefined, 'Systolic BP in mmHg: ≤90 scores 3; 91–100 scores 2; 101–110 scores 1; 111–219 scores 0; ≥220 scores 3.'),
       selectInput('hr', 'Heart rate (bpm)', [
         { label: '≤40 (3)', value: 'hr_le_40' },
         { label: '41–50 (1)', value: 'hr_41_50' },
@@ -290,7 +290,7 @@ export const criticalCareCalcs: Calculator[] = [
         { label: '91–110 (1)', value: 'hr_91_110' },
         { label: '111–130 (2)', value: 'hr_111_130' },
         { label: '≥131 (3)', value: 'hr_ge_131' },
-      ]),
+      ], undefined, 'Heart rate in beats/min: ≤40 scores 3; 41–50 scores 1; 51–90 scores 0; 91–110 scores 1; 111–130 scores 2; ≥131 scores 3.'),
       selectInput('conscious', 'Consciousness (ACVPU)', [
         { label: 'Alert (A) (0)', value: 0, description: 'Alert — eyes open, interacting' },
         { label: 'New confusion (C) or Voice (V) / Pain (P) / Unresponsive (U) (3)', value: 3, description: 'C = new disorientation/delirium (scores 3 even if still “alert” by old AVPU); V = response to speech; P = pain only; U = none' },
@@ -465,10 +465,10 @@ export const criticalCareCalcs: Calculator[] = [
     whyUse: 'Simple 5-variable score endorsed by BTS guidelines.',
     inputs: [
       yesNo('confusion', 'Confusion (new): AMTS ≤8 or new disorientation to person/place/time', 1, 'Lim/BTS: new disorientation in person, place, or time, or Abbreviated Mental Test Score ≤8. Do not reprint a copyrighted AMTS card here — use the official BTS/AMTS instrument if scoring AMTS.'),
-      yesNo('urea', 'Urea > 7 mmol/L (BUN > 19 mg/dL)', 1),
-      yesNo('rr', 'Respiratory rate ≥ 30/min', 1),
-      yesNo('bp', 'SBP < 90 or DBP ≤ 60', 1),
-      yesNo('age', 'Age ≥ 65', 1),
+      yesNo('urea', 'Urea > 7 mmol/L (BUN > 19 mg/dL)', 1, 'Blood urea above 7 mmol/L (BUN above 19 mg/dL) on admission; scores 1 point. BUN in mg/dL = urea mmol/L × 2.8.'),
+      yesNo('rr', 'Respiratory rate ≥ 30/min', 1, 'Respiratory rate 30/min or faster; scores 1 point.'),
+      yesNo('bp', 'SBP < 90 or DBP ≤ 60', 1, 'Systolic BP below 90 mmHg or diastolic BP 60 mmHg or lower; scores 1 point (one point for either).'),
+      yesNo('age', 'Age ≥ 65', 1, 'Age 65 years or older; scores 1 point, with no partial credit for younger ages.'),
     ],
     calculate(values) {
       const score = ['confusion', 'urea', 'rr', 'bp', 'age'].reduce((s, k) => s + (bool(values[k]) ? 1 : 0), 0);
@@ -502,11 +502,11 @@ export const criticalCareCalcs: Calculator[] = [
     whenToUse: 'Adult CAP risk stratification when more detail than CURB-65 is desired.',
     whyUse: 'Highly validated two-step rule: Class I is assigned before points; Classes II–V use the point total.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, helpText: 'Age in completed years. PORT points equal age for men and age minus 10 for women — the sex field carries that −10.' }),
       selectInput('sex', 'Sex', [
         { label: 'Female (−10)', value: -10 },
         { label: 'Male (0)', value: 0 },
-      ]),
+      ], undefined, 'Female subtracts 10 points from the PORT total; male subtracts 0. Score it once per calculation.'),
       yesNo('nh', 'Nursing home resident', 10, 'Residing in a nursing home or long-term care facility at presentation (Fine 1997).'),
       yesNo('neoplasm', 'Neoplastic disease', 30, 'Any cancer except basal/squamous skin cancer; active or diagnosed within 1 year (Fine 1997).'),
       yesNo('liver', 'Liver disease', 20, 'Cirrhosis or other chronic liver disease (Fine 1997).'),
@@ -518,12 +518,12 @@ export const criticalCareCalcs: Calculator[] = [
       yesNo('sbp90', 'SBP < 90', 20, 'Systolic BP <90 mmHg.'),
       yesNo('temp35', 'Temp <35 or ≥40°C', 15, 'Core temperature <35.0°C or ≥40.0°C.'),
       yesNo('hr125', 'Pulse ≥ 125', 10, 'Heart rate ≥125 bpm.'),
-      yesNo('ph735', 'Arterial pH < 7.35', 30),
-      yesNo('bun30', 'BUN ≥ 30 mg/dL', 20),
-      yesNo('na130', 'Sodium < 130 mEq/L', 20),
-      yesNo('glu250', 'Glucose ≥ 250 mg/dL', 10),
-      yesNo('hct30', 'Hematocrit < 30%', 10),
-      yesNo('pao260', 'PaO₂ < 60 or SpO₂ < 90%', 10),
+      yesNo('ph735', 'Arterial pH < 7.35', 30, 'Arterial pH below 7.35 on the ABG used for scoring; adds 30 points, the largest single PORT item. Venous pH is not a substitute.'),
+      yesNo('bun30', 'BUN ≥ 30 mg/dL', 20, 'BUN 30 mg/dL or higher (urea ≥10.7 mmol/L); adds 20 points.'),
+      yesNo('na130', 'Sodium < 130 mEq/L', 20, 'Serum sodium below 130 mEq/L (mmol/L); adds 20 points.'),
+      yesNo('glu250', 'Glucose ≥ 250 mg/dL', 10, 'Glucose 250 mg/dL or higher (≈13.9 mmol/L); adds 10 points, diabetes or not.'),
+      yesNo('hct30', 'Hematocrit < 30%', 10, 'Hematocrit below 30%; adds 10 points.'),
+      yesNo('pao260', 'PaO₂ < 60 or SpO₂ < 90%', 10, 'PaO₂ below 60 mmHg on room air or SpO₂ below 90%; adds 10 points. Do not score both — they share the one item.'),
       yesNo('pleural', 'Pleural effusion', 10, 'Pleural effusion on chest radiograph (any size; Fine 1997).'),
     ],
     calculate(values) {
@@ -622,7 +622,7 @@ export const criticalCareCalcs: Calculator[] = [
     whenToUse: 'Educational approximation of ICU mortality risk.',
     whyUse: 'Classic ICU severity score; full APACHE II needs 12 physiologic variables.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 0, max: 110, exampleValue: 60, helpText: 'Worst physiology in the first 24 hours of ICU admission (official APACHE II). This educational tool omits pH, A–a gradient, temperature, and oxygenation.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 0, max: 110, exampleValue: 60, helpText: 'Age in completed years; APACHE II age points are 0 for 44 or younger, 2 for 45–54, 3 for 55–64, 5 for 65–74, and 6 for 75 or older. (The physiology bands use the worst value in the first 24 ICU hours.)' }),
       // APACHE II neurologic points = 15 − GCS (not SOFA-style buckets)
       numberInput('gcs', 'GCS', { min: 3, max: 15, exampleValue: 15, helpText: 'Points = 15 − GCS. Enter total GCS 3–15; if intubated document VT rather than guessing verbal.' }),
       selectInput('map', 'MAP category (mmHg)', [
@@ -803,11 +803,11 @@ export const criticalCareCalcs: Calculator[] = [
     whenToUse: 'ABG interpretation for hypoxemia differential.',
     whyUse: 'Distinguishes V/Q mismatch, shunt, diffusion vs hypoventilation/low FiO₂.',
     inputs: [
-      numberInput('fio2', 'FiO₂', { unit: 'fraction', unitKind: 'fio2', min: 0.21, max: 1, step: 0.01, exampleValue: 0.21 }),
-      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 100, exampleValue: 40 }),
-      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 90 }),
+      numberInput('fio2', 'FiO₂', { unit: 'fraction', unitKind: 'fio2', min: 0.21, max: 1, step: 0.01, exampleValue: 0.21, helpText: 'FiO₂ as a fraction (0.21–1.00), or as a percentage if you switch the selector — the engine converts the value for you, so enter the figure the blood gas report shows.' }),
+      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 100, exampleValue: 40, helpText: 'Arterial PaCO₂ in mmHg from the same ABG as the PaO₂; it drives the alveolar gas equation term PaCO₂ ÷ 0.8.' }),
+      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 90, helpText: 'Arterial PaO₂ in mmHg from the same ABG as the PaCO₂; the gradient is PAO₂ − PaO₂.' }),
       numberInput('age', 'Age (for expected)', { unit: 'years', min: 0, max: 110, exampleValue: 40, helpText: 'Expected A–a ≈ age/4 + 4 mmHg. This tool flags elevated if measured A–a exceeds expected by more than 5 mmHg.' }),
-      numberInput('patm', 'Atmospheric pressure', { unit: 'mmHg', min: 500, max: 800, exampleValue: 760 }),
+      numberInput('patm', 'Atmospheric pressure', { unit: 'mmHg', min: 500, max: 800, exampleValue: 760, helpText: 'Barometric pressure in mmHg: 760 at sea level. At altitude, subtract roughly 1 mmHg per 10 m of elevation.' }),
     ],
     calculate(values) {
       const fio2 = num(values.fio2, 0.21);
@@ -854,7 +854,7 @@ export const criticalCareCalcs: Calculator[] = [
     whenToUse: 'Hypoxemic respiratory failure / ARDS assessment.',
     whyUse: 'Berlin definition severity tiers based on P/F with PEEP ≥5.',
     inputs: [
-      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 80 }),
+      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 80, helpText: 'Arterial PaO₂ in mmHg from the ABG drawn at the same FiO₂ and PEEP; Berlin severity tiers assume PEEP ≥5 cmH₂O.' }),
       numberInput('fio2', 'FiO₂', { unit: 'fraction', unitKind: 'fio2', min: 0.21, max: 1, step: 0.01, exampleValue: 0.5, helpText: 'Berlin ARDS P/F tiers assume PEEP ≥5 cmH₂O plus radiographic/timing criteria.' }),
     ],
     calculate(values) {
