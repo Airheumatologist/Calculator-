@@ -215,10 +215,12 @@ export const extraCalcs: Calculator[] = [
   {
     id: 'centor-feverpain',
     name: 'FeverPAIN Score',
-    shortName: 'FeverPAIN',
+    shortName: 'FeverPAIN (legacy)',
     description: 'UK NICE-aligned sore throat score for antibiotic stewardship.',
     category: 'infectious-disease',
     tags: ['pharyngitis', 'strep', 'feverpain'],
+    status: 'superseded',
+    supersededBy: 'feverpain-score',
     whenToUse: 'Acute sore throat antibiotic decision support.',
     whyUse: 'Predicts bacterial (strep) probability; guides delayed Rx strategies.',
     inputs: [
@@ -365,7 +367,9 @@ export const extraCalcs: Calculator[] = [
   {
     id: 'pao2-fio2-age-expected',
     name: 'Expected PaO₂ (Age)',
-    shortName: 'Expected PaO₂',
+    shortName: 'Expected PaO₂ (legacy)',
+    status: 'superseded',
+    supersededBy: 'expected-pao2',
     description: 'Rough expected arterial PaO₂ on room air by age.',
     category: 'pulmonary',
     tags: ['abg', 'oxygenation'],
@@ -527,7 +531,7 @@ export const extraCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
-      ], "M", 'Hamwi basis: male 48.0 kg + 2.7 kg per inch over 5 ft; female 45.5 kg + 2.2 kg per inch. Frame-size adjustments of ±10% are sometimes applied on top.'),
+      ], "M", 'Hamwi basis: male 48.0 kg + 2.7 kg per inch over 5 ft; female 45.5 kg + 2.3 kg per inch. Frame-size adjustments of ±10% are sometimes applied on top.'),
     ],
     calculate(values) {
       const h = num(values.heightIn, 67);

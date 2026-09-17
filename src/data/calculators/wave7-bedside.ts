@@ -94,7 +94,7 @@ export const wave7BedsideCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
-      ], 'M', 'Sex assigned at birth sets the k constant in the equation: 0.34 for girls and 0.40 for boys, so the same creatinine gives different eGFRs.'),
+      ], 'M', 'Sex assigned at birth selects the sex- and age-dependent κ in the U25 equation (not the bedside-Schwartz constant). Creatinine κ: girls 36.1 anchored at age 12, ×1.023^(age−12) for 12–<18, 41.4 at ≥18; boys 39.0 anchored at 12, ×1.045^(age−12) for 12–<18, 50.8 at ≥18. The κ actually used is shown in the result details.'),
       numberInput('height', 'Height', { unit: 'cm', min: 50, max: 220, step: 0.1, exampleValue: 140, helpText: 'Measured standing height (recumbent length in infants). Required for the creatinine equation (height in metres).' }),
       numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 15, step: 0.01, exampleValue: 0.8, helpText: 'Standardized (IDMS-traceable) serum creatinine; select µmol/L if the lab reports SI units, the engine converts to mg/dL.' }),
       numberInput('cysc', 'Cystatin C (optional)', {

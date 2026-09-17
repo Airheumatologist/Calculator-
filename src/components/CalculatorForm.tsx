@@ -8,7 +8,7 @@ import {
   rangeViolationMessage,
   stepViolationMessage,
 } from '../utils/helpers';
-import { getCanonicalValue, getUnitOptions, unitInputId } from '../utils/units';
+import { getUnitOptions, unitInputId } from '../utils/units';
 
 type Values = Record<string, number | string | boolean | null>;
 
@@ -27,10 +27,11 @@ interface Props {
 }
 
 function numberFieldError(input: CalcInput, values: Values): string | null {
-  const value = input.unitKind ? getCanonicalValue(input, values) : (values[input.id] ?? null);
-  const [violation] = getRangeViolations([input], { [input.id]: value });
+  // Pass the full values map: unit-aware fields need their `__unit` selection
+  // for canonicalization, which the validators handle internally.
+  const [violation] = getRangeViolations([input], values);
   if (violation) return rangeViolationMessage(violation.direction);
-  const [stepViolation] = getStepViolations([input], { [input.id]: value });
+  const [stepViolation] = getStepViolations([input], values);
   if (stepViolation) return stepViolationMessage(stepViolation);
   return null;
 }
@@ -195,14 +196,17 @@ export function CalculatorForm({
   missingInputIds,
   selectedOptionIndices,
 }: Props) {
+  const hasExample = inputs.some((input) => input.exampleValue !== undefined);
   return (
     <div className="panel">
       <div className="panel-header">
         Inputs
         <div className="form-actions">
-          <button type="button" className="example-btn" onClick={onLoadExample}>
-            Load example
-          </button>
+          {hasExample && (
+            <button type="button" className="example-btn" onClick={onLoadExample}>
+              Load example
+            </button>
+          )}
           <button type="button" className="reset-btn" onClick={onReset}>
             Reset
           </button>

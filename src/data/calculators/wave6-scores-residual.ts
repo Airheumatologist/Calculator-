@@ -421,7 +421,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
   {
     id: 'dash-upper-limb',
     name: 'DASH Score (Upper Extremity)',
-    shortName: 'DASH',
+    shortName: 'DASH-30',
     description: 'Scores and interprets Disabilities of the Arm, Shoulder and Hand (DASH) 30-item disability/symptom score (0–100; higher = worse).',
     category: 'orthopedics',
     tags: ['dash', 'upper extremity', 'shoulder', 'hand', 'disability'],
@@ -1382,28 +1382,28 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         { label: '2 - Moderately difficult', value: 2 },
         { label: '1 - Extremely difficult', value: 1 },
         { label: '0 - Unable to do', value: 0 },
-      ], 3, 'Rate how difficult this task is: 4 = not difficult at all, 3 = minimally, 2 = moderately, 1 = extremely difficult, 0 = unable. Jumping and landing on the affected leg.'),
+      ], 3, 'Rate how difficult this task is: 4 = not difficult at all, 3 = minimally, 2 = moderately, 1 = extremely difficult, 0 = unable. Rising from a chair without arm support.'),
       selectInput('ikdc_q9g', '9g. Run straight ahead', [
         { label: '4 - Not difficult at all', value: 4 },
         { label: '3 - Minimally difficult', value: 3 },
         { label: '2 - Moderately difficult', value: 2 },
         { label: '1 - Extremely difficult', value: 1 },
         { label: '0 - Unable to do', value: 0 },
-      ], 2, 'Rate how difficult this task is: 4 = not difficult at all, 3 = minimally, 2 = moderately, 1 = extremely difficult, 0 = unable. Stopping and starting quickly.'),
+      ], 2, 'Rate how difficult this task is: 4 = not difficult at all, 3 = minimally, 2 = moderately, 1 = extremely difficult, 0 = unable. Running straight ahead on level ground.'),
       selectInput('ikdc_q9h', '9h. Jump and land on your involved leg', [
         { label: '4 - Not difficult at all', value: 4 },
         { label: '3 - Minimally difficult', value: 3 },
         { label: '2 - Moderately difficult', value: 2 },
         { label: '1 - Extremely difficult', value: 1 },
         { label: '0 - Unable to do', value: 0 },
-      ], 2, 'Rate how difficult this task is: 4 = not difficult at all, 3 = minimally, 2 = moderately, 1 = extremely difficult, 0 = unable. Running straight ahead on level ground.'),
+      ], 2, 'Rate how difficult this task is: 4 = not difficult at all, 3 = minimally, 2 = moderately, 1 = extremely difficult, 0 = unable. Jumping and landing on the affected leg.'),
       selectInput('ikdc_q9i', '9i. Stop and start quickly', [
         { label: '4 - Not difficult at all', value: 4 },
         { label: '3 - Minimally difficult', value: 3 },
         { label: '2 - Moderately difficult', value: 2 },
         { label: '1 - Extremely difficult', value: 1 },
         { label: '0 - Unable to do', value: 0 },
-      ], 2, 'Rate how difficult this task is: 4 = not difficult at all, 3 = minimally, 2 = moderately, 1 = extremely difficult, 0 = unable. Jumping and landing on the affected leg from a run.'),
+      ], 2, 'Rate how difficult this task is: 4 = not difficult at all, 3 = minimally, 2 = moderately, 1 = extremely difficult, 0 = unable. Stopping and starting quickly while running (cutting).'),
       numberInput('ikdc_q10b', '10b. How would you rate the function of your knee today? (0–10)', {
         min: 0,
         max: 10,
@@ -2851,47 +2851,44 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'COPD prognostication when 6-minute walk (for BODE) is unavailable.',
     whyUse: 'Simpler than BODE; age + mMRC + FEV1% predicts mortality without exercise test.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 40, max: 100, exampleValue: 68, helpText: 'Updated ADO age points: <50 = 0; 50–59 = 1; 60–69 = 2; 70–79 = 3; 80–89 = 4; ≥90 = 5.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 40, max: 100, exampleValue: 68, helpText: 'Updated ADO (Puhan 2012) age points: 40–49 = 0; 50–59 = 2; 60–69 = 4; 70–79 = 5; ≥80 = 7.' }),
       selectInput('mmrc', 'mMRC dyspnea grade', [
         { label: '0 — Dyspnea only with strenuous exercise (0 pts)', value: 0, description: '“I only get breathless with strenuous exercise.” No dyspnea walking on the level or up a slight hill.' },
-        { label: '1 — Dyspnea when hurrying / walking up slight hill (1)', value: 1, description: '“I get short of breath when hurrying on the level or walking up a slight hill.” Can keep up with peers on the level at own pace.' },
-        { label: '2 — Walks slower than peers / stops on level (2)', value: 2, description: '“I walk slower than people of the same age on the level because of breathlessness, or I have to stop for breath when walking at my own pace on the level.”' },
-        { label: '3 — Stops after ~100 m or few minutes (3)', value: 3, description: '“I stop for breath after walking about 100 metres or after a few minutes on the level.” Still leaves the house.' },
-        { label: '4 — Too dyspneic to leave house / dress (mMRC 4 → 3 ADO pts)', value: 4, description: '“I am too breathless to leave the house or I am breathless when dressing or undressing.” Updated ADO still credits only 3 dyspnea points.' },
-      ], undefined, 'Ask which published mMRC statement best fits usual breathlessness (not only today’s exacerbation). Updated ADO dyspnea points equal mMRC 0–3; mMRC 4 is capped at 3 ADO points. Use the descriptors — not titles alone — to separate 1 vs 2 vs 3 vs 4.'),
+        { label: '1 — Dyspnea when hurrying / walking up slight hill (1 pt)', value: 1, description: '“I get short of breath when hurrying on the level or walking up a slight hill.” Can keep up with peers on the level at own pace.' },
+        { label: '2 — Walks slower than peers / stops on level (1 pt)', value: 2, description: '“I walk slower than people of the same age on the level because of breathlessness, or I have to stop for breath when walking at my own pace on the level.” Updated ADO maps mMRC 1–2 to 1 point.' },
+        { label: '3 — Stops after ~100 m or few minutes (2 pts)', value: 3, description: '“I stop for breath after walking about 100 metres or after a few minutes on the level.” Still leaves the house.' },
+        { label: '4 — Too dyspneic to leave house / dress (3 pts)', value: 4, description: '“I am too breathless to leave the house or I am breathless when dressing or undressing.” Updated ADO credits 3 dyspnea points.' },
+      ], undefined, 'Ask which published mMRC statement best fits usual breathlessness (not only today’s exacerbation). Updated ADO dyspnea points: mMRC 0 → 0, mMRC 1–2 → 1, mMRC 3 → 2, mMRC 4 → 3. Use the descriptors — not titles alone — to separate grades.'),
       numberInput('fev1', 'FEV1 % predicted', {
         unit: '%',
         min: 10,
         max: 120,
         exampleValue: 45,
-        helpText: 'Post-bronchodilator FEV1 % predicted. Updated ADO obstruction points: ≥81% = 0; 65–80 = 1; 50–64 = 2; 36–49 = 3; 21–35 = 4; 6–20 = 5; ≤5 = 6.',
+        helpText: 'Post-bronchodilator FEV1 % predicted. Updated ADO obstruction points: ≥81% = 0; 65–80 = 1; 50–64 = 2; 36–49 = 3; ≤35 = 4.',
       }),
     ],
     calculate(values) {
       const age = num(values.age, 68);
       const mmrc = num(values.mmrc, 2);
       const fev1 = num(values.fev1, 45);
-      // Updated ADO (Puhan 2012): age points 0–5, dyspnea 0–3 (mMRC mapped), obstruction 0–6
+      // Updated ADO (Puhan 2012, BMJ Open e002152 Table 2/3): age 0–7,
+      // dyspnea 0–3 (mMRC 0→0, 1–2→1, 3→2, 4→3), obstruction 0–4
       let agePts = 0;
       if (age < 50) agePts = 0;
-      else if (age < 60) agePts = 1;
-      else if (age < 70) agePts = 2;
-      else if (age < 80) agePts = 3;
-      else if (age < 90) agePts = 4;
-      else agePts = 5;
+      else if (age < 60) agePts = 2;
+      else if (age < 70) agePts = 4;
+      else if (age < 80) agePts = 5;
+      else agePts = 7;
 
-      // Dyspnea points on updated ADO use mMRC 0–3 scale (mMRC 4 maps to 3)
-      const dyspPts = Math.min(3, mmrc);
+      const dyspPts = mmrc <= 0 ? 0 : mmrc <= 2 ? 1 : mmrc === 3 ? 2 : 3;
 
-      // Updated ADO obstruction scoring (0–6)
+      // FEV1 % predicted: ≥81 = 0; 65–80 = 1; 50–64 = 2; 36–49 = 3; ≤35 = 4
       let obsPts = 0;
       if (fev1 >= 81) obsPts = 0;
       else if (fev1 >= 65) obsPts = 1;
       else if (fev1 >= 50) obsPts = 2;
       else if (fev1 >= 36) obsPts = 3;
-      else if (fev1 >= 21) obsPts = 4;
-      else if (fev1 >= 6) obsPts = 5;
-      else obsPts = 6;
+      else obsPts = 4;
 
       const score = agePts + dyspPts + obsPts;
       const r = riskFromThresholds(score, [
@@ -2934,7 +2931,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     },
     evidence: {
       summary:
-        'Updated ADO index (0–14): points for age (0–5), dyspnea (0–3), and FEV1% obstruction (0–6). Predicts COPD mortality without 6-minute walk distance required by BODE.',
+        'Updated ADO index (0–14): points for age (0–7), dyspnea (0–3 via mMRC 0→0, 1–2→1, 3→2, 4→3), and FEV1% obstruction (0–4). Predicts 3-year COPD mortality without 6-minute walk distance required by BODE.',
       formula: 'ADO = age points + dyspnea points + FEV1 points',
       validation: 'Puhan et al. updated ADO; validated against BODE for mortality prediction.',
       references: [
@@ -3499,7 +3496,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     id: 'elixhauser-simp',
     name: 'Elixhauser Comorbidity Count (Simplified)',
     shortName: 'Elixhauser',
-    description: 'Simplified count of Elixhauser comorbidity categories present (0–31 educational tool).',
+    description: 'Simplified count of Elixhauser comorbidity categories present (0–28 educational tool; HTN and DM uncomplicated/complicated merged).',
     category: 'geriatrics',
     tags: ['elixhauser', 'comorbidity', 'risk adjustment', 'charlson'],
     whenToUse: 'Quick comorbidity burden tally when full weighted Elixhauser/van Walraven scores are not computed.',

@@ -725,16 +725,22 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
           interpretation: `BMI′ ${prime} (BMI ${bmiR}). Overweight band (BMI 25–30).`,
         },
         {
-          max: 1.4,
+          max: 1.39,
           level: 'high',
-          label: 'Obesity class I–II range',
-          interpretation: `BMI′ ${prime} (BMI ${bmiR}). Roughly obesity class I–II territory — assess comorbidities.`,
+          label: 'Obesity class I (WHO; BMI 30–34.9)',
+          interpretation: `BMI′ ${prime} (BMI ${bmiR}). WHO obesity class I (BMI 30–34.9) — assess comorbidities.`,
+        },
+        {
+          max: 1.59,
+          level: 'high',
+          label: 'Obesity class II (WHO; BMI 35–39.9)',
+          interpretation: `BMI′ ${prime} (BMI ${bmiR}). WHO obesity class II (BMI 35–39.9) — elevated cardiometabolic risk; structured weight management.`,
         },
         {
           max: 10,
           level: 'high',
-          label: 'Severe obesity range',
-          interpretation: `BMI′ ${prime} (BMI ${bmiR}). Markedly elevated — comprehensive obesity care pathways.`,
+          label: 'Obesity class III (WHO; BMI ≥40)',
+          interpretation: `BMI′ ${prime} (BMI ${bmiR}). WHO obesity class III (BMI ≥40) — comprehensive obesity care pathways, including bariatric evaluation.`,
         },
       ]);
       return {
@@ -770,7 +776,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
   {
     id: 'body-adiposity',
     name: 'Body Adiposity Index (BAI)',
-    shortName: 'BAI',
+    shortName: 'BAI-adiposity',
     description: 'Estimates percent body fat from hip circumference and height (no weight required).',
     category: 'endocrinology',
     tags: ['bai', 'body fat', 'adiposity', 'hip circumference'],
@@ -1994,8 +2000,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
       ], undefined, 'Entry criterion: at least one episode of swelling, pain, or tenderness in a peripheral joint or bursa. Answering No means the patient cannot be classified by these criteria.'),
       selectInput('msu', 'MSU crystals in symptomatic joint/bursa (or tophus)', [
         { label: 'Not positive / not done', value: 'no', points: 0 },
-        { label: 'Yes — sufficient for classification', value: 'pos', points: 100 },
-      ], 'no', 'MSU crystals in the symptomatic joint/bursa or a tophus is sufficient for classification (scored as 100 points here) and makes the additive domains unnecessary.'),
+        { label: 'Yes — sufficient criterion (auto-classifies)', value: 'pos' },
+      ], 'no', 'MSU crystals in the symptomatic joint/bursa or a tophus is a sufficient criterion for classification (not an additive point item) and makes the scored domains unnecessary.'),
       selectInput(
         'pattern',
         'Pattern of joint/bursa involvement (ever)',

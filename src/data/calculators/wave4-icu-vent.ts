@@ -15,7 +15,7 @@ export const wave4IcuVentCalcs: Calculator[] = [
     inputs: [
       numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 3, max: 22, step: 0.1, exampleValue: 12, helpText: 'Hemoglobin in g/dL; each gram carries about 1.34 mL O₂, so anemia lowers CaO₂ almost linearly. Use the value drawn with the gas sample.' }),
       numberInput('sao2', 'SaO₂ (or SpO₂)', { unit: '%', min: 40, max: 100, exampleValue: 98, helpText: 'Arterial oxygen saturation in % from a co-oximetry ABG; a pulse oximeter reading can substitute when the ABG saturation is unavailable.' }),
-      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 90, helpText: 'Arterial PaO₂ in mmHg from the same sample; its dissolved-oxygen contribution is small (0.003 × PaO₂) compared with the hemoglobin-bound fraction.' }),
+      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 90, helpText: 'Arterial PaO₂ in mmHg from the same sample; its dissolved-oxygen contribution is small (0.0031 × PaO₂) compared with the hemoglobin-bound fraction.' }),
     ],
     calculate(values) {
       const hb = num(values.hb, 12);
@@ -238,7 +238,7 @@ export const wave4IcuVentCalcs: Calculator[] = [
           max: 30,
           level: 'normal',
           label: 'Typical extraction',
-          interpretation: `O₂ER ${o2er}% — within common resting range (~20–30%).`,
+          interpretation: `O₂ER ${o2er}% — within common resting range (~15–30%).`,
         },
         {
           max: 40,
@@ -1532,7 +1532,7 @@ export const wave4IcuVentCalcs: Calculator[] = [
         { label: 'Yes', value: 'yes', description: 'Breathing after opening the airway and any indicated LSI' },
         { label: 'No — still apneic', value: 'no', description: 'Still not breathing after airway opening (and pediatric rescue breaths if used) → Dead (Black)' },
       ], undefined, 'If not breathing, open the airway. Pediatric SALT may add 2 rescue breaths. Still apneic after LSI = Dead. This item is N/A for walkers.'),
-      yesNo('lsiDone', 'Lifesaving interventions indicated/performed as able (bleed control, airway, chest seal/needle, auto-injector)', 1, 'SALT LSI only: control major hemorrhage, open airway (child: 2 rescue breaths), decompress tension pneumothorax, auto-injector antidote. Category is set by walking, breathing after LSI, obeys/pulse/distress, and resources — this checkbox is documentation.'),
+      yesNo('lsiDone', 'Lifesaving interventions indicated/performed as able (bleed control, airway, chest seal/needle, auto-injector)', null, 'SALT LSI only: control major hemorrhage, open airway (child: 2 rescue breaths), decompress tension pneumothorax, auto-injector antidote. Category is set by walking, breathing after LSI, obeys/pulse/distress, and resources — this checkbox is documentation.'),
       selectInput('obeys', 'Obeys commands or makes purposeful movements?', [
         { label: 'Yes / N/A walker', value: 'yes', description: 'Follows simple commands, or makes purposeful movements (or N/A if walker)' },
         { label: 'No', value: 'no', description: 'Does not obey commands and no purposeful movement → Immediate physiology (unless expectant)' },
@@ -2285,9 +2285,10 @@ export const wave4IcuVentCalcs: Calculator[] = [
       ], 'none', 'Pick the single highest applicable special-risk item. Official card may stack some items — this tool is highest-one-only.'),
       selectInput('neuro', 'Neurological deficit (highest)', [
         { label: 'None (0)', value: 0, description: 'No diabetes, MS, CVA, motor/sensory deficit, or paraplegia' },
-        { label: 'Diabetes / MS / CVA / motor-sensory (4–6 typical) — use 5', value: 5, description: 'Moderate neurologic deficit (typical 5). Official range 4–6 by severity; this control does not offer 4.' },
-        { label: 'Paraplegia (5–6)', value: 6, description: 'Complete motor/sensory deficit / paraplegia (6)' },
-      ], 0, 'Official Waterlow neuro is 4–6 for diabetes/MS/CVA/motor-sensory/paraplegia — pick 4 mild / 5 moderate / 6 complete. This control only offers 5 or 6.'),
+        { label: 'Diabetes / MS / CVA — mild (4)', value: 4, description: 'Mild neurologic deficit — diabetes, MS, or CVA with minimal residual deficit (official 4)' },
+        { label: 'Diabetes / MS / CVA / motor-sensory — moderate (5)', value: 5, description: 'Moderate neurologic deficit (official 5)' },
+        { label: 'Paraplegia / complete deficit (6)', value: 6, description: 'Complete motor/sensory deficit / paraplegia (official 6)' },
+      ], 0, 'Official Waterlow neuro is 4–6 for diabetes/MS/CVA/motor-sensory/paraplegia — pick 4 mild / 5 moderate / 6 complete.'),
       selectInput('surgery', 'Major surgery / trauma', [
         { label: 'None (0)', value: 'none', description: 'No recent major surgery or trauma' },
         { label: 'Orthopedic / spinal (below waist / spinal) (5)', value: 'orthopedic-spinal', description: 'Orthopedic surgery below the waist, or spinal surgery/injury' },

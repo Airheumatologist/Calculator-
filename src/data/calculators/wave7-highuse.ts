@@ -1275,11 +1275,11 @@ export const wave7HighuseCalcs: Calculator[] = [
     id: 'hits-ipv',
     name: 'HITS Intimate Partner Violence Screen',
     shortName: 'HITS',
-    description: '4-item HITS screen (Hurt, Insult, Threaten, Scream), each 1–5; score 4–20 with ≥10 positive.',
+    description: '4-item HITS screen (Hurt, Insult, Threaten, Scream), each 1–5; score 4–20 with ≥11 positive (published cut score 10.5).',
     category: 'emergency',
     tags: ['ipv', 'hits', 'domestic violence', 'screen', 'primary care'],
     whenToUse: 'Adults in primary care, antenatal clinic, or ED when screening for intimate partner violence.',
-    whyUse: 'Brief validated screen; ≥10 suggests IPV and warrants a private, safety-focused assessment.',
+    whyUse: 'Brief validated screen; ≥11 (above the published cut score of 10.5) suggests IPV and warrants a private, safety-focused assessment.',
     inputs: [
       selectInput('hurt', 'How often does your partner physically Hurt you?', [
         { label: 'Never (1)', value: 1, points: 1, description: 'Not at all' },
@@ -1287,7 +1287,7 @@ export const wave7HighuseCalcs: Calculator[] = [
         { label: 'Sometimes (3)', value: 3, points: 3, description: 'Occasional' },
         { label: 'Fairly often (4)', value: 4, points: 4, description: 'More often than not' },
         { label: 'Frequently (5)', value: 5, points: 5, description: 'Most or all of the time' },
-      ], 1, 'Ask privately — partner not in the room. Never=1 through Frequently=5 on each stem. Sum ≥10 is a positive screen.'),
+      ], 1, 'Ask privately — partner not in the room. Never=1 through Frequently=5 on each stem. Sum ≥11 is a positive screen (published cut score 10.5).'),
       selectInput('insult', 'How often does your partner Insult or talk down to you?', [
         { label: 'Never (1)', value: 1, points: 1 },
         { label: 'Rarely (2)', value: 2, points: 2 },
@@ -1316,18 +1316,18 @@ export const wave7HighuseCalcs: Calculator[] = [
       const threaten = num(values.threaten, 1);
       const scream = num(values.scream, 1);
       const score = hurt + insult + threaten + scream;
-      const positive = score >= 10;
+      const positive = score >= 11;
       const r = riskFromThresholds(score, [
         {
-          max: 9,
+          max: 10,
           level: 'low',
-          label: 'HITS negative (<10)',
-          interpretation: `HITS ${score}/20. Below the conventional positive cut-off of 10. A negative screen does not exclude IPV — remain open to disclosure and safety cues.`,
+          label: 'HITS negative (≤10)',
+          interpretation: `HITS ${score}/20. At or below the published positive cut score of 10.5 (positive = ≥11). A negative screen does not exclude IPV — remain open to disclosure and safety cues.`,
         },
         {
           max: 20,
           level: 'high',
-          label: 'HITS positive (≥10)',
+          label: 'HITS positive (≥11)',
           interpretation: `HITS ${score}/20. Positive screen for intimate partner violence. See the patient alone, assess immediate safety, and offer resources. Do not document in a portal the abuser can access without a safety plan.`,
         },
       ]);
@@ -1347,8 +1347,8 @@ export const wave7HighuseCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'HITS (Sherin 1998) sums four 1–5 frequency items (Hurt, Insult, Threaten, Scream). Range 4–20; ≥10 is the usual positive cut-off in family practice.',
-      formula: 'HITS = Hurt + Insult + Threaten + Scream (each 1–5). Positive if ≥10.',
+      summary: 'HITS (Sherin 1998) sums four 1–5 frequency items (Hurt, Insult, Threaten, Scream). Range 4–20; the published cut score is 10.5, so totals ≥11 are positive in family practice.',
+      formula: 'HITS = Hurt + Insult + Threaten + Scream (each 1–5). Positive if >10.5 (i.e., ≥11).',
       validation: 'Original family-practice derivation; subsequently used in ED and prenatal settings. Not a diagnostic instrument.',
       references: [
         {
@@ -1360,7 +1360,7 @@ export const wave7HighuseCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'HITS ≥10', actions: ['Private interview', 'Safety planning', 'Local IPV advocacy / 800-799-7233 (US)'] },
+      { condition: 'HITS ≥11', actions: ['Private interview', 'Safety planning', 'Local IPV advocacy / 800-799-7233 (US)'] },
       { condition: 'Any disclosure of immediate danger', actions: ['Do not send the patient home to an unsafe setting without a plan', 'Involve social work / security as appropriate'] },
     ],
     pearls: [
@@ -1609,45 +1609,44 @@ export const wave7HighuseCalcs: Calculator[] = [
     ],
   },
 
-  // ─── 12. Leibovich 2018 RCC ────────────────────────────────────────────────
+  // ─── 12. Leibovich 2003 (classic) ccRCC ─────────────────────────────────────
   {
-    id: 'leibovich-2018',
-    name: 'Leibovich 2018 ccRCC Progression Score',
-    shortName: 'Leibovich 2018',
+    id: 'leibovich-2003',
+    name: 'Leibovich Score (classic 2003) — ccRCC Progression',
+    shortName: 'Leibovich 2003',
     description:
-      'Integer progression score after nephrectomy for non-metastatic clear-cell RCC using 2018-style T/N/size/grade/necrosis points.',
+      'Classic Leibovich 2003 integer progression score after radical nephrectomy for non-metastatic clear-cell RCC: pT stage, regional nodes, tumor size ≥10 cm, nuclear grade, and coagulative tumor necrosis.',
     category: 'urology',
     tags: ['rcc', 'leibovich', 'kidney cancer', 'ssign', 'nephrectomy'],
-    whenToUse: 'After nephrectomy for non-metastatic clear-cell RCC to estimate progression risk and surveillance intensity.',
-    whyUse: '2018 Mayo update of the Leibovich/SSIGN family; integer points remain usable at the bedside.',
+    whenToUse: 'After radical nephrectomy for non-metastatic clear-cell RCC to estimate progression risk and surveillance intensity.',
+    whyUse: 'The 2003 Leibovich score is the original integer tool (risk groups 0–2 / 3–5 / ≥6) later extended by the SSIGN and 2018 histology-specific models.',
     inputs: [
       selectInput('tStage', 'Pathologic T stage', [
         { label: 'pT1a', value: 0, points: 0, description: 'Tumor ≤4 cm, limited to kidney' },
         { label: 'pT1b', value: 2, points: 2, description: 'Tumor >4 cm and ≤7 cm, limited to kidney' },
-        { label: 'pT2a', value: 3, points: 3, description: 'Tumor >7 cm and ≤10 cm, limited to kidney' },
-        { label: 'pT2b', value: 4, points: 4, description: 'Tumor >10 cm, limited to kidney' },
+        { label: 'pT2', value: 3, points: 3, description: 'Tumor >7 cm, limited to kidney (the 2003 score predates the pT2a/pT2b split — both score 3)' },
         { label: 'pT3a', value: '3a', points: 4, description: 'Extends into renal vein or perinephric/renal sinus fat, not beyond Gerota' },
         { label: 'pT3b', value: '3b', points: 4, description: 'Grossly extends into IVC below the diaphragm' },
-        { label: 'pT3c / pT4', value: 6, points: 6, description: 'IVC above the diaphragm or invades Gerota fascia / adjacent organs' },
-      ], 0, 'Pathologic T stage from the nephrectomy specimen: pT1a 0, pT1b 2, pT2a 3, pT2b/pT3a/pT3b 4, pT3c or pT4 6 points.'),
+        { label: 'pT3c / pT4', value: 4, points: 4, description: 'IVC above the diaphragm or invades Gerota fascia / adjacent organs — 4 points in the classic 2003 score' },
+      ], 0, 'Pathologic T stage from the nephrectomy specimen (2002 TNM, as in the 2003 paper): pT1a 0, pT1b 2, pT2 3, pT3a/pT3b/pT3c/pT4 4 points.'),
       selectInput('nStage', 'Pathologic N stage', [
         { label: 'pNx / pN0', value: 0, points: 0, description: 'Nodes not sampled, or no regional node metastasis' },
-        { label: 'pN1', value: 2, points: 2, description: 'Metastasis in regional lymph node(s)' },
-      ], 0, 'Pathologic nodal stage: pNx or pN0 scores 0, pN1 scores 2. Use the resected nodal status, not clinical imaging.'),
+        { label: 'pN1 / pN2', value: 2, points: 2, description: 'Metastasis in regional lymph node(s)' },
+      ], 0, 'Pathologic nodal stage: pNx or pN0 scores 0, pN1 or pN2 scores 2. Use the resected nodal status, not clinical imaging.'),
       numberInput('sizeCm', 'Tumor size', {
         unit: 'cm',
         min: 0.5,
         max: 20,
         step: 0.5,
         exampleValue: 4,
-        helpText: '+1 if ≥10 cm (Leibovich integer models). Greatest dimension on pathology.',
+        helpText: '+1 if ≥10 cm (2003 cutoff). Greatest dimension on pathology.',
       }),
-      selectInput('grade', 'WHO/ISUP (or Fuhrman) grade', [
-        { label: 'Grade 1–2', value: 0, points: 0, description: 'G1: nucleoli absent or inconspicuous at 400×. G2: nucleoli conspicuous and eosinophilic at 400× but not prominent at 100×. Combined 0 points.' },
+      selectInput('grade', 'Nuclear grade (Fuhrman / WHO-ISUP)', [
+        { label: 'Grade 1–2', value: 0, points: 0, description: 'Low nuclear grade — 0 points' },
         { label: 'Grade 3', value: 1, points: 1, description: 'Nucleoli conspicuous and eosinophilic at 100×' },
         { label: 'Grade 4', value: 3, points: 3, description: 'Extreme nuclear pleomorphism and/or tumor giant cells and/or sarcomatoid or rhabdoid differentiation' },
-      ], 1, 'Use WHO/ISUP (Delahunt) nuclear grade from the pathology report. Fuhrman 1–2 / 3 / 4 maps to the same point bands. Score the highest grade in the tumor.'),
-      yesNo('necrosis', 'Coagulative tumor necrosis', 2, 'Coagulative tumor necrosis on pathology — not hyalinization, hemorrhage, or treatment effect.', true),
+      ], 1, 'Use the highest nuclear grade in the tumor (2003 paper used Fuhrman grade; WHO/ISUP maps onto the same 1–2 / 3 / 4 bands).'),
+      yesNo('necrosis', 'Histologic tumor necrosis', 1, 'Coagulative tumor necrosis on pathology — not hyalinization, hemorrhage, or treatment effect. Scores 1 in the classic 2003 score.', true),
     ],
     calculate(values) {
       const tRaw = values.tStage;
@@ -1656,26 +1655,26 @@ export const wave7HighuseCalcs: Calculator[] = [
       const sizeCm = num(values.sizeCm, 4);
       const sizePts = sizeCm >= 10 ? 1 : 0;
       const gradePts = num(values.grade, 0);
-      const necrosis = bool(values.necrosis) ? 2 : 0;
+      const necrosis = bool(values.necrosis) ? 1 : 0;
       const score = tPts + nPts + sizePts + gradePts + necrosis;
       const r = riskFromThresholds(score, [
         {
           max: 2,
           level: 'low',
           label: 'Low risk (0–2)',
-          interpretation: `Leibovich-style score ${score}. Low progression risk after nephrectomy (classic 0–2 group). Standard surveillance is usually appropriate.`,
+          interpretation: `Leibovich 2003 score ${score}. Low progression risk after nephrectomy. Standard surveillance is usually appropriate.`,
         },
         {
           max: 5,
           level: 'moderate',
           label: 'Intermediate risk (3–5)',
-          interpretation: `Leibovich-style score ${score}. Intermediate progression risk. Intensify imaging surveillance; adjuvant-therapy trials/options may be discussed.`,
+          interpretation: `Leibovich 2003 score ${score}. Intermediate progression risk. Intensify imaging surveillance; adjuvant-therapy trials/options may be discussed.`,
         },
         {
-          max: 40,
+          max: 11,
           level: 'high',
           label: 'High risk (≥6)',
-          interpretation: `Leibovich-style score ${score}. High progression risk. Close surveillance and multidisciplinary review for adjuvant immunotherapy/TKI where indicated.`,
+          interpretation: `Leibovich 2003 score ${score}. High progression risk. Close surveillance and multidisciplinary review for adjuvant immunotherapy/TKI where indicated.`,
         },
       ]);
       return {
@@ -1698,28 +1697,28 @@ export const wave7HighuseCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Leibovich 2018 (Eur Urol) updates histology-specific models for PFS/CSS after RCC surgery. This bedside integer uses 2018-style T-stage granularity plus N, size ≥10 cm, grade (1–2 / 3 / 4) and coagulative necrosis (+2), with classic 0–2 / 3–5 / ≥6 risk groups from the Leibovich family.',
-      formula: 'pT1a 0, T1b 2, T2a 3, T2b 4, T3a 4, T3b 4, T3c/T4 6; N1 +2; size ≥10 cm +1; grade 3 +1, grade 4 +3; necrosis +2.',
+        'Leibovich 2003 (Cancer) integer score for progression after radical nephrectomy in clear-cell RCC: pT1a 0, pT1b 2, pT2 3, pT3a/pT3b/pT3c/pT4 4; pN1/pN2 +2; size ≥10 cm +1; nuclear grade 3 +1, grade 4 +3; histologic tumor necrosis +1. Risk groups 0–2 low, 3–5 intermediate, ≥6 high.',
+      formula: 'pT1a 0, pT1b 2, pT2 3, pT3a/pT3b/pT3c/pT4 4; N1–2 +2; size ≥10 cm +1; grade 3 +1, grade 4 +3; necrosis +1.',
       validation:
-        '2018 Mayo models report C-indices ~0.83–0.86 for ccRCC. Integer grouping here is a transparent bedside approximation, not the full histology-specific nomogram.',
+        'Derived and validated in the 2003 Mayo clear-cell RCC nephrectomy cohort; later extended by SSIGN and the 2018 histology-specific models.',
       references: [
         {
-          title: 'Predicting oncologic outcomes in renal cell carcinoma after surgery',
-          citation: 'Leibovich BC et al. Eur Urol. 2018',
-          year: 2018,
-          pmid: '29398265',
-          doi: '10.1016/j.eururo.2018.01.005',
+          title: 'Prediction of progression after radical nephrectomy for patients with clear cell renal cell carcinoma: a stratification tool for prospective clinical trials',
+          citation: 'Leibovich BC, Blute ML, Cheville JC, et al. Cancer. 2003;97(7):1663-1671',
+          year: 2003,
+          pmid: '12655523',
+          doi: '10.1002/cncr.11234',
         },
       ],
     },
     nextSteps: [
       { condition: 'Score ≥6', actions: ['GU medical oncology', 'High-intensity imaging', 'Adjuvant-trial eligibility'] },
-      { condition: 'Papillary or chromophobe histology', actions: ['Use the histology-specific 2018 tables — this integer is ccRCC-oriented'] },
+      { condition: 'Papillary or chromophobe histology', actions: ['Use a histology-specific model — the classic Leibovich score was derived in clear-cell RCC'] },
     ],
     pearls: [
       'Necrosis is coagulative tumor necrosis, not hyalinization or hemorrhage.',
-      'pT3a and pT3b share 4 points here; pT3c/T4 is 6.',
-      'Full 2018 model also includes symptoms, sarcomatoid features, and thrombus level for CSS — not all are in this integer.',
+      'The 2003 score predates the pT2a/pT2b split — all pT2 scores 3; pT3a, pT3b, and pT3c/pT4 all score 4.',
+      'Newer tools (SSIGN, 2018 histology-specific models) add performance status, sarcomatoid features, and refined staging.',
     ],
   },
 
@@ -2060,6 +2059,8 @@ export const wave7HighuseCalcs: Calculator[] = [
       'Compatibility registration of the full ISTH-SSC Bleeding Assessment Tool summing 14 domains (0–4 each). Abnormal: ≥4 in adult men, ≥6 in adult women. Use `isth-bat` for the primary registration.',
     category: 'hematology',
     tags: ['isth', 'bat', 'bleeding', 'vwd', 'hemostasis'],
+    status: 'superseded',
+    supersededBy: 'isth-bat',
     whenToUse: 'When scoring a mucocutaneous/surgical bleeding history for possible mild bleeding disorder (VWD, platelet function disorder).',
     whyUse: 'Standardized ISTH-SSC BAT domains; this module sums them rather than only interpreting a pre-computed total.',
     questionnaire: true,

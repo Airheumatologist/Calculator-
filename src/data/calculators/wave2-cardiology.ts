@@ -21,7 +21,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
       selectInput('ecg', 'ECG', [
         { label: 'Normal', value: 0, points: 0, description: 'Entirely normal tracing' },
         { label: 'Non-specific repolarization disturbance', value: 1, points: 1, description: 'LBBB, LVH strain, digoxin effect, RV pacemaker, or unchanged known repolarization' },
-        { label: 'Significant ST deviation', value: 2, points: 2, description: 'Significant ST depression or elevation (typically ≥1 mm / 0.1 mV), not TIMI ≥0.5 mm' },
+        { label: 'Significant ST deviation', value: 2, points: 2, description: 'Significant ST-segment depression or elevation — the HEART score does not specify a fixed mm threshold; judge clinically (clear ischemic deviation, not nonspecific change)' },
       ], undefined, 'ECG: normal 0, non-specific repolarization changes 1, significant ST deviation 2 points. Compare with any prior tracing.'),
       selectInput('age', 'Age', [
         { label: '< 45 years', value: 0, points: 0 },
@@ -169,7 +169,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
         stratum = 'Intermediate risk';
         mort = '~6.4%';
         riskLevel = 'moderate';
-        interpretation = `BUN ≥43 and SBP ≥115: intermediate ADHERE risk (~5–6% range).`;
+        interpretation = `BUN ≥43 and SBP ≥115: intermediate ADHERE risk (~6.4% in-hospital mortality).`;
       } else if (cr < 2.75) {
         stratum = 'High risk';
         mort = '~12.4%';
@@ -1857,9 +1857,9 @@ export const wave2CardiologyCalcs: Calculator[] = [
       yesNo('recentMi', 'Recent MI (≤90 days)', null, 'Myocardial infarction within 90 days before surgery.'),
       selectInput('pasp', 'PA systolic pressure', [
         { label: '<31 mmHg', value: 'n', description: 'PASP <31 mmHg (normal EuroSCORE II band)' },
-        { label: '31–54 mmHg', value: 'm', description: 'PASP 31–54 mmHg (moderate PH band)' },
-        { label: '≥55 mmHg', value: 's', description: 'PASP ≥55 mmHg (severe PH band)' },
-      ], undefined, 'PA systolic pressure: under 31 mmHg is the reference, 31–54 adds a modest penalty, and 55 or higher the largest.'),
+        { label: '31–55 mmHg', value: 'm', description: 'PASP 31–55 mmHg (moderate PH band)' },
+        { label: '>55 mmHg', value: 's', description: 'PASP >55 mmHg (severe PH band)' },
+      ], undefined, 'PA systolic pressure: under 31 mmHg is the reference, 31–55 adds a modest penalty, and above 55 the largest.'),
       selectInput('urgency', 'Urgency', [
         { label: 'Elective', value: 0, description: 'Routine admission for operation' },
         { label: 'Urgent', value: 1, description: 'Not electively admitted; requires surgery this admission and cannot go home' },

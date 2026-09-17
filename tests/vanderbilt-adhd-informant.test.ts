@@ -70,18 +70,19 @@ describe('Vanderbilt ADHD informant + branch declaration (P1 leftover)', () => {
     const result = calc!.calculate({ entryMode: 'direct', inatt: 6, hyper: 4, perf: 1 });
 
     expect(result.score).toBe('—');
-    expect(result.label).toBe('Select the informant');
+    expect(result.label).toBe('Parent form required');
     expect(result.riskLevel).toBe('info');
-    expect(result.details).toContainEqual({ label: 'Informant', value: 'Required' });
-    expect(result.interpretation).not.toMatch(/parent form|assuming parent/i);
+    expect(result.details).toContainEqual({ label: 'Informant', value: 'Parent / caregiver required' });
   });
 
-  it('labels the chosen informant instead of assuming a parent form', () => {
+  it('scores the parent form and rejects the teacher form (different items)', () => {
     const parent = calc!.calculate({ entryMode: 'direct', informant: 'parent', inatt: 6, hyper: 4, perf: 1 });
     const teacher = calc!.calculate({ entryMode: 'direct', informant: 'teacher', inatt: 6, hyper: 4, perf: 1 });
 
-    expect(parent.details).toContainEqual({ label: 'Informant', value: 'Parent' });
-    expect(teacher.details).toContainEqual({ label: 'Informant', value: 'Teacher' });
+    expect(parent.details).toContainEqual({ label: 'Informant', value: 'Parent / caregiver (NICHQ parent form)' });
+    // Teacher ratings must not be scored against parent-form items.
+    expect(teacher.score).toBe('—');
+    expect(teacher.label).toBe('Parent form required');
     expect(parent.label).toBe('Positive ADHD screen (symptom + performance)');
     // inattention 6/9 positive + 1 performance item; hyperactivity 4/9 is below threshold.
     expect(parent.score).toBe(2);
@@ -94,7 +95,7 @@ describe('Vanderbilt ADHD informant + branch declaration (P1 leftover)', () => {
 
     const surveyValues: Record<string, number | string> = {
       entryMode: 'survey',
-      informant: 'teacher',
+      informant: 'parent',
     };
     for (const id of SURVEY_ITEMS) surveyValues[id] = id.startsWith('perf_') ? 3 : 0;
     expect(getMissingQuestionnaireInputs(calc!, surveyValues)).toEqual([]);

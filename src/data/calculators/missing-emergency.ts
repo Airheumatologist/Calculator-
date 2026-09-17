@@ -1218,7 +1218,7 @@ export const missingEmergencyCalcs: Calculator[] = [
   {
     id: 'absi-burn',
     name: 'Abbreviated Burn Severity Index (ABSI)',
-    shortName: 'ABSI',
+    shortName: 'ABSI-burn',
     description: 'Composite burn severity score from sex, age, inhalation, full-thickness burn, and TBSA.',
     category: 'emergency',
     tags: ['burn', 'absi', 'severity', 'mortality'],
@@ -1232,7 +1232,7 @@ export const missingEmergencyCalcs: Calculator[] = [
       numberInput('age', 'Age', { unit: 'years', min: 0, max: 120, step: 1, exampleValue: 40, helpText: 'Age in years; ABSI scores age in bands — 1 point for 20 or younger, then 2 (21–40), 3 (41–60), 4 (61–80), 5 for 81 or older.' }),
       yesNo('inhalation', 'Inhalation injury (+1)', 1, 'Clinically diagnosed inhalation injury (closed-space fire, carbonaceous sputum, facial burns/singed hairs plus airway signs) or bronchoscopy-confirmed.'),
       yesNo('fullThickness', 'Full-thickness burn present (+1)', 1, 'Any full-thickness (3rd degree) area adds +1 in addition to TBSA-category points.'),
-      numberInput('tbsa', 'TBSA burned', { unit: '%', min: 0, max: 100, step: 1, exampleValue: 20, helpText: 'Partial- + full-thickness (2nd/3rd degree) only; exclude isolated first-degree/superficial erythema. Estimate with Lund-Browder (preferred) or Rule of Nines; patient palm ≈ 1%. Full-thickness presence is scored separately (+1).' }),
+      numberInput('tbsa', 'TBSA burned', { unit: '%', min: 0, max: 100, step: 1, exampleValue: 20, helpText: 'Partial- + full-thickness (2nd/3rd degree) only; exclude isolated first-degree/superficial erythema. Estimate with Lund-Browder (preferred) or Rule of Nines; patient palm ≈ 1%. TBSA category: 1 pt for 1–10%, then +1 per 10% band to 10 pts at 91–100% (0% is out of scope). Full-thickness presence is scored separately (+1).' }),
     ],
     calculate(values) {
       const sexPts = num(values.sex, 0) === 1 ? 1 : 0;
@@ -1257,7 +1257,9 @@ export const missingEmergencyCalcs: Calculator[] = [
       else if (tbsa >= 31) tbsaPts = 4;
       else if (tbsa >= 21) tbsaPts = 3;
       else if (tbsa >= 11) tbsaPts = 2;
-      else if (tbsa > 0) tbsaPts = 1;
+      // Published ABSI table assigns 1 pt to the 1–10% band; 0% TBSA (no burn)
+      // is out of scope for the instrument and scores 0.
+      else if (tbsa >= 1) tbsaPts = 1;
 
       const score = sexPts + agePts + inhPts + ftPts + tbsaPts;
 

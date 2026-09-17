@@ -38,8 +38,11 @@ export function validateCalculator(calc: Calculator): string[] {
     inputIds.add(input.id);
     if (!input.label?.trim()) errors.push(`${prefix}: input ${input.id} missing label`);
 
-    if (input.min !== undefined && input.max !== undefined && input.min > input.max) {
-      errors.push(`${prefix}: input ${input.id} has min > max`);
+    if (input.min !== undefined && input.max !== undefined && !(input.min < input.max)) {
+      errors.push(`${prefix}: input ${input.id} has min >= max`);
+    }
+    if (input.unitKind !== undefined && input.type !== 'number') {
+      errors.push(`${prefix}: input ${input.id} declares unitKind on a non-number input`);
     }
     if (input.step !== undefined && !(input.step > 0)) {
       errors.push(`${prefix}: input ${input.id} step must be positive`);

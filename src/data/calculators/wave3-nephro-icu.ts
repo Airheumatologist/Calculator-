@@ -823,7 +823,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       validation: 'Classic teaching with supportive cohorts; neither test is definitive alone.',
       references: [
         {
-          title: 'Fractional excretion of urea for diagnosis of prerenal failure',
+          title: 'Significance of the fractional excretion of urea in the differential diagnosis of acute azotemia',
           citation: 'Carvounis CP et al. Kidney Int. 2002',
           year: 2002,
           pmid: '12427149',
@@ -1525,13 +1525,12 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         };
       }
       const severeCount = [h, p, r].filter((g) => g === 2).length;
-      const anyAbnormal = [h, p, r].some((g) => g >= 1);
-      let grade = 0;
-      if (!anyAbnormal) grade = 0;
-      else if (severeCount === 0) grade = 1; // only mild abnormalities
+      // Original VExUS: with a dilated IVC (≥2 cm), grade 1 = normal or only mild organ
+      // Doppler changes; grade 2 = one severe pattern; grade 3 = ≥2 severe patterns.
+      let grade: number;
+      if (severeCount >= 2) grade = 3;
       else if (severeCount === 1) grade = 2;
-      else grade = 3; // ≥2 severe patterns
-      // Note: original VExUS: grade 1 = any mild; 2 = one severe; 3 = ≥2 severe (with dilated IVC)
+      else grade = 1; // dilated IVC with normal-to-mild waveforms = VExUS 1
       const labels = [
         'VExUS 0 — no congestion',
         'VExUS 1 — mild congestion',
@@ -1541,7 +1540,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       const levels: Array<'low' | 'moderate' | 'high' | 'critical'> = ['low', 'moderate', 'high', 'critical'];
       const interps = [
         'Dilated IVC but normal organ vein Dopplers — no VExUS congestion.',
-        'Mild venous congestion pattern — interpret with volume exam and right heart function.',
+        'Dilated IVC with normal or only mildly abnormal organ vein Dopplers (VExUS 1) — interpret with volume exam and right heart function.',
         'Moderate congestion — fluid removal / decongestion strategies often considered if clinically overloaded.',
         'Severe multi-organ venous congestion — associated with AKI and worse outcomes; prioritize decongestion when appropriate.',
       ];
@@ -1560,7 +1559,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     },
     evidence: {
       summary: 'VExUS grades venous congestion using IVC plus hepatic, portal, and intrarenal venous Doppler patterns.',
-      formula: 'If IVC ≥2 cm: Grade 1 = only mild Doppler changes; 2 = one severe; 3 = ≥2 severe organ patterns',
+      formula: 'If IVC ≥2 cm: Grade 1 = normal or only mild Doppler changes; 2 = one severe; 3 = ≥2 severe organ patterns',
       validation: 'Linked to AKI and congestion phenotypes in cardiac surgery / critical care cohorts; operator dependent.',
       references: [
         {
@@ -1576,7 +1575,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
       { condition: 'VExUS 2–3 + overload', actions: ['Diuresis or ultrafiltration as appropriate', 'Reassess organ perfusion', 'Treat right heart / TR causes'] },
     ],
     pearls: [
-      'Grade 1 = only mild organ patterns; 2 = one severe (grade-2) pattern; 3 = ≥2 severe patterns — all require dilated IVC ≥2 cm.',
+      'Grade 1 = normal or only mild organ patterns; 2 = one severe (grade-2) pattern; 3 = ≥2 severe patterns — all require dilated IVC ≥2 cm.',
     ],
   },
 

@@ -202,8 +202,8 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: '≤8 (8)', value: 8, description: 'GCS ≤8 (coma range)' },
       ], undefined, 'Glasgow Coma Scale sum (eye + verbal + motor). Intubated: score best motor and eye; do not invent a verbal score — use the recorded GCS.'),
       selectInput('urea', 'Urea (mmol/L) band', [
-        { label: '<7.5 (1)', value: 1, description: 'Urea <7.5 mmol/L (BUN ≈ <21 mg/dL)' },
-        { label: '7.5–10 (2)', value: 2, description: 'Urea 7.5–10 mmol/L (BUN ≈ 21–28 mg/dL)' },
+        { label: '≤7.5 (1)', value: 1, description: 'Urea ≤7.5 mmol/L (BUN ≈ ≤21 mg/dL)' },
+        { label: '7.6–10 (2)', value: 2, description: 'Urea 7.6–10 mmol/L (BUN ≈ 21–28 mg/dL)' },
         { label: '10.1–15 (4)', value: 4, description: 'Urea 10.1–15 mmol/L (BUN ≈ 28–42 mg/dL)' },
         { label: '>15 (8)', value: 8, description: 'Urea >15 mmol/L (BUN ≈ >42 mg/dL)' },
       ], undefined, 'Enter SI urea in mmol/L. BUN mg/dL ≈ urea mmol/L × 2.8. 7.5 mmol/L ≈ 21 mg/dL BUN; 10 ≈ 28; 15 ≈ 42.'),
@@ -243,9 +243,9 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
       ], 1, 'Copeland POSSUM examples: Minor = hernia, varicose veins, minor perianal/scrotal; Moderate = appendectomy, cholecystectomy, mastectomy, TURP; Major = laparotomy, bowel resection, CBD exploration, major amputation; Major+ = aortic, APR, Whipple, liver resection, esophagectomy.'),
       selectInput('procedures', 'Number of procedures', [
         { label: '1 (1)', value: 1, description: 'Single procedure this sitting' },
-        { label: '2 (2)', value: 2, description: 'Two procedures this sitting' },
-        { label: '>2 (4)', value: 4, description: 'More than two procedures this sitting' },
-      ], undefined, 'Count of procedures performed at this operation (not lifetime).'),
+        { label: '2 (4)', value: 4, description: 'Two procedures this sitting' },
+        { label: '>2 (8)', value: 8, description: 'More than two procedures this sitting' },
+      ], undefined, 'Count of procedures performed at this operation (not lifetime). Copeland assigns 1 / 4 / 8 points for 1 / 2 / >2 procedures.'),
       selectInput('bloodLoss', 'Blood loss (mL)', [
         { label: '≤100 (1)', value: 1 },
         { label: '101–500 (2)', value: 2 },
@@ -2557,7 +2557,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
       modeInputId: 'entryMode',
       directModeValues: ['direct'],
       activeInputIdsByMode: {
-        patterns: ['primaryPattern', 'secondaryPattern', 'tertiaryPattern'],
+        patterns: ['primaryPattern', 'secondaryPattern', 'tertiaryPattern', 'specimen'],
         direct: ['directGleason'],
       },
     },
@@ -2590,7 +2590,11 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: 'None / Not present', value: 0 },
         { label: 'Pattern 4 tertiary (minor component <5%)', value: 4 },
         { label: 'Pattern 5 tertiary (minor high-grade component <5%)', value: 5 },
-      ], 0, 'Tertiary high-grade component under 5% (pattern 4 or 5). On biopsy, a tertiary pattern 5 upgrades the score; use \'none\' when the report does not mention one.'),
+      ], 0, 'Tertiary high-grade component under 5% (pattern 4 or 5). ISUP 2014/2019: on needle biopsy a tertiary pattern higher than the secondary pattern replaces it in the reported Gleason score; on prostatectomy it is reported as a tertiary pattern without changing the score. Use \'none\' when the report does not mention one.'),
+      selectInput('specimen', 'Specimen type', [
+        { label: 'Needle biopsy', value: 'biopsy' },
+        { label: 'Radical prostatectomy', value: 'prostatectomy' },
+      ], 'biopsy', 'ISUP grading differs by specimen: on biopsy the highest-grade pattern (including a higher tertiary pattern) is incorporated into the Gleason score; on radical prostatectomy a tertiary pattern is reported separately and does not change the score.'),
       selectInput('directGleason', 'Direct Gleason category', [
         { label: 'Grade Group 1: Gleason ≤6 (3+3)', value: '6' },
         { label: 'Grade Group 2: Gleason 3+4=7', value: '3+4' },
@@ -2609,7 +2613,12 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
 
       if (mode === 'patterns') {
         const p = num(values.primaryPattern, 3);
-        const s = num(values.secondaryPattern, 3);
+        const sRaw = num(values.secondaryPattern, 3);
+        const tert = num(values.tertiaryPattern, 0);
+        const isBiopsy = String(values.specimen ?? 'biopsy') === 'biopsy';
+        // ISUP 2014/2019 biopsy convention: a tertiary pattern higher than the
+        // secondary pattern replaces it in the reported Gleason score.
+        const s = isBiopsy && tert > sRaw ? tert : sRaw;
         const sum = p + s;
         gleasonStr = `${p}+${s}=${sum}`;
 
@@ -2693,12 +2702,23 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
       if (tert === 5 && group < 4) {
         interpretation += ' [Alert: Presence of tertiary pattern 5 confers significantly higher risk of biochemical recurrence and adverse pathology, shifting clinical management toward more aggressive therapy.]';
       }
+      if (mode === 'patterns' && tert > 0) {
+        interpretation += String(values.specimen ?? 'biopsy') === 'biopsy'
+          ? ' ISUP biopsy convention applied: a tertiary pattern higher than the secondary pattern is incorporated into the reported Gleason score.'
+          : ' ISUP prostatectomy convention applied: the tertiary pattern is reported separately and does not change the Gleason score.';
+      }
 
       const details = [
         { label: 'ISUP Grade Group', value: `Grade Group ${group} (of 5)` },
         { label: 'Gleason Architecture', value: gleasonStr },
         { label: 'Input Mode', value: mode === 'patterns' ? 'Primary + Secondary Patterns' : 'Direct Category' },
       ];
+      if (mode === 'patterns') {
+        details.push({
+          label: 'Specimen',
+          value: String(values.specimen ?? 'biopsy') === 'biopsy' ? 'Needle biopsy' : 'Radical prostatectomy',
+        });
+      }
 
       if (tert > 0) {
         details.push({ label: 'Tertiary Pattern', value: `Pattern ${tert} identified` });

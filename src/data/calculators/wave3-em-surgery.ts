@@ -226,7 +226,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     category: 'gastroenterology',
     tags: ['ugib', 'bleed', 'abc', 'mortality', 'gi'],
     whenToUse: 'Adults with acute upper GI bleeding for early mortality risk stratification alongside GBS/AIMS65/Rockall.',
-    whyUse: 'Bedside ABC variables (age, urea, albumin, creatinine, AMS, cirrhosis, disseminated malignancy, ASA) predict in-hospital mortality.',
+    whyUse: 'Bedside ABC variables (age, urea, albumin, creatinine, AMS, cirrhosis, disseminated malignancy, ASA) predict 30-day mortality.',
     inputs: [
       selectInput('age', 'Age', [
         { label: '≤59 years (0)', value: 0 },
@@ -271,19 +271,19 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
           max: 3,
           level: 'low',
           label: 'Low ABC mortality risk',
-          interpretation: `ABC score ${score}: lower predicted in-hospital mortality band. Still resuscitate and time endoscopy per clinical severity and GBS.`,
+          interpretation: `ABC score ${score}: lower predicted 30-day mortality band. Still resuscitate and time endoscopy per clinical severity and GBS.`,
         },
         {
           max: 7,
           level: 'moderate',
           label: 'Intermediate ABC risk',
-          interpretation: `ABC score ${score}: intermediate mortality risk — inpatient care, early endoscopy planning, correct coagulopathy/resuscitation.`,
+          interpretation: `ABC score ${score}: intermediate 30-day mortality risk — inpatient care, early endoscopy planning, correct coagulopathy/resuscitation.`,
         },
         {
           max: 100,
           level: 'high',
           label: 'High ABC mortality risk',
-          interpretation: `ABC score ${score}: high mortality risk — aggressive resuscitation, urgent endoscopy, consider ICU-level monitoring.`,
+          interpretation: `ABC score ${score}: high 30-day mortality risk — aggressive resuscitation, urgent endoscopy, consider ICU-level monitoring.`,
         },
       ]);
       return {
@@ -297,11 +297,11 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'ABC score (Laursen et al.): age ≤59/60–74/≥75 = 0/1/2; urea >10 mmol/L = 1; albumin <30 g/L = 2; Cr 100–150/>150 µmol/L = 1/2; AMS 2; cirrhosis 2; disseminated malignancy 4; ASA I–II/III/≥IV = 0/1/3. Range 0–18. Mortality bands ≤3 / 4–7 / ≥8.',
+        'ABC score (Laursen et al.): age ≤59/60–74/≥75 = 0/1/2; urea >10 mmol/L = 1; albumin <30 g/L = 2; Cr 100–150/>150 µmol/L = 1/2; AMS 2; cirrhosis 2; disseminated malignancy 4; ASA I–II/III/≥IV = 0/1/3. Range 0–18. 30-day mortality bands ≤3 / 4–7 / ≥8.',
       formula:
         'Age (0/1/2) + urea >10 mmol/L (1) + albumin <30 g/L (2) + creatinine (0/1/2) + AMS (2) + cirrhosis (2) + disseminated malignancy (4) + ASA (0/1/3); max 18',
       validation:
-        'International multicenter derivation/validation for UGIB mortality; complementary to GBS (intervention) and AIMS65/Rockall.',
+        'International multicenter derivation/validation for 30-day mortality after GI bleeding; complementary to GBS (intervention) and AIMS65/Rockall.',
       references: [
         {
           title: 'ABC score: a new risk score that accurately predicts mortality in acute upper and lower gastrointestinal bleeding',
@@ -448,7 +448,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
       yesNo('fever', 'Fever ≥38 °C', 1, 'Temperature ≥38.0 °C.', false),
       yesNo('tachycardia', 'Tachycardia (HR >100)', 1, 'HR >100 /min.', true),
       yesNo('peritonitis', 'Peritonitis / rebound / guarding', 1, 'Rebound tenderness, involuntary guarding, or rigid abdomen — surgical emergency until proven otherwise.', false),
-      yesNo('leukocytosis', 'Leukocytosis (WBC >12 × 10³/µL)', 1, 'Teaching cutoff WBC >12 × 10³/µL (pick one threshold; drop the 10–12k span).', true),
+      yesNo('leukocytosis', 'Leukocytosis (WBC >12 × 10³/µL)', 1, 'Teaching cutoff WBC >12 × 10³/µL.', true),
       yesNo('lactate', 'Elevated lactate or base deficit', 1, 'Typically lactate >2 mmol/L or worsening base deficit; normal lactate does not exclude early ischemia.', true),
       yesNo('sirs', 'SIRS / systemic toxicity', 1, 'Yes if ≥2 of: T <36 or >38 °C; HR >90; RR >20 or PaCO2 <32 mmHg; WBC <4 or >12 × 10³/µL or >10% bands.', true),
       yesNo('ctIschemia', 'CT signs of ischemia (reduced wall enhancement, closed loop, pneumatosis, etc.)', 1, 'Yes if reduced wall enhancement, closed-loop morphology, pneumatosis, portal venous gas, or mesenteric edema/whirl — closed loop is a surgical emergency even if vitals are initially normal.', false),
@@ -1177,16 +1177,22 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
       const pct = risks[score] ?? 80;
       const r = riskFromThresholds(score, [
         {
+          max: 0,
+          level: 'low',
+          label: `Low PONV risk (~${pct}%)`,
+          interpretation: `Apfel ${score}/4 ≈ ${pct}% PONV risk. Consensus guidelines give 0 risk factors little to no routine prophylaxis — ensure a rescue antiemetic is available.`,
+        },
+        {
           max: 1,
           level: 'low',
-          label: `Low–moderate PONV risk (~${pct}%)`,
-          interpretation: `Apfel ${score}/4 ≈ ${pct}% PONV risk. Consider 1–2 prophylactic interventions (e.g., 5-HT3 antagonist ± dexamethasone).`,
+          label: `Low PONV risk (~${pct}%)`,
+          interpretation: `Apfel ${score}/4 ≈ ${pct}% PONV risk. One risk factor still carries little/no routine prophylaxis per consensus guidelines; consider a single agent only if the consequences of PONV are high (e.g., wired jaw, neurosurgery).`,
         },
         {
           max: 2,
           level: 'moderate',
           label: `Moderate PONV risk (~${pct}%)`,
-          interpretation: `Apfel ${score}/4 ≈ ${pct}% risk. Multimodal prophylaxis recommended (2 agents from different classes).`,
+          interpretation: `Apfel ${score}/4 ≈ ${pct}% risk. Prophylaxis recommended (1–2 agents from different classes, e.g., 5-HT3 antagonist ± dexamethasone).`,
         },
         {
           max: 4,
@@ -1218,9 +1224,9 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: '0', actions: ['Optional single agent', 'Rescue antiemetic available'] },
+      { condition: '0–1', actions: ['Little/no routine prophylaxis per consensus guidelines', 'Rescue antiemetic available'] },
       {
-        condition: '≥1',
+        condition: '≥2',
         actions: [
           '≥2 prophylactic classes (multimodal)',
           'Opioid-sparing strategy',
@@ -1771,8 +1777,8 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
         { label: 'Penetrating trauma to head/neck/torso', value: 'penetrating', description: 'GSW/stab/other penetrating injury to head, neck, or torso' },
         { label: 'Blast / high-energy industrial crush', value: 'blast', description: 'Blast or high-energy industrial crush' },
       ], "fall", 'Dangerous mechanisms appear across Canadian C-spine, CATCH/PECARN, and CDC field triage. Mechanism alone does not mandate imaging if a high-sensitivity rule is fully negative and the exam is reliable.'),
-      yesNo('elderly', 'Age ≥65 years (mechanism more dangerous at same energy)', 1, 'Age ≥65 — lower-energy mechanisms still cause serious injury.', false),
-      yesNo('anticoag', 'Anticoagulated or bleeding diathesis', 1, 'Warfarin, DOAC, therapeutic heparin, or known bleeding diathesis — raises ICH risk even with low-energy mechanism.', false),
+      yesNo('elderly', 'Age ≥65 years (mechanism more dangerous at same energy)', undefined, 'Age ≥65 — lower-energy mechanisms still cause serious injury. A vulnerability modifier (capped, non-additive), not a point item.', false),
+      yesNo('anticoag', 'Anticoagulated or bleeding diathesis', undefined, 'Warfarin, DOAC, therapeutic heparin, or known bleeding diathesis — raises ICH risk even with low-energy mechanism. A vulnerability modifier (capped, non-additive), not a point item.', false),
     ],
     calculate(values) {
       const m = String(values.mechanism ?? 'low');

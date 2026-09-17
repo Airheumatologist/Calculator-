@@ -180,9 +180,8 @@ const IIM_PATH: Opt[] = [
 ];
 const APS_VTE: Opt[] = [
   { label: 'None', value: 'none', points: 0 },
-  { label: 'Provoked VTE (high-risk VTE profile)', value: 'provoked', points: 1, description: 'VTE with a major transient risk factor (surgery with GA >30 min, hospital bedbound ≥3 days, cesarean, major trauma/fracture)' },
-  { label: 'Unprovoked VTE', value: 'unprovoked', points: 3, description: 'VTE without a high-risk (major transient) VTE profile' },
-  { label: 'High-risk thrombophilia + VTE', value: 'high-risk', points: 4, description: 'VTE plus a high-risk thrombophilia (as in the 2023 table)' },
+  { label: 'VTE with high-risk VTE profile', value: 'provoked', points: 1, description: 'VTE with a high-risk profile — major transient factor (surgery with general anesthesia >30 min, hospital bedbound ≥3 days, cesarean delivery, major trauma/fracture) or persistent factor (active malignancy, high-risk thrombophilia such as antithrombin deficiency or homozygous/compound thrombophilias)' },
+  { label: 'VTE without high-risk VTE profile', value: 'unprovoked', points: 3, description: 'VTE without any high-risk profile factor (transient or persistent)' },
 ];
 const APS_ART: Opt[] = [
   { label: 'None', value: 'none', points: 0 },
@@ -198,9 +197,9 @@ const APS_OB: Opt[] = [
   { label: 'None', value: 'none', points: 0 },
   { label: '≥3 consecutive pre-10-week losses', value: 'early-losses', points: 1, description: '≥3 consecutive unexplained pre-fetal deaths (<10 weeks 0 days)' },
   { label: 'Fetal death 10–16 weeks', value: 'fetal-10-16', points: 1, description: 'Death of a morphologically normal fetus at 10 weeks 0 days through 15 weeks 6 days' },
-  { label: 'Placental insufficiency with severe features', value: 'placental', points: 2, description: 'Severe placental insufficiency (e.g. FGR, abnormal UA Dopplers, oligohydramnios) with severe features' },
-  { label: 'Pre-eclampsia with severe features <34 weeks', value: 'preeclampsia', points: 3, description: 'Pre-eclampsia with ACOG severe features requiring delivery <34 weeks' },
-  { label: 'Fetal death ≥16 weeks', value: 'fetal-ge16', points: 4, description: 'Death of a morphologically normal fetus at ≥16 weeks 0 days' },
+  { label: 'Fetal death 16–34 weeks without severe PEC/PI', value: 'fetal-ge16', points: 1, description: 'Death of a morphologically normal fetus at 16 weeks 0 days–33 weeks 6 days in the absence of pre-eclampsia or placental insufficiency with severe features' },
+  { label: 'Pre-eclampsia OR placental insufficiency with severe features <34 weeks', value: 'pec-or-pi', points: 3, description: 'Pre-eclampsia with ACOG severe features, or placental insufficiency with severe features (e.g. abnormal fetal surveillance, FGR, severe oligohydramnios), requiring delivery <34 weeks — with or without fetal death' },
+  { label: 'Pre-eclampsia AND placental insufficiency with severe features <34 weeks', value: 'pec-and-pi', points: 4, description: 'Both pre-eclampsia with severe features and placental insufficiency with severe features requiring delivery <34 weeks — with or without fetal death' },
 ];
 const APS_VALVE: Opt[] = [
   { label: 'None', value: 'none', points: 0 },
@@ -572,8 +571,8 @@ export const wave7RheumClassCalcs: Calculator[] = [
         'Both RF and ACPA ≤ laboratory ULN.'),
       yesNo('noPeripheralSynovitis', 'No other peripheral synovitis', 1,
         'No synovitis of joints other than shoulders and hips (knees, wrists, MCPs, etc. would negate this item).'),
-      yesNo('usShoulderHip', 'Ultrasound: ≥1 abnormal shoulder AND ≥1 abnormal hip', null, 'Abnormal shoulder = subdeltoid bursitis, biceps tenosynovitis, and/or glenohumeral synovitis; abnormal hip = coxofemoral synovitis and/or trochanteric bursitis. Counted only on the clinical+US algorithm.'),
-      yesNo('usBothShoulders', 'Ultrasound: both shoulders abnormal', null, 'Each shoulder: subdeltoid bursitis, biceps tenosynovitis, and/or glenohumeral synovitis. Counted only on the clinical+US algorithm.'),
+      yesNo('usShoulderHip', 'Ultrasound: ≥1 abnormal shoulder AND ≥1 abnormal hip', 1, 'Abnormal shoulder = subdeltoid bursitis, biceps tenosynovitis, and/or glenohumeral synovitis; abnormal hip = coxofemoral synovitis and/or trochanteric bursitis. +1 counted only on the clinical+US algorithm (ignored on the clinical-only path).'),
+      yesNo('usBothShoulders', 'Ultrasound: both shoulders abnormal', 1, 'Each shoulder: subdeltoid bursitis, biceps tenosynovitis, and/or glenohumeral synovitis. +1 counted only on the clinical+US algorithm (ignored on the clinical-only path).'),
       selectInput('algorithm', 'Scoring algorithm', PMR_ALG, 'clinical', 'Clinical-without-US pathway uses threshold ≥4 and does not add US points. US algorithm uses threshold ≥5 and includes US items.'),
     ],
     calculate(values) {
@@ -1478,10 +1477,10 @@ export const wave7RheumClassCalcs: Calculator[] = [
         'Neutrophils ≥80% of the WBC differential.'),
       yesNo('glycFerritin', 'Major: glycosylated ferritin ≤20%', 1,
         'Glycosylated (glycated) ferritin fraction ≤20% of total ferritin.'),
-      yesNo('typicalRash', 'Minor: typical rash', null,
-        'Typical evanescent salmon-colored macular/maculopapular Still’s rash (the Yamaguchi-type rash). Distinct from the major “transient erythema” item.'),
-      yesNo('leukocytosis', 'Minor: leukocytosis ≥10×10⁹/L', null,
-        'WBC ≥10 × 10⁹/L.'),
+      yesNo('typicalRash', 'Minor: typical rash', 1,
+        'Typical evanescent salmon-colored macular/maculopapular Still’s rash (the Yamaguchi-type rash). Distinct from the major “transient erythema” item. Counts toward the minor tally (need 2 minors with 3 majors).'),
+      yesNo('leukocytosis', 'Minor: leukocytosis ≥10×10⁹/L', 1,
+        'WBC ≥10 × 10⁹/L. Counts toward the minor tally (need 2 minors with 3 majors).'),
     ],
     calculate(values) {
       const spike = bool(values.spikeFever) ? 1 : 0;
@@ -1673,10 +1672,10 @@ export const wave7RheumClassCalcs: Calculator[] = [
     whyUse: 'Much higher specificity than Sydney/Sapporo criteria in the 2023 validation cohort.',
     inputs: [
       yesNo('entryWindow', '≥1 clinical AND ≥1 laboratory criterion within 3 years of each other (entry)', null, 'Absolute 2023 entry: first clinical criterion and first laboratory criterion occur within 3 years. Required to classify; score is still computed if absent.'),
-      selectInput('vte', 'Macrovascular VTE (highest)', APS_VTE, undefined, 'High-risk VTE profile = major transient factor (surgery with GA >30 min, hospital bedbound ≥3 days, cesarean, major trauma/fracture).'),
+      selectInput('vte', 'Macrovascular VTE (highest)', APS_VTE, undefined, 'High-risk VTE profile = major transient factor (surgery with GA >30 min, hospital bedbound ≥3 days, cesarean, major trauma/fracture) OR persistent factor (active malignancy, high-risk thrombophilia). VTE with a high-risk profile scores 1; without scores 3.'),
       selectInput('arterial', 'Macrovascular arterial thrombosis (highest)', APS_ART, undefined, 'High-risk CVD profile: current smoking, treated HTN, DM, LDL ≥160 mg/dL or on lipid-lowering therapy.'),
       selectInput('microvascular', 'Microvascular domain (highest)', APS_MICRO, undefined, 'Suspected = livedo/livedo racemosa, aPL nephropathy, alveolar hemorrhage without histopathology; established = biopsy- or unequivocal imaging-proven.'),
-      selectInput('obstetric', 'Obstetric domain (highest)', APS_OB, undefined, 'Highest obstetric item only. Pre-10-week losses = ≥3 consecutive unexplained. Fetal death bands are 10–16 weeks vs ≥16 weeks. Severe pre-eclampsia is ACOG severe features requiring delivery <34 weeks.'),
+      selectInput('obstetric', 'Obstetric domain (highest)', APS_OB, undefined, 'Highest obstetric item only. Pre-10-week losses = ≥3 consecutive unexplained. Fetal death bands: 10w0d–15w6d (1) and 16w0d–33w6d without severe PEC/PI (1). Severe pre-eclampsia OR placental insufficiency <34 weeks scores 3; both together score 4.'),
       selectInput('valve', 'Cardiac valve domain (highest)', APS_VALVE, undefined, 'Highest valve item only. Thickening vs vegetation on echo; vegetation should not be explained by infection.'),
       yesNo('thrombocytopenia', 'Thrombocytopenia (20–130×10⁹/L)', 2,
         'Platelets 20–130 × 10⁹/L attributed to APS (not TTP, HIT, DIC, or drug-induced). Confirmed on two occasions is preferred.'),

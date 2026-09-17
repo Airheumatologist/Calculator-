@@ -342,7 +342,7 @@ export const cardiologyCalcs: Calculator[] = [
     whenToUse: 'UA, NSTEMI, or STEMI for mortality risk stratification.',
     whyUse: 'Guideline-endorsed comprehensive ACS risk model; score >140 supports early invasive strategy in NSTE-ACS.',
     inputs: [
-      numberInput('age', 'Age', { helpText: 'Age in years; the GRACE model contributes 0.2 × age to the risk calculation.', unit: 'years', min: 18, max: 110, exampleValue: 65 }),
+      numberInput('age', 'Age', { helpText: 'Age in years; the GRACE point table scores age in bands — 0 pts under 30, then 8 (30–39), 25 (40–49), 41 (50–59), 58 (60–69), 75 (70–79), 91 (80–89), and 100 pts at 90+.', unit: 'years', min: 18, max: 110, exampleValue: 65 }),
       numberInput('hr', 'Heart rate', { helpText: 'Heart rate in bpm from the admission vital signs.', unit: 'bpm', min: 20, max: 250, exampleValue: 80 }),
       numberInput('sbp', 'Systolic BP', { helpText: 'Systolic blood pressure in mmHg on admission.', unit: 'mmHg', min: 50, max: 250, exampleValue: 130 }),
       numberInput('creat', 'Creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 1.0, helpText: 'Serum creatinine; select µmol/L for SI lab reports.' }),

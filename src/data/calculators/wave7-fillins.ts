@@ -66,7 +66,7 @@ export const wave7FillinsCalcs: Calculator[] = [
         0.1602 * (male - 0.5642) +
         -0.4919 * (egfr / 5 - 7.222) +
         0.3364 * (Math.log(acr) - 5.137) +
-        -0.3444 * (alb - 3.997) +
+        -0.3441 * (alb - 3.997) +
         0.2604 * (phos - 3.916) +
         -0.07354 * (hco3 - 25.57) +
         -0.2228 * (ca - 9.355);
@@ -119,7 +119,7 @@ export const wave7FillinsCalcs: Calculator[] = [
       summary:
         '8-variable KFRE adds serum albumin, phosphorus, bicarbonate, and calcium to age, sex, eGFR, and ln(ACR). Coefficients from Tangri 2011; variables centered on the development-cohort means. Educational North America 8-variable baseline survivals are 2-year 0.9780 and 5-year 0.9301.',
       formula:
-        'LP = −0.1992(age/10−7.036)+0.1602(male−0.5642)−0.4919(eGFR/5−7.222)+0.3364(ln ACR−5.137)−0.3444(alb−3.997)+0.2604(phos−3.916)−0.07354(HCO₃−25.57)−0.2228(Ca−9.355); Risk = 1 − S₀^exp(LP)',
+        'LP = −0.1992(age/10−7.036)+0.1602(male−0.5642)−0.4919(eGFR/5−7.222)+0.3364(ln ACR−5.137)−0.3441(alb−3.997)+0.2604(phos−3.916)−0.07354(HCO₃−25.57)−0.2228(Ca−9.355); Risk = 1 − S₀^exp(LP)',
       validation:
         'Tangri et al. JAMA 2011 (development) and JAMA 2016 (multinational). 8-variable improvement over 4-variable is modest; 4-variable is more widely implemented. Educational — prefer official regional calculator for formal counseling.',
       references: [
@@ -510,11 +510,11 @@ export const wave7FillinsCalcs: Calculator[] = [
       yesNo('cancer', 'Current cancer', 2, 'Currently active cancer (not remote treated-and-cured). Most IMPROVE implementations exclude non-melanoma skin cancer.', false),
       yesNo('immobility', 'Immobilization ≥7 days', 1, 'Confined to bed or chair with or without bathroom privileges for ≥7 days (not merely admitted but walking).', false),
       yesNo('icu', 'ICU/CCU stay', 1, 'ICU or CCU stay during this admission adds 1 point.', true),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 70, helpText: '≥60 years: +1' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 70, helpText: '>60 years: +1' }),
       yesNo('ddimer', 'D-dimer ≥2× ULN', 2, 'D-dimer at 2 times the upper limit of normal or higher adds 2 points. Record it in the assay units the lab reports and compare against that lab\'s ULN.', false),
     ],
     calculate(values) {
-      const agePts = num(values.age, 70) >= 60 ? 1 : 0;
+      const agePts = num(values.age, 70) > 60 ? 1 : 0;
       const score =
         (bool(values.priorVte) ? 3 : 0) +
         (bool(values.thrombophilia) ? 2 : 0) +
@@ -549,14 +549,14 @@ export const wave7FillinsCalcs: Calculator[] = [
         unit: 'points',
         ...r,
         details: [
-          { label: 'Age ≥60', value: agePts ? '+1' : '0' },
+          { label: 'Age >60', value: agePts ? '+1' : '0' },
           { label: 'D-dimer ≥2× ULN', value: bool(values.ddimer) ? '+2' : '0' },
         ],
       };
     },
     evidence: {
       summary:
-        'IMPROVE VTE: prior VTE 3, thrombophilia 2, lower-limb paralysis 2, current cancer 2, immobilization ≥7 d 1, ICU/CCU 1, age ≥60 1. IMPROVE-DD adds D-dimer ≥2× ULN (+2). Score ≥2 increased risk; ≥4 high risk for extended-prophylaxis discussions.',
+        'IMPROVE VTE: prior VTE 3, thrombophilia 2, lower-limb paralysis 2, current cancer 2, immobilization ≥7 d 1, ICU/CCU 1, age >60 1. IMPROVE-DD adds D-dimer ≥2× ULN (+2). Score ≥2 increased risk; ≥4 high risk for extended-prophylaxis discussions.',
       formula: 'Sum of IMPROVE items + 2 if D-dimer ≥2× ULN',
       validation: 'Spyropoulos / IMPROVE registry; Gibson et al. incorporated D-dimer (IMPROVEDD). Validated in medical inpatients including some COVID-19 cohorts.',
       references: [
@@ -675,6 +675,8 @@ export const wave7FillinsCalcs: Calculator[] = [
       'Full 11-item Ranson score for acute pancreatitis severity: 5 admission + 6 forty-eight-hour criteria. Score 0–11.',
     category: 'gastroenterology',
     tags: ['pancreatitis', 'ranson', 'severity', 'icu'],
+    status: 'superseded',
+    supersededBy: 'ranson-full',
     whenToUse: 'Acute pancreatitis when both admission and 48-hour labs are available (or to tally admission items early).',
     whyUse: 'Classic severity score. BISAP/SIRS are more practical at presentation because Ranson is incomplete until 48 hours.',
     inputs: [

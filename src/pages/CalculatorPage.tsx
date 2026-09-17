@@ -65,10 +65,15 @@ export function CalculatorPage() {
     [calc, activeInputs, values]
   );
 
-  const invalidSelects = useMemo(
-    () => (calc ? getInvalidSelectValues(activeInputs, values) : []),
-    [calc, activeInputs, values]
-  );
+  const invalidSelects = useMemo(() => {
+    if (!calc) return [];
+    // The questionnaire mode input is excluded from activeInputs but is still
+    // a select — a stale/invalid stored mode must trip this gate too.
+    const modeInput = getQuestionnaireModeInput(calc);
+    const gateInputs =
+      modeInput && !activeInputs.includes(modeInput) ? [...activeInputs, modeInput] : activeInputs;
+    return getInvalidSelectValues(gateInputs, values);
+  }, [calc, activeInputs, values]);
 
   const successor = calc?.supersededBy ? getCalculator(calc.supersededBy) : undefined;
 

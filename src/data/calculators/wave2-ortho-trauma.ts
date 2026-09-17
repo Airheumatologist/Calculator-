@@ -235,31 +235,31 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
           max: 0,
           level: 'low',
           label: '0 criteria — very low',
-          interpretation: `Classic Kocher 0/4 (~${approx} septic). Transient synovitis more likely if well-appearing; still reassess.`,
+          interpretation: `Classic Kocher 0/4 (${approx} septic). Transient synovitis more likely if well-appearing; still reassess.`,
         },
         {
           max: 1,
           level: 'low',
           label: '1 criterion — low',
-          interpretation: `Classic Kocher 1/4 (~${approx}). Close follow-up; low threshold for labs/imaging if worsening.`,
+          interpretation: `Classic Kocher 1/4 (${approx}). Close follow-up; low threshold for labs/imaging if worsening.`,
         },
         {
           max: 2,
           level: 'moderate',
           label: '2 criteria — intermediate',
-          interpretation: `Classic Kocher 2/4 (~${approx}). Strongly consider ultrasound-guided aspiration and urgent ortho evaluation.`,
+          interpretation: `Classic Kocher 2/4 (${approx}). Strongly consider ultrasound-guided aspiration and urgent ortho evaluation.`,
         },
         {
           max: 3,
           level: 'high',
           label: '3 criteria — high',
-          interpretation: `Classic Kocher 3/4 (~${approx}). Treat as septic arthritis until proven otherwise — urgent aspiration/OR.`,
+          interpretation: `Classic Kocher 3/4 (${approx}). Treat as septic arthritis until proven otherwise — urgent aspiration/OR.`,
         },
         {
           max: 4,
           level: 'critical',
           label: '4 criteria — very high',
-          interpretation: `Classic Kocher 4/4 (~${approx}). Emergent surgical drainage pathway with IV antibiotics after cultures.`,
+          interpretation: `Classic Kocher 4/4 (${approx}). Emergent surgical drainage pathway with IV antibiotics after cultures.`,
         },
       ]);
       return {
@@ -873,13 +873,13 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
             description: 'Two displaced segments (typically surgical neck + one tuberosity)',
           },
           {
-            label: '4-part — three segments displaced (head + both tuberosities + shaft pattern)',
+            label: '4-part — all four segments displaced',
             value: 4,
-            description: 'Three displaced segments (typically head + both tuberosities relative to shaft)',
+            description: 'All four parts displaced (head, greater tuberosity, lesser tuberosity, shaft); head often dislocated from the glenoid',
           },
         ],
         undefined,
-        'Four potential parts: articular head, greater tuberosity, lesser tuberosity, shaft. Count a part only if displaced ≥1 cm or angulated ≥45°. 1-part = none of the four meet that; 2-part = one displaced segment; 3-part = two; 4-part = three. Head-split and dislocation are separate modifiers already on the form.',
+        'Four potential parts: articular head, greater tuberosity, lesser tuberosity, shaft. Count a part only if displaced ≥1 cm or angulated ≥45°. 1-part = none of the four meet that; 2-part = one displaced segment; 3-part = two; 4-part = all four displaced. Head-split and dislocation are separate modifiers already on the form.',
       ),
       yesNo('headSplit', 'Head-splitting or articular surface involvement', 0, 'Yes if the fracture line splits the humeral head or involves the articular surface — it changes the part count and the treatment options.'),
       yesNo('dislocation', 'Associated glenohumeral dislocation', 0, 'Yes if there is an associated glenohumeral dislocation; in Neer\'s system it counts as an additional part.'),
@@ -914,7 +914,7 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
           level: 'high',
           label: '4-part',
           interpretation:
-            'Three or more displaced parts. High AVN risk for head; arthroplasty frequently considered in elderly; reconstruct in selected younger patients.',
+            'All four parts displaced. High AVN risk for head; arthroplasty frequently considered in elderly; reconstruct in selected younger patients.',
         },
       ]);
       let interpretation = r.interpretation;
@@ -1179,7 +1179,7 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
   {
     id: 'iss-score',
     name: 'Injury Severity Score (ISS)',
-    shortName: 'ISS',
+    shortName: 'ISS (trauma)',
     description: 'Anatomic trauma severity: sum of squares of the three highest AIS region scores.',
     category: 'emergency',
     tags: ['trauma', 'iss', 'ais', 'severity'],

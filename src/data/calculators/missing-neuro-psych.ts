@@ -524,7 +524,7 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         {
           max: 2,
           level: 'low',
-          label: 'Independent (mRS 0–2)',
+          label: 'Independent (mRS 1–2)',
           interpretation: 'Functional independence range commonly defined as “good outcome” in stroke trials (mRS ≤2).',
         },
         {
@@ -1093,7 +1093,7 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         'Useful mnemonic but limited prospective predictive validity; do not replace comprehensive risk assessment (e.g., C-SSRS).',
       references: [
         {
-          title: 'The SAD PERSONS scale for suicide risk',
+          title: 'Evaluation of suicidal patients: the SAD PERSONS scale',
           citation: 'Patterson WM et al. Psychosomatics. 1983',
           year: 1983, pmid: '6867245',
           doi: '10.1016/S0033-3182(83)73213-5', },
@@ -1224,28 +1224,28 @@ export const missingNeuroPsychCalcs: Calculator[] = [
       yesNo(
         'feature1',
         'Feature 1: Acute change from mental status baseline OR fluctuating course (past 24h)',
-        1,
+        null,
         'Required for CAM-ICU positive. Ask nurse/family and review RASS trend: acute change from baseline OR fluctuating course in the past 24 hours.',
         true
       ),
       yesNo(
         'feature2',
         'Feature 2: Inattention (e.g., ASE letters: >2 errors on SAVEAHAART, or ASE pictures abnormal)',
-        1,
+        null,
         'Required for CAM-ICU positive. ASE letters: read SAVEAHAART, squeeze on each “A”; >2 errors = inattention. If RASS −4 or −5, unable to assess (do not call CAM−).',
         true
       ),
       yesNo(
         'feature3',
         'Feature 3: Altered level of consciousness (current RASS ≠ 0, or other than alert/calm)',
-        1,
+        null,
         'Current RASS ≠ 0. If RASS −4 or −5, unable to assess (do not call CAM−).',
         true
       ),
       yesNo(
         'feature4',
         'Feature 4: Disorganized thinking (yes/no questions + command; >1 error)',
-        1,
+        null,
         '4 questions (Will a stone float on water? Are there fish in the sea? Does one pound weigh more than two pounds? Can you use a hammer to pound a nail?) + command: hold up this many fingers (show 2), then same with the other hand without demonstrating. Disorganized thinking if >1 error.',
         false
       ),

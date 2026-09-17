@@ -428,6 +428,16 @@ export const wave5NephroGiCalcs: Calculator[] = [
   // 5. 24h protein excretion
   {
     id: 'protein-24h',
+    // The mode selector chooses which fields matter: concentration+volume for
+    // the computed branch, or a single total for the measured branch.
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'mode',
+      activeInputIdsByMode: {
+        calc: ['conc', 'volume'],
+        total: ['totalG'],
+      },
+    },
     name: '24-Hour Urine Protein Excretion',
     shortName: '24h Protein',
     description: 'Calculates or interprets 24-hour urinary protein excretion from collection or concentration × volume.',
@@ -447,6 +457,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
         step: 1,
         exampleValue: 100,
         helpText: 'Used if mode = concentration × volume',
+        required: false,
       }),
       numberInput('volume', '24-hour urine volume', {
         unit: 'mL',
@@ -454,6 +465,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
         max: 10000,
         exampleValue: 1500,
         helpText: 'Used if mode = concentration × volume',
+        required: false,
       }),
       numberInput('totalG', 'Total protein (if already measured)', {
         unit: 'g/day',
@@ -462,6 +474,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
         step: 0.01,
         exampleValue: 1.5,
         helpText: 'Used if mode = total g/day',
+        required: false,
       }),
     ],
     calculate(values) {
@@ -1740,17 +1753,17 @@ export const wave5NephroGiCalcs: Calculator[] = [
 
       let riskLevel: 'normal' | 'low' | 'moderate' | 'high' = 'normal';
       let label = 'Remission';
-      let interpretation = `Full Mayo score ${fullScore}/12 (Endoscopic subscore ${endo}): consistent with clinical and endoscopic remission (0–2 with no individual subscore >1).`;
+      let interpretation = `Full Mayo score ${fullScore}/12 (Endoscopic subscore ${endo}): consistent with clinical and endoscopic remission (this tool uses the stricter convention: total 0–2, no subscore >1, and rectal bleeding = 0).`;
 
       const inRemission = fullScore <= 2 && stool <= 1 && bleed === 0 && endo <= 1 && pga <= 1;
       if (inRemission) {
         riskLevel = 'normal';
         label = 'Clinical & Endoscopic Remission (0–2)';
-        interpretation = `Full Mayo score ${fullScore}/12 (Endoscopic subscore ${endo}): clinical and endoscopic remission. Supports maintenance therapy and treat-to-target mucosal healing.`;
+        interpretation = `Full Mayo score ${fullScore}/12 (Endoscopic subscore ${endo}): clinical and endoscopic remission (stricter convention: no subscore >1 and rectal bleeding 0). Supports maintenance therapy and treat-to-target mucosal healing.`;
       } else if (fullScore <= 2) {
         riskLevel = 'low';
-        label = 'Not in remission (score ≤2 with subscore >1)';
-        interpretation = `Full Mayo score ${fullScore}/12 (Endoscopic subscore ${endo}): total is in the 0–2 band but does not meet remission (requires no subscore >1 and rectal bleeding 0). Treat as residual/mild activity rather than remission.`;
+        label = 'Not in remission (score ≤2 but fails stricter remission criteria)';
+        interpretation = `Full Mayo score ${fullScore}/12 (Endoscopic subscore ${endo}): total is in the 0–2 band but does not meet this tool's remission criteria, which require no subscore >1 AND rectal bleeding 0 AND stool frequency ≤1 (e.g. stool 1 + bleeding 1 still fails). Treat as residual/mild activity rather than remission.`;
       } else if (fullScore <= 5) {
         riskLevel = 'low';
         label = 'Mild Disease Activity (3–5)';
@@ -1783,7 +1796,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Schroeder Mayo Score for Ulcerative Colitis combines 4 subscores (stool frequency 0–3, rectal bleeding 0–3, endoscopic mucosal appearance 0–3, and physician global assessment 0–3) for a 0–12 total. Remission is defined as ≤2 with no subscore >1. Mild: 3–5, Moderate: 6–10, Severe: 11–12.',
+        'Schroeder Mayo Score for Ulcerative Colitis combines 4 subscores (stool frequency 0–3, rectal bleeding 0–3, endoscopic mucosal appearance 0–3, and physician global assessment 0–3) for a 0–12 total. This tool uses the stricter trial convention for remission: total ≤2, no subscore >1, and rectal bleeding 0 (some sources allow bleeding ≤1). Mild: 3–5, Moderate: 6–10, Severe: 11–12.',
       validation: 'Widely used in UC trials; central reading reduces variability.',
       references: [
         {

@@ -249,8 +249,8 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       yesNo('pulsating', 'C2. Pulsating quality', 0, 'Throbbing / pounding quality (not pressing, tightening, or stabbing). Criterion C needs ≥2 of C1–C4.'),
       yesNo('moderateSevere', 'C3. Moderate or severe pain intensity', 0, 'Inhibits or prohibits daily activities (not mild/ignorable). Often ≥5/10. Criterion C needs ≥2 of C1–C4.'),
       yesNo('aggravation', 'C4. Aggravation by / causing avoidance of routine physical activity', 0, 'Routine physical activity = walking or climbing stairs, or avoidance of that activity because of the headache.'),
-      yesNo('nausea', 'D1. Nausea and/or vomiting', 1, 'Criterion D is met if nausea/vomiting OR (photophobia AND phonophobia).'),
-      yesNo('photoPhono', 'D2. Photophobia and phonophobia', 1, 'Requires BOTH photophobia AND phonophobia during the headache (not either alone).'),
+      yesNo('nausea', 'D1. Nausea and/or vomiting', null, 'Criterion D is met if nausea/vomiting OR (photophobia AND phonophobia). The D group contributes once (≥1 of D1–D2), not per item.'),
+      yesNo('photoPhono', 'D2. Photophobia and phonophobia', null, 'Requires BOTH photophobia AND phonophobia during the headache (not either alone). The D group contributes once (≥1 of D1–D2), not per item.'),
       yesNo('notBetter', 'E. Not better accounted for by another ICHD-3 diagnosis', 1, 'No better explanation (tension-type, TAC, medication-overuse, or secondary headache from exam/imaging).'),
     ],
     calculate(values) {
@@ -1081,19 +1081,22 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         { label: '0 — Incorrect', value: 0 },
         { label: '1 — Correct', value: 1 },
       ], 1, '1 point for naming the correct state.'),
-      selectInput('q4_attention', '4. Attention ($100 minus $3 five times)', [
-        { label: '0 — 0 or 1 subtraction correct', value: 0 },
-        { label: '1 — 2 or 3 subtractions correct', value: 1 },
-        { label: '2 — 4 subtractions correct', value: 2 },
-        { label: '3 — All 5 correct (97, 94, 91, 88, 85)', value: 3 },
-      ], 3, 'Serial 7s from 100: 0 points for 0–1 correct, 1 point for 2–3, 2 points for 4, 3 points for all five (97, 94, 91, 88, 85).'),
-      selectInput('q5_fluency', '5. Animal naming fluency in 1 minute', [
+      selectInput('q4_registration', '4. Please remember these five objects. I will ask you what they are later. (Apple, Pen, Tie, House, Car)', [
+        { label: 'Objects presented and repeated back (registration — unscored)', value: 0 },
+      ], 0, 'Unscored registration item: read the five objects and have the patient repeat them back; no points are awarded here.', false),
+      selectInput('q4_attention', '5. You have $100 and you go to the store and buy a dozen apples for $3 and a tricycle for $20', [
+        { label: '0 — Neither answer correct', value: 0 },
+        { label: '1 — Only "How much did you spend?" correct ($23)', value: 1 },
+        { label: '2 — Only "How much do you have left?" correct ($77)', value: 2 },
+        { label: '3 — Both correct ($23 spent, $77 left)', value: 3 },
+      ], 3, 'Official SLUMS calculation item: "How much did you spend?" = 1 point ($23); "How much do you have left?" = 2 points ($77); maximum 3.'),
+      selectInput('q5_fluency', '6. Animal naming fluency in 1 minute', [
         { label: '0 — 0 to 4 animals', value: 0 },
         { label: '1 — 5 to 9 animals', value: 1 },
         { label: '2 — 10 to 14 animals', value: 2 },
         { label: '3 — 15 or more animals', value: 3 },
       ], 3, 'Animal naming in 60 seconds: 0 points for 0–4 animals, 1 for 5–9, 2 for 10–14, 3 for 15 or more.'),
-      selectInput('q6_recall', '6. Delayed recall of 5 objects (Apple, Pen, Tie, House, Car)', [
+      selectInput('q6_recall', '7. What were the five objects I asked you to remember? (Apple, Pen, Tie, House, Car)', [
         { label: '0 — None recalled', value: 0 },
         { label: '1 — 1 object recalled', value: 1 },
         { label: '2 — 2 objects recalled', value: 2 },
@@ -1101,26 +1104,26 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         { label: '4 — 4 objects recalled', value: 4 },
         { label: '5 — All 5 objects recalled', value: 5 },
       ], 4, 'Delayed recall of the five words (apple, pen, tie, house, car) after the intervening items: 1 point per word, maximum 5.'),
-      selectInput('q7_backward', '7. Number sequence backward (e.g. 642 -> 246; 8537 -> 7358)', [
-        { label: '0 — Neither correct', value: 0 },
-        { label: '1 — One sequence correct', value: 1 },
-        { label: '2 — Both sequences correct', value: 2 },
-      ], 2, 'Digits backwards: 0 points if neither sequence is correct, 1 if one is, 2 if both (642 → 246 and 8537 → 7358).'),
+      selectInput('q7_backward', '8. Numbers backward (warm-up 87 → 78 unscored; scored: 649 → 946, 8537 → 7358)', [
+        { label: '0 — Neither scored sequence correct', value: 0 },
+        { label: '1 — One scored sequence correct', value: 1 },
+        { label: '2 — Both scored sequences correct', value: 2 },
+      ], 2, 'Digits backward: say each digit individually; 87 is an unscored warm-up. 1 point each for 649 → 946 and 8537 → 7358 (max 2).'),
       selectInput('q8_clock', '9. Clock drawing (set time to ten to eleven: 10:50)', [
         { label: '0 — Clock incorrect', value: '0' },
         { label: '2 — Hour numbers placed correctly only', value: 'hours_only' },
         { label: '2b — Hands placed correctly only (2 pts)', value: 'hands_only' },
         { label: '4 — Hour numbers AND hands placed correctly (4 pts)', value: 'both_correct' },
       ], 'both_correct', 'Clock set to ten to eleven (10:50): 0 incorrect, 2 for correct hour numbers alone, 2 for correct hands alone, 4 only when both are correct.'),
-      selectInput('q9_shapes', '10a. Place an X in the triangle', [
+      selectInput('q9_shapes', '10. Place an X in the triangle', [
         { label: '0 — Triangle not selected', value: 0 },
         { label: '1 — X placed in the triangle', value: 1 },
       ], 1, '1 point when the X is drawn inside the triangle.'),
-      selectInput('q10_figures', '10b. Which of the above figures is largest? (the square)', [
+      selectInput('q10_figures', '11. Which of the above figures is largest? (the square)', [
         { label: '0 — Incorrect', value: 0 },
         { label: '1 — Square identified as largest', value: 1 },
       ], 1, '1 point for identifying the square as the largest figure.'),
-      selectInput('q11_story', '11. Story recall (Jill, a successful stockbroker... 4 questions, 2 points each)', [
+      selectInput('q11_story', '12. Story recall (Jill, a successful stockbroker... 4 questions, 2 points each)', [
         { label: '0 — 0 questions correct', value: 0 },
         { label: '2 — 1 question correct', value: 2 },
         { label: '4 — 2 questions correct', value: 4 },
@@ -1384,7 +1387,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         { label: '3 — Noticeable loss of appetite', value: 3 },
         { label: '4 — No appetite; food is tasteless; must force self to eat', value: 4 },
         { label: '5 — Profound anorexia', value: 5 },
-        { label: '6 — Needs persuasion or persuasion to eat; profound anorexia', value: 6 },
+        { label: '6 — Needs persuasion to eat; profound anorexia', value: 6 },
       ], 1, 'Item 5 reduced appetite: loss of desire for food (0 = normal or increased appetite, 6 = needs persuasion to eat).'),
       selectInput('madrs6', '6. Concentration difficulties (trouble collecting thoughts)', [
         { label: '0 — No difficulties in concentrating', value: 0 },
@@ -1541,9 +1544,8 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
           doi: '10.1192/bjp.134.4.382', },
         {
           title: 'Ligature and/or Suicide Risk Reduction: Use of an Evidence-based Process to Assess Risk',
-          citation: 'The Joint Commission. Standards FAQ (updated 2026)',
+          citation: 'The Joint Commission. Standards Interpretation FAQ (updated 2026)',
           year: 2026,
-          url: 'https://www.jointcommission.org/en-us/knowledge-library/support-center/standards-interpretation/standards-faqs/000001234',
         },
         {
           title: 'Adult Outpatient Brief Suicide Safety Assessment Guide',
@@ -2713,45 +2715,45 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       selectInput('q1', '1. How often do you have trouble wrapping up the final details of a project, once the challenging parts have been done?', [
         { label: 'Never (0)', value: 0, description: 'Not shaded for Q1–3' },
         { label: 'Rarely (1)', value: 1, description: 'Not shaded for Q1–3' },
-        { label: 'Sometimes (2)', value: 2, description: 'Not shaded for Q1–3 (Q1–3 screen-positive only at Often/Very often)' },
+        { label: 'Sometimes (2)', value: 2, description: 'Shaded / screen-positive for Q1–3' },
         { label: 'Often (3)', value: 3, description: 'Shaded / screen-positive for Q1–3' },
         { label: 'Very often (4)', value: 4, description: 'Shaded / screen-positive for Q1–3' },
-      ], 0, 'Rate the past 6 months. Official ASRS-v1.1 Part A. Q1–3 are screen-positive only at Often or Very often.'),
+      ], 0, 'Rate the past 6 months. Official ASRS-v1.1 Part A. Q1–3 are screen-positive at Sometimes, Often, or Very often.'),
       selectInput('q2', '2. How often do you have difficulty getting things in order when you have to do a task that requires organization?', [
         { label: 'Never (0)', value: 0, description: 'Not shaded for Q1–3' },
         { label: 'Rarely (1)', value: 1, description: 'Not shaded for Q1–3' },
-        { label: 'Sometimes (2)', value: 2, description: 'Not shaded for Q1–3' },
+        { label: 'Sometimes (2)', value: 2, description: 'Shaded / screen-positive for Q1–3' },
         { label: 'Often (3)', value: 3, description: 'Shaded / screen-positive for Q1–3' },
         { label: 'Very often (4)', value: 4, description: 'Shaded / screen-positive for Q1–3' },
-      ], 0, 'Past 6 months. Q1–3 shaded at Often / Very often.'),
+      ], 0, 'Past 6 months. Q1–3 shaded at Sometimes / Often / Very often.'),
       selectInput('q3', '3. How often do you have problems remembering appointments or obligations?', [
         { label: 'Never (0)', value: 0, description: 'Not shaded for Q1–3' },
         { label: 'Rarely (1)', value: 1, description: 'Not shaded for Q1–3' },
-        { label: 'Sometimes (2)', value: 2, description: 'Not shaded for Q1–3' },
+        { label: 'Sometimes (2)', value: 2, description: 'Shaded / screen-positive for Q1–3' },
         { label: 'Often (3)', value: 3, description: 'Shaded / screen-positive for Q1–3' },
         { label: 'Very often (4)', value: 4, description: 'Shaded / screen-positive for Q1–3' },
-      ], 0, 'Past 6 months. Q1–3 shaded at Often / Very often.'),
+      ], 0, 'Past 6 months. Q1–3 shaded at Sometimes / Often / Very often.'),
       selectInput('q4', '4. When you have a task that requires a lot of thought, how often do you avoid or delay getting started?', [
         { label: 'Never (0)', value: 0, description: 'Not shaded for Q4–6' },
         { label: 'Rarely (1)', value: 1, description: 'Not shaded for Q4–6' },
-        { label: 'Sometimes (2)', value: 2, description: 'Shaded / screen-positive for Q4–6' },
+        { label: 'Sometimes (2)', value: 2, description: 'Not shaded for Q4–6 (Q4–6 screen-positive only at Often/Very often)' },
         { label: 'Often (3)', value: 3, description: 'Shaded / screen-positive for Q4–6' },
         { label: 'Very often (4)', value: 4, description: 'Shaded / screen-positive for Q4–6' },
-      ], 0, 'Past 6 months. Q4–6 are screen-positive at Sometimes, Often, or Very often.'),
+      ], 0, 'Past 6 months. Q4–6 are screen-positive only at Often or Very often.'),
       selectInput('q5', '5. How often do you fidget or squirm with your hands or feet when you have to sit down for a long time?', [
         { label: 'Never (0)', value: 0, description: 'Not shaded for Q4–6' },
         { label: 'Rarely (1)', value: 1, description: 'Not shaded for Q4–6' },
-        { label: 'Sometimes (2)', value: 2, description: 'Shaded / screen-positive for Q4–6' },
+        { label: 'Sometimes (2)', value: 2, description: 'Not shaded for Q4–6' },
         { label: 'Often (3)', value: 3, description: 'Shaded / screen-positive for Q4–6' },
         { label: 'Very often (4)', value: 4, description: 'Shaded / screen-positive for Q4–6' },
-      ], 0, 'Past 6 months. Q4–6 shaded at Sometimes / Often / Very often.'),
+      ], 0, 'Past 6 months. Q4–6 shaded at Often / Very often.'),
       selectInput('q6', '6. How often do you feel overly active and compelled to do things, like you were driven by a motor?', [
         { label: 'Never (0)', value: 0, description: 'Not shaded for Q4–6' },
         { label: 'Rarely (1)', value: 1, description: 'Not shaded for Q4–6' },
-        { label: 'Sometimes (2)', value: 2, description: 'Shaded / screen-positive for Q4–6' },
+        { label: 'Sometimes (2)', value: 2, description: 'Not shaded for Q4–6' },
         { label: 'Often (3)', value: 3, description: 'Shaded / screen-positive for Q4–6' },
         { label: 'Very often (4)', value: 4, description: 'Shaded / screen-positive for Q4–6' },
-      ], 0, 'Past 6 months. Q4–6 shaded at Sometimes / Often / Very often. Positive screen = ≥4 shaded items (not raw sum).'),
+      ], 0, 'Past 6 months. Q4–6 shaded at Often / Very often. Positive screen = ≥4 shaded items (not raw sum).'),
     ],
     calculate(values) {
       const raw =
@@ -2761,15 +2763,15 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         num(values.q4) +
         num(values.q5) +
         num(values.q6);
-      // Part A shaded boxes: items 1–3 positive if Often/Very often (3–4);
-      // items 4–6 positive if Sometimes/Often/Very often (2–4)
+      // Part A shaded boxes: items 1–3 positive if Sometimes/Often/Very often (2–4);
+      // items 4–6 positive if Often/Very often (3–4)
       const shaded =
-        (num(values.q1) >= 3 ? 1 : 0) +
-        (num(values.q2) >= 3 ? 1 : 0) +
-        (num(values.q3) >= 3 ? 1 : 0) +
-        (num(values.q4) >= 2 ? 1 : 0) +
-        (num(values.q5) >= 2 ? 1 : 0) +
-        (num(values.q6) >= 2 ? 1 : 0);
+        (num(values.q1) >= 2 ? 1 : 0) +
+        (num(values.q2) >= 2 ? 1 : 0) +
+        (num(values.q3) >= 2 ? 1 : 0) +
+        (num(values.q4) >= 3 ? 1 : 0) +
+        (num(values.q5) >= 3 ? 1 : 0) +
+        (num(values.q6) >= 3 ? 1 : 0);
       const positive = shaded >= 4;
       return {
         score: shaded,
@@ -2784,14 +2786,14 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
           { label: 'Raw sum (0–24)', value: String(raw) },
           {
             label: 'Shading rule',
-            value: 'Q1–3: Often/Very often; Q4–6: Sometimes/Often/Very often',
+            value: 'Q1–3: Sometimes/Often/Very often; Q4–6: Often/Very often',
           },
         ],
       };
     },
     evidence: {
       summary:
-        'ASRS-v1.1 Screener Part A: 6 items. Positive if ≥4 responses fall in the shaded frequency boxes (items 1–3: often/very often; items 4–6: sometimes or more).',
+        'ASRS-v1.1 Screener Part A: 6 items. Positive if ≥4 responses fall in the shaded frequency boxes (items 1–3: sometimes or more; items 4–6: often/very often).',
       formula: 'Count shaded responses (0–6); raw sum optional',
       validation: 'Developed with WHO; validated for adult ADHD screening in community and clinical samples.',
       references: [

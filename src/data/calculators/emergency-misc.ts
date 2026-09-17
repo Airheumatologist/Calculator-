@@ -116,7 +116,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     description: 'Determines need for knee radiograph after acute injury.',
     category: 'orthopedics',
     tags: ['knee', 'xray', 'trauma'],
-    whenToUse: 'Acute knee injury.',
+    whenToUse: 'Adults with acute knee injury (twist, fall, or direct blow) to decide whether radiographs are needed; any single positive criterion warrants a knee X-ray series.',
     whyUse: 'Reduces unnecessary knee films with high sensitivity.',
     inputs: [
       yesNo('age55', 'Age ≥ 55 years', 1,
@@ -504,6 +504,8 @@ export const emergencyMiscCalcs: Calculator[] = [
     description: 'Estimates gestational age and EDD from LMP.',
     category: 'obstetrics',
     tags: ['pregnancy', 'edd', 'lmp'],
+    status: 'superseded',
+    supersededBy: 'pregnancy-dating',
     whenToUse: 'Dating pregnancy when LMP is known and reliable. First-trimester ultrasound is preferred when LMP is uncertain or cycles are irregular.',
     whyUse: 'Naegele’s rule standard LMP-based estimate, assuming a reliable LMP and an approximately 28-day cycle.',
     inputs: [
@@ -690,7 +692,8 @@ export const emergencyMiscCalcs: Calculator[] = [
       const r = riskFromThresholds(score, [
         { max: 2, level: 'low', label: 'Mild', interpretation: 'Mild croup — outpatient dexamethasone often sufficient.' },
         { max: 5, level: 'moderate', label: 'Moderate', interpretation: 'Moderate — dexamethasone; observe; consider nebulized epinephrine.' },
-        { max: 17, level: 'high', label: 'Severe', interpretation: 'Severe — nebulized epinephrine, dexamethasone, close airway monitoring.' },
+        { max: 11, level: 'high', label: 'Severe', interpretation: 'Severe — nebulized epinephrine, dexamethasone, close airway monitoring.' },
+        { max: 17, level: 'critical', label: 'Impending respiratory failure', interpretation: 'Score ≥12 flags impending respiratory failure — immediate senior/airway help, nebulized epinephrine, dexamethasone, and ICU-level monitoring.' },
       ]);
       return { score, ...r };
     },
@@ -703,6 +706,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     nextSteps: [
       { condition: 'Mild', actions: ['Dexamethasone 0.15–0.6 mg/kg', 'Supportive care'] },
       { condition: 'Moderate–severe', actions: ['Dexamethasone', 'Nebulized epinephrine', 'Observe for rebound', 'Airway preparedness'] },
+      { condition: 'Impending respiratory failure (≥12)', actions: ['Escalate to senior/airway team immediately', 'Nebulized epinephrine + dexamethasone', 'Prepare for definitive airway / ICU admission'] },
     ],
   },
   {
@@ -900,7 +904,7 @@ export const emergencyMiscCalcs: Calculator[] = [
         'Anticipated bed rest with bathroom privileges (limitation or order) for at least 3 days.', true),
       yesNo('thrombophilia', 'Known thrombophilic condition', 3,
         'Antithrombin, protein C or S deficiency, factor V Leiden, prothrombin G20210A, or antiphospholipid syndrome.', false),
-      yesNo('recentTrauma', 'Recent trauma and/or surgery (≤1 month)', 2, 'Recent trauma and/or surgery within 1 month scores 2 points, the largest single Padua item.', false),
+      yesNo('recentTrauma', 'Recent trauma and/or surgery (≤1 month)', 2, 'Recent trauma and/or surgery within 1 month scores 2 points.', false),
       yesNo('age70', 'Age ≥ 70', 1, 'Age 70 years or older scores 1 point. Total ≥4 marks high VTE risk and usually warrants prophylaxis.', true),
       yesNo('heartLung', 'Heart and/or respiratory failure', 1,
         'Acute or decompensated heart failure and/or respiratory failure this admission.', true),
@@ -1355,7 +1359,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     whyUse: 'Free phenytoin preferred; correction approximates when free level unavailable.',
     inputs: [
       numberInput('total', 'Total phenytoin', { unit: 'µg/mL', min: 0, max: 50, step: 0.1, exampleValue: 10, helpText: 'Total phenytoin in µg/mL (mcg/mL) from the same draw as the albumin; the Sheiner-Tozer correction raises the level when albumin is low.' }),
-      numberInput('alb', 'Albumin', { unit: 'g/dL', min: 1, max: 5, step: 0.1, exampleValue: 2.5, helpText: 'Serum albumin in g/dL. Correction: adjusted level = measured ÷ (0.2 × albumin + 0.1). With ESRD or CrCl under 20, the 0.1 binding term drops to 0.1 or less.' }),
+      numberInput('alb', 'Albumin', { unit: 'g/dL', min: 1, max: 5, step: 0.1, exampleValue: 2.5, helpText: 'Serum albumin in g/dL. Correction: adjusted level = measured ÷ (0.2 × albumin + 0.1). In ESRD or CrCl under 20 mL/min, the albumin-binding coefficient drops from 0.2 to 0.1 — select the ESRD option below.' }),
       yesNo('esrd', 'ESRD / CrCl <20 (use 0.1 binding factor)', 0, 'Yes for ESRD or creatinine clearance under 20 mL/min; use the renal-failure variant with the lower (0.1) binding factor, which changes the corrected level.', false),
     ],
     calculate(values) {
@@ -1432,6 +1436,8 @@ export const emergencyMiscCalcs: Calculator[] = [
     description: 'Predicted change in serum Na per liter of infusate (Adrogué-Madias).',
     category: 'nephrology',
     tags: ['hyponatremia', 'fluids', 'sodium'],
+    status: 'superseded',
+    supersededBy: 'sodium-correction-rate',
     whenToUse: 'Planning correction of hypo/hypernatremia with IV fluids.',
     whyUse: 'Estimates ΔNa per liter to avoid overcorrection.',
     inputs: [

@@ -391,7 +391,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
       }
       return {
         score,
-        label: score <= 3 ? 'Low–moderate risk' : 'Higher risk',
+        label: score <= 3 ? 'Low–moderate risk' : score <= 5 ? 'Moderate risk' : 'Higher risk',
         interpretation: `GBS ${score}: higher likelihood of needing transfusion/endoscopy/surgery — typically admit.`,
         riskLevel: score >= 6 ? 'high' : 'moderate',
       };
@@ -1181,8 +1181,8 @@ export const giNeuroPsychCalcs: Calculator[] = [
       const keys = ['nausea', 'tremor', 'sweats', 'anxiety', 'agitation', 'tactile', 'auditory', 'visual', 'headache', 'orientation'];
       const score = keys.reduce((s, k) => s + num(values[k]), 0);
       const r = riskFromThresholds(score, [
-        { max: 8, level: 'low', label: 'Mild withdrawal', interpretation: 'CIWA ≤8: mild — may not need benzos if protocol allows observation.' },
-        { max: 15, level: 'moderate', label: 'Moderate', interpretation: 'CIWA 9–15: moderate — typically give symptom-triggered benzodiazepine.' },
+        { max: 7, level: 'low', label: 'Mild withdrawal', interpretation: 'CIWA <8: mild — may not need benzos if protocol allows observation.' },
+        { max: 15, level: 'moderate', label: 'Moderate', interpretation: 'CIWA 8–15: moderate — typically give symptom-triggered benzodiazepine.' },
         { max: 67, level: 'critical', label: 'Severe', interpretation: 'CIWA >15: severe — benzos, close monitoring, rule out DTs risk.' },
       ]);
       return { score, ...r };

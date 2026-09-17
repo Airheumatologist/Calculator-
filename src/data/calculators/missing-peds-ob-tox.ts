@@ -37,7 +37,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
       const acker =
         band === '1-3'
           ? null
-          : band === '13-16' || band === '13-17'
+          : band === '13-16'
             ? { cutoff: 0.9, label: '13–16 years' }
             : band === '7-12'
               ? { cutoff: 1.0, label: '7–12 years' }
@@ -264,7 +264,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Counseling candidates for trial of labor after cesarean (TOLAC) using antenatal (not admission) predictors.',
     whyUse: 'Published Grobman 2007 coefficients estimate VBAC probability from age, BMI, race/ethnicity, prior vaginal birth, prior VBAC, and recurring cesarean indication.',
     inputs: [
-      numberInput('age', 'Maternal age', { unit: 'years', min: 15, max: 55, exampleValue: 30, helpText: 'Maternal age in years at counseling; Grobman 2007 carries a small positive age coefficient (+0.039 per year).' }),
+      numberInput('age', 'Maternal age', { unit: 'years', min: 15, max: 55, exampleValue: 30, helpText: 'Maternal age in years at counseling; Grobman 2007 carries a small negative age coefficient (−0.039 per year) — older age lowers predicted VBAC success.' }),
       numberInput('bmi', 'Prepregnancy BMI', { unit: 'kg/m²', min: 15, max: 60, step: 0.1, exampleValue: 28, helpText: 'Use prepregnancy (not admission) BMI as in the 2007 Grobman antenatal model.' }),
       selectInput('ethnicity', 'Race / ethnicity (as in original model categories)', [
         { label: 'Neither African American nor Hispanic', value: 'other' },
@@ -472,7 +472,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
       numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 5000, exampleValue: 40, helpText: 'Tennessee/Sibai elevated LFTs: AST or ALT ≥2× this lab’s ULN (classically ≥70 U/L when ULN ≈35).' }),
       numberInput('alt', 'ALT', { unit: 'U/L', min: 5, max: 5000, exampleValue: 40, helpText: 'Same ≥2× ULN rule as AST. Either enzyme meeting the fold-change counts.' }),
       numberInput('astUln', 'AST/ALT ULN (lab)', { unit: 'U/L', min: 20, max: 80, exampleValue: 35, helpText: 'Enter this lab’s AST/ALT upper limit of normal. Tennessee uses ≥2× ULN (default ULN 35 → threshold 70 U/L, matching classic AST ≥70).' }),
-      numberInput('platelets', 'Platelet count', { unit: '×10³/µL', min: 5, max: 600, exampleValue: 150, helpText: 'Tennessee thrombocytopenia: platelets ≤100 ×10⁹/L. Mississippi class: I ≤50, II >50–≤100, III >100–≤150 (if other criteria).' }),
+      numberInput('platelets', 'Platelet count', { unit: '×10³/µL', min: 5, max: 600, exampleValue: 150, helpText: 'Tennessee thrombocytopenia: platelets <100 ×10⁹/L (a count of exactly 100 does not satisfy the Tennessee criterion). Mississippi class: I ≤50, II >50–≤100, III >100–≤150 (if other criteria).' }),
     ],
     calculate(values) {
       const ldh = num(values.ldh, 400);
@@ -485,7 +485,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
 
       const hemolysis = ldh >= 600 || bili >= 1.2 || schisto;
       const elevatedLft = ast >= 2 * uln || alt >= 2 * uln;
-      const lowPlt = plt <= 100;
+      const lowPlt = plt < 100; // Tennessee thrombocytopenia is a strict <100 ×10⁹/L
 
       const count = (hemolysis ? 1 : 0) + (elevatedLft ? 1 : 0) + (lowPlt ? 1 : 0);
 
@@ -503,7 +503,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
           details: [
             { label: 'Hemolysis', value: hemolysis ? 'Yes' : 'No' },
             { label: 'Elevated LFTs', value: elevatedLft ? 'Yes' : 'No' },
-            { label: 'Platelets ≤100', value: lowPlt ? 'Yes' : 'No' },
+            { label: 'Platelets <100', value: lowPlt ? 'Yes' : 'No' },
             { label: 'Mississippi class (by plt)', value: mississippi },
           ],
         };
@@ -517,7 +517,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
           details: [
             { label: 'Hemolysis', value: hemolysis ? 'Yes' : 'No' },
             { label: 'Elevated LFTs', value: elevatedLft ? 'Yes' : 'No' },
-            { label: 'Platelets ≤100', value: lowPlt ? 'Yes' : 'No' },
+            { label: 'Platelets <100', value: lowPlt ? 'Yes' : 'No' },
             { label: 'Mississippi class (by plt)', value: mississippi },
           ],
         };
@@ -535,12 +535,12 @@ export const missingPedsObToxCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Tennessee/Sibai complete HELLP: hemolysis (LDH ≥600 U/L, bilirubin ≥1.2 mg/dL, or schistocytes), AST or ALT ≥2× lab ULN (classically ≥70 U/L), and platelets ≤100 ×10⁹/L. Mississippi classifies by platelet nadir (I ≤50, II >50–≤100, III >100–≤150).',
+      summary: 'Tennessee/Sibai complete HELLP: hemolysis (LDH ≥600 U/L, bilirubin ≥1.2 mg/dL, or schistocytes), AST or ALT ≥2× lab ULN (classically ≥70 U/L), and platelets <100 ×10⁹/L. Mississippi classifies by platelet nadir (I ≤50, II >50–≤100, III >100–≤150).',
       validation: 'Clinical diagnosis; smear, haptoglobin, and trends aid hemolysis confirmation.',
       references: [
         { title: 'Syndrome of hemolysis, elevated liver enzymes, and low platelet count: a severe consequence of hypertension in pregnancy', citation: 'Weinstein L. Am J Obstet Gynecol. 1982', year: 1982, pmid: '7055180',
           doi: '10.1016/s0002-9378(16)32330-4', },
-        { title: 'Diagnosis and management of hemolysis, elevated liver enzymes, and low platelets syndrome', citation: 'Sibai BM. Clin Perinatol. 2004 (Tennessee and Mississippi classifications)', year: 2004, pmid: '15519429',
+        { title: 'Diagnosis and management of hemolysis, elevated liver enzymes, and low platelets syndrome', citation: 'Barton JR, Sibai BM. Clin Perinatol. 2004 (Tennessee and Mississippi classifications)', year: 2004, pmid: '15519429',
           doi: '10.1016/j.clp.2004.06.008', },
       ],
     },
@@ -595,8 +595,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
         return {
           score: mgDisplay,
           unit: 'mg/dL',
-          label: 'Loss of deep tendon reflexes expected',
-          interpretation: '≈9–12 mg/dL: loss of DTRs often appears. Stop infusion, assess ventilation, consider calcium gluconate if symptomatic.',
+          label: 'Loss of deep tendon reflexes may appear (≈9–12)',
+          interpretation: 'Above therapeutic range; ≈9–12 mg/dL: loss of DTRs often appears. Levels just above 8.4 mg/dL may still preserve reflexes. Stop infusion, assess ventilation, consider calcium gluconate if symptomatic.',
           riskLevel: 'high',
         };
       }
@@ -758,16 +758,6 @@ export const missingPedsObToxCalcs: Calculator[] = [
 
       const t = num(values.hours, 4);
       const level = num(values.level, 150);
-
-      if (t < 4) {
-        return {
-          score: level,
-          unit: 'µg/mL',
-          label: 'Too early for nomogram',
-          interpretation: 'Levels before 4 hours cannot use the Rumack-Matthew line — repeat level at ≥4 hours post-ingestion (unless massive ingestion / other NAC criteria).',
-          riskLevel: 'info',
-        };
-      }
 
       // Treatment line: 150 µg/mL at 4 h, halves every 4 h (150 × 0.5^((t-4)/4)).
       // The nomogram is not validated beyond 24 hours; clamp late presentations
@@ -1233,6 +1223,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
     description: 'Corrects measured sodium for hyperglycemia (Katz 1.6 or Hillier 2.4 factor).',
     category: 'endocrinology',
     tags: ['sodium', 'glucose', 'hypertonic', 'hyponatremia', 'dka', 'hhs'],
+    status: 'superseded',
+    supersededBy: 'corrected-sodium',
     whenToUse: 'Hyponatremia with marked hyperglycemia (DKA/HHS) to estimate effective water balance.',
     whyUse: 'Translocational hyponatremia from glucose; corrected Na guides free-water status.',
     inputs: [
@@ -1308,8 +1300,26 @@ export const missingPedsObToxCalcs: Calculator[] = [
       numberInput('cycleLength', 'Cycle length', { unit: 'days', min: 21, max: 45, exampleValue: 28, helpText: 'EDD shifts by (cycle − 28) days. First-trimester ultrasound is preferred if LMP is uncertain.' }),
     ],
     calculate(values) {
-      const lmp = new Date(num(values.lmpYear, new Date().getFullYear()), num(values.lmpMonth) - 1, num(values.lmpDay));
-      const ref = new Date(num(values.refYear), num(values.refMonth) - 1, num(values.refDay));
+      const lmpY = num(values.lmpYear, new Date().getFullYear());
+      const lmpM = num(values.lmpMonth);
+      const lmpD = num(values.lmpDay);
+      const refY = num(values.refYear);
+      const refM = num(values.refMonth);
+      const refD = num(values.refDay);
+      const lmp = new Date(lmpY, lmpM - 1, lmpD);
+      const ref = new Date(refY, refM - 1, refD);
+      // new Date() silently rolls impossible dates (e.g., Feb 31 → Mar 3);
+      // verify the constructed date matches the entered components.
+      const lmpValid = lmp.getFullYear() === lmpY && lmp.getMonth() === lmpM - 1 && lmp.getDate() === lmpD;
+      const refValid = ref.getFullYear() === refY && ref.getMonth() === refM - 1 && ref.getDate() === refD;
+      if (!lmpValid || !refValid) {
+        return {
+          score: '—',
+          label: 'Invalid date',
+          interpretation: `${!lmpValid ? 'LMP' : 'Reference'} date is not a real calendar date (e.g., day-of-month exceeds days in that month). Correct the date fields.`,
+          riskLevel: 'info',
+        };
+      }
       const cycle = num(values.cycleLength, 28);
       const days = Math.round((ref.getTime() - lmp.getTime()) / 86400000);
       const weeks = Math.floor(days / 7);
@@ -1362,7 +1372,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Weight-based dosing or nutrition estimates in children when IBW is preferred over total body weight.',
     whyUse: 'Traub-Johnson provides a simple height-based IBW used in pediatric pharmacy contexts.',
     inputs: [
-      numberInput('height', 'Height', { unit: 'cm', min: 50, max: 200, exampleValue: 120, helpText: 'Height in centimeters (not inches). Traub-Johnson: IBW (kg) = 2.396 × e^(0.01863 × height_cm). Not for infants.' }),
+      numberInput('height', 'Height', { unit: 'cm', min: 50, max: 200, exampleValue: 120, helpText: 'Height in centimeters (not inches). Traub-Johnson: IBW (kg) = 2.396 × e^(0.01863 × height_cm). Not validated in infants — heights <76 cm trigger a warning.' }),
       selectInput('method', 'Method', [
         { label: 'Traub-Johnson (preferred here)', value: 'tj' },
         { label: 'Simple BMI-method at BMI 50th≈18 (approx)', value: 'bmi18' },
@@ -1405,6 +1415,10 @@ export const missingPedsObToxCalcs: Calculator[] = [
         interpretation: `IBW ≈ ${ibw} kg. Use drug-specific guidance for dosing weight (TBW vs IBW vs adjusted). Not for infants where specialized methods apply.`,
         riskLevel: 'info',
         details,
+        alerts:
+          ht < 76
+            ? ['Height <76 cm is typical of infants; Traub-Johnson is not validated in infants — use measured weight or infant-specific methods.']
+            : undefined,
       };
     },
     evidence: {

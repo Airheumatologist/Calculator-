@@ -32,7 +32,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         exampleValue: 130,
         helpText: 'Same as ×10³/µL. Expanded Baveno VI: platelets >110×10⁹/L; classic Baveno VI: >150×10⁹/L. Both LSM and platelets must meet the pair.',
       }),
-      yesNo('compensated', 'Compensated (no prior decompensation: ascites, variceal bleed, HE)', 1, 'Any prior clinically evident ascites, variceal hemorrhage, or overt hepatic encephalopathy = decompensated. Baveno sparing rules apply only to compensated advanced chronic liver disease.'),
+      yesNo('compensated', 'Compensated (no prior decompensation: ascites, variceal bleed, HE)', null, 'Any prior clinically evident ascites, variceal hemorrhage, or overt hepatic encephalopathy = decompensated. Baveno sparing rules apply only to compensated advanced chronic liver disease.'),
     ],
     calculate(values) {
       const lsm = num(values.lsm, 18);
@@ -486,11 +486,13 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
   {
     id: 'meld-3-edu',
     name: 'MELD 3.0 (UNOS/OPTN)',
-    shortName: 'MELD 3.0',
+    shortName: 'MELD 3.0 (legacy)',
     description:
       'MELD 3.0 (Kim 2021) incorporating sex and albumin plus bilirubin, INR, creatinine, and sodium. Labs and timing must match the transplant-center/OPTN calculator for listing.',
     category: 'gastroenterology',
     tags: ['meld', 'meld 3.0', 'transplant', 'cirrhosis', 'prognosis', 'albumin'],
+    status: 'superseded',
+    supersededBy: 'meld-na',
     whenToUse: 'Adult chronic liver disease prognosis and transplant-risk discussion when labs for MELD 3.0 components are available.',
     whyUse: 'MELD 3.0 improves mortality prediction vs MELD-Na and addresses sex disparity with a female coefficient and albumin.',
     inputs: [
@@ -771,11 +773,16 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       references: [
         {
           title: 'Acute kidney injury',
-          citation: 'Bellomo R et al. Lancet. 2012; KDIGO AKI guideline',
+          citation: 'Bellomo R, Kellum JA, Ronco C. Lancet. 2012;380:756-766',
           year: 2012,
-          url: 'https://kdigo.org/guidelines/acute-kidney-injury/',
           pmid: '22617274',
           doi: '10.1016/S0140-6736(11)61454-2',
+        },
+        {
+          title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury',
+          citation: 'Kidney Disease: Improving Global Outcomes (KDIGO) Acute Kidney Injury Work Group. Kidney Int Suppl. 2012;2:1-138',
+          year: 2012,
+          url: 'https://kdigo.org/guidelines/acute-kidney-injury/',
         },
       ],
     },
@@ -1084,8 +1091,8 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       validation: 'Classic teaching thresholds vary slightly by protocol; copeptin-based tests reduce need for prolonged deprivation.',
       references: [
         {
-          title: 'Diabetes insipidus: diagnosis and management',
-          citation: 'Garrahy A / Christ-Crain M et al. reviews; Miller et al. classic protocol',
+          title: 'Diagnosis and management of central diabetes insipidus in adults',
+          citation: 'Garrahy A, Moran C, Thompson CJ. Clin Endocrinol (Oxf). 2019;90:23-30',
           year: 2019,
           pmid: '30269342',
           doi: '10.1111/cen.13866',
@@ -1210,8 +1217,8 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       numberInput('uvol', 'Approximate urine output', { unit: 'L/day', min: 1, max: 20, step: 0.5, exampleValue: 6, helpText: 'Pathologic polyuria commonly >3–3.5 L/day. This helper will not score DI vs polydipsia if volume is not clearly in that range.' }),
       yesNo('prefersCold', 'Prefers ice-cold water (classic DI anecdote)', 1, '1 point: a strong preference for ice-cold water, a classic anecdote in DI; it is a soft pointer, not diagnostic.'),
       yesNo('nocturia', 'Prominent nocturia / night water drinking', 1, '1 point: prominent nocturia with night-time drinking, which favours true polyuria over psychogenic water loading.'),
-      yesNo('lithium', 'Lithium or known nephrogenic risk drugs', 1, '1 point: current lithium or another drug causing ADH resistance (amphotericin, demeclocycline, cisplatin) — makes nephrogenic DI likely.'),
-      yesNo('psych', 'Primary psychiatric polydipsia context', 1, '1 point: an established psychiatric context of compulsive water drinking, pointing towards primary polydipsia rather than DI.'),
+      yesNo('lithium', 'Lithium or known nephrogenic risk drugs', 2, '2 points: current lithium or another drug causing ADH resistance (amphotericin, demeclocycline, cisplatin) — makes nephrogenic DI likely.'),
+      yesNo('psych', 'Primary psychiatric polydipsia context', 2, '2 points: an established psychiatric context of compulsive water drinking, pointing towards primary polydipsia rather than DI.'),
     ],
     calculate(values) {
       const na = num(values.na, 142);
@@ -1609,8 +1616,8 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       numberInput('bicarb', 'Serum bicarbonate', { unit: 'mEq/L', min: 1, max: 40, step: 0.1, exampleValue: 16, helpText: 'Resolution component: HCO₃ ≥15 mEq/L (need ≥2 of HCO₃, pH, AG)' }),
       numberInput('ph', 'Venous or arterial pH', { min: 6.6, max: 7.6, step: 0.01, exampleValue: 7.32, helpText: 'Resolution component: pH >7.3' }),
       numberInput('ag', 'Anion gap', { unit: 'mEq/L', min: 4, max: 40, step: 0.1, exampleValue: 11, helpText: 'Resolution component: AG ≤12 mEq/L' }),
-      yesNo('ableEat', 'Able to eat / transition plan ready', 1, '1 criterion: the patient can eat and a subcutaneous insulin transition plan is ready — biochemical resolution alone does not licence stopping the infusion.'),
-      yesNo('sqOverlap', 'SQ basal insulin overlapped ≥1–2 h before stopping IV', 1, 'Do not stop IV insulin until basal SQ has been given with ≥1–2 h overlap.'),
+      yesNo('ableEat', 'Able to eat / transition plan ready', 0, 'The patient can eat and a subcutaneous insulin transition plan is ready — biochemical resolution alone does not licence stopping the infusion. Contextual check, not a scored criterion.'),
+      yesNo('sqOverlap', 'SQ basal insulin overlapped ≥1–2 h before stopping IV', 0, 'Do not stop IV insulin until basal SQ has been given with ≥1–2 h overlap. Contextual check, not a scored criterion.'),
     ],
     calculate(values) {
       const glu = num(values.glu, 180);
@@ -1704,7 +1711,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         helpText: 'HHS typically effective osm ≥320. Often 2Na + glucose/18 (+ BUN/2.8 if total osm)',
       }),
       numberInput('ph', 'pH', { min: 6.6, max: 7.6, step: 0.01, exampleValue: 7.35, helpText: 'HHS: pH typically >7.3 (unlike DKA)' }),
-      numberInput('bicarb', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 40, exampleValue: 20, helpText: 'HHS: bicarbonate typically ≥15–18 mEq/L (stricter defs use ≥18)' }),
+      numberInput('bicarb', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 40, exampleValue: 20, helpText: 'HHS: strict ADA/Kitabchi row uses bicarbonate >18 mEq/L; 15–18 is a borderline gray zone flagged below.' }),
       selectInput('ketones', 'Ketones', [
         {
           label: 'None / small / trace',
@@ -1730,9 +1737,10 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       const ams = bool(values.ams);
       const gluOk = glu >= 600;
       const osmOk = osm >= 320;
-      const acidMinimal = ph > 7.3 && bicarb >= 15; // some use ≥18
-      const bicarbStrict = bicarb >= 18;
+      const acidMinimal = ph > 7.3 && bicarb > 18; // strict ADA/Kitabchi HHS row: HCO₃ >18
+      const bicarbGray = bicarb >= 15 && bicarb <= 18; // borderline zone vs looser ≥15 teaching
       const hhsCore = gluOk && osmOk && acidMinimal && ket === 'small';
+      const hhsGray = gluOk && osmOk && ph > 7.3 && bicarbGray && ket === 'small';
       const mixed = gluOk && osmOk && (ket === 'large' || ph <= 7.3 || bicarb < 15);
       let label = '';
       let riskLevel: 'moderate' | 'high' | 'critical' | 'low' | 'info' = 'info';
@@ -1740,7 +1748,11 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       if (hhsCore) {
         label = 'Compatible with HHS';
         riskLevel = ams ? 'critical' : 'high';
-        interpretation = `Glucose ${glu}, osm ${osm}, pH ${ph}, HCO₃ ${bicarb}, minimal ketones — meets common HHS teaching criteria (glucose ≥600, osm ≥320, pH >7.3, bicarb typically ≥18, negligible ketosis). ${ams ? 'AMS present — critical care fluids/electrolytes.' : 'Assess neurology closely.'} Fluid resuscitation is the cornerstone; insulin after some volume restoration per protocol.`;
+        interpretation = `Glucose ${glu}, osm ${osm}, pH ${ph}, HCO₃ ${bicarb}, minimal ketones — meets strict HHS criteria (glucose ≥600, osm ≥320, pH >7.3, bicarb >18, negligible ketosis). ${ams ? 'AMS present — critical care fluids/electrolytes.' : 'Assess neurology closely.'} Fluid resuscitation is the cornerstone; insulin after some volume restoration per protocol.`;
+      } else if (hhsGray) {
+        label = 'HHS features — borderline bicarbonate (15–18)';
+        riskLevel = ams ? 'critical' : 'high';
+        interpretation = `Glucose ${glu}, osm ${osm}, pH ${ph}, HCO₃ ${bicarb}, minimal ketones — HHS cluster except bicarbonate sits in the 15–18 gray zone (strict ADA/Kitabchi row uses >18). Manage as probable HHS / mild mixed hyperglycemic crisis: fluids first, insulin per protocol, repeat chemistries.`;
       } else if (mixed) {
         label = 'Mixed HHS–DKA features';
         riskLevel = 'critical';
@@ -1754,9 +1766,6 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         riskLevel = 'moderate';
         interpretation = `Entered labs do not fulfill classic HHS cluster. Consider isolated hyperglycemia, DKA, or early crisis — treat ABC, fluids, and precipitant.`;
       }
-      if (!bicarbStrict && hhsCore) {
-        interpretation += ' Note: bicarb 15–17 is borderline vs stricter ≥18 cutoffs used in some definitions.';
-      }
       return {
         score: osm,
         unit: 'mOsm/kg',
@@ -1767,7 +1776,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
           { label: 'Glucose ≥600', value: gluOk ? 'Yes' : `No (${glu})` },
           { label: 'Osm ≥320', value: osmOk ? 'Yes' : `No (${osm})` },
           { label: 'pH >7.3', value: ph > 7.3 ? 'Yes' : `No (${ph})` },
-          { label: 'Bicarb', value: `${bicarb} (many defs ≥18)` },
+          { label: 'Bicarb >18', value: `${bicarb} (strict ADA row; 15–18 borderline)` },
           { label: 'Ketones', value: ket },
           { label: 'AMS', value: ams ? 'Yes' : 'No' },
         ],
@@ -1775,7 +1784,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'HHS: glucose typically ≥600 mg/dL, effective osmolality ≥320 mOsm/kg, pH >7.3, bicarbonate ≥15–18, small ketones, frequent profound dehydration and AMS.',
+        'HHS: glucose typically ≥600 mg/dL, effective osmolality ≥320 mOsm/kg, pH >7.3, bicarbonate >18 (strict ADA/Kitabchi row; 15–18 borderline), small ketones, frequent profound dehydration and AMS.',
       validation: 'ADA hyperglycemic crisis criteria; mixed DKA/HHS is common.',
       references: [
         {

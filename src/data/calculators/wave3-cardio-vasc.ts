@@ -342,8 +342,8 @@ export const wave3CardioVascCalcs: Calculator[] = [
       yesNo('vascular', 'Prior vascular disease (PAD / stroke)', 6, 'Prior peripheral artery disease or stroke/TIA (CRUSADE “vascular disease”).'),
       yesNo('dm', 'Diabetes mellitus', 6, 'Diabetes mellitus (treated or untreated) scores 6 points in the CRUSADE bleeding table. Exclude uncomplicated type 2 by diet alone only if your local protocol says so.'),
       selectInput('sex', 'Sex', [
-        { label: 'Male', value: 'male' },
-        { label: 'Female', value: 'female' },
+        { label: 'Male', value: 'male', points: 0 },
+        { label: 'Female', value: 'female', points: 8 },
       ], undefined, 'In CRUSADE, female sex scores 8 points and male sex 0; sex is a scored item in the published table, not a model input.'),
     ],
     calculate(values) {
@@ -969,15 +969,19 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whyUse: 'Recognizing Wellens pattern prompts urgent angiography rather than stress testing.',
     inputs: [
       yesNo('anginaHx', 'Recent anginal chest pain (often resolved at time of ECG)', 1, 'Recent anginal chest pain, characteristically resolved or improving by the time the ECG is recorded; scores 1 point.'),
-      yesNo('patternA', 'Type A: biphasic T waves in V2–V3 (±V1–V4)', 2, 'Biphasic T: initial positive then terminal negative, typically when pain-free.'),
-      yesNo('patternB', 'Type B: deep symmetric inverted T waves in V2–V3 (±V1–V6)', 2, 'Deep, symmetric, inverted precordial T waves (often >5 mm), typically when pain-free. More common than type A.'),
+      selectInput('pattern', 'Precordial T-wave pattern (V2–V3)', [
+        { label: 'Neither pattern', value: 'none', points: 0, description: 'No biphasic or deeply inverted precordial T waves' },
+        { label: 'Type A: biphasic T waves in V2–V3 (±V1–V4) (+2)', value: 'a', points: 2, description: 'Biphasic T: initial positive then terminal negative, typically when pain-free.' },
+        { label: 'Type B: deep symmetric inverted T waves in V2–V3 (±V1–V6) (+2)', value: 'b', points: 2, description: 'Deep, symmetric, inverted precordial T waves (often >5 mm), typically when pain-free. More common than type A.' },
+      ], 'none', 'Wellens has two recognized precordial T-wave morphologies — type A (biphasic) and type B (deep symmetric inversion). Either contributes +2 once — they are alternative morphologies, not additive items.'),
       yesNo('isoelectric', 'Isoelectric or minimally elevated ST (<1 mm) in precordials', 1, 'Precordial ST segment isoelectric or elevated by less than 1 mm; scores 1 point. Marked ST elevation indicates STEMI, not Wellens.'),
       yesNo('noQ', 'No precordial pathologic Q waves', 1, 'No pathologic precordial Q waves; scores 1 point. Established Q waves indicate completed infarction rather than the Wellens pattern.'),
       yesNo('tropNormal', 'Normal or only slightly elevated cardiac troponin', 1, 'Normal or minimally above URL (classic series often <2× ULN).'),
       yesNo('preservedR', 'Preserved R-wave progression (e.g. R in V3 ≥3 mm)', 1, 'Preserved R-wave progression, for example an R wave of 3 mm or more in V3, scores 1 point. Poor R progression argues against Wellens.'),
     ],
     calculate(values) {
-      const pattern = bool(values.patternA) || bool(values.patternB);
+      const patternSel = String(values.pattern ?? 'none');
+      const pattern = patternSel === 'a' || patternSel === 'b';
       const keys = ['anginaHx', 'isoelectric', 'noQ', 'tropNormal', 'preservedR'] as const;
       const support = keys.reduce((s, k) => s + (bool(values[k]) ? 1 : 0), 0);
       const score = (pattern ? 2 : 0) + support;
@@ -989,7 +993,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
           interpretation: `ECG pattern + ${support}/5 supportive clinical features: highly concerning for Wellens syndrome (critical proximal LAD). Avoid treadmill stress testing; urgent cardiology/angiography pathway.`,
           riskLevel: 'critical',
           details: [
-            { label: 'Pattern type', value: bool(values.patternB) ? 'Type B (deep inversion) ± A' : 'Type A (biphasic)' },
+            { label: 'Pattern type', value: patternSel === 'b' ? 'Type B (deep inversion)' : 'Type A (biphasic)' },
             { label: 'Supportive criteria', value: `${support}/5` },
           ],
           recommendations: [
@@ -1538,11 +1542,13 @@ export const wave3CardioVascCalcs: Calculator[] = [
   {
     id: 'score2-europe',
     name: 'SCORE2 (European 10-year CVD risk)',
-    shortName: 'SCORE2',
+    shortName: 'SCORE2 (legacy)',
     description:
       'Official ESC SCORE2 10-year fatal + nonfatal CVD risk for adults 40–69 without diabetes or established CVD, with sex-specific coefficients and recalibration to four European risk regions.',
     category: 'cardiology',
     tags: ['score2', 'prevention', 'europe', 'ascvd', 'cvd risk'],
+    status: 'superseded',
+    supersededBy: 'score2-cvd',
     whenToUse:
       'Apparently healthy adults aged 40–69 years without diabetes, established ASCVD, or severe CKD, for 10-year fatal and nonfatal CVD risk (ESC 2021 prevention).',
     whyUse:

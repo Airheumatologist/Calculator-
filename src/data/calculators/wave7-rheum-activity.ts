@@ -1288,13 +1288,13 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     whenToUse: 'ANCA-associated or other primary systemic vasculitis activity at diagnosis and follow-up.',
     whyUse: 'Standard activity instrument for AAV trials and clinic; 0 implies remission of scored items.',
     inputs: [
-      numberInput('general', 'General (max 7)', { min: 0, max: 7, exampleValue: 0, helpText: 'Transcribe the weighted subtotal from a completed official BVAS v3 form; persistent vs new/worse have different weights. Items: myalgia 1, arthralgia/arthritis 2, fever ≥38.0 °C 2, weight loss ≥2 kg 2.' }),
+      numberInput('general', 'General (max 3)', { min: 0, max: 3, exampleValue: 0, helpText: 'Transcribe the weighted subtotal from a completed official BVAS v3 form; persistent vs new/worse have different weights. Items (new/worse): myalgia 1, arthralgia/arthritis 1, fever ≥38.0 °C 2, weight loss ≥2 kg 2 — the general system is capped at 3 (persistent cap 2).' }),
       numberInput('cutaneous', 'Cutaneous (max 6)', { min: 0, max: 6, exampleValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal (new/worse vs persistent differ). Typical items: infarct, purpura, ulcer, gangrene, other skin vasculitis.' }),
       numberInput('mucousEyes', 'Mucous membranes / eyes (max 6)', { min: 0, max: 6, exampleValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: mouth/genital ulcers, episcleritis/scleritis, uveitis, retro-orbital mass, conjunctivitis, blepharitis.' }),
       numberInput('ent', 'ENT (max 6)', { min: 0, max: 6, exampleValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: bloody nasal discharge/crusts/ulcers/granulomata, sinus involvement, subglottic stenosis, conductive or sensorineural hearing loss.' }),
       numberInput('chest', 'Chest (max 6)', { min: 0, max: 6, exampleValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: wheeze, nodules/cavities, pleural effusion/pleurisy, infiltrate, endobronchial involvement, massive haemoptysis/DAH, respiratory failure.' }),
       numberInput('cardiac', 'Cardiovascular (max 6)', { min: 0, max: 6, exampleValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: loss of pulses, valvular disease, pericarditis, ischaemic heart disease, cardiomyopathy, congestive failure.' }),
-      numberInput('abdominal', 'Abdominal (max 6)', { min: 0, max: 6, exampleValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: peritonitis, bloody diarrhoea, ischaemic abdominal pain.' }),
+      numberInput('abdominal', 'Abdominal (max 9)', { min: 0, max: 9, exampleValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Items (new/worse): peritonitis 9, bloody diarrhoea 9, ischaemic abdominal pain 6 — system capped at 9.' }),
       numberInput('renal', 'Renal (max 12)', { min: 0, max: 12, exampleValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: hypertension, proteinuria, haematuria ≥10 RBC/hpf, creatinine bands, rise in creatinine >30%.' }),
       numberInput('nervous', 'Nervous system (max 9)', { min: 0, max: 9, exampleValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: headache, meningitis, organic confusion, seizures, stroke, spinal cord lesion, cranial nerve palsy, sensory neuropathy, mononeuritis multiplex.' }),
     ],
@@ -1329,7 +1329,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
           interpretation: `BVAS v3 ${score}: moderate vasculitis activity.`,
         },
         {
-          max: 80,
+          max: 63,
           level: 'high',
           label: 'Severe (≥16)',
           interpretation: `BVAS v3 ${score}: high/severe activity — induction or rescue typically indicated.`,
@@ -1387,17 +1387,17 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     whenToUse: 'Damage documentation in AAV / PAN / other primary systemic vasculitis, separate from BVAS activity.',
     whyUse: 'VDI predicts mortality and distinguishes damage from grumbling activity.',
     inputs: [
-      numberInput('msk', 'Musculoskeletal items', { min: 0, max: 3, exampleValue: 0, helpText: 'Irreversible items ≥3 months; do not score active BVAS lesions. Typical: osteoporosis/vertebral collapse, deforming arthritis, avascular necrosis, osteomyelitis, muscle atrophy/weakness. Or transcribe from the official VDI form.' }),
-      numberInput('skin', 'Skin items', { min: 0, max: 3, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: alopecia, cutaneous ulcers, gangrene. Do not score active BVAS lesions.' }),
-      numberInput('ocular', 'Ocular items', { min: 0, max: 3, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: cataract, retinal change, visual impairment/blindness, orbital wall destruction.' }),
-      numberInput('ent', 'ENT items', { min: 0, max: 3, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: hearing loss, nasal-bridge collapse/septal perforation, chronic sinusitis/crusting, subglottic stenosis.' }),
-      numberInput('pulmonary', 'Pulmonary items', { min: 0, max: 4, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: pulmonary fibrosis, pleural fibrosis, chronic breathlessness, impaired lung function.' }),
-      numberInput('cardiac', 'Cardiac items', { min: 0, max: 4, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: cardiomyopathy, valvular disease, pericarditis ≥3 months or pericardectomy, hypertension, coronary disease.' }),
-      numberInput('vascular', 'Peripheral vascular items', { min: 0, max: 4, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: absent pulses, major vessel stenosis, claudication, tissue loss, complicated venous thrombosis.' }),
-      numberInput('gi', 'Gastrointestinal items', { min: 0, max: 2, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: gut infarction/resection, mesenteric insufficiency/pancreatitis, chronic peritonitis, oesophageal stricture.' }),
-      numberInput('renal', 'Renal items', { min: 0, max: 4, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: GFR ≤50%, proteinuria ≥0.5 g/d, ESRD. Do not score active BVAS nephritis.' }),
-      numberInput('neuro', 'Neuropsychiatric items', { min: 0, max: 4, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: chronic neuropathy, CVA, seizures, cranial nerve lesion. Do not score active BVAS lesions.' }),
-      numberInput('other', 'Other items', { min: 0, max: 3, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: premature gonadal failure, marrow failure, diabetes, malignancy, chemical cystitis.' }),
+      numberInput('msk', 'Musculoskeletal items (max 5)', { min: 0, max: 5, exampleValue: 0, helpText: 'Irreversible items ≥3 months; do not score active BVAS lesions. Official VDI has 5 MSK items: significant muscle atrophy/weakness, deforming/erosive arthritis, osteoporosis/vertebral collapse, avascular necrosis, osteomyelitis. Or transcribe from the official VDI form.' }),
+      numberInput('skin', 'Skin items (max 3)', { min: 0, max: 3, exampleValue: 0, helpText: 'Irreversible ≥3 months. Official VDI has 3 skin/mucous items: alopecia, cutaneous ulcers, mouth ulcers. Do not score active BVAS lesions.' }),
+      numberInput('ocular', 'Ocular items (max 7)', { min: 0, max: 7, exampleValue: 0, helpText: 'Irreversible ≥3 months. Official VDI has 7 ocular items: cataract, retinal change, optic atrophy, visual impairment/diplopia, blindness in one eye, blindness in second eye, orbital wall destruction.' }),
+      numberInput('ent', 'ENT items (max 6)', { min: 0, max: 6, exampleValue: 0, helpText: 'Irreversible ≥3 months. Official VDI has 6 ENT items: hearing loss, nasal blockage/chronic discharge/crusting, nasal-bridge collapse/septal perforation, chronic sinusitis/radiological damage, subglottic stenosis without and with surgery.' }),
+      numberInput('pulmonary', 'Pulmonary items (max 7)', { min: 0, max: 7, exampleValue: 0, helpText: 'Irreversible ≥3 months. Official VDI has 7 pulmonary items: pulmonary hypertension, pulmonary fibrosis, pulmonary infarction, pleural fibrosis, chronic asthma, chronic breathlessness, impaired lung function.' }),
+      numberInput('cardiac', 'Cardiovascular items (max 7)', { min: 0, max: 7, exampleValue: 0, helpText: 'Irreversible ≥3 months. Official VDI has 7 cardiovascular items: angina/coronary bypass, myocardial infarction, cardiomyopathy, valvular disease, pericarditis ≥3 months or pericardectomy, diastolic BP ≥95 or antihypertensives, plus one additional listed cardiovascular item.' }),
+      numberInput('vascular', 'Peripheral vascular items (max 8)', { min: 0, max: 8, exampleValue: 0, helpText: 'Irreversible ≥3 months. Official VDI has 8 peripheral-vascular items: absent pulses, claudication >6 months, major tissue loss, subsequent tissue loss, complicated venous thrombosis, and related arterial stenosis items.' }),
+      numberInput('gi', 'Gastrointestinal items (max 4)', { min: 0, max: 4, exampleValue: 0, helpText: 'Irreversible ≥3 months. Official VDI has 4 GI items: gut infarction/resection, mesenteric insufficiency/chronic pancreatitis, chronic peritonitis, oesophageal stricture/surgery.' }),
+      numberInput('renal', 'Renal items (max 3)', { min: 0, max: 3, exampleValue: 0, helpText: 'Irreversible ≥3 months. Official VDI has 3 renal items: measured/estimated GFR ≤50%, proteinuria ≥0.5 g/d, end-stage renal disease. Do not score active BVAS nephritis.' }),
+      numberInput('neuro', 'Neuropsychiatric items (max 8)', { min: 0, max: 8, exampleValue: 0, helpText: 'Irreversible ≥3 months. Official VDI has 8 neuropsychiatric items: chronic neuropathy, CVA/stroke, seizures, cranial nerve lesion, cognitive impairment/psychosis, and related items. Do not score active BVAS lesions.' }),
+      numberInput('other', 'Other items (max 6)', { min: 0, max: 6, exampleValue: 0, helpText: 'Irreversible ≥3 months. Official VDI has 6 other items: premature gonadal failure, marrow failure, diabetes, malignancy, chemical cystitis, and other listed damage.' }),
     ],
     calculate(values) {
       const msk = num(values.msk, 0);
@@ -1426,7 +1426,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
           interpretation: `VDI ${score}: early damage — associated with later mortality in AAV cohorts.`,
         },
         {
-          max: 40,
+          max: 64,
           level: 'high',
           label: 'High damage (≥3)',
           interpretation: `VDI ${score}: substantial damage. Optimise activity control and organ support.`,
@@ -1452,7 +1452,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'VDI counts irreversible items ≥3 months. This helper uses organ item counts with typical maxima (MSK 3, skin 3, ocular 3, ENT 3, lung 4, heart 4, vascular 4, GI 2, renal 4, neuro 4, other 3). 0 none, 1–2 moderate, ≥3 high. Full VDI has 64 dichotomous items.',
+        'VDI counts irreversible items ≥3 months. This helper sums organ item counts capped at the official item counts per system (MSK 5, skin/mucous 3, ocular 7, ENT 6, pulmonary 7, cardiovascular 7, peripheral vascular 8, GI 4, renal 3, neuropsychiatric 8, other 6 — total 64 dichotomous items). 0 none, 1–2 moderate, ≥3 high.',
       formula: 'VDI = Σ organ item counts',
       validation: 'Exley et al. Vasculitis Damage Index; damage present early and predicts outcome.',
       references: [
@@ -1678,16 +1678,16 @@ export const wave7RheumActivityCalcs: Calculator[] = [
       const score = round((dryness + fatigue + pain) / 3, 1);
       const r = riskFromThresholds(score, [
         {
-          max: 5,
+          max: 4.9,
           level: 'low',
-          label: 'Patient-acceptable range (≤5)',
-          interpretation: `ESSPRI ${score}: at or below the commonly used patient-acceptable symptom state (≤5). Target is ≤5 or a reduction ≥1 point.`,
+          label: 'Patient-acceptable range (<5)',
+          interpretation: `ESSPRI ${score}: below the published patient-acceptable symptom state cutoff (PASS = ESSPRI <5). Target is <5 or a reduction ≥1 point.`,
         },
         {
           max: 10,
           level: 'high',
-          label: 'Unsatisfactory symptom state (>5)',
-          interpretation: `ESSPRI ${score}: above PASS. Address dryness, fatigue, and pain specifically — these often dissociate from ESSDAI.`,
+          label: 'Unsatisfactory symptom state (≥5)',
+          interpretation: `ESSPRI ${score}: at or above PASS (≥5). Address dryness, fatigue, and pain specifically — these often dissociate from ESSDAI.`,
         },
       ]);
       return {
@@ -1717,7 +1717,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
       ],
     },
     nextSteps: [
-      { condition: 'ESSPRI >5', actions: ['Optimise topical sicca therapy', 'Sleep / fatigue work-up', 'Analgesic and musculoskeletal review'] },
+      { condition: 'ESSPRI ≥5', actions: ['Optimise topical sicca therapy', 'Sleep / fatigue work-up', 'Analgesic and musculoskeletal review'] },
     ],
     pearls: ['ESSDAI and ESSPRI correlate poorly — score both.', 'A 1-point drop is the usual MCII.'],
   },

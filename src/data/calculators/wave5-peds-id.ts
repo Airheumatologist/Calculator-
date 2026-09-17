@@ -90,7 +90,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
         { label: 'Pale or CRT 3 s (1)', value: 1 },
         { label: 'Grey or CRT 4 s or HR +20 above normal (2)', value: 2 },
         { label: 'Mottled, CRT ≥5 s, HR +30, or bradycardia (3)', value: 3 },
-      ], 1, 'Score color, capillary refill, and HR against age-normal awake resting HR (PALS): neonate 100–205; infant 100–180; toddler 98–140; preschool 80–120; school-age 75–118; adolescent 60–100. “+20 / +30 above normal” is vs the upper end of that age band; bradycardia is below the lower end with poor perfusion.'),
+      ], 1, 'Score color, capillary refill, and HR against age-normal awake resting HR (PALS): neonate 100–205; infant 100–190; toddler 98–140; preschool 80–120; school-age 75–118; adolescent 60–100. “+20 / +30 above normal” is vs the upper end of that age band; bradycardia is below the lower end with poor perfusion.'),
       selectInput('resp', 'Respiratory rate / effort', [
         { label: 'RR normal, no recession (0)', value: 0, description: 'Within age-normal RR and no recession' },
         { label: 'RR mildly ↑ or mild accessory use (1)', value: 1, description: 'RR >10 above age-normal max, or mild accessory use' },
@@ -222,7 +222,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
         { label: 'Preschool (3–5 years)', value: 'preschool' },
         { label: 'School age (6–11 years)', value: 'school' },
         { label: 'Adolescent (12–15 years)', value: 'teen' },
-      ], 'toddler', 'Age band sets the expected awake resting range: neonate 100–205, infant 100–180, toddler 98–140, preschool 80–120, school age 75–118, adolescent 60–100 bpm.'),
+      ], 'toddler', 'Age band sets the expected awake resting range: neonate 100–205, infant 100–190, toddler 98–140, preschool 80–120, school age 75–118, adolescent 60–100 bpm.'),
       numberInput('hr', 'Measured heart rate', { unit: 'bpm', min: 30, max: 280, exampleValue: 120, helpText: 'Count for a full 60 s at rest (or from monitor). Interpret against the selected age band and awake vs sleeping state.' }),
       selectInput('state', 'Patient state', [
         { label: 'Awake / resting', value: 'awake' },
@@ -236,7 +236,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
       // Approximate PALS / AHA pediatric vital teaching ranges (awake)
       const ranges: Record<string, { lo: number; hi: number; label: string }> = {
         neonate: { lo: 100, hi: 205, label: 'Neonate' },
-        infant: { lo: 100, hi: 180, label: 'Infant' },
+        infant: { lo: 100, hi: 190, label: 'Infant' },
         toddler: { lo: 98, hi: 140, label: 'Toddler' },
         preschool: { lo: 80, hi: 120, label: 'Preschool' },
         school: { lo: 75, hi: 118, label: 'School age' },
@@ -510,14 +510,14 @@ export const wave5PedsIdCalcs: Calculator[] = [
     whenToUse: 'After selecting ETT size, estimate initial oral insertion depth in children (not neonates).',
     whyUse: 'Provides a starting lip-mark depth; must be confirmed with auscultation, ETCO₂, and imaging when available.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 0.5, max: 16, step: 0.5, exampleValue: 4, helpText: 'Age in years for depth at the lips = age ÷ 2 + 12 cm; for infants under 1 year the weight-based estimate (weight ÷ 2 + 6) is used instead.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 0.5, max: 16, step: 0.5, exampleValue: 4, helpText: 'Age in years for depth at the lips = age ÷ 2 + 12 cm; for infants under 1 year the weight-based estimate (weight kg + 6) is used instead.' }),
       numberInput('weight', 'Weight (optional neonatal/alt formula)', {
         unit: 'kg', unitKind: 'weight',
         min: 2,
         max: 80,
         step: 0.1,
         exampleValue: 16,
-        helpText: 'Weight-based depth ≈ weight(kg)/2 + 6 sometimes used in infants',
+        helpText: 'Weight-based depth ≈ weight(kg) + 6 (Tochen "weight+6" / 7-8-9 rule) used in infants',
         required: false,
       }),
       selectInput('route', 'Route', [
@@ -531,14 +531,14 @@ export const wave5PedsIdCalcs: Calculator[] = [
       const wt = num(values.weight, 0);
       const route = String(values.route ?? 'oral');
       const oralAge = round(age / 2 + 12, 1);
-      const oralWt = wtProvided ? round(wt / 2 + 6, 1) : null;
+      const oralWt = wtProvided ? round(wt + 6, 1) : null;
       const isInfant = age < 1 || (wtProvided && wt < 10);
       const oral = isInfant && oralWt != null ? oralWt : oralAge;
       const depth = route === 'nasal' ? round(oral + 2.5, 1) : oral;
 
       const infantNote = isInfant
         ? oralWt != null
-          ? ' In infants (<1 year or <10 kg), weight-based depth (wt/2 + 6) is reported as primary to mitigate right mainstem bronchus intubation risk.'
+          ? ' In infants (<1 year or <10 kg), weight-based depth (wt + 6, Tochen rule) is reported as primary to mitigate right mainstem bronchus intubation risk.'
           : ' CAUTION: Classic age/2 + 12 overestimates depth in infants (<1 year); enter weight or use length/Broselow tape.'
         : '';
 
@@ -562,7 +562,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Classic oral ETT depth (cm) ≈ age(years)/2 + 12. Alternate weight-based teaching: kg/2 + 6.',
+      summary: 'Classic oral ETT depth (cm) ≈ age(years)/2 + 12. Infant weight-based estimate: weight(kg) + 6 (Tochen "7-8-9" rule).',
       formula: 'Oral depth ≈ age/2 + 12 cm (lips)',
       validation: 'Teaching estimate only; anatomy varies — always confirm placement clinically and with ETCO₂.',
       references: [
@@ -1056,9 +1056,9 @@ export const wave5PedsIdCalcs: Calculator[] = [
       const highRiskFloor = (h: number) => {
         if (h <= 24) return 5 + (h / 24) * 3; // ~5→8
         if (h <= 48) return 8 + ((h - 24) / 24) * 5; // ~8→13
-        if (h <= 72) return 13 + ((h - 48) / 24) * 2.5; // ~13→15.5
-        if (h <= 96) return 15.5 + ((h - 72) / 24) * 1.5;
-        return 17;
+        if (h <= 72) return 13 + ((h - 48) / 24) * 4; // ~13→17
+        if (h <= 96) return 17 + ((h - 72) / 24) * 1.5; // ~17→18.5
+        return 18.5 + Math.min((h - 96) / 48, 1); // ~18.5→19.5 by 144 h
       };
       const highIntFloor = (h: number) => highRiskFloor(h) - 2.5;
       const lowIntFloor = (h: number) => highRiskFloor(h) - 5;
@@ -1252,7 +1252,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
         { label: 'None besides gestational age', value: 'none', description: 'Use the GA-specific no-risk-factor exchange curve' },
         { label: 'Any (albumin <3.0, hemolysis, sepsis, instability)', value: 'any', description: 'Any one AAP Table 2 factor besides GA uses the with-risk-factors curve' },
       ], 'none', 'AAP 2022 Table 2 (besides GA): albumin <3.0 g/dL; isoimmune hemolytic disease (DAT+), G6PD deficiency, or other hemolysis; sepsis; significant clinical instability in the previous 24 h. GA <38 weeks is already captured by the GA curve. Legacy low/med/high values still map (low → none; med/high → any).'),
-      yesNo('abeSigns', 'Signs of acute bilirubin encephalopathy (ABE)', -4,
+      yesNo('abeSigns', 'Signs of acute bilirubin encephalopathy (ABE)', null,
         'Tone changes, retrocollis/opisthotonos, poor suck, abnormal cry, fever, altered alertness. AAP: intermediate/advanced ABE is an indication for urgent exchange even if TSB is below the hour-specific threshold.', false),
     ],
     calculate(values) {
@@ -1852,7 +1852,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
         'Peripheral skin temperature more than 3 °C cooler than rectal (core) temperature.', true),
       yesNo('coma', 'Modified coma scale <8 / deeply impaired consciousness', 3,
         'Use pediatric-modified GCS (E4 V5 M6, max 15). Score +3 if total <8. Infant verbal: 5 coos/babbles, 4 irritable cry, 3 cries to pain, 2 moans to pain, 1 none. If intubated, use best pre-intubation exam.', false),
-      yesNo('deterioration', 'Deterioration in the hour before scoring', 2, 'Deterioration in the hour before scoring adds 2 points, one of the two heaviest items.', false),
+      yesNo('deterioration', 'Deterioration in the hour before scoring', 2, 'Deterioration in the hour before scoring adds 2 points — a substantial mid-weight item (the three 3-point items are heaviest).', false),
       yesNo('absenceMeningism', 'Absence of meningism', 2, 'Absence of meningism adds 2 points — its presence is relatively reassuring in this score.', true),
       yesNo('extendingRash', 'Extending purpuric rash (or widespread)', 1, 'An extending or widespread purpuric rash adds 1 point.', true),
       yesNo('baseDeficit', 'Base deficit >8 mmol/L (if known)', 1, 'Base deficit greater than 8 mmol/L adds 1 point; use the ABG value if available.', false),

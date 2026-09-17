@@ -198,7 +198,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
       yesNo('wbc', 'WBC > 25 × 10⁹/L', 1, 'WBC above 25 × 10⁹/L scores 1 point in DIPSS.', false),
       yesNo('hb', 'Hemoglobin < 10 g/dL', 2, 'Worth 2 points in DIPSS', true),
       yesNo('blasts', 'Circulating blasts ≥ 1%', 1, 'Circulating blasts of 1% or more score 1 point in DIPSS.', true),
-      yesNo('symptoms', 'Constitutional symptoms (IWG-MRT)', 1, 'Weight loss >10% of baseline in the past year, and/or unexplained fever, and/or excessive (drenching) sweats, persisting >1 month. Fatigue, pruritus, or bone pain alone do not count.', false),
+      yesNo('symptoms', 'Constitutional symptoms (IWG-MRT)', 1, 'Weight loss >10% of baseline over the last 6 months, and/or unexplained fever, and/or excessive (drenching) sweats, persisting >1 month. Fatigue, pruritus, or bone pain alone do not count.', false),
     ],
     calculate(values) {
       const score =
@@ -370,7 +370,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Newly diagnosed chronic-phase CML before or at TKI start (historical risk grouping).',
     whyUse: 'Still reported in trials and labels; frames baseline risk though ELTS is preferred for TKI-era long-term survival.',
     inputs: [
-      numberInput('age', 'Age', { helpText: 'Age in years at diagnosis; the Sokal formula uses (age/10)² as its age term.', unit: 'years', min: 1, max: 120, exampleValue: 50 }),
+      numberInput('age', 'Age', { helpText: 'Age in years at diagnosis; the Sokal formula uses 0.0116 × (age − 43.4) as its age term.', unit: 'years', min: 1, max: 120, exampleValue: 50 }),
       numberInput('spleen', 'Spleen size below costal margin', {
         unit: 'cm',
         min: 0,
@@ -380,7 +380,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
         helpText: 'Clinical exam, cm below left costal margin in the midclavicular line; 0 if not palpable',
       }),
       numberInput('platelets', 'Platelet count', { helpText: 'Platelet count in ×10⁹/L at diagnosis; enter the value in the units shown on the field.', unit: '×10⁹/L', min: 10, max: 3000, exampleValue: 300 }),
-      numberInput('blasts', 'Peripheral blood blasts', { helpText: 'Peripheral blood blasts as a percentage at diagnosis; the Sokal formula uses (blasts/5)².', unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
+      numberInput('blasts', 'Peripheral blood blasts', { helpText: 'Peripheral blood blasts as a percentage at diagnosis; the Sokal formula uses 0.0887 × (blasts − 2.10).', unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
     ],
     calculate(values) {
       const age = num(values.age, 50);
@@ -458,12 +458,12 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Newly diagnosed chronic-phase CML risk stratification (historical Euro score).',
     whyUse: 'Complementary to Sokal; developed in interferon era and still cited alongside Sokal/EUTOS/ELTS.',
     inputs: [
-      numberInput('age', 'Age', { helpText: 'Age in years at diagnosis; Hasford adds 0.666 × (age − 43) for patients over 50.', unit: 'years', min: 1, max: 120, exampleValue: 50 }),
+      numberInput('age', 'Age', { helpText: 'Age in years at diagnosis; Hasford adds a fixed 0.6666 indicator term when age is 50 or older (not a continuous age slope).', unit: 'years', min: 1, max: 120, exampleValue: 50 }),
       numberInput('spleen', 'Spleen size below costal margin', { unit: 'cm', min: 0, max: 40, step: 0.5, exampleValue: 0, helpText: 'Clinical exam, cm below left costal margin in the midclavicular line; 0 if not palpable' }),
-      numberInput('blasts', 'Peripheral blood blasts', { helpText: 'Peripheral blood blasts as a percentage; Hasford adds 0.042 × blasts.', unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
-      numberInput('eosinophils', 'Peripheral eosinophils', { helpText: 'Peripheral eosinophils as a percentage; Hasford adds 0.058 × eosinophils.', unit: '%', min: 0, max: 50, step: 0.1, exampleValue: 2 }),
-      numberInput('basophils', 'Peripheral basophils', { helpText: 'Peripheral basophils as a percentage; Hasford adds 0.041 × basophils.', unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
-      numberInput('platelets', 'Platelet count', { helpText: 'Platelet count in ×10⁹/L; the Hasford platelet term is positive above 1500 and negative below 1500.', unit: '×10⁹/L', min: 10, max: 3000, exampleValue: 300 }),
+      numberInput('blasts', 'Peripheral blood blasts', { helpText: 'Peripheral blood blasts as a percentage; Hasford adds 0.0584 × blasts.', unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
+      numberInput('eosinophils', 'Peripheral eosinophils', { helpText: 'Peripheral eosinophils as a percentage; Hasford adds 0.0413 × eosinophils.', unit: '%', min: 0, max: 50, step: 0.1, exampleValue: 2 }),
+      numberInput('basophils', 'Peripheral basophils', { helpText: 'Peripheral basophils as a percentage; Hasford adds a fixed 0.2039 term when basophils are ≥3% (0 below that).', unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
+      numberInput('platelets', 'Platelet count', { helpText: 'Platelet count in ×10⁹/L; the Hasford platelet term adds 1.0956 when platelets are ≥1500 and contributes 0 below that threshold.', unit: '×10⁹/L', min: 10, max: 3000, exampleValue: 300 }),
     ],
     calculate(values) {
       const age = num(values.age, 50);
@@ -603,7 +603,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
   {
     id: 'iss-myeloma',
     name: 'ISS (Multiple Myeloma)',
-    shortName: 'ISS',
+    shortName: 'ISS (myeloma)',
     description: 'International Staging System for multiple myeloma using β2-microglobulin and albumin.',
     category: 'hematology',
     tags: ['iss', 'myeloma', 'staging', 'beta-2 microglobulin', 'albumin'],

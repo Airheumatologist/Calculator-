@@ -530,12 +530,14 @@ export type RangeViolation = {
   value: number;
   min?: number;
   max?: number;
+  /** Canonical unit label, so messages match the unit the bounds are written in. */
+  unit?: string;
   direction: 'low' | 'high';
 };
 
 /** Values typed outside an input's min/max (HTML min/max do not block free typing). */
 export function getRangeViolations(
-  inputs: { id: string; label: string; type: string; min?: number; max?: number; unitKind?: UnitKind }[],
+  inputs: { id: string; label: string; type: string; min?: number; max?: number; unit?: string; unitKind?: UnitKind }[],
   values: Record<string, number | string | boolean | null | undefined>
 ): RangeViolation[] {
   const violations: RangeViolation[] = [];
@@ -560,6 +562,7 @@ export function getRangeViolations(
         value: n,
         min: input.min,
         max: input.max,
+        unit: input.unit,
         direction: 'low',
       });
     } else if (input.max !== undefined && n > input.max) {
@@ -569,6 +572,7 @@ export function getRangeViolations(
         value: n,
         min: input.min,
         max: input.max,
+        unit: input.unit,
         direction: 'high',
       });
     }
@@ -605,8 +609,8 @@ export function rangeBlockedResult(violations: RangeViolation[]): {
     interpretation: violations
       .map((v) =>
         v.direction === 'high'
-          ? `${v.label}: too high (maximum ${v.max}).`
-          : `${v.label}: too low (minimum ${v.min}).`
+          ? `${v.label}: too high (maximum ${v.max}${v.unit ? ` ${v.unit}` : ''}).`
+          : `${v.label}: too low (minimum ${v.min}${v.unit ? ` ${v.unit}` : ''}).`
       )
       .join(' '),
     riskLevel: 'info',
@@ -614,8 +618,8 @@ export function rangeBlockedResult(violations: RangeViolation[]): {
       label: v.label,
       value:
         v.direction === 'high'
-          ? `${v.value} (max ${v.max})`
-          : `${v.value} (min ${v.min})`,
+          ? `${v.value}${v.unit ? ` ${v.unit}` : ''} (max ${v.max}${v.unit ? ` ${v.unit}` : ''})`
+          : `${v.value}${v.unit ? ` ${v.unit}` : ''} (min ${v.min}${v.unit ? ` ${v.unit}` : ''})`,
     })),
   };
 }

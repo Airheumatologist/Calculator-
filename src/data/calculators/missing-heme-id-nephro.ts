@@ -352,7 +352,7 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Adults with fever and neutropenia to risk-stratify complications.',
     whyUse: 'Score ≥21 predicts lower risk of serious medical complications and may support oral/step-down care.',
     inputs: [
-      yesNo('fnConfirmed', 'Confirmed febrile neutropenia (fever ≥38.0°C + ANC <1000/µL)', null, 'Prerequisite: temperature ≥38.3°C (or ≥38.0°C sustained) and ANC <500/µL (or <1000/µL and falling). MASCC is invalid without confirmed FN.', true),
+      yesNo('fnConfirmed', 'Confirmed febrile neutropenia (fever ≥38.3°C or ≥38.0°C sustained; ANC <500/µL or <1000/µL and falling)', null, 'Prerequisite: temperature ≥38.3°C (or ≥38.0°C sustained) and ANC <500/µL (or <1000/µL and falling). MASCC is invalid without confirmed FN.', true),
       selectInput('burden', 'Burden of illness (symptoms)', [
         { label: 'No or mild symptoms (5)', value: 5, description: 'Looks well aside from fever/chills, self-caring' },
         { label: 'Moderate symptoms (3)', value: 3, description: 'Significant symptoms but not critically ill' },
@@ -370,7 +370,7 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
         return {
           score: '—',
           label: 'Prerequisite not met',
-          interpretation: 'MASCC risk index is exclusively validated for patients with confirmed febrile neutropenia (fever ≥38.0°C and ANC <1000/µL). Confirm fever and neutropenia before assessing risk for outpatient management.',
+          interpretation: 'MASCC risk index is exclusively validated for patients with confirmed febrile neutropenia (fever ≥38.3°C or ≥38.0°C sustained; ANC <500/µL or <1000/µL and falling). Confirm fever and neutropenia before assessing risk for outpatient management.',
           riskLevel: 'info' as const,
           details: [{ label: 'Status', value: 'Confirmed febrile neutropenia required' }],
         };
@@ -714,7 +714,6 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     ],
   },
 
-  // ─── 8. Revised Baux ───────────────────────────────────────────────────────
   {
     id: 'gap-gap',
     name: 'Delta Gap / Excess Anion Gap',
@@ -785,7 +784,7 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       formula: 'Δ gap = AG_corr − normal AG; Δ/Δ = Δ gap + HCO₃',
       validation: 'Standard acid-base teaching; absolute cutoffs are approximate and lab-dependent.',
       references: [
-        { title: 'Mixed acid-base disturbances and the delta gap', citation: 'Wrenn K. Ann Emerg Med. 1990 / standard nephrology texts', year: 1990, pmid: '2240729',
+        { title: 'The delta (Δ) gap: An approach to mixed acid-base disorders', citation: 'Wrenn K. Ann Emerg Med. 1990', year: 1990, pmid: '2240729',
           doi: '10.1016/s0196-0644(05)82292-9', },
       ],
     },

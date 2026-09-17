@@ -541,6 +541,8 @@ export const wave4FormulasCalcs: Calculator[] = [
     id: '4-2-1-hourly',
     name: '4-2-1 Hourly Maintenance Fluids',
     shortName: '4-2-1',
+    status: 'superseded',
+    supersededBy: 'maintenance-fluids',
     description: 'Hourly IV maintenance fluid rate by the 4-2-1 (Holliday–Segar hourly) rule.',
     category: 'general',
     tags: ['fluids', '4-2-1', 'maintenance', 'ivf', 'pediatrics'],

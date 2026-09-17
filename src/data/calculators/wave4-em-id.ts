@@ -5,7 +5,7 @@ export const wave4EmIdCalcs: Calculator[] = [
   {
     id: 'dash-score-vte',
     name: 'DASH Score (Recurrent VTE)',
-    shortName: 'DASH',
+    shortName: 'DASH-VTE',
     description:
       'Predicts risk of recurrent venous thromboembolism after unprovoked VTE to inform anticoagulation duration.',
     category: 'hematology',
@@ -356,7 +356,7 @@ export const wave4EmIdCalcs: Calculator[] = [
     tags: ['riete', 'bleeding', 'vte', 'pe', 'dvt', 'anticoagulation'],
     whenToUse: 'Patients with acute DVT or PE starting or continuing therapeutic anticoagulation.',
     whyUse:
-      'Stratifies 3-month major bleeding risk into low (0), intermediate (1.5–4), and high (>4) bands to guide monitoring and anticoagulation decisions.',
+      'Stratifies 3-month major bleeding risk into low (0), intermediate (1–4), and high (>4) bands to guide monitoring and anticoagulation decisions.',
     inputs: [
       yesNo('recentBleed', 'Recent major bleeding (<30 days)', 2, 'Clinically overt major bleeding within the past 30 days (+2 points).'),
       yesNo('creatinine', 'Serum creatinine >1.2 mg/dL (>106 µmol/L)', 1.5, 'Elevated serum creatinine (+1.5 points).'),
@@ -388,7 +388,7 @@ export const wave4EmIdCalcs: Calculator[] = [
               riskLevel: 'high' as const,
             }
           : {
-              label: 'Intermediate bleeding risk (1.5–4)',
+              label: 'Intermediate bleeding risk (1–4)',
               interpretation: `RIETE ${score}: intermediate 3-month major bleeding risk. Balance VTE recurrence risk against bleeding risk and arrange appropriate monitoring.`,
               riskLevel: 'moderate' as const,
             };
@@ -418,7 +418,7 @@ export const wave4EmIdCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'Score 0', actions: ['Standard anticoagulation per guidelines', 'Routine monitoring'] },
-      { condition: 'Score 1.5–4', actions: ['Mitigate modifiable bleeding risks', 'Reassess renal function and hemoglobin', 'Arrange closer follow-up as indicated'] },
+      { condition: 'Score 1–4', actions: ['Mitigate modifiable bleeding risks', 'Reassess renal function and hemoglobin', 'Arrange closer follow-up as indicated'] },
       { condition: 'Score >4', actions: ['Review anticoagulation risk/benefit', 'Select agent and intensity carefully', 'Arrange close monitoring'] },
     ],
     pearls: [
@@ -1389,7 +1389,9 @@ export const wave4EmIdCalcs: Calculator[] = [
   {
     id: 'age-adjust-ddimer',
     name: 'Age-Adjusted D-Dimer Threshold',
-    shortName: 'Age D-dimer',
+    shortName: 'Age D-dimer (legacy)',
+    status: 'superseded',
+    supersededBy: 'age-adjusted-ddimer',
     description:
       'Computes age-adjusted D-dimer cutoff for PE/VTE exclusion in patients >50 years (FEU scale).',
     category: 'emergency',

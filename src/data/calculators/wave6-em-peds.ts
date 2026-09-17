@@ -1,5 +1,5 @@
 import type { Calculator } from '../../types/calculator';
-import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
+import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
 export const wave6EmPedsCalcs: Calculator[] = [
   // ─── 1. Kaiser EOS (simplified educational) ────────────────────────────────
@@ -291,8 +291,8 @@ export const wave6EmPedsCalcs: Calculator[] = [
         { label: 'Pneumatosis intestinalis and/or portal venous gas', value: 2, description: 'Bell II: intramural gas (pneumatosis) and/or portal venous gas — definite NEC radiographically' },
         { label: 'Pneumoperitoneum (free air)', value: 3, description: 'Bell IIIB: free intraperitoneal air (perforation). Sentinel loop or ascites without free air can still be IIIA clinically' },
       ], 1, 'Use the worst radiographic finding. Pneumatosis or portal gas defines definite (stage II) NEC for most practical purposes. Free air = IIIB.'),
-      yesNo('definitePneumatosis', 'Definite pneumatosis or portal gas documented', 1, 'Radiologist- or clinician-documented intramural gas or portal venous gas — defines definite (stage II) NEC even if systemic signs look mild.', false),
-      yesNo('freeAir', 'Free intraperitoneal air', 1, 'Pneumoperitoneum on film or cross-sectional imaging — Bell IIIB (perforation) regardless of other domains.', false),
+      yesNo('definitePneumatosis', 'Definite pneumatosis or portal gas documented', null, 'Radiologist- or clinician-documented intramural gas or portal venous gas — defines definite (stage II) NEC even if systemic signs look mild.', false),
+      yesNo('freeAir', 'Free intraperitoneal air', null, 'Pneumoperitoneum on film or cross-sectional imaging — Bell IIIB (perforation) regardless of other domains.', false),
     ],
     calculate(values) {
       const sys = num(values.systemic, 1);
@@ -1956,14 +1956,20 @@ export const wave6EmPedsCalcs: Calculator[] = [
           interpretation: `SI ${si}: critical hypovolemia pattern. Concurrent ABC resuscitation, blood products, and definitive hemorrhage control.`,
         },
       ]);
+      const ctx = str(values.context, 'pph');
+      const ctxNote =
+        ctx === 'ante'
+          ? ' Antepartum context applied: pregnancy-adjusted baselines — a rising index can precede frank hypotension.'
+          : ' Postpartum/hemorrhage context applied: interpret against obstetric hemorrhage thresholds and pair with quantitative blood loss.';
       return {
         score: si,
         unit: 'HR/SBP',
         ...r,
+        interpretation: r.interpretation + ctxNote,
         details: [
           { label: 'HR', value: `${hr} bpm` },
           { label: 'SBP', value: `${sbp} mmHg` },
-          { label: 'Context', value: String(values.context ?? 'pph') },
+          { label: 'Context', value: ctx === 'ante' ? 'Antepartum' : 'Postpartum / hemorrhage' },
         ],
         recommendations: [
           'Trend SI during resuscitation',
@@ -2360,10 +2366,10 @@ export const wave6EmPedsCalcs: Calculator[] = [
       selectInput('onset', 'Onset of distress', [
         { label: 'Immediate / first minutes–hours', value: 'early' },
         { label: 'After a period of relative wellness', value: 'delayed' },
-      ], "early", 'Immediate distress in the first minutes to hours suggests either pattern; distress after a period of relative wellness points toward TTN, which typically peaks early and resolves within 24–72 h.'),
+      ], "early", 'Timing is context only in this tool — it does not shift the score either way. Immediate distress fits either pattern; onset after relative wellness is a soft contextual clue toward TTN, which typically peaks early and resolves within 24–72 h.'),
       yesNo('csection', 'Cesarean without labor', 2, 'Cesarean delivery without labor is a classic TTN risk (retained fetal lung fluid).', true),
-      yesNo('grunting', 'Prominent grunting / marked retractions', 0, 'Prominent expiratory grunt and/or marked retractions (more RDS-like if both with hypoxia).', false),
-      yesNo('cyanosisO2', 'Cyanosis or significant O₂ need', 0, 'Central cyanosis or need for significant supplemental oxygen.', false),
+      yesNo('grunting', 'Prominent grunting / marked retractions', 0, 'Prominent expiratory grunt and/or marked retractions (more RDS-like if both with hypoxia). No badge points alone, but when BOTH this and cyanosis/O₂ need are present they jointly add +1 RDS point (−1 to the TTN−RDS difference).', false),
+      yesNo('cyanosisO2', 'Cyanosis or significant O₂ need', 0, 'Central cyanosis or need for significant supplemental oxygen. No badge points alone, but when BOTH this and grunting/retractions are present they jointly add +1 RDS point (−1 to the TTN−RDS difference).', false),
       yesNo('fluidCXR', 'CXR: fluid in fissures / perihilar streaking (TTN-like)', 3, 'Classic TTN film: fluid in the fissures and/or prominent perihilar streaking without diffuse granular RDS pattern.', true),
       yesNo('reticCXR', 'CXR: diffuse reticulogranular / air bronchograms (RDS-like)', -3, 'Diffuse reticulogranular (“ground-glass”) pattern with air bronchograms — RDS pattern.', false),
       yesNo('improving6_12', 'Clear improvement by 6–12–24 h', 3, 'Clear clinical improvement by 6–12 hours, or definitely by 24 h (TTN-like course).', true),
@@ -2777,7 +2783,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
       yesNo('renal', 'Renal involvement (proteinuria, hematuria, or renal insufficiency)', 1, 'Ankara/EULAR: proteinuria >0.3 g/24 h or morning ACR ≥30 mg/mmol (≈300 mg/g, the paired KDIGO A3 threshold; the original publication prints the units as “30 mmol/mg”, which is a unit typo) or ≥2+ dipstick; and/or hematuria >5 RBC/HPF or RBC casts; and/or renal insufficiency.', false),
       yesNo('histology', 'Histology: leukocytoclastic vasculitis or proliferative GN with predominant IgA', 1, 'Skin or kidney biopsy showing leukocytoclastic vasculitis or proliferative glomerulonephritis with predominant IgA deposits.', false),
       yesNo('scrotal', 'Scrotal edema/orchitis-like involvement (supportive)', 1, 'Acute scrotal swelling or orchitis-like pain — supportive of IgAV but not one of the four Ankara extra criteria.', false),
-      yesNo('alternate', 'More likely alternate diagnosis (ITP, meningococcemia, other vasculitis)', 0, 'If ITP (low platelets), meningococcemia, or another vasculitis is more likely, do not classify as IgAV — this helper subtracts and blocks classification.', false),
+      yesNo('alternate', 'More likely alternate diagnosis (ITP, meningococcemia, other vasculitis)', -3, 'If ITP (low platelets), meningococcemia, or another vasculitis is more likely, do not classify as IgAV — this helper subtracts 3 points and blocks classification regardless of other domains.', false),
     ],
     calculate(values) {
       const purpura = bool(values.purpura);

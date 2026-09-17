@@ -825,7 +825,9 @@ export const wave6HemeOncCalcs: Calculator[] = [
         label: below ? `Below typical target (${m.label})` : `At/above typical target (${m.label})`,
         interpretation: `Current platelets ${plt} ×10⁹/L. ${m.note} ${
           below
-            ? 'Count is below the listed educational threshold—consider transfusion if benefits outweigh risks and diagnosis supports response.'
+            ? ind === 'itp'
+              ? 'ITP: a low count alone is not an indication for transfusion — reserve platelets for critical bleeding or urgent procedures; first-line therapy is IVIG, steroids, or TPO-RA.'
+              : 'Count is below the listed educational threshold—consider transfusion if benefits outweigh risks and diagnosis supports response.'
             : 'Count meets/exceeds the listed educational threshold for this indication; transfusion usually not required for the count alone.'
         }`,
         riskLevel: below ? (ind === 'bleed' || ind === 'neuro' ? 'high' : 'moderate') : 'low',

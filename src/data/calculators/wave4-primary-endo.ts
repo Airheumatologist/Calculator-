@@ -438,7 +438,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         { label: 'Yes', value: 1 },
         { label: 'No / not available', value: 0 },
       ], 1, 'Answer Yes only when a glucose value is available. Level 1 is <70 mg/dL, Level 2 is <54 mg/dL, and Level 3 is any severe event needing help; with no measurement only Level 3 can be documented.'),
-      yesNo('severe', 'Severe cognitive impairment requiring assistance (Level 3)', 1, 'Level 3: altered mental or physical status requiring help from another person to treat (glucagon, IV dextrose, or being given carbs). Any glucose counts as Level 3.', false),
+      yesNo('severe', 'Severe cognitive impairment requiring assistance (Level 3)', null, 'Level 3: altered mental or physical status requiring help from another person to treat (glucagon, IV dextrose, or being given carbs). Any glucose counts as Level 3.', false),
       yesNo('symptoms', 'Hypoglycemic symptoms present', 0, 'Adrenergic or neuroglycopenic symptoms (sweat, tremor, palpitations, confusion, hunger). Supportive, but Level 1–2 are defined by glucose; Level 3 by assistance.', true),
     ],
     calculate(values) {
@@ -920,7 +920,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       selectInput('steroid', 'Glucocorticoid', [
         { label: 'Prednisone / prednisolone', value: 'pred', description: 'Relative potency 1 (reference). Morning daily dose peaks afternoon/evening glucose.' },
         { label: 'Methylprednisolone', value: 'mp', description: '≈1.25× prednisone-equivalent (4 mg MP ≈ 5 mg prednisone).' },
-        { label: 'Dexamethasone', value: 'dex', description: '≈6.25× prednisone-equivalent (0.75 mg dex ≈ 5 mg prednisone). Long-acting; hyperglycemia can last >24 h.' },
+        { label: 'Dexamethasone', value: 'dex', description: '≈6.67× prednisone-equivalent (0.75 mg dex ≈ 5 mg prednisone). Long-acting; hyperglycemia can last >24 h.' },
         { label: 'Hydrocortisone', value: 'hc', description: '≈0.25× prednisone-equivalent (20 mg HC ≈ 5 mg prednisone).' },
       ], 'pred', 'Converts to prednisone-equivalent for educational glycemic-risk banding. Does not output an insulin dose.'),
       numberInput('dose', 'Daily dose', { unit: 'mg', min: 1, max: 500, exampleValue: 40, helpText: 'Total daily milligrams of the selected steroid (not prednisone-equivalent — conversion is applied).' }),
@@ -943,7 +943,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       const timing = String(values.timing ?? 'am');
 
       // Approximate prednisone-equivalent
-      const factor: Record<string, number> = { pred: 1, mp: 1.25, dex: 6.25, hc: 0.25 };
+      const factor: Record<string, number> = { pred: 1, mp: 1.25, dex: 6.67, hc: 0.25 };
       const pe = round(dose * (factor[steroid] ?? 1), 1);
 
       let intensity = 'low–moderate';
@@ -1284,7 +1284,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       const pthNotSuppressed = pth >= pthL;
       const pthNotElevated = pth <= pthH;
 
-      let label = 'Non-diagnostic / euthyroid-Ca pattern';
+      let label = 'Non-diagnostic / normocalcemic (eucalcemic) pattern';
       let interpretation = 'Calcium and PTH both within entered references.';
       let riskLevel: 'normal' | 'moderate' | 'high' | 'info' = 'normal';
 
@@ -1779,7 +1779,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         max: 100,
         step: 0.1,
         exampleValue: 85,
-        helpText: 'Enter the CDC BMI-for-age percentile from the growth chart/EMR — not the adult BMI number. Categories: <5th underweight; 5th–84th healthy; 85th–94th overweight; ≥95th obesity; ≥99th often treated as severe obesity.',
+        helpText: 'Enter the CDC BMI-for-age percentile from the growth chart/EMR — not the adult BMI number. Categories: <5th underweight; 5th–84th healthy; 85th–94th overweight; ≥95th obesity. CDC severe obesity is formally BMI ≥120% of the 95th percentile or BMI ≥35; the ≥99th percentile is used here as the closest percentile-only proxy.',
       }),
       numberInput('age', 'Age', { unit: 'years', min: 2, max: 19, exampleValue: 10, helpText: 'Age in years at the time of the measurement; the CDC percentile bands apply from 2 to 19 years, and adult BMI cutoffs do not apply in this range.' }),
       selectInput('sex', 'Sex', [
@@ -1818,8 +1818,8 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         {
           max: 100,
           level: 'critical',
-          label: 'Severe obesity (≥99th / high percentile)',
-          interpretation: `BMI percentile ${p}: severe obesity range (often ≥120% of 95th percentile in extended definitions). Specialist obesity care; evaluate comorbidities.`,
+          label: 'Severe obesity range (≥99th percentile proxy)',
+          interpretation: `BMI percentile ${p}: severe obesity range. CDC defines severe obesity as BMI ≥120% of the 95th percentile or BMI ≥35 — the ≥99th percentile is the closest percentile-only proxy since raw BMI is not entered here. Specialist obesity care; evaluate comorbidities.`,
         },
       ]);
       return {
@@ -2045,7 +2045,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         { label: 'Monthly (2)', value: 2 },
         { label: 'Weekly (3)', value: 3 },
         { label: 'Daily or almost daily (4)', value: 4 },
-      ], 4, 'In the PAST YEAR, how often have you used tobacco products (cigarettes, cigars, chew, vaping nicotine)?'),
+      ], 0, 'In the PAST YEAR, how often have you used tobacco products (cigarettes, cigars, chew, vaping nicotine)?'),
       selectInput('rx', 'Prescription drugs for nonmedical reasons — past year frequency', [
         { label: 'Never (0)', value: 0 },
         { label: 'Once or twice (1)', value: 1 },

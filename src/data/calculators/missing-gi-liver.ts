@@ -35,7 +35,7 @@ export const missingGiLiverCalcs: Calculator[] = [
         score: df,
         label: 'Not severe by DF',
         interpretation: 'DF <32: not classified as severe by Maddrey criteria; supportive care is mainstay. Still assess clinically for complications.',
-        riskLevel: 'moderate',
+        riskLevel: 'low',
       };
     },
     evidence: {
@@ -326,7 +326,7 @@ export const missingGiLiverCalcs: Calculator[] = [
         { label: 'Acetaminophen (paracetamol)', value: 'apap', description: 'Uses pH <7.3 OR (INR >6.5 + Cr >3.4 + HE III–IV)' },
         { label: 'Non-acetaminophen', value: 'non', description: 'Uses INR >6.5 alone, or ≥3 of 5 accessory factors' },
       ], undefined, 'Switch APAP vs non-APAP first. APAP items: pH, HE III–IV, INR >6.5, Cr >3.4. Non-APAP extras: INR >3.5, bili >17.5, age <10/>40, unfavorable etiology, jaundice-to-HE >7 d. INR >6.5 is used in both pathways.'),      // Shared / APAP
-      yesNo('ph', 'Arterial pH < 7.30 (after fluid resuscitation)', 1, 'Acetaminophen pathway only. Volume-resuscitate before interpreting pH. Ignored in non-APAP mode.'),
+      yesNo('ph', 'Arterial pH < 7.30 (after fluid resuscitation)', null, 'Acetaminophen pathway only. Volume-resuscitate before interpreting pH. Ignored in non-APAP mode.'),
       yesNo('enceph34', 'Hepatic encephalopathy grade III–IV', 0, 'West Haven: III = somnolent but arousable, marked confusion, incoherent speech; IV = coma (unresponsive to verbal stimuli). Grades I–II do not count. Used in the APAP triad (with INR >6.5 and Cr >3.4).'),
       yesNo('inr65', 'INR > 6.5 (or PT > 100 sec)', 0, 'Both pathways: APAP triad item, and standalone non-APAP listing criterion.'),
       yesNo('cr34', 'Creatinine > 3.4 mg/dL (>300 μmol/L)', 0, 'Acetaminophen pathway only (APAP triad with INR >6.5 and grade III–IV HE). Not scored in non-APAP mode.'),
@@ -576,7 +576,7 @@ export const missingGiLiverCalcs: Calculator[] = [
           label: 'Forrest Ia — active spurting',
           interpretation: 'Highest risk active bleeding. Requires immediate endoscopic hemostasis (usually dual therapy) and high-dose acid suppression; high rebleed risk if untreated.',
           riskLevel: 'critical',
-          rebleed: '~55%+ without therapy',
+          rebleed: '~90% without therapy (active spurting)',
         },
         Ib: {
           score: 2,
@@ -652,9 +652,9 @@ export const missingGiLiverCalcs: Calculator[] = [
     inputs: [
       selectInput('organFailure', 'Organ failure (respiratory, cardiovascular, or renal per modified Marshall)', [
         { label: 'None', value: 'none', description: 'No modified Marshall ≥2 in respiratory, CV, or renal systems' },
-        { label: 'Transient (<48 hours)', value: 'transient', description: 'Organ failure present but resolved within 48 h' },
-        { label: 'Persistent (≥48 hours)', value: 'persistent', description: 'Organ failure lasting ≥48 h (defines severe AP)' },
-      ], undefined, 'Organ failure = modified Marshall ≥2 in any system: respiratory PaO₂/FiO₂ <300; renal creatinine ≥1.9 mg/dL (≥170 µmol/L); CV SBP <90 mmHg not fluid-responsive (off inotropes). Estimate FiO₂ for non-ventilated patients; interpret creatinine against CKD baseline. Transient <48 h; persistent ≥48 h.'),
+        { label: 'Transient (≤48 hours)', value: 'transient', description: 'Organ failure present but resolves within 48 h' },
+        { label: 'Persistent (>48 hours)', value: 'persistent', description: 'Organ failure lasting more than 48 h (defines severe AP)' },
+      ], undefined, 'Organ failure = modified Marshall ≥2 in any system: respiratory PaO₂/FiO₂ <300; renal creatinine ≥1.9 mg/dL (≥170 µmol/L); CV SBP <90 mmHg not fluid-responsive (off inotropes). Estimate FiO₂ for non-ventilated patients; interpret creatinine against CKD baseline. Transient ≤48 h; persistent >48 h.'),
       yesNo(
         'localComp',
         'Local complications (acute peripancreatic fluid, necrosis, pseudocyst, walled-off necrosis, etc.)',
@@ -678,7 +678,7 @@ export const missingGiLiverCalcs: Calculator[] = [
           score: 3,
           label: 'Severe acute pancreatitis',
           interpretation:
-            'Persistent organ failure ≥48 h (single or multiple) = severe AP. High mortality — ICU-level care, goal-directed resuscitation, early nutrition, delayed invasive necrosis management if needed.',
+            'Persistent organ failure >48 h (single or multiple) = severe AP. High mortality — ICU-level care, goal-directed resuscitation, early nutrition, delayed invasive necrosis management if needed.',
           riskLevel: 'critical',
         };
       }
@@ -699,7 +699,7 @@ export const missingGiLiverCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Mild: no OF/complications. Moderately severe: transient OF (<48h) and/or local/systemic complications. Severe: persistent OF ≥48h.',
+      summary: 'Mild: no OF/complications. Moderately severe: transient OF (≤48h) and/or local/systemic complications. Severe: persistent OF >48h.',
       validation: 'International consensus revision of Atlanta criteria (2012); widely adopted.',
       references: [
         { title: 'Classification of acute pancreatitis—2012: revision of the Atlanta classification and definitions by international consensus', citation: 'Banks PA et al. Gut. 2013', year: 2013, pmid: '23100216',

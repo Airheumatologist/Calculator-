@@ -354,6 +354,19 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
   // ─── 5. Digoxin immune Fab ─────────────────────────────────────────────────
   {
     id: 'digoxin-fab',
+    // The method selector chooses which fields matter: serum level + weight for
+    // the level method, amount ingested for the amount method, and no extra
+    // inputs for the empiric branches.
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'method',
+      activeInputIdsByMode: {
+        level: ['level', 'weight'],
+        amount: ['amountMg'],
+        'empiric-acute': [],
+        'empiric-chronic': [],
+      },
+    },
     name: 'Digoxin Immune Fab Vial Estimate',
     shortName: 'DigiFab',
     description: 'Estimates digoxin-specific antibody fragment vials from serum level, known amount ingested, or empiric scenario.',
@@ -374,10 +387,10 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         max: 50,
         step: 0.1,
         exampleValue: 4,
-        helpText: 'Post-distribution level preferred',
+        helpText: 'Required only when method = “From steady-state serum level”. Prefer a post-distribution level (~6–8 h after last dose).',
       }),
-      numberInput('weight', 'Weight', { helpText: 'Body weight in kg, used when the vial estimate is derived from a serum digoxin level.', unit: 'kg', unitKind: 'weight', min: 3, max: 200, exampleValue: 70 }),
-      numberInput('amountMg', 'Amount ingested (digoxin)', { helpText: 'Total ingested digoxin in mg when the exposure is known; one vial binds approximately 0.5 mg of digoxin.', unit: 'mg', min: 0, max: 50, step: 0.25, exampleValue: 5 }),
+      numberInput('weight', 'Weight', { helpText: 'Required only when method = “From steady-state serum level” (vials = level × weight / 100). Body weight in kg.', unit: 'kg', unitKind: 'weight', min: 3, max: 200, exampleValue: 70 }),
+      numberInput('amountMg', 'Amount ingested (digoxin)', { helpText: 'Required only when method = “From known amount ingested”. Total ingested digoxin in mg when the exposure is known; one vial binds approximately 0.5 mg of digoxin.', unit: 'mg', min: 0, max: 50, step: 0.25, exampleValue: 5 }),
     ],
     calculate(values) {
       const method = String(values.method ?? 'level');
@@ -440,8 +453,8 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       validation: 'Product labeling and toxicology references; round up partial vials.',
       references: [
         {
-          title: 'Digoxin-specific Fab fragments',
-          citation: 'Antman EM et al. Circulation. 1990 / product inserts',
+          title: 'Treatment of 150 cases of life-threatening digitalis intoxication with digoxin-specific Fab antibody fragments: final report of multicenter study',
+          citation: 'Antman EM, Wenger TL, Butler VP, Haber E, Smith TW. Circulation. 1990;81(6):1744-1752',
           year: 1990,
           pmid: '2188752',
           doi: '10.1161/01.cir.81.6.1744',
@@ -724,15 +737,15 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
     whenToUse: 'Possible serotonin toxicity after serotonergic drugs (SSRI/SNRI, MAOI, tramadol, linezolid, MDMA, etc.).',
     whyUse: 'Hunter criteria are more sensitive/specific than older Sternbach criteria in validation cohorts.',
     inputs: [
-      yesNo('serotonergic', 'Taken a serotonergic agent (required)', 1, 'Examples: SSRI/SNRI, MAOI, tramadol, linezolid, MDMA, triptans, fentanyl, St. John’s wort, or combinations (including overdose). Required for Hunter criteria.'),
-      yesNo('spontaneousClonus', 'Spontaneous clonus', 1, 'Unprovoked rhythmic beating, typically at the ankles, visible without examiner stimulation.'),
-      yesNo('inducibleClonus', 'Inducible clonus', 1, 'Support the leg, knee slightly flexed; rapidly dorsiflex the foot and hold. Positive = rhythmic beats while pressure is maintained. Lower-limb predominant.'),
-      yesNo('ocularClonus', 'Ocular clonus', 1, 'Slow continuous horizontal oscillating eye movements — not ordinary end-gaze nystagmus.'),
-      yesNo('agitation', 'Agitation', 1, 'Observed restlessness, fidgeting, or inability to stay still — not inner anxiety alone.'),
-      yesNo('diaphoresis', 'Diaphoresis', 1, 'Visible sweating not explained by ambient heat or simple fever.'),
-      yesNo('tremor', 'Tremor', 1, 'Visible tremor at rest or with posture, typically greater in the legs.'),
-      yesNo('hyperreflexia', 'Hyperreflexia', 1, 'Pathologically brisk reflexes, greater in the legs than arms. Favors serotonin toxicity over NMS (which has bradyreflexia).'),
-      yesNo('hypertonia', 'Hypertonia', 1, 'Increased tone, greater in the legs. Contrast NMS lead-pipe rigidity with bradyreflexia.'),
+      yesNo('serotonergic', 'Taken a serotonergic agent (required)', undefined, 'Examples: SSRI/SNRI, MAOI, tramadol, linezolid, MDMA, triptans, fentanyl, St. John’s wort, or combinations (including overdose). Required for Hunter criteria.'),
+      yesNo('spontaneousClonus', 'Spontaneous clonus', undefined, 'Unprovoked rhythmic beating, typically at the ankles, visible without examiner stimulation.'),
+      yesNo('inducibleClonus', 'Inducible clonus', undefined, 'Support the leg, knee slightly flexed; rapidly dorsiflex the foot and hold. Positive = rhythmic beats while pressure is maintained. Lower-limb predominant.'),
+      yesNo('ocularClonus', 'Ocular clonus', undefined, 'Slow continuous horizontal oscillating eye movements — not ordinary end-gaze nystagmus.'),
+      yesNo('agitation', 'Agitation', undefined, 'Observed restlessness, fidgeting, or inability to stay still — not inner anxiety alone.'),
+      yesNo('diaphoresis', 'Diaphoresis', undefined, 'Visible sweating not explained by ambient heat or simple fever.'),
+      yesNo('tremor', 'Tremor', undefined, 'Visible tremor at rest or with posture, typically greater in the legs.'),
+      yesNo('hyperreflexia', 'Hyperreflexia', undefined, 'Pathologically brisk reflexes, greater in the legs than arms. Favors serotonin toxicity over NMS (which has bradyreflexia).'),
+      yesNo('hypertonia', 'Hypertonia', undefined, 'Increased tone, greater in the legs. Contrast NMS lead-pipe rigidity with bradyreflexia.'),
       yesNo('temp38', 'Temperature >38 °C', undefined, 'Temperature above 38 °C counts toward the hyperthermia domain; fever above 41 °C with rigidity suggests severe serotonin toxicity.'),
     ],
     calculate(values) {

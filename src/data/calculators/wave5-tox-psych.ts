@@ -27,7 +27,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       selectInput('age_group', 'Age group (threshold frame)', [
         { label: 'Adult / adolescent', value: 'adult' },
         { label: 'Child (<6 y often higher mg/kg tolerance classically)', value: 'child' },
-      ], 'adult', 'Adult/adolescent uses the classic ~150 mg/kg acute toxic threshold; children under 6 often tolerate more per kg, so the child frame raises the threshold.'),
+      ], 'adult', 'Adult/adolescent uses the classic ~150 mg/kg acute toxic threshold; children under 6 classically tolerate more per kg, so the child frame uses a ~200 mg/kg threshold.'),
     ],
     calculate(values) {
       const dose = num(values.dose_mg, 10000);
@@ -35,26 +35,27 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       const mgkg = round(dose / wt, 1);
       const grams = round(dose / 1000, 2);
       const child = String(values.age_group ?? 'adult') === 'child';
-      // Common teaching: adult concern ≥150 mg/kg (or ≥7.5–10 g); child often ≥150–200 mg/kg
-      const concern = 150;
+      // Common teaching: adult concern ≥150 mg/kg (or ≥7.5–10 g); children <6 y
+      // classically tolerate more per kg — use a ~200 mg/kg frame (educational).
+      const concern = child ? 200 : 150;
       let r = riskFromThresholds(mgkg, [
         {
-          max: 99,
+          max: concern - 51,
           level: 'low',
           label: 'Below common toxic threshold',
-          interpretation: `≈${mgkg} mg/kg. Below classic acute toxic dose (~150 mg/kg). Still obtain history of staggered dosing, co-ingestants, and consider level if timing uncertain or unreliable history.`,
+          interpretation: `≈${mgkg} mg/kg. Below the ${child ? 'child-frame acute toxic dose (~200 mg/kg)' : 'classic acute toxic dose (~150 mg/kg)'}. Still obtain history of staggered dosing, co-ingestants, and consider level if timing uncertain or unreliable history.`,
         },
         {
-          max: 149,
+          max: concern - 1,
           level: 'moderate',
           label: 'Near toxic threshold',
-          interpretation: `≈${mgkg} mg/kg. Approaching educational toxic dose (~150 mg/kg acute single ingestion). Plot 4-hour (or later) level on Rumack–Matthew; low threshold for NAC if level delayed/unavailable and dose concerning.`,
+          interpretation: `≈${mgkg} mg/kg. Approaching the educational toxic dose (~${concern} mg/kg acute single ingestion${child ? ', child frame' : ''}). Plot 4-hour (or later) level on Rumack–Matthew; low threshold for NAC if level delayed/unavailable and dose concerning.`,
         },
         {
-          max: 199,
+          max: child ? 299 : 199,
           level: 'high',
           label: 'Likely toxic dose range',
-          interpretation: `≈${mgkg} mg/kg. In or above common acute toxic dose band (≥150 mg/kg; many use ≥7.5–10 g absolute in adults). Check APAP level at ≥4 h post-ingestion; start NAC if level above treatment line or if level not timely available with high suspicion.`,
+          interpretation: `≈${mgkg} mg/kg. In or above the common acute toxic dose band (≥${concern} mg/kg${child ? ', child frame' : '; many use ≥7.5–10 g absolute in adults'}). Check APAP level at ≥4 h post-ingestion; start NAC if level above treatment line or if level not timely available with high suspicion.`,
         },
         {
           max: 10000,
@@ -509,11 +510,16 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       validation: 'Free VPA rises with hypoalbuminemia; lab units µg/mL = mg/L.',
       references: [
         {
-          title: 'Valproic acid toxicity',
-          citation: 'Sztajnkrycer MD. J Toxicol Clin Toxicol. 2002; EXTRIP VPA reviews',
+          title: 'Valproic acid toxicity: overview and management',
+          citation: 'Sztajnkrycer MD. J Toxicol Clin Toxicol. 2002;40(6):789-801',
           year: 2002,
           pmid: '12475192',
           doi: '10.1081/clt-120014645',
+        },
+        {
+          title: 'Extracorporeal treatment for valproic acid poisoning: systematic review and recommendations from the EXTRIP workgroup',
+          citation: 'EXTRIP Workgroup (Ghannoum M et al). Clin Toxicol (Phila). 2015;53(5):454-465',
+          year: 2015,
         },
       ],
     },
@@ -713,10 +719,15 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       references: [
         {
           title: 'Life-threatening events after theophylline overdose: a 10-year prospective analysis',
-          citation: 'Shannon M. / EXTRIP theophylline recommendations',
+          citation: 'Shannon M. Arch Intern Med. 1999;159(9):989-994',
           year: 1999,
           pmid: '10326941',
           doi: '10.1001/archinte.159.9.989',
+        },
+        {
+          title: 'Extracorporeal treatment for theophylline poisoning: systematic review and recommendations from the EXTRIP workgroup',
+          citation: 'EXTRIP Workgroup (Ghannoum M et al). Clin Toxicol (Phila). 2015;53(4):215-229',
+          year: 2015,
         },
       ],
     },
@@ -835,11 +846,16 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       validation: 'Educational only — institutional HD-MTX protocols supersede this helper.',
       references: [
         {
-          title: 'High-dose methotrexate and glucarpidase',
-          citation: 'Ramsey LB et al. / FDA glucarpidase labeling; oncology supportive care guidelines',
+          title: 'Consensus guidelines for the use of glucarpidase in patients with high-dose methotrexate induced acute kidney injury and delayed methotrexate clearance',
+          citation: 'Ramsey LB et al. Oncologist. 2018;23(1):52-61',
           year: 2018,
           pmid: '29079637',
           doi: '10.1634/theoncologist.2017-0243',
+        },
+        {
+          title: 'Glucarpidase (Voraxaze) prescribing information',
+          citation: 'BTG International Inc. FDA prescribing information (glucarpidase injection)',
+          year: 2012,
         },
       ],
     },
@@ -910,11 +926,12 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       }
 
       if (neuro || cardiac || pregnant) {
+        const before = riskLevel;
         if (cohb >= 10 || neuro || cardiac) riskLevel = riskLevel === 'low' ? 'high' : 'critical';
         if (pregnant && cohb >= 15) riskLevel = 'critical';
         interpretation +=
           ' Clinical criteria (neuro/cardiac) or pregnancy lower the threshold for hyperbaric oxygen consideration per local toxicology/HBO protocols.';
-        label += ' + high-risk features';
+        if (riskLevel !== before) label += ' + high-risk features';
       }
 
       return {
@@ -1899,7 +1916,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     shortName: 'Anaphylaxis',
     description: 'Applies NIAID/FAAN clinical criteria for likely anaphylaxis to support epinephrine decisions.',
     category: 'emergency',
-    tags: ['anaphylaxis', 'allergy', 'epinephrine', 'niaid', 'fa an'],
+    tags: ['anaphylaxis', 'allergy', 'epinephrine', 'niaid', 'faan'],
     whenToUse: 'Acute allergic reaction when deciding if anaphylaxis criteria are met.',
     whyUse: 'Anaphylaxis is clinical — early IM epinephrine when criteria met saves lives.',
     inputs: [
@@ -1924,14 +1941,14 @@ export const wave5ToxPsychCalcs: Calculator[] = [
 
       // Criterion 1: acute onset skin/mucosa + (resp OR hypo/end-organ)
       const c1 = acute && skin && (resp || hypoEnd);
-      // Criterion 2: two or more after likely allergen: skin, resp, hypo/end-organ, GI
+      // Criterion 2: acute onset (minutes–hours) of ≥2 domains after likely allergen: skin, resp, hypo/end-organ, GI
       const domains = [skin, resp, hypoEnd, gi].filter(Boolean).length;
-      const c2 = likely && domains >= 2;
+      const c2 = acute && likely && domains >= 2;
       // Criterion 3: reduced BP after known allergen
       const c3 = known && (hypoOnly || hypoEnd);
 
       const met = c1 || c2 || c3;
-      const which = [c1 && '1 (skin + resp/CV)', c2 && '2 (≥2 systems after likely allergen)', c3 && '3 (hypotension after known allergen)']
+      const which = [c1 && '1 (skin + resp/CV)', c2 && '2 (acute ≥2 systems after likely allergen)', c3 && '3 (hypotension after known allergen)']
         .filter(Boolean)
         .join('; ');
 
@@ -1944,7 +1961,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         riskLevel: met ? 'critical' : 'low',
         details: [
           { label: 'Criterion 1 (acute skin + resp/CV)', value: c1 ? 'Met' : 'Not met' },
-          { label: 'Criterion 2 (≥2 systems after likely allergen)', value: c2 ? 'Met' : 'Not met' },
+          { label: 'Criterion 2 (acute onset ≥2 systems after likely allergen)', value: c2 ? 'Met' : 'Not met' },
           { label: 'Criterion 3 (hypotension after known allergen)', value: c3 ? 'Met' : 'Not met' },
           { label: 'Acute onset', value: acute ? 'Yes' : 'No' },
           { label: 'Skin/mucosa', value: skin ? 'Yes' : 'No' },
@@ -1963,7 +1980,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'NIAID/FAAN 2006 criteria: (1) acute skin/mucosa + respiratory or CV compromise; (2) ≥2 of skin, resp, CV, persistent GI after likely allergen; (3) hypotension after known allergen.',
+        'NIAID/FAAN 2006 criteria: (1) acute skin/mucosa + respiratory or CV compromise; (2) acute onset of ≥2 of skin, resp, CV, persistent GI rapidly after exposure to a likely allergen; (3) hypotension after known allergen.',
       formula: 'Boolean evaluation of three clinical pathways',
       validation: 'Widely adopted clinical criteria for anaphylaxis diagnosis.',
       references: [
@@ -2314,9 +2331,9 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'PHQ-A (Patient Health Questionnaire Modified for Adolescents): 9 items scored 0–3 based on DSM criteria for major depressive disorder over the past 2 weeks (total 0–27). Score ≥10 has 89.5% sensitivity and 77.5% specificity for adolescent MDD.',
+        'PHQ-A (Patient Health Questionnaire Modified for Adolescents): 9 items scored 0–3 based on DSM criteria for major depressive disorder over the past 2 weeks (total 0–27). A cutoff of ≥11 has ~89.5% sensitivity and ~77.5% specificity for adolescent major depression (Richardson 2010).',
       formula: 'Sum of 9 items (each 0–3, total 0–27)',
-      validation: 'Johnson JG et al. Validated in adolescent primary care and mental health clinics; endorsed by AAP Guidelines for Adolescent Depression in Primary Care (GLAD-PC).',
+      validation: 'Johnson JG et al. validated the PHQ-A in adolescent primary care; Richardson 2010 reported sensitivity/specificity at cutoff ≥11. Endorsed by AAP Guidelines for Adolescent Depression in Primary Care (GLAD-PC).',
       references: [
         {
           title: 'The Patient Health Questionnaire for Adolescents: validation of an instrument for the assessment of mental disorders among adolescent primary care patients',
@@ -2324,6 +2341,13 @@ export const wave5ToxPsychCalcs: Calculator[] = [
           year: 2002,
           pmid: '11869927',
           doi: '10.1016/s1054-139x(01)00333-0',
+        },
+        {
+          title: 'Evaluation of the Patient Health Questionnaire-9 Item for detecting major depression among adolescents',
+          citation: 'Richardson LP et al. Pediatrics. 2010;126(6):1117-1123',
+          year: 2010,
+          pmid: '21041282',
+          doi: '10.1542/peds.2010-0852',
         },
         {
           title: 'Guidelines for Adolescent Depression in Primary Care (GLAD-PC): Part I. Practice Preparation, Identification, Assessment, and Initial Management',
@@ -2492,30 +2516,33 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       const social = num(values.social, 5);
       const family = num(values.family, 4);
       const total = round(work + social + family, 0);
+      // NOTE: the SDS has no canonical total-score severity bands — the
+      // published instrument is interpreted per-domain (≥5 = marked). The
+      // total bands below are an educational aid only.
       const r = riskFromThresholds(total, [
         {
           max: 5,
           level: 'low',
-          label: 'Mild global impairment',
-          interpretation: `SDS total ${total}/30. Relatively mild global disability. Still review any single domain ≥5 as meaningful impairment.`,
+          label: 'Mild global impairment (educational band)',
+          interpretation: `SDS total ${total}/30. Educational total band only — SDS has no canonical total-score cutoffs; per-domain ≥5 is the usual marker of significant impairment.`,
         },
         {
           max: 11,
           level: 'moderate',
-          label: 'Moderate impairment',
-          interpretation: `SDS total ${total}/30. Moderate functional impairment — treatment should target both symptoms and role function.`,
+          label: 'Moderate impairment (educational band)',
+          interpretation: `SDS total ${total}/30. Educational band (non-canonical): moderate global impairment — treatment should target both symptoms and role function. Review per-domain scores.`,
         },
         {
           max: 20,
           level: 'high',
-          label: 'Marked impairment',
-          interpretation: `SDS total ${total}/30. Marked disability across domains — intensify treatment; consider higher level of care if safety or self-care compromised.`,
+          label: 'Marked impairment (educational band)',
+          interpretation: `SDS total ${total}/30. Educational band (non-canonical): marked disability across domains — intensify treatment; consider higher level of care if safety or self-care compromised.`,
         },
         {
           max: 30,
           level: 'critical',
-          label: 'Severe / extreme impairment',
-          interpretation: `SDS total ${total}/30. Severe functional disability — comprehensive treatment plan and close follow-up.`,
+          label: 'Severe / extreme impairment (educational band)',
+          interpretation: `SDS total ${total}/30. Educational band (non-canonical): severe functional disability — comprehensive treatment plan and close follow-up.`,
         },
       ]);
       const markedDomains = [
@@ -2539,7 +2566,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Sheehan Disability Scale rates work/school, social life, and family life 0–10 each (total 0–30). Domain scores ≥5 often indicate significant impairment. Optional days lost/underproductive items track role disruption.',
+        'Sheehan Disability Scale rates work/school, social life, and family life 0–10 each (total 0–30). Domain scores ≥5 often indicate significant impairment; the SDS has no canonical total-score severity bands (the total bands shown are educational). Optional days lost/underproductive items track role disruption.',
       formula: 'Total = work + social + family (0–30)',
       validation: 'Widely used in anxiety/depression clinical trials as a functional outcome.',
       references: [

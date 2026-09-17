@@ -538,7 +538,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
         ],
         'to_ifcc'
       , 'Choose the direction: NGSP % to IFCC mmol/mol, or IFCC mmol/mol to NGSP %.'),
-      numberInput('value', 'HbA1c value', { min: 1, max: 200, step: 0.1, exampleValue: 7.0, helpText: '% or mmol/mol depending on direction' }),
+      numberInput('value', 'HbA1c value', { min: 3, max: 200, step: 0.1, exampleValue: 7.0, helpText: '% or mmol/mol depending on direction. Minimum 3 — NGSP values below ~2.15% would map to a nonphysiologic negative IFCC result.' }),
     ],
     calculate(values) {
       const direction = String(values.direction ?? 'to_ifcc');
@@ -1273,7 +1273,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
       let riskLevel: 'info' | 'low' | 'moderate' = 'info';
       if (ch2o > 0.1) {
         label = 'Positive CH₂O — free water excretion';
-        interpretation = 'Kidneys excreting electrolyte-free water (urine hypotonic to plasma). Expected in water load; inappropriate if hyponatremic from other causes? Integrate ADH context.';
+        interpretation = 'Kidneys excreting electrolyte-free water (urine hypotonic to plasma). Expected after a water load; if the patient is hyponatremic despite ongoing free water excretion, look for another mechanism and integrate the ADH context.';
         riskLevel = 'low';
       } else if (ch2o < -0.1) {
         label = 'Negative CH₂O — free water reabsorption';

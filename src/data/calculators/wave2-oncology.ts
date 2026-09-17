@@ -14,8 +14,8 @@ export const wave2OncologyCalcs: Calculator[] = [
     inputs: [
       yesNo('fever',
         'Fever ≥ 38.0 °C attributed to CRS',
-        1,
-        'Onset fever ≥38.0 °C not solely infection. After antipyretics, tocilizumab, or steroids, fever is no longer required to continue grading — set “Fever already treated” and grade remaining hypotension/hypoxia.', true),
+        null,
+        'Onset fever ≥38.0 °C not solely infection — fever is a grade floor (minimum grade 1), not an additive point. After antipyretics, tocilizumab, or steroids, fever is no longer required to continue grading — set “Fever already treated” and grade remaining hypotension/hypoxia.', true),
       yesNo('crsTreated',
         'Fever already treated (antipyretics / tocilizumab / steroids)',
         null,
@@ -192,7 +192,7 @@ export const wave2OncologyCalcs: Calculator[] = [
       selectInput('motor', 'Motor findings', [
         { label: 'None', value: 0, description: 'No deep focal motor weakness' },
         { label: 'Deep focal motor weakness (e.g., hemiparesis, paraparesis)', value: 4, description: 'Deep focal weakness only — not mild weakness or isolated cranial-nerve palsy' },
-      ], 0, 'Deep focal motor weakness such as hemiparesis or paraparesis is a grade 3 feature. Subtle tremor or myoclonus does not qualify.'),
+      ], 0, 'Deep focal motor weakness such as hemiparesis or paraparesis is an ASTCT grade 4 feature. Subtle tremor or myoclonus does not qualify.'),
       selectInput('raisedIcp', 'Elevated ICP / cerebral edema', [
         { label: 'None', value: 0, description: 'No imaging or clinical signs of cerebral edema / raised ICP' },
         { label: 'Focal/local edema on neuroimaging', value: 3, description: 'Focal or local edema on CT/MRI without diffuse edema or herniation signs (ASTCT grade 3)' },
@@ -670,8 +670,8 @@ export const wave2OncologyCalcs: Calculator[] = [
     inputs: [
       yesNo('tumorHalf', 'Tumor involving >50% of liver', 1, 'Tumor involving more than 50% of the liver scores 1 adverse factor — a classic Okuda anatomic criterion, not a BCLC variable.', false),
       yesNo('ascites', 'Ascites present', 1, 'Clinically detectable ascites (including diuretic-controlled). Imaging-only trace fluid without clinical ascites is generally not counted.', false),
-      yesNo('albumin', 'Albumin ≤ 3 g/dL (≤30 g/L)', 1, 'Albumin 3 g/dL (30 g/L) or lower scores 1 adverse factor.', false),
-      yesNo('bili', 'Total bilirubin ≥ 3 mg/dL (≥51 µmol/L)', 1, 'Total bilirubin 3 mg/dL (51 µmol/L) or higher scores 1 adverse factor. Zero factors is stage I, one or two is stage II, and three or four is stage III.', false),
+      yesNo('albumin', 'Albumin < 3 g/dL (<30 g/L)', 1, 'Albumin below 3 g/dL (30 g/L) scores 1 adverse factor.', false),
+      yesNo('bili', 'Total bilirubin > 3 mg/dL (>51 µmol/L)', 1, 'Total bilirubin above 3 mg/dL (51 µmol/L) scores 1 adverse factor. Zero factors is stage I, one or two is stage II, and three or four is stage III.', false),
     ],
     calculate(values) {
       const score =
@@ -706,7 +706,7 @@ export const wave2OncologyCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'One point each: tumor >50% liver, ascites, albumin ≤3 g/dL, bilirubin ≥3 mg/dL. Stage I/II/III = 0 / 1–2 / 3–4.',
+      summary: 'One point each: tumor >50% liver, ascites, albumin <3 g/dL, bilirubin >3 mg/dL. Stage I/II/III = 0 / 1–2 / 3–4.',
       formula: 'Sum of 4 binary factors → Okuda I–III',
       validation: 'Historical HCC staging system; BCLC preferred for treatment allocation today.',
       references: [
@@ -957,8 +957,8 @@ export const wave2OncologyCalcs: Calculator[] = [
       ], "multi", 'Single tumor, 2–3 tumors, or more than 3 tumors. Classic Milan requires a single lesion ≤5 cm or up to three lesions each ≤3 cm.'),
       numberInput('largest', 'Largest tumor diameter', { unit: 'cm', min: 0.1, max: 30, step: 0.1, exampleValue: 3, helpText: 'Largest tumor diameter in cm on the explant or imaging used for staging; the Milan limit is 5 cm for a solitary tumor and 3 cm for each of up to three lesions.' }),
       numberInput('count', 'Number of tumors (if multiple)', { min: 1, max: 20, step: 1, exampleValue: 2, helpText: 'Number of tumors when multiple; more than 3 lesions falls outside classic Milan regardless of size.' }),
-      yesNo('vascular', 'Macrovascular invasion', -1, 'Yes for macrovascular invasion (portal or hepatic vein) excludes the patient from classic Milan criteria.', false),
-      yesNo('extrahepatic', 'Extrahepatic disease', -1, 'Yes for extrahepatic disease excludes classic Milan; regional nodal involvement and distant metastases both disqualify.', false),
+      yesNo('vascular', 'Macrovascular invasion', null, 'Yes for macrovascular invasion (portal or hepatic vein) excludes the patient from classic Milan criteria — an exclusion gate, not a scored item.', false),
+      yesNo('extrahepatic', 'Extrahepatic disease', null, 'Yes for extrahepatic disease excludes classic Milan; regional nodal involvement and distant metastases both disqualify — an exclusion gate, not a scored item.', false),
     ],
     calculate(values) {
       const pattern = String(values.pattern ?? 'single');
@@ -968,7 +968,13 @@ export const wave2OncologyCalcs: Calculator[] = [
       const ehd = bool(values.extrahepatic);
 
       const patternLabel =
-        pattern === 'single' ? 'Single tumor' : pattern === 'multi' ? 'Multiple tumors (2–3)' : 'More than 3 tumors';
+        pattern === 'single'
+          ? count > 1
+            ? 'Multiple tumors (count >1 overrides “single” selection)'
+            : 'Single tumor'
+          : pattern === 'multi'
+            ? 'Multiple tumors (2–3)'
+            : 'More than 3 tumors';
 
       if (vascular || ehd) {
         return {
@@ -987,15 +993,14 @@ export const wave2OncologyCalcs: Calculator[] = [
         };
       }
 
-      // Milan: single ≤5 cm OR up to 3 lesions each ≤3 cm — pattern drives branch when count is ambiguous
+      // Milan: single ≤5 cm OR up to 3 lesions each ≤3 cm — a count >1 entered alongside
+      // 'single' is treated as multiple so contradictory inputs cannot report Within Milan.
       let within = false;
       let reason = '';
       if (pattern === 'many' || count > 3) {
         within = false;
-        reason = pattern === 'many' || count > 3
-          ? `>3 tumors (pattern: ${patternLabel}, count ${count}) exceeds Milan number limit`
-          : '>3 tumors exceeds Milan number limit';
-      } else if (pattern === 'single' || (pattern !== 'multi' && count === 1)) {
+        reason = `>3 tumors (pattern: ${patternLabel}, count ${count}) exceeds Milan number limit`;
+      } else if (pattern === 'single' && count <= 1) {
         within = largest <= 5;
         reason = within
           ? `Single tumor ${largest} cm ≤ 5 cm`
@@ -1078,8 +1083,8 @@ export const wave2OncologyCalcs: Calculator[] = [
         exampleValue: -25,
         helpText: 'Negative = decrease vs baseline (or nadir for PD rules). (current − baseline) / baseline × 100',
       }),
-      yesNo('newLesions', 'New lesions present', 1, 'Yes for any new lesion means progressive disease regardless of how much the target lesions shrank.', false),
-      yesNo('completeDisappearance', 'All target lesions disappeared (and nodes <10 mm short axis if applicable)', 1, 'Yes when all target lesions have vanished (and lymph nodes have regressed to under 10 mm short axis); with non-target disease resolved this is a complete response.', false),
+      yesNo('newLesions', 'New lesions present', null, 'Yes for any new lesion means progressive disease regardless of how much the target lesions shrank.', false),
+      yesNo('completeDisappearance', 'All target lesions disappeared (and nodes <10 mm short axis if applicable)', null, 'Yes when all target lesions have vanished (and lymph nodes have regressed to under 10 mm short axis); with non-target disease resolved this is a complete response.', false),
       numberInput('absIncreaseMm', 'Absolute increase in sum vs nadir (if progressing)', {
         unit: 'mm',
         min: 0,

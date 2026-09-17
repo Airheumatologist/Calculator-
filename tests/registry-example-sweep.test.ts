@@ -38,6 +38,16 @@ function productionResult(calc: Calculator, values: Record<string, number | stri
 
 const DISPLAY_TEXT = /NaN|undefined|Infinity|null/;
 
+/** Result labels produced by the production input gates (helpers.ts). */
+const BLOCKED_LABELS = new Set([
+  'Enter all required inputs',
+  'Too high; please change to proceed',
+  'Too low; please change to proceed',
+  'Out of range; please change to proceed',
+  'Invalid step; please change to proceed',
+  'Invalid selection; please change to proceed',
+]);
+
 /**
  * Data files whose calculators may still be missing an `exampleValue`. Files
  * outside this list must load a complete example, so the working set can only
@@ -196,7 +206,7 @@ describe('registry-wide example sweep (pass 2)', () => {
       if (result.label === 'Calculator error — result unavailable') {
         problems.push(`${calc.id}: calculate() threw`);
       }
-      if (result.label === 'Enter all required inputs' || result.label === 'Value out of range') {
+      if (BLOCKED_LABELS.has(result.label)) {
         problems.push(`${calc.id}: example did not survive the production gates (${result.label})`);
       }
     }

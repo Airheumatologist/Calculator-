@@ -2038,7 +2038,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     },
     nextSteps: [
       {
-        condition: 'IQCODE average ≥3.38',
+        condition: 'IQCODE average >3.3',
         actions: [
           'Direct cognitive testing (SLUMS, MoCA, or neuropsychological battery)',
           'Assess IADLs and driver safety',
@@ -2415,32 +2415,32 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         {
           max: 5,
           level: 'low',
-          label: 'Below depression threshold',
+          label: 'No significant depression',
           interpretation: 'CSDD ≤5: no significant depressive symptoms detected. Monitor longitudinally and re-screen if behavioral changes emerge.',
         },
         {
-          max: 7,
+          max: 10,
           level: 'moderate',
-          label: 'Possible / borderline depression',
-          interpretation: 'CSDD 6–7: borderline depressive symptoms. Clinical evaluation, environmental optimization, and close interval follow-up recommended.',
+          label: 'Borderline depressive symptoms',
+          interpretation: 'CSDD 6–10: borderline depressive symptoms below the published cutoff for probable major depression. Clinical evaluation, environmental optimization, and close interval follow-up recommended.',
         },
         {
-          max: 11,
+          max: 18,
           level: 'high',
-          label: 'Probable depression',
-          interpretation: 'CSDD 8–11: probable major depressive episode in dementia. Multidisciplinary intervention, environmental/social activation, and consideration of antidepressant therapy.',
+          label: 'Probable major depression',
+          interpretation: 'CSDD 11–18: probable major depressive episode in dementia (published cutoff >10). Multidisciplinary intervention, environmental/social activation, and consideration of antidepressant therapy.',
         },
         {
           max: 38,
           level: 'critical',
-          label: 'Definite / severe depression',
-          interpretation: 'CSDD ≥12: definite major depression. Active pharmacotherapy, safety assessment, behavioral management, and caregiver support required.',
+          label: 'Definite major depression',
+          interpretation: 'CSDD >18: definite major depression (published cutoff). Active pharmacotherapy, safety assessment, behavioral management, and caregiver support required.',
         },
       ]);
 
       const details = [
         { label: 'Total score', value: `${score} / 38` },
-        { label: 'Depression cutoff', value: 'Score ≥8 = Probable depression; ≥12 = Definite depression' },
+        { label: 'Depression cutoff', value: 'Score >10 = probable major depression; >18 = definite major depression' },
         { label: 'Entry mode', value: mode === 'survey' ? '19-item rating' : 'Direct override' },
       ];
 
@@ -2463,7 +2463,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Cornell Scale for Depression in Dementia (CSDD): 19 items across 5 domains (mood-related signs, behavioral disturbance, physical signs, cyclic functions, ideational disturbance). Score ≥8 suggests probable depression; ≥12 indicates definite major depression.',
+        'Cornell Scale for Depression in Dementia (CSDD): 19 items across 5 domains (mood-related signs, behavioral disturbance, physical signs, cyclic functions, ideational disturbance). Score >10 suggests probable major depression; >18 indicates definite major depression.',
       formula: 'Sum of 19 items (each 0–2, total 0–38)',
       validation: 'Alexopoulos GS et al. Validated against DSM criteria in dementia patients, displaying high inter-rater reliability (0.67–0.98) and sensitivity.',
       references: [
@@ -2478,7 +2478,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     },
     nextSteps: [
       {
-        condition: 'CSDD ≥8',
+        condition: 'CSDD >10 (probable major depression)',
         actions: [
           'Rule out underlying medical triggers, infection, or pain exacerbating mood',
           'Optimize environmental structure, daytime engagement, and pleasant events',

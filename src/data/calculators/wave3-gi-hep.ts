@@ -569,7 +569,7 @@ export const wave3GiHepCalcs: Calculator[] = [
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 50, helpText: 'Age in years; ABIC adds age × 0.1, so every decade of age adds 1 point to the score.' }),
       numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, exampleValue: 10, helpText: 'mg/dL (divide µmol/L by 17.1).' }),
-      numberInput('inr', 'INR', { min: 0.8, max: 10, step: 0.1, exampleValue: 1.8, helpText: 'INR (not PT seconds); ABIC adds INR × 0.66, so an INR of 2 contributes about 1.3 points.' }),
+      numberInput('inr', 'INR', { min: 0.8, max: 10, step: 0.1, exampleValue: 1.8, helpText: 'INR (not PT seconds); ABIC adds INR × 0.8, so an INR of 2 contributes about 1.6 points.' }),
       numberInput('creat', 'Creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 15, step: 0.1, exampleValue: 1.0, helpText: 'Serum creatinine; select µmol/L for SI lab reports.' }),
     ],
     calculate(values) {
@@ -863,7 +863,7 @@ export const wave3GiHepCalcs: Calculator[] = [
     whyUse: 'Absence of peritonitis signs, hemoconcentration, and renal failure predicts mild course with high NPV.',
     inputs: [
       yesNo('peritonitis', 'Rebound tenderness or guarding (peritonitis signs)', 1, 'Involuntary guarding or rebound tenderness on abdominal exam (not voluntary tightness)'),
-      yesNo('hemoconcentration', 'Abnormal hematocrit (male ≥43% or female ≥39.6%)', 1, 'Original HAPS uses the sex-specific hematocrit cutoffs shown: a value at or above them counts against a "harmless" course and adds 1 point here.'),
+      yesNo('hemoconcentration', 'Abnormal hematocrit (male >43% or female >39.6%)', 1, 'Original HAPS (Lankisch) uses the sex-specific hematocrit cutoffs shown: a value strictly above them counts against a "harmless" course and adds 1 point here.'),
       yesNo('renal', 'Creatinine ≥ 2 mg/dL (177 µmol/L)', undefined, 'Yes if the admission creatinine is ≥2 mg/dL (177 µmol/L) or the patient is in established renal failure; any present HAPS criterion removes the \'harmless\' label.'),
     ],
     calculate(values) {
@@ -1012,7 +1012,7 @@ export const wave3GiHepCalcs: Calculator[] = [
   {
     id: 'pas',
     name: 'Pediatric Appendicitis Score (PAS)',
-    shortName: 'PAS',
+    shortName: 'PAS-appendix',
     description: 'Samuel PAS clinical score for probability of appendicitis in children.',
     category: 'pediatrics',
     tags: ['appendicitis', 'pediatric', 'pas', 'abdominal pain'],

@@ -163,7 +163,7 @@ export const wave2PulmIdCalcs: Calculator[] = [
     ],
   },
   {
-    id: 'hall-criteria',
+    id: 'halm-criteria',
     name: 'Halm Criteria (IV → Oral Switch)',
     shortName: 'Halm Criteria',
     description: 'Clinical stability criteria supporting switch from IV to oral antibiotics in pneumonia.',
@@ -304,6 +304,8 @@ export const wave2PulmIdCalcs: Calculator[] = [
   },
   {
     id: 'centor',
+    status: 'superseded',
+    supersededBy: 'mcisaac',
     name: 'Centor Score (Modified / McIsaac)',
     shortName: 'Centor/McIsaac',
     description: 'Estimates likelihood of streptococcal pharyngitis to guide testing/antibiotics.',
@@ -966,7 +968,7 @@ export const wave2PulmIdCalcs: Calculator[] = [
         { label: '60–71.2 (+2)', value: 2 },
         { label: '49–59.9 (+3)', value: 3 },
         { label: '< 49 (+4)', value: 4 },
-      ], 2, 'Wicki 2001 PaO₂ bands from kPa: ≥11 kPa (≥82.5 mmHg)=0; 9.5–10.99 kPa (71.3–82.4)=+1; 8–9.49 kPa (60–71.2)=+2. Room-air ABG when feasible.'),
+      ], 2, 'Wicki 2001 PaO₂ bands from kPa: ≥11 kPa (≥82.5 mmHg)=0; 9.5–10.99 kPa (71.3–82.4)=+1; 8–9.49 kPa (60–71.2)=+2; 6.5–7.99 kPa (49–59.9)=+3; <6.5 kPa (<49)=+4. Room-air ABG when feasible.'),
       yesNo('atelectasis', 'Plate-like atelectasis on CXR (+1)', 1, 'Linear/plate-like atelectasis on the chest radiograph (original Geneva CXR item).', false),
       yesNo('diaphragm', 'Elevation of hemidiaphragm on CXR (+1)', 1, 'Unilateral hemidiaphragm elevation on CXR (original Geneva CXR item).', false),
     ],
@@ -1321,10 +1323,10 @@ export const wave2PulmIdCalcs: Calculator[] = [
       ], 1, 'Le Gall Table 1: take the worse of heart rate or systolic BP.'),
       selectInput('renal', 'Renal (urea/Cr/UOP composite)', [
         { label: 'Normal (0)', value: 0, description: 'Urea <6 mmol/L (BUN <17 mg/dL) and Cr <1.20 mg/dL (<106 µmol/L) and UOP 0.75–9.99 L/24 h' },
-        { label: 'Mild (1)', value: 1, description: 'Urea 6–19.9 mmol/L (BUN 17–56 mg/dL) or Cr 1.20–1.59 mg/dL (106–140 µmol/L)' },
-        { label: 'Moderate (3)', value: 3, description: 'Urea 20–39.9 mmol/L (BUN 57–112 mg/dL) or Cr ≥1.60 mg/dL (≥141 µmol/L) or UOP 0.50–0.74 L/24 h' },
-        { label: 'Severe (5)', value: 5, description: 'Urea ≥40 mmol/L (BUN ≥113 mg/dL) or UOP <0.5 L/24 h or UOP ≥10 L/24 h' },
-      ], 1, 'Le Gall Table 1: take the worst of urea, creatinine, or 24-h urine output.'),
+        { label: 'Mild (1)', value: 1, description: 'Urea 6–9.9 mmol/L (BUN 17–27 mg/dL) or Cr 1.20–1.59 mg/dL (106–140 µmol/L)' },
+        { label: 'Moderate (3)', value: 3, description: 'Urea 10–19.9 mmol/L (BUN 28–55 mg/dL) or Cr ≥1.60 mg/dL (≥141 µmol/L) or UOP 0.50–0.74 L/24 h or UOP ≥10 L/24 h' },
+        { label: 'Severe (5)', value: 5, description: 'Urea ≥20 mmol/L (BUN ≥56 mg/dL) or UOP <0.5 L/24 h' },
+      ], 1, 'Le Gall Table 1: take the worst of urea, creatinine, or 24-h urine output. Urea bands: 6–9.9 = 1, 10–19.9 = 3, ≥20 = 5.'),
       selectInput('pulm', 'Pulmonary (PaO₂/FiO₂ or ventilation)', [
         { label: 'No significant dysfunction (0)', value: 0, description: 'Not mechanically ventilated and not on CPAP' },
         { label: 'Mild (1)', value: 1, description: 'MV or CPAP and PaO₂/FiO₂ ≥150 mmHg' },
@@ -1518,12 +1520,12 @@ export const wave2PulmIdCalcs: Calculator[] = [
     whenToUse: 'Adults with confirmed or probable C. difficile infection to guide therapy intensity.',
     whyUse: 'Severity drives antibiotic choice and need for surgical/ICU consultation.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 0, max: 120, step: 1, exampleValue: 70, helpText: 'Age in years; ages 65 and older raise the severe-CDI classification in the IDSA framework, so this field changes the reported tier rather than the lab-based severity alone.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 0, max: 120, step: 1, exampleValue: 70, helpText: 'Age in years. Context only — age does not change the IDSA severity tier reported here (it is used in alternate scores such as ATLAS).' }),
       numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0, max: 100, step: 0.1, exampleValue: 12, helpText: 'IDSA severe if WBC ≥15 ×10³/µL (or creatinine >1.5 mg/dL).' }),
       numberInput('cr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 1.0, helpText: 'IDSA severe if creatinine >1.5 mg/dL (or WBC ≥15 ×10³/µL). Select µmol/L for SI lab reports.' }),
-      yesNo('hypotension', 'Hypotension or shock', 2, 'SBP <90 mmHg, MAP <65 mmHg, or vasopressors for CDI-associated shock.', false),
-      yesNo('ileus', 'Ileus', 2, 'Obstipation with vomiting, absent bowel sounds, or radiographic small-bowel dilation attributed to CDI (not routine post-op ileus from another cause).', false),
-      yesNo('megacolon', 'Toxic megacolon', 2, 'Colonic dilation (often ≥6 cm on KUB/CT) plus systemic toxicity (fever, shock, marked leukocytosis).', false),
+      yesNo('hypotension', 'Hypotension or shock', null, 'SBP <90 mmHg, MAP <65 mmHg, or vasopressors for CDI-associated shock. Any fulminant feature classifies CDI as fulminant — not additive points.', false),
+      yesNo('ileus', 'Ileus', null, 'Obstipation with vomiting, absent bowel sounds, or radiographic small-bowel dilation attributed to CDI (not routine post-op ileus from another cause). Any fulminant feature classifies CDI as fulminant.', false),
+      yesNo('megacolon', 'Toxic megacolon', null, 'Colonic dilation (often ≥6 cm on KUB/CT) plus systemic toxicity (fever, shock, marked leukocytosis). Any fulminant feature classifies CDI as fulminant.', false),
     ],
     calculate(values) {
       const age = num(values.age, 70);

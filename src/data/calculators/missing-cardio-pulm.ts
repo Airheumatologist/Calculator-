@@ -508,7 +508,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
         { label: 'Female', value: 0 },
         { label: 'Male (+6)', value: 6 },
       ], 6, 'Male sex adds 6 points to the EDACS score; female sex adds none.'),
-      yesNo('riskCad', 'Known CAD or ≥3 risk factors', 4, 'Yes if known CAD (prior MI, coronary revascularization, or documented stenosis) OR ≥3 of: family history of CAD, dyslipidemia, diabetes, hypertension, current smoker.', false),
+      yesNo('riskCad', 'Known CAD or ≥3 risk factors (scores only at 18–50)', 4, 'Yes if known CAD (prior MI, coronary revascularization, or documented stenosis) OR ≥3 of: family history of CAD, dyslipidemia, diabetes, hypertension, current smoker. Per published EDACS, this item only adds 4 points at age 18–50; it is not applied at older ages.', false),
       yesNo('diaphoresis', 'Diaphoresis', 3, 'Sweating associated with this pain episode', true),
       yesNo('radiates', 'Pain radiates to arm or shoulder', 5, 'Pain radiating to the arm or shoulder adds 5 points — the heaviest single EDACS item.', true),
       yesNo('pleuritic', 'Pain occurred or worsened with inspiration', -4, 'Pleuritic pain — occurring or worsening with inspiration — subtracts 4 points.', false),
@@ -666,10 +666,10 @@ export const missingCardioPulmCalcs: Calculator[] = [
     inputs: [
       yesNo('female', 'Sex: female', 1, 'Female sex scores 1 point in the SAMe-TT₂R₂ score.', true),
       yesNo('age60', 'Age < 60 years', 1, 'Age under 60 years scores 1 point.', false),
-      yesNo('medHx', 'Medical history: ≥2 of HTN, DM, CAD/MI, PAD, CHF, prior stroke, pulmonary disease, hepatic or renal disease', 1, 'Two or more of hypertension, diabetes, CAD/MI, peripheral arterial disease, CHF, prior stroke, pulmonary disease, or hepatic/renal disease scores 1 point.', true),
+      yesNo('medHx', 'Medical history: >2 (three or more) of HTN, DM, CAD/MI, PAD, CHF, prior stroke, pulmonary disease, hepatic or renal disease', 1, 'More than two (three or more) of hypertension, diabetes, CAD/MI, peripheral arterial disease, CHF, prior stroke, pulmonary disease, or hepatic/renal disease scores 1 point. Exactly 2 comorbidities do not score.', true),
       yesNo('treatment', 'Treatment: interacting drugs (e.g., amiodarone)', 1, 'Interacting drugs in SAMe-TT2R2 typically means amiodarone (the derivation example). Score other strong CYP2C9/VKORC1 warfarin interactors per local protocol.', false),
       yesNo('tobacco', 'Tobacco use within past 2 years', 2, 'Tobacco use within the past 2 years scores 2 points — the T of SAMe-TT₂R₂, and one of the two 2-point items (with non-white race).', false),
-      yesNo('race', 'Race: non-white', 2, 'Non-white race scores 2 points — the R of SAMe-TT₂R₂; the other four items (female, age >60, medical history, treatment) are worth 1 each.', false),
+      yesNo('race', 'Race: non-white', 2, 'Non-white race scores 2 points — the R of SAMe-TT₂R₂; the other four items (female, age <60, medical history, treatment) are worth 1 each.', false),
     ],
     calculate(values) {
       const score =
@@ -700,7 +700,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
     },
     evidence: {
       summary: 'SAMe-TT₂R₂ helps predict quality of VKA control; score >2 associated with lower TTR and more adverse events on warfarin.',
-      formula: 'Sex female (1) + Age<60 (1) + Medical history ≥2 comorbidities (1) + Treatment interacting drugs (1) + Tobacco (2) + Race non-white (2)',
+      formula: 'Sex female (1) + Age<60 (1) + Medical history >2 comorbidities (1) + Treatment interacting drugs (1) + Tobacco (2) + Race non-white (2)',
       validation: 'Validated in multiple AF cohorts for TTR prediction.',
       references: [
         { title: 'Factors affecting quality of anticoagulation control among patients with atrial fibrillation on warfarin: the SAMe-TT₂R₂ score', citation: 'Apostolakis S, Sullivan RM, Olshansky B, Lip GY. Chest. 2013', year: 2013, pmid: '23669885',
@@ -1141,20 +1141,6 @@ export const missingCardioPulmCalcs: Calculator[] = [
       const si = hr / sbp;
       const asi = round(si * age, 1);
       const rpp = Math.round(hr * sbp);
-      if (age < 18) {
-        return {
-          score: round(si, 2),
-          unit: 'SI',
-          label: 'Pediatric — adult ASI bands not applied',
-          interpretation: `Age ${round(age, 0)} y is below the adult derivation range. Classic shock index = ${round(si, 2)} (HR/SBP). Adult ASI cutoffs of 50/70 are not applied; children almost never reach those ASI values even with abnormal SI. Use pediatric vitals and SI (~0.9) rather than ASI.`,
-          riskLevel: 'info',
-          details: [
-            { label: 'Shock index (HR/SBP)', value: round(si, 2).toString() },
-            { label: 'ASI (not interpreted)', value: String(asi) },
-          ],
-          recommendations: ['Do not use adult ASI 50/70 bands in children', 'Interpret SI with age-normal HR and SBP'],
-        };
-      }
       const r = riskFromThresholds(asi, [
         {
           max: 49.9,

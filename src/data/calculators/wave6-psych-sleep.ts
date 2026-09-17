@@ -178,16 +178,10 @@ export const wave6PsychSleepCalcs: Calculator[] = [
           interpretation: `PDSS ${score}/28: moderate severity. Structured CBT, pharmacotherapy review, and safety-behavior reduction recommended.`,
         },
         {
-          max: 16,
-          level: 'high',
-          label: 'Marked severity',
-          interpretation: `PDSS ${score}/28: marked severity. Intensify treatment (combined CBT + meds), address comorbidity (depression, agoraphobia).`,
-        },
-        {
           max: 28,
-          level: 'critical',
+          level: 'high',
           label: 'Severe panic disorder',
-          interpretation: `PDSS ${score}/28: severe symptoms. Comprehensive treatment; assess for high avoidance, ED overuse, suicidality, and substance coping.`,
+          interpretation: `PDSS ${score}/28: severe (markedly ill) range. Intensify treatment (combined CBT + meds), address comorbidity (depression, agoraphobia), and assess for high avoidance, ED overuse, suicidality, and substance coping.`,
         },
       ]);
       return {
@@ -197,7 +191,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         details: [
           { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : 'Itemized questionnaire' },
           { label: 'Items', value: '7 × 0–4' },
-          { label: 'Bands (approx.)', value: '0–1 normal; 2–5 borderline; 6–9 mild; 10–13 mod; 14–16 marked; ≥17 severe' },
+          { label: 'Bands (approx.)', value: '0–1 normal; 2–5 borderline; 6–9 mild; 10–13 mod; ≥14 severe' },
           { label: 'Response often cited', value: '≥40% reduction from baseline' },
         ],
         recommendations: [
@@ -235,7 +229,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     ],
     pearls: [
       'Item domains: panic frequency, distress, anticipatory anxiety, agoraphobic avoidance, interoceptive avoidance, work, social impairment.',
-      'Remission often operationalized near PDSS ≤3 with clinical stability.',
+      'Remission often operationalized near PDSS ≤5 with clinical stability.',
     ],
   },
 
@@ -1173,25 +1167,24 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         direct: ['informant', 'inatt', 'hyper', 'perf'],
       },
     },
-    name: 'Vanderbilt ADHD Rating Scale & Criteria',
+    name: 'Vanderbilt ADHD Rating Scale & Criteria (Parent Form)',
     shortName: 'Vanderbilt',
     description:
-      'NICHQ Vanderbilt ADHD 18-symptom core rating scale and academic/behavioral performance criteria helper.',
+      'NICHQ Vanderbilt ADHD parent-form 18-symptom core rating scale and academic/behavioral performance criteria helper.',
     category: 'pediatrics',
     tags: ['vanderbilt', 'adhd', 'nichq', 'pediatrics', 'inattention', 'hyperactivity'],
     whenToUse:
-      'ADHD assessment in children/adolescents using parent or teacher report; 18 symptoms + performance items or counts.',
+      'ADHD assessment in children/adolescents using the NICHQ parent form; 18 symptoms + performance items or counts. The teacher form uses different performance items and is not scored here.',
     whyUse:
       'Operationalizes DSM criteria (≥6/9 inattention or hyperactivity rated Often/Very often + ≥1 performance problem).',
     inputs: [
       selectInput('entryMode', 'Entry mode', [
         { label: 'Interactive 18-item symptom questionnaire', value: 'survey' },
         { label: 'Direct symptom count entry', value: 'direct' },
-      ], 'survey', 'Choose the interactive Vanderbilt scales, or override with an existing total. Parent and teacher forms share thresholds but differ in item wording.'),
+      ], 'survey', 'Choose the interactive Vanderbilt scales, or override with an existing total. This tool implements the NICHQ parent form; the teacher form uses different performance items and is not modeled.'),
       selectInput('informant', 'Informant', [
-        { label: 'Parent', value: 'parent' },
-        { label: 'Teacher', value: 'teacher' },
-      ], 'parent', 'Pick whose ratings are being entered (parent or teacher). Conduct and performance items are scored on the same 1–5 scale for both.'),
+        { label: 'Parent / caregiver', value: 'parent' },
+      ], 'parent', 'Parent form only. The NICHQ teacher form has different performance items (e.g., classroom behavior, following directions) and must be scored separately — do not enter teacher ratings here.'),
       selectInput('inatt_1', '1. Fails to give close attention to details or makes careless mistakes', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Occasionally', value: 1 },
@@ -1382,17 +1375,17 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       let hyper: number;
       let perf: number;
 
-      // Without a declared informant the screen is not interpretable (home and
-      // school reports are not interchangeable). Fail closed rather than
-      // reporting a symptom pattern against an assumed parent form.
-      if (informant === '') {
+      // This tool implements the NICHQ parent form only — the teacher form uses
+      // different performance items, so teacher ratings are not interpretable
+      // here. Fail closed rather than scoring parent items against teacher data.
+      if (informant !== 'parent') {
         return {
           score: '—',
-          label: 'Select the informant',
+          label: 'Parent form required',
           interpretation:
-            'Choose whether this form was completed by a parent/caregiver or a teacher. Vanderbilt thresholds are informant-specific, and a diagnosis needs symptoms across settings.',
+            'This tool scores the NICHQ Vanderbilt parent form only. The teacher form uses different performance items — score teacher reports with the dedicated teacher form. A diagnosis still needs symptoms across settings.',
           riskLevel: 'info',
-          details: [{ label: 'Informant', value: 'Required' }],
+          details: [{ label: 'Informant', value: 'Parent / caregiver required' }],
         };
       }
 
@@ -1460,7 +1453,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
           { label: 'Hyperactivity count', value: `${hyper}/9 ${hyperPos ? '(≥6 ✓)' : ''}` },
           { label: 'Performance problems', value: `${perf} item(s) rated 4–5 ${perfPos ? '(✓)' : ''}` },
           { label: 'Pattern', value: subtype },
-          { label: 'Informant', value: informant === 'teacher' ? 'Teacher' : 'Parent' },
+          { label: 'Informant', value: 'Parent / caregiver (NICHQ parent form)' },
         ],
         recommendations: [
           'Require multi-setting symptoms for diagnosis',
@@ -1492,7 +1485,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     },
     nextSteps: [
       {
-        condition: 'Positive parent + teacher screens',
+        condition: 'Positive screen with concordant school report',
         actions: ['DSM-5 clinical interview', 'Comorbidity assessment', 'School supports', 'Discuss behavioral therapy ± medication per guidelines'],
       },
       {
@@ -1501,7 +1494,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       },
     ],
     pearls: [
-      'Teacher forms are critical — home-only symptoms may reflect other stressors.',
+      'Scores the parent form only; obtain the NICHQ teacher form separately — cross-setting symptoms are required for diagnosis.',
       'Oppositional and anxiety co-scales help differential diagnosis.',
     ],
   },
@@ -1704,7 +1697,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     calculate(values) {
       // Approximate oral equivalents: mg of drug ≈ 10 mg diazepam
       // alprazolam 0.5, clonazepam 0.5, lorazepam 1, diazepam 10, temazepam 20,
-      // oxazepam 20, chlordiazepoxide 25, triazolam 0.125
+      // oxazepam 20, chlordiazepoxide 25, triazolam 0.25 (Ashton)
       const factors: Record<string, { toDiazepam10: number; name: string }> = {
         alprazolam: { toDiazepam10: 0.5, name: 'Alprazolam' },
         clonazepam: { toDiazepam10: 0.5, name: 'Clonazepam' },
@@ -1713,7 +1706,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         temazepam: { toDiazepam10: 20, name: 'Temazepam' },
         oxazepam: { toDiazepam10: 20, name: 'Oxazepam' },
         chlordiazepoxide: { toDiazepam10: 25, name: 'Chlordiazepoxide' },
-        triazolam: { toDiazepam10: 0.125, name: 'Triazolam' },
+        triazolam: { toDiazepam10: 0.25, name: 'Triazolam' },
       };
       const drug = String(values.drug ?? 'alprazolam');
       const dose = num(values.dose_mg, 2);
@@ -1763,7 +1756,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Simplified oral benzodiazepine equivalence relative to diazepam 10 mg (e.g., alprazolam 0.5 mg, lorazepam 1 mg, clonazepam 0.5 mg, triazolam 0.25 mg ≈ 20 mg diazepam). Educational only — pharmacokinetics and clinical response vary.',
+        'Simplified oral benzodiazepine equivalence relative to diazepam 10 mg (e.g., alprazolam 0.5 mg, lorazepam 1 mg, clonazepam 0.5 mg, triazolam 0.25 mg ≈ 10 mg diazepam). Educational only — pharmacokinetics and clinical response vary.',
       formula: 'diazepam_eq_mg = (dose_mg / agent_mg_per_10mg_diazepam) × 10',
       validation:
         'Based on commonly published approximate equivalence tables (Ashton and clinical references); not a substitute for formal taper protocols.',
@@ -2015,14 +2008,20 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         {
           max: 24,
           level: 'moderate',
-          label: 'Moderate–moderately severe withdrawal',
-          interpretation: `COWS ${cows}: moderate to moderately severe. Appropriate to induce with buprenorphine while providing supportive meds; monitor response closely.`,
+          label: 'Moderate withdrawal',
+          interpretation: `COWS ${cows}: moderate withdrawal. Appropriate to induce with buprenorphine while providing supportive meds; monitor response closely.`,
+        },
+        {
+          max: 36,
+          level: 'high',
+          label: 'Moderately severe withdrawal',
+          interpretation: `COWS ${cows}: moderately severe withdrawal (25–36 band). Induce with buprenorphine plus aggressive supportive care; monitor response closely.`,
         },
         {
           max: 48,
           level: 'high',
           label: 'Severe withdrawal',
-          interpretation: `COWS ${cows}: severe withdrawal. Induce carefully with supportive care; ensure no other acute medical emergency; may need higher cumulative day-1 dosing per protocol.`,
+          interpretation: `COWS ${cows}: severe withdrawal (>36). Induce carefully with supportive care; ensure no other acute medical emergency; may need higher cumulative day-1 dosing per protocol.`,
         },
       ]);
       let { interpretation, label, riskLevel } = r;
@@ -3002,17 +3001,17 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         { label: 'Respiratory', value: 5, description: 'Community-acquired respiratory infection.' },
         { label: 'Nosocomial respiratory', value: 9, description: 'Nosocomial AND respiratory — points are additive (4+5=9).' },
       ], undefined, 'Nosocomial and respiratory are additive: select “Nosocomial respiratory” if both are present (9 points).'),
-      yesNo('cancer_meta', 'Metastatic cancer', null, 'Distant solid-tumor metastases (not a localized primary alone). Highest comorbidity wins if several are present.'),
-      yesNo('heme_cancer', 'Hematologic cancer', null, 'Leukemia, lymphoma, or multiple myeloma. Highest comorbidity wins.'),
-      yesNo('cirrhosis', 'Cirrhosis', null, 'Documented cirrhosis (imaging, biopsy, or decompensation) — not isolated steatosis/MASLD. Highest comorbidity wins.'),
-      yesNo('heart_fail', 'Chronic heart failure NYHA IV', null, 'NYHA IV: symptoms of HF at rest; unable to carry on any physical activity without discomfort. Highest comorbidity wins.'),
-      yesNo('aids', 'AIDS', null, 'CDC/WHO AIDS (opportunistic infection or AIDS-defining illness) — not asymptomatic HIV. Highest comorbidity wins.'),
+      yesNo('cancer_meta', 'Metastatic cancer', null, 'Distant solid-tumor metastases (not a localized primary alone). Points add if several comorbidities are present.'),
+      yesNo('heme_cancer', 'Hematologic cancer', null, 'Leukemia, lymphoma, or multiple myeloma. Points add if several comorbidities are present.'),
+      yesNo('cirrhosis', 'Cirrhosis', null, 'Documented cirrhosis (imaging, biopsy, or decompensation) — not isolated steatosis/MASLD. Points add if several comorbidities are present.'),
+      yesNo('heart_fail', 'Chronic heart failure NYHA IV', null, 'NYHA IV: symptoms of HF at rest; unable to carry on any physical activity without discomfort. Points add if several comorbidities are present.'),
+      yesNo('aids', 'AIDS', null, 'CDC/WHO AIDS (opportunistic infection or AIDS-defining illness) — not asymptomatic HIV. Points add if several comorbidities are present.'),
       numberInput('gcs', 'Lowest GCS (admission hour)', { min: 3, max: 15, exampleValue: 13, helpText: 'Lowest estimated GCS in the admission hour (±1 h). Estimate the verbal score if intubated or sedated; do not record VT as 1 unless truly no verbal response. Points: ≥13 = 0; 7–12 = 2; 6 = 7; 5 = 10; ≤4 = 15.' }),
       numberInput('sbp', 'Lowest systolic BP', { unit: 'mmHg', min: 0, max: 250, exampleValue: 100, helpText: 'Lowest SBP in the admission hour. ≥120 = 0; 70–119 = 3; 40–69 = 8; <40 = 11.' }),
       numberInput('hr', 'Highest heart rate', { unit: '/min', min: 30, max: 250, exampleValue: 100, helpText: 'Highest HR in the admission hour. <120 = 0; 120–159 = 5; ≥160 = 7.' }),
       numberInput('bili', 'Highest total bilirubin', { unit: 'mg/dL', min: 0, max: 40, step: 0.1, exampleValue: 1, helpText: 'Highest total bilirubin (mg/dL) in the admission hour. <2 = 0; 2–5.9 = 4; ≥6 = 5.' }),
       numberInput('cr', 'Highest creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 1.2, helpText: 'Highest creatinine in the admission hour; select µmol/L for SI lab reports. Bands: <1.2 = 0; 1.2–1.9 = 2; 2–3.4 = 7; ≥3.5 = 8.' }),
-      numberInput('wbc', 'Leukocytes (lowest)', { unit: '×10³/µL', min: 0, max: 100, step: 0.1, exampleValue: 12, helpText: 'Admission-hour leukocyte count (the sibling full SAPS 3 tool in this app asks for the highest value — confirm the direction your source sheet uses). ≥15 ×10³/µL scores 2 points.' }),
+      numberInput('wbc', 'Leukocytes (highest)', { unit: '×10³/µL', min: 0, max: 100, step: 0.1, exampleValue: 12, helpText: 'Highest leukocyte count in the admission hour (official SAPS 3 Box III uses the highest value). ≥15 ×10³/µL scores 2 points.' }),
       numberInput('ph', 'Lowest pH', { min: 6.5, max: 7.8, step: 0.01, exampleValue: 7.35, helpText: 'Lowest arterial pH in the admission hour. ≤7.25 = 3 points; otherwise 0.' }),
       numberInput('temp', 'Highest temperature', { unit: '°C', min: 30, max: 43, step: 0.1, exampleValue: 37, helpText: 'Highest temperature in the admission hour. <35 °C = 7 points; otherwise 0.' }),
       numberInput('plt', 'Lowest platelets', { unit: '×10³/µL', min: 5, max: 800, exampleValue: 200, helpText: 'Lowest platelets in the admission hour. ≥100 = 0; 50–99 = 5; 20–49 = 8; <20 = 13.' }),
@@ -3033,13 +3032,13 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       else if (age >= 60) agePts = 9;
       else if (age >= 40) agePts = 5;
 
-      const comorbid = Math.max(
-        bool(values.cancer_meta) ? 11 : 0,
-        bool(values.heme_cancer) ? 6 : 0,
-        bool(values.heart_fail) ? 6 : 0,
-        bool(values.cirrhosis) ? 8 : 0,
-        bool(values.aids) ? 8 : 0,
-      );
+      // Official SAPS 3 sums all applicable comorbidities (not the max).
+      const comorbid =
+        (bool(values.cancer_meta) ? 11 : 0) +
+        (bool(values.heme_cancer) ? 6 : 0) +
+        (bool(values.heart_fail) ? 6 : 0) +
+        (bool(values.cirrhosis) ? 8 : 0) +
+        (bool(values.aids) ? 8 : 0);
       const losPts = num(values.los_before, 0);
       const locPts = num(values.location, 0);
       const vasoPts = bool(values.vasoactive) ? 3 : 0;
@@ -3126,7 +3125,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     pearls: [
       'The official SAPS 3 mortality model requires complete Box I, II, and III data, including surgery-site terms; this helper intentionally omits them.',
       'Early physiology window differs from APACHE worst-in-24h and from SAPS II.',
-      'Comorbidities use the single highest-weighted condition (metastatic cancer 11, cirrhosis/AIDS 8, heme cancer/NYHA IV 6).',
+      'Comorbidity points add when several apply (metastatic cancer 11, cirrhosis/AIDS 8, heme cancer/NYHA IV 6); only a single primary admission reason is captured here.',
     ],
   },
   {
@@ -3361,7 +3360,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   {
     id: 'reynolds-pentad',
     name: 'Reynolds Pentad',
-    shortName: 'Reynolds',
+    shortName: 'Reynolds-5',
     description:
       'Checks Reynolds pentad features of severe ascending cholangitis: Charcot triad plus hypotension and altered mentation.',
     category: 'gastroenterology',
@@ -3815,7 +3814,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         { label: '3 — Moderate problem', value: 3 },
         { label: '4 — Severe problem', value: 4 },
         { label: '5 — Problem as bad as it can be', value: 5 },
-      ], 2, 'SNOT-22 item: 0 = no problem up to 5 = problem as bad as it can be. Nasal blockage is rated as the patient experiences it.'),
+      ], 2, 'SNOT-22 item: 0 = no problem up to 5 = problem as bad as it can be. Runny nose (anterior rhinorrhea) is rated as the patient experiences it.'),
       selectInput('snot_4', '4. Nasal blockage', [
         { label: '0 — No problem', value: 0 },
         { label: '1 — Very mild problem', value: 1 },

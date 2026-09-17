@@ -352,7 +352,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
   {
     id: 'a-body-shape',
     name: 'A Body Shape Index (ABSI)',
-    shortName: 'ABSI',
+    shortName: 'ABSI-body',
     description: 'Krakauer ABSI: waist circumference normalized to BMI and height — body-shape risk marker.',
     category: 'endocrinology',
     tags: ['absi', 'body shape', 'waist', 'bmi', 'mortality risk'],
@@ -1046,7 +1046,7 @@ export const wave6FormulasMiscCalcs: Calculator[] = [
     whyUse: 'Peripheral veins generally tolerate lower osmolarity better; teaching threshold often ~900 mOsm/L.',
     inputs: [
       numberInput('na', 'Sodium', { unit: 'mEq/L', min: 0, max: 1000, exampleValue: 154, helpText: 'mEq/L in the bag. Calculated osmolarity ≈ Na + K + Cl + glucose osmoles + other. Peripheral teaching ceiling often ~900 mOsm/L.' }),
-      numberInput('k', 'Potassium', { unit: 'mEq/L', min: 0, max: 200, exampleValue: 0, helpText: 'Potassium in mEq/L added to the fluid; it contributes 2 mOsm per mEq (K plus its anion) to the calculated osmolarity.' }),
+      numberInput('k', 'Potassium', { unit: 'mEq/L', min: 0, max: 200, exampleValue: 0, helpText: 'Potassium in mEq/L added to the fluid; counted once (1 mOsm per mEq) in the Na + K + Cl ionic sum — its accompanying anion (e.g., chloride) is captured via the Chloride input, not double-counted here.' }),
       numberInput('cl', 'Chloride', {
         unit: 'mEq/L',
         min: 0,

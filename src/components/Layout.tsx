@@ -12,6 +12,11 @@ export function Layout() {
     setDraft(urlQ);
   }, [urlQ]);
 
+  // HashRouter has no ScrollRestoration — keep page changes landing at the top.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   return (
     <>
       <header className="app-header">

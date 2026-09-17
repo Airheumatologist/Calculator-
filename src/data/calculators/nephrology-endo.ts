@@ -215,7 +215,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     description: 'Helps differentiate prerenal azotemia from acute tubular necrosis.',
     category: 'nephrology',
     tags: ['aki', 'fena', 'sodium'],
-    whenToUse: 'Oliguric AKI when patient not on diuretics.',
+    whenToUse: 'Oliguric AKI when patient not on diuretics. For a combined FENa + FeUrea assessment or on-diuretic interpretation, use the FENa on Diuretics + FeUrea tool.',
     whyUse: 'Classic tool; limited if diuretics used (prefer FeUrea).',
     inputs: [
       numberInput('pna', 'Plasma Na', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 140, helpText: 'Simultaneous plasma and spot urine. Unreliable on diuretics — use FeUrea.' }),
@@ -274,7 +274,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     description: 'Differentiates prerenal AKI from ATN when diuretics confound FENa.',
     category: 'nephrology',
     tags: ['aki', 'urea'],
-    whenToUse: 'AKI on diuretics when FENa unreliable.',
+    whenToUse: 'AKI on diuretics when FENa unreliable. For a combined FENa + FeUrea assessment, use the FENa on Diuretics + FeUrea tool.',
     whyUse: 'Urea handling less affected by loop diuretics than sodium.',
     inputs: [
       numberInput('purea', 'Plasma urea (BUN)', { unit: 'mg/dL', min: 1, max: 200, exampleValue: 40, helpText: 'Simultaneous plasma and urine. Prefer FeUrea over FENa when the patient is on diuretics. Use the same units for plasma and urine urea (both mg/dL).' }),
@@ -710,6 +710,8 @@ export const nephrologyEndoCalcs: Calculator[] = [
     description: 'Ideal body weight using Devine formula.',
     category: 'general',
     tags: ['dosing', 'weight'],
+    status: 'superseded',
+    supersededBy: 'devine-ibw',
     whenToUse: 'Drug dosing (e.g., some antimicrobials), nutrition estimates.',
     whyUse: 'Common pharmacy standard.',
     inputs: [
@@ -789,6 +791,8 @@ export const nephrologyEndoCalcs: Calculator[] = [
     description: 'BSA using Mosteller formula for chemo and physiologic indexing.',
     category: 'general',
     tags: ['bsa', 'chemotherapy', 'dosing'],
+    status: 'superseded',
+    supersededBy: 'bsa-mosteller',
     whenToUse: 'Chemotherapy dosing and cardiac index normalization.',
     whyUse: 'Mosteller is simple and widely accepted.',
     inputs: [
