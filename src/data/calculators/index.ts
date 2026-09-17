@@ -106,13 +106,36 @@ export function getCalculator(id: string): Calculator | undefined {
   return calculators.find((c) => c.id === id);
 }
 
+function scoreTerm(c: Calculator, term: string): number {
+  const name = c.name.toLowerCase();
+  const short = c.shortName.toLowerCase();
+  if (name === term || short === term) return 100;
+  if (name.startsWith(term) || short.startsWith(term)) return 60;
+  if (name.includes(term) || short.includes(term)) return 40;
+  const tags = c.tags.map((t) => t.toLowerCase());
+  if (tags.some((t) => t === term)) return 30;
+  if (tags.some((t) => t.startsWith(term))) return 20;
+  if (tags.some((t) => t.includes(term))) return 15;
+  if (c.description.toLowerCase().includes(term) || c.category.includes(term)) return 5;
+  return 0;
+}
+
 export function searchCalculators(query: string): Calculator[] {
   const q = query.trim().toLowerCase();
   if (!q) return calculators;
-  return calculators.filter((c) => {
-    const hay = [c.name, c.shortName, c.description, c.category, ...c.tags].join(' ').toLowerCase();
-    return hay.includes(q) || q.split(/\s+/).every((term) => hay.includes(term));
-  });
+  const terms = q.split(/\s+/);
+  return calculators
+    .map((c) => {
+      const hay = [c.name, c.shortName, c.description, c.category, ...c.tags].join(' ').toLowerCase();
+      if (!hay.includes(q) && !terms.every((term) => hay.includes(term))) return null;
+      let score = terms.reduce((sum, term) => sum + scoreTerm(c, term), 0);
+      if (hay.includes(q)) score += 10;
+      if (c.status && c.status !== 'current') score -= 50;
+      return { c, score };
+    })
+    .filter((entry): entry is { c: Calculator; score: number } => entry !== null)
+    .sort((a, b) => b.score - a.score)
+    .map((entry) => entry.c);
 }
 
 export function getByCategory(categoryId: string): Calculator[] {
