@@ -334,10 +334,10 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'NSTE-ACS patients when balancing ischemic vs bleeding risk for antithrombotic intensity.',
     whyUse: 'Widely cited bleeding risk model from the CRUSADE registry using admission variables.',
     inputs: [
-      numberInput('hct', 'Baseline hematocrit', { unit: '%', min: 10, max: 60, step: 0.1, defaultValue: 40, helpText: 'Admission hematocrit (%), not hemoglobin. Original CRUSADE used Hct.' }),
-      numberInput('crcl', 'Creatinine clearance', { unit: 'mL/min', min: 5, max: 200, defaultValue: 80, helpText: 'Cockcroft–Gault creatinine clearance (mL/min), not eGFR in mL/min/1.73 m².' }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 200, defaultValue: 80, helpText: 'Admission heart rate (beats/min).' }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, defaultValue: 130, helpText: 'Admission systolic BP (mmHg).' }),
+      numberInput('hct', 'Baseline hematocrit', { unit: '%', min: 10, max: 60, step: 0.1, exampleValue: 40, helpText: 'Admission hematocrit (%), not hemoglobin. Original CRUSADE used Hct.' }),
+      numberInput('crcl', 'Creatinine clearance', { unit: 'mL/min', min: 5, max: 200, exampleValue: 80, helpText: 'Cockcroft–Gault creatinine clearance (mL/min), not eGFR in mL/min/1.73 m².' }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 200, exampleValue: 80, helpText: 'Admission heart rate (beats/min).' }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, exampleValue: 130, helpText: 'Admission systolic BP (mmHg).' }),
       yesNo('hf', 'Signs of heart failure at presentation', 7, 'Killip class II–IV: rales, S3, or radiographic pulmonary congestion at presentation (not remote compensated HF alone).'),
       yesNo('vascular', 'Prior vascular disease (PAD / stroke)', 6, 'Prior peripheral artery disease or stroke/TIA (CRUSADE “vascular disease”).'),
       yesNo('dm', 'Diabetes mellitus', 6),
@@ -491,8 +491,24 @@ export const wave3CardioVascCalcs: Calculator[] = [
       yesNo('veinGraft', 'Vein graft stent', 2, 'Index stent in a saphenous vein graft.'),
     ],
     calculate(values) {
+      // The DAPT age contribution is categorical (−2, −1, or 0), not an
+      // optional numeric input. Keep this guard local so direct callers cannot
+      // silently turn a missing age band into the <65-years (0-point) band.
+      const ageBand = values.ageBand;
+      const agePoints = ageBand === -2 || ageBand === -1 || ageBand === 0 ? ageBand : null;
+      if (agePoints === null) {
+        return {
+          score: '—',
+          label: 'Invalid age band',
+          interpretation:
+            'Select a valid DAPT age band (≥75 years, 65–74 years, or <65 years) before calculating. No clinical score is available without it.',
+          riskLevel: 'info',
+          details: [{ label: 'Age band', value: ageBand === null || ageBand === undefined ? 'Required' : String(ageBand) }],
+        };
+      }
+
       const score =
-        num(values.ageBand) +
+        agePoints +
         (bool(values.smoker) ? 1 : 0) +
         (bool(values.dm) ? 1 : 0) +
         (bool(values.miPresentation) ? 1 : 0) +
@@ -571,10 +587,10 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'At the time of coronary stenting to inform DAPT duration from out-of-hospital bleeding risk.',
     whyUse: 'Score ≥25 identifies high bleeding risk in whom longer DAPT increased bleeding without ischemic benefit in the derivation analyses.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 68, helpText: 'Nomogram age axis is truncated at 50–90 years.' }),
-      numberInput('crcl', 'Creatinine clearance', { unit: 'mL/min', min: 5, max: 200, defaultValue: 70, helpText: 'Cockcroft–Gault CrCl (mL/min). Nomogram axis truncated at 0–100 mL/min.' }),
-      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 5, max: 20, step: 0.1, defaultValue: 13, helpText: 'Baseline hemoglobin. Nomogram axis truncated at 10–12 g/dL (values ≥12 score 0).' }),
-      numberInput('wbc', 'White blood cell count', { unit: '×10⁹/L', min: 1, max: 50, step: 0.1, defaultValue: 8, helpText: 'Baseline WBC. Nomogram axis truncated at 5–20 ×10⁹/L.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 68, helpText: 'Nomogram age axis is truncated at 50–90 years.' }),
+      numberInput('crcl', 'Creatinine clearance', { unit: 'mL/min', min: 5, max: 200, exampleValue: 70, helpText: 'Cockcroft–Gault CrCl (mL/min). Nomogram axis truncated at 0–100 mL/min.' }),
+      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 5, max: 20, step: 0.1, exampleValue: 13, helpText: 'Baseline hemoglobin. Nomogram axis truncated at 10–12 g/dL (values ≥12 score 0).' }),
+      numberInput('wbc', 'White blood cell count', { unit: '×10⁹/L', min: 1, max: 50, step: 0.1, exampleValue: 8, helpText: 'Baseline WBC. Nomogram axis truncated at 5–20 ×10⁹/L.' }),
       yesNo('priorBleed', 'Previous spontaneous bleeding', 26, 'Prior spontaneous (not access-site or traumatic) bleed requiring hospitalization / TIMI-style event. Nomogram: 26 points if present.'),
     ],
     calculate(values) {
@@ -669,13 +685,13 @@ export const wave3CardioVascCalcs: Calculator[] = [
       'ESC HCM Risk-SCD 5-year sudden cardiac death probability (O’Mahony 2014) from age, wall thickness, LA diameter, LVOT gradient, family SCD, NSVT, and unexplained syncope.',
     category: 'cardiology',
     tags: ['hcm', 'scd', 'icd', 'hypertrophic cardiomyopathy', 'risk'],
-    whenToUse: 'Adults ≥16 years with HCM for primary-prevention SCD risk (not after aborted SCD/sustained VT, not pediatric, not phenocopies).',
-    whyUse: 'Published Cox model used in ESC HCM guidelines; 5-year risk <4% / 4–<6% / ≥6% frames ICD discussion.',
+    whenToUse: 'Adults aged 16–80 years with HCM for primary-prevention SCD risk (not after aborted SCD/sustained VT, not pediatric, not phenocopies).',
+    whyUse: 'Published Cox model used in ESC HCM guidelines; 5-year risk <4% / 4–<6% / ≥6% frames an ICD discussion, not an ICD decision by itself.',
     inputs: [
-      numberInput('age', 'Age at evaluation', { unit: 'years', min: 16, max: 90, defaultValue: 45, helpText: 'Do not use below age 16. Younger age increases 5-year risk in this model.' }),
-      numberInput('mwt', 'Maximal wall thickness', { unit: 'mm', min: 5, max: 50, defaultValue: 18, helpText: 'Greatest LV wall thickness (mm) in any segment (echo). Entered continuously — do not add extra points for ≥30 mm.' }),
-      numberInput('la', 'Left atrial diameter', { unit: 'mm', min: 20, max: 80, defaultValue: 42, helpText: 'Anteroposterior LA diameter (mm); continuous predictor.' }),
-      numberInput('lvot', 'Max LVOT gradient', { unit: 'mmHg', min: 0, max: 200, defaultValue: 20, helpText: 'Peak LVOT gradient at rest or with Valsalva/exercise (mmHg); continuous. Use 0 if none.' }),
+      numberInput('age', 'Age at evaluation', { unit: 'years', min: 16, max: 80, exampleValue: 45, helpText: 'Validated adult range is 16–80 years; do not use below 16 or above 80. Younger age increases 5-year risk in this model.' }),
+      numberInput('mwt', 'Maximal wall thickness', { unit: 'mm', min: 5, max: 50, exampleValue: 18, helpText: 'Greatest LV wall thickness (mm) in any segment (echo). Entered continuously — do not add extra points for ≥30 mm.' }),
+      numberInput('la', 'Left atrial diameter', { unit: 'mm', min: 20, max: 80, exampleValue: 42, helpText: 'Anteroposterior LA diameter (mm); continuous predictor.' }),
+      numberInput('lvot', 'Max LVOT gradient', { unit: 'mmHg', min: 0, max: 200, exampleValue: 20, helpText: 'Peak LVOT gradient at rest or with Valsalva/exercise (mmHg); continuous. Use 0 if none.' }),
       yesNo('fhScd', 'Family history of SCD in first-degree relative', null, '≥1 first-degree SCD <40 y, or SCD at any age if that relative had confirmed HCM.'),
       yesNo('nsvt', 'NSVT on ambulatory ECG', null, '≥3 consecutive ventricular beats ≥120 bpm lasting <30 s.'),
       yesNo('syncope', 'Unexplained syncope', null, 'Unexplained TLOC, not neurally mediated or purely obstructive; strongest if recent.'),
@@ -683,6 +699,38 @@ export const wave3CardioVascCalcs: Calculator[] = [
     ],
     calculate(values) {
       const age = num(values.age, 45);
+      if (age < 16) {
+        return {
+          score: '—',
+          unit: '% / 5y',
+          label: 'HCM Risk-SCD not applicable (<16 years)',
+          interpretation:
+            'HCM Risk-SCD is not validated for patients younger than 16 years, so no risk score is provided. Refer to a pediatric HCM/inherited-cardiomyopathy specialist and use a validated pediatric risk model (for example, HCM Risk-Kids or PRIMaCY); do not use this adult model or its thresholds to decide pediatric ICD placement.',
+          riskLevel: 'info' as const,
+          details: [{ label: 'Age entered', value: `${age} years` }],
+          recommendations: [
+            'Pediatric HCM / inherited-cardiomyopathy specialist assessment',
+            'Use a validated pediatric HCM SCD risk model (HCM Risk-Kids or PRIMaCY)',
+            'Do not use the adult HCM Risk-SCD output to decide pediatric ICD placement',
+          ],
+        };
+      }
+      if (age > 80) {
+        return {
+          score: '—',
+          unit: '% / 5y',
+          label: 'HCM Risk-SCD not applicable (>80 years)',
+          interpretation:
+            'HCM Risk-SCD has insufficient validation above age 80, so no risk score is provided. Use individualized clinical assessment and current ESC guidance with an HCM specialist rather than extrapolating this model beyond its validated adult range; the model output must not determine ICD placement by itself.',
+          riskLevel: 'info' as const,
+          details: [{ label: 'Age entered', value: `${age} years` }],
+          recommendations: [
+            'Individualized HCM SCD-risk assessment with an HCM specialist',
+            'Use current ESC cardiomyopathy guidance and shared decision-making',
+            'Do not extrapolate HCM Risk-SCD above age 80 or use it alone to decide ICD placement',
+          ],
+        };
+      }
       const mwt = num(values.mwt, 18);
       const la = num(values.la, 42);
       const lvot = Math.max(0, num(values.lvot, 20));
@@ -706,19 +754,19 @@ export const wave3CardioVascCalcs: Calculator[] = [
           max: 3.99,
           level: 'low',
           label: '5-year SCD risk <4%',
-          interpretation: `HCM Risk-SCD 5-year SCD probability ${risk}%. ESC 2014: ICD generally not indicated for primary prevention at <4% (individualize if other high-risk features).`,
+          interpretation: `HCM Risk-SCD model estimate: ${risk}% 5-year SCD probability. The 2023 ESC cardiomyopathy guideline uses this estimate as an aid to shared decision-making; it does not by itself determine ICD placement. At <4%, ICD is generally not indicated for primary prevention, but individualize for other high-risk features.`,
         },
         {
           max: 5.99,
           level: 'moderate',
           label: '5-year SCD risk 4–<6%',
-          interpretation: `HCM Risk-SCD 5-year SCD probability ${risk}%. ESC 2014: ICD may be considered after shared decision-making.`,
+          interpretation: `HCM Risk-SCD model estimate: ${risk}% 5-year SCD probability. The 2023 ESC cardiomyopathy guideline says ICD may be considered in the 4–<6% range after shared decision-making; this model output alone does not determine ICD placement.`,
         },
         {
           max: 100,
           level: 'high',
           label: '5-year SCD risk ≥6%',
-          interpretation: `HCM Risk-SCD 5-year SCD probability ${risk}%. ESC 2014: ICD should be considered for primary prevention.`,
+          interpretation: `HCM Risk-SCD model estimate: ${risk}% 5-year SCD probability. The 2023 ESC cardiomyopathy guideline says ICD should be considered at ≥6% after shared decision-making; this model output alone does not mandate ICD placement.`,
         },
       ]);
 
@@ -748,10 +796,10 @@ export const wave3CardioVascCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'ESC HCM Risk-SCD estimates 5-year SCD (or appropriate ICD shock) risk from a Cox model using age, maximal wall thickness (quadratic), LA diameter, max LVOT gradient, family SCD, NSVT, and unexplained syncope.',
+        'HCM Risk-SCD is a model-derived estimate of 5-year SCD (or appropriate ICD shock) risk from age, maximal wall thickness (quadratic), LA diameter, max LVOT gradient, family SCD, NSVT, and unexplained syncope. The 2023 ESC cardiomyopathy guideline recommends validated risk estimation in adults aged ≥16 years as an aid to shared decision-making; the model output does not by itself determine ICD placement.',
       formula:
-        'PI = 0.15939858·MWT − 0.00294271·MWT² + 0.0259082·LA + 0.00446131·LVOTmax + 0.4583082·FHSCD + 0.82639195·NSVT + 0.71650361·syncope − 0.01799934·age. 5-year SCD = 1 − 0.998^exp(PI). ESC bands: <4% / 4–<6% / ≥6%. Abnormal exercise BP is not a model covariate.',
-      validation: 'Derived in 3675 patients (O’Mahony 2014); externally validated (EVIDENCE-HCM). Not for age <16, metabolic phenocopies, elite athletes, or secondary-prevention ICD candidates.',
+        'PI = 0.15939858·MWT − 0.00294271·MWT² + 0.0259082·LA + 0.00446131·LVOTmax + 0.4583082·FHSCD + 0.82639195·NSVT + 0.71650361·syncope − 0.01799934·age. 5-year SCD = 1 − 0.998^exp(PI). ESC bands: <4% / 4–<6% / ≥6%. Abnormal exercise BP is not a model covariate. These bands support—not replace—the 2023 ESC shared ICD decision-making process.',
+      validation: 'Derived in 3675 patients (O’Mahony 2014); externally validated (EVIDENCE-HCM). The 2023 ESC guideline applies this adult risk-estimation approach from age ≥16; this implementation uses the validated adult range 16–80 and does not provide a score outside it. It is also not for metabolic phenocopies, elite athletes, or secondary-prevention ICD candidates. ICD placement must integrate clinical context and shared decision-making, not this score alone.',
       references: [
         {
           title: 'A novel clinical risk prediction model for sudden cardiac death in HCM (HCM Risk-SCD)',
@@ -767,12 +815,20 @@ export const wave3CardioVascCalcs: Calculator[] = [
           pmid: '25173338',
           doi: '10.1093/eurheartj/ehu284',
         },
+        {
+          title: '2023 ESC Guidelines for the management of cardiomyopathies',
+          citation: 'Arbelo E et al. Eur Heart J. 2023',
+          year: 2023,
+          pmid: '37622657',
+          doi: '10.1093/eurheartj/ehad194',
+          url: 'https://www.escardio.org/guidelines/clinical-practice-guidelines/all-esc-practice-guidelines/cardiomyopathy/',
+        },
       ],
     },
     nextSteps: [
-      { condition: '5-year risk <4%', actions: ['Surveillance', 'Reassess if new syncope/NSVT/wall-thickness change'] },
-      { condition: '5-year risk 4–<6%', actions: ['Shared ICD decision', 'HCM-center input'] },
-      { condition: '5-year risk ≥6%', actions: ['ICD counseling (should consider)', 'Specialty HCM care'] },
+      { condition: '5-year risk <4%', actions: ['2023 ESC shared decision-making; model output alone does not rule out other high-risk features', 'Surveillance', 'Reassess if new syncope/NSVT/wall-thickness change'] },
+      { condition: '5-year risk 4–<6%', actions: ['2023 ESC: ICD may be considered after shared decision-making; model output alone does not determine placement', 'HCM-center input'] },
+      { condition: '5-year risk ≥6%', actions: ['2023 ESC: ICD should be considered after shared decision-making; model output alone does not mandate placement', 'Specialty HCM care'] },
     ],
     pearls: [
       'Secondary-prevention ICD is indicated after cardiac arrest or sustained VT regardless of this percentage.',
@@ -1005,7 +1061,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
         min: 0,
         max: 15,
         step: 0.5,
-        defaultValue: 3,
+        exampleValue: 3,
         helpText: 'ST elevation measured at J point relative to PR; discordant to deep S wave',
       }),
       numberInput('sMm', 'S-wave depth (same lead, absolute value)', {
@@ -1013,7 +1069,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
         min: 0.5,
         max: 50,
         step: 0.5,
-        defaultValue: 20,
+        exampleValue: 20,
         helpText: 'Absolute depth of the S wave in the same lead as the discordant STE (positive millimetres). Excessive discordance requires ST elevation ≥1 mm and rounded −STE/S ≤ −0.25.',
       }),
     ],
@@ -1192,14 +1248,53 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'Normotensive patients with confirmed acute PE for complication risk staging.',
     whyUse: 'Simple 0–7 point score (SBP, HR, RV dysfunction, troponin) with stage I–III risk bands.',
     inputs: [
-      yesNo('sbp', 'SBP 90–100 mmHg', 2, 'Do not use BOVA if SBP <90 (high-risk PE)'),
+      selectInput(
+        'sbp',
+        'Systolic blood pressure (SBP) range',
+        [
+          {
+            label: 'SBP <90 mmHg — hemodynamic instability (BOVA not applicable)',
+            value: 'lt90',
+            description: 'Do not assign a BOVA stage; activate urgent high-risk PE/hemodynamic-instability assessment.',
+          },
+          { label: 'SBP 90–100 mmHg (+2 BOVA points)', value: '90to100', points: 2 },
+          { label: 'SBP >100 mmHg (+0 BOVA points)', value: 'gt100', points: 0 },
+        ],
+        undefined,
+        'BOVA was derived for normotensive PE. SBP 90–100 mmHg scores 2 points; SBP <90 mmHg is outside BOVA staging and requires the high-risk PE pathway.',
+      ),
       yesNo('hr', 'Heart rate ≥ 110 bpm', 1),
       yesNo('rv', 'RV dysfunction (echo or CT)', 2, 'RV dilation (EDD >30 mm PLAX or RV>LV / RV:LV ≥0.9–1.0), free-wall hypokinesis, or peak TR velocity ≥2.6 m/s.'),
       yesNo('trop', 'Elevated cardiac troponin', 2, 'Any cardiac troponin above the local 99th percentile URL.'),
     ],
     calculate(values) {
+      const sbpRange = str(values.sbp);
+      const hypotensive = sbpRange === 'lt90';
+      const sbpPoints = sbpRange === '90to100' ? 2 : 0;
+
+      if (hypotensive) {
+        const message =
+          'SBP <90 mmHg indicates hemodynamic instability/high-risk PE; BOVA was derived for normotensive PE and must not be staged. Activate urgent high-risk PE assessment and resuscitation/reperfusion pathways per local protocol.';
+        return {
+          score: 'Not applicable',
+          label: 'BOVA not applicable — high-risk PE pathway',
+          interpretation: message,
+          riskLevel: 'critical',
+          details: [
+            { label: 'SBP range', value: '<90 mmHg' },
+            { label: 'BOVA stage', value: 'Not assigned (normotensive PE only)' },
+          ],
+          recommendations: [
+            'Urgent hemodynamic assessment and resuscitation / high-risk PE pathway',
+            'Activate critical care, PERT, or appropriate senior support',
+            'Assess for obstructive shock and consider reperfusion per local protocol',
+          ],
+          alerts: [message],
+        };
+      }
+
       const score =
-        (bool(values.sbp) ? 2 : 0) +
+        sbpPoints +
         (bool(values.hr) ? 1 : 0) +
         (bool(values.rv) ? 2 : 0) +
         (bool(values.trop) ? 2 : 0);
@@ -1229,6 +1324,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
         score,
         ...r,
         details: [
+          { label: 'SBP range', value: sbpRange === '90to100' ? '90–100 mmHg (+2)' : '>100 mmHg (+0)' },
           { label: 'Stage bands', value: 'I: 0–2; II: 3–4; III: >4 (max 7)' },
           { label: 'Points', value: 'SBP 90–100 (2), HR≥110 (1), RV (2), troponin (2)' },
         ],
@@ -1253,6 +1349,13 @@ export const wave3CardioVascCalcs: Calculator[] = [
           pmid: '24696111',
           doi: '10.1183/09031936.00006114',
         },
+        {
+          title: '2019 ESC Guidelines for the diagnosis and management of acute pulmonary embolism',
+          citation: 'Konstantinides SV et al. Eur Heart J. 2020',
+          year: 2020,
+          pmid: '31504429',
+          doi: '10.1093/eurheartj/ehz405',
+        },
       ],
     },
     nextSteps: [
@@ -1275,11 +1378,11 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'Educational estimate of LV mass from IVSd, LVIDd, and PWT linear measurements.',
     whyUse: 'Quantifies LVH beyond voltage criteria; index to BSA for sex-specific reference ranges.',
     inputs: [
-      numberInput('ivsd', 'IVS thickness (diastole)', { unit: 'cm', min: 0.4, max: 3, step: 0.1, defaultValue: 1.0, helpText: 'Enter centimeters (e.g. 1.0 cm), not millimetres (not 10). End-diastolic septal thickness.' }),
-      numberInput('lvidd', 'LVID diastole', { unit: 'cm', min: 2, max: 8, step: 0.1, defaultValue: 5.0, helpText: 'Left ventricular internal diameter in diastole, in centimeters (e.g. 5.0 cm, not 50 mm).' }),
-      numberInput('pwt', 'Posterior wall thickness (diastole)', { unit: 'cm', min: 0.4, max: 3, step: 0.1, defaultValue: 1.0, helpText: 'End-diastolic posterior wall thickness in centimeters (e.g. 1.0 cm, not 10 mm).' }),
-      numberInput('height', 'Height (for BSA)', { unit: 'cm', min: 100, max: 230, defaultValue: 170 }),
-      numberInput('weight', 'Weight (for BSA)', { unit: 'kg', min: 30, max: 250, defaultValue: 70 }),
+      numberInput('ivsd', 'IVS thickness (diastole)', { unit: 'cm', min: 0.4, max: 3, step: 0.1, exampleValue: 1.0, helpText: 'Enter centimeters (e.g. 1.0 cm), not millimetres (not 10). End-diastolic septal thickness.' }),
+      numberInput('lvidd', 'LVID diastole', { unit: 'cm', min: 2, max: 8, step: 0.1, exampleValue: 5.0, helpText: 'Left ventricular internal diameter in diastole, in centimeters (e.g. 5.0 cm, not 50 mm).' }),
+      numberInput('pwt', 'Posterior wall thickness (diastole)', { unit: 'cm', min: 0.4, max: 3, step: 0.1, exampleValue: 1.0, helpText: 'End-diastolic posterior wall thickness in centimeters (e.g. 1.0 cm, not 10 mm).' }),
+      numberInput('height', 'Height (for BSA)', { unit: 'cm', min: 100, max: 230, exampleValue: 170 }),
+      numberInput('weight', 'Weight (for BSA)', { unit: 'kg', unitKind: 'weight', min: 30, max: 250, exampleValue: 70 }),
       selectInput('sex', 'Sex (reference ranges)', [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
@@ -1445,28 +1548,24 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whyUse:
       'SCORE2 replaced SCORE with nonfatal events, HDL, competing risk, and region-specific calibration used in ESC prevention guidelines.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 40, max: 69, defaultValue: 50, helpText: 'SCORE2 is for ages 40–69. Use SCORE2-OP if ≥70; not for diabetes or established CVD.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 40, max: 69, exampleValue: 50, helpText: 'SCORE2 is for ages 40–69. Use SCORE2-OP if ≥70; not for diabetes or established CVD.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
-      ]),
-      yesNo('smoker', 'Current smoker', null, 'Current tobacco smoker. Former smokers are scored as non-smokers in SCORE2.'),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, defaultValue: 140, helpText: 'Office SBP (mmHg), treated or untreated.' }),
+      ], 'male'),
+      yesNo('smoker', 'Current smoker', null, 'Current tobacco smoker. Former smokers are scored as non-smokers in SCORE2.', false),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, exampleValue: 140, helpText: 'Office SBP (mmHg), treated or untreated.' }),
       numberInput('totalChol', 'Total cholesterol', {
-        unit: 'mmol/L',
-        min: 2,
-        max: 12,
-        step: 0.1,
-        defaultValue: 5.5,
-        helpText: 'If in mg/dL, divide by 38.67.',
+        unit: 'mmol/L', unitKind: 'cholesterol',
+        step: 0.001,
+        exampleValue: 5.5,
+        helpText: 'The published SCORE2 model uses mmol/L; select mg/dL if that is how the lab reports it.',
       }),
       numberInput('hdl', 'HDL cholesterol', {
-        unit: 'mmol/L',
-        min: 0.5,
-        max: 3.5,
-        step: 0.1,
-        defaultValue: 1.3,
-        helpText: 'If in mg/dL, divide by 38.67.',
+        unit: 'mmol/L', unitKind: 'cholesterol',
+        step: 0.001,
+        exampleValue: 1.3,
+        helpText: 'The published SCORE2 model uses mmol/L; select mg/dL if that is how the lab reports it.',
       }),
       selectInput('region', 'European risk region', [
         {
@@ -1493,15 +1592,54 @@ export const wave3CardioVascCalcs: Calculator[] = [
           description:
             'ESC 2021 very high-risk countries (≥300): Algeria, Armenia, Azerbaijan, Belarus, Bulgaria, Egypt, Georgia, Kyrgyzstan, Latvia, Lebanon, Libya, Lithuania, Montenegro, Morocco, North Macedonia, Moldova, Romania, Russia, Serbia, Syria, Tunisia, Ukraine, Uzbekistan',
         },
-      ], undefined, 'Use the patient’s country of residence (ESC 2021 / HeartScore lists). Region recalibrates absolute 10-year risk; the same risk-factor profile is several-fold higher in very-high- vs low-risk countries.'),
+      ], 'low', 'Use the patient’s country of residence (ESC 2021 / HeartScore lists). Region recalibrates absolute 10-year risk; the same risk-factor profile is several-fold higher in very-high- vs low-risk countries.'),
     ],
     calculate(values) {
+      const invalidLipidResult = (message: string, details: { label: string; value: string }[]) => ({
+        score: '—' as const,
+        label: 'Invalid lipid values',
+        interpretation: `${message} This is a non-clinical input check; no SCORE2 risk was calculated.`,
+        riskLevel: 'info' as const,
+        details,
+      });
+
+      if (isMissingValue(values.totalChol, true) || isMissingValue(values.hdl, true)) {
+        return invalidLipidResult('Enter both total and HDL cholesterol values.', [
+          { label: 'Total cholesterol', value: 'Missing' },
+          { label: 'HDL cholesterol', value: 'Missing' },
+        ]);
+      }
+
+      // The unit selector has already converted mg/dL entries, so everything
+      // below is in the mmol/L units the published coefficients use.
+      const enteredTotalChol = Number(values.totalChol);
+      const enteredHdl = Number(values.hdl);
+      const enteredUnitLabel = 'mmol/L';
+      const minTotalChol = 2;
+      const maxTotalChol = 12;
+      const minHdl = 0.5;
+      const maxHdl = 3.5;
+      const inRange = (n: number, min: number, max: number) => Number.isFinite(n) && n >= min && n <= max;
+      if (
+        !inRange(enteredTotalChol, minTotalChol, maxTotalChol) ||
+        !inRange(enteredHdl, minHdl, maxHdl) ||
+        enteredTotalChol <= enteredHdl
+      ) {
+        return invalidLipidResult(
+          `Enter total cholesterol ${round(minTotalChol, 2)}–${round(maxTotalChol, 2)} ${enteredUnitLabel} and HDL ${round(minHdl, 2)}–${round(maxHdl, 2)} ${enteredUnitLabel}; total cholesterol must exceed HDL.`,
+          [
+            { label: 'Total cholesterol', value: `${String(values.totalChol)} ${enteredUnitLabel}` },
+            { label: 'HDL cholesterol', value: `${String(values.hdl)} ${enteredUnitLabel}` },
+          ]
+        );
+      }
+
       const age = num(values.age, 50);
       const male = str(values.sex) === 'male';
       const smoker = bool(values.smoker) ? 1 : 0;
       const sbp = num(values.sbp, 140);
-      const tchol = num(values.totalChol, 5.5);
-      const hdl = num(values.hdl, 1.3);
+      const tchol = enteredTotalChol;
+      const hdl = enteredHdl;
       const regionRaw = str(values.region, 'low');
       const region = regionRaw === 'mod' || regionRaw === 'high' || regionRaw === 'vhigh' ? regionRaw : 'low';
       const cage = (age - 60) / 5;
@@ -1589,6 +1727,9 @@ export const wave3CardioVascCalcs: Calculator[] = [
         ...r,
         details: [
           { label: 'Region', value: region },
+          { label: 'Cholesterol units entered', value: enteredUnitLabel },
+          { label: 'Total cholesterol used', value: `${round(tchol, 3)} mmol/L` },
+          { label: 'HDL cholesterol used', value: `${round(hdl, 3)} mmol/L` },
           { label: 'Uncalibrated (derivation) risk', value: `${round(100 * uncal, 1)}%` },
           { label: 'Calibrated 10-year CVD', value: `${pct}%` },
         ],
@@ -1640,11 +1781,11 @@ export const wave3CardioVascCalcs: Calculator[] = [
         { label: 'Female (Ridker 2007 Women’s Health Study)', value: 'female' },
         { label: 'Male (Ridker 2008 Physicians’ Health Study II)', value: 'male' },
       ]),
-      numberInput('age', 'Age', { unit: 'years', min: 45, max: 80, defaultValue: 55, helpText: 'Women model derived at age ≥45. Men model used initially healthy men (typically ≥50).' }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 220, defaultValue: 130 }),
-      numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 100, max: 400, defaultValue: 210 }),
-      numberInput('hdl', 'HDL-C', { unit: 'mg/dL', min: 15, max: 120, defaultValue: 50 }),
-      numberInput('hscrp', 'hsCRP', { unit: 'mg/L', min: 0.1, max: 20, step: 0.1, defaultValue: 2, helpText: 'High-sensitivity CRP (mg/L). Do not measure during acute illness/infection — wait until baseline.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 45, max: 80, exampleValue: 55, helpText: 'Women model derived at age ≥45. Men model used initially healthy men (typically ≥50).' }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 220, exampleValue: 130 }),
+      numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 100, max: 400, exampleValue: 210 }),
+      numberInput('hdl', 'HDL-C', { unit: 'mg/dL', min: 15, max: 120, exampleValue: 50 }),
+      numberInput('hscrp', 'hsCRP', { unit: 'mg/L', min: 0.1, max: 20, step: 0.1, exampleValue: 2, helpText: 'High-sensitivity CRP (mg/L). Do not measure during acute illness/infection — wait until baseline.' }),
       yesNo('smoker', 'Current smoker', 0),
       yesNo('parentMi', 'Parental MI before age 60', 0),
       yesNo('dm', 'Diabetes', 0, 'Women: HbA1c term applies only if diabetic. Men: Ridker 2008 was derived in non-diabetic men — diabetes is not in that equation.'),
@@ -1799,8 +1940,8 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'Primary prevention when a CAC Agatston score is available and age/sex known.',
     whyUse: 'Absolute CAC and rough percentile bands refine statin/aspirin discussions beyond risk estimators alone.',
     inputs: [
-      numberInput('cac', 'CAC Agatston score', { unit: 'AU', min: 0, max: 5000, defaultValue: 0 }),
-      numberInput('age', 'Age', { unit: 'years', min: 45, max: 85, defaultValue: 60 }),
+      numberInput('cac', 'CAC Agatston score', { unit: 'AU', min: 0, max: 5000, exampleValue: 0 }),
+      numberInput('age', 'Age', { unit: 'years', min: 45, max: 85, exampleValue: 60 }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
@@ -1908,7 +2049,7 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'When an Agatston CAC score is reported and absolute category interpretation is needed.',
     whyUse: 'Standard absolute cut-points used in reports and prevention pathways.',
     inputs: [
-      numberInput('cac', 'Agatston CAC score', { unit: 'AU', min: 0, max: 10000, defaultValue: 0 }),
+      numberInput('cac', 'Agatston CAC score', { unit: 'AU', min: 0, max: 10000, exampleValue: 0 }),
     ],
     calculate(values) {
       const cac = num(values.cac, 0);
@@ -1992,12 +2133,12 @@ export const wave3CardioVascCalcs: Calculator[] = [
     whenToUse: 'Suspected PAD, atypical leg symptoms, or CV risk stratification with Doppler SBP measurements.',
     whyUse: 'First-line noninvasive test for lower-extremity PAD diagnosis and severity.',
     inputs: [
-      numberInput('rightBrachial', 'Right brachial SBP', { unit: 'mmHg', min: 50, max: 300, defaultValue: 130, helpText: 'Supine, rest 5–10 min. Doppler SBP. Use the higher of the two brachials as the denominator for both legs.' }),
-      numberInput('leftBrachial', 'Left brachial SBP', { unit: 'mmHg', min: 50, max: 300, defaultValue: 128 }),
-      numberInput('rightPtp', 'Right posterior tibial SBP', { unit: 'mmHg', min: 0, max: 300, defaultValue: 120, helpText: 'Doppler PT SBP. ABI uses the higher of PT or DP on that side.' }),
-      numberInput('rightDp', 'Right dorsalis pedis SBP', { unit: 'mmHg', min: 0, max: 300, defaultValue: 118 }),
-      numberInput('leftPtp', 'Left posterior tibial SBP', { unit: 'mmHg', min: 0, max: 300, defaultValue: 122 }),
-      numberInput('leftDp', 'Left dorsalis pedis SBP', { unit: 'mmHg', min: 0, max: 300, defaultValue: 120 }),
+      numberInput('rightBrachial', 'Right brachial SBP', { unit: 'mmHg', min: 50, max: 300, exampleValue: 130, helpText: 'Supine, rest 5–10 min. Doppler SBP. Use the higher of the two brachials as the denominator for both legs.' }),
+      numberInput('leftBrachial', 'Left brachial SBP', { unit: 'mmHg', min: 50, max: 300, exampleValue: 128 }),
+      numberInput('rightPtp', 'Right posterior tibial SBP', { unit: 'mmHg', min: 0, max: 300, exampleValue: 120, helpText: 'Doppler PT SBP. ABI uses the higher of PT or DP on that side.' }),
+      numberInput('rightDp', 'Right dorsalis pedis SBP', { unit: 'mmHg', min: 0, max: 300, exampleValue: 118 }),
+      numberInput('leftPtp', 'Left posterior tibial SBP', { unit: 'mmHg', min: 0, max: 300, exampleValue: 122 }),
+      numberInput('leftDp', 'Left dorsalis pedis SBP', { unit: 'mmHg', min: 0, max: 300, exampleValue: 120 }),
     ],
     calculate(values) {
       const rb = num(values.rightBrachial, 130);

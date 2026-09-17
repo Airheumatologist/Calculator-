@@ -160,7 +160,7 @@ Calculator
 ├── whenToUse, whyUse
 ├── inputs[] ──────────▶ CalcInput
 │                         ├── id, label, type (number|select|boolean|segmented)
-│                         ├── unit, min, max, step, defaultValue
+│                         ├── unit, unitKind?, min, max, step, exampleValue?
 │                         └── options[] (label, value, points?)
 ├── calculate(values) ──▶ CalcResult
 │                         ├── score, unit?, label
@@ -203,6 +203,40 @@ Calculator
               ▼  (no network)
          Instant UI update
 ```
+
+### Units
+
+Clinical formulas are written in one canonical unit each; the user may enter
+another. A numeric input opts into a unit selector with `unitKind` (`weight`,
+`creatinine`, `fio2`, `ddimer`, `cholesterol`) and keeps `unit` as the canonical
+unit (`kg`, `mg/dL`, `fraction`, `ng/mL FEU`, `mmol/L`). `src/utils/units.ts`
+owns the option sets and conversion factors, `CalculatorForm` renders the
+inline selector, and `getCanonicalValues()` converts the entry before range
+validation and before `calculate()` runs — so a formula never sees pounds or
+µmol/L. Calculation is blocked until a filled field has a unit, because a number
+without its unit cannot be interpreted. Add a new family to `UNITS` rather than
+hand-rolling a per-calculator conversion.
+
+### Questionnaire branches
+
+An assessment that can be answered either item-by-item or by typing a
+precomputed total declares its branches explicitly — the engine never infers
+them from input ids or labels:
+
+```ts
+questionnaire: {
+  modeInputId: 'entryMode',                 // the select that picks the branch
+  directModeValues: ['direct'],             // which of its values is "direct entry"
+  directInputIds: ['score'],                // fields exclusive to that branch
+  // or, when fields are shared between branches (e.g. an informant required in both):
+  activeInputIdsByMode: { survey: ['informant', ...itemIds], direct: ['informant', 'total'] },
+}
+```
+
+`isQuestionnaire: true` marks any other questionnaire whose answers are all
+required. `CalculatorForm` only asks for the active branch, and `validateCalculator`
+rejects an implicit survey/precomputed selector, a `modeInputId` that is not a
+select, or a direct branch with no declared fields.
 
 ### Routing map
 

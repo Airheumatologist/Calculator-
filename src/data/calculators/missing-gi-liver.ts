@@ -12,9 +12,9 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'Suspected or confirmed alcoholic hepatitis to assess severity and steroid candidacy.',
     whyUse: 'DF ≥32 identifies severe AH with high short-term mortality; classically used with Lille for treatment response.',
     inputs: [
-      numberInput('pt', 'Patient prothrombin time', { unit: 'sec', min: 8, max: 120, step: 0.1, defaultValue: 18, helpText: 'Patient PT in seconds (not INR). Original Maddrey uses PT, not INR.' }),
-      numberInput('ptControl', 'Control (lab reference) PT', { unit: 'sec', min: 8, max: 20, step: 0.1, defaultValue: 12, helpText: 'Use local lab control/mean normal PT' }),
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 8, helpText: 'mg/dL. If lab reports µmol/L, divide by 17.1.' }),
+      numberInput('pt', 'Patient prothrombin time', { unit: 'sec', min: 8, max: 120, step: 0.1, exampleValue: 18, helpText: 'Patient PT in seconds (not INR). Original Maddrey uses PT, not INR.' }),
+      numberInput('ptControl', 'Control (lab reference) PT', { unit: 'sec', min: 8, max: 20, step: 0.1, exampleValue: 12, helpText: 'Use local lab control/mean normal PT' }),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, exampleValue: 8, helpText: 'mg/dL. If lab reports µmol/L, divide by 17.1.' }),
     ],
     calculate(values) {
       const pt = num(values.pt, 18);
@@ -67,10 +67,10 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'Outpatient risk stratification for advanced fibrosis in viral hepatitis, NAFLD/MASLD, and other chronic liver disease.',
     whyUse: 'Simple labs; dual cutoffs triage who needs elastography/biopsy vs low-risk follow-up.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 1, max: 120, defaultValue: 50 }),
-      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, step: 1, defaultValue: 40 }),
-      numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 2000, step: 1, defaultValue: 40 }),
-      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 1000, step: 1, defaultValue: 200 }),
+      numberInput('age', 'Age', { unit: 'years', min: 1, max: 120, exampleValue: 50 }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, step: 1, exampleValue: 40 }),
+      numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 2000, step: 1, exampleValue: 40 }),
+      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 1000, step: 1, exampleValue: 200 }),
     ],
     calculate(values) {
       const age = num(values.age, 50);
@@ -137,9 +137,9 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'Noninvasive fibrosis staging aid, especially viral hepatitis and resource-limited settings.',
     whyUse: 'Uses only AST, AST ULN, and platelets; WHO-endorsed in some HCV pathways.',
     inputs: [
-      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, defaultValue: 60 }),
-      numberInput('astUln', 'AST upper limit of normal', { unit: 'U/L', min: 20, max: 80, defaultValue: 40, helpText: 'Use local lab ULN' }),
-      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 1000, defaultValue: 180 }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, exampleValue: 60 }),
+      numberInput('astUln', 'AST upper limit of normal', { unit: 'U/L', min: 20, max: 80, exampleValue: 40, helpText: 'Use local lab ULN' }),
+      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 1000, exampleValue: 180 }),
     ],
     calculate(values) {
       const ast = num(values.ast, 60);
@@ -235,11 +235,11 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'Day 7 of corticosteroid therapy for severe alcoholic hepatitis (usually DF ≥32 or equivalent).',
     whyUse: 'Identifies non-responders (Lille ≥0.45) who may not benefit from continued steroids.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 50 }),
-      numberInput('albumin', 'Albumin day 0', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, defaultValue: 2.5, helpText: 'Converted to g/L in formula' }),
-      numberInput('bili0', 'Bilirubin day 0', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 12 }),
-      numberInput('bili7', 'Bilirubin day 7', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 10 }),
-      numberInput('pt', 'Prothrombin time', { unit: 'sec', min: 8, max: 120, step: 0.1, defaultValue: 20, helpText: 'PT in seconds (Louvet model), not INR. Same-day as the day-0/7 bilirubin pair as specified in the original paper (typically day 0).' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 50 }),
+      numberInput('albumin', 'Albumin day 0', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, exampleValue: 2.5, helpText: 'Converted to g/L in formula' }),
+      numberInput('bili0', 'Bilirubin day 0', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, exampleValue: 12 }),
+      numberInput('bili7', 'Bilirubin day 7', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, exampleValue: 10 }),
+      numberInput('pt', 'Prothrombin time', { unit: 'sec', min: 8, max: 120, step: 0.1, exampleValue: 20, helpText: 'PT in seconds (Louvet model), not INR. Same-day as the day-0/7 bilirubin pair as specified in the original paper (typically day 0).' }),
       yesNo('renal', 'Renal insufficiency (Cr >1.3 mg/dL or renal support at day 0)', null),
     ],
     calculate(values) {
@@ -485,10 +485,10 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'Suspected drug-induced liver injury to characterize biochemical pattern at presentation (or peak).',
     whyUse: 'Pattern guides differential (e.g., hepatocellular vs cholestatic drugs), causality assessment, and expected course.',
     inputs: [
-      numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 10000, defaultValue: 200, helpText: 'Use the same time point as ALP (recognition or peak).' }),
-      numberInput('altUln', 'ALT upper limit of normal', { unit: 'U/L', min: 10, max: 80, defaultValue: 40, helpText: 'Local lab ULN, same assay as the ALT entered.' }),
-      numberInput('alp', 'Alkaline phosphatase', { unit: 'U/L', min: 1, max: 5000, defaultValue: 120, helpText: 'Same time point as ALT.' }),
-      numberInput('alpUln', 'ALP upper limit of normal', { unit: 'U/L', min: 20, max: 200, defaultValue: 120, helpText: 'Local lab ULN, same assay as the ALP entered.' }),
+      numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 10000, exampleValue: 200, helpText: 'Use the same time point as ALP (recognition or peak).' }),
+      numberInput('altUln', 'ALT upper limit of normal', { unit: 'U/L', min: 10, max: 80, exampleValue: 40, helpText: 'Local lab ULN, same assay as the ALT entered.' }),
+      numberInput('alp', 'Alkaline phosphatase', { unit: 'U/L', min: 1, max: 5000, exampleValue: 120, helpText: 'Same time point as ALT.' }),
+      numberInput('alpUln', 'ALP upper limit of normal', { unit: 'U/L', min: 20, max: 200, exampleValue: 120, helpText: 'Local lab ULN, same assay as the ALP entered.' }),
     ],
     calculate(values) {
       const alt = num(values.alt, 200);
@@ -899,13 +899,13 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'Patients with NAFLD/MASLD to estimate likelihood of bridging fibrosis/cirrhosis.',
     whyUse: 'Dual cutoffs identify low- and high-risk groups and reduce unnecessary biopsy.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 50 }),
-      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 70, step: 0.1, defaultValue: 32 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 50 }),
+      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 70, step: 0.1, exampleValue: 32 }),
       yesNo('ifg', 'Impaired fasting glucose or diabetes', null, 'Yes if known diabetes or IFG. Original Angulo NFS: fasting glucose ≥110 mg/dL (6.1 mmol/L). ADA later IFG ≥100 mg/dL — use the local definition; diabetes always Yes.'),
-      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, defaultValue: 45 }),
-      numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 2000, defaultValue: 50 }),
-      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 1000, defaultValue: 220 }),
-      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, defaultValue: 4.0 }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, exampleValue: 45 }),
+      numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 2000, exampleValue: 50 }),
+      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 1000, exampleValue: 220 }),
+      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, exampleValue: 4.0 }),
     ],
     calculate(values) {
       const age = num(values.age, 50);
@@ -968,10 +968,10 @@ export const missingGiLiverCalcs: Calculator[] = [
     whenToUse: 'Prognostication in PSC using age, bilirubin, AST, albumin, and history of variceal bleeding.',
     whyUse: 'Estimates relative risk of death or transplant need; complements MELD for listing decisions.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 1, max: 100, defaultValue: 40 }),
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 40, step: 0.1, defaultValue: 1.5 }),
-      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, defaultValue: 80 }),
-      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, defaultValue: 3.8 }),
+      numberInput('age', 'Age', { unit: 'years', min: 1, max: 100, exampleValue: 40 }),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 40, step: 0.1, exampleValue: 1.5 }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 2000, exampleValue: 80 }),
+      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, exampleValue: 3.8 }),
       yesNo('variceal', 'History of variceal bleeding', null, 'Any prior esophageal or gastric variceal bleed (not just varices on imaging).'),
     ],
     calculate(values) {

@@ -396,7 +396,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         'SORT high-risk specialties: gastrointestinal, thoracic, or vascular surgery (coefficient 0.712). Not ortho, gyn, breast, ENT, or plastics.'),
       yesNo('cancer', 'Surgery for cancer', null,
         'The operation is being performed for a malignant diagnosis (coefficient 0.667).'),
-      numberInput('age', 'Age', { unit: 'years', min: 16, max: 110, step: 1, defaultValue: 65, helpText: 'Categorical in SORT: <65 = 0; 65–79 = 0.777; ≥80 = 1.591 (not a per-year coefficient).' }),
+      numberInput('age', 'Age', { unit: 'years', min: 16, max: 110, step: 1, exampleValue: 65, helpText: 'Categorical in SORT: <65 = 0; 65–79 = 0.777; ≥80 = 1.591 (not a per-year coefficient).' }),
     ],
     calculate(values) {
       const asa = num(values.asa, 1);
@@ -495,7 +495,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
     whyUse:
       'NELA audit drivers (physiology, ASA, peritoneal soiling, malignancy, urgency) strongly associate with death after emergency laparotomy.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 16, max: 110, defaultValue: 70 }),
+      numberInput('age', 'Age', { unit: 'years', min: 16, max: 110, exampleValue: 70 }),
       selectInput('asa', 'ASA', [
         { label: 'I–II', value: 1, description: 'ASA I healthy or II mild systemic disease' },
         { label: 'III', value: 2, description: 'ASA III severe systemic disease' },
@@ -628,7 +628,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
     whyUse:
       'Gupta MICA (Circulation 2011) predicts inpatient MI or cardiac arrest from NSQIP variables and often outperforms RCRI, but the published model uses procedure-specific intercepts that this checklist does not apply.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 65, helpText: 'Gupta uses continuous age in the official logistic; this checklist does not convert age into a MICA %.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 65, helpText: 'Gupta uses continuous age in the official logistic; this checklist does not convert age into a MICA %.' }),
       selectInput('functional', 'Functional status', [
         { label: 'Independent', value: 0, description: 'No human help for any ADLs; devices (cane, walker) still count as independent' },
         { label: 'Partially dependent', value: 1, description: 'Some human help for ADLs in the 30 days before surgery' },
@@ -1222,7 +1222,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         min: 0,
         max: 500,
         step: 1,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText:
           'Official AAS (mg/L). <24 h: <4 = 0; ≥4 and <11 = 2; ≥11 and <25 = 3; ≥25 and <83 = 5; ≥83 = 1. >24 h: <12 = 0; ≥12 and <152 = 2; ≥152 = 1 (high-CRP point drop).',
       }),
@@ -2369,7 +2369,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         min: 0,
         max: 500,
         step: 0.01,
-        defaultValue: 6,
+        exampleValue: 6,
         helpText: 'PSAD = PSA ÷ prostate volume. Values >0.15 ng/mL² often raise concern for significant cancer; ≤0.10 more reassuring (context-dependent).',
       }),
       numberInput('volume', 'Prostate volume', {
@@ -2377,7 +2377,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         min: 5,
         max: 300,
         step: 0.1,
-        defaultValue: 40,
+        exampleValue: 40,
         helpText: 'From TRUS/MRI ellipsoid formula or measured volume',
       }),
     ],
@@ -2468,14 +2468,14 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         min: 0,
         max: 100,
         step: 0.01,
-        defaultValue: 1.2,
+        exampleValue: 1.2,
       }),
       numberInput('totalPsa', 'Total PSA', {
         unit: 'ng/mL',
         min: 0.1,
         max: 500,
         step: 0.01,
-        defaultValue: 6,
+        exampleValue: 6,
         helpText: 'Best studied when total PSA is ~4–10 ng/mL; draw free and total on the same sample. % free <10% higher cancer probability; >25% more reassuring.',
       }),
     ],
@@ -2548,6 +2548,18 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
 
   {
     id: 'gleason-grade-group',
+    // Explicit branch declaration: the pattern-entry branch and the direct
+    // category branch require different fields, and the engine no longer
+    // infers that from input ids or labels.
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        patterns: ['primaryPattern', 'secondaryPattern', 'tertiaryPattern'],
+        direct: ['directGleason'],
+      },
+    },
     name: 'Gleason Grade Group (Prostate Cancer)',
     shortName: 'Grade Group',
     description:

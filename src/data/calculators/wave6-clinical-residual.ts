@@ -21,7 +21,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         min: 1,
         max: 75,
         step: 0.1,
-        defaultValue: 18,
+        exampleValue: 18,
         helpText: 'Valid FibroScan/TE (typically ≥10 shots, IQR/median ≤30%). Expanded Baveno VI sparing requires LSM <25 kPa (classic Baveno VI is LSM <20 kPa). Invalid TE (obesity, ascites, operator limits) voids the rule.',
       }),
       numberInput('plt', 'Platelet count', {
@@ -29,7 +29,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         min: 10,
         max: 800,
         step: 1,
-        defaultValue: 130,
+        exampleValue: 130,
         helpText: 'Same as ×10³/µL. Expanded Baveno VI: platelets >110×10⁹/L; classic Baveno VI: >150×10⁹/L. Both LSM and platelets must meet the pair.',
       }),
       yesNo('compensated', 'Compensated (no prior decompensation: ascites, variceal bleed, HE)', 1, 'Any prior clinically evident ascites, variceal hemorrhage, or overt hepatic encephalopathy = decompensated. Baveno sparing rules apply only to compensated advanced chronic liver disease.'),
@@ -494,11 +494,11 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Adult chronic liver disease prognosis and transplant-risk discussion when labs for MELD 3.0 components are available.',
     whyUse: 'MELD 3.0 improves mortality prediction vs MELD-Na and addresses sex disparity with a female coefficient and albumin.',
     inputs: [
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 2.0, helpText: 'Floored at 1.0 mg/dL in the equation' }),
-      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, defaultValue: 1.5, helpText: 'Floored at 1.0 in the equation' }),
-      numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0, helpText: 'Floored at 1.0 and capped at 3.0; dialysis sets Cr to 3.0 (MELD 3.0, not the older MELD cap of 4.0)' }),
-      numberInput('na', 'Serum sodium', { unit: 'mmol/L', min: 110, max: 160, step: 1, defaultValue: 135, helpText: 'Bounded 125–137 in the equation' }),
-      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, defaultValue: 3.0, helpText: 'Bounded 1.5–3.5 g/dL in the equation' }),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, exampleValue: 2.0, helpText: 'Floored at 1.0 mg/dL in the equation' }),
+      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, exampleValue: 1.5, helpText: 'Floored at 1.0 in the equation' }),
+      numberInput('creat', 'Creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 15, step: 0.1, exampleValue: 1.0, helpText: 'Floored at 1.0 and capped at 3.0; dialysis sets Cr to 3.0 (MELD 3.0, not the older MELD cap of 4.0)' }),
+      numberInput('na', 'Serum sodium', { unit: 'mmol/L', min: 110, max: 160, step: 1, exampleValue: 135, helpText: 'Bounded 125–137 in the equation' }),
+      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, exampleValue: 3.0, helpText: 'Bounded 1.5–3.5 g/dL in the equation' }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
@@ -613,8 +613,8 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Interpreting older lab reports that used MDRD, or teaching why race-based eGFR was abandoned.',
     whyUse: 'Shows the classic 175 equation and documents that the Black race multiplier is no longer recommended for clinical care.',
     inputs: [
-      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.01, defaultValue: 1.0 }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 50 }),
+      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.01, exampleValue: 1.0 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 50 }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
@@ -801,8 +801,8 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'AKI or rising creatinine after iodinated contrast when FENa is considered.',
     whyUse: 'Contrast-associated AKI can show low FENa early; timing and alternatives matter more than a single cut-off.',
     inputs: [
-      numberInput('hours', 'Hours since contrast exposure', { unit: 'h', min: 0, max: 168, defaultValue: 24, helpText: 'CA-AKI creatinine typically rises 24–48 h and peaks 48–72 h after intravascular iodinated contrast. Ongoing rise after 72 h suggests another insult.' }),
-      numberInput('fena', 'Measured FENa (if available)', { unit: '%', min: 0, max: 20, step: 0.1, defaultValue: 0.8, required: false, helpText: 'FENa = (UNa/PNa) ÷ (UCr/PCr) × 100. <1% = avid Na retention (pre-renal or contrast-associated); ≥2% suggests ATN. Unreliable on diuretics — use FeUrea (<35% pre-renal).' }),
+      numberInput('hours', 'Hours since contrast exposure', { unit: 'h', min: 0, max: 168, exampleValue: 24, helpText: 'CA-AKI creatinine typically rises 24–48 h and peaks 48–72 h after intravascular iodinated contrast. Ongoing rise after 72 h suggests another insult.' }),
+      numberInput('fena', 'Measured FENa (if available)', { unit: '%', min: 0, max: 20, step: 0.1, exampleValue: 0.8, required: false, helpText: 'FENa = (UNa/PNa) ÷ (UCr/PCr) × 100. <1% = avid Na retention (pre-renal or contrast-associated); ≥2% suggests ATN. Unreliable on diuretics — use FeUrea (<35% pre-renal).' }),
       yesNo('fenaKnown', 'FENa value entered / available', 0),
       yesNo('creatinineUp', 'Creatinine rise ≥0.3 mg/dL or ≥1.5× baseline after contrast', 0),
       yesNo('otherCause', 'Strong alternate AKI cause (hypotension, sepsis, obstruction, meds)', 0),
@@ -910,14 +910,14 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         unit: 'mOsm/kg',
         min: 50,
         max: 1200,
-        defaultValue: 200,
+        exampleValue: 200,
         helpText: 'Last Uosm before desmopressin. Classic DI pattern is Uosm still <300 after an adequate stimulus.',
       }),
       numberInput('uosm_post', 'Urine osmolality after desmopressin', {
         unit: 'mOsm/kg',
         min: 50,
         max: 1200,
-        defaultValue: 400,
+        exampleValue: 400,
         helpText: 'Peak Uosm after DDAVP (typically 1–2 h). Classic teaching: ≥50% rise from pre-DDAVP favors central DI; <50% favors nephrogenic.',
       }),
       selectInput('depriveOutcome', 'End-of-deprivation pattern (before DDAVP)', [
@@ -1021,9 +1021,9 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Structured polyuria workup when interpreting supervised water deprivation results.',
     whyUse: 'Maps end-test plasma/urine osmolality patterns to primary polydipsia vs DI before desmopressin step.',
     inputs: [
-      numberInput('posm', 'Plasma osmolality at end of test', { unit: 'mOsm/kg', min: 250, max: 350, defaultValue: 300, helpText: 'Adequate osmotic stimulus for a DI call is typically Posm ≥295 mOsm/kg (or Na clearly high-normal/high). Lower Posm = under-stimulated test.' }),
-      numberInput('uosm', 'Urine osmolality at end of test', { unit: 'mOsm/kg', min: 50, max: 1200, defaultValue: 250, helpText: '>600 = concentrated (primary polydipsia/normal); <300 despite Posm ≥295 = DI; 300–600 = partial/indeterminate.' }),
-      numberInput('vol', '24-h urine volume (context)', { unit: 'L/day', min: 1, max: 20, step: 0.1, defaultValue: 5, helpText: 'Pathologic polyuria is commonly >3–3.5 L/day (or >40–50 mL/kg/day). Confirm with a measured 24-h collection when possible.' }),
+      numberInput('posm', 'Plasma osmolality at end of test', { unit: 'mOsm/kg', min: 250, max: 350, exampleValue: 300, helpText: 'Adequate osmotic stimulus for a DI call is typically Posm ≥295 mOsm/kg (or Na clearly high-normal/high). Lower Posm = under-stimulated test.' }),
+      numberInput('uosm', 'Urine osmolality at end of test', { unit: 'mOsm/kg', min: 50, max: 1200, exampleValue: 250, helpText: '>600 = concentrated (primary polydipsia/normal); <300 despite Posm ≥295 = DI; 300–600 = partial/indeterminate.' }),
+      numberInput('vol', '24-h urine volume (context)', { unit: 'L/day', min: 1, max: 20, step: 0.1, exampleValue: 5, helpText: 'Pathologic polyuria is commonly >3–3.5 L/day (or >40–50 mL/kg/day). Confirm with a measured 24-h collection when possible.' }),
       selectInput('stoppedFor', 'Test endpoint', [
         { label: 'Completed protocol / weight loss limit', value: 'complete', description: 'Ran to protocol end (often 3–5% body-weight loss or a preset time) with supervised no-water conditions.' },
         { label: 'Stopped for hypernatremia / hemodynamic concern', value: 'safety', description: 'Aborted for Na/Posm rising into a danger zone or instability — still interpretable if Posm was high enough.' },
@@ -1204,10 +1204,10 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Polyuria–polydipsia syndrome initial differentiation before or alongside formal testing.',
     whyUse: 'Baseline Na, plasma osmolality, and urine concentration provide quick Bayesian framing.',
     inputs: [
-      numberInput('na', 'Serum sodium', { unit: 'mmol/L', min: 120, max: 170, defaultValue: 142, helpText: 'DI tends toward high-normal/high Na (≥143 supports DI; ≤137 supports primary polydipsia).' }),
-      numberInput('posm', 'Plasma osmolality (measured or calculated)', { unit: 'mOsm/kg', min: 250, max: 360, defaultValue: 295, helpText: 'Measured preferred. ≥295 supports DI; <280 supports primary polydipsia.' }),
-      numberInput('uosm', 'Spot urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1200, defaultValue: 150, helpText: 'Inappropriately dilute (<200) with polyuria supports DI; >400 argues some concentrating ability.' }),
-      numberInput('uvol', 'Approximate urine output', { unit: 'L/day', min: 1, max: 20, step: 0.5, defaultValue: 6, helpText: 'Pathologic polyuria commonly >3–3.5 L/day. This helper will not score DI vs polydipsia if volume is not clearly in that range.' }),
+      numberInput('na', 'Serum sodium', { unit: 'mmol/L', min: 120, max: 170, exampleValue: 142, helpText: 'DI tends toward high-normal/high Na (≥143 supports DI; ≤137 supports primary polydipsia).' }),
+      numberInput('posm', 'Plasma osmolality (measured or calculated)', { unit: 'mOsm/kg', min: 250, max: 360, exampleValue: 295, helpText: 'Measured preferred. ≥295 supports DI; <280 supports primary polydipsia.' }),
+      numberInput('uosm', 'Spot urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1200, exampleValue: 150, helpText: 'Inappropriately dilute (<200) with polyuria supports DI; >400 argues some concentrating ability.' }),
+      numberInput('uvol', 'Approximate urine output', { unit: 'L/day', min: 1, max: 20, step: 0.5, exampleValue: 6, helpText: 'Pathologic polyuria commonly >3–3.5 L/day. This helper will not score DI vs polydipsia if volume is not clearly in that range.' }),
       yesNo('prefersCold', 'Prefers ice-cold water (classic DI anecdote)', 1),
       yesNo('nocturia', 'Prominent nocturia / night water drinking', 1),
       yesNo('lithium', 'Lithium or known nephrogenic risk drugs', 1),
@@ -1412,7 +1412,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
           description: 'Solid hypoechoic nodule or mixed cystic-solid with a hypoechoic solid component PLUS ≥1 of: irregular/infiltrative/microlobulated margins, microcalcifications, taller-than-wide (transverse), rim calcifications with extrusive soft tissue, or ETE. Est. malignancy >70–90%; FNA typically ≥1 cm.',
         },
       ], undefined, 'Assign from ATA 2015 Table 6 features, not gestalt. Taller-than-wide is measured in the transverse plane. Survey cervical nodes independently.'),
-      numberInput('size', 'Largest nodule diameter', { unit: 'cm', min: 0.1, max: 10, step: 0.1, defaultValue: 1.5, helpText: 'Longest diameter. ATA FNA size cutoffs: high/intermediate ≥1 cm; low ≥1.5 cm; very low ≥2 cm; purely cystic — not routine.' }),
+      numberInput('size', 'Largest nodule diameter', { unit: 'cm', min: 0.1, max: 10, step: 0.1, exampleValue: 1.5, helpText: 'Longest diameter. ATA FNA size cutoffs: high/intermediate ≥1 cm; low ≥1.5 cm; very low ≥2 cm; purely cystic — not routine.' }),
     ],
     calculate(values) {
       const pattern = str(values.pattern, 'low');
@@ -1514,9 +1514,9 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Patients with high morning glucose on insulin when deciding whether overnight hypo vs dawn physiology is likely.',
     whyUse: '3 a.m. glucose (or CGM) distinguishes nocturnal hypoglycemia with rebound from dawn-related rise without hypo.',
     inputs: [
-      numberInput('glu_bed', 'Bedtime glucose', { unit: 'mg/dL', min: 40, max: 500, defaultValue: 140 }),
-      numberInput('glu_3am', 'Glucose ~3 a.m. (or overnight nadir)', { unit: 'mg/dL', min: 40, max: 500, defaultValue: 110, helpText: 'Check ~3 a.m. or the CGM overnight nadir. <70 mg/dL (or documented CGM hypo) favors nocturnal hypoglycemia, not dawn phenomenon.' }),
-      numberInput('glu_am', 'Pre-breakfast / fasting glucose', { unit: 'mg/dL', min: 40, max: 500, defaultValue: 200 }),
+      numberInput('glu_bed', 'Bedtime glucose', { unit: 'mg/dL', min: 40, max: 500, exampleValue: 140 }),
+      numberInput('glu_3am', 'Glucose ~3 a.m. (or overnight nadir)', { unit: 'mg/dL', min: 40, max: 500, exampleValue: 110, helpText: 'Check ~3 a.m. or the CGM overnight nadir. <70 mg/dL (or documented CGM hypo) favors nocturnal hypoglycemia, not dawn phenomenon.' }),
+      numberInput('glu_am', 'Pre-breakfast / fasting glucose', { unit: 'mg/dL', min: 40, max: 500, exampleValue: 200 }),
       yesNo('nightSweats', 'Night sweats / nightmares / symptoms of nocturnal hypo', 0, 'Sweats, nightmares, morning headache, or a partner witnessing overnight symptoms. Supportive of nocturnal hypo but not required if the 3 a.m. glucose is <70.'),
       yesNo('cgmHypo', 'CGM confirms nocturnal hypoglycemia', 0, 'CGM or sensor glucose <70 mg/dL (Level 1) or <54 (Level 2) overnight. Treat documented nocturnal hypo regardless of the Somogyi eponym.'),
     ],
@@ -1605,10 +1605,10 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'During DKA treatment to decide when ketoacidosis resolution criteria are met for transition to SQ insulin.',
     whyUse: 'Prevents premature stop of insulin infusion before ketoacidosis clears; glucose normalizes before ketosis often.',
     inputs: [
-      numberInput('glu', 'Glucose', { unit: 'mg/dL', min: 40, max: 1000, defaultValue: 180, helpText: 'ADA-style resolution: glucose <200 mg/dL (then continue insulin with dextrose until ketoacidosis clears)' }),
-      numberInput('bicarb', 'Serum bicarbonate', { unit: 'mEq/L', min: 1, max: 40, step: 0.1, defaultValue: 16, helpText: 'Resolution component: HCO₃ ≥15 mEq/L (need ≥2 of HCO₃, pH, AG)' }),
-      numberInput('ph', 'Venous or arterial pH', { min: 6.6, max: 7.6, step: 0.01, defaultValue: 7.32, helpText: 'Resolution component: pH >7.3' }),
-      numberInput('ag', 'Anion gap', { unit: 'mEq/L', min: 4, max: 40, step: 0.1, defaultValue: 11, helpText: 'Resolution component: AG ≤12 mEq/L' }),
+      numberInput('glu', 'Glucose', { unit: 'mg/dL', min: 40, max: 1000, exampleValue: 180, helpText: 'ADA-style resolution: glucose <200 mg/dL (then continue insulin with dextrose until ketoacidosis clears)' }),
+      numberInput('bicarb', 'Serum bicarbonate', { unit: 'mEq/L', min: 1, max: 40, step: 0.1, exampleValue: 16, helpText: 'Resolution component: HCO₃ ≥15 mEq/L (need ≥2 of HCO₃, pH, AG)' }),
+      numberInput('ph', 'Venous or arterial pH', { min: 6.6, max: 7.6, step: 0.01, exampleValue: 7.32, helpText: 'Resolution component: pH >7.3' }),
+      numberInput('ag', 'Anion gap', { unit: 'mEq/L', min: 4, max: 40, step: 0.1, exampleValue: 11, helpText: 'Resolution component: AG ≤12 mEq/L' }),
       yesNo('ableEat', 'Able to eat / transition plan ready', 1),
       yesNo('sqOverlap', 'SQ basal insulin overlapped ≥1–2 h before stopping IV', 1, 'Do not stop IV insulin until basal SQ has been given with ≥1–2 h overlap.'),
     ],
@@ -1695,16 +1695,16 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Severe hyperglycemia with mental status change when distinguishing HHS from DKA or mixed presentations.',
     whyUse: 'HHS uses extreme glucose/osmolality with minimal ketoacidosis; fluid deficits are massive.',
     inputs: [
-      numberInput('glu', 'Glucose', { unit: 'mg/dL', min: 100, max: 2000, defaultValue: 700, helpText: 'HHS typically glucose ≥600 mg/dL' }),
+      numberInput('glu', 'Glucose', { unit: 'mg/dL', min: 100, max: 2000, exampleValue: 700, helpText: 'HHS typically glucose ≥600 mg/dL' }),
       numberInput('osm', 'Effective / calculated serum osmolality', {
         unit: 'mOsm/kg',
         min: 250,
         max: 450,
-        defaultValue: 330,
+        exampleValue: 330,
         helpText: 'HHS typically effective osm ≥320. Often 2Na + glucose/18 (+ BUN/2.8 if total osm)',
       }),
-      numberInput('ph', 'pH', { min: 6.6, max: 7.6, step: 0.01, defaultValue: 7.35, helpText: 'HHS: pH typically >7.3 (unlike DKA)' }),
-      numberInput('bicarb', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 40, defaultValue: 20, helpText: 'HHS: bicarbonate typically ≥15–18 mEq/L (stricter defs use ≥18)' }),
+      numberInput('ph', 'pH', { min: 6.6, max: 7.6, step: 0.01, exampleValue: 7.35, helpText: 'HHS: pH typically >7.3 (unlike DKA)' }),
+      numberInput('bicarb', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 40, exampleValue: 20, helpText: 'HHS: bicarbonate typically ≥15–18 mEq/L (stricter defs use ≥18)' }),
       selectInput('ketones', 'Ketones', [
         {
           label: 'None / small / trace',
@@ -1807,12 +1807,12 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Structured first-pass arterial (or venous) blood gas interpretation in acute care.',
     whyUse: 'Encodes a repeatable sequence: pH → primary process → compensation → anion gap → hidden disorders.',
     inputs: [
-      numberInput('ph', 'pH', { min: 6.5, max: 7.8, step: 0.01, defaultValue: 7.28, helpText: 'Normal 7.35–7.45. Acidemia <7.35; alkalemia >7.45. A “normal” pH can still hide mixed disorders.' }),
-      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 120, defaultValue: 40, helpText: 'Normal ~35–45 mmHg. High CO₂ = respiratory acidosis; low = respiratory alkalosis.' }),
-      numberInput('hco3', 'HCO₃⁻', { unit: 'mEq/L', min: 2, max: 60, step: 0.1, defaultValue: 18, helpText: 'Normal ~22–26 mEq/L. Low = metabolic acidosis; high = metabolic alkalosis.' }),
-      numberInput('na', 'Na (for AG)', { unit: 'mEq/L', min: 110, max: 170, defaultValue: 140 }),
-      numberInput('cl', 'Cl (for AG)', { unit: 'mEq/L', min: 70, max: 140, defaultValue: 104 }),
-      numberInput('albumin', 'Albumin (optional AG adjust)', { unit: 'g/dL', min: 1, max: 5.5, step: 0.1, defaultValue: 4, required: false }),
+      numberInput('ph', 'pH', { min: 6.5, max: 7.8, step: 0.01, exampleValue: 7.28, helpText: 'Normal 7.35–7.45. Acidemia <7.35; alkalemia >7.45. A “normal” pH can still hide mixed disorders.' }),
+      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 120, exampleValue: 40, helpText: 'Normal ~35–45 mmHg. High CO₂ = respiratory acidosis; low = respiratory alkalosis.' }),
+      numberInput('hco3', 'HCO₃⁻', { unit: 'mEq/L', min: 2, max: 60, step: 0.1, exampleValue: 18, helpText: 'Normal ~22–26 mEq/L. Low = metabolic acidosis; high = metabolic alkalosis.' }),
+      numberInput('na', 'Na (for AG)', { unit: 'mEq/L', min: 110, max: 170, exampleValue: 140 }),
+      numberInput('cl', 'Cl (for AG)', { unit: 'mEq/L', min: 70, max: 140, exampleValue: 104 }),
+      numberInput('albumin', 'Albumin (optional AG adjust)', { unit: 'g/dL', min: 1, max: 5.5, step: 0.1, exampleValue: 4, required: false }),
       yesNo('checkGap', 'Compute anion gap', 0),
     ],
     calculate(values) {
@@ -1820,20 +1820,22 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       const paco2 = num(values.paco2, 40);
       const hco3 = num(values.hco3, 18);
       const steps: string[] = [];
-      let acidemia = ph < 7.4;
-      let alkalemia = ph > 7.4;
-      if (ph < 7.35) {
+      // Keep the normal-range boundaries distinct from the 7.40 midpoint used
+      // to identify the direction of a compensated/mixed process.
+      const acidemia = ph < 7.35;
+      const alkalemia = ph > 7.45;
+      const pHLeansAcidic = ph < 7.4;
+      const pHLeansAlkaline = ph > 7.4;
+      if (acidemia) {
         steps.push('Step 1: Acidemia (pH <7.35)');
-        acidemia = true;
-      } else if (ph > 7.45) {
+      } else if (alkalemia) {
         steps.push('Step 1: Alkalemia (pH >7.45)');
-        alkalemia = true;
       } else {
         steps.push('Step 1: pH normal-range (7.35–7.45) — may still hide mixed disorders');
       }
       // Primary process guess
       let primary = 'Indeterminate';
-      if (acidemia || ph < 7.4) {
+      if (acidemia || pHLeansAcidic) {
         if (paco2 > 45 && hco3 <= 24) primary = 'Respiratory acidosis (or mixed)';
         if (hco3 < 22 && paco2 <= 40) primary = 'Metabolic acidosis (or mixed)';
         if (paco2 > 45 && hco3 < 22) primary = 'Mixed metabolic + respiratory acidosis';
@@ -1842,7 +1844,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
           primary = 'Metabolic acidosis with respiratory compensation (evaluate expected CO₂)';
         }
       }
-      if (alkalemia || ph > 7.4) {
+      if (alkalemia || pHLeansAlkaline) {
         if (paco2 < 35 && hco3 >= 24) primary = 'Respiratory alkalosis (or mixed)';
         if (hco3 > 26 && paco2 >= 40) primary = 'Metabolic alkalosis (or mixed)';
         if (paco2 < 35 && hco3 > 26) primary = 'Mixed metabolic + respiratory alkalosis';
@@ -1850,10 +1852,10 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
       // refine with dominant deviation
       const co2Dev = paco2 - 40;
       const hco3Dev = hco3 - 24;
-      if (ph < 7.4) {
+      if (pHLeansAcidic) {
         if (Math.abs(hco3Dev) >= Math.abs(co2Dev / 2) && hco3 < 24) primary = 'Metabolic acidosis primary likely';
         if (co2Dev > 0 && co2Dev >= Math.abs(hco3Dev) && paco2 > 40) primary = 'Respiratory acidosis primary likely';
-      } else if (ph > 7.4) {
+      } else if (pHLeansAlkaline) {
         if (hco3 > 24 && hco3Dev >= Math.abs(co2Dev / 2)) primary = 'Metabolic alkalosis primary likely';
         if (paco2 < 40 && Math.abs(co2Dev) >= hco3Dev) primary = 'Respiratory alkalosis primary likely';
       }
@@ -1962,9 +1964,9 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         { label: 'Respiratory alkalosis (acute)', value: 'resp_alk_acute', description: 'Low PaCO₂ of minutes–hours. Expected ΔHCO₃ ≈ −2 per −10 mmHg PaCO₂.' },
         { label: 'Respiratory alkalosis (chronic)', value: 'resp_alk_chronic', description: 'Low PaCO₂ of days. Expected ΔHCO₃ ≈ −5 per −10 mmHg PaCO₂.' },
       ], undefined, 'Pick the disorder you believe is primary; the tool flags a second process if the compensating value is outside the expected band.'),
-      numberInput('hco3', 'Measured HCO₃⁻', { unit: 'mEq/L', min: 2, max: 60, step: 0.1, defaultValue: 12 }),
-      numberInput('paco2', 'Measured PaCO₂', { unit: 'mmHg', min: 10, max: 120, defaultValue: 28 }),
-      numberInput('ph', 'pH (context)', { min: 6.5, max: 7.8, step: 0.01, defaultValue: 7.28 }),
+      numberInput('hco3', 'Measured HCO₃⁻', { unit: 'mEq/L', min: 2, max: 60, step: 0.1, exampleValue: 12 }),
+      numberInput('paco2', 'Measured PaCO₂', { unit: 'mmHg', min: 10, max: 120, exampleValue: 28 }),
+      numberInput('ph', 'pH (context)', { min: 6.5, max: 7.8, step: 0.01, exampleValue: 7.28 }),
     ],
     calculate(values) {
       const primary = str(values.primary, 'met_acid');
@@ -2099,11 +2101,11 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Severe hypoxemia workup when estimating shunt fraction educationally from ABG and assumed contents.',
     whyUse: 'Qs/Qt helps frame true shunt vs V/Q mismatch (shunt responds poorly to FiO₂ alone).',
     inputs: [
-      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, defaultValue: 60 }),
-      numberInput('fio2', 'FiO₂', { unit: 'fraction', min: 0.21, max: 1, step: 0.01, defaultValue: 1.0 }),
-      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 100, defaultValue: 40 }),
-      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 5, max: 20, step: 0.1, defaultValue: 12 }),
-      numberInput('pvO2', 'Mixed venous PO₂ (required for content method)', { unit: 'mmHg', min: 20, max: 50, defaultValue: 40, required: false }),
+      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 60 }),
+      numberInput('fio2', 'FiO₂', { unit: 'fraction', unitKind: 'fio2', min: 0.21, max: 1, step: 0.01, exampleValue: 1.0 }),
+      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 100, exampleValue: 40 }),
+      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 5, max: 20, step: 0.1, exampleValue: 12 }),
+      numberInput('pvO2', 'Mixed venous PO₂ (required for content method)', { unit: 'mmHg', min: 20, max: 50, exampleValue: 40, required: false }),
       selectInput('mode', 'Method', [
         { label: 'Simplified content shunt (educational)', value: 'content' },
         { label: 'Rough iso-shunt from P/F only', value: 'pf' },
@@ -2235,12 +2237,12 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Quick sanity check of room-air ABG values at sea level or rough expected PaO₂ from PaCO₂.',
     whyUse: 'On room air, PaO₂ ≈ 150 − PaCO₂ (simplified alveolar gas). Large shortfalls suggest A–a gradient elevation.',
     inputs: [
-      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 100, defaultValue: 40 }),
+      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 100, exampleValue: 40 }),
       numberInput('pao2', 'Measured PaO₂ (optional)', {
         unit: 'mmHg',
         min: 0,
         max: 600,
-        defaultValue: 95,
+        exampleValue: 95,
         helpText: 'Enter 0 if unknown — only expected value shown',
         required: false,
       }),
@@ -2337,15 +2339,15 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'Travel/medicine or interpreting hypoxemia at elevation; teaching alveolar gas equation at low PB.',
     whyUse: 'Barometric pressure falls with altitude, lowering PIO₂ and expected PaO₂ even in healthy lungs.',
     inputs: [
-      numberInput('altitude', 'Altitude', { unit: 'm', min: 0, max: 9000, defaultValue: 2500 }),
+      numberInput('altitude', 'Altitude', { unit: 'm', min: 0, max: 9000, exampleValue: 2500 }),
       numberInput('paco2', 'PaCO₂ (assume lower at altitude if hyperventilating)', {
         unit: 'mmHg',
         min: 10,
         max: 50,
-        defaultValue: 32,
+        exampleValue: 32,
       }),
-      numberInput('fio2', 'FiO₂', { unit: 'fraction', min: 0.21, max: 1, step: 0.01, defaultValue: 0.21 }),
-      numberInput('aa', 'Assumed A–a gradient', { unit: 'mmHg', min: 0, max: 60, defaultValue: 10 }),
+      numberInput('fio2', 'FiO₂', { unit: 'fraction', unitKind: 'fio2', min: 0.21, max: 1, step: 0.01, exampleValue: 0.21 }),
+      numberInput('aa', 'Assumed A–a gradient', { unit: 'mmHg', min: 0, max: 60, exampleValue: 10 }),
     ],
     calculate(values) {
       const alt = num(values.altitude, 2500);
@@ -2514,7 +2516,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
     whenToUse: 'CO poisoning management counseling on expected COHb clearance with oxygen therapy.',
     whyUse: 'Illustrates why 100% NRB oxygen is mandatory and when HBO is considered to accelerate clearance.',
     inputs: [
-      numberInput('cohb', 'Current COHb', { unit: '%', min: 0, max: 70, step: 0.1, defaultValue: 25 }),
+      numberInput('cohb', 'Current COHb', { unit: '%', min: 0, max: 70, step: 0.1, exampleValue: 25 }),
       selectInput('therapy', 'Oxygen therapy', [
         { label: 'Room air', value: 'ra' },
         { label: '100% NRB / high-flow O₂', value: 'nrb' },
@@ -2525,7 +2527,7 @@ export const wave6ClinicalResidualCalcs: Calculator[] = [
         min: 0,
         max: 24,
         step: 0.5,
-        defaultValue: 1.5,
+        exampleValue: 1.5,
       }),
     ],
     calculate(values) {

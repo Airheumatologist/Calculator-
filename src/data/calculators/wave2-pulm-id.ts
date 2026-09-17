@@ -573,9 +573,9 @@ export const wave2PulmIdCalcs: Calculator[] = [
     whenToUse: 'Mechanically ventilated patients when grading oxygenation failure (neonatal and adult critical care).',
     whyUse: 'Integrates FiO₂ and mean airway pressure with PaO₂; used in ECMO candidacy discussions (context-specific cutoffs).',
     inputs: [
-      numberInput('fio2', 'FiO₂', { unit: 'fraction 0–1', min: 0.21, max: 1, step: 0.01, defaultValue: 0.6, helpText: 'e.g. 0.60 for 60%' }),
-      numberInput('map', 'Mean airway pressure (MAP)', { unit: 'cm H₂O', min: 0, max: 50, step: 0.5, defaultValue: 15 }),
-      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, step: 1, defaultValue: 60 }),
+      numberInput('fio2', 'FiO₂', { unit: 'fraction', unitKind: 'fio2', min: 0.21, max: 1, step: 0.01, exampleValue: 0.6, helpText: 'Select % if the device is labelled as a percent (e.g. 60%)' }),
+      numberInput('map', 'Mean airway pressure (MAP)', { unit: 'cm H₂O', min: 0, max: 50, step: 0.5, exampleValue: 15 }),
+      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, step: 1, exampleValue: 60 }),
     ],
     calculate(values) {
       const fio2 = num(values.fio2, 0.6);
@@ -670,13 +670,13 @@ export const wave2PulmIdCalcs: Calculator[] = [
     whenToUse: 'When mixed-expired CO₂ (or equivalent) and arterial PCO₂ are available to estimate dead space.',
     whyUse: 'Elevated VD/VT indicates wasted ventilation (PE, COPD, low output, over-ventilation of dead space).',
     inputs: [
-      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 120, step: 0.1, defaultValue: 40 }),
+      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 120, step: 0.1, exampleValue: 40 }),
       numberInput('peco2', 'PECO₂ (mixed expired PCO₂)', {
         unit: 'mmHg',
         min: 0,
         max: 100,
         step: 0.1,
-        defaultValue: 28,
+        exampleValue: 28,
         helpText: 'Mixed expired CO₂ partial pressure; not end-tidal alone unless using Enghoff assumptions carefully',
       }),
     ],
@@ -767,7 +767,7 @@ export const wave2PulmIdCalcs: Calculator[] = [
     whenToUse: 'Interpreting room-air ABG oxygenation relative to age-expected normal.',
     whyUse: 'PaO₂ declines with age; absolute cutoffs misclassify older adults without age adjustment.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, step: 1, defaultValue: 60 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, step: 1, exampleValue: 60 }),
       numberInput('pao2', 'Measured PaO₂ (optional)', {
         unit: 'mmHg',
         min: 20,
@@ -777,11 +777,11 @@ export const wave2PulmIdCalcs: Calculator[] = [
         required: false,
       }),
       numberInput('fio2', 'FiO₂', {
-        unit: 'fraction',
+        unit: 'fraction', unitKind: 'fio2',
         min: 0.21,
         max: 1,
         step: 0.01,
-        defaultValue: 0.21,
+        exampleValue: 0.21,
         helpText: 'Age formula applies to room air (~0.21)',
       }),
     ],
@@ -1036,11 +1036,11 @@ export const wave2PulmIdCalcs: Calculator[] = [
     whenToUse: 'Risk adjustment, prognosis discussions, research, and frailty/comorbidity burden estimates.',
     whyUse: 'Most widely used comorbidity index; correlates with survival and resource use.',
     inputs: [
-      numberInput('age', 'Age (for age-adjusted CCI)', { unit: 'years', min: 0, max: 120, step: 1, defaultValue: 65 }),
+      numberInput('age', 'Age (for age-adjusted CCI)', { unit: 'years', min: 0, max: 120, step: 1, exampleValue: 65 }),
       yesNo('mi', 'Myocardial infarction (+1)', 1, 'Documented MI (history or ECG/enzyme evidence), not isolated angina.'),
       yesNo('chf', 'Congestive heart failure (+1)', 1, 'Symptomatic HF that has required treatment and responded (exertional or paroxysmal nocturnal dyspnea).'),
       yesNo('pvd', 'Peripheral vascular disease (+1)', 1, 'Intermittent claudication, bypass, gangrene, or untreated aortic aneurysm ≥6 cm.'),
-      yesNo('cva', 'CVA or TIA (+1)', 1, 'TIA or stroke with minor or no residua. Hemiplegia is the separate +2 item — do not double-count dense hemiplegia here.'),
+      yesNo('cva', 'CVA or TIA without hemiplegia (+1)', 1, 'Cerebrovascular disease such as TIA or stroke with minor or no residual deficit. If hemiplegia/paraplegia is present, select the separate +2 hemiplegia item instead; the higher tier supersedes this +1 item.'),
       yesNo('dementia', 'Dementia (+1)', 1, 'Chronic cognitive deficit interfering with daily life (not isolated acute delirium).'),
       yesNo('copd', 'Chronic pulmonary disease (+1)', 1, 'Symptomatic chronic lung disease (COPD, asthma requiring treatment, ILD, etc.).'),
       yesNo('ctd', 'Connective tissue disease (+1)', 1, 'SLE, RA, polymyositis, mixed CTD, or similar systemic rheumatic disease.'),
@@ -1048,7 +1048,7 @@ export const wave2PulmIdCalcs: Calculator[] = [
       yesNo('liverMild', 'Mild liver disease (+1)', 1, 'Chronic hepatitis or cirrhosis without portal hypertension. Score only the highest liver tier.'),
       yesNo('dm', 'Diabetes without end-organ damage (+1)', 1, 'On insulin or oral agents, not diet alone. Score only the highest diabetes tier.'),
       yesNo('dmEnd', 'Diabetes with end-organ damage (+2)', 2, 'Retinopathy, neuropathy, or nephropathy. Use this instead of the +1 diabetes item.'),
-      yesNo('hemiplegia', 'Hemiplegia (+2)', 2, 'Hemiplegia or paraplegia with dense residual. Do not also give the +1 CVA/TIA item for the same dense deficit.'),
+      yesNo('hemiplegia', 'Hemiplegia or paraplegia (+2)', 2, 'Hemiplegia or paraplegia with dense residual deficit. This higher CCI tier supersedes cerebrovascular disease/CVA/TIA (+1) when both are documented; do not double-count.'),
       yesNo('ckd', 'Moderate–severe CKD (+2)', 2, 'Creatinine >3 mg/dL, dialysis, transplant, or uremia — not ordinary stage 3 CKD without that threshold.'),
       yesNo('tumor', 'Solid tumor (localized) (+2)', 2, 'Treated in the last 5 years; exclude non-melanoma skin cancer. Metastatic tumor is the separate +6 item.'),
       yesNo('leukemia', 'Leukemia (+2)', 2, 'Acute or chronic leukemia.'),
@@ -1058,16 +1058,18 @@ export const wave2PulmIdCalcs: Calculator[] = [
       yesNo('aids', 'AIDS (+6)', 6, 'AIDS-defining illness — not asymptomatic HIV without AIDS.'),
     ],
     calculate(values) {
-      // Mutually exclusive pairs: use higher weight only
+      // Mutually exclusive pairs: use higher weight only. The CCI hierarchy
+      // treats hemiplegia/paraplegia (+2) as the severe tier that supersedes
+      // cerebrovascular disease/CVA/TIA (+1) when both are selected.
       const dmPts = bool(values.dmEnd) ? 2 : bool(values.dm) ? 1 : 0;
       const liverPts = bool(values.liverSevere) ? 3 : bool(values.liverMild) ? 1 : 0;
       const cancerPts = bool(values.mets) ? 6 : bool(values.tumor) ? 2 : 0;
+      const cerebrovascularPts = bool(values.hemiplegia) ? 0 : bool(values.cva) ? 1 : 0;
 
       const single: [string, number][] = [
         ['mi', 1],
         ['chf', 1],
         ['pvd', 1],
-        ['cva', 1],
         ['dementia', 1],
         ['copd', 1],
         ['ctd', 1],
@@ -1079,7 +1081,7 @@ export const wave2PulmIdCalcs: Calculator[] = [
         ['aids', 6],
       ];
       let base = single.reduce((s, [k, p]) => s + (bool(values[k]) ? p : 0), 0);
-      base += dmPts + liverPts + cancerPts;
+      base += cerebrovascularPts + dmPts + liverPts + cancerPts;
 
       const age = num(values.age, 65);
       let agePts = 0;
@@ -1117,6 +1119,17 @@ export const wave2PulmIdCalcs: Calculator[] = [
         score: ageAdjusted,
         ...r,
         details: [
+          {
+            label: 'CVA/hemiplegia hierarchy',
+            value:
+              bool(values.hemiplegia) && bool(values.cva)
+                ? 'Hemiplegia/paraplegia +2; CVA/TIA +1 superseded (no double-counting)'
+                : bool(values.hemiplegia)
+                  ? 'Hemiplegia/paraplegia +2'
+                  : bool(values.cva)
+                    ? 'CVA/TIA without hemiplegia +1'
+                    : 'None (0)',
+          },
           { label: 'Unadjusted CCI', value: String(base) },
           { label: 'Age points', value: String(agePts) },
           { label: 'Age-adjusted CCI', value: String(ageAdjusted) },
@@ -1124,8 +1137,8 @@ export const wave2PulmIdCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Charlson index weights 17 comorbidity categories; age adjustment adds 1 point per decade after 40 starting at 50.',
-      formula: 'Sum of weighted conditions (+ age points for age-adjusted CCI)',
+      summary: 'Charlson index weights 17 comorbidity categories; age adjustment adds 1 point per decade after 40 starting at 50. Within severity hierarchies, only the highest-weight category contributes.',
+      formula: 'Sum of weighted conditions (+ age points for age-adjusted CCI); hemiplegia/paraplegia (+2) supersedes cerebrovascular disease/CVA/TIA (+1)',
       validation: 'Extensively validated for mortality prediction across populations; coding adaptations (ICD) vary.',
       references: [
         {
@@ -1133,6 +1146,12 @@ export const wave2PulmIdCalcs: Calculator[] = [
           citation: 'Charlson ME et al. J Chronic Dis. 1987',
           year: 1987, pmid: '3558716',
           doi: '10.1016/0021-9681(87)90171-8', },
+        {
+          title: 'Charlson Comorbidity Index: ICD-9 Update and ICD-10 Translation',
+          citation: 'Glasheen WP et al. Am Health Drug Benefits. 2019;12(4):188–197',
+          year: 2019,
+          pmid: '31428236',
+        },
       ],
     },
     nextSteps: [
@@ -1141,6 +1160,7 @@ export const wave2PulmIdCalcs: Calculator[] = [
     pearls: [
       'Diabetes and liver disease: score only the highest applicable tier.',
       'Metastatic solid tumor supersedes localized tumor points.',
+      'Cerebrovascular disease/CVA/TIA (+1) and hemiplegia/paraplegia (+2) are hierarchical; when both are selected, count only the +2 hemiplegia/paraplegia tier.',
     ],
   },
   {
@@ -1154,23 +1174,23 @@ export const wave2PulmIdCalcs: Calculator[] = [
     whenToUse: 'Adult ICU patients for admission-day severity and estimated hospital mortality (worst values in first 24 h).',
     whyUse: 'Classic, widely validated ICU score. Prefer institutional APACHE/SAPS software for official benchmarking.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 16, max: 110, defaultValue: 65, helpText: '<40: 0; 40–59: 7; 60–69: 12; 70–74: 15; 75–79: 16; ≥80: 18' }),
-      numberInput('hr', 'Heart rate (worst 24 h)', { unit: '/min', min: 20, max: 220, defaultValue: 90, helpText: '<40: 11; 40–69: 2; 70–119: 0; 120–159: 4; ≥160: 7' }),
-      numberInput('sbp', 'Systolic BP (worst 24 h)', { unit: 'mmHg', min: 40, max: 250, defaultValue: 120, helpText: '<70: 13; 70–99: 5; 100–199: 0; ≥200: 2' }),
-      numberInput('temp', 'Temperature (worst 24 h)', { unit: '°C', min: 32, max: 42, step: 0.1, defaultValue: 37, helpText: '≥39 °C: 3' }),
-      numberInput('gcs', 'Worst GCS', { min: 3, max: 15, defaultValue: 15, helpText: 'Worst in first 24 h. If sedated/intubated, estimated GCS before sedation (do not assign verbal 1 solely for the tube). Points: 14–15: 0; 11–13: 5; 9–10: 7; 6–8: 13; <6: 26' }),
+      numberInput('age', 'Age', { unit: 'years', min: 16, max: 110, exampleValue: 65, helpText: '<40: 0; 40–59: 7; 60–69: 12; 70–74: 15; 75–79: 16; ≥80: 18' }),
+      numberInput('hr', 'Heart rate (worst 24 h)', { unit: '/min', min: 20, max: 220, exampleValue: 90, helpText: '<40: 11; 40–69: 2; 70–119: 0; 120–159: 4; ≥160: 7' }),
+      numberInput('sbp', 'Systolic BP (worst 24 h)', { unit: 'mmHg', min: 40, max: 250, exampleValue: 120, helpText: '<70: 13; 70–99: 5; 100–199: 0; ≥200: 2' }),
+      numberInput('temp', 'Temperature (worst 24 h)', { unit: '°C', min: 32, max: 42, step: 0.1, exampleValue: 37, helpText: '≥39 °C: 3' }),
+      numberInput('gcs', 'Worst GCS', { min: 3, max: 15, exampleValue: 15, helpText: 'Worst in first 24 h. If sedated/intubated, estimated GCS before sedation (do not assign verbal 1 solely for the tube). Points: 14–15: 0; 11–13: 5; 9–10: 7; 6–8: 13; <6: 26' }),
       selectInput('vent', 'Ventilated or CPAP', [
         { label: 'Not ventilated', value: 'none', description: 'Not on invasive mechanical ventilation or CPAP — PaO₂/FiO₂ is not scored (0 oxygenation points)' },
         { label: 'Ventilated / CPAP', value: 'vent', description: 'Invasive mechanical ventilation or CPAP during the first 24 h — score the worst PaO₂/FiO₂' },
       ], undefined, 'PaO₂/FiO₂ points apply only if ventilated or on CPAP (Le Gall 1993).'),
-      numberInput('pao2fio2', 'PaO₂/FiO₂ (if ventilated/CPAP)', { unit: 'mmHg', min: 40, max: 600, defaultValue: 300, helpText: '<100: 11; 100–199: 9; ≥200: 6; ignored if not ventilated' }),
-      numberInput('uop', 'Urine output', { unit: 'L/24 h', min: 0, max: 10, step: 0.1, defaultValue: 1.5, helpText: '<0.5 L: 11; 0.5–0.999: 4; ≥1.0: 0' }),
-      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 3, max: 200, defaultValue: 18, helpText: '<28: 0; 28–83: 6; ≥84: 10' }),
-      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 80, step: 0.1, defaultValue: 10, helpText: '<1.0: 12; 1.0–19.9: 0; ≥20: 3' }),
-      numberInput('k', 'Potassium', { unit: 'mmol/L', min: 1.5, max: 8, step: 0.1, defaultValue: 4.0, helpText: '<3.0 or ≥5.0: 3' }),
-      numberInput('na', 'Sodium', { unit: 'mmol/L', min: 110, max: 170, defaultValue: 140, helpText: '<125: 5; 125–144: 0; ≥145: 1' }),
-      numberInput('hco3', 'HCO₃', { unit: 'mmol/L', min: 5, max: 45, defaultValue: 24, helpText: '<15: 6; 15–19: 3; ≥20: 0' }),
-      numberInput('bili', 'Bilirubin', { unit: 'mg/dL', min: 0.1, max: 30, step: 0.1, defaultValue: 0.8, helpText: '<4.0: 0; 4.0–5.9: 4; ≥6.0: 9' }),
+      numberInput('pao2fio2', 'PaO₂/FiO₂ (if ventilated/CPAP)', { unit: 'mmHg', min: 40, max: 600, exampleValue: 300, helpText: '<100: 11; 100–199: 9; ≥200: 6; ignored if not ventilated' }),
+      numberInput('uop', 'Urine output', { unit: 'L/24 h', min: 0, max: 10, step: 0.1, exampleValue: 1.5, helpText: '<0.5 L: 11; 0.5–0.999: 4; ≥1.0: 0' }),
+      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 3, max: 200, exampleValue: 18, helpText: '<28: 0; 28–83: 6; ≥84: 10' }),
+      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 80, step: 0.1, exampleValue: 10, helpText: '<1.0: 12; 1.0–19.9: 0; ≥20: 3' }),
+      numberInput('k', 'Potassium', { unit: 'mmol/L', min: 1.5, max: 8, step: 0.1, exampleValue: 4.0, helpText: '<3.0 or ≥5.0: 3' }),
+      numberInput('na', 'Sodium', { unit: 'mmol/L', min: 110, max: 170, exampleValue: 140, helpText: '<125: 5; 125–144: 0; ≥145: 1' }),
+      numberInput('hco3', 'HCO₃', { unit: 'mmol/L', min: 5, max: 45, exampleValue: 24, helpText: '<15: 6; 15–19: 3; ≥20: 0' }),
+      numberInput('bili', 'Bilirubin', { unit: 'mg/dL', min: 0.1, max: 30, step: 0.1, exampleValue: 0.8, helpText: '<4.0: 0; 4.0–5.9: 4; ≥6.0: 9' }),
       selectInput('chronic', 'Chronic disease', [
         { label: 'None (0)', value: 0, points: 0, description: 'No metastatic cancer, hematologic malignancy, or AIDS. Localized solid tumor without metastases does not score.' },
         { label: 'Metastatic cancer (9)', value: 9, points: 9, description: 'Histologically or radiologically proven distant metastases (surgery, CT, or other method). Not a localized solid tumor alone.' },
@@ -1498,9 +1518,9 @@ export const wave2PulmIdCalcs: Calculator[] = [
     whenToUse: 'Adults with confirmed or probable C. difficile infection to guide therapy intensity.',
     whyUse: 'Severity drives antibiotic choice and need for surgical/ICU consultation.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 0, max: 120, step: 1, defaultValue: 70 }),
-      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0, max: 100, step: 0.1, defaultValue: 12, helpText: 'IDSA severe if WBC ≥15 ×10³/µL (or creatinine >1.5 mg/dL).' }),
-      numberInput('cr', 'Serum creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.0, helpText: 'IDSA severe if creatinine >1.5 mg/dL (or WBC ≥15 ×10³/µL).' }),
+      numberInput('age', 'Age', { unit: 'years', min: 0, max: 120, step: 1, exampleValue: 70 }),
+      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0, max: 100, step: 0.1, exampleValue: 12, helpText: 'IDSA severe if WBC ≥15 ×10³/µL (or creatinine >1.5 mg/dL).' }),
+      numberInput('cr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 1.0, helpText: 'IDSA severe if creatinine >1.5 mg/dL (or WBC ≥15 ×10³/µL). Select µmol/L for SI lab reports.' }),
       yesNo('hypotension', 'Hypotension or shock', 2, 'SBP <90 mmHg, MAP <65 mmHg, or vasopressors for CDI-associated shock.'),
       yesNo('ileus', 'Ileus', 2, 'Obstipation with vomiting, absent bowel sounds, or radiographic small-bowel dilation attributed to CDI (not routine post-op ileus from another cause).'),
       yesNo('megacolon', 'Toxic megacolon', 2, 'Colonic dilation (often ≥6 cm on KUB/CT) plus systemic toxicity (fever, shock, marked leukocytosis).'),
@@ -1588,8 +1608,8 @@ export const wave2PulmIdCalcs: Calculator[] = [
       yesNo('infection', 'Suspected or documented infection', 0),
       yesNo('fluids', 'Adequate volume resuscitation (e.g. ~30 mL/kg crystalloid unless fluid-intolerant / already volume-replete)', 0, 'Sepsis-3 leaves volume unspecified; SSC operationalizes ~30 mL/kg crystalloid (or clinically adequate preload) before the shock label.'),
       yesNo('vasopressors', 'Vasopressors required to maintain MAP ≥ 65 mmHg', 0),
-      numberInput('lactate', 'Lactate', { unit: 'mmol/L', min: 0, max: 30, step: 0.1, defaultValue: 1.5, helpText: 'Sepsis-3 septic shock requires lactate >2 mmol/L after fluids (plus vasopressors for MAP ≥65).' }),
-      numberInput('map', 'Current MAP (optional context)', { unit: 'mmHg', min: 0, max: 150, step: 1, defaultValue: 65, required: false }),
+      numberInput('lactate', 'Lactate', { unit: 'mmol/L', min: 0, max: 30, step: 0.1, exampleValue: 1.5, helpText: 'Sepsis-3 septic shock requires lactate >2 mmol/L after fluids (plus vasopressors for MAP ≥65).' }),
+      numberInput('map', 'Current MAP (optional context)', { unit: 'mmHg', min: 0, max: 150, step: 1, exampleValue: 65, required: false }),
     ],
     calculate(values) {
       const infection = bool(values.infection);
@@ -1697,7 +1717,7 @@ export const wave2PulmIdCalcs: Calculator[] = [
     whenToUse: 'Adults with lower respiratory infection or sepsis pathways using PCT algorithms (not a stand-alone diagnosis).',
     whyUse: 'PCT algorithms can safely reduce antibiotic exposure when combined with clinical judgment.',
     inputs: [
-      numberInput('pct', 'Procalcitonin', { unit: 'ng/mL', min: 0, max: 200, step: 0.01, defaultValue: 0.25 }),
+      numberInput('pct', 'Procalcitonin', { unit: 'ng/mL', min: 0, max: 200, step: 0.01, exampleValue: 0.25 }),
       selectInput('setting', 'Clinical setting / algorithm', [
         { label: 'Outpatient / ward LRTI (0.1 / 0.25 cutoffs)', value: 'lrti', description: 'ProHOSP-style LRTI: <0.1 strongly withhold; <0.25 withhold; ≥0.25 start; ≥0.5 strongly start' },
         { label: 'ICU / critically ill (0.5 / 1.0 cutoffs)', value: 'icu', description: 'ICU-style: <0.5 discourage; 0.5–<1.0 encourage; ≥1.0 strongly encourage (still override if unstable)' },
@@ -1813,7 +1833,7 @@ export const wave2PulmIdCalcs: Calculator[] = [
     whenToUse: 'Interpreting TST induration in mm according to CDC risk-stratified cut points.',
     whyUse: 'Prevents under-calling LTBI in high-risk patients and over-calling in low-risk persons.',
     inputs: [
-      numberInput('induration', 'TST induration', { unit: 'mm', min: 0, max: 40, step: 1, defaultValue: 8, helpText: 'Measure induration (palpable firmness), not erythema, at 48–72 hours after Mantoux placement. Two-step testing if serial screening (booster).' }),
+      numberInput('induration', 'TST induration', { unit: 'mm', min: 0, max: 40, step: 1, exampleValue: 8, helpText: 'Measure induration (palpable firmness), not erythema, at 48–72 hours after Mantoux placement. Two-step testing if serial screening (booster).' }),
       selectInput('riskGroup', 'Highest applicable risk group', [
         {
           label: 'High risk — use ≥5 mm cutoff (HIV, recent contact, fibrotic CXR, immunosuppressed, transplant)',

@@ -20,10 +20,10 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         unit: 'mg',
         min: 0,
         max: 100000,
-        defaultValue: 10000,
+        exampleValue: 10000,
         helpText: 'Sum all APAP sources; convert g→mg (1 g = 1000 mg)',
       }),
-      numberInput('weight', 'Body weight', { unit: 'kg', min: 3, max: 250, step: 0.1, defaultValue: 70 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 3, max: 250, step: 0.1, exampleValue: 70 }),
       selectInput('age_group', 'Age group (threshold frame)', [
         { label: 'Adult / adolescent', value: 'adult' },
         { label: 'Child (<6 y often higher mg/kg tolerance classically)', value: 'child' },
@@ -129,8 +129,8 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Acute ibuprofen overdose with estimated dose and weight (bands are ibuprofen-specific, not all NSAIDs).',
     whyUse: 'Most single acute ibuprofen ODs are mild; bands help disposition and need for labs/observation.',
     inputs: [
-      numberInput('dose_mg', 'Ingested ibuprofen dose', { unit: 'mg', min: 0, max: 100000, defaultValue: 6000 }),
-      numberInput('weight', 'Body weight', { unit: 'kg', min: 5, max: 250, step: 0.1, defaultValue: 70 }),
+      numberInput('dose_mg', 'Ingested ibuprofen dose', { unit: 'mg', min: 0, max: 100000, exampleValue: 6000 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 5, max: 250, step: 0.1, exampleValue: 70 }),
     ],
     calculate(values) {
       const dose = num(values.dose_mg, 6000);
@@ -214,7 +214,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         unit: 'mg',
         min: 0,
         max: 50000,
-        defaultValue: 3000,
+        exampleValue: 3000,
         helpText: 'Total mg of the salt product (not already elemental unless selected)',
       }),
       selectInput('salt', 'Iron preparation (% elemental)', [
@@ -223,7 +223,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Ferrous gluconate (~12% elemental)', value: 0.12 },
         { label: 'Already elemental iron / carbonyl / known elemental mg', value: 1 },
       ]),
-      numberInput('weight', 'Body weight', { unit: 'kg', min: 5, max: 200, step: 0.1, defaultValue: 20 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 5, max: 200, step: 0.1, exampleValue: 20 }),
     ],
     calculate(values) {
       const saltMg = num(values.dose_mg, 3000);
@@ -307,7 +307,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Known lithium concentration with suspected toxicity or therapeutic drug monitoring concern.',
     whyUse: 'Chronic toxicity is severe at lower levels than acute overdose; clinical neurotoxicity drives dialysis decisions.',
     inputs: [
-      numberInput('level', 'Serum lithium', { unit: 'mEq/L', min: 0, max: 10, step: 0.1, defaultValue: 1.8 }),
+      numberInput('level', 'Serum lithium', { unit: 'mEq/L', min: 0, max: 10, step: 0.1, exampleValue: 1.8 }),
       selectInput('context', 'Context', [
         { label: 'Acute overdose (not on lithium chronically)', value: 'acute', description: 'Single acute ingestion in a patient not taking lithium chronically' },
         { label: 'Chronic / therapeutic use toxicity', value: 'chronic', description: 'On maintenance lithium; toxicity from accumulation, dehydration, or interacting drugs' },
@@ -429,7 +429,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Therapeutic drug monitoring or suspected valproate toxicity/overdose.',
     whyUse: 'Levels frame toxicity risk; hyperammonemia and clinical status may be severe even when total VPA is not extreme.',
     inputs: [
-      numberInput('level', 'Total serum VPA', { unit: 'µg/mL', min: 0, max: 1000, step: 1, defaultValue: 120 }),
+      numberInput('level', 'Total serum VPA', { unit: 'µg/mL', min: 0, max: 1000, step: 1, exampleValue: 120 }),
       selectInput('context', 'Context', [
         { label: 'Therapeutic monitoring', value: 'tdm' },
         { label: 'Overdose / toxicity evaluation', value: 'od' },
@@ -540,7 +540,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Carbamazepine therapeutic monitoring or suspected toxicity/overdose.',
     whyUse: 'Levels correlate roughly with toxicity (nystagmus, ataxia, coma, seizures, Na channel effects).',
     inputs: [
-      numberInput('level', 'Serum carbamazepine', { unit: 'µg/mL', min: 0, max: 100, step: 0.1, defaultValue: 14 }),
+      numberInput('level', 'Serum carbamazepine', { unit: 'µg/mL', min: 0, max: 100, step: 0.1, exampleValue: 14 }),
       yesNo('ams', 'Significant CNS depression / coma', 0),
       yesNo('seizure', 'Seizure / status risk features', 0),
     ],
@@ -637,7 +637,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Patients on theophylline/aminophylline with levels, or methylxanthine overdose.',
     whyUse: 'Narrow therapeutic index; chronic toxicity is dangerous at lower levels than acute OD.',
     inputs: [
-      numberInput('level', 'Serum theophylline', { unit: 'µg/mL', min: 0, max: 200, step: 0.1, defaultValue: 28 }),
+      numberInput('level', 'Serum theophylline', { unit: 'µg/mL', min: 0, max: 200, step: 0.1, exampleValue: 28 }),
       selectInput('context', 'Context', [
         { label: 'Acute overdose', value: 'acute' },
         { label: 'Chronic / repeated supratherapeutic', value: 'chronic' },
@@ -749,7 +749,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         min: 0,
         max: 1000,
         step: 0.01,
-        defaultValue: 10,
+        exampleValue: 10,
         helpText: 'Confirm units with lab (µmol/L vs µmol/mL errors are catastrophic)',
       }),
       selectInput('timepoint', 'Time after start of MTX infusion', [
@@ -870,7 +870,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Known or suspected CO exposure with co-oximetry COHb result.',
     whyUse: 'COHb frames exposure magnitude; treatment (O₂ ± HBO) depends heavily on symptoms, pregnancy, and source.',
     inputs: [
-      numberInput('cohb', 'Carboxyhemoglobin', { unit: '%', min: 0, max: 80, step: 0.1, defaultValue: 15 }),
+      numberInput('cohb', 'Carboxyhemoglobin', { unit: '%', min: 0, max: 80, step: 0.1, exampleValue: 15 }),
       selectInput('smoker', 'Baseline smoking status', [
         { label: 'Nonsmoker', value: 'no' },
         { label: 'Smoker (higher baseline COHb)', value: 'yes' },
@@ -974,7 +974,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Suspected methemoglobinemia (cyanosis refractory to O₂, chocolate blood, drug exposures) with co-oximetry MetHb.',
     whyUse: 'Severity bands guide urgency of methylene blue and ICU care.',
     inputs: [
-      numberInput('methb', 'Methemoglobin', { unit: '%', min: 0, max: 100, step: 0.1, defaultValue: 25 }),
+      numberInput('methb', 'Methemoglobin', { unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 25 }),
       yesNo('symptomatic', 'Symptoms (dyspnea, headache, tachycardia, AMS)', 0),
       yesNo('severe', 'Severe features (coma, seizure, ischemia, profound hypoxia symptoms)', 0),
       yesNo('g6pd', 'Known G6PD deficiency', 0),
@@ -1088,7 +1088,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Industrial / lab cyanide', value: 'industrial', description: 'Known or suspected cyanide salt, gas, or laboratory exposure' },
         { label: 'Unknown / other', value: 'other', description: 'No clear fire or industrial cyanide source' },
       ]),
-      numberInput('lactate', 'Serum lactate', { unit: 'mmol/L', min: 0, max: 30, step: 0.1, defaultValue: 8, helpText: 'Smoke/CN teaching: lactate ≥8–10 mmol/L raises suspicion, especially with AMS or shock. Do not wait for a cyanide level.' }),
+      numberInput('lactate', 'Serum lactate', { unit: 'mmol/L', min: 0, max: 30, step: 0.1, exampleValue: 8, helpText: 'Smoke/CN teaching: lactate ≥8–10 mmol/L raises suspicion, especially with AMS or shock. Do not wait for a cyanide level.' }),
       yesNo('ams', 'Altered mental status / coma / seizure', 2),
       yesNo('shock', 'Hypotension / cardiovascular collapse', 2),
       yesNo('soot', 'Soot in airway / severe smoke exposure signs'),
@@ -1192,7 +1192,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
         { label: 'Moderate (prominent secretions, wheeze, GI, weakness)', value: 'moderate', description: 'Copious secretions, wheeze/bronchorrhea, vomiting/diarrhea, or muscle weakness without respiratory failure' },
         { label: 'Severe (respiratory failure, profound bronchorrhea, coma, seizures)', value: 'severe', description: 'Need for intubation/ventilatory support, coma, seizures, or life-threatening bronchorrhea' },
       ], undefined, 'SLUDGE = salivation, lacrimation, urination, defecation, GI upset, emesis. Also DUMBBELS (diarrhea, urination, miosis, bronchorrhea/bradycardia/bronchospasm, emesis, lacrimation, salivation). Titrate atropine to dry secretions, not HR alone.'),
-      numberInput('weight', 'Body weight', { unit: 'kg', min: 5, max: 200, step: 0.1, defaultValue: 70 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 5, max: 200, step: 0.1, exampleValue: 70 }),
       yesNo('bronchorrhea', 'Significant bronchorrhea / hypoxia from secretions', null),
       yesNo('bradycardia', 'Symptomatic bradycardia / AV block', 0),
     ],
@@ -1999,7 +1999,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Anaphylaxis treatment dosing for IM epinephrine by weight.',
     whyUse: 'Correct dose and thigh IM route are critical; delay increases mortality.',
     inputs: [
-      numberInput('weight', 'Body weight', { unit: 'kg', min: 3, max: 200, step: 0.1, defaultValue: 70 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 3, max: 200, step: 0.1, exampleValue: 70 }),
       selectInput('concentration', 'Concentration available', [
         { label: '1 mg/mL (1:1000) IM/SC — correct for anaphylaxis IM', value: '1in1000', description: 'Draw 0.01 mg/kg (max 0.5 mg) IM in the mid-anterolateral thigh. Do not use 1:10,000 (0.1 mg/mL) for IM anaphylaxis.' },
         { label: 'Using autoinjector only', value: 'auto', description: '0.15 mg junior typically 15–30 kg; 0.3 mg adult ≥30 kg; 0.1 mg infant autoinjector if available <15 kg' },
@@ -2157,7 +2157,12 @@ export const wave5ToxPsychCalcs: Calculator[] = [
   // ─── 20. PHQ-A ─────────────────────────────────────────────────────────────
   {
     id: 'phq-a',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score', 'item9'],
+    },
     name: 'PHQ-A (Adolescent Depression Screen)',
     shortName: 'PHQ-A',
     description:
@@ -2174,7 +2179,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       numberInput('score', 'PHQ-A total (0–27, direct mode)', {
         min: 0,
         max: 27,
-        defaultValue: 12,
+        exampleValue: 12,
         helpText: 'Used only if direct override is selected.',
       }),
       yesNo('item9', 'Item 9 positive (thoughts of self-harm / better off dead — direct mode)', 0),
@@ -2476,11 +2481,11 @@ export const wave5ToxPsychCalcs: Calculator[] = [
     whenToUse: 'Quantify functional impairment from psychiatric symptoms across three life domains.',
     whyUse: 'Simple 0–10 ratings; total and per-domain scores track treatment response and disability.',
     inputs: [
-      numberInput('work', 'Work / school impairment', { min: 0, max: 10, defaultValue: 5, helpText: 'Past week: how much have symptoms disrupted this domain? 0 = not at all; 1–3 mild; 4–6 moderate; 7–9 marked; 10 = extreme. Domain ≥5 often = significant impairment.' }),
-      numberInput('social', 'Social life impairment', { min: 0, max: 10, defaultValue: 5, helpText: 'Past week: how much have symptoms disrupted this domain? 0 = not at all; 1–3 mild; 4–6 moderate; 7–9 marked; 10 = extreme. Domain ≥5 often = significant impairment.' }),
-      numberInput('family', 'Family life / home responsibilities', { min: 0, max: 10, defaultValue: 4, helpText: 'Past week: how much have symptoms disrupted this domain? 0 = not at all; 1–3 mild; 4–6 moderate; 7–9 marked; 10 = extreme. Domain ≥5 often = significant impairment.' }),
-      numberInput('days_lost', 'Days lost (optional)', { min: 0, max: 7, defaultValue: 0, helpText: 'Days unable to fulfill role in past week', required: false }),
-      numberInput('days_unprod', 'Days underproductive (optional)', { min: 0, max: 7, defaultValue: 0, helpText: 'Days underproductive but present in the past week (0–7)', required: false }),
+      numberInput('work', 'Work / school impairment', { min: 0, max: 10, exampleValue: 5, helpText: 'Past week: how much have symptoms disrupted this domain? 0 = not at all; 1–3 mild; 4–6 moderate; 7–9 marked; 10 = extreme. Domain ≥5 often = significant impairment.' }),
+      numberInput('social', 'Social life impairment', { min: 0, max: 10, exampleValue: 5, helpText: 'Past week: how much have symptoms disrupted this domain? 0 = not at all; 1–3 mild; 4–6 moderate; 7–9 marked; 10 = extreme. Domain ≥5 often = significant impairment.' }),
+      numberInput('family', 'Family life / home responsibilities', { min: 0, max: 10, exampleValue: 4, helpText: 'Past week: how much have symptoms disrupted this domain? 0 = not at all; 1–3 mild; 4–6 moderate; 7–9 marked; 10 = extreme. Domain ≥5 often = significant impairment.' }),
+      numberInput('days_lost', 'Days lost (optional)', { min: 0, max: 7, exampleValue: 0, helpText: 'Days unable to fulfill role in past week', required: false }),
+      numberInput('days_unprod', 'Days underproductive (optional)', { min: 0, max: 7, exampleValue: 0, helpText: 'Days underproductive but present in the past week (0–7)', required: false }),
     ],
     calculate(values) {
       const work = num(values.work, 5);
@@ -2559,7 +2564,12 @@ export const wave5ToxPsychCalcs: Calculator[] = [
   // ─── 23. Zung SDS ──────────────────────────────────────────────────────────
   {
     id: 'sds-zung',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
+    },
     name: 'Zung Self-Rating Depression Scale (SDS)',
     shortName: 'Zung SDS',
     description: 'Zung Self-Rating Depression Scale: 20 items (10 forward, 10 reverse scored; raw 20–80, SDS index 25–100), or direct raw score.',
@@ -2575,7 +2585,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       numberInput('score', 'Zung SDS raw total (20–80, direct mode)', {
         min: 20,
         max: 80,
-        defaultValue: 38,
+        exampleValue: 38,
         helpText: 'Used only if direct override is selected.',
       }),
       selectInput('sds1', '1. I feel down-hearted and blue', [
@@ -2796,7 +2806,12 @@ export const wave5ToxPsychCalcs: Calculator[] = [
   // ─── 24. Zung Anxiety (SAS) ────────────────────────────────────────────────
   {
     id: 'sas-zung-anxiety',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
+    },
     name: 'Zung Self-Rating Anxiety Scale (SAS)',
     shortName: 'Zung SAS',
     description: 'Zung Self-Rating Anxiety Scale: 20 items (15 forward, 5 reverse scored; raw 20–80, SAS index 25–100), or direct raw total.',
@@ -2812,7 +2827,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       numberInput('score', 'Zung SAS raw total (20–80, direct mode)', {
         min: 20,
         max: 80,
-        defaultValue: 35,
+        exampleValue: 35,
         helpText: 'Used only if direct override is selected.',
       }),
       selectInput('sas1', '1. I feel more nervous and anxious than usual', [
@@ -2941,10 +2956,12 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       let raw = 0;
 
       if (mode === 'direct' || (values.score !== undefined && values.entryMode === undefined && values.sas1 === undefined)) {
-        raw = num(values.score, 35);
+        raw = Math.max(20, Math.min(80, num(values.score, 35)));
       } else {
         for (let i = 1; i <= 20; i++) {
-          raw += num(values[`sas${i}`], 1);
+          // Each SAS item is 1–4 by design; clamp tampered or off-scale
+          // entries so a single stray value cannot inflate the index.
+          raw += Math.max(1, Math.min(4, num(values[`sas${i}`], 1)));
         }
       }
 
@@ -3020,7 +3037,12 @@ export const wave5ToxPsychCalcs: Calculator[] = [
   // ─── 25. Y-BOCS ────────────────────────────────────────────────────────────
   {
     id: 'yale-brown-ocd',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score', 'obsessions', 'compulsions'],
+    },
     name: 'Yale–Brown Obsessive Compulsive Scale (Y-BOCS)',
     shortName: 'Y-BOCS',
     description: 'Yale–Brown Obsessive Compulsive Scale: 10 clinician-rated items (5 obsessions + 5 compulsions, 0–40), auto-calculating subscores, or direct total.',
@@ -3036,7 +3058,7 @@ export const wave5ToxPsychCalcs: Calculator[] = [
       numberInput('score', 'Y-BOCS total (0–40, direct mode)', {
         min: 0,
         max: 40,
-        defaultValue: 20,
+        exampleValue: 20,
         helpText: 'Used only if direct override is selected.',
       }),
       numberInput('obsessions', 'Obsession subtotal (0–20, optional direct)', { min: 0, max: 20, required: false }),

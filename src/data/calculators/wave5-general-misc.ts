@@ -15,8 +15,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Microcytic anemia workup when distinguishing iron deficiency from thalassemia trait is relevant.',
     whyUse: 'Simple bedside ratio; Mentzer <13 favors thalassemia trait, >13 favors iron deficiency (imperfect).',
     inputs: [
-      numberInput('mcv', 'MCV', { unit: 'fL', min: 40, max: 120, step: 0.1, defaultValue: 70 }),
-      numberInput('rbc', 'RBC count', { unit: '×10⁶/µL', min: 1, max: 8, step: 0.01, defaultValue: 5.5 }),
+      numberInput('mcv', 'MCV', { unit: 'fL', min: 40, max: 120, step: 0.1, exampleValue: 70 }),
+      numberInput('rbc', 'RBC count', { unit: '×10⁶/µL', min: 1, max: 8, step: 0.01, exampleValue: 5.5 }),
     ],
     calculate(values) {
       const mcv = num(values.mcv, 70);
@@ -94,14 +94,14 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0.1,
         max: 200,
         step: 0.1,
-        defaultValue: 15,
+        exampleValue: 15,
       }),
       numberInput('nrbc', 'nRBCs per 100 WBCs', {
         unit: '/100 WBC',
         min: 0,
         max: 500,
         step: 1,
-        defaultValue: 10,
+        exampleValue: 10,
         helpText: 'Number of nucleated RBCs counted per 100 white cells',
       }),
     ],
@@ -160,8 +160,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Drug dosing or PK estimates that scale to lean mass (e.g., some anesthetics, research equations).',
     whyUse: 'Classic sex-specific LBW formulas; can fail at high BMI (prefer Janmahasatian).',
     inputs: [
-      numberInput('weight', 'Total body weight', { unit: 'kg', min: 30, max: 300, step: 0.1, defaultValue: 80 }),
-      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, defaultValue: 170 }),
+      numberInput('weight', 'Total body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 300, step: 0.1, exampleValue: 80 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, exampleValue: 170 }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
@@ -229,8 +229,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Quick educational guide when choosing weight scalar for common inpatient drug classes.',
     whyUse: 'Obesity dosing is drug-specific; this summarizes common practice patterns (always verify monographs).',
     inputs: [
-      numberInput('tbw', 'Total body weight (TBW)', { unit: 'kg', min: 30, max: 400, step: 0.1, defaultValue: 100 }),
-      numberInput('height', 'Height', { unit: 'cm', min: 140, max: 220, defaultValue: 170 }),
+      numberInput('tbw', 'Total body weight (TBW)', { unit: 'kg', unitKind: 'weight', min: 30, max: 400, step: 0.1, exampleValue: 100 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 140, max: 220, exampleValue: 170 }),
       selectInput('sex', 'Sex (for Devine IBW)', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
@@ -251,7 +251,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0.2,
         max: 0.5,
         step: 0.05,
-        defaultValue: 0.4,
+        exampleValue: 0.4,
         helpText: 'Common aminoglycoside factor 0.4',
       }),
     ],
@@ -389,7 +389,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Exercise prescription, stress testing context, or educational fitness targets.',
     whyUse: 'Quick population estimate; individual max HR varies widely.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 10, max: 100, defaultValue: 40 }),
+      numberInput('age', 'Age', { unit: 'years', min: 10, max: 100, exampleValue: 40 }),
       selectInput('formula', 'Primary formula', [
         { label: 'Fox: 220 − age', value: 'fox' },
         { label: 'Tanaka: 208 − 0.7×age', value: 'tanaka' },
@@ -444,20 +444,20 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Aerobic training zones using heart-rate reserve (HRR).',
     whyUse: 'Accounts for resting HR; preferred over simple %HRmax for many exercise prescriptions.',
     inputs: [
-      numberInput('resting', 'Resting HR', { unit: 'bpm', min: 30, max: 120, defaultValue: 70 }),
-      numberInput('hrmax', 'Max HR (measured or estimated)', { unit: 'bpm', min: 80, max: 220, defaultValue: 180 }),
+      numberInput('resting', 'Resting HR', { unit: 'bpm', min: 30, max: 120, exampleValue: 70 }),
+      numberInput('hrmax', 'Max HR (measured or estimated)', { unit: 'bpm', min: 80, max: 220, exampleValue: 180 }),
       numberInput('lowPct', 'Lower intensity', {
         unit: '% HRR',
         min: 20,
         max: 95,
-        defaultValue: 50,
+        exampleValue: 50,
         helpText: 'e.g., 50 for moderate aerobic floor',
       }),
       numberInput('highPct', 'Upper intensity', {
         unit: '% HRR',
         min: 25,
         max: 100,
-        defaultValue: 70,
+        exampleValue: 70,
         helpText: 'e.g., 70 for moderate–vigorous ceiling',
       }),
     ],
@@ -523,8 +523,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Exercise testing, perioperative or ICU context when estimating myocardial workload.',
     whyUse: 'Simple correlate of myocardial oxygen consumption (MVO₂).',
     inputs: [
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 60, max: 300, defaultValue: 120 }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 250, defaultValue: 80 }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 60, max: 300, exampleValue: 120 }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 250, exampleValue: 80 }),
     ],
     calculate(values) {
       const sbp = num(values.sbp, 120);
@@ -606,8 +606,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Sepsis, distributive shock, or when diastolic hypotension may signal low vascular tone.',
     whyUse: 'May flag high-risk physiology when classic SI is borderline; studied in septic shock cohorts.',
     inputs: [
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 20, max: 300, defaultValue: 100 }),
-      numberInput('dbp', 'Diastolic BP', { unit: 'mmHg', min: 20, max: 200, defaultValue: 50 }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 20, max: 300, exampleValue: 100 }),
+      numberInput('dbp', 'Diastolic BP', { unit: 'mmHg', min: 20, max: 200, exampleValue: 50 }),
     ],
     calculate(values) {
       const hr = num(values.hr, 100);
@@ -692,8 +692,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Expressing BMI relative to the upper normal WHO threshold (25 kg/m²).',
     whyUse: 'Values >1.0 indicate BMI above normal range; easy comparison across populations.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', min: 20, max: 400, step: 0.1, defaultValue: 80 }),
-      numberInput('height', 'Height', { unit: 'cm', min: 100, max: 250, defaultValue: 170 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 400, step: 0.1, exampleValue: 80 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 100, max: 250, exampleValue: 170 }),
     ],
     calculate(values) {
       const w = num(values.weight, 80);
@@ -781,10 +781,10 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         min: 50,
         max: 200,
         step: 0.5,
-        defaultValue: 100,
+        exampleValue: 100,
         helpText: 'Widest hip/buttock circumference',
       }),
-      numberInput('height', 'Height', { unit: 'cm', min: 100, max: 250, defaultValue: 170 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 100, max: 250, exampleValue: 170 }),
       selectInput('sex', 'Sex (for interpretation bands)', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
@@ -896,8 +896,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Anthropometry when a height-cubed index is preferred (neonatal/pediatric or comparative research contexts).',
     whyUse: 'Less height-dependent than BMI in some populations; used historically and in neonatal assessment variants.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', min: 0.5, max: 400, step: 0.1, defaultValue: 70 }),
-      numberInput('height', 'Height', { unit: 'cm', min: 40, max: 250, defaultValue: 170 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 0.5, max: 400, step: 0.1, exampleValue: 70 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 40, max: 250, exampleValue: 170 }),
     ],
     calculate(values) {
       const w = num(values.weight, 70);
@@ -983,8 +983,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'When a protocol specifies DuBois BSA rather than Mosteller.',
     whyUse: 'Historical gold-standard BSA equation still referenced in physiology and some dosing tables.',
     inputs: [
-      numberInput('height', 'Height', { unit: 'cm', min: 50, max: 250, step: 0.1, defaultValue: 170 }),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 10, max: 400, step: 0.1, defaultValue: 70 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 50, max: 250, step: 0.1, exampleValue: 170 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 10, max: 400, step: 0.1, exampleValue: 70 }),
     ],
     calculate(values) {
       const h = num(values.height, 170);
@@ -1037,8 +1037,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Pediatric BSA estimation for dosing or physiologic indexing when Haycock is preferred.',
     whyUse: 'Better performance than some adult formulas at low body size / pediatrics.',
     inputs: [
-      numberInput('height', 'Height / length', { unit: 'cm', min: 30, max: 200, step: 0.1, defaultValue: 100 }),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 1, max: 150, step: 0.1, defaultValue: 15 }),
+      numberInput('height', 'Height / length', { unit: 'cm', min: 30, max: 200, step: 0.1, exampleValue: 100 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 1, max: 150, step: 0.1, exampleValue: 15 }),
     ],
     calculate(values) {
       const h = num(values.height, 100);
@@ -1091,7 +1091,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'When comparing IBW formulas or a reference cites Robinson rather than Devine.',
     whyUse: 'Slightly different height increments than Devine; sometimes used in anesthesia/PK literature.',
     inputs: [
-      numberInput('height', 'Height', { unit: 'cm', min: 140, max: 220, defaultValue: 170 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 140, max: 220, exampleValue: 170 }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
@@ -1147,7 +1147,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'Alternative IBW estimate when literature or local practice references Miller.',
     whyUse: 'Another commonly cited IBW equation for comparison with Devine/Robinson/Hamwi.',
     inputs: [
-      numberInput('height', 'Height', { unit: 'cm', min: 140, max: 220, defaultValue: 170 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 140, max: 220, exampleValue: 170 }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
@@ -1203,8 +1203,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'LBW estimation in normal-weight and obese adults for PK/dosing equations.',
     whyUse: 'Performs better than James LBW across BMI range; widely used in modern PK.',
     inputs: [
-      numberInput('weight', 'Total body weight', { unit: 'kg', min: 30, max: 300, step: 0.1, defaultValue: 90 }),
-      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, defaultValue: 170 }),
+      numberInput('weight', 'Total body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 300, step: 0.1, exampleValue: 90 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, exampleValue: 170 }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
@@ -1273,7 +1273,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 10,
         step: 0.1,
-        defaultValue: 5,
+        exampleValue: 5,
         helpText: 'BASDAI Q2, past week: overall AS neck, back or hip pain. 0=none, 10=very severe.',
       }),
       numberInput('morningStiff', 'Duration of morning stiffness (BASDAI Q6)', {
@@ -1281,7 +1281,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 10,
         step: 0.1,
-        defaultValue: 4,
+        exampleValue: 4,
         helpText: 'BASDAI Q6, past week: morning stiffness duration from waking. 0=0 h, 10=2 h or more (VAS, not raw hours).',
       }),
       numberInput('ptGlobal', 'Patient global assessment of disease activity', {
@@ -1289,7 +1289,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 10,
         step: 0.1,
-        defaultValue: 5,
+        exampleValue: 5,
         helpText: 'Past week: how active was your spondyloarthritis? 0=not active, 10=very active.',
       }),
       numberInput('peripheral', 'Peripheral pain/swelling (BASDAI Q3)', {
@@ -1297,7 +1297,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 10,
         step: 0.1,
-        defaultValue: 2,
+        exampleValue: 2,
         helpText: 'BASDAI Q3, past week: pain/swelling in joints other than neck, back or hips. 0=none, 10=very severe.',
       }),
       numberInput('crp', 'CRP', {
@@ -1305,7 +1305,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 200,
         step: 0.1,
-        defaultValue: 8,
+        exampleValue: 8,
         helpText: 'mg/L (not mg/dL). If the lab reports mg/dL, multiply by 10. ASDAS uses ln(CRP+1).',
       }),
     ],
@@ -1395,14 +1395,14 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
       numberInput('tjc', 'Tender joint count (68)', {
         min: 0,
         max: 68,
-        defaultValue: 6,
+        exampleValue: 6,
         helpText:
           '68 joints: DIP, PIP, MCP, wrists, elbows, shoulders, AC, SC, TMJ, hips, knees, ankles, midtarsals, MTPs, toe IPs (bilateral). Tender = pain on firm pressure.',
       }),
       numberInput('sjc', 'Swollen joint count (66)', {
         min: 0,
         max: 66,
-        defaultValue: 3,
+        exampleValue: 3,
         helpText: 'Same set except hips not scored for swelling (66).',
       }),
       numberInput('pain', 'Patient pain VAS', {
@@ -1410,7 +1410,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 10,
         step: 0.1,
-        defaultValue: 4,
+        exampleValue: 4,
         helpText: 'Patient pain due to PsA (typically past week). 0=none, 10=worst.',
       }),
       numberInput('ptGlobal', 'Patient global VAS', {
@@ -1418,7 +1418,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 10,
         step: 0.1,
-        defaultValue: 4,
+        exampleValue: 4,
         helpText: 'Patient global PsA activity (typically past week). 0=none, 10=worst imaginable.',
       }),
       numberInput('crp', 'CRP', {
@@ -1426,7 +1426,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 30,
         step: 0.1,
-        defaultValue: 0.5,
+        exampleValue: 0.5,
         helpText: 'mg/dL (divide mg/L by 10)',
       }),
     ],
@@ -1512,7 +1512,12 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     tags: ['haq', 'haq-di', 'disability', 'rheumatology', 'function'],
     whenToUse: 'When evaluating functional impairment and physical disability in rheumatoid arthritis, psoriatic arthritis, or other rheumatic conditions.',
     whyUse: 'Gold-standard patient-reported physical function outcome measure in rheumatology trials and treat-to-target clinic care.',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['total'],
+    },
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 20-item HAQ-DI (recommended)', value: 'survey' },
@@ -1650,7 +1655,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 3,
         step: 0.125,
-        defaultValue: 1,
+        exampleValue: 1,
         helpText: 'Used if Direct score override mode is selected. Enter the official 20-item HAQ-DI (mean of 8 category scores).',
       }),
     ],
@@ -1764,27 +1769,32 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     tags: ['basfi', 'ankylosing spondylitis', 'function', 'axspa'],
     whenToUse: 'When evaluating functional impairment and physical limitation in axial spondyloarthritis / ankylosing spondylitis.',
     whyUse: 'Standard function PRO in axSpA alongside BASDAI/ASDAS disease activity measures endorsed by ASAS.',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['total'],
+    },
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 10-item functional questionnaire (recommended)', value: 'survey' },
         { label: 'Direct BASFI mean override (0–10)', value: 'direct' },
       ], 'survey'),
-      numberInput('basfi_q1', '1. Putting on socks or tights without help or aids', { min: 0, max: 10, step: 0.5, defaultValue: 4, helpText: '0 = easy, 10 = impossible' }),
-      numberInput('basfi_q2', '2. Bending forward from waist to pick up pen from floor without aid', { min: 0, max: 10, step: 0.5, defaultValue: 4, helpText: '0 = easy, 10 = impossible' }),
-      numberInput('basfi_q3', '3. Reaching up to a high shelf without help or aids', { min: 0, max: 10, step: 0.5, defaultValue: 3, helpText: '0 = easy, 10 = impossible' }),
-      numberInput('basfi_q4', '4. Getting up out of armless dining room chair without using hands/help', { min: 0, max: 10, step: 0.5, defaultValue: 4, helpText: '0 = easy, 10 = impossible' }),
-      numberInput('basfi_q5', '5. Getting up off the floor without help from lying on your back', { min: 0, max: 10, step: 0.5, defaultValue: 5, helpText: '0 = easy, 10 = impossible' }),
-      numberInput('basfi_q6', '6. Standing unsupported for 10 minutes without discomfort', { min: 0, max: 10, step: 0.5, defaultValue: 4, helpText: '0 = easy, 10 = impossible' }),
-      numberInput('basfi_q7', '7. Climbing 12–14 steps without using a handrail or walking aid', { min: 0, max: 10, step: 0.5, defaultValue: 3, helpText: '0 = easy, 10 = impossible' }),
-      numberInput('basfi_q8', '8. Looking over your shoulder without turning your body', { min: 0, max: 10, step: 0.5, defaultValue: 5, helpText: '0 = easy, 10 = impossible' }),
-      numberInput('basfi_q9', '9. Doing physically demanding activities (e.g. physio exercises, gardening, sports)', { min: 0, max: 10, step: 0.5, defaultValue: 5, helpText: '0 = easy, 10 = impossible' }),
-      numberInput('basfi_q10', '10. Doing a full day\'s activities (at home or at work)', { min: 0, max: 10, step: 0.5, defaultValue: 4, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q1', '1. Putting on socks or tights without help or aids', { min: 0, max: 10, step: 0.5, exampleValue: 4, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q2', '2. Bending forward from waist to pick up pen from floor without aid', { min: 0, max: 10, step: 0.5, exampleValue: 4, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q3', '3. Reaching up to a high shelf without help or aids', { min: 0, max: 10, step: 0.5, exampleValue: 3, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q4', '4. Getting up out of armless dining room chair without using hands/help', { min: 0, max: 10, step: 0.5, exampleValue: 4, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q5', '5. Getting up off the floor without help from lying on your back', { min: 0, max: 10, step: 0.5, exampleValue: 5, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q6', '6. Standing unsupported for 10 minutes without discomfort', { min: 0, max: 10, step: 0.5, exampleValue: 4, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q7', '7. Climbing 12–14 steps without using a handrail or walking aid', { min: 0, max: 10, step: 0.5, exampleValue: 3, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q8', '8. Looking over your shoulder without turning your body', { min: 0, max: 10, step: 0.5, exampleValue: 5, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q9', '9. Doing physically demanding activities (e.g. physio exercises, gardening, sports)', { min: 0, max: 10, step: 0.5, exampleValue: 5, helpText: '0 = easy, 10 = impossible' }),
+      numberInput('basfi_q10', '10. Doing a full day\'s activities (at home or at work)', { min: 0, max: 10, step: 0.5, exampleValue: 4, helpText: '0 = easy, 10 = impossible' }),
       numberInput('total', 'Direct BASFI total (mean of 10 items)', {
         min: 0,
         max: 10,
         step: 0.1,
-        defaultValue: 4,
+        exampleValue: 4,
         helpText: 'Used if Direct score override mode is selected. Mean 0–10.',
       }),
     ],
@@ -1868,7 +1878,12 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     tags: ['mases', 'enthesitis', 'axial spa', 'rheumatology'],
     whenToUse: 'Quantifying enthesitis burden in axSpA / AS clinical care or clinical trials.',
     whyUse: 'Validated 0–13 site count endorsed in SpA research; focuses primarily on axial plus Achilles insertions.',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['total'],
+    },
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 13-site examination (recommended)', value: 'survey' },
@@ -1890,7 +1905,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
       numberInput('total', 'Direct MASES total (tender sites override)', {
         min: 0,
         max: 13,
-        defaultValue: 2,
+        exampleValue: 2,
         helpText: 'Used if Direct score override mode is selected.',
       }),
     ],
@@ -2226,7 +2241,12 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     tags: ['kujala', 'patellofemoral', 'anterior knee pain', 'ortho'],
     whenToUse: 'When evaluating anterior knee pain, patellofemoral pain syndrome (PFPS), or patellar instability.',
     whyUse: 'Widely validated clinician- and patient-reported outcome measure specifically sensitive to patellofemoral disorders.',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['total'],
+    },
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 13-item assessment (recommended)', value: 'survey' },
@@ -2315,7 +2335,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
       numberInput('total', 'Direct Kujala total score override (0–100)', {
         min: 0,
         max: 100,
-        defaultValue: 70,
+        exampleValue: 70,
         helpText: 'Used if Direct score override mode is selected.',
       }),
     ],
@@ -2407,7 +2427,12 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
     tags: ['lysholm', 'knee', 'acl', 'ligament', 'ortho'],
     whenToUse: 'When evaluating knee ligament, meniscus, or cartilage injury and post-operative recovery.',
     whyUse: 'Classic knee-specific outcome measure for symptoms and function (especially ACL and meniscus injuries).',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['total'],
+    },
     inputs: [
       selectInput('entryMode', 'Entry Mode', [
         { label: 'Interactive 8-domain questionnaire (recommended)', value: 'survey' },
@@ -2467,7 +2492,7 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
       numberInput('total', 'Direct Lysholm total override (0–100)', {
         min: 0,
         max: 100,
-        defaultValue: 75,
+        exampleValue: 75,
         helpText: 'Used if Direct score override mode is selected.',
       }),
     ],

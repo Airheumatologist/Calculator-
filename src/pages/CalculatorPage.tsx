@@ -8,12 +8,14 @@ import { NextStepsPanel } from '../components/NextStepsPanel';
 import {
   calculatorErrorResult,
   getActiveQuestionnaireInputs,
+  getCanonicalValues,
   getInvalidSelectValues,
   getMissingQuestionnaireInputs,
   getQuestionnaireModeInput,
   getRangeViolations,
   getStepViolations,
   getInitialFormValues,
+  getExampleFormValues,
   incompleteResult,
   invalidSelectResult,
   rangeBlockedResult,
@@ -85,7 +87,9 @@ export function CalculatorPage() {
       return invalidSelectResult(invalidSelects);
     }
     try {
-      return calc.calculate(values);
+      // Unit-aware fields are converted to the canonical unit the formula
+      // expects; the form keeps displaying what the user typed.
+      return calc.calculate(getCanonicalValues(calc.inputs, values));
     } catch (error) {
       console.error(`Calculator ${calc.id} failed`, error);
       return calculatorErrorResult(calc.id);
@@ -149,6 +153,10 @@ export function CalculatorPage() {
           }}
           onReset={() => {
             setFormState({ calcId, values: getInitialFormValues(calc) });
+            setSelectedOptionIndices({});
+          }}
+          onLoadExample={() => {
+            setFormState({ calcId, values: getExampleFormValues(calc) });
             setSelectedOptionIndices({});
           }}
         />

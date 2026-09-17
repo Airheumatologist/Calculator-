@@ -14,13 +14,13 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
     whenToUse: 'Suspected toxic alcohol ingestion with measured and calculated osmolality ± known ethanol level.',
     whyUse: 'Elevated osmolar gap suggests unmeasured osmotically active solutes (alcohols, acetone, severe hyperlipidemia/proteins, mannitol).',
     inputs: [
-      numberInput('measured', 'Measured serum osmolality', { unit: 'mOsm/kg', min: 200, max: 500, defaultValue: 320 }),
-      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, defaultValue: 140 }),
-      numberInput('glucose', 'Glucose', { unit: 'mg/dL', min: 20, max: 1000, defaultValue: 100 }),
-      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, defaultValue: 14 }),
-      numberInput('ethanol', 'Ethanol (if known)', { unit: 'mg/dL', min: 0, max: 600, defaultValue: 0, helpText: 'Leave 0 if not measured', required: false }),
-      numberInput('methanol', 'Methanol level (if known)', { unit: 'mg/dL', min: 0, max: 500, defaultValue: 0, required: false }),
-      numberInput('eg', 'Ethylene glycol level (if known)', { unit: 'mg/dL', min: 0, max: 500, defaultValue: 0, required: false }),
+      numberInput('measured', 'Measured serum osmolality', { unit: 'mOsm/kg', min: 200, max: 500, exampleValue: 320 }),
+      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 140 }),
+      numberInput('glucose', 'Glucose', { unit: 'mg/dL', min: 20, max: 1000, exampleValue: 100 }),
+      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, exampleValue: 14 }),
+      numberInput('ethanol', 'Ethanol (if known)', { unit: 'mg/dL', min: 0, max: 600, exampleValue: 0, helpText: 'Leave 0 if not measured', required: false }),
+      numberInput('methanol', 'Methanol level (if known)', { unit: 'mg/dL', min: 0, max: 500, exampleValue: 0, required: false }),
+      numberInput('eg', 'Ethylene glycol level (if known)', { unit: 'mg/dL', min: 0, max: 500, exampleValue: 0, required: false }),
     ],
     calculate(values) {
       const measured = num(values.measured, 320);
@@ -145,7 +145,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         unit: 'mOsm/kg',
         min: 0,
         max: 200,
-        defaultValue: 30,
+        exampleValue: 30,
         helpText: 'Prefer gap after subtracting ethanol contribution',
       }),
     ],
@@ -218,7 +218,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         unit: 'mOsm/kg',
         min: 0,
         max: 200,
-        defaultValue: 30,
+        exampleValue: 30,
         helpText: 'Prefer gap after subtracting ethanol contribution',
       }),
     ],
@@ -289,7 +289,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
     whenToUse: 'Acetaminophen overdose when IV NAC is indicated (nomogram, unknown time, fulminant pathway, etc.).',
     whyUse: 'Standard three-bag protocol doses are weight-based; errors in bag preparation are common.',
     inputs: [
-      numberInput('weight', 'Body weight', { unit: 'kg', min: 3, max: 200, step: 0.1, defaultValue: 70 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 3, max: 200, step: 0.1, exampleValue: 70 }),
       selectInput('cap150', 'Cap weight at 100 kg for dosing? (common practice)', [
         { label: 'Yes — use max 100 kg for dose calc', value: 'cap', description: 'Many protocols cap IV NAC at 100 kg (this tool’s default). Confirm local policy.' },
         { label: 'No — use actual weight', value: 'actual', description: 'Use actual body weight even if >100 kg (some massive-OD / local protocols).' },
@@ -373,11 +373,11 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         min: 0,
         max: 50,
         step: 0.1,
-        defaultValue: 4,
+        exampleValue: 4,
         helpText: 'Post-distribution level preferred',
       }),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 3, max: 200, defaultValue: 70 }),
-      numberInput('amountMg', 'Amount ingested (digoxin)', { unit: 'mg', min: 0, max: 50, step: 0.25, defaultValue: 5 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 3, max: 200, exampleValue: 70 }),
+      numberInput('amountMg', 'Amount ingested (digoxin)', { unit: 'mg', min: 0, max: 50, step: 0.25, exampleValue: 5 }),
     ],
     calculate(values) {
       const method = String(values.method ?? 'level');
@@ -469,7 +469,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
     whenToUse: 'Known or suspected salicylate poisoning with a quantitative level.',
     whyUse: 'Levels guide urgency, but chronic toxicity is severe at lower concentrations than acute.',
     inputs: [
-      numberInput('level', 'Serum salicylate', { unit: 'mg/dL', min: 0, max: 200, step: 0.1, defaultValue: 45 }),
+      numberInput('level', 'Serum salicylate', { unit: 'mg/dL', min: 0, max: 200, step: 0.1, exampleValue: 45 }),
       selectInput('chronicity', 'Context', [
         { label: 'Acute single ingestion', value: 'acute' },
         { label: 'Chronic / repeated supratherapeutic', value: 'chronic' },
@@ -578,7 +578,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
     whenToUse: 'Confirmed or highly suspected methanol or ethylene glycol poisoning.',
     whyUse: 'ADH inhibition is time-critical; weight-based dosing and redosing with HD differ from standard q12h.',
     inputs: [
-      numberInput('weight', 'Body weight', { unit: 'kg', min: 3, max: 200, step: 0.1, defaultValue: 70 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 3, max: 200, step: 0.1, exampleValue: 70 }),
       selectInput('phase', 'Dose to calculate', [
         { label: 'Loading dose (15 mg/kg)', value: 'load' },
         { label: 'Early maintenance (10 mg/kg) — doses 2–5', value: 'maint10' },
@@ -656,13 +656,13 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         min: 0.04,
         max: 10,
         step: 0.02,
-        defaultValue: 0.4,
+        exampleValue: 0.4,
       }),
       numberInput('weight', 'Weight (optional, for µg/kg/h display)', {
-        unit: 'kg',
+        unit: 'kg', unitKind: 'weight',
         min: 3,
         max: 200,
-        defaultValue: 70,
+        exampleValue: 70,
         required: false,
       }),
     ],
@@ -997,8 +997,18 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       yesNo('lacrimation', 'Lacrimation'),
       yesNo('urination', 'Urination'),
       yesNo('diarrhea', 'Diarrhea / defecation'),
-      yesNo('gi', 'GI upset / emesis'),
-      yesNo('emesis', 'Emesis (if separate)'),
+      yesNo(
+        'gi',
+        'GI upset / emesis (one combined feature)',
+        null,
+        'Select for gastrointestinal distress; this overlaps with the Emesis / vomiting entry below and is counted once when both are selected.',
+      ),
+      yesNo(
+        'emesis',
+        'Emesis / vomiting (same combined feature)',
+        null,
+        'If GI upset is also selected, the pair contributes one combined GI feature—not two points.',
+      ),
       yesNo('bronchorrhea', 'Bronchorrhea / bronchospasm'),
       yesNo('bradycardia', 'Bradycardia (muscarinic)', 1, 'HR typically <60 bpm (may be preceded by nicotinic tachycardia).'),
       yesNo('miosis', 'Miosis'),
@@ -1006,38 +1016,46 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       yesNo('ams', 'Altered mental status / seizures'),
     ],
     calculate(values) {
+      const giSelected = bool(values.gi);
+      const emesisSelected = bool(values.emesis);
+      const giEmesis = giSelected || emesisSelected;
       const keys = [
         'salivation',
         'lacrimation',
         'urination',
         'diarrhea',
-        'gi',
-        'emesis',
         'bronchorrhea',
         'bradycardia',
         'miosis',
         'muscle',
         'ams',
       ] as const;
-      const score = keys.reduce((s, k) => s + (bool(values[k]) ? 1 : 0), 0);
+      const score = keys.reduce((s, k) => s + (bool(values[k]) ? 1 : 0), 0) + (giEmesis ? 1 : 0);
       const wetAirway = bool(values.bronchorrhea) || bool(values.salivation);
+      const giEmesisDetail = giSelected && emesisSelected
+        ? 'Both selected — counted once'
+        : giSelected
+          ? 'GI upset selected'
+          : emesisSelected
+            ? 'Emesis selected'
+            : 'Not selected';
       const r = riskFromThresholds(score, [
         {
           max: 2,
           level: 'low',
-          label: 'Few features',
+          label: 'Few features (0–2)',
           interpretation: 'Limited cholinergic features on checklist.',
         },
         {
           max: 5,
           level: 'moderate',
-          label: 'Suggestive cholinergic pattern',
+          label: 'Suggestive cholinergic pattern (3–5)',
           interpretation: 'Multiple SLUDGE/DUMBBELS features — consider cholinergic toxicity; prepare atropine and airway equipment.',
         },
         {
-          max: 15,
+          max: 10,
           level: 'critical',
-          label: 'Strong cholinergic toxidrome',
+          label: 'Strong cholinergic toxidrome (6–10)',
           interpretation: 'Many cholinergic features — treat aggressively: decontaminate, atropine titrated to drying of secretions, pralidoxime for OP, benzos for seizures, critical care.',
         },
       ]);
@@ -1046,12 +1064,16 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         unit: 'features',
         ...r,
         riskLevel: wetAirway && score >= 3 ? 'critical' : r.riskLevel,
-        details: [{ label: 'Life-threat airway secretions/bronchospasm', value: wetAirway ? 'Present' : 'Not selected' }],
+        details: [
+          { label: 'GI upset / emesis (one feature)', value: giEmesisDetail },
+          { label: 'Distinct feature count', value: `${score} / 10` },
+          { label: 'Life-threat airway secretions/bronchospasm', value: wetAirway ? 'Present' : 'Not selected' },
+        ],
       };
     },
     evidence: {
-      summary: 'Cholinergic (muscarinic) toxidrome: SLUDGE/DUMBBELS — secretions, urination, diarrhea, bronchorrhea/bradycardia/bronchospasm, emesis, lacrimation, salivation, miosis; nicotinic: fasciculations/weakness.',
-      formula: 'Feature checklist',
+      summary: 'Cholinergic (muscarinic) toxidrome: SLUDGE/DUMBBELS — secretions, urination, diarrhea, bronchorrhea/bradycardia/bronchospasm, emesis, lacrimation, salivation, miosis; nicotinic: fasciculations/weakness. GI upset and emesis are overlapping entries and count as one combined checklist feature.',
+      formula: 'Feature checklist (10 distinct features; GI upset/emesis counted once when either or both are selected)',
       validation: 'Standard toxicology recognition tool; treatment titration is clinical (dry secretions), not score-based.',
       references: [
         {
@@ -1069,7 +1091,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         actions: ['PPE / decontamination', 'Atropine', 'Pralidoxime for OP', 'Benzodiazepines', 'Airway management'],
       },
     ],
-    pearls: ['Atropine endpoint is drying of secretions, not heart rate normalization alone.', 'Nicotinic effects may cause initial tachycardia.'],
+    pearls: ['Atropine endpoint is drying of secretions, not heart rate normalization alone.', 'Nicotinic effects may cause initial tachycardia.', 'GI upset and emesis overlap in this educational checklist and are intentionally counted as one feature.'],
   },
 
   // ─── 13. Opioid toxidrome ──────────────────────────────────────────────────
@@ -1169,15 +1191,15 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         min: 0,
         max: 10,
         step: 0.1,
-        defaultValue: 1,
+        exampleValue: 1,
         helpText: '20 cigarettes = 1 pack; e.g. 10 cig/day = 0.5',
       }),
-      numberInput('years', 'Years smoked', { unit: 'years', min: 0, max: 80, step: 0.5, defaultValue: 30 }),
+      numberInput('years', 'Years smoked', { unit: 'years', min: 0, max: 80, step: 0.5, exampleValue: 30 }),
       numberInput('cpd', 'Or cigarettes per day (optional override)', {
         unit: 'cig/day',
         min: 0,
         max: 100,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'If >0, packs/day is computed as cig/day ÷ 20',
         required: false,
       }),
@@ -1350,9 +1372,9 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
     whenToUse: 'Counseling on intake, documenting exposure, or estimating ethanol load.',
     whyUse: 'Volume × ABV is more accurate than “number of drinks” when pour sizes vary.',
     inputs: [
-      numberInput('volume', 'Drink volume', { unit: 'mL', min: 1, max: 5000, defaultValue: 355 }),
-      numberInput('abv', 'Alcohol by volume (ABV)', { unit: '%', min: 0.1, max: 95, step: 0.1, defaultValue: 5, helpText: 'Label % ABV. Typical: beer ~4–7%, wine ~12%, spirits ~40%.' }),
-      numberInput('count', 'Number of such drinks', { unit: 'drinks', min: 1, max: 30, defaultValue: 1 }),
+      numberInput('volume', 'Drink volume', { unit: 'mL', min: 1, max: 5000, exampleValue: 355 }),
+      numberInput('abv', 'Alcohol by volume (ABV)', { unit: '%', min: 0.1, max: 95, step: 0.1, exampleValue: 5, helpText: 'Label % ABV. Typical: beer ~4–7%, wine ~12%, spirits ~40%.' }),
+      numberInput('count', 'Number of such drinks', { unit: 'drinks', min: 1, max: 30, exampleValue: 1 }),
       selectInput('standardDef', 'Standard drink definition', [
         { label: 'US (14 g alcohol)', value: 'us' },
         { label: 'UK unit (8 g alcohol)', value: 'uk' },
@@ -1440,14 +1462,14 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
       ]),
-      numberInput('height', 'Height', { unit: 'in', min: 48, max: 90, step: 0.1, defaultValue: 70, helpText: 'All circumferences and height in inches (cm ÷ 2.54).' }),
-      numberInput('neck', 'Neck circumference', { unit: 'in', min: 8, max: 30, step: 0.1, defaultValue: 15, helpText: 'Just inferior to the larynx; tape perpendicular to the long axis of the neck.' }),
+      numberInput('height', 'Height', { unit: 'in', min: 48, max: 90, step: 0.1, exampleValue: 70, helpText: 'All circumferences and height in inches (cm ÷ 2.54).' }),
+      numberInput('neck', 'Neck circumference', { unit: 'in', min: 8, max: 30, step: 0.1, exampleValue: 15, helpText: 'Just inferior to the larynx; tape perpendicular to the long axis of the neck.' }),
       numberInput('waist', 'Abdomen / waist circumference', {
         unit: 'in',
         min: 15,
         max: 70,
         step: 0.1,
-        defaultValue: 34,
+        exampleValue: 34,
         helpText: 'Male: abdomen at navel. Female: waist at narrowest. All measurements in inches.',
       }),
       numberInput('hip', 'Hip circumference (female)', {
@@ -1455,7 +1477,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         min: 20,
         max: 80,
         step: 0.1,
-        defaultValue: 38,
+        exampleValue: 38,
         helpText: 'Required for female equation. Measure at the greatest protrusion of the buttocks. Inches.',
       }),
     ],
@@ -1568,8 +1590,8 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         { label: 'Female', value: 'female' },
         { label: 'Male', value: 'male' },
       ]),
-      numberInput('waist', 'Waist circumference', { unit: 'cm', min: 40, max: 200, defaultValue: 90, helpText: 'WHO: midpoint between the lowest rib and the iliac crest, at end-expiration. Same units as hip (cm).' }),
-      numberInput('hip', 'Hip circumference', { unit: 'cm', min: 50, max: 200, defaultValue: 100, helpText: 'Widest circumference over the buttocks. Same units as waist (cm).' }),
+      numberInput('waist', 'Waist circumference', { unit: 'cm', min: 40, max: 200, exampleValue: 90, helpText: 'WHO: midpoint between the lowest rib and the iliac crest, at end-expiration. Same units as hip (cm).' }),
+      numberInput('hip', 'Hip circumference', { unit: 'cm', min: 50, max: 200, exampleValue: 100, helpText: 'Widest circumference over the buttocks. Same units as waist (cm).' }),
     ],
     calculate(values) {
       const sex = String(values.sex ?? 'female');
@@ -1683,7 +1705,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         { label: 'Peripheral / rim calcifications (2)', value: 2, description: 'Complete or incomplete calcified rim' },
         { label: 'Punctate echogenic foci (3)', value: 3, description: '<1 mm non-shadowing foci, not large comet-tail (microcalcification correlate)' },
       ], undefined, 'ACR: large comet-tail ≥1 mm V-shaped in cysts (0); macrocalcification with shadow (1); rim (2); punctate <1 mm (3). If multiple types coexist, ACR sums points — this picker stores one value, so choose the highest-point type or pick the bin matching a 1–3 sum.'),
-      numberInput('size', 'Largest diameter', { unit: 'cm', min: 0.1, max: 10, step: 0.1, defaultValue: 1.5 }),
+      numberInput('size', 'Largest diameter', { unit: 'cm', min: 0.1, max: 10, step: 0.1, exampleValue: 1.5 }),
     ],
     calculate(values) {
       const compositionPoints: Record<string, number> = {

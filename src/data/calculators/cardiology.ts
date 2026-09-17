@@ -342,10 +342,10 @@ export const cardiologyCalcs: Calculator[] = [
     whenToUse: 'UA, NSTEMI, or STEMI for mortality risk stratification.',
     whyUse: 'Guideline-endorsed comprehensive ACS risk model; score >140 supports early invasive strategy in NSTE-ACS.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 65 }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 20, max: 250, defaultValue: 80 }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, defaultValue: 130 }),
-      numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.0, helpText: 'mg/dL (divide µmol/L by 88.4).' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 65 }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 20, max: 250, exampleValue: 80 }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, exampleValue: 130 }),
+      numberInput('creat', 'Creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 1.0, helpText: 'Serum creatinine; select µmol/L for SI lab reports.' }),
       selectInput('killip', 'Killip class', [
         { label: 'I — No HF (0)', value: 0, points: 0, description: 'No rales, no S3, no JVD' },
         { label: 'II — Rales / JVD (20)', value: 20, points: 20, description: 'S3 and/or rales occupying less than half the lung fields and/or JVD' },
@@ -704,7 +704,7 @@ export const cardiologyCalcs: Calculator[] = [
     whenToUse: 'Risk stratify confirmed acute PE for outpatient vs inpatient management.',
     whyUse: 'Identifies low-risk PE candidates for early discharge.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 60 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 60 }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 0 },
         { label: 'Male', value: 10 },
@@ -873,8 +873,8 @@ export const cardiologyCalcs: Calculator[] = [
     whenToUse: 'Shock, hypertension emergencies, ICU titration of pressors.',
     whyUse: 'MAP better reflects tissue perfusion pressure than SBP alone.',
     inputs: [
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 40, max: 300, defaultValue: 120 }),
-      numberInput('dbp', 'Diastolic BP', { unit: 'mmHg', min: 20, max: 200, defaultValue: 80 }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 40, max: 300, exampleValue: 120 }),
+      numberInput('dbp', 'Diastolic BP', { unit: 'mmHg', min: 20, max: 200, exampleValue: 80 }),
     ],
     calculate(values) {
       const sbp = num(values.sbp, 120);

@@ -159,16 +159,16 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'After diagnostic thoracentesis when distinguishing exudative from transudative effusion.',
     whyUse: 'Gold-standard first step; highly sensitive for exudates.',
     inputs: [
-      numberInput('pleuralProtein', 'Pleural fluid protein', { unit: 'g/dL', min: 0, max: 15, step: 0.1, defaultValue: 3.0, helpText: 'Same-day paired serum and pleural labs' }),
-      numberInput('serumProtein', 'Serum protein', { unit: 'g/dL', min: 0, max: 15, step: 0.1, defaultValue: 7.0, helpText: 'Draw serum the same day as thoracentesis' }),
-      numberInput('pleuralLdh', 'Pleural fluid LDH', { unit: 'U/L', min: 0, max: 5000, step: 1, defaultValue: 200, helpText: 'Same-day paired serum LDH' }),
-      numberInput('serumLdh', 'Serum LDH', { unit: 'U/L', min: 0, max: 5000, step: 1, defaultValue: 200, helpText: 'Draw serum the same day as thoracentesis' }),
+      numberInput('pleuralProtein', 'Pleural fluid protein', { unit: 'g/dL', min: 0, max: 15, step: 0.1, exampleValue: 3.0, helpText: 'Same-day paired serum and pleural labs' }),
+      numberInput('serumProtein', 'Serum protein', { unit: 'g/dL', min: 0, max: 15, step: 0.1, exampleValue: 7.0, helpText: 'Draw serum the same day as thoracentesis' }),
+      numberInput('pleuralLdh', 'Pleural fluid LDH', { unit: 'U/L', min: 0, max: 5000, step: 1, exampleValue: 200, helpText: 'Same-day paired serum LDH' }),
+      numberInput('serumLdh', 'Serum LDH', { unit: 'U/L', min: 0, max: 5000, step: 1, exampleValue: 200, helpText: 'Draw serum the same day as thoracentesis' }),
       numberInput('ldhUln', 'Serum LDH upper limit of normal', {
         unit: 'U/L',
         min: 100,
         max: 500,
         step: 1,
-        defaultValue: 200,
+        exampleValue: 200,
         helpText: 'Lab-specific ULN for serum LDH',
       }),
     ],
@@ -228,16 +228,39 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'Adults with CAP to estimate risk of needing IRVS (ICU-level support).',
     whyUse: 'Better identifies ICU need than CURB-65 alone in some cohorts.',
     inputs: [
-      yesNo('sbp', 'Systolic BP < 90 mmHg', 2),
-      yesNo('multilobar', 'Multilobar chest radiograph involvement', 1, 'Infiltrate involving more than one lobe on CXR (or equivalent CT).'),
-      yesNo('albumin', 'Albumin < 3.5 g/dL (35 g/L)', 1),
-      yesNo('rr', 'Respiratory rate elevated (age-adjusted)', 1, 'Age ≤50: RR ≥25; age >50: RR ≥30'),
-      yesNo('hr', 'Heart rate ≥ 125 bpm', 1),
-      yesNo('confusion', 'New onset confusion', 1, 'New disorientation to person, place, or time (or abbreviated mental test ≤8). Do not score chronic baseline dementia without acute change.'),
-      yesNo('oxygen', 'Low oxygenation (age-adjusted)', 2, 'Age ≤50: PaO₂ <70, SpO₂ ≤93%, or PaO₂/FiO₂ <333; age >50: PaO₂ <60, SpO₂ ≤90%, or PaO₂/FiO₂ <250'),
-      yesNo('ph', 'Arterial pH < 7.35', 2),
+      numberInput('age', 'Age', {
+        unit: 'years',
+        min: 18,
+        max: 110,
+        step: 1,
+        exampleValue: 40,
+        helpText: 'Age-adjusted thresholds use age ≤50 years versus age >50 years; enter age before scoring RR and oxygenation.',
+      }),
+      yesNo('sbp', 'Systolic BP < 90 mmHg', 2, undefined, false),
+      yesNo('multilobar', 'Multilobar chest radiograph involvement', 1, 'Infiltrate involving more than one lobe on CXR (or equivalent CT).', false),
+      yesNo('albumin', 'Albumin < 3.5 g/dL (35 g/L)', 1, undefined, false),
+      yesNo('rr', 'Respiratory rate elevated (age-adjusted)', 1, 'Age ≤50: RR ≥25; age >50: RR ≥30', false),
+      yesNo('hr', 'Heart rate ≥ 125 bpm', 1, undefined, false),
+      yesNo('confusion', 'New onset confusion', 1, 'New disorientation to person, place, or time (or abbreviated mental test ≤8). Do not score chronic baseline dementia without acute change.', false),
+      yesNo('oxygen', 'Low oxygenation (age-adjusted)', 2, 'Age ≤50: PaO₂ <70, SpO₂ ≤93%, or PaO₂/FiO₂ <333; age >50: PaO₂ <60, SpO₂ ≤90%, or PaO₂/FiO₂ <250', false),
+      yesNo('ph', 'Arterial pH < 7.35', 2, undefined, false),
     ],
     calculate(values) {
+      const age = num(values.age, Number.NaN);
+      if (!Number.isFinite(age)) {
+        return {
+          score: '—',
+          label: 'Age required',
+          interpretation: 'Enter the patient age to select the published age-adjusted respiratory-rate and oxygenation thresholds.',
+          riskLevel: 'info',
+          details: [{ label: 'Age', value: 'Not entered' }],
+        };
+      }
+      const ageAtMost50 = age <= 50;
+      const rrThreshold = ageAtMost50 ? '≥25' : '≥30';
+      const oxygenThreshold = ageAtMost50
+        ? 'PaO₂ <70 mmHg OR SpO₂ ≤93% OR PaO₂/FiO₂ <333'
+        : 'PaO₂ <60 mmHg OR SpO₂ ≤90% OR PaO₂/FiO₂ <250';
       const score =
         (bool(values.sbp) ? 2 : 0) +
         (bool(values.multilobar) ? 1 : 0) +
@@ -282,15 +305,19 @@ export const missingCardioPulmCalcs: Calculator[] = [
       return {
         score,
         ...r,
+        interpretation: `${r.interpretation} Age ${age} years uses RR ${rrThreshold} breaths/min and oxygenation ${oxygenThreshold}.`,
         details: [
+          { label: 'Age', value: Number.isFinite(age) ? `${age} years` : 'Not entered' },
+          { label: 'RR threshold used', value: `${rrThreshold} breaths/min (age ${ageAtMost50 ? '≤50' : '>50'} years)` },
+          { label: 'Oxygenation threshold used', value: oxygenThreshold },
           { label: 'Max score', value: '11' },
           { label: 'Endpoint', value: 'Need for IRVS (invasive/noninvasive vent or vasopressors)' },
         ],
       };
     },
     evidence: {
-      summary: 'SMART-COP identifies CAP patients likely to need intensive respiratory or vasopressor support; points favor SBP, oxygenation, and acidosis.',
-      formula: 'SBP<90 (2) + Multilobar (1) + Albumin<3.5 (1) + RR↑ (1) + HR≥125 (1) + Confusion (1) + low O₂ (2) + pH<7.35 (2)',
+      summary: 'SMART-COP identifies CAP patients likely to need intensive respiratory or vasopressor support; points favor SBP, oxygenation, and acidosis. Respiratory-rate and oxygenation criteria are age-adjusted at age 50.',
+      formula: 'SBP<90 (2) + Multilobar (1) + Albumin<3.5 (1) + age-adjusted RR (1; age ≤50: RR ≥25; age >50: RR ≥30) + HR≥125 (1) + Confusion (1) + age-adjusted low O₂ (2; age ≤50: PaO₂ <70 mmHg OR SpO₂ ≤93% OR PaO₂/FiO₂ <333; age >50: PaO₂ <60 mmHg OR SpO₂ ≤90% OR PaO₂/FiO₂ <250) + pH<7.35 (2)',
       validation: 'Derived and validated in Australian CAP cohorts (Charles et al.).',
       references: [
         { title: 'SMART-COP: a tool for predicting the need for intensive respiratory or vasopressor support in CAP', citation: 'Charles PG et al. Clin Infect Dis. 2008', year: 2008, pmid: '18558884',
@@ -397,8 +424,8 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'Hypoxemic respiratory failure when arterial blood gas is unavailable or for serial noninvasive monitoring.',
     whyUse: 'S/F correlates with P/F; useful triage and ARDS screening without ABG.',
     inputs: [
-      numberInput('spo2', 'SpO₂', { unit: '%', min: 50, max: 100, step: 1, defaultValue: 94, helpText: 'Prefer SpO₂ ≤97% for better correlation with PaO₂' }),
-      numberInput('fio2', 'FiO₂', { unit: 'fraction', min: 0.21, max: 1, step: 0.01, defaultValue: 0.4, helpText: 'Fraction (0.21 = room air, 1.0 = 100%). Estimate from device tables if only L/min is known.' }),
+      numberInput('spo2', 'SpO₂', { unit: '%', min: 50, max: 100, step: 1, exampleValue: 94, helpText: 'Prefer SpO₂ ≤97% for better correlation with PaO₂' }),
+      numberInput('fio2', 'FiO₂', { unit: 'fraction', unitKind: 'fio2', min: 0.21, max: 1, step: 0.01, exampleValue: 0.4, helpText: 'Estimate from device tables if only L/min is known.' }),
     ],
     calculate(values) {
       const spo2 = num(values.spo2, 94);
@@ -476,7 +503,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'ED patients with possible cardiac chest pain in accelerated diagnostic protocols.',
     whyUse: 'Identifies low-risk patients (with negative ECG/troponins) safe for early discharge.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 55, helpText: 'Mapped automatically: 18–45 → 2 points, then +2 per 5 years to ≥86 → 20' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 55, helpText: 'Mapped automatically: 18–45 → 2 points, then +2 per 5 years to ≥86 → 20' }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 0 },
         { label: 'Male (+6)', value: 6 },
@@ -504,6 +531,8 @@ export const missingCardioPulmCalcs: Calculator[] = [
       const score =
         agePts +
         num(values.sex) +
+        // The published EDACS gates the +4 "known CAD or ≥3 risk factors" term
+        // to age 18–50; it is not applied at older ages.
         (bool(values.riskCad) && age >= 18 && age <= 50 ? 4 : 0) +
         (bool(values.diaphoresis) ? 3 : 0) +
         (bool(values.radiates) ? 5 : 0) +
@@ -542,7 +571,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
     },
     evidence: {
       summary: 'EDACS plus ECG and 0/2h troponins (EDACS-ADP) safely identifies low-risk chest pain for early discharge.',
-      formula: 'Age points (2–20) + male (6) + known CAD/≥3 RF (4) + diaphoresis (3) + radiation (5) − pleuritic (4) − reproduced (6)',
+      formula: 'Age points (2–20) + male (6) + known CAD/≥3 RF at age 18–50 (4) + diaphoresis (3) + radiation (5) − pleuritic (4) − reproduced (6); reachable range −8 to 34',
       validation: 'Derived and validated in Australasian ED cohorts; implemented in accelerated diagnostic protocols.',
       references: [
         { title: 'Development and validation of the EDACS', citation: 'Than M et al. Emerg Med Australas. 2014', year: 2014, pmid: '24428678',
@@ -778,7 +807,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
         min: 0,
         max: 21,
         step: 0.1,
-        defaultValue: 8,
+        exampleValue: 8,
         helpText: 'Minutes on standard Bruce protocol',
       }),
       numberInput('stDev', 'Max net ST-segment deviation', {
@@ -786,7 +815,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
         min: 0,
         max: 10,
         step: 0.1,
-        defaultValue: 1,
+        exampleValue: 1,
         helpText: 'Largest net ST-segment deviation from the resting baseline, any lead, during or immediately after exercise, in mm (enter absolute value). Measure 60–80 ms after the J-point. Do not score if ST is uninterpretable (LBBB, ventricular paced, digoxin, ≥1 mm resting ST-T changes).',
       }),
       selectInput('angina', 'Exercise angina index', [
@@ -863,8 +892,8 @@ export const missingCardioPulmCalcs: Calculator[] = [
       yesNo('timing', 'Timing: within 1 week of known clinical insult or new/worsening respiratory symptoms', 0, 'Must begin within 1 week of a known insult (e.g., pneumonia, sepsis, aspiration, trauma) or new/worsening respiratory symptoms.'),
       yesNo('imaging', 'Imaging: bilateral opacities not fully explained by effusions, lobar/lung collapse, or nodules', 0, 'CXR or CT: bilateral opacities consistent with pulmonary edema, not fully explained by effusion, collapse, or nodules.'),
       yesNo('origin', 'Origin: respiratory failure not fully explained by cardiac failure or fluid overload', 0, 'Need objective assessment (e.g., echo) if no risk factor present'),
-      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, defaultValue: 80, helpText: 'Arterial PaO2 on the same ABG as the FiO2 below' }),
-      numberInput('fio2', 'FiO₂', { unit: 'fraction', min: 0.21, max: 1, step: 0.01, defaultValue: 0.5, helpText: 'Fraction (0.21 = room air, 1.0 = 100%). Berlin: mild P/F 201–300, moderate 101–200, severe ≤100 (all with PEEP/CPAP ≥5).' }),
+      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 80, helpText: 'Arterial PaO2 on the same ABG as the FiO2 below' }),
+      numberInput('fio2', 'FiO₂', { unit: 'fraction', unitKind: 'fio2', min: 0.21, max: 1, step: 0.01, exampleValue: 0.5, helpText: 'Berlin: mild P/F 201–300, moderate 101–200, severe ≤100 (all with PEEP/CPAP ≥5).' }),
       yesNo('peep', 'PEEP or CPAP ≥ 5 cmH₂O', 0, 'Invasive PEEP or noninvasive CPAP/PEEP ≥5 cm H2O is required for the Berlin definition.'),
     ],
     calculate(values) {
@@ -959,15 +988,15 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'When serum protein/LDH simultaneous values are unavailable, or as a simplified adjunct to Light’s.',
     whyUse: 'Uses pleural fluid values alone; practical when paired serum labs are missing.',
     inputs: [
-      numberInput('pleuralProtein', 'Pleural fluid protein', { unit: 'g/dL', min: 0, max: 15, step: 0.1, defaultValue: 3.0, helpText: 'Heffner exudate if pleural protein >2.9 g/dL' }),
-      numberInput('pleuralChol', 'Pleural fluid cholesterol', { unit: 'mg/dL', min: 0, max: 300, step: 1, defaultValue: 50, helpText: 'Heffner exudate if pleural cholesterol >45 mg/dL' }),
-      numberInput('pleuralLdh', 'Pleural fluid LDH', { unit: 'U/L', min: 0, max: 5000, step: 1, defaultValue: 200, helpText: 'Heffner exudate if pleural LDH > 0.45 × lab serum LDH ULN' }),
+      numberInput('pleuralProtein', 'Pleural fluid protein', { unit: 'g/dL', min: 0, max: 15, step: 0.1, exampleValue: 3.0, helpText: 'Heffner exudate if pleural protein >2.9 g/dL' }),
+      numberInput('pleuralChol', 'Pleural fluid cholesterol', { unit: 'mg/dL', min: 0, max: 300, step: 1, exampleValue: 50, helpText: 'Heffner exudate if pleural cholesterol >45 mg/dL' }),
+      numberInput('pleuralLdh', 'Pleural fluid LDH', { unit: 'U/L', min: 0, max: 5000, step: 1, exampleValue: 200, helpText: 'Heffner exudate if pleural LDH > 0.45 × lab serum LDH ULN' }),
       numberInput('ldhUln', 'Serum LDH upper limit of normal', {
         unit: 'U/L',
         min: 100,
         max: 500,
         step: 1,
-        defaultValue: 200,
+        exampleValue: 200,
         helpText: 'Used for 0.45 × ULN cutoff',
       }),
     ],
@@ -1021,8 +1050,8 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'Cardiogenic shock or advanced HF with measured/estimated CO and MAP available.',
     whyUse: 'Strong hemodynamic correlate of prognosis in cardiogenic shock (e.g., SHOCK trial analyses).',
     inputs: [
-      numberInput('map', 'Mean arterial pressure (MAP)', { unit: 'mmHg', min: 20, max: 200, defaultValue: 70, helpText: 'If MAP not measured: DBP + (SBP − DBP)/3' }),
-      numberInput('co', 'Cardiac output (CO)', { unit: 'L/min', min: 0.5, max: 15, step: 0.1, defaultValue: 4.0 }),
+      numberInput('map', 'Mean arterial pressure (MAP)', { unit: 'mmHg', min: 20, max: 200, exampleValue: 70, helpText: 'If MAP not measured: DBP + (SBP − DBP)/3' }),
+      numberInput('co', 'Cardiac output (CO)', { unit: 'L/min', min: 0.5, max: 15, step: 0.1, exampleValue: 4.0 }),
     ],
     calculate(values) {
       const map = num(values.map, 70);
@@ -1093,9 +1122,9 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'Trauma, sepsis, or hemorrhage triage when occult shock is a concern, especially in older adults.',
     whyUse: 'Age adjustment improves prediction of mortality/transfusion need vs raw shock index in some studies.',
     inputs: [
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 20, max: 250, defaultValue: 100 }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 40, max: 250, defaultValue: 110 }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 65, helpText: 'Adult ASI bands (≥50 / ≥70) are for adults. Not validated in children — use classic shock index (~0.9) in pediatrics.' }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 20, max: 250, exampleValue: 100 }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 40, max: 250, exampleValue: 110 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 65, helpText: 'Adult ASI bands (≥50 / ≥70) are for adults. Not validated in children — use classic shock index (~0.9) in pediatrics.' }),
     ],
     calculate(values) {
       const hr = num(values.hr, 100);
@@ -1192,16 +1221,16 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whyUse:
       'AHA 2023 scientific statement and 2024 PREVENT equations replace race-based PCEs with a CKM-aware, race-free base model using lipids, BP, BMI, eGFR, diabetes, smoking, antihypertensive and statin therapy. This tool is the base equation only (no UACR/HbA1c/SDI add-on).',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 30, max: 79, defaultValue: 55 }),
+      numberInput('age', 'Age', { unit: 'years', min: 30, max: 79, exampleValue: 55 }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
       ]),
-      numberInput('totalChol', 'Total cholesterol', { unit: 'mg/dL', min: 100, max: 400, defaultValue: 200 }),
-      numberInput('hdl', 'HDL cholesterol', { unit: 'mg/dL', min: 20, max: 120, defaultValue: 50 }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 80, max: 200, defaultValue: 130 }),
-      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 50, step: 0.1, defaultValue: 28 }),
-      numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 15, max: 140, defaultValue: 90 }),
+      numberInput('totalChol', 'Total cholesterol', { unit: 'mg/dL', min: 100, max: 400, exampleValue: 200 }),
+      numberInput('hdl', 'HDL cholesterol', { unit: 'mg/dL', min: 20, max: 120, exampleValue: 50 }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 80, max: 200, exampleValue: 130 }),
+      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 50, step: 0.1, exampleValue: 28 }),
+      numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 15, max: 140, exampleValue: 90 }),
       yesNo('diabetes', 'Diabetes mellitus', null),
       yesNo('smoker', 'Current smoker', null),
       yesNo('bpTx', 'On antihypertensive therapy', null),

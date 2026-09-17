@@ -1,8 +1,6 @@
 import type { Calculator } from '../../types/calculator';
 import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
-const questionnaireMetadata = { questionnaire: true as const };
-
 const eat26ForwardOptions = [
   { label: 'Always (3 points)', value: 'always', points: 3 },
   { label: 'Usually (2 points)', value: 'usually', points: 2 },
@@ -50,7 +48,12 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 1. PDSS (Panic Disorder Severity Scale) ───────────────────────────────
   {
     id: 'panic-pdss',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
+    },
     name: 'Panic Disorder Severity Scale (PDSS) Total',
     shortName: 'PDSS',
     description:
@@ -118,7 +121,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       numberInput('score', 'Direct PDSS total override (0–28)', {
         min: 0,
         max: 28,
-        defaultValue: 10,
+        exampleValue: 10,
         helpText: 'Direct score override (0–28). Used when entry mode is set to direct or when passing precomputed totals.',
       }),
     ],
@@ -227,7 +230,12 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 2. LSAS (Liebowitz Social Anxiety Scale) ──────────────────────────────
   {
     id: 'lsas-social',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
+    },
     name: 'Liebowitz Social Anxiety Scale (LSAS) Total',
     shortName: 'LSAS',
     description:
@@ -532,7 +540,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       numberInput('score', 'Direct LSAS total override (0–144)', {
         min: 0,
         max: 144,
-        defaultValue: 55,
+        exampleValue: 55,
         helpText: 'Direct LSAS total override: 24 situations × (fear 0–3 + avoidance 0–3).',
       }),
     ],
@@ -639,7 +647,12 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 3. EAT-26 ─────────────────────────────────────────────────────────────
   {
     id: 'eat-26',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['behaviors', 'score'],
+    },
     name: 'EAT-26 Eating Attitudes Total',
     shortName: 'EAT-26',
     description:
@@ -697,14 +710,14 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       numberInput('score', 'Direct EAT-26 total override (0–78)', {
         min: 0,
         max: 78,
-        defaultValue: 18,
+        exampleValue: 18,
         helpText: 'Direct 26-item attitude total override (0–78).',
       }),
       numberInput('bmi', 'BMI (optional context)', {
         min: 10,
         max: 60,
         step: 0.1,
-        defaultValue: 22,
+        exampleValue: 22,
         helpText: 'Low BMI raises urgency independent of score',
         required: false,
       }),
@@ -817,7 +830,12 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 4. M-CHAT-R ───────────────────────────────────────────────────────────
   {
     id: 'mchat-r',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
+    },
     name: 'M-CHAT-R Autism Toddler Score',
     shortName: 'M-CHAT-R',
     description:
@@ -1034,7 +1052,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       numberInput('score', 'Direct M-CHAT-R total failed items override (0–20)', {
         min: 0,
         max: 20,
-        defaultValue: 3,
+        exampleValue: 3,
         helpText: 'Direct count of failed items (0–20).',
       }),
     ],
@@ -1125,8 +1143,24 @@ export const wave6PsychSleepCalcs: Calculator[] = [
 
   // ─── 5. Vanderbilt ADHD ────────────────────────────────────────────────────
   {
+    isQuestionnaire: true,
     id: 'vanderbilt-adhd',
-    ...questionnaireMetadata,
+    // Explicit branch declaration: the informant is required in BOTH branches
+    // (parent vs teacher forms differ), so each mode lists its active fields
+    // rather than relying on `directInputIds`, which are direct-branch only.
+    questionnaire: {
+      directModeValues: ['direct'],
+      modeInputId: 'entryMode',
+      activeInputIdsByMode: {
+        survey: [
+          'informant',
+          'inatt_1', 'inatt_2', 'inatt_3', 'inatt_4', 'inatt_5', 'inatt_6', 'inatt_7', 'inatt_8', 'inatt_9',
+          'hyper_1', 'hyper_2', 'hyper_3', 'hyper_4', 'hyper_5', 'hyper_6', 'hyper_7', 'hyper_8', 'hyper_9',
+          'perf_1', 'perf_2', 'perf_3', 'perf_4', 'perf_5', 'perf_6', 'perf_7', 'perf_8',
+        ],
+        direct: ['informant', 'inatt', 'hyper', 'perf'],
+      },
+    },
     name: 'Vanderbilt ADHD Rating Scale & Criteria',
     shortName: 'Vanderbilt',
     description:
@@ -1313,27 +1347,42 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       numberInput('inatt', 'Direct Inattention items count “Often/Very often” (0–9)', {
         min: 0,
         max: 9,
-        defaultValue: 6,
+        exampleValue: 6,
         helpText: 'Count of inattention items rated 2 (Often) or 3 (Very often).',
       }),
       numberInput('hyper', 'Direct Hyperactivity items count “Often/Very often” (0–9)', {
         min: 0,
         max: 9,
-        defaultValue: 4,
+        exampleValue: 4,
         helpText: 'Count of hyperactivity/impulsivity items rated 2 (Often) or 3 (Very often).',
       }),
       numberInput('perf', 'Direct Performance items count rated 4 or 5 (0–8)', {
         min: 0,
         max: 8,
-        defaultValue: 1,
+        exampleValue: 1,
         helpText: 'Count of performance items scored 4 (Somewhat of a problem) or 5 (Problematic).',
       }),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');
+      const informant = typeof values.informant === 'string' && values.informant !== '' ? values.informant : '';
       let inatt: number;
       let hyper: number;
       let perf: number;
+
+      // Without a declared informant the screen is not interpretable (home and
+      // school reports are not interchangeable). Fail closed rather than
+      // reporting a symptom pattern against an assumed parent form.
+      if (informant === '') {
+        return {
+          score: '—',
+          label: 'Select the informant',
+          interpretation:
+            'Choose whether this form was completed by a parent/caregiver or a teacher. Vanderbilt thresholds are informant-specific, and a diagnosis needs symptoms across settings.',
+          riskLevel: 'info',
+          details: [{ label: 'Informant', value: 'Required' }],
+        };
+      }
 
       if (mode === 'direct' || (values.inatt !== undefined && values.entryMode === undefined && values.inatt_1 === undefined)) {
         inatt = num(values.inatt, 6);
@@ -1399,7 +1448,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
           { label: 'Hyperactivity count', value: `${hyper}/9 ${hyperPos ? '(≥6 ✓)' : ''}` },
           { label: 'Performance problems', value: `${perf} item(s) rated 4–5 ${perfPos ? '(✓)' : ''}` },
           { label: 'Pattern', value: subtype },
-          { label: 'Informant', value: String(values.informant ?? 'parent') },
+          { label: 'Informant', value: informant === 'teacher' ? 'Teacher' : 'Parent' },
         ],
         recommendations: [
           'Require multi-setting symptoms for diagnosis',
@@ -1448,7 +1497,12 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 6. CUDIT-R ────────────────────────────────────────────────────────────
   {
     id: 'cudit-r',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
+    },
     name: 'CUDIT-R Cannabis Use Total',
     shortName: 'CUDIT-R',
     description:
@@ -1519,7 +1573,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       numberInput('score', 'Direct CUDIT-R total override (0–32)', {
         min: 0,
         max: 32,
-        defaultValue: 10,
+        exampleValue: 10,
         helpText: 'Direct CUDIT-R total (0–32).',
       }),
     ],
@@ -1631,7 +1685,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         min: 0,
         max: 200,
         step: 0.125,
-        defaultValue: 2,
+        exampleValue: 2,
         helpText: 'Total daily oral dose (scheduled + 24 h PRN) of the selected benzodiazepine, in mg.',
       }),
     ],
@@ -1754,7 +1808,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         min: 0,
         max: 5000,
         step: 0.5,
-        defaultValue: 10,
+        exampleValue: 10,
         helpText: 'Total 24-hour morphine dose in the selected current route (IV/SC or oral), not a single dose.',
       }),
       selectInput('ratio', 'IV:PO ratio used', [
@@ -1857,14 +1911,14 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     category: 'psychiatry',
     tags: ['cows', 'buprenorphine', 'opioid', 'withdrawal', 'induction', 'oud'],
     whenToUse:
-      'Before traditional transmucosal buprenorphine induction when patient is in opioid withdrawal; enter COWS total.',
+      'Before traditional transmucosal buprenorphine induction when patient is in opioid withdrawal; enter the COWS total, last full-agonist context, and prior precipitated-withdrawal history.',
     whyUse:
-      'Starting buprenorphine too early precipitates withdrawal; adequate COWS reduces that risk (protocol-dependent).',
+      'Starting buprenorphine too early precipitates withdrawal; adequate COWS reduces that risk (protocol-dependent). All three clinical inputs are required before this tool returns a result.',
     inputs: [
       numberInput('cows', 'COWS total (0–48)', {
         min: 0,
         max: 48,
-        defaultValue: 10,
+        exampleValue: 10,
         helpText: 'Enter the official 11-item COWS total (0–48) from the Wesson/Ling form (pulse, GI upset, sweating, restlessness, pupil size, bone/joint aches, runny nose/tearing, yawning, tremor, anxiety/irritability, gooseflesh). Traditional transmucosal induction often waits for COWS ≥8–12 plus adequate time off full agonist.',
       }),
       selectInput('last_opioid', 'Last full agonist timing / type context', [
@@ -1876,9 +1930,56 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       yesNo('prior_precip', 'History of precipitated withdrawal with buprenorphine', 0),
     ],
     calculate(values) {
-      const cows = num(values.cows, 10);
-      const last = String(values.last_opioid ?? 'short');
-      const prior = bool(values.prior_precip);
+      // COWS readiness and induction context are unsafe to infer.  The page
+      // normally gates the form, but calculate() is also called directly by
+      // tests, integrations, and other consumers; never replace a missing
+      // answer with a clinical default here.
+      const required = [
+        { id: 'cows', label: 'COWS total (0–48)', numeric: true },
+        { id: 'last_opioid', label: 'Last full agonist timing / type context', numeric: false },
+        { id: 'prior_precip', label: 'History of precipitated withdrawal with buprenorphine', numeric: false },
+      ];
+      const missing = required.filter((input) => isMissingValue(values[input.id], input.numeric));
+      if (missing.length > 0) {
+        return {
+          score: '—',
+          unit: 'COWS',
+          label: 'Enter all required inputs',
+          interpretation: 'No COWS result is available until every required clinical input is entered explicitly.',
+          riskLevel: 'info',
+          details: missing.map((input) => ({ label: input.label, value: 'Required' })),
+        };
+      }
+
+      const cowsRaw = values.cows;
+      const cows = num(cowsRaw, Number.NaN);
+      const last = String(values.last_opioid);
+      const priorRaw = values.prior_precip;
+      const prior = typeof priorRaw === 'string' ? bool(priorRaw.toLowerCase()) : bool(priorRaw);
+      const allowedLastOpioids = new Set(['short', 'long', 'methadone', 'fentanyl']);
+      const explicitPrior =
+        typeof priorRaw === 'boolean' ||
+        priorRaw === 0 ||
+        priorRaw === 1 ||
+        (typeof priorRaw === 'string' && ['true', 'false', 'yes', 'no', '1', '0'].includes(priorRaw.toLowerCase()));
+      if (
+        (typeof cowsRaw !== 'number' && typeof cowsRaw !== 'string') ||
+        !Number.isFinite(cows) ||
+        !Number.isInteger(cows) ||
+        cows < 0 ||
+        cows > 48 ||
+        !allowedLastOpioids.has(last) ||
+        !explicitPrior
+      ) {
+        return {
+          score: '—',
+          unit: 'COWS',
+          label: 'Invalid input',
+          interpretation: 'No COWS result is available because one or more entered values is outside the allowed input set.',
+          riskLevel: 'info',
+          details: [{ label: 'Allowed COWS range', value: '0–48' }],
+        };
+      }
       // Traditional teaching: often COWS ≥8–12 before first dose
       const r = riskFromThresholds(cows, [
         {
@@ -1945,7 +2046,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'COWS (0–48) grades opioid withdrawal. Traditional buprenorphine induction often waits for mild–moderate withdrawal (commonly COWS ≥8–12) plus adequate time off full agonists to reduce precipitated withdrawal.',
+        'COWS (0–48) grades opioid withdrawal. Traditional buprenorphine induction often waits for mild–moderate withdrawal (commonly COWS ≥8–12) plus adequate time off full agonists to reduce precipitated withdrawal; SAMHSA TIP 63 notes that COWS ≥12 is typically adequate for a first dose and withdrawal should be present.',
       formula: 'Enter COWS total; interpret readiness with opioid type/timing',
       validation:
         'COWS is a standard clinical withdrawal scale; induction cutoffs are protocol-based rather than a single universal trial endpoint.',
@@ -1956,6 +2057,12 @@ export const wave6PsychSleepCalcs: Calculator[] = [
           year: 2003,
           pmid: '12924748',
           doi: '10.1080/02791072.2003.10400007',
+        },
+        {
+          title: 'TIP 63: Medications for Opioid Use Disorder — Part 3: Pharmacotherapy for Opioid Use Disorder',
+          citation: 'Substance Abuse and Mental Health Services Administration. 2021. TIP 63 (COWS or CINA can assess withdrawal; withdrawal should be present before the first buprenorphine dose; COWS ≥12 is typically adequate).',
+          year: 2021,
+          url: 'https://library.samhsa.gov/sites/default/files/SAMHSA_Digital_Download/PEP20-02-01-006.pdf',
         },
       ],
     },
@@ -1978,7 +2085,12 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 10. painDETECT ────────────────────────────────────────────────────────
   {
     id: 'pain-detect',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
+    },
     name: 'painDETECT Questionnaire Total',
     shortName: 'painDETECT',
     description:
@@ -2023,7 +2135,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       numberInput('score', 'Direct painDETECT total override (−1 to 38)', {
         min: -1,
         max: 38,
-        defaultValue: 14,
+        exampleValue: 14,
         helpText: 'Direct total: 7 sensory items (0–35) + course pattern (−1 to +1) + radiation (0 or +2). Range −1 to 38.',
       }),
     ],
@@ -2122,21 +2234,21 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         min: 0,
         max: 10,
         step: 0.5,
-        defaultValue: 6,
+        exampleValue: 6,
         helpText: 'Krebs PEG: “What number best describes your pain on average in the past week?” 0 = no pain; 10 = pain as bad as you can imagine.',
       }),
       numberInput('enjoyment', 'Pain interference with enjoyment of life (0–10)', {
         min: 0,
         max: 10,
         step: 0.5,
-        defaultValue: 5,
+        exampleValue: 5,
         helpText: '“What number best describes how, during the past week, pain has interfered with your enjoyment of life?” 0 = does not interfere; 10 = completely interferes.',
       }),
       numberInput('activity', 'Pain interference with general activity (0–10)', {
         min: 0,
         max: 10,
         step: 0.5,
-        defaultValue: 5,
+        exampleValue: 5,
         helpText: '“What number best describes how, during the past week, pain has interfered with your general activity?” 0 = does not interfere; 10 = completely interferes.',
       }),
     ],
@@ -2211,7 +2323,12 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 12. BPI interference ──────────────────────────────────────────────────
   {
     id: 'bpi-interference',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['avg'],
+    },
     name: 'BPI Pain Interference Average',
     shortName: 'BPI Interference',
     description:
@@ -2238,7 +2355,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
           min: 0,
           max: 10,
           step: 0.5,
-          defaultValue: i === 5 ? 6 : 4,
+          exampleValue: i === 5 ? 6 : 4,
           helpText: '0 = Does not interfere; 10 = Completely interferes',
         }),
       ),
@@ -2246,14 +2363,14 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         min: 0,
         max: 10,
         step: 0.1,
-        defaultValue: 4.5,
+        exampleValue: 4.5,
         helpText: 'Mean of the 7 interference ratings (0–10).',
       }),
       numberInput('worst', 'Worst pain in last 24 h (optional)', {
         min: 0,
         max: 10,
         step: 0.5,
-        defaultValue: 6,
+        exampleValue: 6,
         required: false,
         helpText: 'Optional BPI “worst pain in the last 24 hours” (0 = no pain, 10 = pain as bad as you can imagine). Context only.',
       }),
@@ -2414,7 +2531,12 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 14. Barthel Index ─────────────────────────────────────────────────────
   {
     id: 'barthel-index',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
+    },
     name: 'Barthel ADL Index Total',
     shortName: 'Barthel',
     description:
@@ -2482,7 +2604,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
         min: 0,
         max: 100,
         step: 5,
-        defaultValue: 60,
+        exampleValue: 60,
         helpText: 'Enter official Mahoney/Collin 0–100 total (5-point increments).',
       }),
     ],
@@ -2688,13 +2810,13 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     whenToUse: 'Educational severity framing with first-day ICU physiologic derangement (not for formal benchmarking).',
     whyUse: 'OASIS uses a limited variable set vs APACHE; this tool approximates risk bands for teaching.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 16, max: 120, defaultValue: 65, helpText: 'Educational map: <40 = 0; 40–49 = 2; 50–59 = 3; 60–69 = 5; 70–79 = 7; ≥80 = 9.' }),
-      numberInput('gcs', 'Worst GCS (3–15)', { min: 3, max: 15, defaultValue: 14, helpText: 'Lowest first-day GCS 3–15. If intubated, estimate verbal — do not enter 1 for a T-tube unless there is no verbal response. Educational map: 15 = 0; 14 = 1; 11–13 = 4; 8–10 = 7; ≤7 = 10.' }),
-      numberInput('hr', 'Heart rate (most abnormal, high or low)', { unit: '/min', min: 20, max: 300, defaultValue: 110, helpText: 'Worst first-day HR (tachycardia or bradycardia). Educational map: ≥150 = 6; 120–149 = 4; 110–119 = 2; also HR <40 = 4.' }),
-      numberInput('map', 'Mean arterial pressure (lowest)', { unit: 'mmHg', min: 20, max: 200, defaultValue: 70, helpText: 'Lowest first-day MAP. Educational map: ≥70 = 0; 60–69 = 2; 40–59 = 4; <40 = 6.' }),
-      numberInput('rr', 'Respiratory rate (most abnormal, high or low)', { unit: '/min', min: 4, max: 80, defaultValue: 24, helpText: 'Worst first-day RR (tachypnea or bradypnea). Educational map: ≥40 = 6; 30–39 = 4; 22–29 = 2; also RR ≤6 = 6.' }),
-      numberInput('temp', 'Temperature (most abnormal, °C)', { unit: '°C', min: 30, max: 43, step: 0.1, defaultValue: 37.5, helpText: 'Most abnormal first-day temperature. Educational map: 35–38.9 = 0; 33–34.9 or 39–39.9 = 2; <33 or ≥40 = 4.' }),
-      numberInput('uop', 'Urine output (24 h)', { unit: 'mL', min: 0, max: 10000, defaultValue: 1200, helpText: '24-hour urine output. Educational map: ≥1000 mL = 0; 500–999 = 2; 100–499 = 5; <100 = 8.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 16, max: 120, exampleValue: 65, helpText: 'Educational map: <40 = 0; 40–49 = 2; 50–59 = 3; 60–69 = 5; 70–79 = 7; ≥80 = 9.' }),
+      numberInput('gcs', 'Worst GCS (3–15)', { min: 3, max: 15, exampleValue: 14, helpText: 'Lowest first-day GCS 3–15. If intubated, estimate verbal — do not enter 1 for a T-tube unless there is no verbal response. Educational map: 15 = 0; 14 = 1; 11–13 = 4; 8–10 = 7; ≤7 = 10.' }),
+      numberInput('hr', 'Heart rate (most abnormal, high or low)', { unit: '/min', min: 20, max: 300, exampleValue: 110, helpText: 'Worst first-day HR (tachycardia or bradycardia). Educational map: ≥150 = 6; 120–149 = 4; 110–119 = 2; also HR <40 = 4.' }),
+      numberInput('map', 'Mean arterial pressure (lowest)', { unit: 'mmHg', min: 20, max: 200, exampleValue: 70, helpText: 'Lowest first-day MAP. Educational map: ≥70 = 0; 60–69 = 2; 40–59 = 4; <40 = 6.' }),
+      numberInput('rr', 'Respiratory rate (most abnormal, high or low)', { unit: '/min', min: 4, max: 80, exampleValue: 24, helpText: 'Worst first-day RR (tachypnea or bradypnea). Educational map: ≥40 = 6; 30–39 = 4; 22–29 = 2; also RR ≤6 = 6.' }),
+      numberInput('temp', 'Temperature (most abnormal, °C)', { unit: '°C', min: 30, max: 43, step: 0.1, exampleValue: 37.5, helpText: 'Most abnormal first-day temperature. Educational map: 35–38.9 = 0; 33–34.9 or 39–39.9 = 2; <33 or ≥40 = 4.' }),
+      numberInput('uop', 'Urine output (24 h)', { unit: 'mL', min: 0, max: 10000, exampleValue: 1200, helpText: '24-hour urine output. Educational map: ≥1000 mL = 0; 500–999 = 2; 100–499 = 5; <100 = 8.' }),
       yesNo('vent', 'Mechanical ventilation (day 1)', 9, 'Day-1 invasive mechanical ventilation (intubated or tracheostomy on a ventilator).'),
       yesNo('emergency', 'Emergency admission', 2, 'Emergency/non-elective ICU admission. Elective surgical admissions do not receive this burden point.'),
       yesNo('cancer', 'Pre-ICU hospital length of stay prolonged / cancer context (educational flag)', 2, 'Educational flag — not official OASIS. Official OASIS uses continuous pre-ICU length of stay (hours/days) and does not have a cancer item.'),
@@ -2828,7 +2950,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
     whenToUse: 'Educational review of selected ICU admission variables from 1 hour before to 1 hour after admission; not for mortality prediction or benchmarking.',
     whyUse: 'Shows how selected admission-window variables contribute to a point total while making clear that this is not the complete SAPS 3 model.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 16, max: 120, defaultValue: 70, helpText: 'SAPS 3 age points: <40 = 0; 40–59 = 5; 60–69 = 9; 70–74 = 13; 75–79 = 15; ≥80 = 18.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 16, max: 120, exampleValue: 70, helpText: 'SAPS 3 age points: <40 = 0; 40–59 = 5; 60–69 = 9; 70–74 = 13; 75–79 = 15; ≥80 = 18.' }),
       selectInput('los_before', 'Hospital LOS before ICU', [
         { label: '<14 days', value: 0 },
         { label: '14–27 days', value: 6 },
@@ -2873,15 +2995,15 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       yesNo('cirrhosis', 'Cirrhosis', null, 'Documented cirrhosis (imaging, biopsy, or decompensation) — not isolated steatosis/MASLD. Highest comorbidity wins.'),
       yesNo('heart_fail', 'Chronic heart failure NYHA IV', null, 'NYHA IV: symptoms of HF at rest; unable to carry on any physical activity without discomfort. Highest comorbidity wins.'),
       yesNo('aids', 'AIDS', null, 'CDC/WHO AIDS (opportunistic infection or AIDS-defining illness) — not asymptomatic HIV. Highest comorbidity wins.'),
-      numberInput('gcs', 'Lowest GCS (admission hour)', { min: 3, max: 15, defaultValue: 13, helpText: 'Lowest estimated GCS in the admission hour (±1 h). Estimate the verbal score if intubated or sedated; do not record VT as 1 unless truly no verbal response. Points: ≥13 = 0; 7–12 = 2; 6 = 7; 5 = 10; ≤4 = 15.' }),
-      numberInput('sbp', 'Lowest systolic BP', { unit: 'mmHg', min: 0, max: 250, defaultValue: 100, helpText: 'Lowest SBP in the admission hour. ≥120 = 0; 70–119 = 3; 40–69 = 8; <40 = 11.' }),
-      numberInput('hr', 'Highest heart rate', { unit: '/min', min: 30, max: 250, defaultValue: 100, helpText: 'Highest HR in the admission hour. <120 = 0; 120–159 = 5; ≥160 = 7.' }),
-      numberInput('bili', 'Highest total bilirubin', { unit: 'mg/dL', min: 0, max: 40, step: 0.1, defaultValue: 1, helpText: 'Highest total bilirubin (mg/dL) in the admission hour. <2 = 0; 2–5.9 = 4; ≥6 = 5.' }),
-      numberInput('cr', 'Highest creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.2, helpText: 'Highest creatinine (mg/dL) in the admission hour. <1.2 = 0; 1.2–1.9 = 2; 2–3.4 = 7; ≥3.5 = 8.' }),
-      numberInput('wbc', 'Leukocytes (lowest)', { unit: '×10³/µL', min: 0, max: 100, step: 0.1, defaultValue: 12, helpText: 'Official sheet uses the lowest leukocyte count in the admission hour. ≥15 ×10³/µL = 2 points.' }),
-      numberInput('ph', 'Lowest pH', { min: 6.5, max: 7.8, step: 0.01, defaultValue: 7.35, helpText: 'Lowest arterial pH in the admission hour. ≤7.25 = 3 points; otherwise 0.' }),
-      numberInput('temp', 'Highest temperature', { unit: '°C', min: 30, max: 43, step: 0.1, defaultValue: 37, helpText: 'Highest temperature in the admission hour. <35 °C = 7 points; otherwise 0.' }),
-      numberInput('plt', 'Lowest platelets', { unit: '×10³/µL', min: 5, max: 800, defaultValue: 200, helpText: 'Lowest platelets in the admission hour. ≥100 = 0; 50–99 = 5; 20–49 = 8; <20 = 13.' }),
+      numberInput('gcs', 'Lowest GCS (admission hour)', { min: 3, max: 15, exampleValue: 13, helpText: 'Lowest estimated GCS in the admission hour (±1 h). Estimate the verbal score if intubated or sedated; do not record VT as 1 unless truly no verbal response. Points: ≥13 = 0; 7–12 = 2; 6 = 7; 5 = 10; ≤4 = 15.' }),
+      numberInput('sbp', 'Lowest systolic BP', { unit: 'mmHg', min: 0, max: 250, exampleValue: 100, helpText: 'Lowest SBP in the admission hour. ≥120 = 0; 70–119 = 3; 40–69 = 8; <40 = 11.' }),
+      numberInput('hr', 'Highest heart rate', { unit: '/min', min: 30, max: 250, exampleValue: 100, helpText: 'Highest HR in the admission hour. <120 = 0; 120–159 = 5; ≥160 = 7.' }),
+      numberInput('bili', 'Highest total bilirubin', { unit: 'mg/dL', min: 0, max: 40, step: 0.1, exampleValue: 1, helpText: 'Highest total bilirubin (mg/dL) in the admission hour. <2 = 0; 2–5.9 = 4; ≥6 = 5.' }),
+      numberInput('cr', 'Highest creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 1.2, helpText: 'Highest creatinine in the admission hour; select µmol/L for SI lab reports. Bands: <1.2 = 0; 1.2–1.9 = 2; 2–3.4 = 7; ≥3.5 = 8.' }),
+      numberInput('wbc', 'Leukocytes (lowest)', { unit: '×10³/µL', min: 0, max: 100, step: 0.1, exampleValue: 12, helpText: 'Official sheet uses the lowest leukocyte count in the admission hour. ≥15 ×10³/µL = 2 points.' }),
+      numberInput('ph', 'Lowest pH', { min: 6.5, max: 7.8, step: 0.01, exampleValue: 7.35, helpText: 'Lowest arterial pH in the admission hour. ≤7.25 = 3 points; otherwise 0.' }),
+      numberInput('temp', 'Highest temperature', { unit: '°C', min: 30, max: 43, step: 0.1, exampleValue: 37, helpText: 'Highest temperature in the admission hour. <35 °C = 7 points; otherwise 0.' }),
+      numberInput('plt', 'Lowest platelets', { unit: '×10³/µL', min: 5, max: 800, exampleValue: 200, helpText: 'Lowest platelets in the admission hour. ≥100 = 0; 50–99 = 5; 20–49 = 8; <20 = 13.' }),
       selectInput('ox', 'Oxygenation', [
         { label: 'PaO₂ ≥60, not ventilated', value: 0, description: 'PaO₂ ≥60 mmHg on the admission-hour gas, not mechanically ventilated (0 points).' },
         { label: 'PaO₂ <60, not ventilated', value: 5, description: 'PaO₂ <60 mmHg, not ventilated (5 points).' },
@@ -3639,7 +3761,12 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 24. SNOT-22 ───────────────────────────────────────────────────────────
   {
     id: 'snot-22',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
+    },
     name: 'SNOT-22 Sinonasal Total',
     shortName: 'SNOT-22',
     description:
@@ -3832,7 +3959,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       numberInput('score', 'Direct SNOT-22 total override (0–110)', {
         min: 0,
         max: 110,
-        defaultValue: 40,
+        exampleValue: 40,
         helpText: 'Enter official SNOT-22 total (0–110): 22 items × 0–5.',
       }),
     ],
@@ -3921,7 +4048,12 @@ export const wave6PsychSleepCalcs: Calculator[] = [
   // ─── 25. NOSE scale ────────────────────────────────────────────────────────
   {
     id: 'nose-scale',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['raw'],
+    },
     name: 'NOSE Scale (Nasal Obstruction)',
     shortName: 'NOSE',
     description:
@@ -3953,7 +4085,7 @@ export const wave6PsychSleepCalcs: Calculator[] = [
       numberInput('raw', 'Direct raw sum override (0–20)', {
         min: 0,
         max: 20,
-        defaultValue: 12,
+        exampleValue: 12,
         helpText: 'Sum of 5 NOSE items (0–20). Scaled total = raw × 5 (0–100).',
       }),
     ],

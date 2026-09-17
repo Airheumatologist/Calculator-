@@ -895,7 +895,7 @@ export const wave7RheumClassCalcs: Calculator[] = [
     whenToUse: 'Age ≥50 with suspected large-vessel vasculitis when classifying GCA for research.',
     whyUse: 'Incorporates ultrasound halo sign, FDG-PET, and axillary imaging alongside TAB.',
     inputs: [
-      numberInput('age', 'Age (years)', { unit: 'years', min: 0, max: 120, step: 1, defaultValue: 70, helpText: 'Entry requires age ≥50; points are still computed if younger' }),
+      numberInput('age', 'Age (years)', { unit: 'years', min: 0, max: 120, step: 1, exampleValue: 70, helpText: 'Entry requires age ≥50; points are still computed if younger' }),
       yesNo('morningStiffness', 'Morning stiffness in shoulders/neck', 2,
         'Morning stiffness of the shoulder girdle and/or neck on waking (PMR-like).'),
       yesNo('claudication', 'Jaw or tongue claudication', 2,
@@ -985,7 +985,7 @@ export const wave7RheumClassCalcs: Calculator[] = [
     whenToUse: 'Age ≤60 with imaging evidence of large-vessel vasculitis when classifying Takayasu arteritis.',
     whyUse: 'Modern imaging-inclusive criteria outperform 1990 ACR TAK criteria.',
     inputs: [
-      numberInput('age', 'Age (years)', { unit: 'years', min: 0, max: 120, step: 1, defaultValue: 30, helpText: 'Entry requires age ≤60' }),
+      numberInput('age', 'Age (years)', { unit: 'years', min: 0, max: 120, step: 1, exampleValue: 30, helpText: 'Entry requires age ≤60' }),
       yesNo('imagingLVV', 'Imaging evidence of large-vessel vasculitis (entry)', null,
         'CTA, MRA, PET, or catheter angiography showing stenosis, occlusion, aneurysm, or mural thickening of the aorta or its major branches, attributed to vasculitis (not atherosclerosis alone).'),
       selectInput('sex', 'Sex', TAK_SEX),

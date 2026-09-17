@@ -985,7 +985,7 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     whenToUse: 'Quick teaching frame for relative perioperative risk before major surgery.',
     whyUse: 'Surfaces dominant predictors used in modern surgical risk models without claiming NSQIP accuracy.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 65, helpText: 'Educational age points: <65 = 0; 65–74 = 1; 75–84 = 2; ≥85 = 3 (applied in calculate; do not change this field’s meaning).' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 65, helpText: 'Educational age points: <65 = 0; 65–74 = 1; 75–84 = 2; ≥85 = 3 (applied in calculate; do not change this field’s meaning).' }),
       selectInput('asa', 'ASA class', [
         { label: 'I', value: 1, description: 'Healthy' },
         { label: 'II', value: 2, description: 'Mild systemic disease' },
@@ -1860,9 +1860,9 @@ export const wave3EmSurgeryCalcs: Calculator[] = [
     whenToUse: 'Trauma or major hemorrhage to estimate blood-loss class and resuscitation intensity.',
     whyUse: 'Shared language for estimated % blood loss and expected vital-sign changes (educational — real patients vary).',
     inputs: [
-      numberInput('hr', 'Heart rate', { unit: '/min', min: 30, max: 220, defaultValue: 100, helpText: 'ATLS teaching: Class I <100; II 100–120; III 120–140; IV >140. Athletes/beta-blockers/elderly may not tachycardize.' }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 40, max: 250, defaultValue: 110, helpText: 'Class I–II usually maintain SBP; Class III often <90–100; Class IV profound hypotension. Pulse pressure may narrow before SBP falls.' }),
-      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 4, max: 60, defaultValue: 18, helpText: 'ATLS teaching: Class I 14–20; II 20–30; III 30–40; IV >35.' }),
+      numberInput('hr', 'Heart rate', { unit: '/min', min: 30, max: 220, exampleValue: 100, helpText: 'ATLS teaching: Class I <100; II 100–120; III 120–140; IV >140. Athletes/beta-blockers/elderly may not tachycardize.' }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 40, max: 250, exampleValue: 110, helpText: 'Class I–II usually maintain SBP; Class III often <90–100; Class IV profound hypotension. Pulse pressure may narrow before SBP falls.' }),
+      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 4, max: 60, exampleValue: 18, helpText: 'ATLS teaching: Class I 14–20; II 20–30; III 30–40; IV >35.' }),
       selectInput('mental', 'Mental status', [
         { label: 'Slightly anxious / normal', value: 'normal', description: 'ATLS Class I — slightly anxious or normal mentation' },
         { label: 'Mildly anxious', value: 'mild', description: 'ATLS Class II — mildly anxious' },

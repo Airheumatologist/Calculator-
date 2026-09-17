@@ -12,8 +12,8 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'End-stage liver disease prognosis when INR is unreliable (warfarin, DOAC, DIC) or unavailable.',
     whyUse: 'Retains bilirubin and creatinine prognostic information without coagulation; educational alternative to full MELD/MELD-Na.',
     inputs: [
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 2.0, helpText: 'mg/dL (divide µmol/L by 17.1).' }),
-      numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0, helpText: 'mg/dL (divide µmol/L by 88.4).' }),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, exampleValue: 2.0, helpText: 'mg/dL (divide µmol/L by 17.1).' }),
+      numberInput('creat', 'Creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 15, step: 0.1, exampleValue: 1.0, helpText: 'Serum creatinine; select µmol/L for SI lab reports.' }),
       yesNo('dialysis', 'Dialysis ≥2 times in past week (or continuous RRT)', null, 'Sets creatinine to 4.0 mg/dL (does not add a fixed point total). Same dialysis rule as OPTN MELD.'),
     ],
     calculate(values) {
@@ -78,13 +78,13 @@ export const wave3GiHepCalcs: Calculator[] = [
         min: 0,
         max: 11.99,
         step: 0.1,
-        defaultValue: 2,
+        exampleValue: 2,
         helpText: 'Fractional calendar years at the lab date used for PELD. Policy: <1 year uses 1; >5.5 and <12 uses 5.5; otherwise the measured age. For age ≥12 use MELD 3.0.',
       }),
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 3.0, helpText: 'Floored at 1.0 mg/dL; spline at 4; capped at 40.' }),
-      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, defaultValue: 1.5, helpText: 'Floored at 1.0; spline at 2; capped at 10.' }),
-      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, defaultValue: 3.0, helpText: 'Floored at 1.0 g/dL; values >1.9 are set to 1.9.' }),
-      numberInput('creat', 'Serum creatinine', { unit: 'mg/dL', min: 0.05, max: 15, step: 0.01, defaultValue: 0.4, helpText: 'Floored at 0.2 mg/dL; values >1.3 or qualifying dialysis are set to 1.3.' }),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, exampleValue: 3.0, helpText: 'Floored at 1.0 mg/dL; spline at 4; capped at 40.' }),
+      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, exampleValue: 1.5, helpText: 'Floored at 1.0; spline at 2; capped at 10.' }),
+      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, exampleValue: 3.0, helpText: 'Floored at 1.0 g/dL; values >1.9 are set to 1.9.' }),
+      numberInput('creat', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.05, max: 15, step: 0.01, exampleValue: 0.4, helpText: 'Floored at 0.2 mg/dL; values >1.3 or qualifying dialysis are set to 1.3.' }),
       yesNo(
         'dialysis',
         'Dialysis ≥2 times or ≥24 h CVVHD in the 7 days before the creatinine test',
@@ -95,7 +95,7 @@ export const wave3GiHepCalcs: Calculator[] = [
         min: -10,
         max: 5,
         step: 0.1,
-        defaultValue: -2.1,
+        exampleValue: -2.1,
         helpText: 'Use the more negative of CDC 2000 height-for-age and weight-for-age z-scores (LMS). Policy bounds: < −5 → −5; > −2.1 → −2.1. Leave −2.1 if growth is not below −2.1 SD.',
       }),
     ],
@@ -207,10 +207,10 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Adult chronic liver disease when estimating transplant benefit using UK-style labs (includes sodium).',
     whyUse: 'UK listing threshold historically UKELD ≥49; incorporates INR, creatinine, bilirubin, and sodium.',
     inputs: [
-      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, defaultValue: 1.5 }),
-      numberInput('creat', 'Creatinine', { unit: 'µmol/L', min: 20, max: 1000, step: 1, defaultValue: 90, helpText: 'SI units — mg/dL × 88.4' }),
-      numberInput('bili', 'Total bilirubin', { unit: 'µmol/L', min: 1, max: 1000, step: 1, defaultValue: 50, helpText: 'SI units — mg/dL × 17.1' }),
-      numberInput('na', 'Serum sodium', { unit: 'mmol/L', min: 110, max: 150, step: 1, defaultValue: 135 }),
+      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, exampleValue: 1.5 }),
+      numberInput('creat', 'Creatinine', { unit: 'µmol/L', min: 20, max: 1000, step: 1, exampleValue: 90, helpText: 'SI units — mg/dL × 88.4' }),
+      numberInput('bili', 'Total bilirubin', { unit: 'µmol/L', min: 1, max: 1000, step: 1, exampleValue: 50, helpText: 'SI units — mg/dL × 17.1' }),
+      numberInput('na', 'Serum sodium', { unit: 'mmol/L', min: 110, max: 150, step: 1, exampleValue: 135 }),
     ],
     calculate(values) {
       const inr = Math.max(num(values.inr, 1.5), 0.8);
@@ -287,6 +287,7 @@ export const wave3GiHepCalcs: Calculator[] = [
     whyUse: 'Validated prognostic model by the EASL-CLIF Consortium (CANONIC study); superior to MELD and Child-Pugh for predicting 28-day and 90-day mortality.',
     isQuestionnaire: true,
     questionnaire: {
+      directInputIds: ['directClifOfs', 'age', 'wbc'],
       modeInputId: 'entryMode',
       directModeValues: ['direct'],
       activeInputIdsByMode: {
@@ -336,11 +337,11 @@ export const wave3GiHepCalcs: Calculator[] = [
         min: 6,
         max: 18,
         step: 1,
-        defaultValue: 8,
+        exampleValue: 8,
         helpText: 'Only used when "Enter precomputed CLIF-OFs total" is selected.',
       }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 55 }),
-      numberInput('wbc', 'White blood cell count', { unit: '×10⁹/L', min: 0.5, max: 100, step: 0.1, defaultValue: 8.0 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 55 }),
+      numberInput('wbc', 'White blood cell count', { unit: '×10⁹/L', min: 0.5, max: 100, step: 0.1, exampleValue: 8.0 }),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'domains');
@@ -566,10 +567,10 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Confirmed or probable alcoholic hepatitis for risk stratification (complements Maddrey, GAHS, MELD).',
     whyUse: 'Continuous score with low/intermediate/high 90-day mortality strata.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 50 }),
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 10, helpText: 'mg/dL (divide µmol/L by 17.1).' }),
-      numberInput('inr', 'INR', { min: 0.8, max: 10, step: 0.1, defaultValue: 1.8 }),
-      numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0, helpText: 'mg/dL (divide µmol/L by 88.4).' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 50 }),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, exampleValue: 10, helpText: 'mg/dL (divide µmol/L by 17.1).' }),
+      numberInput('inr', 'INR', { min: 0.8, max: 10, step: 0.1, exampleValue: 1.8 }),
+      numberInput('creat', 'Creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 15, step: 0.1, exampleValue: 1.0, helpText: 'Serum creatinine; select µmol/L for SI lab reports.' }),
     ],
     calculate(values) {
       const age = num(values.age, 50);
@@ -630,8 +631,8 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Interpreting aminotransferase pattern in suspected alcoholic liver disease, cirrhosis, or mixed injury.',
     whyUse: 'Ratio >1 (especially >2) supports alcohol-related injury or advanced fibrosis; <1 common in viral/NAFLD hepatitis without cirrhosis.',
     inputs: [
-      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 10000, defaultValue: 80 }),
-      numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 10000, defaultValue: 40 }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 1, max: 10000, exampleValue: 80 }),
+      numberInput('alt', 'ALT', { unit: 'U/L', min: 1, max: 10000, exampleValue: 40 }),
     ],
     calculate(values) {
       const ast = num(values.ast, 80);
@@ -695,14 +696,14 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'After diagnostic paracentesis when serum and ascites albumin are available.',
     whyUse: 'SAAG ≥1.1 g/dL indicates portal hypertension with high accuracy; guides differential and therapy.',
     inputs: [
-      numberInput('serumAlb', 'Serum albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, defaultValue: 2.8, helpText: 'Draw the same day as paracentesis' }),
-      numberInput('ascitesAlb', 'Ascites albumin', { unit: 'g/dL', min: 0.1, max: 6, step: 0.1, defaultValue: 1.0 }),
+      numberInput('serumAlb', 'Serum albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, exampleValue: 2.8, helpText: 'Draw the same day as paracentesis' }),
+      numberInput('ascitesAlb', 'Ascites albumin', { unit: 'g/dL', min: 0.1, max: 6, step: 0.1, exampleValue: 1.0 }),
       numberInput('ascitesProtein', 'Ascites total protein (optional)', {
         unit: 'g/dL',
         min: 0,
         max: 10,
         step: 0.1,
-        defaultValue: 1.5,
+        exampleValue: 1.5,
         helpText: 'Helps cardiac vs cirrhotic high-SAAG differential',
         required: false,
       }),
@@ -1362,10 +1363,10 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'PBC prognosis discussions and transplant timing context (educational R score).',
     whyUse: 'Classic model using age, bilirubin, albumin, PT, and edema; higher R → worse survival.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 55 }),
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 30, step: 0.1, defaultValue: 1.5 }),
-      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, defaultValue: 3.5 }),
-      numberInput('pt', 'Prothrombin time', { unit: 'sec', min: 8, max: 60, step: 0.1, defaultValue: 12 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 55 }),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 30, step: 0.1, exampleValue: 1.5 }),
+      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, exampleValue: 3.5 }),
+      numberInput('pt', 'Prothrombin time', { unit: 'sec', min: 8, max: 60, step: 0.1, exampleValue: 12 }),
       selectInput('edema', 'Edema', [
         { label: 'No edema (0)', value: 0, description: 'No ankle, pretibial, or sacral edema and no diuretic therapy for edema' },
         { label: 'Edema present, no diuretics (0.5)', value: 0.5, description: 'Edema present without diuretics. Original Mayo also codes 0.5 if edema is controlled on diuretics' },
@@ -1444,8 +1445,8 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Documenting Barrett esophagus extent at endoscopy for surveillance planning.',
     whyUse: 'Standardized C&M reporting improves communication and correlates with neoplastic risk burden.',
     inputs: [
-      numberInput('c', 'C — circumferential extent', { unit: 'cm', min: 0, max: 25, step: 0.5, defaultValue: 2, helpText: 'Length of circumferential Barrett from GEJ' }),
-      numberInput('m', 'M — maximal extent', { unit: 'cm', min: 0, max: 25, step: 0.5, defaultValue: 4, helpText: 'Maximal tongue length from GEJ including islands/tongues' }),
+      numberInput('c', 'C — circumferential extent', { unit: 'cm', min: 0, max: 25, step: 0.5, exampleValue: 2, helpText: 'Length of circumferential Barrett from GEJ' }),
+      numberInput('m', 'M — maximal extent', { unit: 'cm', min: 0, max: 25, step: 0.5, exampleValue: 4, helpText: 'Maximal tongue length from GEJ including islands/tongues' }),
       selectInput('histology', 'Worst histology (if known)', [
         { label: 'Not specified / NDBE', value: 'ndbe' },
         { label: 'Indefinite for dysplasia', value: 'indefinite' },
@@ -1625,8 +1626,8 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Compensated advanced chronic liver disease (cACLD) when deciding need for screening EGD for varices needing treatment.',
     whyUse: 'LSM <20 kPa and platelets >150×10⁹/L identify patients at very low risk of varices needing treatment who can defer endoscopy.',
     inputs: [
-      numberInput('lsm', 'Liver stiffness (VCTE)', { unit: 'kPa', min: 1, max: 75, step: 0.1, defaultValue: 15 }),
-      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 600, defaultValue: 180 }),
+      numberInput('lsm', 'Liver stiffness (VCTE)', { unit: 'kPa', min: 1, max: 75, step: 0.1, exampleValue: 15 }),
+      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 1, max: 600, exampleValue: 180 }),
       selectInput(
         'compensated',
         'Disease stage',
@@ -1716,7 +1717,7 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Interpreting measured HVPG from hepatic vein catheterization.',
     whyUse: 'HVPG thresholds define CSPH, variceal bleeding risk, and treatment response targets.',
     inputs: [
-      numberInput('hvpg', 'HVPG', { unit: 'mmHg', min: 0, max: 40, step: 0.5, defaultValue: 12 }),
+      numberInput('hvpg', 'HVPG', { unit: 'mmHg', min: 0, max: 40, step: 0.5, exampleValue: 12 }),
     ],
     calculate(values) {
       const hvpg = num(values.hvpg, 12);
@@ -1796,12 +1797,12 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Diagnostic paracentesis in ascites — especially cirrhosis with symptoms, admission, or GI bleed.',
     whyUse: 'PMN ≥250/µL diagnoses SBP and warrants prompt antibiotics without waiting for culture.',
     inputs: [
-      numberInput('pmn', 'Ascites PMN (neutrophil) count', { unit: 'cells/µL', min: 0, max: 50000, defaultValue: 100 }),
+      numberInput('pmn', 'Ascites PMN (neutrophil) count', { unit: 'cells/µL', min: 0, max: 50000, exampleValue: 100 }),
       numberInput('rbc', 'Ascites RBC count (optional)', {
         unit: 'cells/µL',
         min: 0,
         max: 1e7,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'If traumatic tap, correct PMN −1 per 250 RBC',
         required: false,
       }),
@@ -1901,9 +1902,9 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Serial MELD scores in decompensated cirrhosis or waitlist monitoring.',
     whyUse: 'Rising MELD (positive ΔMELD) associates with higher mortality beyond static MELD alone.',
     inputs: [
-      numberInput('meldNow', 'Current MELD (or MELD-Na)', { min: 6, max: 40, defaultValue: 20 }),
-      numberInput('meldPrior', 'Prior MELD (or MELD-Na)', { min: 6, max: 40, defaultValue: 15 }),
-      numberInput('days', 'Interval between scores', { unit: 'days', min: 1, max: 365, defaultValue: 30 }),
+      numberInput('meldNow', 'Current MELD (or MELD-Na)', { min: 6, max: 40, exampleValue: 20 }),
+      numberInput('meldPrior', 'Prior MELD (or MELD-Na)', { min: 6, max: 40, exampleValue: 15 }),
+      numberInput('days', 'Interval between scores', { unit: 'days', min: 1, max: 365, exampleValue: 30 }),
     ],
     calculate(values) {
       const now = num(values.meldNow, 20);
@@ -1974,7 +1975,7 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'Interpreting vibration-controlled transient elastography (FibroScan) LSM in chronic liver disease.',
     whyUse: 'Etiology-aware kPa cut-offs triage advanced fibrosis/cirrhosis risk for clinical pathways.',
     inputs: [
-      numberInput('lsm', 'Liver stiffness', { unit: 'kPa', min: 1, max: 75, step: 0.1, defaultValue: 8 }),
+      numberInput('lsm', 'Liver stiffness', { unit: 'kPa', min: 1, max: 75, step: 0.1, exampleValue: 8 }),
       selectInput('etiology', 'Dominant etiology', [
         { label: 'Viral hepatitis (HBV/HCV)', value: 'viral' },
         { label: 'NAFLD / MASLD', value: 'nafld' },
@@ -1986,7 +1987,7 @@ export const wave3GiHepCalcs: Calculator[] = [
         min: 0,
         max: 100,
         step: 1,
-        defaultValue: 15,
+        exampleValue: 15,
         helpText: 'Prefer IQR/med ≤30% with ≥10 valid measurements',
         required: false,
       }),
@@ -2096,21 +2097,23 @@ export const wave3GiHepCalcs: Calculator[] = [
     whenToUse: 'When calculating Maddrey DF and labs report INR more readily than PT/control.',
     whyUse: 'Original DF uses PT in seconds vs control; INR-based shortcuts are imperfect and lab-dependent.',
     inputs: [
-      numberInput('pt', 'Patient PT', { unit: 'sec', min: 8, max: 120, step: 0.1, defaultValue: 18 }),
-      numberInput('control', 'Control / mean normal PT', { unit: 'sec', min: 8, max: 20, step: 0.1, defaultValue: 12 }),
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 8 }),
-      numberInput('inr', 'INR (optional, for note only)', { min: 0.8, max: 10, step: 0.1, defaultValue: 1.5, required: false }),
-      selectInput('biliUnit', 'Bilirubin unit entered as', [
-        { label: 'mg/dL (correct for DF)', value: 'mg' },
-        { label: 'µmol/L (will convert)', value: 'umol' },
-      ]),
+      numberInput('pt', 'Patient PT', { unit: 'sec', min: 8, max: 120, step: 0.1, exampleValue: 18 }),
+      numberInput('control', 'Control / mean normal PT', { unit: 'sec', min: 8, max: 20, step: 0.1, exampleValue: 12 }),
+      numberInput('bili', 'Total bilirubin', {
+        unit: 'mg/dL',
+        unitKind: 'bilirubin',
+        min: 0.1,
+        max: 50,
+        step: 0.1,
+        exampleValue: 8,
+        helpText: 'DF requires mg/dL; select µmol/L to enter SI units (17.1 µmol/L = 1 mg/dL).',
+      }),
+      numberInput('inr', 'INR (optional, for note only)', { min: 0.8, max: 10, step: 0.1, exampleValue: 1.5, required: false }),
     ],
     calculate(values) {
       const pt = num(values.pt, 18);
       const control = num(values.control, 12);
-      let bili = num(values.bili, 8);
-      const unit = String(values.biliUnit ?? 'mg');
-      if (unit === 'umol') bili = bili / 17.1;
+      const bili = num(values.bili, 8);
       const ptDifference = Math.max(0, pt - control);
       const prolong = round(ptDifference, 1);
       const df = round(4.6 * ptDifference + bili, 1);

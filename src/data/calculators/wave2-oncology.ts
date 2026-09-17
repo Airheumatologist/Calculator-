@@ -170,7 +170,7 @@ export const wave2OncologyCalcs: Calculator[] = [
         min: 0,
         max: 10,
         step: 1,
-        defaultValue: 10,
+        exampleValue: 10,
         helpText:
           'Orientation 4 (year, month, city, hospital — 1 each) + name 3 objects e.g. clock, pen, button (3) + command e.g. “Show me 2 fingers” or “Close your eyes and stick out your tongue” (1) + write a standard sentence e.g. “Our national bird is the bald eagle” (1) + count backwards from 100 by 10 (1). If unarousable and unable to perform ICE: enter 0 and set consciousness to unarousable (grade 4 — do not treat as arousable ICE 0–2 = grade 3).',
       }),
@@ -309,7 +309,7 @@ export const wave2OncologyCalcs: Calculator[] = [
         min: 0,
         max: 20,
         step: 0.01,
-        defaultValue: 1.2,
+        exampleValue: 1.2,
         helpText: 'SI units ×10⁹/L only (e.g., 0.5 = 500/µL). Do not enter cells/µL.',
       }),
       numberInput('lln', 'Lab ANC lower limit of normal (optional)', {
@@ -328,10 +328,10 @@ export const wave2OncologyCalcs: Calculator[] = [
       const llnProvided = !isMissingValue(values.lln, true);
       const lln = num(values.lln);
 
-      let grade = 0;
+      let grade: number | string = 0;
       let label = 'Grade 0';
       let interpretation = 'ANC ≥1.5 ×10⁹/L — above CTCAE grade 2–4 neutropenia bands. Grade 1 applies only if count is below institutional LLN down to 1.5.';
-      let riskLevel: 'low' | 'moderate' | 'high' | 'critical' | 'normal' = 'normal';
+      let riskLevel: 'low' | 'moderate' | 'high' | 'critical' | 'normal' | 'info' = 'normal';
 
       if (ancK < 0.5) {
         grade = 4;
@@ -357,8 +357,11 @@ export const wave2OncologyCalcs: Calculator[] = [
         interpretation = `ANC ${round(ancK, 2)} ×10⁹/L is below lab LLN (${round(lln, 2)}) down to 1.5 — CTCAE grade 1.`;
         riskLevel = 'low';
       } else if (!llnProvided) {
+        grade = '—';
+        label = 'Grade 1 cannot be determined';
         interpretation =
-          'ANC ≥1.5 ×10⁹/L. CTCAE grade 1 is <LLN–1.5; without a lab LLN this is not graded G1 (including 1.5–<2.0).';
+          'ANC ≥1.5 ×10⁹/L. CTCAE grade 1 is <LLN–1.5; without a lab LLN, grade 1 cannot be determined (including 1.5–<2.0). Do not classify this result as grade 0.';
+        riskLevel = 'info';
       } else {
         interpretation = `ANC ≥ lab LLN (${round(lln, 2)} ×10⁹/L) — grade 0.`;
       }
@@ -411,7 +414,7 @@ export const wave2OncologyCalcs: Calculator[] = [
         min: 0,
         max: 1000,
         step: 1,
-        defaultValue: 90,
+        exampleValue: 90,
         helpText: '×10⁹/L equals ×10³/µL numerically (e.g., 50 = 50,000/µL)',
       }),
       numberInput('lln', 'Lab platelet lower limit of normal', {
@@ -419,17 +422,20 @@ export const wave2OncologyCalcs: Calculator[] = [
         min: 75,
         max: 200,
         step: 1,
-        defaultValue: 150,
-        helpText: 'CTCAE G1 is <LLN–75 ×10⁹/L. Typical adult LLN ≈150; do not stop G1 at 100.',
+        required: false,
+        exampleValue: 150,
+        helpText:
+          'CTCAE G1 is <LLN–75 ×10⁹/L. Leave blank if LLN unknown — ≥75 ×10⁹/L cannot be assigned G1 without a lab LLN. Typical adult LLN ≈150; do not stop G1 at 100.',
       }),
     ],
     calculate(values) {
       const plt = num(values.plt, 90);
-      const lln = num(values.lln, 150);
-      let grade = 0;
+      const llnProvided = !isMissingValue(values.lln, true);
+      const lln = num(values.lln);
+      let grade: number | string = 0;
       let label = 'Grade 0';
       let interpretation = 'Platelets not in CTCAE thrombocytopenia grade range (typically ≥ LLN).';
-      let riskLevel: 'low' | 'moderate' | 'high' | 'critical' | 'normal' = 'normal';
+      let riskLevel: 'low' | 'moderate' | 'high' | 'critical' | 'normal' | 'info' = 'normal';
 
       if (plt < 25) {
         grade = 4;
@@ -446,11 +452,17 @@ export const wave2OncologyCalcs: Calculator[] = [
         label = 'Grade 2 thrombocytopenia';
         interpretation = 'Platelets 50–<75 ×10⁹/L: moderate. May delay treatment depending on regimen (many cytotoxics require ≥75–100).';
         riskLevel = 'moderate';
-      } else if (plt < lln) {
+      } else if (llnProvided && plt < lln) {
         grade = 1;
         label = 'Grade 1 thrombocytopenia';
         interpretation = `Platelets ${round(plt, 0)} ×10⁹/L: CTCAE G1 (<LLN ${round(lln, 0)} to 75).`;
         riskLevel = 'low';
+      } else if (!llnProvided) {
+        grade = '—';
+        label = 'Grade 1 cannot be determined';
+        interpretation =
+          'Platelets ≥75 ×10⁹/L. CTCAE grade 1 is <LLN–75; without a lab LLN, grade 1 cannot be determined. Do not classify this result as grade 0.';
+        riskLevel = 'info';
       } else {
         interpretation = `Platelets ≥ lab LLN (${round(lln, 0)} ×10⁹/L) — grade 0.`;
       }
@@ -463,14 +475,14 @@ export const wave2OncologyCalcs: Calculator[] = [
         riskLevel,
         details: [
           { label: 'Platelets', value: `${round(plt, 0)} ×10⁹/L` },
-          { label: 'Lab LLN', value: `${round(lln, 0)} ×10⁹/L` },
+          { label: 'Lab LLN', value: llnProvided ? `${round(lln, 0)} ×10⁹/L` : 'Not entered' },
           { label: 'CTCAE bands', value: 'G1 <LLN–75; G2 50–<75; G3 25–<50; G4 <25' },
         ],
       };
     },
     evidence: {
       summary: 'CTCAE platelets: G1 <LLN–75; G2 50–<75; G3 25–<50; G4 <25 ×10⁹/L.',
-      formula: 'Grade from platelet count vs lab LLN (default LLN 150 ×10⁹/L) and 75/50/25 cutoffs',
+      formula: 'Grade from platelet count thresholds (×10⁹/L); G1 only when platelets < provided LLN and ≥75; G2–4 use absolute cutoffs',
       validation: 'NCI CTCAE; protocol-specific hold parameters may be stricter.',
       references: [
         {
@@ -503,7 +515,7 @@ export const wave2OncologyCalcs: Calculator[] = [
         min: 0.1,
         max: 5000,
         step: 0.1,
-        defaultValue: 750,
+        exampleValue: 750,
         helpText: 'e.g., cyclophosphamide 750, doxorubicin 50, vincristine 1.4 (cap often applies)',
       }),
       numberInput('bsa', 'BSA (if known)', {
@@ -511,18 +523,18 @@ export const wave2OncologyCalcs: Calculator[] = [
         min: 0,
         max: 3.5,
         step: 0.01,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Leave 0 to compute Mosteller BSA from height/weight',
         required: false,
       }),
-      numberInput('height', 'Height', { unit: 'cm', min: 30, max: 250, step: 0.1, defaultValue: 170 }),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 10, max: 300, step: 0.1, defaultValue: 70 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 30, max: 250, step: 0.1, exampleValue: 170 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 10, max: 300, step: 0.1, exampleValue: 70 }),
       numberInput('pctDose', 'Percent of full dose', {
         unit: '%',
         min: 1,
         max: 100,
         step: 1,
-        defaultValue: 100,
+        exampleValue: 100,
         helpText: 'Use for dose reductions (e.g., 80%)',
       }),
     ],
@@ -594,7 +606,7 @@ export const wave2OncologyCalcs: Calculator[] = [
         min: 1,
         max: 8,
         step: 0.5,
-        defaultValue: 5,
+        exampleValue: 5,
         helpText: 'Common targets AUC 4–6 (regimen-specific)',
       }),
       numberInput('gfr', 'GFR or CrCl', {
@@ -602,10 +614,10 @@ export const wave2OncologyCalcs: Calculator[] = [
         min: 5,
         max: 200,
         step: 1,
-        defaultValue: 70,
+        exampleValue: 70,
         helpText: 'Many protocols cap GFR at 125 mL/min for Calvert',
       }),
-      { ...yesNo('capGfr', 'Cap GFR at 125 mL/min (FDA/common practice)', null), defaultValue: true },
+      { ...yesNo('capGfr', 'Cap GFR at 125 mL/min (FDA/common practice)', null), exampleValue: true },
     ],
     calculate(values) {
       const auc = num(values.auc, 5);
@@ -955,8 +967,8 @@ export const wave2OncologyCalcs: Calculator[] = [
         { label: 'Multiple tumors (2–3)', value: 'multi' },
         { label: 'More than 3 tumors', value: 'many' },
       ]),
-      numberInput('largest', 'Largest tumor diameter', { unit: 'cm', min: 0.1, max: 30, step: 0.1, defaultValue: 3 }),
-      numberInput('count', 'Number of tumors (if multiple)', { min: 1, max: 20, step: 1, defaultValue: 2 }),
+      numberInput('largest', 'Largest tumor diameter', { unit: 'cm', min: 0.1, max: 30, step: 0.1, exampleValue: 3 }),
+      numberInput('count', 'Number of tumors (if multiple)', { min: 1, max: 20, step: 1, exampleValue: 2 }),
       yesNo('vascular', 'Macrovascular invasion', -1),
       yesNo('extrahepatic', 'Extrahepatic disease', -1),
     ],
@@ -1075,7 +1087,7 @@ export const wave2OncologyCalcs: Calculator[] = [
         min: -100,
         max: 500,
         step: 0.1,
-        defaultValue: -25,
+        exampleValue: -25,
         helpText: 'Negative = decrease vs baseline (or nadir for PD rules). (current − baseline) / baseline × 100',
       }),
       yesNo('newLesions', 'New lesions present', 1),
@@ -1375,7 +1387,7 @@ export const wave2OncologyCalcs: Calculator[] = [
     whenToUse: 'Teaching relative contribution of reproductive/family/biopsy factors to 5-year breast cancer risk discussion.',
     whyUse: 'Highlights who may warrant formal Gail/Tyrer-Cuzick calculation, genetic counseling, or preventive therapy discussion.',
     inputs: [
-      numberInput('age', 'Current age', { unit: 'years', min: 20, max: 90, step: 1, defaultValue: 45 }),
+      numberInput('age', 'Current age', { unit: 'years', min: 20, max: 90, step: 1, exampleValue: 45 }),
       selectInput('menarche', 'Age at menarche', [
         { label: '≥14 years (lower risk)', value: 0, description: 'Menarche at age 14 or later (Gail lower-risk band)' },
         { label: '12–13 years', value: 1, description: 'Menarche at age 12 or 13' },
@@ -1534,7 +1546,7 @@ export const wave2OncologyCalcs: Calculator[] = [
         min: 0,
         max: 10,
         step: 1,
-        defaultValue: 3,
+        exampleValue: 3,
         helpText: 'Patient self-report of distress in the past week, including today (0 = none, 10 = extreme). NCCN commonly uses ≥4 as referral cut-off. Do not reprint the official NCCN problem list — complete it on paper/EHR if screening positive.',
       }),
       yesNo('practical', 'Practical problems (housing, bills, transport, work)', 0),

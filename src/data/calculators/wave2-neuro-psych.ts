@@ -1,8 +1,6 @@
 import type { Calculator } from '../../types/calculator';
 import { num, bool, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
-const questionnaireMetadata = { questionnaire: true as const };
-
 const hit6Opts = [
   { label: 'Never (6)', value: 6 },
   { label: 'Rarely (8)', value: 8 },
@@ -120,37 +118,37 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       numberInput('q1', '1. On how many days in the last 3 months did you miss work or school because of headaches?', {
         min: 0,
         max: 90,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Full days of missed work or school in the last 3 months',
       }),
       numberInput('q2', '2. Days in the last 3 months productivity at work/school reduced by half or more (do not count Q1 missed days)', {
         min: 0,
         max: 90,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Last 3 months. Exclude days already counted in Q1.',
       }),
       numberInput('q3', '3. Days in the last 3 months you did not do household work (housework, repairs, shopping, caring for children/relatives)', {
         min: 0,
         max: 90,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Last 3 months. Household work includes housework, home repairs, shopping, and caring for children or relatives.',
       }),
       numberInput('q4', '4. Days in the last 3 months household productivity reduced by half or more (do not count Q3 days)', {
         min: 0,
         max: 90,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Last 3 months. Exclude days already counted in Q3.',
       }),
       numberInput('q5', '5. Days in the last 3 months missed family, social, or leisure activities because of headaches', {
         min: 0,
         max: 90,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Last 3 months.',
       }),
       numberInput('freq', 'A. Headache days in past 3 months (optional)', {
         min: 0,
         max: 90,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Not part of MIDAS sum; for context',
         required: false,
       }),
@@ -158,7 +156,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         min: 0,
         max: 10,
         step: 1,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: '0 = no pain, 10 = worst possible. Item B is not in the MIDAS sum.',
         required: false,
       }),
@@ -360,7 +358,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         min: 0,
         max: 300,
         step: 1,
-        defaultValue: 5,
+        exampleValue: 5,
         helpText: 'Time of ongoing seizure activity or incomplete recovery between seizures',
       }),
       yesNo('recurrent', 'Seizures recur without recovery between', null, 'Yes if seizures repeat without recovery of consciousness between them. Use the total ongoing/cluster duration below; recurrence alone does not bypass the seizure-type-specific t1 threshold.'),
@@ -486,7 +484,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         min: 0,
         max: 200,
         step: 0.1,
-        defaultValue: 10,
+        exampleValue: 10,
         helpText: 'Prefer a trough at steady state (just before next dose). µg/mL = mg/L. Lab-specific ranges vary — treat the patient, not the number.',
       }),
       yesNo('toxicSx', 'Clinical toxicity symptoms present', 0, 'Nystagmus, ataxia, diplopia, sedation, tremor, or encephalopathy attributable to the ASM — treat clinically even if the level is “therapeutic.”'),
@@ -592,7 +590,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         min: 0,
         max: 50,
         step: 0.1,
-        defaultValue: 10,
+        exampleValue: 10,
         helpText: 'Measured total (bound + free) phenytoin in µg/mL (= mg/L). Prefer trough.',
       }),
       numberInput('alb', 'Serum albumin', {
@@ -600,7 +598,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         min: 1,
         max: 5.5,
         step: 0.1,
-        defaultValue: 2.5,
+        exampleValue: 2.5,
         helpText: 'g/dL (3.5 g/dL = 35 g/L). Correction is most useful when albumin is low.',
       }),
       yesNo('esrd', 'ESRD / CrCl <20 mL/min (use 0.1 binding factor variant)', 0, 'Yes if ESRD or CrCl <20 mL/min — uses binding factor 0.1 instead of 0.2. Measured free assay is still preferred.'),
@@ -705,7 +703,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       numberInput('part3', 'MDS-UPDRS Part III motor total', {
         min: 0,
         max: 132,
-        defaultValue: 20,
+        exampleValue: 20,
         helpText: 'Score from the official MDS-UPDRS Part III motor exam (copyrighted training form) and enter the already-administered total. Official maximum is 132.',
       }),
       selectInput('state', 'Motor state when scored', [
@@ -1049,7 +1047,12 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'slums',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
+    },
     name: 'SLUMS Cognitive Examination',
     shortName: 'SLUMS',
     description: 'Saint Louis University Mental Status (SLUMS) 11-item cognitive exam (0–30) with education-adjusted cutoffs.',
@@ -1127,7 +1130,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       numberInput('score', 'Direct SLUMS total score override (0–30)', {
         min: 0,
         max: 30,
-        defaultValue: 27,
+        exampleValue: 27,
         helpText: 'Enter official SLUMS total (0–30).',
       }),
     ],
@@ -1320,7 +1323,12 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'madrs',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
+    },
     name: 'MADRS Depression Score',
     shortName: 'MADRS',
     description: 'Montgomery–Åsberg Depression Rating Scale 10-item clinician rating (0–60).',
@@ -1416,17 +1424,17 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       ], 1),
       selectInput('madrs10', '10. Suicidal thoughts (feeling life is not worth living, plans)', [
         { label: '0 — Enjoys life or takes it as it comes', value: 0 },
-        { label: '1 — Weary of life; fleeting thoughts', value: 1 },
+        { label: '1 — Between the 0 and 2 anchors (mild weariness of life / fleeting thoughts)', value: 1 },
         { label: '2 — Weary of life; only fleeting suicidal thoughts', value: 2 },
-        { label: '3 — Recurrent passive thoughts that life is not worth living', value: 3 },
-        { label: '4 — Probably better off dead; suicidal thoughts are common (no plan)', value: 4 },
-        { label: '5 — Active preparations or explicit suicidal plan', value: 5 },
+        { label: '3 — Between the 2 and 4 anchors (more frequent thoughts, without a specific plan or intent)', value: 3 },
+        { label: '4 — Probably better off dead; suicidal thoughts are common and suicide is considered a possible solution, without a specific plan or intent', value: 4 },
+        { label: '5 — Between the 4 and 6 anchors (approaching explicit planning or active preparation)', value: 5 },
         { label: '6 — Explicit plans for suicide when opportunity arises; active preparations', value: 6 },
       ], 1),
       numberInput('score', 'Direct MADRS total override (0–60)', {
         min: 0,
         max: 60,
-        defaultValue: 20,
+        exampleValue: 20,
         helpText: 'Enter official MADRS 10-item total (0–60).',
       }),
     ],
@@ -1477,12 +1485,22 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         },
       ]);
 
-      const suicideItem = num(values.madrs10, 0);
+      // Item 10 has its own safety meaning and is unavailable when only a
+      // direct total is entered. Do not carry a hidden/stale survey answer
+      // into the direct-total branch or infer suicidality from the total.
+      const suicideItem = mode === 'survey' ? num(values.madrs10, 0) : undefined;
+      const suicideItemEndorsed = suicideItem !== undefined && suicideItem > 0;
+      // Four is the first MADRS item-10 anchor describing common suicidal
+      // thoughts / suicide as a possible solution. This is an urgent safety
+      // flag, not a diagnosis of intent or imminent risk.
+      const suicideItemUrgent = suicideItem !== undefined && suicideItem >= 4;
       let { riskLevel, label, interpretation } = r;
-      if (suicideItem >= 4) {
+      if (suicideItemUrgent) {
         riskLevel = 'critical';
-        label += ' (High Suicide Risk Flag)';
-        interpretation += ' CRITICAL SAFETY ALERT: Item 10 rated ≥4 indicates frequent suicidal ideation or active planning. Perform emergency safety assessment.';
+        label += ' (Urgent suicide safety flag)';
+        interpretation += ' URGENT SAFETY ALERT: MADRS item 10 is rated ≥4 (common suicidal thoughts / suicide considered a possible solution; the anchor itself does not establish plan or intent). Perform an immediate direct suicide risk assessment; if current intent, plan, access to lethal means, inability to stay safe, or other imminent-risk features are present, initiate emergency psychiatric evaluation and safety measures.';
+      } else if (suicideItemEndorsed) {
+        interpretation += ` SAFETY ALERT: MADRS item 10 is endorsed (${suicideItem}/6). Perform an immediate direct suicide risk assessment; do not use the MADRS total alone to rule out suicide risk.`;
       }
 
       return {
@@ -1495,11 +1513,18 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
           { label: 'Entry mode', value: mode === 'direct' ? 'Direct override' : '10-item clinician rating' },
           { label: 'Common bands', value: '0–6 recovered; 7–19 mild; 20–34 moderate; ≥35 severe' },
           { label: 'Response / remission (trials)', value: 'Often ≥50% reduction = response; ≤10 (or ≤6) = remission' },
+          { label: 'Item 10 (suicidal thoughts)', value: mode === 'survey' ? `${suicideItem}/6` : 'Unavailable from direct total — assess directly' },
         ],
-        alerts: suicideItem >= 4 ? [
-          'CRITICAL SAFETY ALERT: MADRS Item 10 rated ≥4 (frequent suicidal thoughts or active planning). Immediate safety evaluation required.',
-        ] : suicideItem >= 2 ? [
-          'MADRS Item 10 endorsed (weariness of life / passive suicidal thoughts). Clinical safety assessment recommended.',
+        recommendations: suicideItemEndorsed ? [
+          suicideItemUrgent
+            ? 'Immediately perform a direct suicide risk assessment (current ideation, intent, plan, access to lethal means, past behavior, and protective factors); escalate to emergency psychiatric care and safety precautions if imminent risk, intent/plan, or inability to maintain safety is present.'
+            : 'Perform a direct suicide risk assessment now (current ideation, intent, plan, access to lethal means, past behavior, and protective factors); escalate urgently if imminent risk is identified.',
+          'MADRS is a depression-severity scale, not a standalone suicide-risk assessment; do not infer safety from the total score.',
+        ] : undefined,
+        alerts: suicideItemEndorsed ? [
+          suicideItemUrgent
+            ? `URGENT SAFETY ALERT: MADRS item 10 rated ${suicideItem}/6 (≥4 anchor: common suicidal thoughts / possible solution, without a specific plan or intent at the anchor). Immediate direct suicide risk assessment is required; assess intent, plan, access to lethal means, past behavior, and protective factors, and escalate to emergency psychiatric care if imminent risk or inability to stay safe is present. MADRS is not a standalone suicide-risk tool.`
+            : `SAFETY ALERT: MADRS item 10 endorsed at ${suicideItem}/6. Perform an immediate direct suicide risk assessment (ideation, intent, plan, access to lethal means, past behavior, and protective factors); do not use the total MADRS score to rule out risk.`,
         ] : undefined,
       };
     },
@@ -1514,6 +1539,17 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
           citation: 'Montgomery SA, Åsberg M. Br J Psychiatry. 1979',
           year: 1979, pmid: '444788',
           doi: '10.1192/bjp.134.4.382', },
+        {
+          title: 'Ligature and/or Suicide Risk Reduction: Use of an Evidence-based Process to Assess Risk',
+          citation: 'The Joint Commission. Standards FAQ (updated 2026)',
+          year: 2026,
+          url: 'https://www.jointcommission.org/en-us/knowledge-library/support-center/standards-interpretation/standards-faqs/000001234',
+        },
+        {
+          title: 'Adult Outpatient Brief Suicide Safety Assessment Guide',
+          citation: 'National Institute of Mental Health (NIMH), ASQ Toolkit',
+          url: 'https://www.nimh.nih.gov/research/research-conducted-at-nimh/asq-toolkit-materials/adult-outpatient/adult-outpatient-brief-suicide-safety-assessment-guide',
+        },
       ],
     },
     nextSteps: [
@@ -1521,16 +1557,30 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         condition: 'Moderate–severe',
         actions: ['Safety/suicide assessment', 'Antidepressant and/or evidence-based psychotherapy', 'Follow serial MADRS'],
       },
+      {
+        condition: 'MADRS Item 10 ≥1 (any suicidal-thoughts endorsement)',
+        actions: ['Immediate direct suicide risk assessment (ideation, intent, plan, means, past behavior, protective factors)', 'Do not use the total MADRS score alone to rule out risk'],
+      },
+      {
+        condition: 'MADRS Item 10 ≥4 (common suicidal thoughts / possible solution anchor)',
+        actions: ['Urgent same-day safety evaluation', 'Escalate to emergency psychiatric care and safety precautions if current intent/plan, access to lethal means, or inability to stay safe is present'],
+      },
     ],
     pearls: [
       'Apparent sadness and reported sadness are distinct items.',
-      'Item 10 (suicidality) must be reviewed independently for urgent clinical safety.',
+      'MADRS item 10 uses anchors at 0, 2, 4, and 6; intermediate scores (1, 3, 5) represent ratings between anchors.',
+      'Any item-10 endorsement requires direct suicide-risk assessment; item 10 ≥4 is an urgent safety flag, but MADRS alone does not establish intent or imminent risk.',
     ],
   },
 
   {
     id: 'ham-d',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
+    },
     name: 'HAM-D Depression Score',
     shortName: 'HAM-D',
     description: 'Hamilton Depression Rating Scale (HAM-D 17) 17-item clinician interview and total (0–52).',
@@ -1649,7 +1699,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       numberInput('score', 'Direct HAM-D total override (0–52)', {
         min: 0,
         max: 52,
-        defaultValue: 12,
+        exampleValue: 12,
         helpText: 'Enter official 17-item HDRS total (0–52).',
       }),
     ],
@@ -1755,7 +1805,12 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
 
   {
     id: 'ham-a',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
+    },
     name: 'HAM-A Anxiety Score',
     shortName: 'HAM-A',
     description: 'Hamilton Anxiety Rating Scale (HAM-A) 14-item clinician interview and total (0–56).',
@@ -1795,7 +1850,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       numberInput('score', 'Direct HAM-A total override (0–56)', {
         min: 0,
         max: 56,
-        defaultValue: 18,
+        exampleValue: 18,
         helpText: 'Enter official HAM-A 14-item total (0–56).',
       }),
     ],
@@ -1896,7 +1951,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       numberInput('score', 'BAI total (0–63)', {
         min: 0,
         max: 63,
-        defaultValue: 16,
+        exampleValue: 16,
         helpText: '21 items scored 0–3 over the past week including today. Copyrighted instrument — score from the official BAI form and enter the total only here.',
       }),
     ],
@@ -1967,7 +2022,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       numberInput('score', 'BDI-II total (0–63)', {
         min: 0,
         max: 63,
-        defaultValue: 18,
+        exampleValue: 18,
         helpText: '21 items scored 0–3 over the past 2 weeks including today. Copyrighted — use the licensed BDI-II form for item administration; enter the already-scored total. Item 9 (suicidal thoughts) warrants direct clinical follow-up if elevated.',
       }),
     ],
@@ -2030,7 +2085,12 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'ymrs',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
+    },
     name: 'Young Mania Rating Scale (YMRS)',
     shortName: 'YMRS',
     description: 'Young Mania Rating Scale 11-item clinician interview (0–60) for manic symptom severity.',
@@ -2123,7 +2183,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       numberInput('score', 'Direct YMRS total override (0–60)', {
         min: 0,
         max: 60,
-        defaultValue: 12,
+        exampleValue: 12,
         helpText: 'Enter official YMRS 11-item total (0–60). Items 5, 6, 8, 9 are double-weighted (0, 2, 4, 6, 8).',
       }),
     ],
@@ -2223,27 +2283,27 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       numberInput('total', 'PANSS total score', {
         min: 30,
         max: 210,
-        defaultValue: 75,
+        exampleValue: 75,
         helpText: '30 items × 1–7; minimum total 30. Score from the official PANSS form (Kay); this tool interprets an already-administered total.',
       }),
       numberInput('positive', 'Positive subscale (optional, 7–49)', {
         min: 7,
         max: 49,
-        defaultValue: 7,
+        exampleValue: 7,
         required: false,
         helpText: 'Optional display only (not added into the total here). Official P1–P7, each 1–7. Leave blank if not scored separately.',
       }),
       numberInput('negative', 'Negative subscale (optional, 7–49)', {
         min: 7,
         max: 49,
-        defaultValue: 7,
+        exampleValue: 7,
         required: false,
         helpText: 'Optional display only. Official N1–N7, each 1–7.',
       }),
       numberInput('general', 'General psychopathology (optional, 16–112)', {
         min: 16,
         max: 112,
-        defaultValue: 16,
+        exampleValue: 16,
         required: false,
         helpText: 'Optional display only. Official G1–G16, each 1–7.',
       }),
@@ -2714,7 +2774,12 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'isi-insomnia',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
+    },
     name: 'Insomnia Severity Index (ISI)',
     shortName: 'ISI',
     description: 'Insomnia Severity Index (ISI) 7-item questionnaire and total (0–28) for insomnia severity.',
@@ -2779,7 +2844,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       numberInput('score', 'Direct ISI total override (0–28)', {
         min: 0,
         max: 28,
-        defaultValue: 12,
+        exampleValue: 12,
         helpText: 'Enter official ISI total (0–28).',
       }),
     ],
@@ -2865,7 +2930,12 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
 
   {
     id: 'pcl5',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
+    },
     name: 'PCL-5 PTSD Checklist for DSM-5',
     shortName: 'PCL-5',
     description: 'PTSD Checklist for DSM-5 (PCL-5) 20-item survey, total severity score (0–80), and DSM-5 cluster algorithm.',
@@ -3021,7 +3091,7 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
       numberInput('score', 'Direct PCL-5 total override (0–80)', {
         min: 0,
         max: 80,
-        defaultValue: 30,
+        exampleValue: 30,
         helpText: 'Enter official PCL-5 total (0–80).',
       }),
     ],

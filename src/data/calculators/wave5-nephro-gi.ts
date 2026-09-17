@@ -13,9 +13,9 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Confirm eGFR when creatinine alone is unreliable, or when a more accurate estimate would change management.',
     whyUse: 'Combined Cr+CysC equation is more accurate than either marker alone across body composition extremes.',
     inputs: [
-      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.01, defaultValue: 1.0 }),
-      numberInput('scys', 'Serum cystatin C', { unit: 'mg/L', min: 0.2, max: 10, step: 0.01, defaultValue: 1.0 }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 50 }),
+      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.01, exampleValue: 1.0 }),
+      numberInput('scys', 'Serum cystatin C', { unit: 'mg/L', min: 0.2, max: 10, step: 0.01, exampleValue: 1.0 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 50 }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
@@ -128,13 +128,13 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Adults with CKD (typically eGFR <60) to estimate 2- and 5-year risk of treated kidney failure.',
     whyUse: 'Guides referral urgency, patient counseling, and planning; validated internationally with regional calibrations.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 65 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 65 }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
       ]),
-      numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 5, max: 90, defaultValue: 45 }),
-      numberInput('acr', 'Urine ACR', { unit: 'mg/g', min: 0.1, max: 10000, step: 0.1, defaultValue: 30, helpText: 'Albumin/creatinine ratio; convert mg/mmol × 8.84 ≈ mg/g' }),
+      numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 5, max: 90, exampleValue: 45 }),
+      numberInput('acr', 'Urine ACR', { unit: 'mg/g', min: 0.1, max: 10000, step: 0.1, exampleValue: 30, helpText: 'Albumin/creatinine ratio; convert mg/mmol × 8.84 ≈ mg/g' }),
       selectInput(
         'region',
         'Calibration region',
@@ -251,8 +251,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Historical or alternative CrCl estimate when Cockcroft–Gault is not preferred; educational comparison.',
     whyUse: 'Simple age/sex/Scr formula historically used for drug dosing; does not require weight.',
     inputs: [
-      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.01, defaultValue: 1.0 }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 50 }),
+      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.01, exampleValue: 1.0 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 50 }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
@@ -335,10 +335,10 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Alternative GFR estimate when BSA-based formulas are desired (e.g., historical oncology contexts).',
     whyUse: 'Incorporates BSA; sometimes compared with Cockcroft–Gault and measured GFR in chemo dosing literature.',
     inputs: [
-      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.01, defaultValue: 1.0 }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 55 }),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 30, max: 250, step: 0.1, defaultValue: 70 }),
-      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, defaultValue: 170 }),
+      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.01, exampleValue: 1.0 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 55 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 250, step: 0.1, exampleValue: 70 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, exampleValue: 170 }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
@@ -445,14 +445,14 @@ export const wave5NephroGiCalcs: Calculator[] = [
         min: 0,
         max: 5000,
         step: 1,
-        defaultValue: 100,
+        exampleValue: 100,
         helpText: 'Used if mode = concentration × volume',
       }),
       numberInput('volume', '24-hour urine volume', {
         unit: 'mL',
         min: 100,
         max: 10000,
-        defaultValue: 1500,
+        exampleValue: 1500,
         helpText: 'Used if mode = concentration × volume',
       }),
       numberInput('totalG', 'Total protein (if already measured)', {
@@ -460,7 +460,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
         min: 0,
         max: 40,
         step: 0.01,
-        defaultValue: 1.5,
+        exampleValue: 1.5,
         helpText: 'Used if mode = total g/day',
       }),
     ],
@@ -544,8 +544,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Spot quantification of proteinuria when 24h collection is impractical.',
     whyUse: 'UPCR approximates daily protein excretion (g/day ≈ ratio in g/g) for monitoring and nephrotic-range classification.',
     inputs: [
-      numberInput('uprot', 'Urine protein', { unit: 'mg/dL', min: 0, max: 5000, step: 1, defaultValue: 100 }),
-      numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', min: 1, max: 500, step: 1, defaultValue: 100 }),
+      numberInput('uprot', 'Urine protein', { unit: 'mg/dL', min: 0, max: 5000, step: 1, exampleValue: 100 }),
+      numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 1, max: 500, step: 1, exampleValue: 100, helpText: 'Select µmol/L for SI lab reports.' }),
     ],
     calculate(values) {
       const uprot = num(values.uprot, 100);
@@ -620,8 +620,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'CKD staging (CGA), diabetes screening for albuminuria, and cardiovascular/CKD risk stratification.',
     whyUse: 'Albuminuria category strongly predicts CKD progression and CV events independent of eGFR.',
     inputs: [
-      numberInput('ualb', 'Urine albumin', { unit: 'mg/dL', min: 0, max: 2000, step: 0.1, defaultValue: 3 }),
-      numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', min: 1, max: 500, step: 1, defaultValue: 100 }),
+      numberInput('ualb', 'Urine albumin', { unit: 'mg/dL', min: 0, max: 2000, step: 0.1, exampleValue: 3 }),
+      numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 1, max: 500, step: 1, exampleValue: 100, helpText: 'Select µmol/L for SI lab reports; the ratio is taken in mg/dL.' }),
       selectInput('sex', 'Sex (optional microalbumin cutoffs context)', [
         { label: 'Not specified', value: 'U' },
         { label: 'Female', value: 'F' },
@@ -708,11 +708,11 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Estimate daily sodium excretion / dietary salt when full 24h collection is unavailable.',
     whyUse: 'Spot estimates support HTN and edema counseling; 24h collection remains more accurate when feasible.',
     inputs: [
-      numberInput('una', 'Spot urine sodium', { unit: 'mEq/L', min: 1, max: 300, defaultValue: 80 }),
-      numberInput('ucr', 'Spot urine creatinine', { unit: 'mg/dL', min: 1, max: 400, defaultValue: 100 }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 50 }),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 30, max: 200, step: 0.1, defaultValue: 70 }),
-      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, defaultValue: 170 }),
+      numberInput('una', 'Spot urine sodium', { unit: 'mEq/L', min: 1, max: 300, exampleValue: 80 }),
+      numberInput('ucr', 'Spot urine creatinine', { unit: 'mg/dL', min: 1, max: 400, exampleValue: 100 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 50 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 200, step: 0.1, exampleValue: 70 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, exampleValue: 170 }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
@@ -803,8 +803,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Hyponatremia workup and hypertonic states — assess tonicity that drives water shifts across cell membranes.',
     whyUse: 'Urea is an ineffective osmole; tonicity (not total osm) determines cellular hydration.',
     inputs: [
-      numberInput('na', 'Serum sodium', { unit: 'mEq/L', min: 90, max: 190, step: 1, defaultValue: 138 }),
-      numberInput('glucose', 'Serum glucose', { unit: 'mg/dL', min: 20, max: 2000, defaultValue: 100 }),
+      numberInput('na', 'Serum sodium', { unit: 'mEq/L', min: 90, max: 190, step: 1, exampleValue: 138 }),
+      numberInput('glucose', 'Serum glucose', { unit: 'mg/dL', min: 20, max: 2000, exampleValue: 100 }),
     ],
     calculate(values) {
       const na = num(values.na, 138);
@@ -883,8 +883,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
         { label: 'Acute respiratory alkalosis', value: 'ac_resp_alk' },
         { label: 'Chronic respiratory alkalosis', value: 'ch_resp_alk' },
       ]),
-      numberInput('hco3', 'Measured HCO₃⁻', { unit: 'mEq/L', min: 1, max: 60, step: 0.1, defaultValue: 18 }),
-      numberInput('pco2', 'Measured PCO₂', { unit: 'mmHg', min: 5, max: 120, defaultValue: 40 }),
+      numberInput('hco3', 'Measured HCO₃⁻', { unit: 'mEq/L', min: 1, max: 60, step: 0.1, exampleValue: 18 }),
+      numberInput('pco2', 'Measured PCO₂', { unit: 'mmHg', min: 5, max: 120, exampleValue: 40 }),
     ],
     calculate(values) {
       const disorder = str(values.disorder, 'met_acid');
@@ -1005,8 +1005,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'COPD/chronic hypercapnia — is the HCO₃ rise appropriate for chronic CO₂ retention?',
     whyUse: 'Distinguishes pure chronic compensation from concurrent metabolic acid–base disorders.',
     inputs: [
-      numberInput('pco2', 'PaCO₂', { unit: 'mmHg', min: 40, max: 120, defaultValue: 60 }),
-      numberInput('hco3', 'Measured HCO₃⁻ (optional compare)', { unit: 'mEq/L', min: 10, max: 60, step: 0.1, defaultValue: 32, required: false }),
+      numberInput('pco2', 'PaCO₂', { unit: 'mmHg', min: 40, max: 120, exampleValue: 60 }),
+      numberInput('hco3', 'Measured HCO₃⁻ (optional compare)', { unit: 'mEq/L', min: 10, max: 60, step: 0.1, exampleValue: 32, required: false }),
     ],
     calculate(values) {
       const pco2 = num(values.pco2, 60);
@@ -1084,9 +1084,9 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Acute hypoventilation (opiates, airway, NM weakness) — is the ABG consistent with pure acute CO₂ retention?',
     whyUse: 'Acute buffering only slightly raises HCO₃; larger rises imply chronicity or metabolic alkalosis.',
     inputs: [
-      numberInput('pco2', 'PaCO₂', { unit: 'mmHg', min: 40, max: 120, defaultValue: 60 }),
-      numberInput('hco3', 'Measured HCO₃⁻', { unit: 'mEq/L', min: 10, max: 50, step: 0.1, defaultValue: 26 }),
-      numberInput('ph', 'Measured pH (optional)', { unit: '', min: 6.8, max: 7.8, step: 0.01, defaultValue: 7.25, required: false }),
+      numberInput('pco2', 'PaCO₂', { unit: 'mmHg', min: 40, max: 120, exampleValue: 60 }),
+      numberInput('hco3', 'Measured HCO₃⁻', { unit: 'mEq/L', min: 10, max: 50, step: 0.1, exampleValue: 26 }),
+      numberInput('ph', 'Measured pH (optional)', { unit: '', min: 6.8, max: 7.8, step: 0.01, exampleValue: 7.25, required: false }),
     ],
     calculate(values) {
       const pco2 = num(values.pco2, 60);
@@ -1303,11 +1303,11 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'NAGMA: estimate renal NH₄⁺ excretion when direct NH₄ assay is unavailable.',
     whyUse: 'High estimated NH₄⁺ favors extrarenal HCO₃ loss; low NH₄⁺ favors RTA or impaired ammoniagenesis. The teaching estimate is max(UOG/2, 0), not the full UOG.',
     inputs: [
-      numberInput('uosm', 'Measured urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1200, defaultValue: 400 }),
-      numberInput('una', 'Urine Na', { unit: 'mEq/L', min: 1, max: 300, defaultValue: 40 }),
-      numberInput('uk', 'Urine K', { unit: 'mEq/L', min: 1, max: 200, defaultValue: 20 }),
-      numberInput('uurea', 'Urine urea nitrogen', { unit: 'mg/dL', min: 0, max: 2000, defaultValue: 200 }),
-      numberInput('uglu', 'Urine glucose', { unit: 'mg/dL', min: 0, max: 1000, defaultValue: 0 }),
+      numberInput('uosm', 'Measured urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1200, exampleValue: 400 }),
+      numberInput('una', 'Urine Na', { unit: 'mEq/L', min: 1, max: 300, exampleValue: 40 }),
+      numberInput('uk', 'Urine K', { unit: 'mEq/L', min: 1, max: 200, exampleValue: 20 }),
+      numberInput('uurea', 'Urine urea nitrogen', { unit: 'mg/dL', min: 0, max: 2000, exampleValue: 200 }),
+      numberInput('uglu', 'Urine glucose', { unit: 'mg/dL', min: 0, max: 1000, exampleValue: 0 }),
     ],
     calculate(values) {
       const uosm = num(values.uosm, 400);
@@ -1380,7 +1380,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'Known or suspected hyperkalemia — triage membrane-stabilization urgency from ECG features.',
     whyUse: 'ECG changes mark increased risk of arrhythmia; guide calcium, shift, and removal therapies. Multiple findings are handled as an ordinal severity tier using the highest selected feature, not by summing points.',
     inputs: [
-      numberInput('k', 'Serum K⁺ (if known)', { unit: 'mEq/L', min: 2, max: 12, step: 0.1, defaultValue: 6.2, required: false, helpText: 'Optional. ECG can be normal at dangerous K⁺ — treat the number and trajectory even if no ECG flags.' }),
+      numberInput('k', 'Serum K⁺ (if known)', { unit: 'mEq/L', min: 2, max: 12, step: 0.1, exampleValue: 6.2, required: false, helpText: 'Optional. ECG can be normal at dangerous K⁺ — treat the number and trajectory even if no ECG flags.' }),
       yesNo('peakedT', 'Peaked T waves', null, 'Tall, peaked, narrow T waves (often precordial). Early change; not required for treatment if K is high. This ordinal checklist uses the highest selected severity, not additive points.'),
       yesNo('prProlong', 'PR prolongation / flattened P', null, 'Lengthening PR and/or P waves that flatten or widen as atrial conduction slows.'),
       yesNo('lossP', 'Loss of P waves', null, 'P waves absent (sinoventricular rhythm); QRS often still narrow at this stage.'),
@@ -1486,8 +1486,8 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'CKD-MBD monitoring — frame iPTH versus stage-based goals and assay upper limit of normal.',
     whyUse: 'Avoids over-treating modest elevations in non-dialysis CKD and anchors dialysis targets to 2–9× ULN.',
     inputs: [
-      numberInput('ipth', 'Intact PTH', { unit: 'pg/mL', min: 1, max: 3000, defaultValue: 120 }),
-      numberInput('uln', 'Assay upper limit of normal', { unit: 'pg/mL', min: 20, max: 100, defaultValue: 65, helpText: 'Lab-specific ULN' }),
+      numberInput('ipth', 'Intact PTH', { unit: 'pg/mL', min: 1, max: 3000, exampleValue: 120 }),
+      numberInput('uln', 'Assay upper limit of normal', { unit: 'pg/mL', min: 20, max: 100, exampleValue: 65, helpText: 'Lab-specific ULN' }),
       selectInput('stage', 'CKD stage context', [
         { label: 'G3a–G3b (not on dialysis)', value: 'g3' },
         { label: 'G4 (not on dialysis)', value: 'g4' },
@@ -1584,7 +1584,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whenToUse: 'CKD patients with low or borderline total CO₂/HCO₃ to decide on alkali therapy consideration.',
     whyUse: 'Frames alkali consideration in CKD; hard-outcome benefit is uncertain. KDIGO 2024 dropped the 2012 graded <22 recommendation and uses <18 mmol/L as a practice-point example.',
     inputs: [
-      numberInput('hco3', 'Serum HCO₃⁻ or total CO₂', { unit: 'mEq/L', min: 5, max: 40, step: 0.1, defaultValue: 20 }),
+      numberInput('hco3', 'Serum HCO₃⁻ or total CO₂', { unit: 'mEq/L', min: 5, max: 40, step: 0.1, exampleValue: 20 }),
       selectInput('stage', 'CKD stage (context)', [
         { label: 'G3', value: 'g3' },
         { label: 'G4', value: 'g4' },
@@ -2087,7 +2087,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
       numberInput('liquidStools', 'Number of liquid stools (yesterday)', {
         min: 0,
         max: 30,
-        defaultValue: 1,
+        exampleValue: 1,
         helpText: 'Count liquid or very soft stools yesterday only. Each stool = 1 point. Do not count formed stools.',
       }),
       selectInput(
@@ -2194,7 +2194,12 @@ export const wave5NephroGiCalcs: Calculator[] = [
     tags: ['ses-cd', 'crohn', 'endoscopy', 'ibd', 'mucosal healing', 'colonoscopy'],
     whenToUse: 'During or after ileocolonoscopy to assess mucosal inflammation and evaluate endoscopic healing in Crohn disease.',
     whyUse: 'Validated standard endoscopic score for Crohn disease; categorizes activity into remission, mild, moderate, and severe.',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['directTotal'],
+    },
     inputs: [
       selectInput('entryMode', 'Entry mode', [
         { label: 'Score 5 anatomical segments (20 items)', value: 'survey' },
@@ -2203,7 +2208,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
       numberInput('directTotal', 'Precomputed SES-CD total', {
         min: 0,
         max: 56,
-        defaultValue: 8,
+        exampleValue: 8,
         helpText: 'Only used when "Enter precomputed SES-CD total" is selected.',
       }),
 
@@ -2458,26 +2463,26 @@ export const wave5NephroGiCalcs: Calculator[] = [
       numberInput('painSev', 'Abdominal pain severity (0–100 VAS)', {
         min: 0,
         max: 100,
-        defaultValue: 40,
+        exampleValue: 40,
         helpText: 'Last 10 days. 0 = no pain, 100 = very severe pain.',
       }),
-      numberInput('painDays', 'Number of days with pain in last 10 days', { min: 0, max: 10, defaultValue: 4, helpText: 'Score contribution = days × 10. Recall window is the last 10 days.' }),
+      numberInput('painDays', 'Number of days with pain in last 10 days', { min: 0, max: 10, exampleValue: 4, helpText: 'Score contribution = days × 10. Recall window is the last 10 days.' }),
       numberInput('distension', 'Abdominal distension severity (0–100)', {
         min: 0,
         max: 100,
-        defaultValue: 30,
+        exampleValue: 30,
         helpText: 'Last 10 days. 0 = none, 100 = very severe tightness/bloating.',
       }),
       numberInput('bowelSat', 'Satisfaction with bowel habits (0–100; 100 = very unhappy)', {
         min: 0,
         max: 100,
-        defaultValue: 50,
+        exampleValue: 50,
         helpText: 'Last 10 days. 0 = very happy with bowel habit, 100 = very unhappy. Higher = more dissatisfaction.',
       }),
       numberInput('interfere', 'Interference with life in general (0–100)', {
         min: 0,
         max: 100,
-        defaultValue: 40,
+        exampleValue: 40,
         helpText: 'Last 10 days. 0 = not at all, 100 = completely interferes with life.',
       }),
     ],

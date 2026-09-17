@@ -211,6 +211,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     whyUse: 'Standard neck-specific disability PRO; validated counterpart to the Oswestry Low Back Pain Disability Index.',
     isQuestionnaire: true,
     questionnaire: {
+      directInputIds: ['pct'],
       modeInputId: 'entryMode',
       directModeValues: ['direct'],
       activeInputIdsByMode: {
@@ -308,7 +309,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 100,
         step: 1,
-        defaultValue: 28,
+        exampleValue: 28,
         helpText: 'Used only if entry mode is set to Direct Score Override (0–100%).',
       }),
     ],
@@ -428,6 +429,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     whyUse: 'Gold-standard region-specific PRO for upper-limb function across diagnoses.',
     isQuestionnaire: true,
     questionnaire: {
+      directInputIds: ['total'],
       modeInputId: 'entryMode',
       directModeValues: ['direct'],
       activeInputIdsByMode: {
@@ -658,7 +660,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 100,
         step: 0.1,
-        defaultValue: 35,
+        exampleValue: 35,
         helpText: 'Used if Direct Score Override mode is active. DASH = ((sum of n responses / n) − 1) × 25.',
       }),
     ],
@@ -772,6 +774,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     whyUse: '11-item short form correlates highly with full DASH and is practical in clinic.',
     isQuestionnaire: true,
     questionnaire: {
+      directInputIds: ['total'],
       modeInputId: 'entryMode',
       directModeValues: ['direct'],
       activeInputIdsByMode: {
@@ -865,7 +868,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 100,
         step: 0.1,
-        defaultValue: 32,
+        exampleValue: 32,
         helpText: 'Used if Direct Score Override mode is active. QuickDASH = ((sum of n / n) − 1) × 25.',
       }),
     ],
@@ -971,6 +974,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     whyUse: 'Core PRO for hip and knee osteoarthritis trials and clinic outcomes endorsed by OMERACT.',
     isQuestionnaire: true,
     questionnaire: {
+      directInputIds: ['total', 'pain', 'function'],
       modeInputId: 'entryMode',
       directModeValues: ['direct'],
       activeInputIdsByMode: {
@@ -1161,21 +1165,21 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 96,
         step: 1,
-        defaultValue: 40,
+        exampleValue: 40,
         helpText: 'Used if Direct score override mode is chosen.',
       }),
       numberInput('pain', 'Pain subscale override (optional, 0–20)', {
         min: 0,
         max: 20,
         step: 1,
-        defaultValue: 8,
+        exampleValue: 8,
         required: false,
       }),
       numberInput('function', 'Function subscale override (optional, 0–68)', {
         min: 0,
         max: 68,
         step: 1,
-        defaultValue: 28,
+        exampleValue: 28,
         required: false,
       }),
     ],
@@ -1269,6 +1273,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     whyUse: 'Standard sports-knee PRO spanning symptoms, sports activity, and function endorsed by AOSSM.',
     isQuestionnaire: true,
     questionnaire: {
+      directInputIds: ['total'],
       modeInputId: 'entryMode',
       directModeValues: ['direct'],
       activeInputIdsByMode: {
@@ -1409,7 +1414,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 100,
         step: 0.1,
-        defaultValue: 65,
+        exampleValue: 65,
         helpText: 'Transformed score 0–100; higher = better function',
       }),
     ],
@@ -1539,6 +1544,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     whyUse: 'Core clinician-reported AD severity endpoint in modern dermatology trials and guidelines.',
     isQuestionnaire: true,
     questionnaire: {
+      directInputIds: ['total'],
       modeInputId: 'entryMode',
       directModeValues: ['direct'],
       activeInputIdsByMode: {
@@ -1701,7 +1707,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 72,
         step: 0.1,
-        defaultValue: 16,
+        exampleValue: 16,
         helpText: 'Used if Direct score override mode is chosen.',
       }),
     ],
@@ -1824,6 +1830,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     whyUse: 'Classic European composite AD severity score combining objective signs and patient symptoms.',
     isQuestionnaire: true,
     questionnaire: {
+      directInputIds: ['total'],
       modeInputId: 'entryMode',
       directModeValues: ['direct'],
       activeInputIdsByMode: {
@@ -1843,7 +1850,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 100,
         step: 1,
-        defaultValue: 25,
+        exampleValue: 25,
         unit: '%',
         helpText: 'Estimated using the rule of nines (0–100%).',
       }),
@@ -1887,21 +1894,21 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 10,
         step: 0.5,
-        defaultValue: 5,
+        exampleValue: 5,
         helpText: 'Visual analog scale average of last 3 days (0 = no itch, 10 = worst imaginable).',
       }),
       numberInput('subj_sleep', 'Part C: Sleep loss VAS (0–10)', {
         min: 0,
         max: 10,
         step: 0.5,
-        defaultValue: 3,
+        exampleValue: 3,
         helpText: 'Visual analog scale average of last 3 nights (0 = no sleep loss, 10 = complete sleeplessness).',
       }),
       numberInput('total', 'Direct SCORAD total override (0–103)', {
         min: 0,
         max: 103,
         step: 0.1,
-        defaultValue: 35,
+        exampleValue: 35,
         helpText: 'Used if Direct score override mode is selected.',
       }),
     ],
@@ -2010,7 +2017,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         min: 1,
         max: 80,
         step: 0.5,
-        defaultValue: 18,
+        exampleValue: 18,
         helpText: 'Goldmann applanation is the usual reference; note device (iCare, NCT, Tono-Pen) and CCT. Measure sitting, undilated when possible. Do not diagnose glaucoma from IOP alone.',
       }),
       selectInput('context', 'Clinical context', [
@@ -2130,20 +2137,20 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
       numberInput('dist', 'Snellen numerator (test distance)', {
         min: 1,
         max: 20,
-        defaultValue: 20,
+        exampleValue: 20,
         helpText: 'Feet: usually 20; meters: often 6',
       }),
       numberInput('line', 'Snellen denominator (letter size line)', {
         min: 6,
         max: 400,
-        defaultValue: 40,
+        exampleValue: 40,
         helpText: 'e.g., 40 for 20/40; 6 for 6/6 metric',
       }),
       numberInput('decimal', 'Decimal acuity (if selected)', {
         min: 0.01,
         max: 2,
         step: 0.01,
-        defaultValue: 0.5,
+        exampleValue: 0.5,
         helpText: 'Decimal = numerator/denominator (20/40 → 0.5)',
       }),
     ],
@@ -2241,6 +2248,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     whyUse: 'Brief, validated voice-related quality-of-life measure widely used in ENT and speech therapy clinics.',
     isQuestionnaire: true,
     questionnaire: {
+      directInputIds: ['total'],
       modeInputId: 'entryMode',
       directModeValues: ['direct'],
       activeInputIdsByMode: {
@@ -2327,7 +2335,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 40,
         step: 1,
-        defaultValue: 12,
+        exampleValue: 12,
         helpText: 'Used if Direct score override mode is selected.',
       }),
     ],
@@ -2428,15 +2436,15 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         '3',
         'Air-conduction dB HL from the audiogram. 3-frequency is the traditional speech PTA; 4-frequency includes 4 kHz.',
       ),
-      numberInput('f500', '500 Hz threshold', { unit: 'dB HL', min: -10, max: 120, step: 5, defaultValue: 20, helpText: 'Air-conduction threshold in dB HL from the audiogram (not bone conduction).' }),
-      numberInput('f1000', '1000 Hz threshold', { unit: 'dB HL', min: -10, max: 120, step: 5, defaultValue: 25 }),
-      numberInput('f2000', '2000 Hz threshold', { unit: 'dB HL', min: -10, max: 120, step: 5, defaultValue: 30 }),
+      numberInput('f500', '500 Hz threshold', { unit: 'dB HL', min: -10, max: 120, step: 5, exampleValue: 20, helpText: 'Air-conduction threshold in dB HL from the audiogram (not bone conduction).' }),
+      numberInput('f1000', '1000 Hz threshold', { unit: 'dB HL', min: -10, max: 120, step: 5, exampleValue: 25 }),
+      numberInput('f2000', '2000 Hz threshold', { unit: 'dB HL', min: -10, max: 120, step: 5, exampleValue: 30 }),
       numberInput('f4000', '4000 Hz threshold', {
         unit: 'dB HL',
         min: -10,
         max: 120,
         step: 5,
-        defaultValue: 35,
+        exampleValue: 35,
         helpText: 'Used only for 4-frequency PTA',
       }),
     ],
@@ -2581,7 +2589,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
       ], undefined, 'Any drowsy-driving episode counts as 1 Category 2 point (not only recent or frequent events).'),
       // Category 3
       yesNo('htn', 'High blood pressure (diagnosed/treated)', 1, 'Diagnosed or treated hypertension. Category 3 is positive if HTN or BMI >30 kg/m² (either one is enough).'),
-      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 12, max: 80, step: 0.1, defaultValue: 32, helpText: 'Category 3 is positive if BMI >30 kg/m² or diagnosed/treated hypertension.' }),
+      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 12, max: 80, step: 0.1, exampleValue: 32, helpText: 'Category 3 is positive if BMI >30 kg/m² or diagnosed/treated hypertension.' }),
     ],
     calculate(values) {
       const snorePoints: Record<string, number> = { no: 0, yes: 1, unknown: 0 };
@@ -2672,6 +2680,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     whyUse: '8-item validated symptom score preferred in GOLD guidelines for impact assessment (with mMRC).',
     isQuestionnaire: true,
     questionnaire: {
+      directInputIds: ['total'],
       modeInputId: 'entryMode',
       directModeValues: ['direct'],
       activeInputIdsByMode: {
@@ -2752,7 +2761,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 40,
         step: 1,
-        defaultValue: 15,
+        exampleValue: 15,
         helpText: 'Used if Direct score override mode is selected.',
       }),
     ],
@@ -2842,7 +2851,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     whenToUse: 'COPD prognostication when 6-minute walk (for BODE) is unavailable.',
     whyUse: 'Simpler than BODE; age + mMRC + FEV1% predicts mortality without exercise test.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 40, max: 100, defaultValue: 68, helpText: 'Updated ADO age points: <50 = 0; 50–59 = 1; 60–69 = 2; 70–79 = 3; 80–89 = 4; ≥90 = 5.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 40, max: 100, exampleValue: 68, helpText: 'Updated ADO age points: <50 = 0; 50–59 = 1; 60–69 = 2; 70–79 = 3; 80–89 = 4; ≥90 = 5.' }),
       selectInput('mmrc', 'mMRC dyspnea grade', [
         { label: '0 — Dyspnea only with strenuous exercise (0 pts)', value: 0, description: '“I only get breathless with strenuous exercise.” No dyspnea walking on the level or up a slight hill.' },
         { label: '1 — Dyspnea when hurrying / walking up slight hill (1)', value: 1, description: '“I get short of breath when hurrying on the level or walking up a slight hill.” Can keep up with peers on the level at own pace.' },
@@ -2854,7 +2863,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         unit: '%',
         min: 10,
         max: 120,
-        defaultValue: 45,
+        exampleValue: 45,
         helpText: 'Post-bronchodilator FEV1 % predicted. Updated ADO obstruction points: ≥81% = 0; 65–80 = 1; 50–64 = 2; 36–49 = 3; 21–35 = 4; 6–20 = 5; ≤5 = 6.',
       }),
     ],
@@ -2960,7 +2969,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         min: 5,
         max: 120,
         step: 1,
-        defaultValue: 55,
+        exampleValue: 55,
         helpText: 'GOLD spirometric grade (after FEV1/FVC <0.7 post-BD): 1 mild ≥80%; 2 moderate 50–79%; 3 severe 30–49%; 4 very severe <30%.',
       }),
       selectInput('ratioOk', 'FEV1/FVC < 0.7 (post-BD) confirmed?', [
@@ -3008,7 +3017,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     },
     evidence: {
       summary:
-        'GOLD airflow limitation grades (post-BD FEV1 % predicted): 1 mild ≥80%, 2 moderate 50–79%, 3 severe 30–49%, 4 very severe <30%, after FEV1/FVC <0.7.',
+        'GOLD airflow limitation grades (post-BD FEV1 % predicted): 1 mild ≥80%, 2 moderate 50–79%, 3 severe 30–49%, 4 very severe <30%, after FEV1/FVC <0.7. The 2026 GOLD report (a major revision) keeps these bands and continues to stage with FEV1 % predicted, but now recommends the GLI-Global race-neutral reference equations as the reference standard; ATS/ERS prefer z-score bands, which reclassify some patients.',
       formula: 'Grade from FEV1 % predicted thresholds',
       validation: 'Global Initiative for Chronic Obstructive Lung Disease strategy documents.',
       references: [
@@ -3024,7 +3033,11 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
       { condition: 'GOLD 3–4', actions: ['Specialty COPD care', 'Check O2 criteria', 'Pulm rehab', 'Exacerbation prevention'] },
       { condition: 'Any grade', actions: ['Assign ABE group with CAT/mMRC + exacerbations', 'Smoking cessation', 'Vaccinations'] },
     ],
-    pearls: ['Do not confuse spirometric grade with former A–D or current A/B/E groups.', 'Pre- vs post-bronchodilator values must be labeled.'],
+    pearls: [
+      'Do not confuse spirometric grade with former A–D or current A/B/E groups.',
+      'Pre- vs post-bronchodilator values must be labeled.',
+      'The % predicted denominator matters: GOLD 2026 endorses the GLI-Global race-neutral equations, so the same FEV1 can land in a different grade than older race-based references.',
+    ],
   },
 
   // ─── 17. ACT asthma ────────────────────────────────────────────────────────
@@ -3039,6 +3052,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     whyUse: '5-item validated patient questionnaire; cutoff ≤19 identifies uncontrolled asthma with high sensitivity.',
     isQuestionnaire: true,
     questionnaire: {
+      directInputIds: ['total'],
       modeInputId: 'entryMode',
       directModeValues: ['direct'],
       activeInputIdsByMode: {
@@ -3090,23 +3104,83 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         min: 5,
         max: 25,
         step: 1,
-        defaultValue: 18,
+        exampleValue: 18,
         helpText: 'Used if Direct score override mode is chosen.',
       }),
     ],
     calculate(values) {
-      const mode = String(values.entryMode ?? 'survey');
+      const modeValue = values.entryMode;
+      const mode = modeValue === null || modeValue === undefined || modeValue === '' ? 'survey' : String(modeValue);
+      const itemKeys = ['act_q1', 'act_q2', 'act_q3', 'act_q4', 'act_q5'] as const;
       let score: number;
 
-      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.act_q1 === undefined)) {
-        score = Math.round(Math.min(25, Math.max(5, num(values.total, 18))));
+      if (mode !== 'survey' && mode !== 'direct') {
+        return {
+          score: '—',
+          unit: '/25',
+          label: 'Invalid ACT entry mode',
+          interpretation: 'Choose the interactive 5-item questionnaire or direct ACT total override before interpreting asthma control.',
+          riskLevel: 'info' as const,
+        };
+      }
+
+      if (mode === 'direct') {
+        const rawTotal = values.total;
+        if (isMissingValue(rawTotal, true)) {
+          return {
+            score: '—',
+            unit: '/25',
+            label: 'Incomplete ACT',
+            interpretation: 'Enter the direct ACT total (5–25) before interpreting asthma control.',
+            riskLevel: 'info' as const,
+            details: [{ label: 'Direct ACT total', value: 'Required' }],
+          };
+        }
+        const directTotal = typeof rawTotal === 'number' ? rawTotal : Number(String(rawTotal));
+        if (!Number.isFinite(directTotal) || !Number.isInteger(directTotal) || directTotal < 5 || directTotal > 25) {
+          return {
+            score: '—',
+            unit: '/25',
+            label: 'Invalid ACT total',
+            interpretation: 'Direct ACT total must be an integer from 5 to 25.',
+            riskLevel: 'info' as const,
+            details: [{ label: 'Direct ACT total', value: String(rawTotal) }],
+          };
+        }
+        score = directTotal;
       } else {
-        score =
-          num(values.act_q1, 4) +
-          num(values.act_q2, 4) +
-          num(values.act_q3, 4) +
-          num(values.act_q4, 4) +
-          num(values.act_q5, 4);
+        const missingKeys = itemKeys.filter((key) => isMissingValue(values[key], false));
+        if (missingKeys.length > 0) {
+          return {
+            score: '—',
+            unit: '/25',
+            label: 'Incomplete ACT',
+            interpretation: `Answer all 5 ACT items before interpreting the score (${itemKeys.length - missingKeys.length}/5 entered).`,
+            riskLevel: 'info' as const,
+            details: [{ label: 'Items entered', value: `${itemKeys.length - missingKeys.length} / 5` }],
+          };
+        }
+
+        const invalidKeys = itemKeys.filter((key) => {
+          const raw = values[key];
+          const answer = typeof raw === 'number' ? raw : Number(String(raw));
+          return !Number.isInteger(answer) || answer < 1 || answer > 5;
+        });
+        if (invalidKeys.length > 0) {
+          return {
+            score: '—',
+            unit: '/25',
+            label: 'Invalid ACT response',
+            interpretation: 'Each ACT item must be an integer response from 1 to 5.',
+            riskLevel: 'info' as const,
+            details: invalidKeys.map((key) => ({ label: key, value: String(values[key]) })),
+          };
+        }
+
+        score = itemKeys.reduce((sum, key) => {
+          const raw = values[key];
+          return sum + (typeof raw === 'number' ? raw : Number(String(raw)));
+        }, 0);
       }
 
       let riskLevel: 'normal' | 'low' | 'moderate' | 'high' = 'normal';
@@ -3175,6 +3249,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     whyUse: 'Juniper ACQ is a standard continuous control metric in asthma clinical trials with well-established cutoffs.',
     isQuestionnaire: true,
     questionnaire: {
+      directInputIds: ['total'],
       modeInputId: 'entryMode',
       directModeValues: ['direct'],
       activeInputIdsByMode: {
@@ -3262,7 +3337,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 6,
         step: 0.01,
-        defaultValue: 1.2,
+        exampleValue: 1.2,
         helpText: 'Used if Direct score override mode is selected. Mean of items (0 = totally controlled, 6 = severely uncontrolled).',
       }),
     ],
@@ -3916,6 +3991,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
     whyUse: 'Validated 6-item short form; rapidly identifies older adults malnourished or at risk of malnutrition.',
     isQuestionnaire: true,
     questionnaire: {
+      directInputIds: ['total'],
       modeInputId: 'entryMode',
       directModeValues: ['direct'],
       activeInputIdsByMode: {
@@ -3963,7 +4039,7 @@ export const wave6ScoresResidualCalcs: AuditedQuestionnaireCalculator[] = [
         min: 0,
         max: 14,
         step: 1,
-        defaultValue: 10,
+        exampleValue: 10,
         helpText: 'Used if Direct score override mode is selected.',
       }),
     ],

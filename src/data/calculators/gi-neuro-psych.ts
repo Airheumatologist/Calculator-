@@ -133,9 +133,9 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'When reproducing the original MELD model in historical studies or comparing legacy prognostic scores; use MELD 3.0 for current OPTN allocation.',
     whyUse: 'The original MELD model is the historical foundation for later MELD-Na and MELD 3.0 models, but its four-variable formula should not be treated as current allocation policy.',
     inputs: [
-      numberInput('bili', 'Bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 2.0, helpText: 'Total bilirubin in mg/dL; this historical implementation floors values below 1.0.' }),
-      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, defaultValue: 1.5, helpText: 'This historical implementation floors INR below 1.0.' }),
-      numberInput('creat', 'Creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.1, defaultValue: 1.0, helpText: 'Historical MELD handling: floor at 1.0, cap at 4.0; dialysis ≥2× in the past week (or 24 h CVVHD) sets Cr to 4.0.' }),
+      numberInput('bili', 'Bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, exampleValue: 2.0, helpText: 'Total bilirubin in mg/dL; this historical implementation floors values below 1.0.' }),
+      numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, exampleValue: 1.5, helpText: 'This historical implementation floors INR below 1.0.' }),
+      numberInput('creat', 'Creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 15, step: 0.1, exampleValue: 1.0, helpText: 'Historical MELD handling: floor at 1.0, cap at 4.0; dialysis ≥2× in the past week (or 24 h CVVHD) sets Cr to 4.0.' }),
       yesNo('dialysis', 'Dialysis ≥2 times in past week (or 24h CVVHD)', null, 'Historical MELD handling sets creatinine to 4.0 mg/dL; this is not the current MELD 3.0 creatinine rule.'),
     ],
     calculate(values) {
@@ -175,6 +175,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whyUse: 'Current OPTN allocation model, implemented July 13, 2023, incorporating sex, albumin, sodium, bilirubin, INR, and creatinine interactions to estimate medical urgency.',
     isQuestionnaire: true,
     questionnaire: {
+      directInputIds: ['directMeld'],
       modeInputId: 'entryMode',
       directModeValues: ['direct'],
       activeInputIdsByMode: {
@@ -187,18 +188,18 @@ export const giNeuroPsychCalcs: Calculator[] = [
         { label: 'Primary OPTN laboratory values', value: 'labs' },
         { label: 'Enter precomputed MELD 3.0 score', value: 'direct' },
       ], 'labs'),
-      numberInput('age', 'Age at waitlist registration', { unit: 'years', min: 12, max: 120, step: 1, defaultValue: 55, helpText: 'Use age at registration: adult formula at ≥18 years; adolescent formula at 12–17 years.' }),
+      numberInput('age', 'Age at waitlist registration', { unit: 'years', min: 12, max: 120, step: 1, exampleValue: 55, helpText: 'Use age at registration: adult formula at ≥18 years; adolescent formula at 12–17 years.' }),
       selectInput('sex', 'Sex for MELD 3.0 calculation', [
         { label: 'Male', value: 'male' },
         { label: 'Female (+1.33 adult points)', value: 'female' },
       ], 'male', 'Adult female: +1.33. Adolescent (12–17) constant is 7.33, which already includes the 1.33 for both sexes; do not add 1.33 again.'),
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 1.5, helpText: 'Values below 1.0 mg/dL are set to 1.0 per OPTN policy.' }),
-      numberInput('inr', 'INR', { min: 0.8, max: 15, step: 0.01, defaultValue: 1.2, helpText: 'Values below 1.0 are set to 1.0 per OPTN policy.' }),
-      numberInput('albumin', 'Serum albumin', { unit: 'g/dL', min: 0.1, max: 6, step: 0.1, defaultValue: 3.0, helpText: 'Bounded to 1.5–3.5 g/dL per OPTN policy.' }),
-      numberInput('creat', 'Serum creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.2, helpText: 'Values below 1.0 are set to 1.0; values above 3.0 are set to 3.0. Dialysis also sets creatinine to 3.0.' }),
-      numberInput('na', 'Serum sodium', { unit: 'mEq/L', min: 100, max: 160, step: 1, defaultValue: 135, helpText: 'Bounded to 125–137 mEq/L per OPTN policy.' }),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, exampleValue: 1.5, helpText: 'Values below 1.0 mg/dL are set to 1.0 per OPTN policy.' }),
+      numberInput('inr', 'INR', { min: 0.8, max: 15, step: 0.01, exampleValue: 1.2, helpText: 'Values below 1.0 are set to 1.0 per OPTN policy.' }),
+      numberInput('albumin', 'Serum albumin', { unit: 'g/dL', min: 0.1, max: 6, step: 0.1, exampleValue: 3.0, helpText: 'Bounded to 1.5–3.5 g/dL per OPTN policy.' }),
+      numberInput('creat', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 1.2, helpText: 'Values below 1.0 are set to 1.0; values above 3.0 are set to 3.0. Dialysis also sets creatinine to 3.0.' }),
+      numberInput('na', 'Serum sodium', { unit: 'mEq/L', min: 100, max: 160, step: 1, exampleValue: 135, helpText: 'Bounded to 125–137 mEq/L per OPTN policy.' }),
       yesNo('dialysis', 'Dialysis ≥2 times or ≥24h CVVHD within prior 7 days', 0, 'If yes, serum creatinine is set to 3.0 mg/dL. OPTN policy specifies dialysis twice or 24 hours of CVVHD; CVVH/SLED are not interchangeable terms here.'),
-      numberInput('directMeld', 'Precomputed MELD 3.0 score (6–40)', { min: 6, max: 40, defaultValue: 15, helpText: 'Only used when "Enter precomputed MELD 3.0 score" is selected; do not apply a second sodium adjustment.' }),
+      numberInput('directMeld', 'Precomputed MELD 3.0 score (6–40)', { min: 6, max: 40, exampleValue: 15, helpText: 'Only used when "Enter precomputed MELD 3.0 score" is selected; do not apply a second sodium adjustment.' }),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'labs');
@@ -1201,7 +1202,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
     tags: ['dementia', 'cognition', 'mmse'],
     whenToUse: 'Cognitive screening interpretation when MMSE already administered.',
     whyUse: 'Widely known cognitive screen (copyrighted instrument — enter total only).',
-    inputs: [numberInput('score', 'MMSE total score', { min: 0, max: 30, defaultValue: 28, helpText: 'Enter the total from the official copyrighted MMSE form; do not administer items from this screen.' })],
+    inputs: [numberInput('score', 'MMSE total score', { min: 0, max: 30, exampleValue: 28, helpText: 'Enter the total from the official copyrighted MMSE form; do not administer items from this screen.' })],
     calculate(values) {
       const score = num(values.score, 28);
       const r = riskFromThresholds(score, [
@@ -1235,7 +1236,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
       numberInput('score', 'MoCA total (before education adjust)', {
         min: 0,
         max: 30,
-        defaultValue: 26,
+        exampleValue: 26,
         helpText: 'Enter the total from the official MoCA form (mocatest.org); do not administer items from this screen.',
       }),
       yesNo('edu', '≤12 years education (+1 if applicable)', 1, 'Add 1 point if ≤12 years of education, only if the raw total is <30 (cannot exceed 30).'),

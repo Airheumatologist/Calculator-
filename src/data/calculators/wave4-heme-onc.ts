@@ -370,17 +370,17 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Newly diagnosed chronic-phase CML before or at TKI start (historical risk grouping).',
     whyUse: 'Still reported in trials and labels; frames baseline risk though ELTS is preferred for TKI-era long-term survival.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 1, max: 120, defaultValue: 50 }),
+      numberInput('age', 'Age', { unit: 'years', min: 1, max: 120, exampleValue: 50 }),
       numberInput('spleen', 'Spleen size below costal margin', {
         unit: 'cm',
         min: 0,
         max: 40,
         step: 0.5,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Clinical exam, cm below left costal margin in the midclavicular line; 0 if not palpable',
       }),
-      numberInput('platelets', 'Platelet count', { unit: '×10⁹/L', min: 10, max: 3000, defaultValue: 300 }),
-      numberInput('blasts', 'Peripheral blood blasts', { unit: '%', min: 0, max: 30, step: 0.1, defaultValue: 1 }),
+      numberInput('platelets', 'Platelet count', { unit: '×10⁹/L', min: 10, max: 3000, exampleValue: 300 }),
+      numberInput('blasts', 'Peripheral blood blasts', { unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
     ],
     calculate(values) {
       const age = num(values.age, 50);
@@ -458,12 +458,12 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Newly diagnosed chronic-phase CML risk stratification (historical Euro score).',
     whyUse: 'Complementary to Sokal; developed in interferon era and still cited alongside Sokal/EUTOS/ELTS.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 1, max: 120, defaultValue: 50 }),
-      numberInput('spleen', 'Spleen size below costal margin', { unit: 'cm', min: 0, max: 40, step: 0.5, defaultValue: 0, helpText: 'Clinical exam, cm below left costal margin in the midclavicular line; 0 if not palpable' }),
-      numberInput('blasts', 'Peripheral blood blasts', { unit: '%', min: 0, max: 30, step: 0.1, defaultValue: 1 }),
-      numberInput('eosinophils', 'Peripheral eosinophils', { unit: '%', min: 0, max: 50, step: 0.1, defaultValue: 2 }),
-      numberInput('basophils', 'Peripheral basophils', { unit: '%', min: 0, max: 30, step: 0.1, defaultValue: 1 }),
-      numberInput('platelets', 'Platelet count', { unit: '×10⁹/L', min: 10, max: 3000, defaultValue: 300 }),
+      numberInput('age', 'Age', { unit: 'years', min: 1, max: 120, exampleValue: 50 }),
+      numberInput('spleen', 'Spleen size below costal margin', { unit: 'cm', min: 0, max: 40, step: 0.5, exampleValue: 0, helpText: 'Clinical exam, cm below left costal margin in the midclavicular line; 0 if not palpable' }),
+      numberInput('blasts', 'Peripheral blood blasts', { unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
+      numberInput('eosinophils', 'Peripheral eosinophils', { unit: '%', min: 0, max: 50, step: 0.1, exampleValue: 2 }),
+      numberInput('basophils', 'Peripheral basophils', { unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
+      numberInput('platelets', 'Platelet count', { unit: '×10⁹/L', min: 10, max: 3000, exampleValue: 300 }),
     ],
     calculate(values) {
       const age = num(values.age, 50);
@@ -545,8 +545,8 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Chronic-phase CML at diagnosis when a simple spleen + basophil score is desired.',
     whyUse: 'Minimal inputs; originally validated for CCyR probability on imatinib (not identical to ELTS long-term survival model).',
     inputs: [
-      numberInput('spleen', 'Spleen size below costal margin', { unit: 'cm', min: 0, max: 40, step: 0.5, defaultValue: 0, helpText: 'Clinical exam, cm below left costal margin in the midclavicular line; 0 if not palpable' }),
-      numberInput('basophils', 'Peripheral basophils', { unit: '%', min: 0, max: 30, step: 0.1, defaultValue: 1 }),
+      numberInput('spleen', 'Spleen size below costal margin', { unit: 'cm', min: 0, max: 40, step: 0.5, exampleValue: 0, helpText: 'Clinical exam, cm below left costal margin in the midclavicular line; 0 if not palpable' }),
+      numberInput('basophils', 'Peripheral basophils', { unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
     ],
     calculate(values) {
       const spleen = num(values.spleen, 0);
@@ -610,8 +610,8 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Newly diagnosed multiple myeloma staging (pair with R-ISS when cytogenetics/LDH available).',
     whyUse: 'Simple, widely validated three-stage system that correlates with overall survival.',
     inputs: [
-      numberInput('b2m', 'Serum β₂-microglobulin', { unit: 'mg/L', min: 0.5, max: 50, step: 0.1, defaultValue: 3.0, helpText: 'ISS I if <3.5 mg/L (with albumin ≥3.5 g/dL); ISS III if ≥5.5 mg/L regardless of albumin.' }),
-      numberInput('albumin', 'Serum albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, defaultValue: 3.8, helpText: 'ISS I requires albumin ≥3.5 g/dL together with β2M <3.5 mg/L.' }),
+      numberInput('b2m', 'Serum β₂-microglobulin', { unit: 'mg/L', min: 0.5, max: 50, step: 0.1, exampleValue: 3.0, helpText: 'ISS I if <3.5 mg/L (with albumin ≥3.5 g/dL); ISS III if ≥5.5 mg/L regardless of albumin.' }),
+      numberInput('albumin', 'Serum albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, exampleValue: 3.8, helpText: 'ISS I requires albumin ≥3.5 g/dL together with β2M <3.5 mg/L.' }),
     ],
     calculate(values) {
       const b2m = num(values.b2m, 3);
@@ -1312,8 +1312,8 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'When BSA is needed for mg/m² dosing, cardiac index, or other indexed parameters.',
     whyUse: 'Simple square-root formula widely accepted and easy to verify at the bedside.',
     inputs: [
-      numberInput('height', 'Height', { unit: 'cm', min: 50, max: 250, step: 0.1, defaultValue: 170 }),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 10, max: 400, step: 0.1, defaultValue: 70 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 50, max: 250, step: 0.1, exampleValue: 170 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 10, max: 400, step: 0.1, exampleValue: 70 }),
     ],
     calculate(values) {
       const h = num(values.height, 170);
@@ -1459,47 +1459,116 @@ export const wave4HemeOncCalcs: Calculator[] = [
     id: 'das28',
     name: 'DAS28 (RA Disease Activity)',
     shortName: 'DAS28',
-    description: 'Disease Activity Score using 28 joints with ESR or CRP and patient global assessment.',
+    description: 'Disease Activity Score using 28 joints with a selected ESR or CRP pathway and patient global assessment.',
     category: 'rheumatology',
     tags: ['das28', 'rheumatoid arthritis', 'disease activity', 'rheumatology'],
     whenToUse: 'Rheumatoid arthritis treat-to-target monitoring with tender/swollen joint counts and acute-phase reactant.',
-    whyUse: 'Standard composite endpoint for remission/LDA/MDA/HDA classification in RA trials and clinics.',
+    whyUse: 'Standard composite endpoint for remission/LDA/MDA/HDA classification in RA trials and clinics. Select one laboratory variant and trend the same variant over time; DAS28-ESR and DAS28-CRP are correlated but not numerically interchangeable.',
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'variant',
+      activeInputIdsByMode: {
+        esr: ['tjc', 'sjc', 'esr', 'pga'],
+        crp: ['tjc', 'sjc', 'crp', 'pga'],
+      },
+    },
     inputs: [
       selectInput('variant', 'DAS28 variant', [
         { label: 'DAS28-ESR', value: 'esr' },
         { label: 'DAS28-CRP', value: 'crp' },
-      ]),
-      numberInput('tjc', 'Tender joint count (28)', { min: 0, max: 28, defaultValue: 4, helpText: '28 joints = bilateral shoulders, elbows, wrists, MCP1–5, PIP1–5, knees (not hips, ankles, or feet). Tender = pain on pressure/motion.' }),
-      numberInput('sjc', 'Swollen joint count (28)', { min: 0, max: 28, defaultValue: 2, helpText: 'Same 28-joint set. Swollen = synovitis, not bony enlargement.' }),
-      numberInput('apr', 'ESR (mm/h) or CRP (mg/L)', {
+      ], 'esr', 'Required: choose the acute-phase reactant pathway. Do not substitute CRP for ESR or vice versa.'),
+      numberInput('tjc', 'Tender joint count (28)', { min: 0, max: 28, exampleValue: 4, helpText: '28 joints = bilateral shoulders, elbows, wrists, MCP1–5, PIP1–5, knees (not hips, ankles, or feet). Tender = pain on pressure/motion.' }),
+      numberInput('sjc', 'Swollen joint count (28)', { min: 0, max: 28, exampleValue: 2, helpText: 'Same 28-joint set. Swollen = synovitis, not bony enlargement.' }),
+      numberInput('esr', 'ESR (DAS28-ESR)', {
+        unit: 'mm/h',
+        min: 0.1,
+        max: 200,
+        step: 0.1,
+        exampleValue: 20,
+        helpText: 'DAS28-ESR pathway only. ESR must be >0 because the validated formula uses ln(ESR).',
+      }),
+      numberInput('crp', 'CRP (DAS28-CRP)', {
+        unit: 'mg/L',
         min: 0,
         max: 200,
         step: 0.1,
-        defaultValue: 20,
-        helpText: 'Enter ESR if DAS28-ESR; CRP in mg/L if DAS28-CRP',
+        exampleValue: 20,
+        helpText: 'DAS28-CRP pathway only. Use CRP in mg/L; CRP may be 0 because the formula uses ln(CRP+1).',
       }),
       numberInput('pga', 'Patient global assessment', {
         unit: '0–100 mm',
         min: 0,
         max: 100,
-        defaultValue: 30,
+        exampleValue: 30,
         helpText: 'How active has your arthritis been during the last week? 0 = not active, 100 = extremely active (VAS 0–100 mm).',
       }),
     ],
     calculate(values) {
-      const variant = String(values.variant ?? 'esr');
-      const tjc = Math.max(0, num(values.tjc, 0));
-      const sjc = Math.max(0, num(values.sjc, 0));
-      const apr = Math.max(variant === 'crp' ? 0 : 1, num(values.apr, 20)); // ESR ln needs >0
-      const pga = num(values.pga, 30);
+      const variant = values.variant === 'esr' || values.variant === 'crp' ? values.variant : null;
+      const invalidResult = (label: string, interpretation: string, details: { label: string; value: string }[]) => ({
+        score: '—' as const,
+        label,
+        interpretation,
+        riskLevel: 'info' as const,
+        details,
+      });
+
+      if (!variant) {
+        return invalidResult(
+          'Select a DAS28 variant',
+          'Choose DAS28-ESR or DAS28-CRP before calculating. The two pathways require different acute-phase reactants and formulas.',
+          [{ label: 'DAS28 variant', value: String(values.variant ?? 'Not selected') }]
+        );
+      }
+
+      const variantLabel = variant === 'crp' ? 'DAS28-CRP' : 'DAS28-ESR';
+      const labId = variant === 'crp' ? 'crp' : 'esr';
+      const labLabel = variant === 'crp' ? 'CRP' : 'ESR';
+      const rawLab = values[labId];
+      const lab = num(rawLab, Number.NaN);
+      const labValid =
+        typeof rawLab !== 'boolean' &&
+        Number.isFinite(lab) &&
+        (variant === 'crp' ? lab >= 0 : lab > 0);
+      if (!labValid) {
+        return invalidResult(
+          `${variantLabel} requires a valid ${labLabel}`,
+          `${variantLabel} cannot be calculated safely because ${labLabel} must be ${variant === 'crp' ? 'a finite value ≥0 mg/L' : 'a finite value >0 mm/h'} for its logarithm.`,
+          [
+            { label: 'Variant', value: variantLabel },
+            { label: labLabel, value: rawLab === null || rawLab === undefined || rawLab === '' ? 'Not entered' : String(rawLab) },
+          ]
+        );
+      }
+
+      const tjc = num(values.tjc, Number.NaN);
+      const sjc = num(values.sjc, Number.NaN);
+      const pga = num(values.pga, Number.NaN);
+      const otherInputInvalid =
+        !Number.isFinite(tjc) ||
+        !Number.isFinite(sjc) ||
+        !Number.isFinite(pga) ||
+        tjc < 0 ||
+        tjc > 28 ||
+        sjc < 0 ||
+        sjc > 28 ||
+        pga < 0 ||
+        pga > 100;
+      if (otherInputInvalid) {
+        return invalidResult(
+          `${variantLabel} input invalid`,
+          `${variantLabel} requires finite joint counts in the 0–28 range and a patient global assessment in the 0–100 mm range.`,
+          [{ label: 'Variant', value: variantLabel }]
+        );
+      }
 
       let das: number;
       if (variant === 'crp') {
         // DAS28-CRP = 0.56√TJC + 0.28√SJC + 0.36·ln(CRP+1) + 0.014·PGA + 0.96
-        das = 0.56 * Math.sqrt(tjc) + 0.28 * Math.sqrt(sjc) + 0.36 * Math.log(apr + 1) + 0.014 * pga + 0.96;
+        das = 0.56 * Math.sqrt(tjc) + 0.28 * Math.sqrt(sjc) + 0.36 * Math.log(lab + 1) + 0.014 * pga + 0.96;
       } else {
         // DAS28-ESR = 0.56√TJC + 0.28√SJC + 0.70·ln(ESR) + 0.014·PGA
-        das = 0.56 * Math.sqrt(tjc) + 0.28 * Math.sqrt(sjc) + 0.7 * Math.log(apr) + 0.014 * pga;
+        das = 0.56 * Math.sqrt(tjc) + 0.28 * Math.sqrt(sjc) + 0.7 * Math.log(lab) + 0.014 * pga;
       }
       const score = round(das, 2);
 
@@ -1507,44 +1576,51 @@ export const wave4HemeOncCalcs: Calculator[] = [
         {
           max: 2.59,
           level: 'normal',
-          label: 'Remission (<2.6)',
-          interpretation: `DAS28 ${score}: remission range by common cutoffs. Confirm with clinical judgment and Boolean/SDAI remission criteria when relevant.`,
+          label: `${variantLabel} remission (<2.6)`,
+          interpretation: `${variantLabel} ${score}: remission range by common DAS28 cutoffs. Confirm with clinical judgment and Boolean/SDAI remission criteria when relevant.`,
         },
         {
           max: 3.2,
           level: 'low',
-          label: 'Low disease activity (≤3.2)',
-          interpretation: `DAS28 ${score}: low disease activity. Often treat-to-target acceptable range; continue monitoring.`,
+          label: `${variantLabel} low disease activity (≤3.2)`,
+          interpretation: `${variantLabel} ${score}: low disease activity by common DAS28 cutoffs. Often treat-to-target acceptable range; continue monitoring the same variant.`,
         },
         {
           max: 5.1,
           level: 'moderate',
-          label: 'Moderate disease activity (≤5.1)',
-          interpretation: `DAS28 ${score}: moderate activity. Consider treatment escalation per ACR/EULAR treat-to-target.`,
+          label: `${variantLabel} moderate disease activity (≤5.1)`,
+          interpretation: `${variantLabel} ${score}: moderate disease activity by common DAS28 cutoffs. Consider treatment escalation per ACR/EULAR treat-to-target.`,
         },
         {
           max: 20,
           level: 'high',
-          label: 'High disease activity (>5.1)',
-          interpretation: `DAS28 ${score}: high disease activity. Escalate DMARD/biologic strategy; assess adherence and comorbidities.`,
+          label: `${variantLabel} high disease activity (>5.1)`,
+          interpretation: `${variantLabel} ${score}: high disease activity by common DAS28 cutoffs. Escalate DMARD/biologic strategy; assess adherence and comorbidities.`,
         },
       ]);
       return {
         score,
         ...r,
         details: [
-          { label: 'Variant', value: variant === 'crp' ? 'DAS28-CRP' : 'DAS28-ESR' },
+          { label: 'Variant', value: variantLabel },
           { label: 'TJC28 / SJC28', value: `${tjc} / ${sjc}` },
-          { label: 'APR entered', value: String(apr) },
+          { label: labLabel, value: `${lab} ${variant === 'crp' ? 'mg/L' : 'mm/h'}` },
           { label: 'PGA', value: `${pga} mm` },
+          {
+            label: `${variantLabel} formula`,
+            value:
+              variant === 'crp'
+                ? '0.56√TJC28 + 0.28√SJC28 + 0.36 ln(CRP+1) + 0.014·PGA + 0.96'
+                : '0.56√TJC28 + 0.28√SJC28 + 0.70 ln(ESR) + 0.014·PGA',
+          },
         ],
       };
     },
     evidence: {
       summary:
-        'DAS28-ESR = 0.56√TJC + 0.28√SJC + 0.70 ln(ESR) + 0.014·PGA. DAS28-CRP adds +0.96 and uses 0.36 ln(CRP+1). Remission <2.6; LDA ≤3.2; MDA ≤5.1; HDA >5.1.',
-      formula: 'Composite of joint counts, APR, and patient global (0–100)',
-      validation: 'Widely validated; DAS28-CRP and DAS28-ESR are not interchangeable at the same numeric cutoffs perfectly.',
+        'DAS28-ESR = 0.56√TJC28 + 0.28√SJC28 + 0.70 ln(ESR) + 0.014·PGA. DAS28-CRP = 0.56√TJC28 + 0.28√SJC28 + 0.36 ln(CRP+1) + 0.014·PGA + 0.96. Common DAS28 interpretation: remission <2.6; low disease activity ≤3.2; moderate disease activity ≤5.1; high disease activity >5.1. The variants are correlated but should not be treated as numerically interchangeable.',
+      formula: 'Selected DAS28-ESR or DAS28-CRP composite of 28-joint counts, the matching acute-phase reactant, and patient global assessment (0–100 mm)',
+      validation: 'DAS28-ESR was developed and validated in the original DAS28 work; DAS28-CRP was validated against radiographic progression and physical function. Use the matching lab pathway and do not conflate their calibration or numeric values.',
       references: [
         {
           title: 'Modified disease activity scores that include twenty-eight-joint counts. Development and validation in a prospective longitudinal study of patients with rheumatoid arthritis',
@@ -1552,6 +1628,20 @@ export const wave4HemeOncCalcs: Calculator[] = [
           year: 1995,
           pmid: '7818570',
           doi: '10.1002/art.1780380107',
+        },
+        {
+          title: 'Validation of the 28-joint Disease Activity Score (DAS28) and European League Against Rheumatism response criteria based on C-reactive protein against disease progression in patients with rheumatoid arthritis, and comparison with the DAS28 based on erythrocyte sedimentation rate',
+          citation: 'Wells G et al. Ann Rheum Dis. 2009;68:954-960',
+          year: 2009,
+          pmid: '18490431',
+          doi: '10.1136/ard.2007.084459',
+        },
+        {
+          title: 'Disease Activity Score 28 (DAS28) using C-reactive protein underestimates disease activity and overestimates EULAR response criteria compared with DAS28 using erythrocyte sedimentation rate in a large observational cohort of rheumatoid arthritis patients in Japan',
+          citation: 'Matsui T et al. Ann Rheum Dis. 2007;66:1221-1226',
+          year: 2007,
+          pmid: '17369281',
+          doi: '10.1136/ard.2006.063834',
         },
       ],
     },
@@ -1573,10 +1663,10 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'RA disease activity assessment when labs are unavailable or a purely clinical composite is preferred.',
     whyUse: 'Simple sum of joint counts and global assessments; same-day scoring without ESR/CRP.',
     inputs: [
-      numberInput('tjc', 'Tender joint count (28)', { min: 0, max: 28, defaultValue: 4, helpText: '28 joints = bilateral shoulders, elbows, wrists, MCP1–5, PIP1–5, knees (not hips, ankles, or feet). Tender = pain on pressure/motion.' }),
-      numberInput('sjc', 'Swollen joint count (28)', { min: 0, max: 28, defaultValue: 2, helpText: 'Same 28-joint set. Swollen = synovitis, not bony enlargement.' }),
-      numberInput('pga', 'Patient global assessment', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 3, helpText: 'Considering all the ways your arthritis affects you, how have you been? 0 = best, 10 = worst (not 0–100).' }),
-      numberInput('ega', 'Evaluator global assessment', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 3, helpText: 'Evaluator/physician global of current RA activity, 0 = none to 10 = worst imaginable.' }),
+      numberInput('tjc', 'Tender joint count (28)', { min: 0, max: 28, exampleValue: 4, helpText: '28 joints = bilateral shoulders, elbows, wrists, MCP1–5, PIP1–5, knees (not hips, ankles, or feet). Tender = pain on pressure/motion.' }),
+      numberInput('sjc', 'Swollen joint count (28)', { min: 0, max: 28, exampleValue: 2, helpText: 'Same 28-joint set. Swollen = synovitis, not bony enlargement.' }),
+      numberInput('pga', 'Patient global assessment', { unit: '0–10', min: 0, max: 10, step: 0.1, exampleValue: 3, helpText: 'Considering all the ways your arthritis affects you, how have you been? 0 = best, 10 = worst (not 0–100).' }),
+      numberInput('ega', 'Evaluator global assessment', { unit: '0–10', min: 0, max: 10, step: 0.1, exampleValue: 3, helpText: 'Evaluator/physician global of current RA activity, 0 = none to 10 = worst imaginable.' }),
     ],
     calculate(values) {
       const tjc = num(values.tjc, 0);
@@ -1650,11 +1740,11 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'RA monitoring when tender/swollen counts, dual globals, and CRP are available.',
     whyUse: 'ACR/EULAR-endorsed composite; remission cutoff commonly used in trials and practice.',
     inputs: [
-      numberInput('tjc', 'Tender joint count (28)', { min: 0, max: 28, defaultValue: 4, helpText: '28 joints = bilateral shoulders, elbows, wrists, MCP1–5, PIP1–5, knees (not hips, ankles, or feet). Tender = pain on pressure/motion.' }),
-      numberInput('sjc', 'Swollen joint count (28)', { min: 0, max: 28, defaultValue: 2, helpText: 'Same 28-joint set. Swollen = synovitis, not bony enlargement.' }),
-      numberInput('pga', 'Patient global assessment', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 3, helpText: 'Considering all the ways your arthritis affects you, how have you been? 0 = best, 10 = worst (not 0–100).' }),
-      numberInput('ega', 'Evaluator global assessment', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 3, helpText: 'Evaluator/physician global of current RA activity, 0 = none to 10 = worst imaginable.' }),
-      numberInput('crp', 'CRP', { unit: 'mg/dL', min: 0, max: 30, step: 0.1, defaultValue: 0.5, helpText: 'Note mg/dL (not mg/L)' }),
+      numberInput('tjc', 'Tender joint count (28)', { min: 0, max: 28, exampleValue: 4, helpText: '28 joints = bilateral shoulders, elbows, wrists, MCP1–5, PIP1–5, knees (not hips, ankles, or feet). Tender = pain on pressure/motion.' }),
+      numberInput('sjc', 'Swollen joint count (28)', { min: 0, max: 28, exampleValue: 2, helpText: 'Same 28-joint set. Swollen = synovitis, not bony enlargement.' }),
+      numberInput('pga', 'Patient global assessment', { unit: '0–10', min: 0, max: 10, step: 0.1, exampleValue: 3, helpText: 'Considering all the ways your arthritis affects you, how have you been? 0 = best, 10 = worst (not 0–100).' }),
+      numberInput('ega', 'Evaluator global assessment', { unit: '0–10', min: 0, max: 10, step: 0.1, exampleValue: 3, helpText: 'Evaluator/physician global of current RA activity, 0 = none to 10 = worst imaginable.' }),
+      numberInput('crp', 'CRP', { unit: 'mg/dL', min: 0, max: 30, step: 0.1, exampleValue: 0.5, helpText: 'Note mg/dL (not mg/L)' }),
     ],
     calculate(values) {
       const tjc = num(values.tjc, 0);
@@ -1729,17 +1819,17 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Axial spondyloarthritis / AS disease activity monitoring and biologic eligibility discussions.',
     whyUse: 'Standard PRO composite; BASDAI ≥4 often denotes active disease in pathways and trials.',
     inputs: [
-      numberInput('q1', 'Q1 Overall level of fatigue / tiredness', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 4, helpText: 'Past week. 0 = none, 10 = very severe. Score from the official BASDAI sheet if available.' }),
-      numberInput('q2', 'Q2 Overall AS neck, back, or hip pain', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 5, helpText: 'Past week. Neck, back, or hip pain from AS — not generic spinal pain.' }),
-      numberInput('q3', 'Q3 Pain/swelling in joints other than neck, back, or hips', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 2, helpText: 'Past week. Peripheral joints OTHER THAN neck, back, or hips.' }),
-      numberInput('q4', 'Q4 Discomfort from areas tender to touch or pressure', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 3, helpText: 'Past week. Tender-to-touch/pressure discomfort (entheseal), not the word “enthesitis” alone.' }),
-      numberInput('q5', 'Q5 Level of morning stiffness from waking', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 4, helpText: 'Past week. Severity/LEVEL of morning stiffness on waking (0 none – 10 very severe).' }),
+      numberInput('q1', 'Q1 Overall level of fatigue / tiredness', { unit: '0–10', min: 0, max: 10, step: 0.1, exampleValue: 4, helpText: 'Past week. 0 = none, 10 = very severe. Score from the official BASDAI sheet if available.' }),
+      numberInput('q2', 'Q2 Overall AS neck, back, or hip pain', { unit: '0–10', min: 0, max: 10, step: 0.1, exampleValue: 5, helpText: 'Past week. Neck, back, or hip pain from AS — not generic spinal pain.' }),
+      numberInput('q3', 'Q3 Pain/swelling in joints other than neck, back, or hips', { unit: '0–10', min: 0, max: 10, step: 0.1, exampleValue: 2, helpText: 'Past week. Peripheral joints OTHER THAN neck, back, or hips.' }),
+      numberInput('q4', 'Q4 Discomfort from areas tender to touch or pressure', { unit: '0–10', min: 0, max: 10, step: 0.1, exampleValue: 3, helpText: 'Past week. Tender-to-touch/pressure discomfort (entheseal), not the word “enthesitis” alone.' }),
+      numberInput('q5', 'Q5 Level of morning stiffness from waking', { unit: '0–10', min: 0, max: 10, step: 0.1, exampleValue: 4, helpText: 'Past week. Severity/LEVEL of morning stiffness on waking (0 none – 10 very severe).' }),
       numberInput('q6', 'Q6 Duration of morning stiffness', {
         unit: '0–10',
         min: 0,
         max: 10,
         step: 0.1,
-        defaultValue: 3,
+        exampleValue: 3,
         helpText: 'Past week. 0 = 0 h, 10 = 2 h or more (standard 0–10 mapping of duration)',
       }),
     ],
@@ -1805,7 +1895,12 @@ export const wave4HemeOncCalcs: Calculator[] = [
     tags: ['sledai', 'sle', 'lupus', 'disease activity', 'autoimmune', 'rheumatology'],
     whenToUse: 'When evaluating SLE disease activity at diagnosis or monitoring response to immunosuppressive and biologic therapies.',
     whyUse: 'Globally validated 24-descriptor instrument; foundational for defining clinical response, low disease activity (LLDAS), and remission (DORIS).',
-    questionnaire: true,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['directTotal'],
+    },
     inputs: [
       selectInput('entryMode', 'Scoring method', [
         { label: 'Complete 24-descriptor checklist', value: 'survey' },
@@ -1814,7 +1909,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
       numberInput('directTotal', 'Precomputed SLEDAI-2K total', {
         min: 0,
         max: 105,
-        defaultValue: 6,
+        exampleValue: 6,
         helpText: 'Only used when "Enter precomputed SLEDAI-2K total" is selected.',
       }),
 
@@ -1945,6 +2040,12 @@ export const wave4HemeOncCalcs: Calculator[] = [
   // 24. PASI (Psoriasis Area and Severity Index)
   {
     id: 'pasi',
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['directTotal'],
+    },
     name: 'PASI (Psoriasis Area and Severity Index)',
     shortName: 'PASI',
     description: 'Calculates and interprets the Psoriasis Area and Severity Index (0–72) across 4 anatomical regions (head, upper limbs, trunk, lower limbs).',
@@ -1961,7 +2062,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
         min: 0,
         max: 72,
         step: 0.1,
-        defaultValue: 8,
+        exampleValue: 8,
         helpText: 'Only used when "Enter precomputed PASI total" is selected.',
       }),
 

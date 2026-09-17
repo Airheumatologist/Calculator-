@@ -68,7 +68,8 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'KDIGO defines AKI and stages 1–3 using the worse of creatinine or urine-output criteria.',
+      summary:
+        'KDIGO defines AKI and stages 1–3 using the worse of creatinine or urine-output criteria. The staging thresholds used here are the published 2012 guideline; KDIGO has a 2026 AKI/AKD update in public review (first major revision since 2012 — it folds acute kidney disease into one framework and revises definitions to include biomarkers), so re-check the thresholds once that document publishes.',
       formula: 'Stage = max(creatinine stage, UOP stage); Stage 3 also if RRT initiated',
       validation: 'International consensus; widely used in research and clinical pathways.',
       references: [
@@ -85,6 +86,7 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     pearls: [
       'Baseline Cr should reflect a recent steady-state value; missing baseline complicates staging.',
       'UOP criteria require accurate weight-based hourly measurement.',
+      'A KDIGO 2026 AKI/AKD revision is in public review — the 2012 thresholds are still the published standard, but expect biomarker-based definitions to follow.',
     ],
   },
   {
@@ -97,8 +99,8 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Children ~1–16 years for CKD staging, drug dosing context, or renal function estimates.',
     whyUse: 'Preferred simple bedside pediatric eGFR with IDMS-traceable creatinine.',
     inputs: [
-      numberInput('height', 'Height', { unit: 'cm', min: 40, max: 200, defaultValue: 120, helpText: 'Length/height in cm. Bedside Schwartz is for children ~1–16 y, not neonates or adults.' }),
-      numberInput('scr', 'Serum creatinine (IDMS)', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.01, defaultValue: 0.5, helpText: 'IDMS-traceable creatinine in mg/dL (use k = 0.413). µmol/L ÷ 88.4 ≈ mg/dL.' }),
+      numberInput('height', 'Height', { unit: 'cm', min: 40, max: 200, exampleValue: 120, helpText: 'Length/height in cm. Bedside Schwartz is for children ~1–16 y, not neonates or adults.' }),
+      numberInput('scr', 'Serum creatinine (IDMS)', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 15, step: 0.01, exampleValue: 0.5, helpText: 'IDMS-traceable creatinine (k = 0.413); select µmol/L for SI lab reports.' }),
     ],
     calculate(values) {
       const height = num(values.height, 120);
@@ -556,11 +558,14 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Classic KD: fever ≥5 days plus ≥4 of 5 principal clinical criteria; incomplete KD uses lab/echo supplements.',
-      validation: 'AHA scientific statements guide diagnosis and treatment timing.',
+      summary: 'Classic KD: fever ≥5 days plus ≥4 of 5 principal clinical criteria; incomplete KD uses lab/echo supplements. The 2024 AHA statement is an update covering diagnosis, cardiac imaging, and long-term management since 2017 — it adds criteria for North American patients at high risk of coronary artery aneurysms rather than re-deriving the classic criteria, so the fever + ≥4-of-5 logic is retained here; re-read the statement if your pathway depends on the newer risk definition.',
+      validation:
+        'AHA scientific statements guide diagnosis and treatment timing. The 2017 statement is the source of the principal clinical criteria; the 2024 update (with 2025 corrections) carries current guidance on imaging, high-risk features for coronary artery aneurysms, and long-term care.',
       references: [
         { title: 'Diagnosis, Treatment, and Long-Term Management of Kawasaki Disease', citation: 'McCrindle BW et al. Circulation. 2017', year: 2017, pmid: '28356445',
           doi: '10.1161/CIR.0000000000000484', },
+        { title: 'Update on Diagnosis and Management of Kawasaki Disease: A Scientific Statement From the American Heart Association', citation: 'Jone PN et al. Circulation. 2024;150(23):e481–e500', year: 2024, pmid: '39534969',
+          doi: '10.1161/CIR.0000000000001295', },
       ],
     },
     nextSteps: [
@@ -632,18 +637,18 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Medical inpatients being considered for pharmacologic VTE prophylaxis, typically alongside IMPROVE/IMPROVE-DD or Padua.',
     whyUse: 'Identifies patients in whom the harm of anticoagulants may outweigh VTE benefit. Active gastroduodenal ulcer and recent bleeding dominate the score.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 70, helpText: '<40: 0; 40–84: 1.5; ≥85: 3.5' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 70, helpText: '<40: 0; 40–84: 1.5; ≥85: 3.5' }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F', points: 0 },
         { label: 'Male', value: 'M', points: 1 },
       ]),
-      numberInput('gfr', 'GFR', { unit: 'mL/min/1.73 m²', min: 5, max: 120, defaultValue: 70, helpText: '≥60: 0; 30–59: 1; <30: 2.5' }),
+      numberInput('gfr', 'GFR', { unit: 'mL/min/1.73 m²', min: 5, max: 120, exampleValue: 70, helpText: '≥60: 0; 30–59: 1; <30: 2.5' }),
       yesNo('cancer', 'Active cancer (within 6 months)', 2, 'Cancer diagnosed or treated within 6 months, or metastatic disease.'),
       yesNo('rheumatic', 'Rheumatic disease', 2, 'Active rheumatic/autoimmune disease (e.g. RA, SLE) as in IMPROVE.'),
       yesNo('cvc', 'Central venous catheter', 2, 'Central line in situ (PICC, port, internal jugular/subclavian CVC).'),
       yesNo('icu', 'ICU/CCU admission', 2.5, 'Admitted to ICU or CCU during this hospitalization.'),
       yesNo('liver', 'Hepatic failure (INR >1.5)', 2.5, 'INR >1.5 attributed to hepatic failure (not isolated warfarin).'),
-      numberInput('plt', 'Platelet count', { unit: '×10⁹/L', min: 5, max: 800, defaultValue: 200, helpText: '<50: +4' }),
+      numberInput('plt', 'Platelet count', { unit: '×10⁹/L', min: 5, max: 800, exampleValue: 200, helpText: '<50: +4' }),
       yesNo('recentBleed', 'Bleeding in the 3 months before admission', 4, 'Any clinically significant bleed in the 3 months before this admission.'),
       yesNo('ulcer', 'Active gastroduodenal ulcer', 4.5, 'Active gastroduodenal ulcer (not remote PUD history alone).'),
     ],
@@ -720,11 +725,11 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'High anion gap metabolic acidosis to screen for coexisting NAGMA or metabolic alkalosis.',
     whyUse: 'Delta-delta (excess AG + HCO₃) reveals mixed disorders missed by AG alone.',
     inputs: [
-      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, defaultValue: 140, helpText: 'Serum Na in mEq/L (= mmol/L).' }),
-      numberInput('cl', 'Chloride', { unit: 'mEq/L', min: 70, max: 140, defaultValue: 100, helpText: 'Serum Cl in mEq/L.' }),
-      numberInput('hco3', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 50, defaultValue: 12, helpText: 'Serum HCO₃ / total CO₂ in mEq/L.' }),
-      numberInput('albumin', 'Albumin (optional)', { unit: 'g/dL', min: 1, max: 6, step: 0.1, defaultValue: 4.0, required: false, helpText: 'If entered, AG is corrected ≈ +2.5 mEq/L per 1 g/dL albumin below 4. Leave blank to skip correction.' }),
-      numberInput('normalAg', 'Assumed normal AG', { unit: 'mEq/L', min: 6, max: 16, defaultValue: 12, helpText: 'Lab-specific normal; often 10–12' }),
+      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 140, helpText: 'Serum Na in mEq/L (= mmol/L).' }),
+      numberInput('cl', 'Chloride', { unit: 'mEq/L', min: 70, max: 140, exampleValue: 100, helpText: 'Serum Cl in mEq/L.' }),
+      numberInput('hco3', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 50, exampleValue: 12, helpText: 'Serum HCO₃ / total CO₂ in mEq/L.' }),
+      numberInput('albumin', 'Albumin (optional)', { unit: 'g/dL', min: 1, max: 6, step: 0.1, exampleValue: 4.0, required: false, helpText: 'If entered, AG is corrected ≈ +2.5 mEq/L per 1 g/dL albumin below 4. Leave blank to skip correction.' }),
+      numberInput('normalAg', 'Assumed normal AG', { unit: 'mEq/L', min: 6, max: 16, exampleValue: 12, helpText: 'Lab-specific normal; often 10–12' }),
     ],
     calculate(values) {
       const na = num(values.na, 140);
@@ -800,15 +805,15 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Planning IV fluid therapy for hypo- or hypernatremia.',
     whyUse: 'Estimates ΔNa per liter to design safer correction rates and reduce ODS risk.',
     inputs: [
-      numberInput('serumNa', 'Current serum Na', { unit: 'mEq/L', min: 90, max: 190, defaultValue: 120, helpText: 'Current measured serum sodium. For chronic hyponatremia typical limits are often ≤8–10 mEq/L in 24 h (stricter if high ODS risk).' }),
+      numberInput('serumNa', 'Current serum Na', { unit: 'mEq/L', min: 90, max: 190, exampleValue: 120, helpText: 'Current measured serum sodium. For chronic hyponatremia typical limits are often ≤8–10 mEq/L in 24 h (stricter if high ODS risk).' }),
       numberInput('infusateNa', 'Infusate Na concentration', {
         unit: 'mEq/L',
         min: 0,
         max: 513,
-        defaultValue: 154,
+        exampleValue: 154,
         helpText: 'D5W ≈ 0; 0.45% NaCl ≈ 77; NS ≈ 154; 3% NaCl ≈ 513',
       }),
-      numberInput('weight', 'Body weight', { unit: 'kg', min: 2, max: 300, defaultValue: 70 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 2, max: 300, exampleValue: 70 }),
       selectInput('tbwFactor', 'TBW fraction', [
         { label: 'Child / young man ≈ 0.6', value: 0.6, description: 'Total body water ≈ 0.6 × weight (child or young man)' },
         { label: 'Young woman / elderly man ≈ 0.5', value: 0.5, description: 'TBW ≈ 0.5 × weight' },
@@ -818,7 +823,7 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
         unit: 'mEq/L',
         min: 0,
         max: 100,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'If K in fluid, effective cation = Na_inf + K_inf',
         required: false,
       }),
@@ -871,10 +876,10 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Educational evaluation of renal K handling in hypo/hyperkalemia when urine is concentrated.',
     whyUse: 'Classic teaching aid for mineralocorticoid effect; limited validity with modern understanding of urea and flow.',
     inputs: [
-      numberInput('uk', 'Urine potassium', { unit: 'mEq/L', min: 1, max: 200, defaultValue: 30, helpText: 'Spot urine K. TTKG is largely historical — many experts prefer urine K/Cr.' }),
-      numberInput('pk', 'Plasma / serum potassium', { unit: 'mEq/L', min: 1.5, max: 10, step: 0.1, defaultValue: 3.0, helpText: 'Plasma/serum K in mEq/L.' }),
-      numberInput('uosm', 'Urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1200, defaultValue: 400, helpText: 'Traditional TTKG is valid only if Uosm > Posm (concentrated urine) and distal Na delivery is adequate.' }),
-      numberInput('posm', 'Plasma osmolality', { unit: 'mOsm/kg', min: 200, max: 400, defaultValue: 290, helpText: 'Measured plasma osmolality preferred (not calculated).' }),
+      numberInput('uk', 'Urine potassium', { unit: 'mEq/L', min: 1, max: 200, exampleValue: 30, helpText: 'Spot urine K. TTKG is largely historical — many experts prefer urine K/Cr.' }),
+      numberInput('pk', 'Plasma / serum potassium', { unit: 'mEq/L', min: 1.5, max: 10, step: 0.1, exampleValue: 3.0, helpText: 'Plasma/serum K in mEq/L.' }),
+      numberInput('uosm', 'Urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1200, exampleValue: 400, helpText: 'Traditional TTKG is valid only if Uosm > Posm (concentrated urine) and distal Na delivery is adequate.' }),
+      numberInput('posm', 'Plasma osmolality', { unit: 'mOsm/kg', min: 200, max: 400, exampleValue: 290, helpText: 'Measured plasma osmolality preferred (not calculated).' }),
     ],
     calculate(values) {
       const uk = num(values.uk, 30);
@@ -961,10 +966,10 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
     whenToUse: 'Hypomagnesemia workup when deciding renal vs GI losses.',
     whyUse: 'Accounts for protein-bound Mg (~30% bound → ultrafilterable fraction ~0.7).',
     inputs: [
-      numberInput('umg', 'Urine magnesium', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, defaultValue: 5, helpText: 'Use the same concentration units for urine and plasma Mg (both mg/dL here).' }),
-      numberInput('pmg', 'Plasma / serum magnesium', { unit: 'mg/dL', min: 0.3, max: 6, step: 0.1, defaultValue: 1.2, helpText: 'Formula uses 0.7 × plasma Mg as the ultrafilterable fraction (~30% protein-bound).' }),
-      numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', min: 1, max: 500, defaultValue: 100, helpText: 'Spot urine creatinine in mg/dL (same unit system as plasma Cr).' }),
-      numberInput('pcr', 'Plasma creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.0, helpText: 'Plasma creatinine in mg/dL. FEMg <2% suggests extrarenal losses; >4% renal wasting (approximate).' }),
+      numberInput('umg', 'Urine magnesium', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, exampleValue: 5, helpText: 'Use the same concentration units for urine and plasma Mg (both mg/dL here).' }),
+      numberInput('pmg', 'Plasma / serum magnesium', { unit: 'mg/dL', min: 0.3, max: 6, step: 0.1, exampleValue: 1.2, helpText: 'Formula uses 0.7 × plasma Mg as the ultrafilterable fraction (~30% protein-bound).' }),
+      numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 1, max: 500, exampleValue: 100, helpText: 'Spot urine creatinine; select µmol/L for SI reports (both creatinine fields convert to mg/dL).' }),
+      numberInput('pcr', 'Plasma creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 1.0, helpText: 'Plasma creatinine; select µmol/L for SI reports. FEMg <2% suggests extrarenal losses; >4% renal wasting (approximate).' }),
     ],
     calculate(values) {
       const umg = num(values.umg, 5);
@@ -1032,11 +1037,11 @@ export const missingHemeIdNephroCalcs: Calculator[] = [
         unit: 'points',
         min: 0,
         max: 24,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'If baseline unknown, Sepsis-3 allows assuming baseline SOFA = 0',
         required: false,
       }),
-      numberInput('current', 'Current total SOFA', { unit: 'points', min: 0, max: 24, defaultValue: 2, helpText: 'Current total SOFA (0–24) from the six organ scores. ΔSOFA ≥2 with infection supports Sepsis-3 organ dysfunction.' }),
+      numberInput('current', 'Current total SOFA', { unit: 'points', min: 0, max: 24, exampleValue: 2, helpText: 'Current total SOFA (0–24) from the six organ scores. ΔSOFA ≥2 with infection supports Sepsis-3 organ dysfunction.' }),
       yesNo('infection', 'Suspected or documented infection', 0, 'Yes if infection is suspected or documented. Sepsis-3 requires infection plus ΔSOFA ≥2.'),
     ],
     calculate(values) {

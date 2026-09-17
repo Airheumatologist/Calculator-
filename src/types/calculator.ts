@@ -2,6 +2,23 @@ export type RiskLevel = 'low' | 'moderate' | 'high' | 'critical' | 'info' | 'nor
 
 export type InputType = 'number' | 'select' | 'boolean' | 'segmented';
 
+/**
+ * Unit families whose entry unit is chosen by the user at the point of entry.
+ * The calculator declares the canonical unit in `CalcInput.unit`; the engine
+ * owns the selector, the stored choice, and the conversion (see `utils/units`).
+ */
+export type UnitKind =
+  | 'weight'
+  | 'creatinine'
+  | 'fio2'
+  | 'ddimer'
+  | 'cholesterol'
+  | 'phosphate'
+  | 'bilirubin'
+  | 'vitaminD'
+  | 'lpa'
+  | 'magnesium';
+
 export interface CalcOption {
   label: string;
   value: string | number | boolean;
@@ -13,10 +30,28 @@ export interface CalcInput {
   id: string;
   label: string;
   type: InputType;
+  /** Canonical unit for this field; see `unitKind` for user-selectable entry units. */
   unit?: string;
+  /**
+   * Marks a numeric field whose unit the user may choose (e.g. kg ↔ lb).
+   * The engine renders the selector next to the field, stores the choice under
+   * `${id}__unit`, converts the entry into the canonical `unit` before range
+   * validation and before `calculate()` runs, and blocks calculation while the
+   * entry unit is still unselected.
+   */
+  unitKind?: UnitKind;
   min?: number;
   max?: number;
   step?: number;
+  /**
+   * Illustrative/sample value used only by the explicit "Load example" action.
+   * It is never copied into a fresh or reset form.
+   */
+  exampleValue?: number | string | boolean;
+  /**
+   * @deprecated Patient defaults are not allowed. Migrate this field to
+   * `exampleValue`; the registry rejects it when present.
+   */
   defaultValue?: number | string | boolean;
   options?: CalcOption[];
   helpText?: string;

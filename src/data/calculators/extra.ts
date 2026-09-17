@@ -417,8 +417,8 @@ export const extraCalcs: Calculator[] = [
     whenToUse: 'ABG interpretation on room air.',
     whyUse: 'PaO₂ normally declines with age.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 0, max: 110, defaultValue: 60, helpText: 'Expected room-air PaO₂ ≈ 100 − 0.3×age mmHg (sea level).' }),
-      numberInput('pao2', 'Measured PaO₂', { unit: 'mmHg', min: 20, max: 120, defaultValue: 80, helpText: 'Room-air PaO₂ at sea level. Not for supplemental oxygen or altitude. Flagged below expected if measured is >5 mmHg under 100 − 0.3×age.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 0, max: 110, exampleValue: 60, helpText: 'Expected room-air PaO₂ ≈ 100 − 0.3×age mmHg (sea level).' }),
+      numberInput('pao2', 'Measured PaO₂', { unit: 'mmHg', min: 20, max: 120, exampleValue: 80, helpText: 'Room-air PaO₂ at sea level. Not for supplemental oxygen or altitude. Flagged below expected if measured is >5 mmHg under 100 − 0.3×age.' }),
     ],
     calculate(values) {
       const age = num(values.age, 60);
@@ -450,8 +450,8 @@ export const extraCalcs: Calculator[] = [
     whenToUse: 'QT correction when HR is very high or low.',
     whyUse: 'More accurate than Bazett at heart rate extremes.',
     inputs: [
-      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, defaultValue: 400, helpText: 'Measure from QRS onset to the end of the T wave (not U wave) in a lead with a clear T; use a representative RR.' }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, defaultValue: 70, helpText: 'Use the same cycle as the measured QT (or the mean HR of that tracing).' }),
+      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, exampleValue: 400, helpText: 'Measure from QRS onset to the end of the T wave (not U wave) in a lead with a clear T; use a representative RR.' }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, exampleValue: 70, helpText: 'Use the same cycle as the measured QT (or the mean HR of that tracing).' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
@@ -536,10 +536,10 @@ export const extraCalcs: Calculator[] = [
     whenToUse: 'When comparing to lab AG methods that include K.',
     whyUse: 'Avoid misinterpretation of method differences.',
     inputs: [
-      numberInput('na', 'Na', { unit: 'mEq/L', defaultValue: 140, min: 100, max: 180, helpText: 'K-inclusive AG = Na + K − (Cl + HCO₃). Normal is higher than the no-K method (~12–16 vs ~8–12).' }),
-      numberInput('k', 'K', { unit: 'mEq/L', defaultValue: 4, min: 1, max: 10, step: 0.1 }),
-      numberInput('cl', 'Cl', { unit: 'mEq/L', defaultValue: 104, min: 70, max: 140 }),
-      numberInput('hco3', 'HCO₃', { unit: 'mEq/L', defaultValue: 24, min: 1, max: 50 }),
+      numberInput('na', 'Na', { unit: 'mEq/L', exampleValue: 140, min: 100, max: 180, helpText: 'K-inclusive AG = Na + K − (Cl + HCO₃). Normal is higher than the no-K method (~12–16 vs ~8–12).' }),
+      numberInput('k', 'K', { unit: 'mEq/L', exampleValue: 4, min: 1, max: 10, step: 0.1 }),
+      numberInput('cl', 'Cl', { unit: 'mEq/L', exampleValue: 104, min: 70, max: 140 }),
+      numberInput('hco3', 'HCO₃', { unit: 'mEq/L', exampleValue: 24, min: 1, max: 50 }),
     ],
     calculate(values) {
       const ag = round(num(values.na) + num(values.k) - num(values.cl) - num(values.hco3), 1);
@@ -568,7 +568,7 @@ export const extraCalcs: Calculator[] = [
     whenToUse: 'Alternative IBW estimate for nutrition.',
     whyUse: 'Common dietetics formula.',
     inputs: [
-      numberInput('heightIn', 'Height', { unit: 'inches', min: 55, max: 84, defaultValue: 67, helpText: 'Height in inches (e.g. 5′7″ = 67 in). Below 5 ft (60 in) the same per-inch increment is subtracted. ±10% frame-size adjustment is sometimes applied after the result.' }),
+      numberInput('heightIn', 'Height', { unit: 'inches', min: 55, max: 84, exampleValue: 67, helpText: 'Height in inches (e.g. 5′7″ = 67 in). Below 5 ft (60 in) the same per-inch increment is subtracted. ±10% frame-size adjustment is sometimes applied after the result.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
@@ -620,8 +620,8 @@ export const extraCalcs: Calculator[] = [
     whenToUse: 'Labs reporting SI units.',
     whyUse: 'Avoid unit confusion with US conventional formula.',
     inputs: [
-      numberInput('ca', 'Total Ca', { unit: 'mmol/L', min: 1, max: 4, step: 0.01, defaultValue: 2.0, helpText: 'Total (not ionized) calcium in mmol/L. US conventional mg/dL ÷ 4 ≈ mmol/L.' }),
-      numberInput('alb', 'Albumin', { unit: 'g/L', min: 10, max: 50, defaultValue: 25, helpText: 'Albumin in g/L (g/dL × 10). Reference 40 g/L in the Payne-style correction.' }),
+      numberInput('ca', 'Total Ca', { unit: 'mmol/L', min: 1, max: 4, step: 0.01, exampleValue: 2.0, helpText: 'Total (not ionized) calcium in mmol/L. US conventional mg/dL ÷ 4 ≈ mmol/L.' }),
+      numberInput('alb', 'Albumin', { unit: 'g/L', min: 10, max: 50, exampleValue: 25, helpText: 'Albumin in g/L (g/dL × 10). Reference 40 g/L in the Payne-style correction.' }),
     ],
     calculate(values) {
       const ca = num(values.ca, 2);

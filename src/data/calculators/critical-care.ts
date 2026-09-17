@@ -622,9 +622,9 @@ export const criticalCareCalcs: Calculator[] = [
     whenToUse: 'Educational approximation of ICU mortality risk.',
     whyUse: 'Classic ICU severity score; full APACHE II needs 12 physiologic variables.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 0, max: 110, defaultValue: 60, helpText: 'Worst physiology in the first 24 hours of ICU admission (official APACHE II). This educational tool omits pH, A–a gradient, temperature, and oxygenation.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 0, max: 110, exampleValue: 60, helpText: 'Worst physiology in the first 24 hours of ICU admission (official APACHE II). This educational tool omits pH, A–a gradient, temperature, and oxygenation.' }),
       // APACHE II neurologic points = 15 − GCS (not SOFA-style buckets)
-      numberInput('gcs', 'GCS', { min: 3, max: 15, defaultValue: 15, helpText: 'Points = 15 − GCS. Enter total GCS 3–15; if intubated document VT rather than guessing verbal.' }),
+      numberInput('gcs', 'GCS', { min: 3, max: 15, exampleValue: 15, helpText: 'Points = 15 − GCS. Enter total GCS 3–15; if intubated document VT rather than guessing verbal.' }),
       selectInput('map', 'MAP category (mmHg)', [
         { label: '70–109 (0)', value: 0 },
         { label: '50–69 or 110–129 (2)', value: 2 },
@@ -803,11 +803,11 @@ export const criticalCareCalcs: Calculator[] = [
     whenToUse: 'ABG interpretation for hypoxemia differential.',
     whyUse: 'Distinguishes V/Q mismatch, shunt, diffusion vs hypoventilation/low FiO₂.',
     inputs: [
-      numberInput('fio2', 'FiO₂', { unit: '(0.21–1.0)', min: 0.21, max: 1, step: 0.01, defaultValue: 0.21, helpText: 'Enter as a fraction (0.21 = 21% oxygen), not as a percent (21).' }),
-      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 100, defaultValue: 40 }),
-      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, defaultValue: 90 }),
-      numberInput('age', 'Age (for expected)', { unit: 'years', min: 0, max: 110, defaultValue: 40, helpText: 'Expected A–a ≈ age/4 + 4 mmHg. This tool flags elevated if measured A–a exceeds expected by more than 5 mmHg.' }),
-      numberInput('patm', 'Atmospheric pressure', { unit: 'mmHg', min: 500, max: 800, defaultValue: 760 }),
+      numberInput('fio2', 'FiO₂', { unit: 'fraction', unitKind: 'fio2', min: 0.21, max: 1, step: 0.01, exampleValue: 0.21 }),
+      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 10, max: 100, exampleValue: 40 }),
+      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 90 }),
+      numberInput('age', 'Age (for expected)', { unit: 'years', min: 0, max: 110, exampleValue: 40, helpText: 'Expected A–a ≈ age/4 + 4 mmHg. This tool flags elevated if measured A–a exceeds expected by more than 5 mmHg.' }),
+      numberInput('patm', 'Atmospheric pressure', { unit: 'mmHg', min: 500, max: 800, exampleValue: 760 }),
     ],
     calculate(values) {
       const fio2 = num(values.fio2, 0.21);
@@ -854,8 +854,8 @@ export const criticalCareCalcs: Calculator[] = [
     whenToUse: 'Hypoxemic respiratory failure / ARDS assessment.',
     whyUse: 'Berlin definition severity tiers based on P/F with PEEP ≥5.',
     inputs: [
-      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, defaultValue: 80 }),
-      numberInput('fio2', 'FiO₂', { unit: 'fraction', min: 0.21, max: 1, step: 0.01, defaultValue: 0.5, helpText: 'Enter as a fraction (0.50 = 50% oxygen). Berlin ARDS P/F tiers assume PEEP ≥5 cmH₂O plus radiographic/timing criteria.' }),
+      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 80 }),
+      numberInput('fio2', 'FiO₂', { unit: 'fraction', unitKind: 'fio2', min: 0.21, max: 1, step: 0.01, exampleValue: 0.5, helpText: 'Berlin ARDS P/F tiers assume PEEP ≥5 cmH₂O plus radiographic/timing criteria.' }),
     ],
     calculate(values) {
       const pao2 = num(values.pao2, 80);

@@ -67,9 +67,9 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     whenToUse: 'Calculated LDL when TG are elevated (validated to ~800 mg/dL) or LDL is low.',
     whyUse: 'Outperforms Friedewald at low LDL and higher TG; usable when Friedewald is invalid.',
     inputs: [
-      numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 50, max: 600, defaultValue: 200, helpText: 'mg/dL. Fasting preferred when pairing with TG.' }),
-      numberInput('hdl', 'HDL-C', { unit: 'mg/dL', min: 10, max: 150, defaultValue: 50 }),
-      numberInput('tg', 'Triglycerides', { unit: 'mg/dL', min: 20, max: 1000, defaultValue: 150, helpText: 'mg/dL. Validated to TG ≈800 mg/dL; prefer direct LDL above that. Fasting preferred.' }),
+      numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 50, max: 600, exampleValue: 200, helpText: 'mg/dL. Fasting preferred when pairing with TG.' }),
+      numberInput('hdl', 'HDL-C', { unit: 'mg/dL', min: 10, max: 150, exampleValue: 50 }),
+      numberInput('tg', 'Triglycerides', { unit: 'mg/dL', min: 20, max: 1000, exampleValue: 150, helpText: 'mg/dL. Validated to TG ≈800 mg/dL; prefer direct LDL above that. Fasting preferred.' }),
     ],
     calculate(values) {
       const tc = num(values.tc, 200);
@@ -145,9 +145,9 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     whenToUse: 'Calculated LDL with better accuracy than Friedewald at low LDL or higher TG (typically TG <400 mg/dL).',
     whyUse: 'AHA-supported alternative; factor varies with TG and non-HDL rather than fixed /5.',
     inputs: [
-      numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 50, max: 600, defaultValue: 200, helpText: 'mg/dL. Fasting preferred when pairing with TG.' }),
-      numberInput('hdl', 'HDL-C', { unit: 'mg/dL', min: 10, max: 150, defaultValue: 50 }),
-      numberInput('tg', 'Triglycerides', { unit: 'mg/dL', min: 20, max: 800, defaultValue: 150, helpText: 'mg/dL. Original table best validated with TG <400 mg/dL. Fasting preferred.' }),
+      numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 50, max: 600, exampleValue: 200, helpText: 'mg/dL. Fasting preferred when pairing with TG.' }),
+      numberInput('hdl', 'HDL-C', { unit: 'mg/dL', min: 10, max: 150, exampleValue: 50 }),
+      numberInput('tg', 'Triglycerides', { unit: 'mg/dL', min: 20, max: 800, exampleValue: 350, helpText: 'mg/dL. Original table best validated with TG <400 mg/dL. Fasting preferred.' }),
     ],
     calculate(values) {
       const tc = num(values.tc, 200);
@@ -224,8 +224,8 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     whenToUse: 'Lipid risk assessment, especially when TG elevated or as a secondary treatment target.',
     whyUse: 'Includes LDL, VLDL, IDL, and remnant cholesterol; less dependent on fasting than calculated LDL.',
     inputs: [
-      numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 50, max: 600, defaultValue: 200, helpText: 'mg/dL. Non-HDL can be calculated nonfasting.' }),
-      numberInput('hdl', 'HDL-C', { unit: 'mg/dL', min: 10, max: 150, defaultValue: 50, helpText: 'Non-HDL goal is typically ~30 mg/dL above the corresponding LDL goal.' }),
+      numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 50, max: 600, exampleValue: 200, helpText: 'mg/dL. Non-HDL can be calculated nonfasting.' }),
+      numberInput('hdl', 'HDL-C', { unit: 'mg/dL', min: 10, max: 150, exampleValue: 50, helpText: 'Non-HDL goal is typically ~30 mg/dL above the corresponding LDL goal.' }),
     ],
     calculate(values) {
       const tc = num(values.tc, 200);
@@ -294,8 +294,8 @@ export const wave2GeneralLabCalcs: Calculator[] = [
         'high',
         'Low = 10-year ASCVD <5%; borderline 5–<7.5%; intermediate ≥7.5–<20%; high primary ≥20%. Clinical ASCVD: ACS, MI, stable/unstable angina, coronary or other arterial revascularization, stroke, TIA, or atherosclerotic PAD including aortic aneurysm. Very high-risk: ≥2 major events or 1 major + multiple high-risk conditions. Major: ACS within 12 mo, MI, ischemic stroke, symptomatic PAD (claudication + ABI <0.85 or prior revasc/amputation). High-risk conditions: age ≥65, HeFH, prior CABG/PCI outside the major event, DM, HTN, CKD eGFR 15–59, current smoking, LDL ≥100 on max statin+ezetimibe, history of HF.',
       ),
-      numberInput('ldl', 'Current LDL-C (optional)', { unit: 'mg/dL', min: 0, max: 400, defaultValue: 120, helpText: 'Optional — for gap-to-goal display', required: false }),
-      numberInput('nonHdl', 'Current non-HDL-C (optional)', { unit: 'mg/dL', min: 0, max: 500, defaultValue: 150, required: false }),
+      numberInput('ldl', 'Current LDL-C (optional)', { unit: 'mg/dL', min: 0, max: 400, exampleValue: 120, helpText: 'Optional — for gap-to-goal display', required: false }),
+      numberInput('nonHdl', 'Current non-HDL-C (optional)', { unit: 'mg/dL', min: 0, max: 500, exampleValue: 150, required: false }),
     ],
     calculate(values) {
       const tier = String(values.riskTier ?? 'high');
@@ -383,8 +383,8 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     whenToUse: 'Bedside estimate of insulin resistance from fasting TG and glucose.',
     whyUse: 'Simple, no insulin assay required; associated with metabolic syndrome and CV risk in studies.',
     inputs: [
-      numberInput('tg', 'Fasting triglycerides', { unit: 'mg/dL', min: 30, max: 2000, defaultValue: 150, helpText: 'Fasting, mg/dL (not mmol/L).' }),
-      numberInput('glucose', 'Fasting glucose', { unit: 'mg/dL', min: 50, max: 500, defaultValue: 100, helpText: 'Fasting, mg/dL (not mmol/L). TyG = ln(TG × glucose / 2). IR cutoffs are population-dependent (often ~8.5–8.8).' }),
+      numberInput('tg', 'Fasting triglycerides', { unit: 'mg/dL', min: 30, max: 2000, exampleValue: 150, helpText: 'Fasting, mg/dL (not mmol/L).' }),
+      numberInput('glucose', 'Fasting glucose', { unit: 'mg/dL', min: 50, max: 500, exampleValue: 100, helpText: 'Fasting, mg/dL (not mmol/L). TyG = ln(TG × glucose / 2). IR cutoffs are population-dependent (often ~8.5–8.8).' }),
     ],
     calculate(values) {
       const tg = num(values.tg, 150);
@@ -437,8 +437,8 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     whenToUse: 'Research or clinical estimate of β-cell function with fasting labs.',
     whyUse: 'Complements HOMA-IR; lower HOMA-B suggests reduced insulin secretion capacity.',
     inputs: [
-      numberInput('glucose', 'Fasting glucose', { unit: 'mg/dL', min: 50, max: 400, defaultValue: 100, helpText: 'Fasting; formula invalid if glucose ≤63 mg/dL (denominator is glucose − 63).' }),
-      numberInput('insulin', 'Fasting insulin', { unit: 'µU/mL', min: 0.5, max: 200, step: 0.1, defaultValue: 10, helpText: 'µU/mL = mU/L. HOMA-B = 360 × insulin / (glucose_mg/dL − 63).' }),
+      numberInput('glucose', 'Fasting glucose', { unit: 'mg/dL', min: 50, max: 400, exampleValue: 100, helpText: 'Fasting; formula invalid if glucose ≤63 mg/dL (denominator is glucose − 63).' }),
+      numberInput('insulin', 'Fasting insulin', { unit: 'µU/mL', min: 0.5, max: 200, step: 0.1, exampleValue: 10, helpText: 'µU/mL = mU/L. HOMA-B = 360 × insulin / (glucose_mg/dL − 63).' }),
     ],
     calculate(values) {
       const g = num(values.glucose, 100);
@@ -488,8 +488,8 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     whenToUse: 'Estimate insulin sensitivity without clamp study.',
     whyUse: 'Simple log-based index; correlates with clamp-derived insulin sensitivity.',
     inputs: [
-      numberInput('glucose', 'Fasting glucose', { unit: 'mg/dL', min: 50, max: 400, defaultValue: 100, helpText: 'mg/dL (not mmol/L). QUICKI = 1 / [log₁₀(insulin) + log₁₀(glucose)].' }),
-      numberInput('insulin', 'Fasting insulin', { unit: 'µU/mL', min: 0.5, max: 200, step: 0.1, defaultValue: 10, helpText: 'µU/mL = mU/L. QUICKI ≤0.30 is a common insulin-resistance threshold (population-dependent).' }),
+      numberInput('glucose', 'Fasting glucose', { unit: 'mg/dL', min: 50, max: 400, exampleValue: 100, helpText: 'mg/dL (not mmol/L). QUICKI = 1 / [log₁₀(insulin) + log₁₀(glucose)].' }),
+      numberInput('insulin', 'Fasting insulin', { unit: 'µU/mL', min: 0.5, max: 200, step: 0.1, exampleValue: 10, helpText: 'µU/mL = mU/L. QUICKI ≤0.30 is a common insulin-resistance threshold (population-dependent).' }),
     ],
     calculate(values) {
       const g = num(values.glucose, 100);
@@ -538,7 +538,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
         ],
         'to_ifcc'
       ),
-      numberInput('value', 'HbA1c value', { min: 1, max: 200, step: 0.1, defaultValue: 7.0, helpText: '% or mmol/mol depending on direction' }),
+      numberInput('value', 'HbA1c value', { min: 1, max: 200, step: 0.1, exampleValue: 7.0, helpText: '% or mmol/mol depending on direction' }),
     ],
     calculate(values) {
       const direction = String(values.direction ?? 'to_ifcc');
@@ -608,7 +608,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
         ],
         'to_mmol'
       ),
-      numberInput('value', 'Glucose value', { min: 0.5, max: 2000, step: 0.1, defaultValue: 100, helpText: 'Enter mg/dL if converting to mmol/L; enter mmol/L if converting to mg/dL. Factor 18.' }),
+      numberInput('value', 'Glucose value', { min: 0.5, max: 2000, step: 0.1, exampleValue: 100, helpText: 'Enter mg/dL if converting to mmol/L; enter mmol/L if converting to mg/dL. Factor 18.' }),
     ],
     calculate(values) {
       const direction = String(values.direction ?? 'to_mmol');
@@ -662,7 +662,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
         ],
         'to_umol'
       ),
-      numberInput('value', 'Creatinine value', { min: 0.1, max: 3000, step: 0.1, defaultValue: 1.0, helpText: 'Enter mg/dL if converting to µmol/L (×88.4); enter µmol/L if converting to mg/dL.' }),
+      numberInput('value', 'Creatinine value', { min: 0.1, max: 3000, step: 0.1, exampleValue: 1.0, helpText: 'Enter mg/dL if converting to µmol/L (×88.4); enter µmol/L if converting to mg/dL.' }),
     ],
     calculate(values) {
       const direction = String(values.direction ?? 'to_umol');
@@ -718,7 +718,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
         ],
         'to_umol'
       ),
-      numberInput('value', 'Bilirubin value', { min: 0.1, max: 1000, step: 0.1, defaultValue: 1.0, helpText: 'Enter mg/dL if converting to µmol/L (×17.1); enter µmol/L if converting to mg/dL.' }),
+      numberInput('value', 'Bilirubin value', { min: 0.1, max: 1000, step: 0.1, exampleValue: 1.0, helpText: 'Enter mg/dL if converting to µmol/L (×17.1); enter µmol/L if converting to mg/dL.' }),
     ],
     calculate(values) {
       const direction = String(values.direction ?? 'to_umol');
@@ -774,7 +774,7 @@ export const wave2GeneralLabCalcs: Calculator[] = [
         ],
         'to_mmol'
       ),
-      numberInput('value', 'Calcium value', { min: 0.5, max: 30, step: 0.1, defaultValue: 9.0, helpText: 'Total calcium. Enter mg/dL if converting to mmol/L (×0.2495); enter mmol/L if converting to mg/dL (×4.008).' }),
+      numberInput('value', 'Calcium value', { min: 0.5, max: 30, step: 0.1, exampleValue: 9.0, helpText: 'Total calcium. Enter mg/dL if converting to mmol/L (×0.2495); enter mmol/L if converting to mg/dL (×4.008).' }),
     ],
     calculate(values) {
       const direction = String(values.direction ?? 'to_mmol');
@@ -819,8 +819,8 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     whenToUse: 'CKD mineral-bone disorder monitoring.',
     whyUse: 'Historical calcification-risk composite (classic Ca×P <55); KDIGO prefers individual Ca and phosphate targets over the product alone.',
     inputs: [
-      numberInput('ca', 'Serum calcium', { unit: 'mg/dL', min: 4, max: 16, step: 0.1, defaultValue: 9.0, helpText: 'Total calcium in mg/dL (not mmol/L). Classic Ca×P goal <55 mg²/dL².' }),
-      numberInput('phos', 'Serum phosphate', { unit: 'mg/dL', min: 0.5, max: 20, step: 0.1, defaultValue: 4.5, helpText: 'Phosphate in mg/dL (not mmol/L). Use the same unit system as calcium.' }),
+      numberInput('ca', 'Serum calcium', { unit: 'mg/dL', min: 4, max: 16, step: 0.1, exampleValue: 9.0, helpText: 'Total calcium in mg/dL (not mmol/L). Classic Ca×P goal <55 mg²/dL².' }),
+      numberInput('phos', 'Serum phosphate', { unit: 'mg/dL', min: 0.5, max: 20, step: 0.1, exampleValue: 4.5, helpText: 'Phosphate in mg/dL (not mmol/L). Use the same unit system as calcium.' }),
     ],
     calculate(values) {
       const ca = num(values.ca, 9);
@@ -864,10 +864,10 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     whenToUse: 'Hypokalemia workup (renal vs extrarenal losses) and selected hyperkalemia contexts.',
     whyUse: 'Low FEK suggests appropriate renal K conservation; high FEK suggests renal K wasting (context-dependent).',
     inputs: [
-      numberInput('pk', 'Plasma K', { unit: 'mEq/L', min: 1, max: 10, step: 0.1, defaultValue: 3.0, helpText: 'In hypokalemia: FEK <6% suggests extrarenal loss/conservation; FEK >10% suggests renal K wasting. Cutoffs are approximate.' }),
-      numberInput('uk', 'Urine K', { unit: 'mEq/L', min: 1, max: 200, defaultValue: 20 }),
-      numberInput('pcr', 'Plasma creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.0 }),
-      numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', min: 1, max: 500, defaultValue: 100 }),
+      numberInput('pk', 'Plasma K', { unit: 'mEq/L', min: 1, max: 10, step: 0.1, exampleValue: 3.0, helpText: 'In hypokalemia: FEK <6% suggests extrarenal loss/conservation; FEK >10% suggests renal K wasting. Cutoffs are approximate.' }),
+      numberInput('uk', 'Urine K', { unit: 'mEq/L', min: 1, max: 200, exampleValue: 20 }),
+      numberInput('pcr', 'Plasma creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 1.0, helpText: 'Select µmol/L for SI lab reports.' }),
+      numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 1, max: 500, exampleValue: 100, helpText: 'Select µmol/L for SI lab reports.' }),
     ],
     calculate(values) {
       const pk = num(values.pk, 3);
@@ -931,11 +931,11 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     whenToUse: 'Normal anion gap metabolic acidosis: diarrhea vs RTA differential.',
     whyUse: 'High UOG suggests robust NH₄⁺ excretion (extrarenal HCO₃ loss); low UOG suggests impaired renal acidification (RTA).',
     inputs: [
-      numberInput('uosm', 'Measured urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1200, defaultValue: 400 }),
-      numberInput('una', 'Urine Na', { unit: 'mEq/L', min: 1, max: 300, defaultValue: 40 }),
-      numberInput('uk', 'Urine K', { unit: 'mEq/L', min: 1, max: 200, defaultValue: 20 }),
-      numberInput('uurea', 'Urine urea nitrogen', { unit: 'mg/dL', min: 0, max: 2000, defaultValue: 200, helpText: 'Enter UUN in mg/dL (formula uses UUN/2.8). If the lab reports urea in mmol/L, enter urea mmol/L × 2.8 here (UUN/2.8 = urea mmol/L). If urea is in mg/dL (not nitrogen), UUN ≈ urea × 28/60 ≈ ×0.47.' }),
-      numberInput('uglu', 'Urine glucose (optional)', { unit: 'mg/dL', min: 0, max: 1000, defaultValue: 0, required: false }),
+      numberInput('uosm', 'Measured urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1200, exampleValue: 400 }),
+      numberInput('una', 'Urine Na', { unit: 'mEq/L', min: 1, max: 300, exampleValue: 40 }),
+      numberInput('uk', 'Urine K', { unit: 'mEq/L', min: 1, max: 200, exampleValue: 20 }),
+      numberInput('uurea', 'Urine urea nitrogen', { unit: 'mg/dL', min: 0, max: 2000, exampleValue: 200, helpText: 'Enter UUN in mg/dL (formula uses UUN/2.8). If the lab reports urea in mmol/L, enter urea mmol/L × 2.8 here (UUN/2.8 = urea mmol/L). If urea is in mg/dL (not nitrogen), UUN ≈ urea × 28/60 ≈ ×0.47.' }),
+      numberInput('uglu', 'Urine glucose (optional)', { unit: 'mg/dL', min: 0, max: 1000, exampleValue: 0, required: false }),
     ],
     calculate(values) {
       const uosm = num(values.uosm, 400);
@@ -1001,8 +1001,8 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     whenToUse: 'Cross-check ABG/VBG consistency or estimate pH from electrolytes + PCO₂.',
     whyUse: 'Core acid-base relationship between pH, PCO₂, and HCO₃⁻.',
     inputs: [
-      numberInput('hco3', 'HCO₃⁻', { unit: 'mEq/L', min: 1, max: 60, step: 0.1, defaultValue: 24, helpText: 'Bicarbonate in mEq/L (= mmol/L).' }),
-      numberInput('pco2', 'PCO₂', { unit: 'mmHg', min: 5, max: 120, defaultValue: 40, helpText: 'PCO₂ in mmHg (not kPa). pH = 6.1 + log₁₀(HCO₃ / (0.0307 × PCO₂)).' }),
+      numberInput('hco3', 'HCO₃⁻', { unit: 'mEq/L', min: 1, max: 60, step: 0.1, exampleValue: 24, helpText: 'Bicarbonate in mEq/L (= mmol/L).' }),
+      numberInput('pco2', 'PCO₂', { unit: 'mmHg', min: 5, max: 120, exampleValue: 40, helpText: 'PCO₂ in mmHg (not kPa). pH = 6.1 + log₁₀(HCO₃ / (0.0307 × PCO₂)).' }),
     ],
     calculate(values) {
       const hco3 = num(values.hco3, 24);
@@ -1055,10 +1055,10 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     whenToUse: 'Metabolic acidosis workup with low albumin (ICU, cirrhosis, nephrosis).',
     whyUse: 'Hypoalbuminemia lowers observed AG and can mask a high-AG process.',
     inputs: [
-      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, defaultValue: 140 }),
-      numberInput('cl', 'Chloride', { unit: 'mEq/L', min: 70, max: 140, defaultValue: 104 }),
-      numberInput('hco3', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 50, defaultValue: 24 }),
-      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, defaultValue: 2.5, helpText: 'Corrected AG = observed AG + 2.5 × (4 − albumin g/dL). Normal albumin assumed 4.0 g/dL.' }),
+      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 140 }),
+      numberInput('cl', 'Chloride', { unit: 'mEq/L', min: 70, max: 140, exampleValue: 104 }),
+      numberInput('hco3', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 50, exampleValue: 24 }),
+      numberInput('albumin', 'Albumin', { unit: 'g/dL', min: 0.5, max: 6, step: 0.1, exampleValue: 2.5, helpText: 'Corrected AG = observed AG + 2.5 × (4 − albumin g/dL). Normal albumin assumed 4.0 g/dL.' }),
     ],
     calculate(values) {
       const na = num(values.na, 140);
@@ -1106,10 +1106,10 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     whenToUse: 'High anion gap metabolic acidosis to detect concurrent NAGMA or metabolic alkalosis.',
     whyUse: 'Pure HAGMA should drop HCO₃ roughly with the rise in AG; deviations suggest a second process.',
     inputs: [
-      numberInput('ag', 'Anion gap (prefer albumin-corrected)', { unit: 'mEq/L', min: 0, max: 50, defaultValue: 20, helpText: 'Δ ratio = (AG − normal AG) / (normal HCO₃ − measured HCO₃). <0.4 NAGMA-dominant; 0.4–0.8 mixed; ~0.8–2 pure HAGMA; >2 HAGMA + metabolic alkalosis.' }),
-      numberInput('hco3', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 40, defaultValue: 12 }),
-      numberInput('normalAg', 'Normal AG used', { unit: 'mEq/L', min: 6, max: 16, defaultValue: 12 }),
-      numberInput('normalHco3', 'Normal HCO₃ used', { unit: 'mEq/L', min: 20, max: 28, defaultValue: 24 }),
+      numberInput('ag', 'Anion gap (prefer albumin-corrected)', { unit: 'mEq/L', min: 0, max: 50, exampleValue: 20, helpText: 'Δ ratio = (AG − normal AG) / (normal HCO₃ − measured HCO₃). <0.4 NAGMA-dominant; 0.4–0.8 mixed; ~0.8–2 pure HAGMA; >2 HAGMA + metabolic alkalosis.' }),
+      numberInput('hco3', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 40, exampleValue: 12 }),
+      numberInput('normalAg', 'Normal AG used', { unit: 'mEq/L', min: 6, max: 16, exampleValue: 12 }),
+      numberInput('normalHco3', 'Normal HCO₃ used', { unit: 'mEq/L', min: 20, max: 28, exampleValue: 24 }),
     ],
     calculate(values) {
       const ag = num(values.ag, 20);
@@ -1197,12 +1197,12 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     whenToUse: 'Stewart-style acid-base teaching or complex ICU acid-base interpretation adjunct.',
     whyUse: 'Reduced SID (e.g., hyperchloremia) associates with metabolic acidosis; elevated SID with alkalosis.',
     inputs: [
-      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, defaultValue: 140 }),
-      numberInput('k', 'Potassium', { unit: 'mEq/L', min: 1, max: 10, step: 0.1, defaultValue: 4.0 }),
-      numberInput('ca', 'Calcium (ionized preferred)', { unit: 'mEq/L', min: 0, max: 10, step: 0.1, defaultValue: 2.5, helpText: 'If total Ca in mg/dL, rough mEq/L ≈ mg/dL × 0.5' }),
-      numberInput('mg', 'Magnesium', { unit: 'mEq/L', min: 0, max: 10, step: 0.1, defaultValue: 1.5, helpText: 'If mg/dL, mEq/L ≈ mg/dL × 0.8' }),
-      numberInput('cl', 'Chloride', { unit: 'mEq/L', min: 70, max: 140, defaultValue: 104 }),
-      numberInput('lactate', 'Lactate', { unit: 'mEq/L', min: 0, max: 30, step: 0.1, defaultValue: 1.0 }),
+      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 140 }),
+      numberInput('k', 'Potassium', { unit: 'mEq/L', min: 1, max: 10, step: 0.1, exampleValue: 4.0 }),
+      numberInput('ca', 'Calcium (ionized preferred)', { unit: 'mEq/L', min: 0, max: 10, step: 0.1, exampleValue: 2.5, helpText: 'If total Ca in mg/dL, rough mEq/L ≈ mg/dL × 0.5' }),
+      numberInput('mg', 'Magnesium', { unit: 'mEq/L', min: 0, max: 10, step: 0.1, exampleValue: 1.5, helpText: 'If mg/dL, mEq/L ≈ mg/dL × 0.8' }),
+      numberInput('cl', 'Chloride', { unit: 'mEq/L', min: 70, max: 140, exampleValue: 104 }),
+      numberInput('lactate', 'Lactate', { unit: 'mEq/L', min: 0, max: 30, step: 0.1, exampleValue: 1.0 }),
     ],
     calculate(values) {
       const na = num(values.na, 140);
@@ -1255,9 +1255,9 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     whenToUse: 'Hyponatremia / concentrating-diluting ability assessment with timed urine collection.',
     whyUse: 'Positive CH₂O = net free water excretion (dilute urine); negative = free water reabsorption (concentrated urine).',
     inputs: [
-      numberInput('v', 'Urine flow rate (V)', { unit: 'mL/min', min: 0.1, max: 50, step: 0.1, defaultValue: 1.0, helpText: 'Or convert 24h volume: mL/day ÷ 1440' }),
-      numberInput('uosm', 'Urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1400, defaultValue: 300 }),
-      numberInput('posm', 'Plasma osmolality', { unit: 'mOsm/kg', min: 200, max: 400, defaultValue: 280 }),
+      numberInput('v', 'Urine flow rate (V)', { unit: 'mL/min', min: 0.1, max: 50, step: 0.1, exampleValue: 1.0, helpText: 'Or convert 24h volume: mL/day ÷ 1440' }),
+      numberInput('uosm', 'Urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1400, exampleValue: 300 }),
+      numberInput('posm', 'Plasma osmolality', { unit: 'mOsm/kg', min: 200, max: 400, exampleValue: 280 }),
     ],
     calculate(values) {
       const v = num(values.v, 1);
@@ -1315,9 +1315,9 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     whenToUse: 'With free water clearance calculations and polyuria workups.',
     whyUse: 'Separates osmotic diuresis (high Cosm) from water diuresis (high V with low Uosm).',
     inputs: [
-      numberInput('v', 'Urine flow rate (V)', { unit: 'mL/min', min: 0.1, max: 50, step: 0.1, defaultValue: 1.0, helpText: 'Or convert 24h volume: mL/day ÷ 1440' }),
-      numberInput('uosm', 'Urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1400, defaultValue: 300 }),
-      numberInput('posm', 'Plasma osmolality', { unit: 'mOsm/kg', min: 200, max: 400, defaultValue: 280 }),
+      numberInput('v', 'Urine flow rate (V)', { unit: 'mL/min', min: 0.1, max: 50, step: 0.1, exampleValue: 1.0, helpText: 'Or convert 24h volume: mL/day ÷ 1440' }),
+      numberInput('uosm', 'Urine osmolality', { unit: 'mOsm/kg', min: 50, max: 1400, exampleValue: 300 }),
+      numberInput('posm', 'Plasma osmolality', { unit: 'mOsm/kg', min: 200, max: 400, exampleValue: 280 }),
     ],
     calculate(values) {
       const v = num(values.v, 1);
@@ -1366,10 +1366,10 @@ export const wave2GeneralLabCalcs: Calculator[] = [
     whenToUse: 'When measured clearance is needed (extremes of muscle mass, amputations, pregnancy, drug dosing uncertainty).',
     whyUse: 'Classic measured clearance from timed urine when eGFR is unreliable; overestimates true GFR vs exogenous-marker methods.',
     inputs: [
-      numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', min: 1, max: 500, defaultValue: 100, helpText: 'Urine creatinine concentration (mg/dL) from the timed collection.' }),
-      numberInput('volume', 'Urine volume', { unit: 'mL', min: 50, max: 10000, defaultValue: 2000, helpText: 'Total volume over the collection period (typically 24 h). Incomplete collection is the main error.' }),
-      numberInput('pcr', 'Plasma creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.0, helpText: 'Plasma creatinine drawn during the collection (same day). mg/dL.' }),
-      numberInput('hours', 'Collection duration', { unit: 'hours', min: 1, max: 48, step: 0.5, defaultValue: 24, helpText: 'Duration of the timed collection in hours (usually 24).' }),
+      numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 1, max: 500, exampleValue: 100, helpText: 'Urine creatinine concentration from the timed collection. Select µmol/L for SI lab reports.' }),
+      numberInput('volume', 'Urine volume', { unit: 'mL', min: 50, max: 10000, exampleValue: 2000, helpText: 'Total volume over the collection period (typically 24 h). Incomplete collection is the main error.' }),
+      numberInput('pcr', 'Plasma creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 1.0, helpText: 'Plasma creatinine drawn during the collection (same day). Select µmol/L for SI lab reports.' }),
+      numberInput('hours', 'Collection duration', { unit: 'hours', min: 1, max: 48, step: 0.5, exampleValue: 24, helpText: 'Duration of the timed collection in hours (usually 24).' }),
     ],
     calculate(values) {
       const ucr = num(values.ucr, 100);

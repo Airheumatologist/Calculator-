@@ -1,4 +1,12 @@
-import type { CalcInput, Calculator, QuestionnaireMetadata } from '../types/calculator';
+import type { CalcInput, Calculator, QuestionnaireMetadata, UnitKind } from '../types/calculator';
+import {
+  getCanonicalValue,
+  getInvalidUnitSelections,
+  getMissingUnitSelections,
+  getUnitExampleValues,
+  isUnitField,
+  withCanonicalUnits,
+} from './units';
 
 export function num(v: number | string | boolean | null | undefined, fallback = 0): number {
   if (v === null || v === undefined || v === '') return fallback;
@@ -7,11 +15,14 @@ export function num(v: number | string | boolean | null | undefined, fallback = 
   return Number.isFinite(n) ? n : fallback;
 }
 
+const BOOLEAN_TRUE_STRINGS = new Set(['true', 't', 'yes', 'y', '1', 'on']);
+
 export function bool(v: number | string | boolean | null | undefined): boolean {
   if (typeof v === 'boolean') return v;
-  if (typeof v === 'number') return v !== 0;
-  if (v === 'true' || v === 'yes' || v === '1') return true;
-  return false;
+  if (typeof v === 'number') return Number.isFinite(v) && v !== 0;
+  if (typeof v !== 'string') return false;
+  // Case- and whitespace-insensitive: 'TRUE', ' Yes ', 'Y', '1', 'ON'.
+  return BOOLEAN_TRUE_STRINGS.has(v.trim().toLowerCase());
 }
 
 export function str(v: number | string | boolean | null | undefined, fallback = ''): string {
@@ -59,7 +70,14 @@ export function riskFromThresholds(
  * that change score non-linearly, or contextual gates that should not show a
  * misleading "+0" chip).
  */
-export function yesNo(id: string, label: string, pointsYes: number | null = 1, helpText?: string) {
+export function yesNo(
+  id: string,
+  label: string,
+  pointsYes: number | null = 1,
+  helpText?: string,
+  exampleValue?: boolean,
+  required = true
+) {
   const options =
     pointsYes === null || pointsYes === 0
       ? [
@@ -74,9 +92,10 @@ export function yesNo(id: string, label: string, pointsYes: number | null = 1, h
     id,
     label,
     type: 'boolean' as const,
-    defaultValue: false,
+    exampleValue,
     options,
     helpText,
+    required,
   };
 }
 
@@ -84,16 +103,18 @@ export function selectInput(
   id: string,
   label: string,
   options: { label: string; value: string | number; points?: number; description?: string }[],
-  defaultValue?: string | number,
-  helpText?: string
+  exampleValue?: string | number,
+  helpText?: string,
+  required = true
 ) {
   return {
     id,
     label,
     type: 'select' as const,
     options,
-    defaultValue: defaultValue ?? options[0]?.value,
+    exampleValue,
     helpText,
+    required,
   };
 }
 
@@ -102,9 +123,12 @@ export function numberInput(
   label: string,
   opts: {
     unit?: string;
+    unitKind?: UnitKind;
     min?: number;
     max?: number;
     step?: number;
+    exampleValue?: number;
+    /** @deprecated Ignored; patient defaults must be migrated to exampleValue. */
     defaultValue?: number;
     helpText?: string;
     placeholder?: string;
@@ -117,10 +141,11 @@ export function numberInput(
     label,
     type: 'number' as const,
     unit: opts.unit,
+    unitKind: opts.unitKind,
     min: opts.min,
     max: opts.max,
     step: opts.step ?? 1,
-    defaultValue: opts.defaultValue,
+    exampleValue: opts.exampleValue,
     helpText: opts.helpText,
     placeholder: opts.placeholder,
     required: opts.required ?? true,
@@ -136,58 +161,32 @@ type CalculatorQuestionnaireShape = Pick<Calculator, 'inputs' | 'isQuestionnaire
 type CalculatorValue = number | string | boolean | null | undefined;
 type QuestionnaireValues = Record<string, CalculatorValue>;
 
-const QUESTIONNAIRE_MODE_VALUES = new Set(['survey', 'questionnaire', 'checkboxes', 'regions', 'items', 'itemized']);
-const DIRECT_MODE_VALUES = new Set(['direct', 'override', 'precomputed']);
-
 function metadataFor(calc: CalculatorQuestionnaireShape): QuestionnaireMetadata | undefined {
   return calc.questionnaire && typeof calc.questionnaire === 'object' ? calc.questionnaire : undefined;
 }
 
-function optionValueIs(value: string | number | boolean, candidates: Set<string>): boolean {
-  return typeof value === 'string' && candidates.has(value.toLowerCase());
-}
-
-function isQuestionnaireModeInput(input: CalcInput): boolean {
-  if (!input.options || input.options.length === 0) return false;
-  const hasDirectMode = input.options.some((option) => optionValueIs(option.value, DIRECT_MODE_VALUES));
-  const hasQuestionnaireMode = input.options.some((option) => optionValueIs(option.value, QUESTIONNAIRE_MODE_VALUES));
-  return hasDirectMode && hasQuestionnaireMode;
-}
-
-function isDirectModeValue(
-  modeInput: CalcInput,
-  value: CalculatorValue,
-  metadata?: QuestionnaireMetadata
-): boolean {
-  if (metadata?.directModeValues?.some((candidate) => candidate === value)) return true;
-  if (typeof value !== 'string') return false;
-  if (!modeInput.options?.some((option) => option.value === value)) return false;
-  return DIRECT_MODE_VALUES.has(value.toLowerCase());
-}
-
-/** Whether a calculator is explicitly or conventionally marked as an interactive questionnaire. */
+/**
+ * Whether a calculator is explicitly marked as an interactive questionnaire.
+ * Branch metadata is declared on the calculator (`isQuestionnaire`,
+ * `questionnaire.modeInputId`, `directInputIds`); the engine never infers a
+ * branch from input ids or labels.
+ */
 export function isQuestionnaireCalculator(calc: CalculatorQuestionnaireShape): boolean {
   if (typeof calc.isQuestionnaire === 'boolean') return calc.isQuestionnaire;
   if (typeof calc.questionnaire === 'boolean') return calc.questionnaire;
-  if (calc.questionnaire) return true;
-  return calc.inputs.some(isQuestionnaireModeInput);
+  return Boolean(calc.questionnaire);
 }
 
-/** Find the branch selector for a questionnaire, if it has one. */
+/** Find the explicitly declared branch selector for a questionnaire, if any. */
 export function getQuestionnaireModeInput(calc: CalculatorQuestionnaireShape): CalcInput | undefined {
   const configuredId = metadataFor(calc)?.modeInputId;
   if (configuredId) return calc.inputs.find((input) => input.id === configuredId);
-  return calc.inputs.find(isQuestionnaireModeInput);
+  return undefined;
 }
 
-function isDirectOverrideInput(input: CalcInput): boolean {
-  const id = input.id.toLowerCase();
-  const text = `${input.id} ${input.label}`.toLowerCase();
-  return (
-    id.startsWith('direct') ||
-    /\b(direct|override|precomputed)\b/.test(text) ||
-    /\b(score|total|raw)\b.*\b(if|entry|input)\b/.test(text)
-  );
+/** Direct/precomputed branch values must be declared, never guessed. */
+function isDirectModeValue(value: CalculatorValue, metadata?: QuestionnaireMetadata): boolean {
+  return Boolean(metadata?.directModeValues?.some((candidate) => candidate === value));
 }
 
 /**
@@ -213,8 +212,8 @@ export function getActiveQuestionnaireInputs(
     return calc.inputs.filter((input) => activeIds.has(input.id));
   }
 
-  if (isDirectModeValue(modeInput, modeValue, metadata)) {
-    const directIds = metadata?.directInputIds ?? calc.inputs.filter(isDirectOverrideInput).map((input) => input.id);
+  if (isDirectModeValue(modeValue, metadata)) {
+    const directIds = metadata?.directInputIds ?? [];
     if (directIds.length > 0) {
       const activeIds = new Set(directIds);
       return calc.inputs.filter((input) => activeIds.has(input.id));
@@ -225,7 +224,8 @@ export function getActiveQuestionnaireInputs(
     return calc.inputs.filter((input) => input.id !== modeInput.id);
   }
 
-  return calc.inputs.filter((input) => input.id !== modeInput.id && !isDirectOverrideInput(input));
+  const directIds = new Set(metadata?.directInputIds ?? []);
+  return calc.inputs.filter((input) => input.id !== modeInput.id && !directIds.has(input.id));
 }
 
 /** Required/unanswered fields for both marked and inferred questionnaires. */
@@ -250,6 +250,7 @@ export function getMissingQuestionnaireInputs(
       missing.push({ id: input.id, label: input.label });
     }
   }
+  missing.push(...getMissingUnitSelections(getActiveQuestionnaireInputs(calc, values), values));
   return missing;
 }
 
@@ -268,11 +269,10 @@ export function isMissingValue(
   return numeric ? !Number.isFinite(parseFloat(raw)) : false;
 }
 
-/** Patient numeric fields are required unless they explicitly opt out. */
+/** Patient inputs are required unless they explicitly opt out. */
 export function isRequiredInput(input: { type?: string; required?: boolean }): boolean {
   if (input.required === false) return false;
-  if (input.required === true) return true;
-  return input.type === 'number';
+  return true;
 }
 
 export function getInitialFormValues(
@@ -280,33 +280,36 @@ export function getInitialFormValues(
 ): Record<string, number | string | boolean | null> {
   const values: Record<string, number | string | boolean | null> = {};
   if (!calc) return values;
-  const isQuestionnaire = isQuestionnaireCalculator(calc);
-  const modeInput = isQuestionnaire ? getQuestionnaireModeInput(calc) : undefined;
   for (const input of calc.inputs) {
-    if (isQuestionnaire && input.id !== modeInput?.id) {
-      values[input.id] = null;
-      continue;
-    }
-    if (input.type === 'number') {
-      values[input.id] = null;
-      continue;
-    }
-    if (input.defaultValue !== undefined) {
-      values[input.id] = input.defaultValue;
-    } else if (input.type === 'boolean') {
-      values[input.id] = false;
-    } else if (input.type === 'select' || input.type === 'segmented') {
-      values[input.id] = input.options?.[0]?.value ?? null;
-    } else {
-      values[input.id] = null;
-    }
+    values[input.id] = null;
+    if (isUnitField(input)) values[`${input.id}__unit`] = null;
+  }
+  return values;
+}
+
+/**
+ * Build values for the explicit illustrative-example action. Every field is
+ * still blank unless its schema declares an `exampleValue`.
+ */
+export function getExampleFormValues(
+  calc: CalculatorQuestionnaireShape | undefined
+): Record<string, number | string | boolean | null> {
+  const values = getInitialFormValues(calc);
+  if (!calc) return values;
+  for (const input of calc.inputs) {
+    if (input.exampleValue !== undefined) values[input.id] = input.exampleValue;
+  }
+  // Explicit unit choices are part of a complete example; every unit field
+  // defaults to the canonical unit the formula is written in.
+  for (const [id, unit] of Object.entries(getUnitExampleValues(calc.inputs))) {
+    values[id] = unit;
   }
   return values;
 }
 
 /** Required inputs the user has not filled in yet. Zero is a valid value. */
 export function getMissingRequiredInputs(
-  inputs: { id: string; label: string; type?: string; required?: boolean }[],
+  inputs: CalcInput[],
   values: Record<string, number | string | boolean | null | undefined>
 ): MissingRequiredInput[] {
   const missing: MissingRequiredInput[] = [];
@@ -316,6 +319,9 @@ export function getMissingRequiredInputs(
       missing.push({ id: input.id, label: input.label });
     }
   }
+  // Unit-aware fields also need their entry unit, but only once a value exists:
+  // a blank field should ask for the value, not for its unit.
+  missing.push(...getMissingUnitSelections(inputs, values));
   return missing;
 }
 
@@ -327,7 +333,13 @@ export type InvalidSelectValue = {
 
 /** Select/segmented values that are not in the declared option set. */
 export function getInvalidSelectValues(
-  inputs: { id: string; label: string; type: string; options?: { value: string | number | boolean }[] }[],
+  inputs: {
+    id: string;
+    label: string;
+    type: string;
+    options?: { value: string | number | boolean }[];
+    unitKind?: UnitKind;
+  }[],
   values: Record<string, number | string | boolean | null | undefined>
 ): InvalidSelectValue[] {
   const invalid: InvalidSelectValue[] = [];
@@ -340,7 +352,21 @@ export function getInvalidSelectValues(
       invalid.push({ id: input.id, label: input.label, value: raw });
     }
   }
+  for (const issue of getInvalidUnitSelections(inputs as CalcInput[], values)) {
+    invalid.push({ id: issue.id, label: issue.label, value: issue.value });
+  }
   return invalid;
+}
+
+/**
+ * Values as `calculate()` must see them: every unit-aware field converted into
+ * its canonical unit. The form keeps showing (and storing) what the user typed.
+ */
+export function getCanonicalValues(
+  inputs: CalcInput[],
+  values: Record<string, number | string | boolean | null>
+): Record<string, number | string | boolean | null> {
+  return withCanonicalUnits(inputs, values);
 }
 
 export function invalidSelectResult(invalid: InvalidSelectValue[]): {
@@ -431,12 +457,17 @@ function stepFit(value: number, base: number, step: number): { ok: boolean; near
  * (0.1), where the strict HTML rule would reject every sensible value.
  */
 export function getStepViolations(
-  inputs: { id: string; label: string; type: string; min?: number; step?: number }[],
+  inputs: { id: string; label: string; type: string; min?: number; step?: number; unitKind?: UnitKind }[],
   values: Record<string, number | string | boolean | null | undefined>
 ): StepViolation[] {
   const violations: StepViolation[] = [];
   for (const input of inputs) {
     if (input.type !== 'number') continue;
+    // `step` is declared in the canonical unit (e.g. 1 kg). A converted entry
+    // such as 154 lb = 69.85 kg legitimately sits off that grid, so step
+    // strictness only applies to fields without a unit selector. Range checks
+    // still run on the canonical value, which is what protects plausibility.
+    if (input.unitKind) continue;
     const step = input.step;
     if (step === undefined || !Number.isFinite(step) || step <= 0) continue;
     const raw = values[input.id];
@@ -504,17 +535,24 @@ export type RangeViolation = {
 
 /** Values typed outside an input's min/max (HTML min/max do not block free typing). */
 export function getRangeViolations(
-  inputs: { id: string; label: string; type: string; min?: number; max?: number }[],
+  inputs: { id: string; label: string; type: string; min?: number; max?: number; unitKind?: UnitKind }[],
   values: Record<string, number | string | boolean | null | undefined>
 ): RangeViolation[] {
   const violations: RangeViolation[] = [];
   for (const input of inputs) {
     if (input.type !== 'number') continue;
     if (input.min === undefined && input.max === undefined) continue;
-    const raw = values[input.id];
-    if (raw === null || raw === undefined || raw === '') continue;
-    const n = typeof raw === 'number' ? raw : parseFloat(String(raw));
-    if (!Number.isFinite(n)) continue;
+    // Unit-aware fields are judged in the canonical unit, so a 154 lb entry is
+    // checked against the kilogram bounds the calculator declares.
+    const n = input.unitKind
+      ? getCanonicalValue(input as CalcInput, values)
+      : (() => {
+          const raw = values[input.id];
+          if (raw === null || raw === undefined || raw === '') return null;
+          const parsed = typeof raw === 'number' ? raw : parseFloat(String(raw));
+          return Number.isFinite(parsed) ? parsed : null;
+        })();
+    if (n === null) continue;
     if (input.min !== undefined && n < input.min) {
       violations.push({
         id: input.id,

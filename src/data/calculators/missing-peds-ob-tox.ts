@@ -18,8 +18,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
         { label: '13–16 years (Acker cutoff >0.9)', value: '13-16', description: 'Acker 2015 derivation band (not 13–17)' },
         { label: '1–3 years (not Acker SIPA — no official cutoff)', value: '1-3', description: 'Acker derived SIPA in ages 4–16 years only; do not apply the 4–6 year cutoff' },
       ], '4-6', 'Acker 2015 SIPA: children 4–16 years. Cutoffs SI >1.22 (4–6 y), >1.0 (7–12 y), >0.9 (13–16 y). 1–3 years is not the derivation population.'),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 40, max: 250, defaultValue: 120, helpText: 'SIPA = HR ÷ SBP. Acker cutoffs: >1.22 (4–6 y), >1.0 (7–12 y), >0.9 (13–16 y).' }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 40, max: 200, defaultValue: 90 }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 40, max: 250, exampleValue: 120, helpText: 'SIPA = HR ÷ SBP. Acker cutoffs: >1.22 (4–6 y), >1.0 (7–12 y), >0.9 (13–16 y).' }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 40, max: 200, exampleValue: 90 }),
     ],
     calculate(values) {
       const hr = num(values.hr, 120);
@@ -190,11 +190,11 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whyUse: 'Identifies infants at low risk of invasive bacterial infection who may avoid LP/admission in validated pathways.',
     inputs: [
       yesNo('illAppearing', 'Ill-appearing / clinical suspicion of severe infection', null, 'Ill/toxic on Pediatric Assessment Triangle (appearance, work of breathing, circulation) or clinician suspicion of invasive infection — not a well, playful infant.'),
-      numberInput('ageDays', 'Age', { unit: 'days', min: 0, max: 90, defaultValue: 40, helpText: 'Age ≤21 days automatically fails the low-risk pathway.' }),
+      numberInput('ageDays', 'Age', { unit: 'days', min: 0, max: 90, exampleValue: 40, helpText: 'Age ≤21 days automatically fails the low-risk pathway.' }),
       yesNo('leukocyturia', 'Leukocyturia (positive UA / dipstick LE or nitrite per local def.)', null, 'LE or nitrite positive on dipstick (or lab UA per local definition).'),
-      numberInput('pct', 'Procalcitonin', { unit: 'ng/mL', min: 0, max: 100, step: 0.01, defaultValue: 0.2, helpText: 'Fails low-risk if PCT ≥0.5 ng/mL (applied automatically).' }),
-      numberInput('crp', 'CRP', { unit: 'mg/L', min: 0, max: 400, defaultValue: 10, helpText: 'Fails low-risk if CRP >20 mg/L (applied automatically).' }),
-      numberInput('anc', 'Absolute neutrophil count', { unit: '×10³/µL', min: 0, max: 50, step: 0.1, defaultValue: 4, helpText: 'Fails low-risk if ANC >10 ×10³/µL (applied automatically).' }),
+      numberInput('pct', 'Procalcitonin', { unit: 'ng/mL', min: 0, max: 100, step: 0.01, exampleValue: 0.2, helpText: 'Fails low-risk if PCT ≥0.5 ng/mL (applied automatically).' }),
+      numberInput('crp', 'CRP', { unit: 'mg/L', min: 0, max: 400, exampleValue: 10, helpText: 'Fails low-risk if CRP >20 mg/L (applied automatically).' }),
+      numberInput('anc', 'Absolute neutrophil count', { unit: '×10³/µL', min: 0, max: 50, step: 0.1, exampleValue: 4, helpText: 'Fails low-risk if ANC >10 ×10³/µL (applied automatically).' }),
     ],
     calculate(values) {
       const ill = bool(values.illAppearing);
@@ -264,8 +264,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Counseling candidates for trial of labor after cesarean (TOLAC) using antenatal (not admission) predictors.',
     whyUse: 'Published Grobman 2007 coefficients estimate VBAC probability from age, BMI, race/ethnicity, prior vaginal birth, prior VBAC, and recurring cesarean indication.',
     inputs: [
-      numberInput('age', 'Maternal age', { unit: 'years', min: 15, max: 55, defaultValue: 30 }),
-      numberInput('bmi', 'Prepregnancy BMI', { unit: 'kg/m²', min: 15, max: 60, step: 0.1, defaultValue: 28, helpText: 'Use prepregnancy (not admission) BMI as in the 2007 Grobman antenatal model.' }),
+      numberInput('age', 'Maternal age', { unit: 'years', min: 15, max: 55, exampleValue: 30 }),
+      numberInput('bmi', 'Prepregnancy BMI', { unit: 'kg/m²', min: 15, max: 60, step: 0.1, exampleValue: 28, helpText: 'Use prepregnancy (not admission) BMI as in the 2007 Grobman antenatal model.' }),
       selectInput('ethnicity', 'Race / ethnicity (as in original model categories)', [
         { label: 'Neither African American nor Hispanic', value: 'other' },
         { label: 'African American', value: 'aa' },
@@ -338,6 +338,10 @@ export const missingPedsObToxCalcs: Calculator[] = [
       references: [
         { title: 'Development of a nomogram for prediction of vaginal birth after cesarean delivery', citation: 'Grobman WA et al. Obstet Gynecol. 2007', year: 2007, pmid: '17400840',
           doi: '10.1097/01.AOG.0000259312.36053.02', },
+        { title: 'Does information available at admission for delivery improve prediction of vaginal birth after cesarean?', citation: 'Grobman WA et al. Am J Perinatol. 2009;26(10):693–701', year: 2009, pmid: '19813165',
+          doi: '10.1055/s-0029-1239494', },
+        { title: 'Prediction of vaginal birth after cesarean using information at admission for delivery: a calculator without race or ethnicity', citation: 'Grobman WA et al. Am J Obstet Gynecol. 2024;230(3 Suppl):S804–S806', year: 2024, pmid: '38180754',
+          doi: '10.1016/j.ajog.2023.02.008', },
       ],
     },
     nextSteps: [
@@ -346,6 +350,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
     pearls: [
       'Prior vaginal birth is one of the strongest favorable predictors.',
       'Arrest-of-labor indication for prior CD lowers success odds.',
+      'The 2007 antenatal model carries race/ethnicity terms; the MFMU published a race-free calculator using admission-time data in 2024 — prefer it when cervical exam, induction, and gestational-age data are available.',
     ],
   },
 
@@ -461,13 +466,13 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Suspected HELLP in pregnant/postpartum patients with preeclampsia features or RUQ pain.',
     whyUse: 'Organizes classic lab triad; incomplete HELLP still warrants aggressive management.',
     inputs: [
-      numberInput('ldh', 'LDH', { unit: 'U/L', min: 50, max: 5000, defaultValue: 400, helpText: 'Tennessee-style hemolysis often uses LDH ≥600 U/L (or bilirubin ≥1.2 mg/dL or schistocytes).' }),
-      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 0.8, helpText: 'Hemolysis support if ≥1.2 mg/dL (Tennessee-style).' }),
+      numberInput('ldh', 'LDH', { unit: 'U/L', min: 50, max: 5000, exampleValue: 400, helpText: 'Tennessee-style hemolysis often uses LDH ≥600 U/L (or bilirubin ≥1.2 mg/dL or schistocytes).' }),
+      numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, exampleValue: 0.8, helpText: 'Hemolysis support if ≥1.2 mg/dL (Tennessee-style).' }),
       yesNo('schistocytes', 'Schistocytes / hemolysis on smear (if known)'),
-      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 5000, defaultValue: 40, helpText: 'Tennessee/Sibai elevated LFTs: AST or ALT ≥2× this lab’s ULN (classically ≥70 U/L when ULN ≈35).' }),
-      numberInput('alt', 'ALT', { unit: 'U/L', min: 5, max: 5000, defaultValue: 40, helpText: 'Same ≥2× ULN rule as AST. Either enzyme meeting the fold-change counts.' }),
-      numberInput('astUln', 'AST/ALT ULN (lab)', { unit: 'U/L', min: 20, max: 80, defaultValue: 35, helpText: 'Enter this lab’s AST/ALT upper limit of normal. Tennessee uses ≥2× ULN (default ULN 35 → threshold 70 U/L, matching classic AST ≥70).' }),
-      numberInput('platelets', 'Platelet count', { unit: '×10³/µL', min: 5, max: 600, defaultValue: 150, helpText: 'Tennessee thrombocytopenia: platelets ≤100 ×10⁹/L. Mississippi class: I ≤50, II >50–≤100, III >100–≤150 (if other criteria).' }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 5000, exampleValue: 40, helpText: 'Tennessee/Sibai elevated LFTs: AST or ALT ≥2× this lab’s ULN (classically ≥70 U/L when ULN ≈35).' }),
+      numberInput('alt', 'ALT', { unit: 'U/L', min: 5, max: 5000, exampleValue: 40, helpText: 'Same ≥2× ULN rule as AST. Either enzyme meeting the fold-change counts.' }),
+      numberInput('astUln', 'AST/ALT ULN (lab)', { unit: 'U/L', min: 20, max: 80, exampleValue: 35, helpText: 'Enter this lab’s AST/ALT upper limit of normal. Tennessee uses ≥2× ULN (default ULN 35 → threshold 70 U/L, matching classic AST ≥70).' }),
+      numberInput('platelets', 'Platelet count', { unit: '×10³/µL', min: 5, max: 600, exampleValue: 150, helpText: 'Tennessee thrombocytopenia: platelets ≤100 ×10⁹/L. Mississippi class: I ≤50, II >50–≤100, III >100–≤150 (if other criteria).' }),
     ],
     calculate(values) {
       const ldh = num(values.ldh, 400);
@@ -554,18 +559,18 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Patients on MgSO₄ for preeclampsia/eclampsia or to interpret a Mg level.',
     whyUse: 'Links level ranges to loss of reflexes, respiratory depression, and cardiac risk.',
     inputs: [
-      numberInput('mg', 'Serum magnesium', { unit: 'mg/dL', min: 1, max: 30, step: 0.1, defaultValue: 6, helpText: 'If the lab reports mEq/L, choose mEq/L below (≈ mg/dL ÷ 1.2). Therapeutic seizure-prophylaxis range is roughly 4.8–8.4 mg/dL.' }),
-      selectInput('unitNote', 'Entered unit', [
-        { label: 'mg/dL (common US)', value: 'mgdl' },
-        { label: 'mEq/L (≈ mg/dL ÷ 1.2)', value: 'meq' },
-      ]),
+      numberInput('mg', 'Serum magnesium', {
+        unit: 'mg/dL',
+        unitKind: 'magnesium',
+        min: 1,
+        max: 30,
+        step: 0.1,
+        exampleValue: 6,
+        helpText: 'Select the reported unit; mEq/L is converted ×1.2 to mg/dL (≈ mg/dL ÷ 1.2 in the other direction). Therapeutic seizure-prophylaxis range is roughly 4.8–8.4 mg/dL.',
+      }),
     ],
     calculate(values) {
-      let mg = num(values.mg, 6);
-      if (values.unitNote === 'meq') {
-        mg = round(mg * 1.2, 1); // convert mEq/L → approximate mg/dL
-      }
-      const mgDisplay = mg;
+      const mgDisplay = round(num(values.mg, 6), 1);
 
       // Ranges in mg/dL (educational)
       if (mgDisplay < 4.8) {
@@ -641,15 +646,15 @@ export const missingPedsObToxCalcs: Calculator[] = [
         { label: 'Osmolal gap → ethanol', value: 'gap' },
         { label: 'Drinks / Widmark approximate', value: 'widmark' },
       ]),
-      numberInput('osmGap', 'Osmolal gap (if gap mode)', { unit: 'mOsm/kg', min: 0, max: 200, defaultValue: 20, helpText: 'Measured osm − calculated osm. EtOH (mg/dL) ≈ gap × 4.6 if the gap is entirely ethanol. Other alcohols also raise the gap.' }),
-      numberInput('drinks', 'Standard drinks absorbed (if Widmark)', { min: 0, max: 40, step: 0.5, defaultValue: 4, helpText: 'US standard drink ≈ 14 g ethanol. Educational estimate only — not forensic.' }),
-      numberInput('weight', 'Body weight', { unit: 'kg', min: 30, max: 250, defaultValue: 70 }),
+      numberInput('osmGap', 'Osmolal gap (if gap mode)', { unit: 'mOsm/kg', min: 0, max: 200, exampleValue: 20, helpText: 'Measured osm − calculated osm. EtOH (mg/dL) ≈ gap × 4.6 if the gap is entirely ethanol. Other alcohols also raise the gap.' }),
+      numberInput('drinks', 'Standard drinks absorbed (if Widmark)', { min: 0, max: 40, step: 0.5, exampleValue: 4, helpText: 'US standard drink ≈ 14 g ethanol. Educational estimate only — not forensic.' }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 250, exampleValue: 70 }),
       selectInput('sex', 'Sex (Widmark r)', [
         { label: 'Male (r ≈ 0.68)', value: 0.68 },
         { label: 'Female (r ≈ 0.55)', value: 0.55 },
       ]),
-      numberInput('hours', 'Hours since drinking started (metabolism)', { unit: 'h', min: 0, max: 24, step: 0.5, defaultValue: 2 }),
-      numberInput('beta', 'Elimination rate', { unit: 'mg/dL/h', min: 10, max: 40, defaultValue: 15 }),
+      numberInput('hours', 'Hours since drinking started (metabolism)', { unit: 'h', min: 0, max: 24, step: 0.5, exampleValue: 2 }),
+      numberInput('beta', 'Elimination rate', { unit: 'mg/dL/h', min: 10, max: 40, exampleValue: 15 }),
     ],
     calculate(values) {
       const mode = String(values.mode ?? 'gap');
@@ -735,8 +740,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Single acute acetaminophen ingestion ≥4 hours post-ingestion with a timed level.',
     whyUse: 'Approximates whether level is above the 150 treatment line for NAC decisions (educational).',
     inputs: [
-      numberInput('hours', 'Time since acute ingestion', { unit: 'hours', min: 4, max: 24, step: 0.5, defaultValue: 4, helpText: 'Nomogram starts at 4 hours after a single acute ingestion. Levels before 4 h cannot be plotted.' }),
-      numberInput('level', 'Acetaminophen level', { unit: 'µg/mL (mcg/mL)', min: 0, max: 500, defaultValue: 150, helpText: 'Same as mcg/mL. Treatment (150) line starts at 150 µg/mL at 4 h and halves about every 4 h.' }),
+      numberInput('hours', 'Time since acute ingestion', { unit: 'hours', min: 4, max: 24, step: 0.5, exampleValue: 4, helpText: 'Nomogram starts at 4 hours after a single acute ingestion. Levels before 4 h cannot be plotted.' }),
+      numberInput('level', 'Acetaminophen level', { unit: 'µg/mL (mcg/mL)', min: 0, max: 500, exampleValue: 150, helpText: 'Same as mcg/mL. Treatment (150) line starts at 150 µg/mL at 4 h and halves about every 4 h.' }),
       yesNo('chronicOrUnknown', 'Chronic, staggered, or unknown time (not nomogram-eligible)', null),
     ],
     calculate(values) {
@@ -845,9 +850,9 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Estimating loading doses when Vd and target concentration are known (e.g., teaching PK).',
     whyUse: 'Core pharmacokinetic relationship for rapidly achieving a target plasma concentration.',
     inputs: [
-      numberInput('cp', 'Target concentration (Cp)', { unit: 'mg/L', min: 0.01, max: 500, step: 0.1, defaultValue: 20, helpText: 'Keep units consistent: mg/L × L/kg × kg = mg. µg/mL is numerically equal to mg/L.' }),
-      numberInput('vd', 'Volume of distribution (Vd)', { unit: 'L/kg', min: 0.05, max: 20, step: 0.05, defaultValue: 0.7 }),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 1, max: 300, step: 0.1, defaultValue: 70, helpText: 'Enter weight in kg, not lb.' }),
+      numberInput('cp', 'Target concentration (Cp)', { unit: 'mg/L', min: 0.01, max: 500, step: 0.1, exampleValue: 20, helpText: 'Keep units consistent: mg/L × L/kg × kg = mg. µg/mL is numerically equal to mg/L.' }),
+      numberInput('vd', 'Volume of distribution (Vd)', { unit: 'L/kg', min: 0.05, max: 20, step: 0.05, exampleValue: 0.7 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 1, max: 300, step: 0.1, exampleValue: 70 }),
       selectInput('bioavailability', 'Bioavailability (F)', [
         { label: 'IV (F = 1)', value: 1 },
         { label: 'Oral F = 0.8', value: 0.8 },
@@ -898,9 +903,9 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Titrating vasoactive or other continuous infusions with known concentration.',
     whyUse: 'Prevents unit errors when programming pumps.',
     inputs: [
-      numberInput('dose', 'Desired dose', { unit: 'mcg/kg/min', min: 0.01, max: 200, step: 0.01, defaultValue: 5 }),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 1, max: 300, step: 0.1, defaultValue: 70, helpText: 'Enter weight in kg, not lb.' }),
-      numberInput('concentration', 'Drug concentration', { unit: 'mcg/mL', min: 0.1, max: 100000, defaultValue: 1600, helpText: '1 mg/mL = 1000 mcg/mL — unit mismatches are a common serious error. Confirm the bag label.' }),
+      numberInput('dose', 'Desired dose', { unit: 'mcg/kg/min', min: 0.01, max: 200, step: 0.01, exampleValue: 5 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 1, max: 300, step: 0.1, exampleValue: 70 }),
+      numberInput('concentration', 'Drug concentration', { unit: 'mcg/mL', min: 0.1, max: 100000, exampleValue: 1600, helpText: '1 mg/mL = 1000 mcg/mL — unit mismatches are a common serious error. Confirm the bag label.' }),
     ],
     calculate(values) {
       const dose = num(values.dose, 5);
@@ -949,9 +954,9 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Anemia workup to distinguish hypo- vs hyperproliferative response.',
     whyUse: 'Raw retic % overestimates production when Hct is low; RPI accounts for shift/maturation.',
     inputs: [
-      numberInput('retic', 'Reticulocyte count', { unit: '%', min: 0.1, max: 30, step: 0.1, defaultValue: 2, helpText: 'Corrected retic = retic% × (Hct / normal Hct). RPI = corrected / maturation factor (1–2.5 by Hct). RPI <2 suggests hypoproliferation; ≥3 adequate response.' }),
-      numberInput('hct', 'Hematocrit', { unit: '%', min: 5, max: 60, defaultValue: 30 }),
-      numberInput('normalHct', 'Normal Hct reference', { unit: '%', min: 35, max: 50, defaultValue: 45 }),
+      numberInput('retic', 'Reticulocyte count', { unit: '%', min: 0.1, max: 30, step: 0.1, exampleValue: 2, helpText: 'Corrected retic = retic% × (Hct / normal Hct). RPI = corrected / maturation factor (1–2.5 by Hct). RPI <2 suggests hypoproliferation; ≥3 adequate response.' }),
+      numberInput('hct', 'Hematocrit', { unit: '%', min: 5, max: 60, exampleValue: 30 }),
+      numberInput('normalHct', 'Normal Hct reference', { unit: '%', min: 35, max: 50, exampleValue: 45 }),
     ],
     calculate(values) {
       const retic = num(values.retic, 2);
@@ -1028,8 +1033,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Infection risk, viral illness, immunodeficiency screens, chemo recovery.',
     whyUse: 'Absolute counts are more informative than percentages alone.',
     inputs: [
-      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 200, step: 0.1, defaultValue: 6, helpText: 'ALC = WBC × (% lymphocytes / 100). Pediatric reference ranges are age-dependent and higher in infants.' }),
-      numberInput('lymphPct', 'Lymphocytes', { unit: '%', min: 0, max: 100, defaultValue: 30 }),
+      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 200, step: 0.1, exampleValue: 6, helpText: 'ALC = WBC × (% lymphocytes / 100). Pediatric reference ranges are age-dependent and higher in infants.' }),
+      numberInput('lymphPct', 'Lymphocytes', { unit: '%', min: 0, max: 100, exampleValue: 30 }),
     ],
     calculate(values) {
       const wbc = num(values.wbc, 6);
@@ -1099,9 +1104,9 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Planning sodium replacement in symptomatic or severe hyponatremia (adjunct).',
     whyUse: 'Provides a rough total deficit estimate; correction rate limits are critical.',
     inputs: [
-      numberInput('weight', 'Body weight', { unit: 'kg', min: 20, max: 300, defaultValue: 70, helpText: 'Na deficit (mEq) = TBW × (desired − actual). Guides total replacement, not rate. Typical limit ≤8–10 mEq/L in 24 h if chronic.' }),
-      numberInput('na', 'Current serum Na', { unit: 'mEq/L', min: 90, max: 140, defaultValue: 120 }),
-      numberInput('goalNa', 'Desired Na', { unit: 'mEq/L', min: 120, max: 140, defaultValue: 130 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 300, exampleValue: 70, helpText: 'Na deficit (mEq) = TBW × (desired − actual). Guides total replacement, not rate. Typical limit ≤8–10 mEq/L in 24 h if chronic.' }),
+      numberInput('na', 'Current serum Na', { unit: 'mEq/L', min: 90, max: 140, exampleValue: 120 }),
+      numberInput('goalNa', 'Desired Na', { unit: 'mEq/L', min: 120, max: 140, exampleValue: 130 }),
       selectInput('tbw', 'TBW fraction', [
         { label: 'Young men (0.6)', value: 'young-men' },
         { label: 'Young women / elderly men (0.5)', value: 'young-women-elderly-men' },
@@ -1169,8 +1174,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Metabolic alkalosis to detect concurrent respiratory disorders.',
     whyUse: 'Compensation is hypoventilation; if PCO₂ differs from expected, mixed disorder likely.',
     inputs: [
-      numberInput('hco3', 'HCO₃⁻', { unit: 'mEq/L', min: 26, max: 60, defaultValue: 36, helpText: 'Expected PaCO₂ ≈ 0.7 × HCO₃ + 20 (±5). Compensation rarely raises PCO₂ above ~55–60 mmHg.' }),
-      numberInput('paco2', 'Measured PaCO₂', { unit: 'mmHg', min: 20, max: 100, defaultValue: 45 }),
+      numberInput('hco3', 'HCO₃⁻', { unit: 'mEq/L', min: 26, max: 60, exampleValue: 36, helpText: 'Expected PaCO₂ ≈ 0.7 × HCO₃ + 20 (±5). Compensation rarely raises PCO₂ above ~55–60 mmHg.' }),
+      numberInput('paco2', 'Measured PaCO₂', { unit: 'mmHg', min: 20, max: 100, exampleValue: 45 }),
     ],
     calculate(values) {
       const hco3 = num(values.hco3, 36);
@@ -1231,8 +1236,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Hyponatremia with marked hyperglycemia (DKA/HHS) to estimate effective water balance.',
     whyUse: 'Translocational hyponatremia from glucose; corrected Na guides free-water status.',
     inputs: [
-      numberInput('na', 'Measured sodium', { unit: 'mEq/L', min: 100, max: 180, defaultValue: 128, helpText: 'Na_corrected = Na_measured + factor × (glucose − 100)/100. Katz 1.6 is classic; Hillier 2.4 may be more accurate at very high glucose.' }),
-      numberInput('glu', 'Serum glucose', { unit: 'mg/dL', min: 100, max: 2000, defaultValue: 500 }),
+      numberInput('na', 'Measured sodium', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 128, helpText: 'Na_corrected = Na_measured + factor × (glucose − 100)/100. Katz 1.6 is classic; Hillier 2.4 may be more accurate at very high glucose.' }),
+      numberInput('glu', 'Serum glucose', { unit: 'mg/dL', min: 100, max: 2000, exampleValue: 500 }),
       selectInput('factor', 'Correction factor per 100 mg/dL glucose >100', [
         { label: '1.6 (Katz classic)', value: 1.6 },
         { label: '2.4 (Hillier)', value: 2.4 },
@@ -1294,13 +1299,13 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Dating pregnancy when LMP is known (confirm with ultrasound when possible).',
     whyUse: "Naegele's rule is the classic EDD estimate: LMP + 280 days.",
     inputs: [
-      numberInput('lmpYear', 'LMP year', { min: 2020, max: 2035, defaultValue: 2026 }),
-      numberInput('lmpMonth', 'LMP month', { min: 1, max: 12, defaultValue: 1 }),
-      numberInput('lmpDay', 'LMP day', { min: 1, max: 31, defaultValue: 15, helpText: 'Day of month of the first day of the last menstrual period (not the last day of bleeding).' }),
-      numberInput('refYear', 'Reference (today) year', { min: 2020, max: 2035, defaultValue: 2026 }),
-      numberInput('refMonth', 'Reference month', { min: 1, max: 12, defaultValue: 7 }),
-      numberInput('refDay', 'Reference day', { min: 1, max: 31, defaultValue: 27 }),
-      numberInput('cycleLength', 'Cycle length', { unit: 'days', min: 21, max: 45, defaultValue: 28, helpText: 'EDD shifts by (cycle − 28) days. First-trimester ultrasound is preferred if LMP is uncertain.' }),
+      numberInput('lmpYear', 'LMP year', { min: 2020, max: 2035, exampleValue: 2026 }),
+      numberInput('lmpMonth', 'LMP month', { min: 1, max: 12, exampleValue: 1 }),
+      numberInput('lmpDay', 'LMP day', { min: 1, max: 31, exampleValue: 15, helpText: 'Day of month of the first day of the last menstrual period (not the last day of bleeding).' }),
+      numberInput('refYear', 'Reference (today) year', { min: 2020, max: 2035, exampleValue: 2026 }),
+      numberInput('refMonth', 'Reference month', { min: 1, max: 12, exampleValue: 7 }),
+      numberInput('refDay', 'Reference day', { min: 1, max: 31, exampleValue: 27 }),
+      numberInput('cycleLength', 'Cycle length', { unit: 'days', min: 21, max: 45, exampleValue: 28, helpText: 'EDD shifts by (cycle − 28) days. First-trimester ultrasound is preferred if LMP is uncertain.' }),
     ],
     calculate(values) {
       const lmp = new Date(num(values.lmpYear, new Date().getFullYear()), num(values.lmpMonth) - 1, num(values.lmpDay));
@@ -1357,12 +1362,12 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Weight-based dosing or nutrition estimates in children when IBW is preferred over total body weight.',
     whyUse: 'Traub-Johnson provides a simple height-based IBW used in pediatric pharmacy contexts.',
     inputs: [
-      numberInput('height', 'Height', { unit: 'cm', min: 50, max: 200, defaultValue: 120, helpText: 'Height in centimeters (not inches). Traub-Johnson: IBW (kg) = 2.396 × e^(0.01863 × height_cm). Not for infants.' }),
+      numberInput('height', 'Height', { unit: 'cm', min: 50, max: 200, exampleValue: 120, helpText: 'Height in centimeters (not inches). Traub-Johnson: IBW (kg) = 2.396 × e^(0.01863 × height_cm). Not for infants.' }),
       selectInput('method', 'Method', [
         { label: 'Traub-Johnson (preferred here)', value: 'tj' },
         { label: 'Simple BMI-method at BMI 50th≈18 (approx)', value: 'bmi18' },
       ]),
-      numberInput('actualWt', 'Actual weight (optional, for %IBW)', { unit: 'kg', min: 0, max: 200, step: 0.1, defaultValue: 0, required: false }),
+      numberInput('actualWt', 'Actual weight (optional, for %IBW)', { unit: 'kg', unitKind: 'weight', min: 0, max: 200, step: 0.1, exampleValue: 0, required: false }),
     ],
     calculate(values) {
       const ht = num(values.height, 120);
@@ -1551,9 +1556,9 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Normal anion gap metabolic acidosis to help distinguish GI bicarb loss vs RTA.',
     whyUse: 'Negative UAG suggests appropriate NH₄⁺ excretion (e.g., diarrhea); positive suggests impaired renal acidification (RTA).',
     inputs: [
-      numberInput('una', 'Urine Na', { unit: 'mEq/L', min: 1, max: 300, defaultValue: 40, helpText: 'UAG = UNa + UK − UCl. Negative suggests high NH₄⁺ (e.g. diarrhea); positive suggests low NH₄⁺ (RTA) in NAGMA.' }),
-      numberInput('uk', 'Urine K', { unit: 'mEq/L', min: 1, max: 200, defaultValue: 20 }),
-      numberInput('ucl', 'Urine Cl', { unit: 'mEq/L', min: 1, max: 300, defaultValue: 60 }),
+      numberInput('una', 'Urine Na', { unit: 'mEq/L', min: 1, max: 300, exampleValue: 40, helpText: 'UAG = UNa + UK − UCl. Negative suggests high NH₄⁺ (e.g. diarrhea); positive suggests low NH₄⁺ (RTA) in NAGMA.' }),
+      numberInput('uk', 'Urine K', { unit: 'mEq/L', min: 1, max: 200, exampleValue: 20 }),
+      numberInput('ucl', 'Urine Cl', { unit: 'mEq/L', min: 1, max: 300, exampleValue: 60 }),
     ],
     calculate(values) {
       const una = num(values.una, 40);

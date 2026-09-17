@@ -13,8 +13,8 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Adult CKD detection, staging, and monitoring using serum creatinine.',
     whyUse: 'NKF-ASN preferred race-free creatinine equation (Inker 2021).',
     inputs: [
-      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.01, defaultValue: 1.0 }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 50 }),
+      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.01, exampleValue: 1.0 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 50 }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
@@ -101,8 +101,8 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'When creatinine is unreliable (low muscle mass, amputation, extremes of diet) or to confirm eGFR.',
     whyUse: 'Cystatin C less dependent on muscle mass; useful confirmatory or alternative equation.',
     inputs: [
-      numberInput('scys', 'Serum cystatin C', { unit: 'mg/L', min: 0.2, max: 10, step: 0.01, defaultValue: 1.0 }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 50 }),
+      numberInput('scys', 'Serum cystatin C', { unit: 'mg/L', min: 0.2, max: 10, step: 0.01, exampleValue: 1.0 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 50 }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
@@ -177,7 +177,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         unit: 'mL/min/1.73 m²',
         min: 1,
         max: 200,
-        defaultValue: 55,
+        exampleValue: 55,
       }),
     ],
     calculate(values) {
@@ -664,15 +664,15 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         unit: 'mg',
         min: 10,
         max: 400,
-        defaultValue: 80,
+        exampleValue: 80,
         helpText: 'Under-dosing invalidates a non-responder call. Naïve ~1.0 mg/kg IV bolus; exposed ~1.5 mg/kg; single bolus not infusion.',
       }),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 30, max: 200, defaultValue: 70 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 200, exampleValue: 70 }),
       numberInput('uop2h', 'Urine output in 2 hours after dose', {
         unit: 'mL',
         min: 0,
         max: 3000,
-        defaultValue: 250,
+        exampleValue: 250,
         helpText:
           'Empty bladder/Foley at time 0; collect all urine for 2 h from the bolus; responder ≥200 mL; do not run if hypovolemic; replace UOP mL-for-mL ~6 h if not intentionally diuresing.',
       }),
@@ -745,12 +745,12 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Oliguric AKI differential when patient has received diuretics.',
     whyUse: 'FENa rises after loops even if prerenal; FeUrea is preferred in that setting.',
     inputs: [
-      numberInput('pna', 'Plasma Na', { unit: 'mEq/L', min: 100, max: 180, defaultValue: 140 }),
-      numberInput('una', 'Urine Na', { unit: 'mEq/L', min: 1, max: 300, defaultValue: 40 }),
-      numberInput('pcr', 'Plasma creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 2.0 }),
-      numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', min: 1, max: 500, defaultValue: 100 }),
-      numberInput('purea', 'Plasma urea (BUN)', { unit: 'mg/dL', min: 1, max: 200, defaultValue: 40 }),
-      numberInput('uurea', 'Urine urea nitrogen', { unit: 'mg/dL', min: 1, max: 2000, defaultValue: 200 }),
+      numberInput('pna', 'Plasma Na', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 140 }),
+      numberInput('una', 'Urine Na', { unit: 'mEq/L', min: 1, max: 300, exampleValue: 40 }),
+      numberInput('pcr', 'Plasma creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 2.0, helpText: 'Select µmol/L for SI lab reports; both creatinine fields convert to mg/dL before the ratio is taken.' }),
+      numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 1, max: 500, exampleValue: 100, helpText: 'Select µmol/L for SI lab reports.' }),
+      numberInput('purea', 'Plasma urea (BUN)', { unit: 'mg/dL', min: 1, max: 200, exampleValue: 40 }),
+      numberInput('uurea', 'Urine urea nitrogen', { unit: 'mg/dL', min: 1, max: 2000, exampleValue: 200 }),
       yesNo(
         'onDiuretic',
         'Recent loop/thiazide diuretic',
@@ -847,10 +847,10 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Hyponatremia / free-water balance assessment using urine electrolytes and volume.',
     whyUse: 'Estimates whether kidneys are excreting or retaining electrolyte-free water.',
     inputs: [
-      numberInput('v', 'Urine volume rate', { unit: 'L/day (or L per period)', min: 0.1, max: 20, step: 0.1, defaultValue: 1.5 }),
-      numberInput('una', 'Urine Na', { unit: 'mEq/L', min: 0, max: 300, defaultValue: 40 }),
-      numberInput('uk', 'Urine K', { unit: 'mEq/L', min: 0, max: 200, defaultValue: 30 }),
-      numberInput('pna', 'Plasma Na', { unit: 'mEq/L', min: 100, max: 180, defaultValue: 130 }),
+      numberInput('v', 'Urine volume rate', { unit: 'L/day (or L per period)', min: 0.1, max: 20, step: 0.1, exampleValue: 1.5 }),
+      numberInput('una', 'Urine Na', { unit: 'mEq/L', min: 0, max: 300, exampleValue: 40 }),
+      numberInput('uk', 'Urine K', { unit: 'mEq/L', min: 0, max: 200, exampleValue: 30 }),
+      numberInput('pna', 'Plasma Na', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 130 }),
     ],
     calculate(values) {
       const v = num(values.v, 1.5);
@@ -923,8 +923,8 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Planning IV fluid Na content effect for dysnatremia correction.',
     whyUse: 'Estimates ΔNa per 1 L of D5W, 0.45% NaCl, 0.9% NaCl, or 3% NaCl.',
     inputs: [
-      numberInput('sna', 'Current serum Na', { unit: 'mEq/L', min: 100, max: 190, defaultValue: 125 }),
-      numberInput('weight', 'Body weight', { unit: 'kg', min: 20, max: 300, defaultValue: 70 }),
+      numberInput('sna', 'Current serum Na', { unit: 'mEq/L', min: 100, max: 190, exampleValue: 125 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 300, exampleValue: 70 }),
       selectInput('tbwFrac', 'TBW fraction', [
         { label: 'Young men (0.6)', value: 0.6 },
         { label: 'Women / elderly men (0.5)', value: 0.5 },
@@ -999,9 +999,9 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Rough planning for K repletion in hypokalemia (not exact total-body K).',
     whyUse: 'Provides order-of-magnitude deficit; actual needs vary with ongoing losses and pH.',
     inputs: [
-      numberInput('k', 'Current serum K', { unit: 'mEq/L', min: 1.0, max: 5.5, step: 0.1, defaultValue: 2.8 }),
-      numberInput('goal', 'Goal serum K', { unit: 'mEq/L', min: 3.0, max: 5.0, step: 0.1, defaultValue: 4.0 }),
-      numberInput('weight', 'Body weight', { unit: 'kg', min: 20, max: 300, defaultValue: 70 }),
+      numberInput('k', 'Current serum K', { unit: 'mEq/L', min: 1.0, max: 5.5, step: 0.1, exampleValue: 2.8 }),
+      numberInput('goal', 'Goal serum K', { unit: 'mEq/L', min: 3.0, max: 5.0, step: 0.1, exampleValue: 4.0 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 300, exampleValue: 70 }),
       selectInput('method', 'Estimate method', [
         { label: 'Rule of thumb: ~100 mEq per 0.4 mEq/L deficit (Gennari-style)', value: 'rule' },
         { label: 'ECF-only Vd: (goal−K)×0.4×wt', value: 'vd' },
@@ -1078,9 +1078,9 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Chloride-depletion (saline-responsive) metabolic alkalosis volume/Cl repletion planning.',
     whyUse: 'Rough Cl deficit helps estimate NS volume needed when alkalosis is Cl-responsive.',
     inputs: [
-      numberInput('cl', 'Current serum Cl', { unit: 'mEq/L', min: 50, max: 120, defaultValue: 90 }),
-      numberInput('goalCl', 'Goal serum Cl', { unit: 'mEq/L', min: 90, max: 110, defaultValue: 100 }),
-      numberInput('weight', 'Body weight', { unit: 'kg', min: 20, max: 300, defaultValue: 70 }),
+      numberInput('cl', 'Current serum Cl', { unit: 'mEq/L', min: 50, max: 120, exampleValue: 90 }),
+      numberInput('goalCl', 'Goal serum Cl', { unit: 'mEq/L', min: 90, max: 110, exampleValue: 100 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 300, exampleValue: 70 }),
       selectInput('vd', 'Apparent Vd factor', [
         { label: '0.2 × weight (common teaching)', value: 0.2 },
         { label: '0.3 × weight (alternate)', value: 0.3 },
@@ -1144,13 +1144,13 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Before/while ordering IV KCl to compare planned rate with usual safety ceilings.',
     whyUse: 'Rapid IV K risks arrhythmia; institutions set max rates and concentrations.',
     inputs: [
-      numberInput('meq', 'KCl amount to infuse', { unit: 'mEq', min: 1, max: 80, defaultValue: 10 }),
+      numberInput('meq', 'KCl amount to infuse', { unit: 'mEq', min: 1, max: 80, exampleValue: 10 }),
       numberInput('hours', 'Infusion duration', {
         unit: 'hours',
         min: 0.25,
         max: 24,
         step: 0.25,
-        defaultValue: 1,
+        exampleValue: 1,
         helpText: 'Rate = mEq / hours. Peripheral usually ≥1 h per 10 mEq.',
       }),
       selectInput(
@@ -1256,7 +1256,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         min: 0.4,
         max: 2.5,
         step: 0.01,
-        defaultValue: 1.05,
+        exampleValue: 1.05,
         helpText: 'Usual iCa ~1.1–1.3 mmol/L. This tool approximates +0.05 mmol/L iCa per 0.1 pH below the reference (inverse if alkalemic).',
       }),
       numberInput('ph', 'pH at measurement', {
@@ -1264,10 +1264,10 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         min: 6.8,
         max: 7.8,
         step: 0.01,
-        defaultValue: 7.25,
+        exampleValue: 7.25,
         helpText: 'pH of the sample when iCa was measured (ABG/VBG).',
       }),
-      numberInput('targetPh', 'Reference pH', { unit: '', min: 7.3, max: 7.5, step: 0.01, defaultValue: 7.4 }),
+      numberInput('targetPh', 'Reference pH', { unit: '', min: 7.3, max: 7.5, step: 0.01, exampleValue: 7.4 }),
     ],
     calculate(values) {
       const ica = num(values.ica, 1.05);
@@ -1341,24 +1341,18 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     inputs: [
       numberInput('phos', 'Serum phosphate', {
         unit: 'mg/dL',
+        unitKind: 'phosphate',
         min: 0.3,
         max: 5,
         step: 0.1,
-        defaultValue: 1.5,
-        helpText: 'Enter the lab value in the unit selected below. 1 mmol/L ≈ 3.1 mg/dL. Repletion typically considered below ~2.5 mg/dL.',
+        exampleValue: 1.5,
+        helpText: 'Select the unit your lab reported (mg/dL or mmol/L; 1 mmol/L ≈ 3.1 mg/dL). Repletion typically considered below ~2.5 mg/dL.',
       }),
-      numberInput('weight', 'Body weight', { unit: 'kg', min: 30, max: 200, defaultValue: 70 }),
-      selectInput('units', 'Phosphate unit entered', [
-        { label: 'mg/dL', value: 'mg', description: 'Conventional US units (tool default)' },
-        { label: 'mmol/L (will treat as mmol/L)', value: 'mmol', description: 'SI units; converted ×3.1 to mg/dL for severity bands' },
-      ]),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 200, exampleValue: 70 }),
     ],
     calculate(values) {
-      let phos = num(values.phos, 1.5);
+      const phosMg = num(values.phos, 1.5);
       const wt = num(values.weight, 70);
-      const units = str(values.units, 'mg');
-      // Convert mmol/L → approx mg/dL (1 mmol/L ≈ 3.1 mg/dL)
-      const phosMg = units === 'mmol' ? phos * 3.1 : phos;
       let severity = 'mild';
       let factor = 0.16;
       let riskLevel: 'info' | 'moderate' | 'high' | 'critical' = 'info';
@@ -1601,7 +1595,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         min: 0.5,
         max: 4,
         step: 0.1,
-        defaultValue: 2.0,
+        exampleValue: 2.0,
         helpText:
           'AP diameter ~1–2 cm caudal to RA–IVC junction (or just distal to HV inflow), subcostal long-axis, M-mode over several quiet breaths — not a sniff. Dmax = largest diameter.',
       }),
@@ -1610,7 +1604,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         min: 0.3,
         max: 4,
         step: 0.1,
-        defaultValue: 1.2,
+        exampleValue: 1.2,
         helpText: 'Smallest AP diameter in the same clip/window as Dmax. Spontaneous: Dmin usually inspiration; controlled PPV: Dmax usually inspiration.',
       }),
       selectInput(
@@ -1747,7 +1741,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         min: 0.1,
         max: 300,
         step: 0.1,
-        defaultValue: 50,
+        exampleValue: 50,
         helpText:
           'Measure at semi-recumbent 30–45° (start position) using SV, CO, or LVOT VTI — not cuff BP. Then, using the bed, drop the trunk to horizontal and raise the legs to 45° (do not lift the feet off the mattress). Invalid if severe IAH, bilateral amputation, pain, or IABP.',
       }),
@@ -1756,7 +1750,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         min: 0.1,
         max: 300,
         step: 0.1,
-        defaultValue: 58,
+        exampleValue: 58,
         helpText:
           'Peak effect 30–90 s after the PLR maneuver; then return to semi-recumbent to confirm the value falls. Responder if Δ ≥10% (some protocols use ≥15%).',
       }),
@@ -1833,7 +1827,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         unit: 'mmHg',
         min: 1,
         max: 150,
-        defaultValue: 50,
+        exampleValue: 50,
         helpText:
           'From the arterial line over one mechanical breath: PPmax = largest (SBP−DBP) in the cycle — not SPmax minus a different beat\'s DP.',
       }),
@@ -1841,7 +1835,7 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         unit: 'mmHg',
         min: 1,
         max: 150,
-        defaultValue: 40,
+        exampleValue: 40,
         helpText: 'PPmin = smallest (SBP−DBP) in the same mechanical breath as PPmax.',
       }),
       yesNo(
@@ -1928,21 +1922,21 @@ export const wave3NephroIcuCalcs: Calculator[] = [
         unit: 'mmHg',
         min: 30,
         max: 200,
-        defaultValue: 80,
+        exampleValue: 80,
         helpText: 'Mean arterial pressure (not SBP). Level the arterial transducer at the same reference as ICP.',
       }),
       numberInput('icp', 'ICP', {
         unit: 'mmHg',
         min: 0,
         max: 80,
-        defaultValue: 15,
+        exampleValue: 15,
         helpText: 'Intracranial pressure from EVD or bolt. Common CPP target ≥60 mmHg (individualize).',
       }),
       numberInput('cvp', 'CVP (optional; used if > ICP)', {
         unit: 'mmHg',
         min: 0,
         max: 40,
-        defaultValue: 0,
+        exampleValue: 0,
         required: false,
         helpText: 'If entered and higher than ICP, used as the downstream pressure (CPP = MAP − max(ICP, CVP)). Leave blank if unknown.',
       }),
@@ -2032,10 +2026,10 @@ export const wave3NephroIcuCalcs: Calculator[] = [
     whenToUse: 'Shock / high-risk perioperative care when CO and ABG/oximetry available.',
     whyUse: 'Quantifies bulk O₂ transport; low DO₂ may contribute to tissue hypoxia.',
     inputs: [
-      numberInput('co', 'Cardiac output', { unit: 'L/min', min: 0.5, max: 20, step: 0.1, defaultValue: 5.0 }),
-      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 3, max: 22, step: 0.1, defaultValue: 10 }),
-      numberInput('sao2', 'SaO₂ (or SpO₂)', { unit: '%', min: 40, max: 100, defaultValue: 98 }),
-      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, defaultValue: 90 }),
+      numberInput('co', 'Cardiac output', { unit: 'L/min', min: 0.5, max: 20, step: 0.1, exampleValue: 5.0 }),
+      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 3, max: 22, step: 0.1, exampleValue: 10 }),
+      numberInput('sao2', 'SaO₂ (or SpO₂)', { unit: '%', min: 40, max: 100, exampleValue: 98 }),
+      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 90 }),
     ],
     calculate(values) {
       const co = num(values.co, 5);

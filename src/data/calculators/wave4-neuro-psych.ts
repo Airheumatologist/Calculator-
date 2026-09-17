@@ -1,8 +1,6 @@
 import type { Calculator } from '../../types/calculator';
 import { num, bool, str, round, yesNo, selectInput, numberInput, riskFromThresholds, isMissingValue } from '../../utils/helpers';
 
-const questionnaireMetadata = { questionnaire: true as const };
-
 // The validated ZBI-12 is a selected subset of the original ZBI-22, not items 1–12.
 const zbi12OriginalItemNumbers = [2, 3, 5, 6, 9, 10, 11, 12, 17, 19, 20, 21] as const;
 
@@ -277,7 +275,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
   },
 
   {
-    id: 'laps-score',
+    id: 'lams',
     name: 'LAMS (Los Angeles Motor Scale)',
     shortName: 'LAMS',
     description: '3-item motor scale for prehospital LVO prediction (facial droop, arm drift, grip; 0–5).',
@@ -343,9 +341,9 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'LAMS = facial droop (0–1) + arm drift (0–2) + grip (0–2). Total 0–5; ≥4 often used for LVO suspicion.',
+      summary: 'Los Angeles Motor Scale (LAMS) = facial droop (0–1) + arm drift (0–2) + grip (0–2). Total 0–5; ≥4 often used for LVO suspicion.',
       formula: 'Face + arm + grip (0–5)',
-      validation: 'Derived from LAPSS motor items; validated for LVO and outcome prediction in EMS/ED cohorts.',
+      validation: 'Los Angeles Motor Scale (LAMS) is derived from Los Angeles Prehospital Stroke Screen (LAPSS) motor items; validated for LVO and outcome prediction in EMS/ED cohorts.',
       references: [
         {
           title: 'A brief prehospital stroke severity scale identifies ischemic stroke patients harboring persisting large arterial occlusions',
@@ -801,7 +799,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       numberInput('gcs', 'Glasgow Coma Scale total', {
         min: 3,
         max: 15,
-        defaultValue: 15,
+        exampleValue: 15,
         helpText: 'Best eye + verbal + motor (3–15). Re-grade after resuscitation/EVD — hydrocephalus can lower GCS reversibly.',
       }),
       yesNo('motorDeficit', 'Major focal motor deficit present (hemiparesis/hemiplegia)', 0, 'Limb hemiparesis or hemiplegia. Isolated cranial-nerve palsy (e.g. III, VI, VII) does not count as a major focal motor deficit for WFNS.'),
@@ -905,7 +903,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       numberInput('day', 'Days since SAH onset (bleed day = 0 or 1 per local convention)', {
         min: 0,
         max: 30,
-        defaultValue: 5,
+        exampleValue: 5,
         helpText: 'Use hospital day or days from ictus consistently',
       }),
       selectInput(
@@ -1025,7 +1023,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       numberInput('gcs', 'Glasgow Coma Scale', {
         min: 3,
         max: 15,
-        defaultValue: 15,
+        exampleValue: 15,
         helpText: 'Eye (1–4) + verbal (1–5) + motor (1–6). Use T/P modifiers if intubated/paralyzed; score best responses.',
       }),
       yesNo('intubated', 'Intubated / chemically paralyzed (GCS limited)', 0, 'Cannot score a full verbal GCS — report T/P modifiers; this tool flags GCS as confounded if still >8.'),
@@ -1118,7 +1116,12 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
 
   {
     id: 'scat5-symptom',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['numSymptoms', 'severity'],
+    },
     name: 'SCAT Symptom Severity Score',
     shortName: 'SCAT Symptoms',
     description:
@@ -1135,13 +1138,13 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       numberInput('numSymptoms', 'Number of symptoms endorsed (0–22, direct mode)', {
         min: 0,
         max: 22,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Used only if direct override is selected.',
       }),
       numberInput('severity', 'Symptom severity sum (0–132, direct mode)', {
         min: 0,
         max: 132,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Used only if direct override is selected.',
       }),
       selectInput('headache', 'Headache', [
@@ -1832,14 +1835,14 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       numberInput('total', 'ACE-III total (0–100)', {
         min: 0,
         max: 100,
-        defaultValue: 88,
+        exampleValue: 88,
         helpText: 'Attention 18 + Memory 26 + Fluency 14 + Language 26 + Visuospatial 16. Enter the total from the official ACE-III form; do not administer items from this screen.',
       }),
-      numberInput('attention', 'Attention / Orientation (0–18, optional)', { min: 0, max: 18, defaultValue: 0, required: false, helpText: 'Leave blank if this domain was not scored (blank is not a 0).' }),
-      numberInput('memory', 'Memory (0–26, optional)', { min: 0, max: 26, defaultValue: 0, required: false, helpText: 'Leave blank if this domain was not scored (blank is not a 0).' }),
-      numberInput('fluency', 'Fluency (0–14, optional)', { min: 0, max: 14, defaultValue: 0, required: false, helpText: 'Leave blank if this domain was not scored (blank is not a 0).' }),
-      numberInput('language', 'Language (0–26, optional)', { min: 0, max: 26, defaultValue: 0, required: false, helpText: 'Leave blank if this domain was not scored (blank is not a 0).' }),
-      numberInput('visuospatial', 'Visuospatial (0–16, optional)', { min: 0, max: 16, defaultValue: 0, required: false, helpText: 'Leave blank if this domain was not scored (blank is not a 0).' }),
+      numberInput('attention', 'Attention / Orientation (0–18, optional)', { min: 0, max: 18, exampleValue: 0, required: false, helpText: 'Leave blank if this domain was not scored (blank is not a 0).' }),
+      numberInput('memory', 'Memory (0–26, optional)', { min: 0, max: 26, exampleValue: 0, required: false, helpText: 'Leave blank if this domain was not scored (blank is not a 0).' }),
+      numberInput('fluency', 'Fluency (0–14, optional)', { min: 0, max: 14, exampleValue: 0, required: false, helpText: 'Leave blank if this domain was not scored (blank is not a 0).' }),
+      numberInput('language', 'Language (0–26, optional)', { min: 0, max: 26, exampleValue: 0, required: false, helpText: 'Leave blank if this domain was not scored (blank is not a 0).' }),
+      numberInput('visuospatial', 'Visuospatial (0–16, optional)', { min: 0, max: 16, exampleValue: 0, required: false, helpText: 'Leave blank if this domain was not scored (blank is not a 0).' }),
     ],
     calculate(values) {
       const total = num(values.total, 88);
@@ -1914,7 +1917,12 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
 
   {
     id: 'iqcode',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['average', 'form'],
+    },
     name: 'IQCODE (Informant Questionnaire on Cognitive Decline)',
     shortName: 'IQCODE',
     description:
@@ -1932,7 +1940,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         min: 1,
         max: 5,
         step: 0.01,
-        defaultValue: 3.0,
+        exampleValue: 3.0,
         helpText: 'Used only if direct override is selected. Mean of items: 1 much improved, 3 no change, 5 much worse.',
       }),
       selectInput('form', 'Form used (if direct override)', [
@@ -2255,7 +2263,12 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'cornell-dementia',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score', 'csdd_somatic'],
+    },
     name: 'Cornell Scale for Depression in Dementia (CSDD)',
     shortName: 'CSDD',
     description: 'Cornell Scale for Depression in Dementia: 19 clinician/caregiver-rated items across 5 domains (0–38), or direct total score.',
@@ -2271,7 +2284,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       numberInput('score', 'Cornell total score (0–38, direct mode)', {
         min: 0,
         max: 38,
-        defaultValue: 6,
+        exampleValue: 6,
         helpText: 'Used only if direct override is selected.',
       }),
       selectInput('csdd_anxiety', '1. Anxiety (anxious expression, rumination, worrying)', [
@@ -2474,7 +2487,12 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'zarit-burden',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['form', 'score'],
+    },
     name: 'Zarit Burden Interview (Caregiver Strain)',
     shortName: 'ZBI',
     description: 'Zarit Burden Interview (ZBI-12 Short Form, 0–48; or classic ZBI-22 direct total, 0–88) for caregiver burden assessment.',
@@ -2494,7 +2512,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       numberInput('score', 'Total score (direct mode)', {
         min: 0,
         max: 88,
-        defaultValue: 12,
+        exampleValue: 12,
         helpText: 'Used only if direct override is selected. ZBI-12 accepts 0–48; ZBI-22 accepts 0–88.',
       }),
       selectInput('z1', 'ZBI-22 item 2 (ZBI-12 item 1). Do you feel that because of the time you spend with your relative that you don’t have enough time for yourself?', [
@@ -2717,7 +2735,6 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'psqi',
-    ...questionnaireMetadata,
     isQuestionnaire: true,
     questionnaire: {
       modeInputId: 'entryMode',
@@ -2746,29 +2763,29 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       numberInput('global', 'PSQI global score (0–21, direct mode)', {
         min: 0,
         max: 21,
-        defaultValue: 5,
+        exampleValue: 5,
         helpText: 'Used only if direct override is selected. Enter a previously scored official PSQI global total.',
       }),
       numberInput('q1BedHour', 'Q1: Usual bedtime (hour, 24-h clock)', {
-        min: 0, max: 23, step: 1, defaultValue: 22,
+        min: 0, max: 23, step: 1, exampleValue: 22,
         helpText: 'Past month. Example: 22 for 10:00 PM.',
       }),
       numberInput('q1BedMin', 'Q1: Usual bedtime (minutes)', {
-        min: 0, max: 59, step: 1, defaultValue: 30,
+        min: 0, max: 59, step: 1, exampleValue: 30,
       }),
       numberInput('q2LatencyMin', 'Q2: Minutes to fall asleep', {
-        unit: 'min', min: 0, max: 240, step: 1, defaultValue: 15,
+        unit: 'min', min: 0, max: 240, step: 1, exampleValue: 15,
         helpText: 'Usual number of minutes to fall asleep. ≤15 = 0; 16–30 = 1; 31–60 = 2; >60 = 3.',
       }),
       numberInput('q3WakeHour', 'Q3: Usual get-up time (hour, 24-h clock)', {
-        min: 0, max: 23, step: 1, defaultValue: 6,
+        min: 0, max: 23, step: 1, exampleValue: 6,
         helpText: 'Past month. Example: 6 for 6:00 AM.',
       }),
       numberInput('q3WakeMin', 'Q3: Usual get-up time (minutes)', {
-        min: 0, max: 59, step: 1, defaultValue: 30,
+        min: 0, max: 59, step: 1, exampleValue: 30,
       }),
       numberInput('q4HoursSlept', 'Q4: Hours of actual sleep per night', {
-        unit: 'hours', min: 0, max: 16, step: 0.25, defaultValue: 7,
+        unit: 'hours', min: 0, max: 16, step: 0.25, exampleValue: 7,
         helpText: 'Hours actually slept, not hours in bed. >7 = C3 0; 6–7 = 1; 5–6 = 2; <5 = 3.',
       }),
       selectInput('q5a', 'Q5a: Cannot get to sleep within 30 minutes', psqiFreqOptions, 0),
@@ -2933,7 +2950,12 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
   },
   {
     id: 'restless-irlssg',
-    ...questionnaireMetadata,
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'entryMode',
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
+    },
     name: 'IRLSSG Restless Legs Severity Scale (IRLS)',
     shortName: 'IRLS',
     description: 'International Restless Legs Syndrome Study Group rating scale: 10 items (0–4 each, total 0–40), or direct total score.',
@@ -2949,7 +2971,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       numberInput('score', 'IRLS total (0–40, direct mode)', {
         min: 0,
         max: 40,
-        defaultValue: 15,
+        exampleValue: 15,
         helpText: 'Used only if direct override is selected.',
       }),
       selectInput('irls1', '1. Overall discomfort in legs/arms due to RLS', irlsSeverityOptions, 1),
@@ -3162,7 +3184,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       numberInput('score', 'CIWA-B total (0–80 typical full scale range)', {
         min: 0,
         max: 80,
-        defaultValue: 10,
+        exampleValue: 10,
         helpText: 'Enter the scored total from the official/institutional CIWA-B form (typically ~20 items, 0–80). Do not score items from this screen.',
       }),
       yesNo('seizureHx', 'History of withdrawal seizures', 0),

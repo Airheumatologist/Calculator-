@@ -428,6 +428,21 @@ a {
   padding: 0;
 }
 
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.example-btn {
+  border: none;
+  background: none;
+  color: var(--brand);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0;
+}
+
 .panel-body {
   padding: 0.85rem 0.95rem 1rem;
 }
@@ -511,6 +526,46 @@ a {
   color: var(--muted);
   font-size: 0.85rem;
   min-width: 3rem;
+}
+
+.unit-toggle {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.unit-btn {
+  border: none;
+  border-left: 1px solid var(--border);
+  background: #fff;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0 0.55rem;
+  min-height: 42px;
+  white-space: nowrap;
+}
+
+.unit-btn:first-child {
+  border-left: none;
+}
+
+.unit-btn:hover {
+  background: #f7fbfa;
+  color: var(--brand);
+}
+
+.unit-btn.selected {
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.unit-toggle[aria-invalid='true'] {
+  border-color: var(--muted);
+  border-style: dashed;
 }
 
 .option-list,

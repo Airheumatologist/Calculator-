@@ -293,8 +293,8 @@ export const emergencyMiscCalcs: Calculator[] = [
     whenToUse: 'Adults/children with major burns needing formal resuscitation.',
     whyUse: 'Classic crystalloid estimate; give half in first 8 hours from injury time.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', min: 5, max: 200, defaultValue: 70, helpText: 'Enter weight in kg, not lb.' }),
-      numberInput('tbsa', 'TBSA burned (2nd + 3rd degree)', { unit: '%', min: 1, max: 100, defaultValue: 20, helpText: 'Exclude first-degree/superficial burns. Use Rule of Nines, Lund-Browder, or palm ≈1% of the patient’s palm including fingers.' }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 5, max: 200, exampleValue: 70 }),
+      numberInput('tbsa', 'TBSA burned (2nd + 3rd degree)', { unit: '%', min: 1, max: 100, exampleValue: 20, helpText: 'Exclude first-degree/superficial burns. Use Rule of Nines, Lund-Browder, or palm ≈1% of the patient’s palm including fingers.' }),
     ],
     calculate(values) {
       const w = num(values.weight, 70);
@@ -507,12 +507,12 @@ export const emergencyMiscCalcs: Calculator[] = [
     whenToUse: 'Dating pregnancy when LMP is known and reliable. First-trimester ultrasound is preferred when LMP is uncertain or cycles are irregular.',
     whyUse: 'Naegele’s rule standard LMP-based estimate, assuming a reliable LMP and an approximately 28-day cycle.',
     inputs: [
-      numberInput('lmpYear', 'LMP year', { min: 2020, max: 2030, defaultValue: 2026 }),
-      numberInput('lmpMonth', 'LMP month', { min: 1, max: 12, defaultValue: 1 }),
-      numberInput('lmpDay', 'LMP day', { min: 1, max: 31, defaultValue: 1, helpText: 'First day of the last menstrual period (not last day of bleeding).' }),
-      numberInput('refYear', 'Reference year (today)', { min: 2020, max: 2030, defaultValue: 2026 }),
-      numberInput('refMonth', 'Reference month', { min: 1, max: 12, defaultValue: 7 }),
-      numberInput('refDay', 'Reference day', { min: 1, max: 31, defaultValue: 23 }),
+      numberInput('lmpYear', 'LMP year', { min: 2020, max: 2030, exampleValue: 2026 }),
+      numberInput('lmpMonth', 'LMP month', { min: 1, max: 12, exampleValue: 1 }),
+      numberInput('lmpDay', 'LMP day', { min: 1, max: 31, exampleValue: 1, helpText: 'First day of the last menstrual period (not last day of bleeding).' }),
+      numberInput('refYear', 'Reference year (today)', { min: 2020, max: 2030, exampleValue: 2026 }),
+      numberInput('refMonth', 'Reference month', { min: 1, max: 12, exampleValue: 7 }),
+      numberInput('refDay', 'Reference day', { min: 1, max: 31, exampleValue: 23 }),
     ],
     calculate(values) {
       const ly = num(values.lmpYear);
@@ -957,6 +957,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     description: 'Caprini RAM for perioperative VTE risk and prophylaxis intensity.',
     category: 'hematology',
     tags: ['vte', 'surgery', 'prophylaxis'],
+    sourceVersion: 'Caprini 2005 RAM',
     whenToUse: 'Perioperative VTE risk assessment (surgical and overlapping medical risk factors on the Caprini RAM).',
     whyUse: 'Widely used in surgical pathways for prophylaxis intensity; total is the sum of published weighted items.',
     inputs: [
@@ -964,10 +965,13 @@ export const emergencyMiscCalcs: Calculator[] = [
       yesNo('age61', 'Age 61–74 (2)', 2),
       yesNo('age75', 'Age ≥75 (3)', 3),
       yesNo('minorSurg', 'Minor surgery (1)', 1,
-        'Surgery <45 min. Do not also score major / laparoscopic >45 min / arthroscopic for the same case unless those procedures were also performed.'),
-      yesNo('majorSurg', 'Major open surgery >45 min (2)', 2),
-      yesNo('arthroscopic', 'Arthroscopic surgery (2)', 2),
-      yesNo('laparoscopic', 'Laparoscopic surgery >45 min (2)', 2),
+        'Surgery <45 min. For one operation, select only the single applicable surgery category (minor, major open >45 min, arthroscopic, or laparoscopic >45 min); do not stack categories for the same case.'),
+      yesNo('majorSurg', 'Major open surgery >45 min (2)', 2,
+        'For one operation, select only the single applicable surgery category; do not also select minor, arthroscopic, or laparoscopic surgery for the same case.'),
+      yesNo('arthroscopic', 'Arthroscopic surgery (2)', 2,
+        'The 2005 Caprini RAM assigns arthroscopic surgery 2 points. For one operation, select only this surgery category, not another surgery-duration/type category.'),
+      yesNo('laparoscopic', 'Laparoscopic surgery >45 min (2)', 2,
+        'The 2005 Caprini RAM assigns laparoscopic surgery lasting >45 minutes 2 points. For one operation, select only this surgery category, not another surgery-duration/type category.'),
       yesNo('bmi25', 'BMI ≥25 (1)', 1),
       yesNo('swollenLegs', 'Swollen legs (1)', 1),
       yesNo('varicose', 'Varicose veins (1)', 1),
@@ -1005,13 +1009,16 @@ export const emergencyMiscCalcs: Calculator[] = [
       yesNo('multipleTrauma', 'Multiple trauma <1 month (5)', 5),
     ],
     calculate(values) {
-      // Age bands are mutually exclusive (highest applicable). Surgery types add if selected
-      // (a single case is usually one of minor / major open / lap / arthroscopic).
+      // Age bands are mutually exclusive (highest applicable). The 2005 Caprini
+      // form lists four surgery categories, but one operation must contribute
+      // only its highest applicable surgery tier (minor = 1; the other three = 2).
       const agePoints = bool(values.age75) ? 3 : bool(values.age61) ? 2 : bool(values.age41) ? 1 : 0;
-      const surgeryPoints = (bool(values.majorSurg) ? 2 : bool(values.minorSurg) ? 1 : 0);
+      const surgeryPoints = Math.max(
+        bool(values.minorSurg) ? 1 : 0,
+        bool(values.majorSurg) || bool(values.arthroscopic) || bool(values.laparoscopic) ? 2 : 0,
+      );
       let score = agePoints + surgeryPoints;
       const items: [string, number][] = [
-        ['arthroscopic', 2], ['laparoscopic', 2],
         ['bmi25', 1], ['swollenLegs', 1], ['varicose', 1], ['pregnancy', 1], ['recurrentSab', 1],
         ['ocpHrt', 1], ['historyIbd', 1], ['sepsis', 1], ['pneumonia', 1], ['abnormalPft', 1],
         ['acuteMi', 1], ['chf', 1], ['bedrest', 1], ['bedrest72', 2], ['plasterCast', 2], ['cvc', 2],
@@ -1030,8 +1037,8 @@ export const emergencyMiscCalcs: Calculator[] = [
       return { score, ...r };
     },
     evidence: {
-      summary: 'Caprini RAM (2005/2010) assigns weighted points to VTE risk factors. This form includes the published 1-, 2-, 3-, and 5-point items used to generate a numeric total and ACCP-style prophylaxis bands.',
-      formula: 'Sum of selected items. Age: highest band only (41–60 = 1, 61–74 = 2, ≥75 = 3). 1 pt: minor surgery, BMI ≥25, swollen legs, varicose veins, pregnancy/postpartum, unexplained stillbirth/recurrent SAB, OCP/HRT, IBD, sepsis <1 mo, pneumonia/serious lung disease <1 mo, abnormal PFTs, acute MI, CHF <1 mo, medical bed rest. 2 pt: arthroscopic surgery, major open surgery >45 min, laparoscopic surgery >45 min, malignancy, confined to bed >72 h, immobilizing plaster cast, central venous access. 3 pt: prior VTE, family VTE, thrombophilia, HIT. 5 pt: elective major LE arthroplasty; hip/pelvis/leg fracture; stroke or acute SCI <1 mo; multiple trauma <1 mo.',
+      summary: 'The 2005 Caprini RAM assigns weighted points to VTE risk factors. This form includes the published 1-, 2-, 3-, and 5-point items used to generate a numeric total and ACCP-style prophylaxis bands.',
+      formula: 'Sum of selected items. Age bands use the highest applicable band only (41–60 = 1, 61–74 = 2, ≥75 = 3). For one operation, surgery categories are mutually exclusive and only the highest applicable tier is scored: minor surgery = 1; arthroscopic surgery, major open surgery >45 min, or laparoscopic surgery >45 min = 2. Other 1 pt: BMI ≥25, swollen legs, varicose veins, pregnancy/postpartum, unexplained stillbirth/recurrent SAB, OCP/HRT, IBD, sepsis <1 mo, pneumonia/serious lung disease <1 mo, abnormal PFTs, acute MI, CHF <1 mo, medical bed rest. Other 2 pt: malignancy, confined to bed >72 h, immobilizing plaster cast, central venous access. 3 pt: prior VTE, family VTE, thrombophilia, HIT. 5 pt: elective major LE arthroplasty; hip/pelvis/leg fracture; stroke or acute SCI <1 mo; multiple trauma <1 mo.',
       validation: 'Validated across surgical specialties (including Bahl 2010); prophylaxis thresholds remain protocol-dependent (ACCP 2012 Caprini bands shown).',
       references: [
         { title: 'Thrombosis risk assessment as a guide to quality patient care', citation: 'Caprini JA. Dis Mon. 2005', year: 2005, pmid: '15900257',
@@ -1048,6 +1055,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     ],
     pearls: [
       'Age bands are mutually exclusive (use the highest applicable). Medical bed rest (1) and confinement >72 h (2) are distinct published items.',
+      'For one operation, surgery categories are mutually exclusive: score only the highest applicable tier (minor = 1; major open >45 min, arthroscopic, or laparoscopic >45 min = 2). Do not double-count categories for the same case.',
       'HIT is 3 points on Caprini forms and is scored separately from other thrombophilias.',
     ],
   },
@@ -1208,7 +1216,7 @@ export const emergencyMiscCalcs: Calculator[] = [
     whenToUse: 'Switching between systemic corticosteroids.',
     whyUse: 'Approximate anti-inflammatory equivalences.',
     inputs: [
-      numberInput('dose', 'Current dose', { unit: 'mg', min: 0.1, max: 1000, step: 0.5, defaultValue: 20 }),
+      numberInput('dose', 'Current dose', { unit: 'mg', min: 0.1, max: 1000, step: 0.5, exampleValue: 20 }),
       // Relative glucocorticoid potency vs hydrocortisone = 1.
       // From classic equivalents: HC 20 = cortisone 25 = pred 5 = methylpred/triamcinolone 4 = dex/beta 0.75 mg.
       // potency = 20 / equivalent_dose_mg  →  dex/beta = 20/0.75 ≈ 26.667 (not the rounded "25" used in some tables).
@@ -1269,11 +1277,12 @@ export const emergencyMiscCalcs: Calculator[] = [
     description: 'Daily opioid morphine milligram equivalents (CDC conversion factors).',
     category: 'general',
     tags: ['opioid', 'mme', 'pain'],
+    sourceVersion: 'CDC Clinical Practice Guideline 2022 MME table',
     whenToUse: 'Assessing opioid dose intensity and overdose risk.',
     whyUse: 'CDC thresholds (e.g., ≥50 MME/day) flag higher risk.',
     inputs: [
-      numberInput('dose', 'Dose per administration', { unit: 'mg', min: 0, max: 1000, step: 0.5, defaultValue: 10, helpText: 'Oral mg per dose for tablets/liquids. For fentanyl patch enter patch strength in mcg/h and set doses/day = 1 (CDC MME/day = mcg/h × 2.4). Do not use this tool to switch opioids.' }),
-      numberInput('freq', 'Doses per day', { min: 1, max: 24, defaultValue: 3, helpText: 'For fentanyl patch, set to 1 (the 2.4 factor already converts mcg/h → MME/day).' }),
+      numberInput('dose', 'Dose per administration', { unit: 'mg', min: 0, max: 1000, step: 0.5, exampleValue: 10, helpText: 'Oral mg per dose for tablets/liquids. For fentanyl patch enter patch strength in mcg/h and set doses/day = 1 (CDC MME/day = mcg/h × 2.4). Do not use this tool to switch opioids.' }),
+      numberInput('freq', 'Doses per day', { min: 1, max: 24, exampleValue: 3, helpText: 'For fentanyl patch, set to 1 (the 2.4 factor already converts mcg/h → MME/day).' }),
       selectInput('opioid', 'Opioid', [
         { label: 'Morphine', value: 'morphine' },
         { label: 'Hydrocodone', value: 'hydrocodone' },
@@ -1316,19 +1325,23 @@ export const emergencyMiscCalcs: Calculator[] = [
         ...r,
         details: [
           { label: 'Daily opioid amount', value: `${round(daily, 1)} ${opioid === 'fentanyl_patch' ? 'mcg/h (×1)' : 'mg/day'}` },
-          { label: 'CDC conversion factor', value: String(factor) },
+          { label: 'CDC 2022 conversion factor', value: String(factor) },
           { label: 'Methadone rule', value: opioid === 'methadone' ? 'CDC 2022 flat factor ×4.7' : 'n/a' },
         ],
       };
     },
     evidence: {
-      summary: 'MME uses CDC 2022 conversion factors to standardize opioid intensity, including a flat methadone factor of ×4.7.',
-      validation: 'Public health tool for risk; not exact equianalgesia for switching (use caution).',
-      references: [{ title: 'CDC Clinical Practice Guideline for Prescribing Opioids', citation: 'Dowell D et al. MMWR. 2022', year: 2022, pmid: '36327391',
-          doi: '10.15585/mmwr.rr7103a1', }],
+      summary: 'MME uses the CDC Clinical Practice Guideline for Prescribing Opioids — United States, 2022 Table of conversion factors (hydromorphone ×5.0; tramadol ×0.2), including a flat methadone factor of ×4.7.',
+      formula: 'MME/day = total daily opioid dose × the CDC 2022 Table conversion factor. Doses are mg/day except transdermal fentanyl (mcg/hr ×2.4). Do not use calculated MME to select a replacement opioid dose.',
+      validation: 'Public health tool for communicating opioid dose intensity and overdose risk; MME is not exact equianalgesia and must not be used for opioid rotation or other dose-conversion decisions (use product labeling and clinical judgment).',
+      references: [{ title: 'CDC Clinical Practice Guideline for Prescribing Opioids — United States, 2022 (MME table)', citation: 'Dowell D et al. MMWR Recomm Rep. 2022;71(RR-3):1–95', year: 2022, pmid: '36327391',
+          doi: '10.15585/mmwr.rr7103a1', url: 'https://www.cdc.gov/mmwr/volumes/71/rr/rr7103a1.htm' }],
     },
     nextSteps: [
       { condition: '≥50 MME', actions: ['Offer naloxone', 'Avoid benzodiazepines', 'Reassess pain plan', 'Consider taper if harm outweighs benefit'] },
+    ],
+    pearls: [
+      'CDC 2022 MME factors are dose-intensity estimates for risk communication, not equianalgesic doses. Never use this result to rotate or switch opioids.',
     ],
   },
   {
@@ -1341,8 +1354,8 @@ export const emergencyMiscCalcs: Calculator[] = [
     whenToUse: 'Total phenytoin levels with low albumin (or CrCl <20 with adjusted formula).',
     whyUse: 'Free phenytoin preferred; correction approximates when free level unavailable.',
     inputs: [
-      numberInput('total', 'Total phenytoin', { unit: 'µg/mL', min: 0, max: 50, step: 0.1, defaultValue: 10 }),
-      numberInput('alb', 'Albumin', { unit: 'g/dL', min: 1, max: 5, step: 0.1, defaultValue: 2.5 }),
+      numberInput('total', 'Total phenytoin', { unit: 'µg/mL', min: 0, max: 50, step: 0.1, exampleValue: 10 }),
+      numberInput('alb', 'Albumin', { unit: 'g/dL', min: 1, max: 5, step: 0.1, exampleValue: 2.5 }),
       yesNo('esrd', 'ESRD / CrCl <20 (use 0.1 binding factor)', 0),
     ],
     calculate(values) {
@@ -1379,8 +1392,8 @@ export const emergencyMiscCalcs: Calculator[] = [
     whenToUse: 'Iron deficiency vs overload assessment.',
     whyUse: 'Quick iron availability metric.',
     inputs: [
-      numberInput('iron', 'Serum iron', { unit: 'µg/dL', min: 0, max: 500, defaultValue: 60 }),
-      numberInput('tibc', 'TIBC', { unit: 'µg/dL', min: 50, max: 600, defaultValue: 300 }),
+      numberInput('iron', 'Serum iron', { unit: 'µg/dL', min: 0, max: 500, exampleValue: 60 }),
+      numberInput('tibc', 'TIBC', { unit: 'µg/dL', min: 50, max: 600, exampleValue: 300 }),
     ],
     calculate(values) {
       const iron = num(values.iron, 60);
@@ -1422,17 +1435,17 @@ export const emergencyMiscCalcs: Calculator[] = [
     whenToUse: 'Planning correction of hypo/hypernatremia with IV fluids.',
     whyUse: 'Estimates ΔNa per liter to avoid overcorrection.',
     inputs: [
-      numberInput('serumNa', 'Serum Na', { unit: 'mEq/L', min: 100, max: 180, defaultValue: 120 }),
-      numberInput('infusateNa', 'Infusate Na', { unit: 'mEq/L', min: 0, max: 513, defaultValue: 154, helpText: 'D5W=0, 0.45%NaCl=77, NS=154, 3%=513' }),
+      numberInput('serumNa', 'Serum Na', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 120 }),
+      numberInput('infusateNa', 'Infusate Na', { unit: 'mEq/L', min: 0, max: 513, exampleValue: 154, helpText: 'D5W=0, 0.45%NaCl=77, NS=154, 3%=513' }),
       numberInput('infusateK', 'Infusate K (optional)', {
         unit: 'mEq/L',
         min: 0,
         max: 100,
-        defaultValue: 0,
+        exampleValue: 0,
         required: false,
         helpText: 'K in the liter of infusate (e.g. 10–40 mEq/L KCl). Published ΔNa uses infusate Na + K. Leave 0 if none.',
       }),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 20, max: 200, defaultValue: 70 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 200, exampleValue: 70 }),
       selectInput('tbwFactor', 'TBW factor', [
         { label: 'Young man 0.6', value: 0.6 },
         { label: 'Young woman / elderly man 0.5', value: 0.5 },

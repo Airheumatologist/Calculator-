@@ -32,24 +32,24 @@ export const wave7FillinsCalcs: Calculator[] = [
     whyUse:
       'The 8-variable model modestly improves discrimination over 4-variable KFRE by incorporating CKD-MBD and nutritional labs. Guides referral urgency and kidney-replacement planning.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 65 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 65 }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
       ]),
-      numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 5, max: 90, defaultValue: 45 }),
+      numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 5, max: 90, exampleValue: 45 }),
       numberInput('acr', 'Urine ACR', {
         unit: 'mg/g',
         min: 0.1,
         max: 10000,
         step: 0.1,
-        defaultValue: 30,
+        exampleValue: 30,
         helpText: 'Albumin/creatinine ratio; convert mg/mmol × 8.84 ≈ mg/g',
       }),
-      numberInput('albumin', 'Serum albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, defaultValue: 4.0, helpText: 'Use g/dL (g/L ÷ 10). Lower albumin raises predicted kidney-failure risk in the 8-variable model.' }),
-      numberInput('phosphorus', 'Serum phosphorus', { unit: 'mg/dL', min: 1, max: 12, step: 0.1, defaultValue: 3.9, helpText: 'Use mg/dL (mmol/L × 3.1 ≈ mg/dL). Higher phosphorus raises predicted risk.' }),
-      numberInput('bicarbonate', 'Serum bicarbonate', { unit: 'mEq/L', min: 8, max: 40, step: 0.1, defaultValue: 25, helpText: 'Lower bicarbonate (acidosis) raises predicted kidney-failure risk.' }),
-      numberInput('calcium', 'Serum calcium', { unit: 'mg/dL', min: 5, max: 15, step: 0.1, defaultValue: 9.4, helpText: 'Use mg/dL (mmol/L × 4 ≈ mg/dL). Lower calcium raises predicted risk.' }),
+      numberInput('albumin', 'Serum albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, exampleValue: 4.0, helpText: 'Use g/dL (g/L ÷ 10). Lower albumin raises predicted kidney-failure risk in the 8-variable model.' }),
+      numberInput('phosphorus', 'Serum phosphorus', { unit: 'mg/dL', min: 1, max: 12, step: 0.1, exampleValue: 3.9, helpText: 'Use mg/dL (mmol/L × 3.1 ≈ mg/dL). Higher phosphorus raises predicted risk.' }),
+      numberInput('bicarbonate', 'Serum bicarbonate', { unit: 'mEq/L', min: 8, max: 40, step: 0.1, exampleValue: 25, helpText: 'Lower bicarbonate (acidosis) raises predicted kidney-failure risk.' }),
+      numberInput('calcium', 'Serum calcium', { unit: 'mg/dL', min: 5, max: 15, step: 0.1, exampleValue: 9.4, helpText: 'Use mg/dL (mmol/L × 4 ≈ mg/dL). Lower calcium raises predicted risk.' }),
     ],
     calculate(values) {
       const age = num(values.age, 65);
@@ -163,7 +163,7 @@ export const wave7FillinsCalcs: Calculator[] = [
     whyUse:
       '4PEPS defines four pretest bands (very low / low / moderate / high) and can reduce imaging versus dichotomous Wells/Geneva strategies when applied as published.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 55, helpText: '<50: −2; 50–64: −1; ≥65: 0' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 55, helpText: '<50: −2; 50–64: −1; ≥65: 0' }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F', points: 0 },
         { label: 'Male', value: 'M', points: 2 },
@@ -284,7 +284,7 @@ export const wave7FillinsCalcs: Calculator[] = [
         unit: 'days',
         min: 0,
         max: 180,
-        defaultValue: 14,
+        exampleValue: 14,
         helpText: '<3 d: 0; 3–7 d: +1; ≥8 d: +2 (latency is typical for AIN)',
       }),
     ],
@@ -383,7 +383,7 @@ export const wave7FillinsCalcs: Calculator[] = [
     whyUse:
       'Lists the major SCD and mortality markers used in Mayo/AHA pathways and ESC HCM Risk-SCD. Official calculators (ESC HCM Risk-SCD; Mayo HCM SCD strategy) should drive ICD decisions.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 16, max: 90, defaultValue: 50 }),
+      numberInput('age', 'Age', { unit: 'years', min: 16, max: 90, exampleValue: 50 }),
       selectInput('nyha', 'NYHA class', [
         { label: 'I', value: 1, description: 'No limitation of ordinary physical activity' },
         { label: 'II', value: 2, description: 'Slight limitation of ordinary activity (dyspnea/fatigue with ordinary exertion)' },
@@ -392,11 +392,11 @@ export const wave7FillinsCalcs: Calculator[] = [
       ]),
       yesNo('syncope', 'Unexplained syncope', null, 'Unexplained TLOC judged not neurally mediated (not vasovagal). ESC treats recent syncope (often ≤6 months) as the high-impact marker.'),
       yesNo('famScd', 'Family history of SCD attributed to HCM', null, 'SCD in ≥1 first-degree relative <40 years, or SCD at any age in a first-degree relative with documented HCM.'),
-      numberInput('lvh', 'Maximal LV wall thickness', { unit: 'mm', min: 13, max: 40, defaultValue: 20, helpText: 'Massive LVH typically ≥30 mm' }),
+      numberInput('lvh', 'Maximal LV wall thickness', { unit: 'mm', min: 13, max: 40, exampleValue: 20, helpText: 'Massive LVH typically ≥30 mm' }),
       yesNo('nsvt', 'NSVT on ambulatory ECG', null, '≥3 consecutive ventricular beats at ≥120 bpm lasting <30 s (ESC HCM Risk-SCD definition).'),
-      numberInput('ef', 'LVEF', { unit: '%', min: 15, max: 80, defaultValue: 65, helpText: 'EF <50% is an AHA major SCD risk modifier (HCM end-stage phenotype) even when numeric risk estimates are modest.' }),
-      numberInput('la', 'Left atrial diameter (or equivalent LA size)', { unit: 'mm', min: 25, max: 70, defaultValue: 40 }),
-      numberInput('gradient', 'Resting LVOT gradient', { unit: 'mmHg', min: 0, max: 150, defaultValue: 0 }),
+      numberInput('ef', 'LVEF', { unit: '%', min: 15, max: 80, exampleValue: 65, helpText: 'EF <50% is an AHA major SCD risk modifier (HCM end-stage phenotype) even when numeric risk estimates are modest.' }),
+      numberInput('la', 'Left atrial diameter (or equivalent LA size)', { unit: 'mm', min: 25, max: 70, exampleValue: 40 }),
+      numberInput('gradient', 'Resting LVOT gradient', { unit: 'mmHg', min: 0, max: 150, exampleValue: 0 }),
       yesNo('af', 'Atrial fibrillation (any)', null, 'Any history of AF (paroxysmal, persistent, or permanent), not only AF on this ECG.'),
       yesNo('lge', 'Extensive late gadolinium enhancement', null, 'CMR; extensive/≥15% of LV mass is the usual high-risk descriptor'),
     ],
@@ -510,7 +510,7 @@ export const wave7FillinsCalcs: Calculator[] = [
       yesNo('cancer', 'Current cancer', 2, 'Currently active cancer (not remote treated-and-cured). Most IMPROVE implementations exclude non-melanoma skin cancer.'),
       yesNo('immobility', 'Immobilization ≥7 days', 1, 'Confined to bed or chair with or without bathroom privileges for ≥7 days (not merely admitted but walking).'),
       yesNo('icu', 'ICU/CCU stay', 1),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 70, helpText: '≥60 years: +1' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 70, helpText: '≥60 years: +1' }),
       yesNo('ddimer', 'D-dimer ≥2× ULN', 2),
     ],
     calculate(values) {
@@ -598,8 +598,8 @@ export const wave7FillinsCalcs: Calculator[] = [
     whenToUse: 'Acute thermal injury for early mortality risk communication and transfer decisions.',
     whyUse: 'Simple, well-known revision of the classic Baux index that accounts for inhalation injury. Complements ABSI and modern burn-unit models.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 0, max: 110, defaultValue: 40 }),
-      numberInput('tbsa', 'TBSA burned', { unit: '%', min: 0, max: 100, defaultValue: 20, helpText: 'Partial- + full-thickness (2nd/3rd degree) only; exclude isolated first-degree/superficial erythema. Estimate with Lund-Browder (preferred) or Rule of Nines; patient palm ≈ 1%.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 0, max: 110, exampleValue: 40 }),
+      numberInput('tbsa', 'TBSA burned', { unit: '%', min: 0, max: 100, exampleValue: 20, helpText: 'Partial- + full-thickness (2nd/3rd degree) only; exclude isolated first-degree/superficial erythema. Estimate with Lund-Browder (preferred) or Rule of Nines; patient palm ≈ 1%.' }),
       yesNo('inhalation', 'Inhalation injury', 17, 'Clinically diagnosed inhalation injury (closed-space fire, carbonaceous sputum, facial burns/singed hairs plus airway signs) or bronchoscopy-confirmed.'),
     ],
     calculate(values) {
@@ -774,7 +774,7 @@ export const wave7FillinsCalcs: Calculator[] = [
     whenToUse: 'ICU admission severity scoring using data from 1 hour before to 1 hour after admission.',
     whyUse: 'Admission-window physiology (unlike APACHE worst-in-24h). Global logistic equation estimates hospital mortality; custom equations exist by region.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 16, max: 120, defaultValue: 65, helpText: 'SAPS 3 age points: <40 = 0; 40–59 = 5; 60–69 = 9; 70–74 = 13; 75–79 = 15; ≥80 = 18' }),
+      numberInput('age', 'Age', { unit: 'years', min: 16, max: 120, exampleValue: 65, helpText: 'SAPS 3 age points: <40 = 0; 40–59 = 5; 60–69 = 9; 70–74 = 13; 75–79 = 15; ≥80 = 18' }),
       selectInput('comorbid', 'Highest comorbidity', [
         { label: 'None', value: 'none', description: 'None of the listed SAPS 3 comorbidities.' },
         { label: 'Cancer therapy (chemo/radio/steroids)', value: 'therapy', description: 'Chemotherapy, radiotherapy, or chronic high-dose steroids for cancer (not a short burst for COPD).' },
@@ -784,7 +784,7 @@ export const wave7FillinsCalcs: Calculator[] = [
         { label: 'AIDS', value: 'aids', description: 'CDC AIDS (opportunistic infection or CD4 <200), not asymptomatic HIV alone.' },
         { label: 'Metastatic cancer', value: 'meta', description: 'Distant metastases of solid cancer. Highest-weighted comorbidity — use this instead of “cancer therapy” if both apply.' },
       ], undefined, 'Use the single highest-weighted condition only (do not add multiple). NYHA IV = symptoms at rest.'),
-      numberInput('losBefore', 'Hospital LOS before ICU', { unit: 'days', min: 0, max: 90, defaultValue: 1, helpText: 'Days in this hospital before ICU admission. SAPS 3: 0 if <14 d; +6 if 14–27 d; +7 if ≥28 d.' }),
+      numberInput('losBefore', 'Hospital LOS before ICU', { unit: 'days', min: 0, max: 90, exampleValue: 1, helpText: 'Days in this hospital before ICU admission. SAPS 3: 0 if <14 d; +6 if 14–27 d; +7 if ≥28 d.' }),
       selectInput('location', 'Intra-hospital location before ICU', [
         { label: 'Operating room', value: 'or', description: 'Came from OR/PACU (including planned postoperative ICU).' },
         { label: 'Emergency room', value: 'ed', description: 'Admitted to ICU from the ED.' },
@@ -838,15 +838,15 @@ export const wave7FillinsCalcs: Calculator[] = [
         { label: 'Respiratory', value: 'resp', description: 'Community-acquired pneumonia / respiratory infection. +5.' },
         { label: 'Nosocomial respiratory', value: 'both', description: 'Hospital-acquired pneumonia or ventilator-associated pneumonia. +9 (do not also add nosocomial or respiratory).' },
       ]),
-      numberInput('gcs', 'Lowest GCS (admission window)', { min: 3, max: 15, defaultValue: 15, helpText: 'Lowest estimated GCS from 1 h before to 1 h after ICU admission. If sedated/paralyzed, use pre-sedation GCS. If intubated, verbal is untestable (VT = 1) or estimate pre-intubation speech — do not guess a normal verbal 5.' }),
-      numberInput('bili', 'Highest total bilirubin', { unit: 'mg/dL', min: 0, max: 40, step: 0.1, defaultValue: 0.8, helpText: 'Worst value in the ±1 hour admission window only (not worst in 24 h).' }),
-      numberInput('temp', 'Highest temperature', { unit: '°C', min: 30, max: 43, step: 0.1, defaultValue: 37, helpText: '±1 hour admission window only (not worst in 24 h). Points if temperature <35 °C.' }),
-      numberInput('creat', 'Highest creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, defaultValue: 1.0, helpText: 'Worst value in the ±1 hour admission window only (not worst in 24 h).' }),
-      numberInput('hr', 'Highest heart rate', { unit: '/min', min: 30, max: 250, defaultValue: 90, helpText: 'Worst value in the ±1 hour admission window only (not worst in 24 h).' }),
-      numberInput('wbc', 'Highest leukocytes (admission window)', { unit: '×10³/µL', min: 0, max: 100, step: 0.1, defaultValue: 10, helpText: 'Highest leukocytes in the ±1 hour admission window only (not worst in 24 h).' }),
-      numberInput('ph', 'Lowest pH', { min: 6.6, max: 7.7, step: 0.01, defaultValue: 7.38, helpText: 'Worst value in the ±1 hour admission window only (not worst in 24 h).' }),
-      numberInput('plt', 'Lowest platelets', { unit: '×10³/µL', min: 5, max: 800, defaultValue: 220, helpText: 'Worst value in the ±1 hour admission window only (not worst in 24 h).' }),
-      numberInput('sbp', 'Lowest systolic BP', { unit: 'mmHg', min: 30, max: 250, defaultValue: 120, helpText: 'Worst value in the ±1 hour admission window only (not worst in 24 h).' }),
+      numberInput('gcs', 'Lowest GCS (admission window)', { min: 3, max: 15, exampleValue: 15, helpText: 'Lowest estimated GCS from 1 h before to 1 h after ICU admission. If sedated/paralyzed, use pre-sedation GCS. If intubated, verbal is untestable (VT = 1) or estimate pre-intubation speech — do not guess a normal verbal 5.' }),
+      numberInput('bili', 'Highest total bilirubin', { unit: 'mg/dL', min: 0, max: 40, step: 0.1, exampleValue: 0.8, helpText: 'Worst value in the ±1 hour admission window only (not worst in 24 h).' }),
+      numberInput('temp', 'Highest temperature', { unit: '°C', min: 30, max: 43, step: 0.1, exampleValue: 37, helpText: '±1 hour admission window only (not worst in 24 h). Points if temperature <35 °C.' }),
+      numberInput('creat', 'Highest creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 1.0, helpText: 'Worst value in the ±1 hour admission window only (not worst in 24 h).' }),
+      numberInput('hr', 'Highest heart rate', { unit: '/min', min: 30, max: 250, exampleValue: 90, helpText: 'Worst value in the ±1 hour admission window only (not worst in 24 h).' }),
+      numberInput('wbc', 'Highest leukocytes (admission window)', { unit: '×10³/µL', min: 0, max: 100, step: 0.1, exampleValue: 10, helpText: 'Highest leukocytes in the ±1 hour admission window only (not worst in 24 h).' }),
+      numberInput('ph', 'Lowest pH', { min: 6.6, max: 7.7, step: 0.01, exampleValue: 7.38, helpText: 'Worst value in the ±1 hour admission window only (not worst in 24 h).' }),
+      numberInput('plt', 'Lowest platelets', { unit: '×10³/µL', min: 5, max: 800, exampleValue: 220, helpText: 'Worst value in the ±1 hour admission window only (not worst in 24 h).' }),
+      numberInput('sbp', 'Lowest systolic BP', { unit: 'mmHg', min: 30, max: 250, exampleValue: 120, helpText: 'Worst value in the ±1 hour admission window only (not worst in 24 h).' }),
       selectInput('ox', 'Oxygenation (admission window)', [
         { label: 'PaO₂ ≥60 and not ventilated', value: 'room', description: 'Not intubated/ventilated, PaO₂ ≥60 mmHg (includes supplemental O₂ if not ventilated).' },
         { label: 'PaO₂ <60, not ventilated', value: 'hypox', description: 'Not ventilated, PaO₂ <60 mmHg. +5.' },

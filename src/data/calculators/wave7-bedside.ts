@@ -90,13 +90,13 @@ export const wave7BedsideCalcs: Calculator[] = [
     whyUse:
       'CKiD U25 is less biased across the pediatric-to-young-adult range than bedside Schwartz or adult CKD-EPI in this age band; averaging Cr and CysC improves precision.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 1, max: 25, step: 0.1, defaultValue: 10 }),
+      numberInput('age', 'Age', { unit: 'years', min: 1, max: 25, step: 0.1, exampleValue: 10 }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
       ]),
-      numberInput('height', 'Height', { unit: 'cm', min: 50, max: 220, step: 0.1, defaultValue: 140, helpText: 'Measured standing height (recumbent length in infants). Required for the creatinine equation (height in metres).' }),
-      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', min: 0.1, max: 15, step: 0.01, defaultValue: 0.8 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 50, max: 220, step: 0.1, exampleValue: 140, helpText: 'Measured standing height (recumbent length in infants). Required for the creatinine equation (height in metres).' }),
+      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 15, step: 0.01, exampleValue: 0.8 }),
       numberInput('cysc', 'Cystatin C (optional)', {
         unit: 'mg/L',
         min: 0.2,
@@ -220,13 +220,13 @@ export const wave7BedsideCalcs: Calculator[] = [
     whyUse:
       'BRI models the body as an ellipse; higher values indicate rounder (more viscerally adiposity-like) shape. 2024 US cohort data show a U-shaped link with all-cause mortality — both low and high BRI vs the mid-range nadir.',
     inputs: [
-      numberInput('height', 'Height', { unit: 'cm', min: 100, max: 220, step: 0.1, defaultValue: 170 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 100, max: 220, step: 0.1, exampleValue: 170 }),
       numberInput('waist', 'Waist circumference', {
         unit: 'cm',
         min: 40,
         max: 200,
         step: 0.1,
-        defaultValue: 80,
+        exampleValue: 80,
         helpText: 'Standing, end-expiration. State the site (WHO midpoint last rib–iliac crest vs NIH superior iliac crest) and keep it consistent — several cm difference changes BRI.',
       }),
     ],
@@ -323,16 +323,16 @@ export const wave7BedsideCalcs: Calculator[] = [
     whenToUse: 'Adults on HFNC for acute hypoxemic respiratory failure (especially pneumonia) when deciding whether to continue HFNC or intubate.',
     whyUse: 'Simple bedside ratio; ROX ≥4.88 predicts HFNC success. Time-specific floors (2 h 2.85 / 6 h 3.47 / 12 h 3.85) flag high failure risk; values between the floor and 4.88 are indeterminate.',
     inputs: [
-      numberInput('spo2', 'SpO₂', { unit: '%', min: 50, max: 100, step: 1, defaultValue: 98, helpText: 'Current pulse-oximetry SpO₂ (%) on HFNC at the selected timepoint.' }),
+      numberInput('spo2', 'SpO₂', { unit: '%', min: 50, max: 100, step: 1, exampleValue: 98, helpText: 'Current pulse-oximetry SpO₂ (%) on HFNC at the selected timepoint.' }),
       numberInput('fio2', 'FiO₂ (fraction)', {
-        unit: 'fraction',
+        unit: 'fraction', unitKind: 'fio2',
         min: 0.21,
         max: 1,
         step: 0.01,
-        defaultValue: 0.4,
-        helpText: '0.21 (air) to 1.00. Convert % by dividing by 100 (e.g. 40% → 0.40).',
+        exampleValue: 0.4,
+        helpText: 'Select % if the device is labelled as a percent (e.g. 40%).',
       }),
-      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 8, max: 50, step: 1, defaultValue: 20, helpText: 'Count RR over 30–60 s on HFNC at the same moment as SpO₂/FiO₂.' }),
+      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 8, max: 50, step: 1, exampleValue: 20, helpText: 'Count RR over 30–60 s on HFNC at the same moment as SpO₂/FiO₂.' }),
       selectInput(
         'timepoint',
         'HFNC assessment time',
@@ -428,11 +428,11 @@ export const wave7BedsideCalcs: Calculator[] = [
     whenToUse: 'Adults receiving NIV (especially COPD hypercapnic failure) after ~1 hour, to predict NIV failure (intubation or death on NIV).',
     whyUse: 'Score ≥5 at 1–2 h of NIV predicted ~50% failure in derivation; early intubation in high-risk patients was associated with lower mortality.',
     inputs: [
-      numberInput('hr', 'Heart rate', { unit: '/min', min: 40, max: 180, step: 1, defaultValue: 90, helpText: 'Use values after ~1 hour of optimized NIV (Duan 2017), not the pre-NIV gas. HACOR is for NIV — not already-intubated patients. HR ≥120 = 1 point.' }),
-      numberInput('ph', 'Arterial pH', { min: 6.8, max: 7.6, step: 0.01, defaultValue: 7.36, helpText: 'Arterial pH after ~1 h NIV. ≥7.35 = 0; 7.30–7.34 = 2; 7.25–7.29 = 3; <7.25 = 4.' }),
-      numberInput('gcs', 'Glasgow Coma Scale', { min: 3, max: 15, step: 1, defaultValue: 15, helpText: 'Total GCS 3–15. Not for already-intubated patients. 15 = 0; 13–14 = 2; 11–12 = 5; ≤10 = 10.' }),
-      numberInput('pf', 'PaO₂/FiO₂', { unit: 'mmHg', min: 40, max: 600, step: 1, defaultValue: 220, helpText: 'PaO₂/FiO₂ after ~1 h NIV. ≥201 = 0; 176–200 = 2; 151–175 = 3; 126–150 = 4; 101–125 = 5; ≤100 = 6.' }),
-      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 8, max: 60, step: 1, defaultValue: 24, helpText: 'RR after ~1 h NIV. ≤30 = 0; 31–35 = 1; 36–40 = 2; 41–45 = 3; ≥46 = 4.' }),
+      numberInput('hr', 'Heart rate', { unit: '/min', min: 40, max: 180, step: 1, exampleValue: 90, helpText: 'Use values after ~1 hour of optimized NIV (Duan 2017), not the pre-NIV gas. HACOR is for NIV — not already-intubated patients. HR ≥120 = 1 point.' }),
+      numberInput('ph', 'Arterial pH', { min: 6.8, max: 7.6, step: 0.01, exampleValue: 7.36, helpText: 'Arterial pH after ~1 h NIV. ≥7.35 = 0; 7.30–7.34 = 2; 7.25–7.29 = 3; <7.25 = 4.' }),
+      numberInput('gcs', 'Glasgow Coma Scale', { min: 3, max: 15, step: 1, exampleValue: 15, helpText: 'Total GCS 3–15. Not for already-intubated patients. 15 = 0; 13–14 = 2; 11–12 = 5; ≤10 = 10.' }),
+      numberInput('pf', 'PaO₂/FiO₂', { unit: 'mmHg', min: 40, max: 600, step: 1, exampleValue: 220, helpText: 'PaO₂/FiO₂ after ~1 h NIV. ≥201 = 0; 176–200 = 2; 151–175 = 3; 126–150 = 4; 101–125 = 5; ≤100 = 6.' }),
+      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 8, max: 60, step: 1, exampleValue: 24, helpText: 'RR after ~1 h NIV. ≤30 = 0; 31–35 = 1; 36–40 = 2; 41–45 = 3; ≥46 = 4.' }),
     ],
     calculate(values) {
       const hr = num(values.hr, 90);
@@ -649,19 +649,19 @@ export const wave7BedsideCalcs: Calculator[] = [
     whenToUse: 'Adults with unexplained dyspnea and LVEF ≥50% when HFpEF is in the differential.',
     whyUse: 'Separates HFpEF from non-cardiac dyspnea using six routinely available variables; high scores can make the diagnosis without invasive testing.',
     inputs: [
-      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 60, step: 0.1, defaultValue: 28, helpText: 'Heavy: 2 points if BMI >30' }),
+      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 60, step: 0.1, exampleValue: 28, helpText: 'Heavy: 2 points if BMI >30' }),
       numberInput('htnMeds', 'Antihypertensive medications', {
         unit: 'agents',
         min: 0,
         max: 8,
         step: 1,
-        defaultValue: 1,
+        exampleValue: 1,
         helpText: 'Hypertensive: 1 point if ≥2 BP medicines',
       }),
       yesNo('af', 'Atrial fibrillation (paroxysmal or persistent)', 3, 'Any history of AF (paroxysmal, persistent, or permanent) — 3 points. Heavy (BMI >30) is scored from the BMI field.'),
-      numberInput('pasp', 'Estimated PASP (echo)', { unit: 'mmHg', min: 15, max: 80, step: 1, defaultValue: 30, helpText: '1 point if PASP >35' }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, step: 1, defaultValue: 65, helpText: 'Elder: 1 point if age >60' }),
-      numberInput('ee', "E/e′ (average)", { min: 3, max: 25, step: 0.1, defaultValue: 8, helpText: 'Filling pressure: 1 point if E/e′ >9' }),
+      numberInput('pasp', 'Estimated PASP (echo)', { unit: 'mmHg', min: 15, max: 80, step: 1, exampleValue: 30, helpText: '1 point if PASP >35' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, step: 1, exampleValue: 65, helpText: 'Elder: 1 point if age >60' }),
+      numberInput('ee', "E/e′ (average)", { min: 3, max: 25, step: 0.1, exampleValue: 8, helpText: 'Filling pressure: 1 point if E/e′ >9' }),
     ],
     calculate(values) {
       const bmi = num(values.bmi, 28);
@@ -743,9 +743,9 @@ export const wave7BedsideCalcs: Calculator[] = [
     name: 'HFA-PEFF Diagnostic Score',
     shortName: 'HFA-PEFF',
     description:
-      'ESC HFA-PEFF stepwise score for HFpEF: functional, morphological, and biomarker domains (major = 2, minor = 1 each; max 2 per domain, total 0–6).',
+      'ESC HFA-PEFF stepwise score for HFpEF: functional, morphological, and biomarker domains (major = 2, minor = 1 each; max 2 per domain, total 0–6). Natriuretic-peptide cutoffs are selected by cardiac rhythm (sinus rhythm vs atrial fibrillation).',
     category: 'cardiology',
-    tags: ['hfpef', 'hfa-peff', 'esc', 'diastolic', 'nt-probnp'],
+    tags: ['hfpef', 'hfa-peff', 'esc', 'diastolic', 'bnp', 'nt-probnp'],
     whenToUse: 'Suspected HFpEF after pretest clinical assessment (step 1) when echo and natriuretic peptides are available (step 2).',
     whyUse: '≥5 points = definite HFpEF; 2–4 = intermediate (diastolic stress / invasive); ≤1 = HFpEF unlikely.',
     inputs: [
@@ -772,21 +772,63 @@ export const wave7BedsideCalcs: Calculator[] = [
         'Score the higher criterion only (never 3 in one domain). LAVI in mL/m²; LVMI in g/m² (male/female); RWT unitless; wall thickness in mm.',
       ),
       selectInput(
-        'biomarker',
-        'Biomarker domain (NT-proBNP / BNP by rhythm)',
+        'rhythm',
+        'Cardiac rhythm (for natriuretic-peptide cutoffs)',
         [
-          { label: 'None', value: 0, points: 0, description: 'NP below the sinus-rhythm minor cutoffs (NT-proBNP <125 or BNP <35 pg/mL in SR; use AF cutoffs if in AF).' },
-          { label: 'Minor (NT-proBNP 125–220 SR / 365–660 AF; BNP 35–80 / 105–240 pg/mL)', value: 1, points: 1, description: 'Sinus: NT-proBNP 125–220 or BNP 35–80 pg/mL. AF: NT-proBNP 365–660 or BNP 105–240 pg/mL.' },
-          { label: 'Major (NT-proBNP >220 SR / >660 AF; BNP >80 / >240 pg/mL)', value: 2, points: 2, description: 'Sinus: NT-proBNP >220 or BNP >80 pg/mL. AF: NT-proBNP >660 or BNP >240 pg/mL.' },
+          { label: 'Sinus rhythm (SR)', value: 'sr' },
+          { label: 'Atrial fibrillation (AF)', value: 'af' },
         ],
-        0,
-        'Score the higher criterion only (never 3 in one domain). NP values in pg/mL. AF thresholds are higher than sinus rhythm.',
+        'sr',
+        'Use the rhythm documented at the time of natriuretic-peptide measurement. The HFA-PEFF consensus uses higher BNP/NT-proBNP cutoffs in AF than in sinus rhythm.',
       ),
+      selectInput(
+        'biomarker',
+        'Natriuretic peptide assay',
+        [
+          { label: 'Not measured', value: 'none', points: 0, description: 'No BNP or NT-proBNP result is available; the biomarker domain contributes 0 points.' },
+          { label: 'BNP', value: 'bnp', description: 'Enter BNP in pg/mL; the score uses rhythm-specific HFA-PEFF cutoffs.' },
+          { label: 'NT-proBNP', value: 'nt', description: 'Enter NT-proBNP in pg/mL; the score uses rhythm-specific HFA-PEFF cutoffs.' },
+        ],
+        'nt',
+        'Select the assay reported by the laboratory. Leave the value blank only when the assay was not measured; do not substitute BNP for NT-proBNP or use a single compromise threshold.',
+      ),
+      numberInput('biomarkerValue', 'Natriuretic peptide value', {
+        unit: 'pg/mL',
+        min: 0,
+        max: 100000,
+        step: 1,
+        exampleValue: 125,
+        required: false,
+        helpText: 'Measured BNP or NT-proBNP in pg/mL (numerically equivalent to ng/L). The value is scored as a minor criterion at the lower cutoff through the major cutoff; major requires a value above the major cutoff.',
+      }),
     ],
     calculate(values) {
       const functional = num(values.functional, 0);
       const morphological = num(values.morphological, 0);
-      const biomarker = num(values.biomarker, 0);
+      const rhythmRaw = str(values.rhythm, 'sr').toLowerCase();
+      const rhythm = rhythmRaw === 'af' || rhythmRaw.includes('atrial fibrillation') ? 'af' : 'sr';
+      const rhythmLabel = rhythm === 'af' ? 'Atrial fibrillation (AF)' : 'Sinus rhythm (SR)';
+
+      // `biomarker` is retained as the assay input id for continuity with the
+      // prior form; these aliases also keep direct callers unambiguous while
+      // the form exposes one assay and one measured value.
+      const assayRaw = str(values.biomarker ?? values.biomarkerType ?? values.assay ?? 'nt', 'nt').toLowerCase();
+      const assay = assayRaw === 'none' ? 'none' : assayRaw === 'bnp' ? 'bnp' : 'nt';
+      const assayLabel = assay === 'bnp' ? 'BNP' : assay === 'nt' ? 'NT-proBNP' : 'Not measured';
+      const rawBiomarkerValue =
+        values.biomarkerValue ?? values.npValue ?? values.level ?? (assay === 'bnp' ? values.bnp : values.ntprobnp);
+      const hasBiomarkerValue = !isMissingValue(rawBiomarkerValue, true);
+      const biomarkerValue = hasBiomarkerValue ? Math.max(num(rawBiomarkerValue, 0), 0) : null;
+
+      // Pieske et al. (EHJ 2019) Table/Step 2(E): major is strictly above
+      // the upper boundary, while the lower and upper boundaries are minor.
+      const minorCutoff =
+        assay === 'bnp' ? (rhythm === 'af' ? 105 : 35) : rhythm === 'af' ? 375 : 125;
+      const majorCutoff = assay === 'bnp' ? (rhythm === 'af' ? 240 : 80) : rhythm === 'af' ? 660 : 220;
+      let biomarker = 0;
+      if (assay !== 'none' && biomarkerValue != null) {
+        biomarker = biomarkerValue > majorCutoff ? 2 : biomarkerValue >= minorCutoff ? 1 : 0;
+      }
       const score = functional + morphological + biomarker;
       const r = riskFromThresholds(score, [
         {
@@ -816,13 +858,24 @@ export const wave7BedsideCalcs: Calculator[] = [
           { label: 'Functional', value: String(functional) },
           { label: 'Morphological', value: String(morphological) },
           { label: 'Biomarker', value: String(biomarker) },
+          { label: 'Rhythm', value: rhythmLabel },
+          { label: 'Natriuretic peptide assay', value: assayLabel },
+          { label: 'Natriuretic peptide value', value: biomarkerValue == null ? 'Not entered' : `${biomarkerValue} pg/mL` },
+          {
+            label: 'HFA-PEFF NP cutoffs',
+            value:
+              assay === 'none'
+                ? 'Not measured'
+                : `Minor ${minorCutoff}–${majorCutoff}; major >${majorCutoff} pg/mL`,
+          },
         ],
       };
     },
     evidence: {
       summary:
-        'Pieske 2019 HFA/ESC: three domains. Major criterion = 2 points, minor = 1; only the higher fulfilled criterion counts per domain (max 2/domain). Total 0–6. ≥5 definite HFpEF; 2–4 intermediate; ≤1 unlikely.',
-      formula: 'Score = functional (0–2) + morphological (0–2) + biomarker (0–2)',
+        'Pieske 2019 HFA/ESC: three domains. Major criterion = 2 points, minor = 1; only the higher fulfilled criterion counts per domain (max 2/domain). Total 0–6. ≥5 definite HFpEF; 2–4 intermediate; ≤1 unlikely. Step 2(E) natriuretic-peptide cutoffs are rhythm-specific: in sinus rhythm, minor NT-proBNP 125–220 or BNP 35–80 pg/mL and major NT-proBNP >220 or BNP >80; in AF, minor NT-proBNP 375–660 or BNP 105–240 pg/mL and major NT-proBNP >660 or BNP >240.',
+      formula:
+        'Score = functional (0–2) + morphological (0–2) + biomarker (0–2). Biomarker: SR NT-proBNP 125–220/ >220 and BNP 35–80/ >80; AF NT-proBNP 375–660/ >660 and BNP 105–240/ >240 (minor range includes both endpoints; major is strictly above the upper endpoint).',
       validation: 'Consensus algorithm; validated against invasive HFpEF diagnosis with good specificity at ≥5.',
       references: [
         {
@@ -841,7 +894,8 @@ export const wave7BedsideCalcs: Calculator[] = [
     ],
     pearls: [
       'Do not add major and minor in the same domain — cap at 2 points.',
-      'NP thresholds are higher in AF than in sinus rhythm.',
+      'Use the rhythm at the time of the natriuretic-peptide measurement: AF thresholds are higher than sinus-rhythm thresholds.',
+      'The consensus AF NT-proBNP minor band starts at 375 pg/mL; do not substitute the sinus threshold or an unreferenced compromise cutoff.',
     ],
   },
 
@@ -1063,16 +1117,16 @@ export const wave7BedsideCalcs: Calculator[] = [
     whenToUse: 'Adult ICU patients expected to stay >24 h, at admission, to triage intensity of nutrition support.',
     whyUse: 'High NUTRIC patients have worse mortality/ventilation outcomes and are the group in whom more complete calorie/protein delivery was associated with benefit.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, step: 1, defaultValue: 60, helpText: '0 if <50; 1 if 50–74; 2 if ≥75.' }),
-      numberInput('apache', 'APACHE II', { min: 0, max: 50, step: 1, defaultValue: 18, helpText: '0 if <15; 1 if 15–19; 2 if 20–27; 3 if ≥28.' }),
-      numberInput('sofa', 'SOFA (initial)', { min: 0, max: 24, step: 1, defaultValue: 5, helpText: '0 if <6; 1 if 6–9; 2 if ≥10. Use the initial (admission) SOFA.' }),
-      numberInput('comorbidities', 'Number of comorbidities', { min: 0, max: 12, step: 1, defaultValue: 1, helpText: 'Count of distinct chronic conditions (Heyland used a simple count, not a published Charlson list). 0–1 = 0 points; ≥2 = 1 point.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, step: 1, exampleValue: 60, helpText: '0 if <50; 1 if 50–74; 2 if ≥75.' }),
+      numberInput('apache', 'APACHE II', { min: 0, max: 50, step: 1, exampleValue: 18, helpText: '0 if <15; 1 if 15–19; 2 if 20–27; 3 if ≥28.' }),
+      numberInput('sofa', 'SOFA (initial)', { min: 0, max: 24, step: 1, exampleValue: 5, helpText: '0 if <6; 1 if 6–9; 2 if ≥10. Use the initial (admission) SOFA.' }),
+      numberInput('comorbidities', 'Number of comorbidities', { min: 0, max: 12, step: 1, exampleValue: 1, helpText: 'Count of distinct chronic conditions (Heyland used a simple count, not a published Charlson list). 0–1 = 0 points; ≥2 = 1 point.' }),
       numberInput('hospitalDays', 'Days in hospital before ICU', {
         unit: 'days',
         min: 0,
         max: 30,
         step: 1,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: '0 if admitted directly to ICU. ≥1 day scores 1 point.',
       }),
       numberInput('il6', 'IL-6', {
@@ -1080,7 +1134,7 @@ export const wave7BedsideCalcs: Calculator[] = [
         min: 0,
         max: 2000,
         step: 1,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Enter 0 if not measured (modified NUTRIC). ≥400 scores 1 point.',
       }),
     ],
@@ -1169,9 +1223,9 @@ export const wave7BedsideCalcs: Calculator[] = [
     whenToUse: 'MASLD/MASH evaluation when FibroScan LSM + CAP and a contemporaneous AST are available.',
     whyUse: 'Rule-out <0.35 and rule-in ≥0.67 identify at-risk MASH with ~90% sensitivity / specificity in derivation, shrinking the grey zone vs LSM alone.',
     inputs: [
-      numberInput('lsm', 'Liver stiffness (VCTE)', { unit: 'kPa', min: 1.5, max: 75, step: 0.1, defaultValue: 8, helpText: 'Valid FibroScan LSM (kPa), fasting; check IQR/M. Same-encounter CAP and AST for FAST.' }),
-      numberInput('cap', 'Controlled attenuation parameter (CAP)', { unit: 'dB/m', min: 100, max: 400, step: 1, defaultValue: 250 }),
-      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 500, step: 1, defaultValue: 40 }),
+      numberInput('lsm', 'Liver stiffness (VCTE)', { unit: 'kPa', min: 1.5, max: 75, step: 0.1, exampleValue: 8, helpText: 'Valid FibroScan LSM (kPa), fasting; check IQR/M. Same-encounter CAP and AST for FAST.' }),
+      numberInput('cap', 'Controlled attenuation parameter (CAP)', { unit: 'dB/m', min: 100, max: 400, step: 1, exampleValue: 250 }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 500, step: 1, exampleValue: 40 }),
     ],
     calculate(values) {
       const lsm = Math.max(num(values.lsm, 8), 1.5);
@@ -1247,16 +1301,16 @@ export const wave7BedsideCalcs: Calculator[] = [
     whenToUse: 'MASLD when VCTE LSM and routine labs are available to rule in/out advanced fibrosis.',
     whyUse: 'Better PPV and a smaller indeterminate zone than LSM or FIB-4 alone for F≥3 (Sanyal 2022).',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 90, step: 1, defaultValue: 55 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 90, step: 1, exampleValue: 55 }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
       ]),
       yesNo('diabetes', 'Diabetes mellitus', null, 'Diagnosed diabetes or glucose-lowering therapy (Agile 3+ coefficient).'),
-      numberInput('lsm', 'Liver stiffness (VCTE)', { unit: 'kPa', min: 1.5, max: 75, step: 0.1, defaultValue: 10, helpText: 'Valid fasting VCTE LSM in kPa (check IQR/M).' }),
-      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 500, step: 1, defaultValue: 40 }),
-      numberInput('alt', 'ALT', { unit: 'U/L', min: 5, max: 500, step: 1, defaultValue: 45 }),
-      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 20, max: 600, step: 1, defaultValue: 220 }),
+      numberInput('lsm', 'Liver stiffness (VCTE)', { unit: 'kPa', min: 1.5, max: 75, step: 0.1, exampleValue: 10, helpText: 'Valid fasting VCTE LSM in kPa (check IQR/M).' }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 500, step: 1, exampleValue: 40 }),
+      numberInput('alt', 'ALT', { unit: 'U/L', min: 5, max: 500, step: 1, exampleValue: 45 }),
+      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 20, max: 600, step: 1, exampleValue: 220 }),
     ],
     calculate(values) {
       const age = num(values.age, 55);
@@ -1354,10 +1408,10 @@ export const wave7BedsideCalcs: Calculator[] = [
         { label: 'Male', value: 'M' },
       ]),
       yesNo('diabetes', 'Diabetes mellitus', null, 'Diagnosed diabetes or glucose-lowering therapy (Agile 4 coefficient).'),
-      numberInput('lsm', 'Liver stiffness (VCTE)', { unit: 'kPa', min: 1.5, max: 75, step: 0.1, defaultValue: 12, helpText: 'Valid fasting VCTE LSM in kPa (check IQR/M).' }),
-      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 500, step: 1, defaultValue: 40 }),
-      numberInput('alt', 'ALT', { unit: 'U/L', min: 5, max: 500, step: 1, defaultValue: 45 }),
-      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 20, max: 600, step: 1, defaultValue: 180 }),
+      numberInput('lsm', 'Liver stiffness (VCTE)', { unit: 'kPa', min: 1.5, max: 75, step: 0.1, exampleValue: 12, helpText: 'Valid fasting VCTE LSM in kPa (check IQR/M).' }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 500, step: 1, exampleValue: 40 }),
+      numberInput('alt', 'ALT', { unit: 'U/L', min: 5, max: 500, step: 1, exampleValue: 45 }),
+      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 20, max: 600, step: 1, exampleValue: 180 }),
     ],
     calculate(values) {
       const male = str(values.sex, 'F') === 'M' ? 1 : 0;
@@ -1462,7 +1516,7 @@ export const wave7BedsideCalcs: Calculator[] = [
         min: 0,
         max: 150,
         step: 1,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: '1 standard drink ≈ 10–14 g ethanol depending on region.',
       }),
     ],
@@ -1570,7 +1624,7 @@ export const wave7BedsideCalcs: Calculator[] = [
     name: 'Age-Adjusted D-dimer Threshold',
     shortName: 'Age D-dimer',
     description:
-      'Age-adjusted D-dimer cutoff for excluding VTE in patients ≥50 years (age × 10 µg/L FEU, or age × 5 for DDU assays), compared with the measured value.',
+      'Age-adjusted D-dimer cutoff for excluding VTE in patients ≥50 years (age × 10 ng/mL FEU, or age × 5 in DDU units), compared with the measured value entered in its reported assay units.',
     category: 'hematology',
     tags: ['d-dimer', 'vte', 'pe', 'dvt', 'age-adjusted'],
     whenToUse:
@@ -1578,32 +1632,23 @@ export const wave7BedsideCalcs: Calculator[] = [
     whyUse:
       'Conventional 500 µg/L FEU cutoff loses specificity with age. Age × 10 (FEU) from age 50 safely increases the proportion of negative tests (ADJUST-PE).',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, step: 1, defaultValue: 70 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, step: 1, exampleValue: 70 }),
       numberInput('ddimer', 'Measured D-dimer', {
-        unit: 'ng/mL or µg/L',
+        unit: 'ng/mL FEU', unitKind: 'ddimer',
         min: 50,
         max: 10000,
         step: 1,
-        defaultValue: 600,
-        helpText: 'Same numeric value in ng/mL or µg/L. Interpret in the units of the selected assay type.',
+        exampleValue: 600,
+        helpText: 'Select the assay units (FEU or DDU); values are converted to ng/mL FEU, the unit the cutoff is written in.',
       }),
-      selectInput(
-        'assay',
-        'Assay reporting',
-        [
-          { label: 'FEU (fibrinogen-equivalent units) — cutoff age × 10 (or 500 if age <50)', value: 'feu' },
-          { label: 'DDU (D-dimer units) — cutoff age × 5 (or 250 if age <50)', value: 'ddu' },
-        ],
-        'feu',
-      ),
     ],
     calculate(values) {
       const age = num(values.age, 70);
-      const assay = str(values.assay, 'feu');
-      const conventional = assay === 'ddu' ? 250 : 500;
-      const ageAdj = assay === 'ddu' ? age * 5 : age * 10;
-      const threshold = age >= 50 ? ageAdj : conventional;
-      const unit = assay === 'ddu' ? 'µg/L DDU' : 'µg/L FEU';
+      const conventional = 500;
+      const threshold = age >= 50 ? age * 10 : conventional;
+      // ng/mL FEU is numerically identical to µg/L FEU, and DDU entries were
+      // already converted ×2 into FEU by the unit selector.
+      const unit = 'ng/mL FEU';
 
       if (isMissingValue(values.ddimer, true)) {
         return {
@@ -1634,16 +1679,15 @@ export const wave7BedsideCalcs: Calculator[] = [
           { label: 'Measured D-dimer', value: `${ddimer} ${unit}` },
           { label: 'Threshold used', value: `${threshold} ${unit}` },
           { label: 'D-dimer / threshold', value: round(ratio, 2).toString() },
-          { label: 'Assay', value: assay === 'ddu' ? 'DDU' : 'FEU' },
           { label: 'Age', value: String(age) },
-          { label: 'Rule', value: age >= 50 ? (assay === 'ddu' ? 'age × 5' : 'age × 10') : `conventional ${conventional}` },
+          { label: 'Rule', value: age >= 50 ? 'age × 10 (FEU)' : `conventional ${conventional} FEU` },
         ],
       };
     },
     evidence: {
       summary:
-        'For age ≥50, FEU threshold = age × 10 µg/L (ng/mL); DDU threshold = age × 5. Age <50 uses 500 FEU or 250 DDU. Positive if measured D-dimer ≥ threshold. Only for unlikely / non-high pretest probability.',
-      formula: 'Threshold = age≥50 ? (FEU: age×10 ; DDU: age×5) : (500 FEU / 250 DDU); positive if D-dimer ≥ threshold',
+        'For age ≥50, FEU threshold = age × 10 ng/mL (µg/L); DDU assays report age × 5 DDU, which is the same cutoff after conversion (DDU × 2 = FEU). Age <50 uses 500 ng/mL FEU. Positive if measured D-dimer ≥ threshold. Only for unlikely / non-high pretest probability.',
+      formula: 'Threshold = age≥50 ? age×10 ng/mL FEU : 500 ng/mL FEU; positive if D-dimer ≥ threshold',
       validation:
         'Age-adjusted cutoffs meta-analyzed (Schouten / Douma) and prospectively validated in ADJUST-PE (Righini JAMA 2014). YEARS uses a related two-level D-dimer strategy.',
       references: [

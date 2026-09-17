@@ -352,14 +352,14 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         min: 0,
         max: 28,
         step: 1,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: '28 joints: shoulders, elbows, wrists, MCP 1–5, PIP 1–5, knees (bilateral). Boolean target ≤1.',
       }),
       numberInput('sjc28', 'Swollen joint count (28)', {
         min: 0,
         max: 28,
         step: 1,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Same 28 joints as TJC. Boolean target ≤1.',
       }),
       numberInput('crp', 'CRP', {
@@ -367,7 +367,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         min: 0,
         max: 30,
         step: 0.1,
-        defaultValue: 0.3,
+        exampleValue: 0.3,
         helpText: 'Must be mg/dL (divide mg/L by 10). Threshold ≤1 mg/dL.',
       }),
       numberInput('pga', 'Patient global assessment', {
@@ -375,7 +375,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         min: 0,
         max: 10,
         step: 0.1,
-        defaultValue: 0.5,
+        exampleValue: 0.5,
         helpText: '0–10 NRS/VAS. Original Boolean PGA ≤1; Boolean 2.0 (2022) PGA ≤2.0.',
       }),
     ],
@@ -468,21 +468,21 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         min: 0,
         max: 10,
         step: 0.1,
-        defaultValue: 1,
+        exampleValue: 1,
         helpText: 'Converted MDHAQ function 0–10 (raw 0–3 mean × 3.33). 0 = no functional difficulty, 10 = unable to do activities. Do not enter the raw 0–3 mean here.',
       }),
       numberInput('pn', 'PN — Pain VAS (0–10)', {
         min: 0,
         max: 10,
         step: 0.1,
-        defaultValue: 1,
+        exampleValue: 1,
         helpText: 'Past week; 0 = no pain, 10 = pain as bad as it could be.',
       }),
       numberInput('ptgl', 'PTGL — Patient global (0–10)', {
         min: 0,
         max: 10,
         step: 0.1,
-        defaultValue: 1,
+        exampleValue: 1,
         helpText: 'Considering all the ways arthritis affects you; 0 = very well, 10 = very poorly.',
       }),
     ],
@@ -569,73 +569,73 @@ export const wave7RheumActivityCalcs: Calculator[] = [
       numberInput('ocular', 'Ocular damage items', {
         min: 0,
         max: 2,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Irreversible damage ≥6 months (do not score current activity). Cataract; retinal change / optic atrophy (0–2).',
       }),
       numberInput('neuro', 'Neuropsychiatric damage items', {
         min: 0,
         max: 6,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Irreversible ≥6 months. Cognitive impairment/psychosis; seizures requiring therapy; CVA (up to 2 if events >6 months apart); cranial/peripheral neuropathy; transverse myelitis (0–6).',
       }),
       numberInput('renal', 'Renal damage items', {
         min: 0,
         max: 3,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Irreversible ≥6 months. GFR <50% (1), proteinuria ≥3.5 g/24 h (1). ESRD (dialysis/transplant) = 3 for the domain, not additive with the other renal items.',
       }),
       numberInput('pulmonary', 'Pulmonary damage items', {
         min: 0,
         max: 5,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Irreversible ≥6 months. Pulmonary hypertension; pulmonary fibrosis; shrinking lung; pleural fibrosis; infarction/resection (0–5).',
       }),
       numberInput('cv', 'Cardiovascular damage items', {
         min: 0,
         max: 6,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Irreversible ≥6 months. Angina/CABG; MI (up to 2 if events >6 months apart); cardiomyopathy; valvular disease; pericarditis ≥6 months or pericardiectomy (0–6).',
       }),
       numberInput('pvd', 'Peripheral vascular damage items', {
         min: 0,
         max: 5,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Irreversible ≥6 months. Claudication ≥6 months; minor tissue loss; significant tissue loss (up to 2); venous thrombosis with swelling/ulceration (0–5).',
       }),
       numberInput('gi', 'Gastrointestinal damage items', {
         min: 0,
         max: 6,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Irreversible ≥6 months. Infarction/resection (up to 2); mesenteric insufficiency; chronic peritonitis; stricture or upper-GI surgery; pancreatic insufficiency (0–6).',
       }),
       numberInput('msk', 'Musculoskeletal damage items', {
         min: 0,
         max: 7,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Irreversible ≥6 months. Muscle atrophy/weakness; deforming/erosive arthritis; osteoporotic fracture or vertebral collapse; AVN (up to 2); osteomyelitis; tendon rupture (0–7).',
       }),
       numberInput('skin', 'Skin damage items', {
         min: 0,
         max: 3,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Irreversible ≥6 months. Scarring chronic alopecia; extensive scarring of panniculum other than scalp/pulp; skin ulceration >6 months (0–3).',
       }),
       numberInput('gonadal', 'Premature gonadal failure', {
         min: 0,
         max: 1,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Secondary amenorrhea before age 40, present ≥6 months. 0 or 1.',
       }),
       numberInput('diabetes', 'Diabetes (damage)', {
         min: 0,
         max: 1,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Diabetes requiring therapy, present ≥6 months, regardless of treatment. Do not score current activity.',
       }),
       numberInput('malignancy', 'Malignancy items', {
         min: 0,
         max: 2,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Each distinct site 1 (max 2), excluding dysplasia. Irreversible event; do not score current activity.',
       }),
     ],
@@ -828,7 +828,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
       numberInput('sjc', 'Swollen joint count (0–28)', {
         min: 0,
         max: 28,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: '28 joints: shoulders, elbows, wrists, MCP 1–5, PIP 1–5, knees. Used even if the arthritis flag is No.',
       }),
       yesNo('mucocutVasc', 'Mucocutaneous vasculitis', null, 'Cutaneous vasculitis (e.g. palpable purpura or vasculitic ulcers limited to skin) — not visceral vasculitis (use systemic vasculitis).'),
@@ -844,7 +844,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         min: 0,
         max: 20000,
         step: 10,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Used as ln(Prot) only when PProt is Yes. Enter 0 if no proteinuria.',
       }),
       yesNo('thromb', 'Thrombocytopenia (<100 × 10⁹/L)', null),
@@ -852,7 +852,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         unit: '×10⁹/L',
         min: 1,
         max: 800,
-        defaultValue: 250,
+        exampleValue: 250,
         helpText: 'Used as ln(PlatCount) only when thrombocytopenia is Yes.',
       }),
       yesNo('leuk', 'Leukopenia (<3 × 10⁹/L)', null),
@@ -861,7 +861,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         min: 0.1,
         max: 40,
         step: 0.1,
-        defaultValue: 6,
+        exampleValue: 6,
         helpText: 'Used as ln(LeukCount) only when leukopenia is Yes.',
       }),
       yesNo('neuropsych', 'Neuropsychiatric SLE', null, 'Current NPSLE (e.g. seizure, psychosis, organic brain syndrome, acute confusional state, stroke/cranial neuropathy attributed to SLE). Exclude damage and infection.'),
@@ -906,6 +906,19 @@ export const wave7RheumActivityCalcs: Calculator[] = [
           ],
         };
       }
+      if (!pprot && prot >= 500) {
+        return {
+          score: '—',
+          label: 'Invalid inputs',
+          interpretation:
+            'PProt is No but proteinuria is ≥500 mg/24 h. Set PProt to Yes for proteinuria at or above the SLE-DAS threshold, or enter proteinuria <500 mg/24 h. The ln(Prot) term is not computed when the flag and amount are inconsistent.',
+          riskLevel: 'info',
+          details: [
+            { label: 'PProt >500 mg/24 h', value: String(pprot) },
+            { label: 'Proteinuria mg/24 h', value: String(prot) },
+          ],
+        };
+      }
       if (thromb && platCount >= 100) {
         return {
           score: '—',
@@ -919,12 +932,38 @@ export const wave7RheumActivityCalcs: Calculator[] = [
           ],
         };
       }
+      if (!thromb && platCount < 100) {
+        return {
+          score: '—',
+          label: 'Invalid inputs',
+          interpretation:
+            'Thrombocytopenia flag is No but platelets are <100 ×10⁹/L. Set the flag to Yes for a platelet count below 100 ×10⁹/L, or enter platelets ≥100 ×10⁹/L. The ln(PlatCount) term is not computed when the flag and count are inconsistent.',
+          riskLevel: 'info',
+          details: [
+            { label: 'Thrombocytopenia flag', value: String(thromb) },
+            { label: 'Platelets ×10⁹/L', value: String(platCount) },
+          ],
+        };
+      }
       if (leuk && leukCount >= 3) {
         return {
           score: '—',
           label: 'Invalid inputs',
           interpretation:
             'Leukopenia flag is Yes but leukocytes are ≥3 ×10⁹/L. The flag requires WBC <3 ×10⁹/L, or set the flag to No. The ln(LeukCount) term is not computed when the flag and count are inconsistent.',
+          riskLevel: 'info',
+          details: [
+            { label: 'Leukopenia flag', value: String(leuk) },
+            { label: 'WBC ×10⁹/L', value: String(leukCount) },
+          ],
+        };
+      }
+      if (!leuk && leukCount < 3) {
+        return {
+          score: '—',
+          label: 'Invalid inputs',
+          interpretation:
+            'Leukopenia flag is No but leukocytes are <3 ×10⁹/L. Set the flag to Yes for a WBC count below 3 ×10⁹/L, or enter leukocytes ≥3 ×10⁹/L. The ln(LeukCount) term is not computed when the flag and count are inconsistent.',
           riskLevel: 'info',
           details: [
             { label: 'Leukopenia flag', value: String(leuk) },
@@ -1048,17 +1087,17 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     whenToUse: 'SLE clinic visits to document whether low-disease-activity state is met.',
     whyUse: 'Attainment of LLDAS is associated with less damage and fewer flares.',
     inputs: [
-      numberInput('sledai', 'SLEDAI-2K', { min: 0, max: 105, defaultValue: 2, helpText: 'Enter the total from the official SLEDAI-2K form (copyrighted — do not administer items from this screen). LLDAS requires ≤4 with no major organ activity.' }),
+      numberInput('sledai', 'SLEDAI-2K', { min: 0, max: 105, exampleValue: 2, helpText: 'Enter the total from the official SLEDAI-2K form (copyrighted — do not administer items from this screen). LLDAS requires ≤4 with no major organ activity.' }),
       yesNo('majorOrgan', 'Major organ activity present (renal, CNS, cardiopulmonary, vasculitis, myositis, fever, haemolysis, or GI)', null, 'Fails LLDAS if any renal, CNS, cardiopulmonary, vasculitis, myositis, fever, haemolytic anaemia, or GI lupus activity — even when SLEDAI-2K ≤4.'),
       yesNo('newActivity', 'New activity vs previous assessment', null, 'Any new lupus activity feature compared with the previous assessment fails LLDAS, even if SLEDAI remains ≤4.'),
       numberInput('pga', 'Physician global assessment (0–3)', {
         min: 0,
         max: 3,
         step: 0.1,
-        defaultValue: 0.5,
+        exampleValue: 0.5,
         helpText: 'SELENA-SLEDAI PGA; LLDAS requires ≤1.',
       }),
-      numberInput('predDose', 'Prednisone (or equivalent)', { unit: 'mg/day', min: 0, max: 80, step: 0.5, defaultValue: 5, helpText: 'Current daily prednisone-equivalent. LLDAS requires ≤7.5 mg/day.' }),
+      numberInput('predDose', 'Prednisone (or equivalent)', { unit: 'mg/day', min: 0, max: 80, step: 0.5, exampleValue: 5, helpText: 'Current daily prednisone-equivalent. LLDAS requires ≤7.5 mg/day.' }),
       yesNo('intoleranceIS', 'Intolerance of standard immunosuppressives / antimalarials', null, 'Fail (Yes) if current standard maintenance antimalarial/IS/approved biologic is not tolerated. Not on IS/HCQ is allowed (answer No). Investigational drugs do not count as standard maintenance.'),
     ],
     calculate(values) {
@@ -1151,17 +1190,17 @@ export const wave7RheumActivityCalcs: Calculator[] = [
       numberInput('cSledai', 'Clinical SLEDAI (exclude serology)', {
         min: 0,
         max: 105,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'SLEDAI-2K minus the two serology items only (low complement and increased anti-dsDNA/DNA binding). All remaining clinical items must be 0 for DORIS. Do not subtract rash/arthritis. Enter the total from the official SLEDAI-2K form (copyrighted — do not administer items from this screen).',
       }),
       numberInput('pga', 'Physician global assessment (0–3)', {
         min: 0,
         max: 3,
         step: 0.1,
-        defaultValue: 0.2,
+        exampleValue: 0.2,
         helpText: 'SELENA 0–3 scale. DORIS requires PGA <0.5 (0.5 fails).',
       }),
-      numberInput('predDose', 'Prednisone (or equivalent)', { unit: 'mg/day', min: 0, max: 80, step: 0.5, defaultValue: 0, helpText: 'Complete remission requires 0 mg/day; on-treatment allows ≤5 mg/day with stable antimalarial/IS/biologic.' }),
+      numberInput('predDose', 'Prednisone (or equivalent)', { unit: 'mg/day', min: 0, max: 80, step: 0.5, exampleValue: 0, helpText: 'Complete remission requires 0 mg/day; on-treatment allows ≤5 mg/day with stable antimalarial/IS/biologic.' }),
       yesNo('serologyPositive', 'Serology positive (low complement and/or anti-dsDNA)', null, 'Allowed in DORIS clinical remission; still recorded.'),
     ],
     calculate(values) {
@@ -1249,15 +1288,15 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     whenToUse: 'ANCA-associated or other primary systemic vasculitis activity at diagnosis and follow-up.',
     whyUse: 'Standard activity instrument for AAV trials and clinic; 0 implies remission of scored items.',
     inputs: [
-      numberInput('general', 'General (max 7)', { min: 0, max: 7, defaultValue: 0, helpText: 'Transcribe the weighted subtotal from a completed official BVAS v3 form; persistent vs new/worse have different weights. Items: myalgia 1, arthralgia/arthritis 2, fever ≥38.0 °C 2, weight loss ≥2 kg 2.' }),
-      numberInput('cutaneous', 'Cutaneous (max 6)', { min: 0, max: 6, defaultValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal (new/worse vs persistent differ). Typical items: infarct, purpura, ulcer, gangrene, other skin vasculitis.' }),
-      numberInput('mucousEyes', 'Mucous membranes / eyes (max 6)', { min: 0, max: 6, defaultValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: mouth/genital ulcers, episcleritis/scleritis, uveitis, retro-orbital mass, conjunctivitis, blepharitis.' }),
-      numberInput('ent', 'ENT (max 6)', { min: 0, max: 6, defaultValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: bloody nasal discharge/crusts/ulcers/granulomata, sinus involvement, subglottic stenosis, conductive or sensorineural hearing loss.' }),
-      numberInput('chest', 'Chest (max 6)', { min: 0, max: 6, defaultValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: wheeze, nodules/cavities, pleural effusion/pleurisy, infiltrate, endobronchial involvement, massive haemoptysis/DAH, respiratory failure.' }),
-      numberInput('cardiac', 'Cardiovascular (max 6)', { min: 0, max: 6, defaultValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: loss of pulses, valvular disease, pericarditis, ischaemic heart disease, cardiomyopathy, congestive failure.' }),
-      numberInput('abdominal', 'Abdominal (max 6)', { min: 0, max: 6, defaultValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: peritonitis, bloody diarrhoea, ischaemic abdominal pain.' }),
-      numberInput('renal', 'Renal (max 12)', { min: 0, max: 12, defaultValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: hypertension, proteinuria, haematuria ≥10 RBC/hpf, creatinine bands, rise in creatinine >30%.' }),
-      numberInput('nervous', 'Nervous system (max 9)', { min: 0, max: 9, defaultValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: headache, meningitis, organic confusion, seizures, stroke, spinal cord lesion, cranial nerve palsy, sensory neuropathy, mononeuritis multiplex.' }),
+      numberInput('general', 'General (max 7)', { min: 0, max: 7, exampleValue: 0, helpText: 'Transcribe the weighted subtotal from a completed official BVAS v3 form; persistent vs new/worse have different weights. Items: myalgia 1, arthralgia/arthritis 2, fever ≥38.0 °C 2, weight loss ≥2 kg 2.' }),
+      numberInput('cutaneous', 'Cutaneous (max 6)', { min: 0, max: 6, exampleValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal (new/worse vs persistent differ). Typical items: infarct, purpura, ulcer, gangrene, other skin vasculitis.' }),
+      numberInput('mucousEyes', 'Mucous membranes / eyes (max 6)', { min: 0, max: 6, exampleValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: mouth/genital ulcers, episcleritis/scleritis, uveitis, retro-orbital mass, conjunctivitis, blepharitis.' }),
+      numberInput('ent', 'ENT (max 6)', { min: 0, max: 6, exampleValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: bloody nasal discharge/crusts/ulcers/granulomata, sinus involvement, subglottic stenosis, conductive or sensorineural hearing loss.' }),
+      numberInput('chest', 'Chest (max 6)', { min: 0, max: 6, exampleValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: wheeze, nodules/cavities, pleural effusion/pleurisy, infiltrate, endobronchial involvement, massive haemoptysis/DAH, respiratory failure.' }),
+      numberInput('cardiac', 'Cardiovascular (max 6)', { min: 0, max: 6, exampleValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: loss of pulses, valvular disease, pericarditis, ischaemic heart disease, cardiomyopathy, congestive failure.' }),
+      numberInput('abdominal', 'Abdominal (max 6)', { min: 0, max: 6, exampleValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: peritonitis, bloody diarrhoea, ischaemic abdominal pain.' }),
+      numberInput('renal', 'Renal (max 12)', { min: 0, max: 12, exampleValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: hypertension, proteinuria, haematuria ≥10 RBC/hpf, creatinine bands, rise in creatinine >30%.' }),
+      numberInput('nervous', 'Nervous system (max 9)', { min: 0, max: 9, exampleValue: 0, helpText: 'Transcribe official BVAS v3 weighted subtotal. Typical items: headache, meningitis, organic confusion, seizures, stroke, spinal cord lesion, cranial nerve palsy, sensory neuropathy, mononeuritis multiplex.' }),
     ],
     calculate(values) {
       const general = num(values.general, 0);
@@ -1348,17 +1387,17 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     whenToUse: 'Damage documentation in AAV / PAN / other primary systemic vasculitis, separate from BVAS activity.',
     whyUse: 'VDI predicts mortality and distinguishes damage from grumbling activity.',
     inputs: [
-      numberInput('msk', 'Musculoskeletal items', { min: 0, max: 3, defaultValue: 0, helpText: 'Irreversible items ≥3 months; do not score active BVAS lesions. Typical: osteoporosis/vertebral collapse, deforming arthritis, avascular necrosis, osteomyelitis, muscle atrophy/weakness. Or transcribe from the official VDI form.' }),
-      numberInput('skin', 'Skin items', { min: 0, max: 3, defaultValue: 0, helpText: 'Irreversible ≥3 months. Typical: alopecia, cutaneous ulcers, gangrene. Do not score active BVAS lesions.' }),
-      numberInput('ocular', 'Ocular items', { min: 0, max: 3, defaultValue: 0, helpText: 'Irreversible ≥3 months. Typical: cataract, retinal change, visual impairment/blindness, orbital wall destruction.' }),
-      numberInput('ent', 'ENT items', { min: 0, max: 3, defaultValue: 0, helpText: 'Irreversible ≥3 months. Typical: hearing loss, nasal-bridge collapse/septal perforation, chronic sinusitis/crusting, subglottic stenosis.' }),
-      numberInput('pulmonary', 'Pulmonary items', { min: 0, max: 4, defaultValue: 0, helpText: 'Irreversible ≥3 months. Typical: pulmonary fibrosis, pleural fibrosis, chronic breathlessness, impaired lung function.' }),
-      numberInput('cardiac', 'Cardiac items', { min: 0, max: 4, defaultValue: 0, helpText: 'Irreversible ≥3 months. Typical: cardiomyopathy, valvular disease, pericarditis ≥3 months or pericardectomy, hypertension, coronary disease.' }),
-      numberInput('vascular', 'Peripheral vascular items', { min: 0, max: 4, defaultValue: 0, helpText: 'Irreversible ≥3 months. Typical: absent pulses, major vessel stenosis, claudication, tissue loss, complicated venous thrombosis.' }),
-      numberInput('gi', 'Gastrointestinal items', { min: 0, max: 2, defaultValue: 0, helpText: 'Irreversible ≥3 months. Typical: gut infarction/resection, mesenteric insufficiency/pancreatitis, chronic peritonitis, oesophageal stricture.' }),
-      numberInput('renal', 'Renal items', { min: 0, max: 4, defaultValue: 0, helpText: 'Irreversible ≥3 months. Typical: GFR ≤50%, proteinuria ≥0.5 g/d, ESRD. Do not score active BVAS nephritis.' }),
-      numberInput('neuro', 'Neuropsychiatric items', { min: 0, max: 4, defaultValue: 0, helpText: 'Irreversible ≥3 months. Typical: chronic neuropathy, CVA, seizures, cranial nerve lesion. Do not score active BVAS lesions.' }),
-      numberInput('other', 'Other items', { min: 0, max: 3, defaultValue: 0, helpText: 'Irreversible ≥3 months. Typical: premature gonadal failure, marrow failure, diabetes, malignancy, chemical cystitis.' }),
+      numberInput('msk', 'Musculoskeletal items', { min: 0, max: 3, exampleValue: 0, helpText: 'Irreversible items ≥3 months; do not score active BVAS lesions. Typical: osteoporosis/vertebral collapse, deforming arthritis, avascular necrosis, osteomyelitis, muscle atrophy/weakness. Or transcribe from the official VDI form.' }),
+      numberInput('skin', 'Skin items', { min: 0, max: 3, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: alopecia, cutaneous ulcers, gangrene. Do not score active BVAS lesions.' }),
+      numberInput('ocular', 'Ocular items', { min: 0, max: 3, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: cataract, retinal change, visual impairment/blindness, orbital wall destruction.' }),
+      numberInput('ent', 'ENT items', { min: 0, max: 3, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: hearing loss, nasal-bridge collapse/septal perforation, chronic sinusitis/crusting, subglottic stenosis.' }),
+      numberInput('pulmonary', 'Pulmonary items', { min: 0, max: 4, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: pulmonary fibrosis, pleural fibrosis, chronic breathlessness, impaired lung function.' }),
+      numberInput('cardiac', 'Cardiac items', { min: 0, max: 4, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: cardiomyopathy, valvular disease, pericarditis ≥3 months or pericardectomy, hypertension, coronary disease.' }),
+      numberInput('vascular', 'Peripheral vascular items', { min: 0, max: 4, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: absent pulses, major vessel stenosis, claudication, tissue loss, complicated venous thrombosis.' }),
+      numberInput('gi', 'Gastrointestinal items', { min: 0, max: 2, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: gut infarction/resection, mesenteric insufficiency/pancreatitis, chronic peritonitis, oesophageal stricture.' }),
+      numberInput('renal', 'Renal items', { min: 0, max: 4, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: GFR ≤50%, proteinuria ≥0.5 g/d, ESRD. Do not score active BVAS nephritis.' }),
+      numberInput('neuro', 'Neuropsychiatric items', { min: 0, max: 4, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: chronic neuropathy, CVA, seizures, cranial nerve lesion. Do not score active BVAS lesions.' }),
+      numberInput('other', 'Other items', { min: 0, max: 3, exampleValue: 0, helpText: 'Irreversible ≥3 months. Typical: premature gonadal failure, marrow failure, diabetes, malignancy, chemical cystitis.' }),
     ],
     calculate(values) {
       const msk = num(values.msk, 0);
@@ -1628,9 +1667,9 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     whenToUse: 'Patient-reported symptom burden in Sjögren disease, alongside ESSDAI.',
     whyUse: 'Complementary to ESSDAI; PASS often cited as ESSPRI <5, MCII as decrease ≥1 or 15%.',
     inputs: [
-      numberInput('dryness', 'Dryness VAS', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 4, helpText: 'Last 2 weeks; 0 = no dryness, 10 = worst imaginable. ESSPRI is the mean of dryness, fatigue, and pain.' }),
-      numberInput('fatigue', 'Fatigue VAS', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 6, helpText: 'Last 2 weeks; 0 = no fatigue, 10 = worst imaginable.' }),
-      numberInput('pain', 'Pain VAS', { unit: '0–10', min: 0, max: 10, step: 0.1, defaultValue: 5, helpText: 'Last 2 weeks; 0 = no pain, 10 = worst imaginable.' }),
+      numberInput('dryness', 'Dryness VAS', { unit: '0–10', min: 0, max: 10, step: 0.1, exampleValue: 4, helpText: 'Last 2 weeks; 0 = no dryness, 10 = worst imaginable. ESSPRI is the mean of dryness, fatigue, and pain.' }),
+      numberInput('fatigue', 'Fatigue VAS', { unit: '0–10', min: 0, max: 10, step: 0.1, exampleValue: 6, helpText: 'Last 2 weeks; 0 = no fatigue, 10 = worst imaginable.' }),
+      numberInput('pain', 'Pain VAS', { unit: '0–10', min: 0, max: 10, step: 0.1, exampleValue: 5, helpText: 'Last 2 weeks; 0 = no pain, 10 = worst imaginable.' }),
     ],
     calculate(values) {
       const dryness = num(values.dryness, 0);
@@ -1913,18 +1952,18 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     whenToUse: 'Composite PsA activity when 66/68 joints, LEI, dactylitis, CRP, dual globals, and SF-36 PCS are available.',
     whyUse: 'Most responsive GRAPPA composite in several datasets; VLDA ≤1.9, LDA ≤3.2, high ≥5.4.',
     inputs: [
-      numberInput('phga', 'Physician global VAS', { unit: '0–100 mm', min: 0, max: 100, step: 1, defaultValue: 0, helpText: '0–100 mm VAS of current PsA activity (physician). 0 = no activity, 100 = worst imaginable.' }),
-      numberInput('ptga', 'Patient global VAS', { unit: '0–100 mm', min: 0, max: 100, step: 1, defaultValue: 0, helpText: '0–100 mm VAS of current arthritis activity (patient). 0 = no activity, 100 = worst imaginable.' }),
-      numberInput('tjc68', 'Tender joint count (68)', { min: 0, max: 68, defaultValue: 0, helpText: 'Full 68-joint tender count (includes DIP, TMJ, AC, hip, ankle, midtarsal — not the 28-joint set).' }),
-      numberInput('sjc66', 'Swollen joint count (66)', { min: 0, max: 66, defaultValue: 0, helpText: '66-joint swollen count (hips not swollen). Do not use a 28-joint count here.' }),
-      numberInput('lei', 'Leeds Enthesitis Index', { min: 0, max: 6, defaultValue: 0, helpText: 'LEI 0–6: tenderness at 6 sites — bilateral lateral epicondyle of humerus, medial femoral condyle, and Achilles insertion. Score 1 if tender. Do not substitute SPARCC/MASES counts.' }),
-      numberInput('dactylitis', 'Tender dactylitis count', { min: 0, max: 20, defaultValue: 0, helpText: 'Number of tender dactylitic digits (fingers + toes; max 20).' }),
-      numberInput('crp', 'CRP', { unit: 'mg/L', min: 0, max: 200, step: 0.1, defaultValue: 0, helpText: 'mg/L (not mg/dL).' }),
+      numberInput('phga', 'Physician global VAS', { unit: '0–100 mm', min: 0, max: 100, step: 1, exampleValue: 0, helpText: '0–100 mm VAS of current PsA activity (physician). 0 = no activity, 100 = worst imaginable.' }),
+      numberInput('ptga', 'Patient global VAS', { unit: '0–100 mm', min: 0, max: 100, step: 1, exampleValue: 0, helpText: '0–100 mm VAS of current arthritis activity (patient). 0 = no activity, 100 = worst imaginable.' }),
+      numberInput('tjc68', 'Tender joint count (68)', { min: 0, max: 68, exampleValue: 0, helpText: 'Full 68-joint tender count (includes DIP, TMJ, AC, hip, ankle, midtarsal — not the 28-joint set).' }),
+      numberInput('sjc66', 'Swollen joint count (66)', { min: 0, max: 66, exampleValue: 0, helpText: '66-joint swollen count (hips not swollen). Do not use a 28-joint count here.' }),
+      numberInput('lei', 'Leeds Enthesitis Index', { min: 0, max: 6, exampleValue: 0, helpText: 'LEI 0–6: tenderness at 6 sites — bilateral lateral epicondyle of humerus, medial femoral condyle, and Achilles insertion. Score 1 if tender. Do not substitute SPARCC/MASES counts.' }),
+      numberInput('dactylitis', 'Tender dactylitis count', { min: 0, max: 20, exampleValue: 0, helpText: 'Number of tender dactylitic digits (fingers + toes; max 20).' }),
+      numberInput('crp', 'CRP', { unit: 'mg/L', min: 0, max: 200, step: 0.1, exampleValue: 0, helpText: 'mg/L (not mg/dL).' }),
       numberInput('sf36pcs', 'SF-36 physical component summary', {
         min: 0,
         max: 100,
         step: 0.1,
-        defaultValue: 50,
+        exampleValue: 50,
         helpText: 'Higher PCS (better function) lowers PASDAS. Population mean ~50.',
       }),
     ],
@@ -2035,14 +2074,14 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     whenToUse: 'PsA treat-to-target visits when 68/66 joints, skin, pain, global, HAQ, and enthesitis are recorded.',
     whyUse: 'MDA is the GRAPPA/EULAR-endorsed target; VLDA is a near-remission state.',
     inputs: [
-      numberInput('tjc68', 'Tender joint count (68)', { min: 0, max: 68, defaultValue: 0, helpText: 'Full 68-joint tender count (DIP, TMJ, AC, hip, ankle, midtarsal — not the 28-joint set). Target ≤1.' }),
-      numberInput('sjc66', 'Swollen joint count (66)', { min: 0, max: 66, defaultValue: 0, helpText: '66-joint swollen count (hips not swollen). Do not use a 28-joint count. Target ≤1.' }),
-      numberInput('pasi', 'PASI', { min: 0, max: 72, step: 0.1, defaultValue: 0, helpText: 'Enter PASI from the official worksheet (do not score PASI items here). Skin criterion: PASI ≤1 OR BSA ≤3%.' }),
-      numberInput('bsa', 'BSA psoriasis', { unit: '%', min: 0, max: 100, step: 0.1, defaultValue: 0, helpText: 'Percent body-surface-area of psoriasis. Skin criterion met if BSA ≤3 even when PASI >1.' }),
-      numberInput('pain', 'Patient pain VAS', { unit: '0–100', min: 0, max: 100, defaultValue: 0, helpText: '0 = no pain, 100 = worst imaginable. Target ≤15.' }),
-      numberInput('ptga', 'Patient global VAS', { unit: '0–100', min: 0, max: 100, defaultValue: 0, helpText: '0 = very well, 100 = very poorly. Target ≤20.' }),
-      numberInput('haq', 'HAQ-DI', { min: 0, max: 3, step: 0.125, defaultValue: 0, helpText: 'Health Assessment Questionnaire Disability Index 0–3. Target ≤0.5.' }),
-      numberInput('enthesitis', 'Tender entheseal points', { min: 0, max: 16, defaultValue: 0, helpText: 'Count of tender entheses as recorded (LEI 0–6 or SPARCC 0–16). Target ≤1.' }),
+      numberInput('tjc68', 'Tender joint count (68)', { min: 0, max: 68, exampleValue: 0, helpText: 'Full 68-joint tender count (DIP, TMJ, AC, hip, ankle, midtarsal — not the 28-joint set). Target ≤1.' }),
+      numberInput('sjc66', 'Swollen joint count (66)', { min: 0, max: 66, exampleValue: 0, helpText: '66-joint swollen count (hips not swollen). Do not use a 28-joint count. Target ≤1.' }),
+      numberInput('pasi', 'PASI', { min: 0, max: 72, step: 0.1, exampleValue: 0, helpText: 'Enter PASI from the official worksheet (do not score PASI items here). Skin criterion: PASI ≤1 OR BSA ≤3%.' }),
+      numberInput('bsa', 'BSA psoriasis', { unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 0, helpText: 'Percent body-surface-area of psoriasis. Skin criterion met if BSA ≤3 even when PASI >1.' }),
+      numberInput('pain', 'Patient pain VAS', { unit: '0–100', min: 0, max: 100, exampleValue: 0, helpText: '0 = no pain, 100 = worst imaginable. Target ≤15.' }),
+      numberInput('ptga', 'Patient global VAS', { unit: '0–100', min: 0, max: 100, exampleValue: 0, helpText: '0 = very well, 100 = very poorly. Target ≤20.' }),
+      numberInput('haq', 'HAQ-DI', { min: 0, max: 3, step: 0.125, exampleValue: 0, helpText: 'Health Assessment Questionnaire Disability Index 0–3. Target ≤0.5.' }),
+      numberInput('enthesitis', 'Tender entheseal points', { min: 0, max: 16, exampleValue: 0, helpText: 'Count of tender entheses as recorded (LEI 0–6 or SPARCC 0–16). Target ≤1.' }),
     ],
     calculate(values) {
       const tjc68 = num(values.tjc68, 0);
@@ -2145,7 +2184,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         min: 0,
         max: 10,
         step: 0.1,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Past week; 0 = easy, 10 = impossible. BASFI is the mean of the 10 items.',
       }),
     ),
@@ -2218,7 +2257,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         min: 5,
         max: 40,
         step: 0.5,
-        defaultValue: 12,
+        exampleValue: 12,
         helpText: 'Heels, buttocks and scapulae against the wall; feet ~30 cm apart; chin tucked. Rigid ruler to each tragus; mean L/R. 2-step: <15 cm = 0, 15–30 = 1, >30 = 2.',
       }),
       numberInput('schober', 'Modified Schober (lumbar flexion)', {
@@ -2226,7 +2265,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         min: 0,
         max: 8,
         step: 0.1,
-        defaultValue: 5,
+        exampleValue: 5,
         helpText: 'Mark the lumbosacral junction (dimples of Venus) and 10 cm above (classic also marks 5 cm below). Patient flexes fully; score the increase in cm. 2-step: >4 cm = 0, 2–4 = 1, <2 = 2.',
       }),
       numberInput('cervical', 'Cervical rotation (mean of L/R)', {
@@ -2234,7 +2273,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         min: 0,
         max: 90,
         step: 1,
-        defaultValue: 70,
+        exampleValue: 70,
         helpText: 'Supine; goniometer on the forehead; rotate L and R; enter the mean. 2-step: >70° = 0, 20–70 = 1, <20 = 2.',
       }),
       numberInput('sideFlex', 'Lumbar side flexion (mean of L/R)', {
@@ -2242,7 +2281,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         min: 0,
         max: 20,
         step: 0.5,
-        defaultValue: 12,
+        exampleValue: 12,
         helpText: 'Fingertip-to-floor difference or skin-distraction method; mean of L/R; no trunk rotation. 2-step: >10 cm = 0, 5–10 = 1, <5 = 2.',
       }),
       numberInput('imd', 'Intermalleolar distance', {
@@ -2250,7 +2289,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         min: 40,
         max: 130,
         step: 1,
-        defaultValue: 110,
+        exampleValue: 110,
         helpText: 'Supine, knees extended, abduct both legs; distance between medial malleoli. 2-step: >100 cm = 0, 70–100 = 1, <70 = 2.',
       }),
     ],

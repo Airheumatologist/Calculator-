@@ -44,22 +44,32 @@ export function validateCalculator(calc: Calculator): string[] {
     if (input.step !== undefined && !(input.step > 0)) {
       errors.push(`${prefix}: input ${input.id} step must be positive`);
     }
-    if (typeof input.defaultValue === 'number') {
-      if (input.min !== undefined && input.defaultValue < input.min) {
-        errors.push(`${prefix}: input ${input.id} default below min`);
+    if (input.defaultValue !== undefined) {
+      errors.push(`${prefix}: input ${input.id} defines forbidden patient defaultValue; use exampleValue`);
+    }
+    if (input.exampleValue !== undefined && input.type === 'number' && typeof input.exampleValue !== 'number') {
+      errors.push(`${prefix}: input ${input.id} exampleValue must be a number`);
+    }
+    if (input.exampleValue !== undefined && input.type === 'boolean' && typeof input.exampleValue !== 'boolean') {
+      errors.push(`${prefix}: input ${input.id} exampleValue must be boolean`);
+    }
+    if (typeof input.exampleValue === 'number') {
+      if (!Number.isFinite(input.exampleValue)) errors.push(`${prefix}: input ${input.id} exampleValue must be finite`);
+      if (input.min !== undefined && input.exampleValue < input.min) {
+        errors.push(`${prefix}: input ${input.id} exampleValue below min`);
       }
-      if (input.max !== undefined && input.defaultValue > input.max) {
-        errors.push(`${prefix}: input ${input.id} default above max`);
+      if (input.max !== undefined && input.exampleValue > input.max) {
+        errors.push(`${prefix}: input ${input.id} exampleValue above max`);
       }
     }
     if (input.type === 'select' || input.type === 'segmented') {
       if (!input.options?.length) {
         errors.push(`${prefix}: input ${input.id} has no options`);
       } else if (
-        input.defaultValue !== undefined &&
-        !input.options.some((option) => option.value === input.defaultValue)
+        input.exampleValue !== undefined &&
+        !input.options.some((option) => option.value === input.exampleValue)
       ) {
-        errors.push(`${prefix}: input ${input.id} default is not in options`);
+        errors.push(`${prefix}: input ${input.id} exampleValue is not in options`);
       }
     }
   }
@@ -67,6 +77,45 @@ export function validateCalculator(calc: Calculator): string[] {
   const questionnaire = calc.questionnaire && typeof calc.questionnaire === 'object' ? calc.questionnaire : undefined;
   if (questionnaire?.modeInputId && !inputIds.has(questionnaire.modeInputId)) {
     errors.push(`${prefix}: questionnaire.modeInputId ${questionnaire.modeInputId} is not an input`);
+  }
+  const modeInput = questionnaire?.modeInputId
+    ? (calc.inputs ?? []).find((input) => input.id === questionnaire.modeInputId)
+    : undefined;
+  if (questionnaire?.modeInputId && modeInput && modeInput.type !== 'select' && modeInput.type !== 'segmented') {
+    errors.push(`${prefix}: questionnaire.modeInputId ${questionnaire.modeInputId} must be a select or segmented input`);
+  }
+  const directModeValues = (questionnaire?.directModeValues ?? []).map(String);
+  if (questionnaire?.modeInputId && directModeValues.length > 0) {
+    const covered = (value: string) =>
+      Boolean(questionnaire.directInputIds?.length) ||
+      Boolean(questionnaire.activeInputIdsByMode?.[value]?.length);
+    for (const value of directModeValues) {
+      const declaredOption = modeInput?.options?.some((option) => String(option.value) === value);
+      if (!declaredOption) {
+        errors.push(`${prefix}: questionnaire.directModeValues contains ${value}, which is not an option of ${questionnaire.modeInputId}`);
+      }
+      if (!covered(value)) {
+        errors.push(
+          `${prefix}: questionnaire mode ${questionnaire.modeInputId}=${value} must declare directInputIds or activeInputIdsByMode["${value}"]`
+        );
+      }
+    }
+  }
+  if (!questionnaire?.modeInputId) {
+    // A survey/precomputed selector must be declared explicitly; the engine no
+    // longer infers the branch from input ids or labels.
+    const DIRECT_VALUES = new Set(['direct', 'override', 'precomputed']);
+    const implicitMode = (calc.inputs ?? []).find(
+      (input) =>
+        input.type === 'select' &&
+        Boolean(input.options?.some((option) => typeof option.value === 'string' && DIRECT_VALUES.has(option.value.toLowerCase()))) &&
+        Boolean(input.options?.some((option) => !(typeof option.value === 'string' && DIRECT_VALUES.has(option.value.toLowerCase()))))
+    );
+    if (implicitMode) {
+      errors.push(
+        `${prefix}: input ${implicitMode.id} looks like a survey/precomputed branch selector; declare calculator.questionnaire.modeInputId explicitly`
+      );
+    }
   }
   for (const id of questionnaire?.directInputIds ?? []) {
     if (!inputIds.has(id)) errors.push(`${prefix}: questionnaire.directInputIds contains unknown id ${id}`);

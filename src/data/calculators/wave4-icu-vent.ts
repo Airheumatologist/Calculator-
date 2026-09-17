@@ -13,9 +13,9 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'Shock, anemia, hypoxemia workups when quantifying blood O₂ carrying capacity.',
     whyUse: 'CaO₂ is the content term in DO₂ and O₂ extraction calculations.',
     inputs: [
-      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 3, max: 22, step: 0.1, defaultValue: 12 }),
-      numberInput('sao2', 'SaO₂ (or SpO₂)', { unit: '%', min: 40, max: 100, defaultValue: 98 }),
-      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, defaultValue: 90 }),
+      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 3, max: 22, step: 0.1, exampleValue: 12 }),
+      numberInput('sao2', 'SaO₂ (or SpO₂)', { unit: '%', min: 40, max: 100, exampleValue: 98 }),
+      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 90 }),
     ],
     calculate(values) {
       const hb = num(values.hb, 12);
@@ -109,9 +109,9 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'When mixed venous (or sometimes central venous as surrogate) gases available for O₂ balance.',
     whyUse: 'Needed for AV O₂ difference, O₂ER, and Fick-based calculations.',
     inputs: [
-      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 3, max: 22, step: 0.1, defaultValue: 12 }),
-      numberInput('svo2', 'SvO₂ (mixed venous)', { unit: '%', min: 20, max: 100, defaultValue: 70 }),
-      numberInput('pvo2', 'PvO₂', { unit: 'mmHg', min: 10, max: 100, defaultValue: 40 }),
+      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 3, max: 22, step: 0.1, exampleValue: 12 }),
+      numberInput('svo2', 'SvO₂ (mixed venous)', { unit: '%', min: 20, max: 100, exampleValue: 70 }),
+      numberInput('pvo2', 'PvO₂', { unit: 'mmHg', min: 10, max: 100, exampleValue: 40 }),
     ],
     calculate(values) {
       const hb = num(values.hb, 12);
@@ -202,11 +202,11 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'Shock / high-risk ICU when arterial and mixed venous contents (or saturations with shared Hb) are known.',
     whyUse: 'Summarizes balance between O₂ delivery and consumption; rises when delivery falls or demand rises.',
     inputs: [
-      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 3, max: 22, step: 0.1, defaultValue: 12 }),
-      numberInput('sao2', 'SaO₂', { unit: '%', min: 40, max: 100, defaultValue: 98 }),
-      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, defaultValue: 90 }),
-      numberInput('svo2', 'SvO₂', { unit: '%', min: 20, max: 100, defaultValue: 70 }),
-      numberInput('pvo2', 'PvO₂', { unit: 'mmHg', min: 10, max: 100, defaultValue: 40 }),
+      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 3, max: 22, step: 0.1, exampleValue: 12 }),
+      numberInput('sao2', 'SaO₂', { unit: '%', min: 40, max: 100, exampleValue: 98 }),
+      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 90 }),
+      numberInput('svo2', 'SvO₂', { unit: '%', min: 20, max: 100, exampleValue: 70 }),
+      numberInput('pvo2', 'PvO₂', { unit: 'mmHg', min: 10, max: 100, exampleValue: 40 }),
     ],
     calculate(values) {
       const hb = num(values.hb, 12);
@@ -309,9 +309,9 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'Ventilated patients (classically pediatric) when grading ventilatory support intensity.',
     whyUse: 'Integrates rate, peak airway pressure, and CO₂; higher VI = more intense support.',
     inputs: [
-      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 5, max: 80, defaultValue: 20 }),
-      numberInput('pip', 'Peak inspiratory pressure (PIP)', { unit: 'cm H₂O', min: 5, max: 60, defaultValue: 25 }),
-      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 15, max: 120, defaultValue: 45 }),
+      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 5, max: 80, exampleValue: 20 }),
+      numberInput('pip', 'Peak inspiratory pressure (PIP)', { unit: 'cm H₂O', min: 5, max: 60, exampleValue: 25 }),
+      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 15, max: 120, exampleValue: 45 }),
     ],
     calculate(values) {
       const rr = num(values.rr, 20);
@@ -392,12 +392,12 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'Spontaneous breathing trial assessment for readiness to wean/extubate.',
     whyUse: 'Simple bedside predictor; RSBI <105 breaths/min/L associated with weaning success in classic studies.',
     inputs: [
-      numberInput('f', 'Respiratory frequency (f)', { unit: '/min', min: 4, max: 60, defaultValue: 24, helpText: 'Count during a spontaneous breathing trial on minimal/no support, not fully controlled MV' }),
+      numberInput('f', 'Respiratory frequency (f)', { unit: '/min', min: 4, max: 60, exampleValue: 24, helpText: 'Count during a spontaneous breathing trial on minimal/no support, not fully controlled MV' }),
       numberInput('vt', 'Tidal volume (Vt)', {
         unit: 'mL',
         min: 50,
         max: 1200,
-        defaultValue: 350,
+        exampleValue: 350,
         helpText: 'Average spontaneous Vt during SBT; converted to liters for f/Vt',
       }),
     ],
@@ -496,7 +496,7 @@ export const wave4IcuVentCalcs: Calculator[] = [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
       ]),
-      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 220, defaultValue: 170 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 220, exampleValue: 170 }),
     ],
     calculate(values) {
       const male = String(values.sex ?? 'M') === 'M';
@@ -557,13 +557,13 @@ export const wave4IcuVentCalcs: Calculator[] = [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
       ]),
-      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 220, defaultValue: 170 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 220, exampleValue: 170 }),
       numberInput('mlPerKg', 'Target mL/kg PBW', {
         unit: 'mL/kg',
         min: 4,
         max: 10,
         step: 0.5,
-        defaultValue: 6,
+        exampleValue: 6,
         helpText: 'ARDSNet primary target 6; range often 4–8 to keep Pplat ≤30',
       }),
     ],
@@ -643,8 +643,8 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'Volume- or pressure-controlled ventilation with measurable end-inspiratory plateau.',
     whyUse: 'ΔP is strongly associated with ARDS mortality; aim often ≤15 cm H₂O when feasible.',
     inputs: [
-      numberInput('pplat', 'Plateau pressure (Pplat)', { unit: 'cm H₂O', min: 5, max: 60, step: 0.5, defaultValue: 22, helpText: '0.5 s inspiratory pause, patient passive' }),
-      numberInput('peep', 'Total PEEP', { unit: 'cm H₂O', min: 0, max: 30, step: 0.5, defaultValue: 10, helpText: 'Set PEEP plus auto-PEEP if measured (same total PEEP used for Cstat/driving pressure)' }),
+      numberInput('pplat', 'Plateau pressure (Pplat)', { unit: 'cm H₂O', min: 5, max: 60, step: 0.5, exampleValue: 22, helpText: '0.5 s inspiratory pause, patient passive' }),
+      numberInput('peep', 'Total PEEP', { unit: 'cm H₂O', min: 0, max: 30, step: 0.5, exampleValue: 10, helpText: 'Set PEEP plus auto-PEEP if measured (same total PEEP used for Cstat/driving pressure)' }),
     ],
     calculate(values) {
       const pplat = num(values.pplat, 22);
@@ -734,9 +734,9 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'Passive ventilated patients with reliable plateau pressure.',
     whyUse: 'Tracks stiffness of lung/chest wall; falling Cstat suggests edema, fibrosis, abdominal hypertension, mainstem intubation.',
     inputs: [
-      numberInput('vt', 'Tidal volume (exhaled)', { unit: 'mL', min: 50, max: 1200, defaultValue: 400, helpText: 'Exhaled Vt of the same breath as Pplat' }),
-      numberInput('pplat', 'Plateau pressure', { unit: 'cm H₂O', min: 5, max: 60, step: 0.5, defaultValue: 22, helpText: '0.5 s inspiratory pause, patient passive (no effort)' }),
-      numberInput('peep', 'Total PEEP', { unit: 'cm H₂O', min: 0, max: 30, step: 0.5, defaultValue: 10, helpText: 'Set PEEP plus auto-PEEP if measured' }),
+      numberInput('vt', 'Tidal volume (exhaled)', { unit: 'mL', min: 50, max: 1200, exampleValue: 400, helpText: 'Exhaled Vt of the same breath as Pplat' }),
+      numberInput('pplat', 'Plateau pressure', { unit: 'cm H₂O', min: 5, max: 60, step: 0.5, exampleValue: 22, helpText: '0.5 s inspiratory pause, patient passive (no effort)' }),
+      numberInput('peep', 'Total PEEP', { unit: 'cm H₂O', min: 0, max: 30, step: 0.5, exampleValue: 10, helpText: 'Set PEEP plus auto-PEEP if measured' }),
     ],
     calculate(values) {
       const vt = num(values.vt, 400);
@@ -838,13 +838,13 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'Passive volume-cycled breath with constant flow and plateau hold.',
     whyUse: 'Separates resistive load (ETT, bronchospasm, secretions) from elastic load (Pplat).',
     inputs: [
-      numberInput('pip', 'Peak inspiratory pressure (PIP)', { unit: 'cm H₂O', min: 5, max: 80, step: 0.5, defaultValue: 30 }),
-      numberInput('pplat', 'Plateau pressure', { unit: 'cm H₂O', min: 5, max: 60, step: 0.5, defaultValue: 20 }),
+      numberInput('pip', 'Peak inspiratory pressure (PIP)', { unit: 'cm H₂O', min: 5, max: 80, step: 0.5, exampleValue: 30 }),
+      numberInput('pplat', 'Plateau pressure', { unit: 'cm H₂O', min: 5, max: 60, step: 0.5, exampleValue: 20 }),
       numberInput('flow', 'Inspiratory flow', {
         unit: 'L/min',
         min: 10,
         max: 120,
-        defaultValue: 60,
+        exampleValue: 60,
         helpText: 'Constant-flow breath; converted to L/s for Raw units',
       }),
     ],
@@ -958,14 +958,14 @@ export const wave4IcuVentCalcs: Calculator[] = [
         min: 1,
         max: 80,
         step: 0.5,
-        defaultValue: 15,
+        exampleValue: 15,
       }),
       numberInput('crs', 'Compliance (Crs)', {
         unit: 'mL/cm H₂O',
         min: 5,
         max: 150,
         step: 0.5,
-        defaultValue: 40,
+        exampleValue: 40,
         helpText: 'Will be converted to L/cm H₂O for τ in seconds',
       }),
     ],
@@ -1221,20 +1221,20 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'Quantifying pharmacologic cardiovascular support (pediatric cardiac ICU classic; also adult research).',
     whyUse: 'Single number comparing support intensity across dopamine, epi, norepi, milrinone, vasopressin, etc.',
     inputs: [
-      numberInput('dopamine', 'Dopamine', { unit: 'µg/kg/min', min: 0, max: 30, step: 0.1, defaultValue: 0, helpText: 'Current infusion rate' }),
-      numberInput('dobutamine', 'Dobutamine', { unit: 'µg/kg/min', min: 0, max: 30, step: 0.1, defaultValue: 0, helpText: 'Current infusion rate' }),
-      numberInput('epinephrine', 'Epinephrine', { unit: 'µg/kg/min', min: 0, max: 2, step: 0.01, defaultValue: 0, helpText: 'Current infusion rate' }),
-      numberInput('norepinephrine', 'Norepinephrine', { unit: 'µg/kg/min', min: 0, max: 2, step: 0.01, defaultValue: 0, helpText: 'Current infusion rate' }),
-      numberInput('milrinone', 'Milrinone', { unit: 'µg/kg/min', min: 0, max: 1, step: 0.05, defaultValue: 0, helpText: 'Current infusion rate' }),
+      numberInput('dopamine', 'Dopamine', { unit: 'µg/kg/min', min: 0, max: 30, step: 0.1, exampleValue: 0, helpText: 'Current infusion rate' }),
+      numberInput('dobutamine', 'Dobutamine', { unit: 'µg/kg/min', min: 0, max: 30, step: 0.1, exampleValue: 0, helpText: 'Current infusion rate' }),
+      numberInput('epinephrine', 'Epinephrine', { unit: 'µg/kg/min', min: 0, max: 2, step: 0.01, exampleValue: 0, helpText: 'Current infusion rate' }),
+      numberInput('norepinephrine', 'Norepinephrine', { unit: 'µg/kg/min', min: 0, max: 2, step: 0.01, exampleValue: 0, helpText: 'Current infusion rate' }),
+      numberInput('milrinone', 'Milrinone', { unit: 'µg/kg/min', min: 0, max: 1, step: 0.05, exampleValue: 0, helpText: 'Current infusion rate' }),
       numberInput('vasopressin', 'Vasopressin', {
         unit: 'U/kg/min',
         min: 0,
         max: 0.1,
         step: 0.0001,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Note units U/kg/min (not units/min). Example: 0.0003',
       }),
-      numberInput('phenylephrine', 'Phenylephrine', { unit: 'µg/kg/min', min: 0, max: 10, step: 0.1, defaultValue: 0, helpText: 'Current infusion rate' }),
+      numberInput('phenylephrine', 'Phenylephrine', { unit: 'µg/kg/min', min: 0, max: 10, step: 0.1, exampleValue: 0, helpText: 'Current infusion rate' }),
     ],
     calculate(values) {
       const dopa = num(values.dopamine);
@@ -1329,9 +1329,9 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'Serial lactate monitoring during sepsis or shock resuscitation.',
     whyUse: 'Improving lactate is associated with better outcomes; used as a resuscitation trend marker.',
     inputs: [
-      numberInput('initial', 'Initial lactate', { unit: 'mmol/L', min: 0.1, max: 30, step: 0.1, defaultValue: 4.0 }),
-      numberInput('delayed', 'Repeat lactate', { unit: 'mmol/L', min: 0.1, max: 30, step: 0.1, defaultValue: 3.0 }),
-      numberInput('hours', 'Interval (optional)', { unit: 'hours', min: 0.5, max: 24, step: 0.5, defaultValue: 2, required: false, helpText: 'Typical sepsis protocols resample at 2–6 hours' }),
+      numberInput('initial', 'Initial lactate', { unit: 'mmol/L', min: 0.1, max: 30, step: 0.1, exampleValue: 4.0 }),
+      numberInput('delayed', 'Repeat lactate', { unit: 'mmol/L', min: 0.1, max: 30, step: 0.1, exampleValue: 3.0 }),
+      numberInput('hours', 'Interval (optional)', { unit: 'hours', min: 0.5, max: 24, step: 0.5, exampleValue: 2, required: false, helpText: 'Typical sepsis protocols resample at 2–6 hours' }),
     ],
     calculate(values) {
       const initial = num(values.initial, 4);
@@ -1438,7 +1438,7 @@ export const wave4IcuVentCalcs: Calculator[] = [
         min: -15,
         max: 40,
         step: 0.1,
-        defaultValue: 6,
+        exampleValue: 6,
         helpText: 'If ABG shows BE −6, enter base deficit = 6. If BE +2, enter −2.',
       }),
     ],

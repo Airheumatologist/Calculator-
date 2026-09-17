@@ -16,14 +16,14 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whyUse:
       'Highlights key antecedents of early-onset GBS/E. coli sepsis. This tool does not reproduce the full Kaiser Permanente online algorithm or absolute incidence estimates.',
     inputs: [
-      numberInput('gaWeeks', 'Gestational age', { unit: 'weeks', min: 34, max: 43, step: 0.1, defaultValue: 39, helpText: 'Official KP EOS calculator is for ≥34 weeks. This educational helper adds points if GA <38.' }),
-      numberInput('romHours', 'Duration of ROM', { unit: 'hours', min: 0, max: 120, step: 0.5, defaultValue: 6, helpText: 'Hours of ruptured membranes before birth. Educational helper: ≥12 h and ≥18 h add points (PROM ≥18 h is a classic EOS risk factor).' }),
+      numberInput('gaWeeks', 'Gestational age', { unit: 'weeks', min: 34, max: 43, step: 0.1, exampleValue: 39, helpText: 'Official KP EOS calculator is for ≥34 weeks. This educational helper adds points if GA <38.' }),
+      numberInput('romHours', 'Duration of ROM', { unit: 'hours', min: 0, max: 120, step: 0.5, exampleValue: 6, helpText: 'Hours of ruptured membranes before birth. Educational helper: ≥12 h and ≥18 h add points (PROM ≥18 h is a classic EOS risk factor).' }),
       numberInput('maxTemp', 'Highest maternal intrapartum temperature', {
         unit: '°C',
         min: 36,
         max: 42,
         step: 0.1,
-        defaultValue: 37.2,
+        exampleValue: 37.2,
         helpText: 'Highest maternal temperature during labor. Educational: ≥37.5 / ≥38.0 / ≥39.0 °C add increasing points. Convert °F: (°F − 32) × 5/9.',
       }),
       selectInput('gbs', 'Maternal GBS status', [
@@ -425,10 +425,10 @@ export const wave6EmPedsCalcs: Calculator[] = [
         { label: 'School age 6–12 years', value: 'school' },
         { label: 'Adolescent 13 to <18 years', value: 'teen' },
       ], undefined, 'Goldstein 2005 age groups (no 1–5 year band). Map 12–23 mo to the infant band — do not use 2–5 y vitals. Newborn 0 d–1 wk: HR >180 or <100, RR >50, WBC >34 only (no <5 leukopenia criterion). Neonate 1 wk–1 mo: HR >180 or <100, RR >40, WBC >19.5 or <5. Infant 1 mo–1 y (and 12–23 mo here): HR >180 or <90, RR >34, WBC >17.5 or <5. Toddler/preschool 2–5 y: HR >140, RR >22, WBC >15.5 or <6. School 6–12 y: HR >130, RR >18, WBC >13.5 or <4.5. Adolescent 13 to <18 y: HR >110, RR >14, WBC >11 or <4.5. Bradycardia is a CV SIRS criterion for children <1 year.'),
-      numberInput('temp', 'Core temperature', { unit: '°C', min: 30, max: 43, step: 0.1, defaultValue: 38.5, helpText: 'Abnormal if >38.5°C or <36.0°C (Goldstein). Pediatric SIRS usually requires temperature or WBC abnormality among the ≥2 criteria.' }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 40, max: 280, defaultValue: 140, helpText: 'Tachycardia if above the age-band cutoff. Bradycardia counts as the CV criterion for children <1 year (newborn/neonate <100; infant including 12–23 mo <90), not only 0–30 days.' }),
-      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 5, max: 120, defaultValue: 30, helpText: 'Tachypnea if above the age-band cutoff. Mechanical ventilation for an acute process also fulfills the respiratory criterion.' }),
-      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 100, step: 0.1, defaultValue: 14, helpText: 'Leukocyte criterion: WBC above or below the age-band range, or bands >10%. For newborns 0–7 days, only WBC >34 counts; WBC <5 does not.' }),
+      numberInput('temp', 'Core temperature', { unit: '°C', min: 30, max: 43, step: 0.1, exampleValue: 38.5, helpText: 'Abnormal if >38.5°C or <36.0°C (Goldstein). Pediatric SIRS usually requires temperature or WBC abnormality among the ≥2 criteria.' }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 40, max: 280, exampleValue: 140, helpText: 'Tachycardia if above the age-band cutoff. Bradycardia counts as the CV criterion for children <1 year (newborn/neonate <100; infant including 12–23 mo <90), not only 0–30 days.' }),
+      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 5, max: 120, exampleValue: 30, helpText: 'Tachypnea if above the age-band cutoff. Mechanical ventilation for an acute process also fulfills the respiratory criterion.' }),
+      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 100, step: 0.1, exampleValue: 14, helpText: 'Leukocyte criterion: WBC above or below the age-band range, or bands >10%. For newborns 0–7 days, only WBC >34 counts; WBC <5 does not.' }),
       yesNo('bands', 'Immature neutrophils (bands) >10%', 0),
       yesNo('mechVent', 'Mechanical ventilation for acute process (counts as respiratory criterion)', 1),
     ],
@@ -800,7 +800,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         unit: '/min',
         min: 0,
         max: 200,
-        defaultValue: 110,
+        exampleValue: 110,
         helpText: 'Enter 0 if not measuring',
         required: false,
       }),
@@ -809,7 +809,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         min: 0,
         max: 8,
         step: 0.5,
-        defaultValue: 4,
+        exampleValue: 4,
         required: false,
       }),
     ],
@@ -1012,7 +1012,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whenToUse: 'Newborns requiring UVC and/or UAC for resuscitation, infusions, or monitoring.',
     whyUse: 'Formula-based starting depths reduce malposition; always confirm radiographically.',
     inputs: [
-      numberInput('weightKg', 'Birth weight', { unit: 'kg', min: 0.4, max: 6, step: 0.01, defaultValue: 1.5 }),
+      numberInput('weightKg', 'Birth weight', { unit: 'kg', unitKind: 'weight', min: 0.4, max: 6, step: 0.01, exampleValue: 1.5 }),
       selectInput('catheter', 'Catheter', [
         { label: 'UVC (umbilical venous)', value: 'uvc' },
         { label: 'UAC (umbilical arterial)', value: 'uac' },
@@ -1106,7 +1106,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whenToUse: 'First-trimester ultrasound dating when CRL is measured (typically ~6–14 weeks).',
     whyUse: 'Early CRL is the most accurate ultrasound dating method; maps length to GA via standard charts.',
     inputs: [
-      numberInput('crlMm', 'Crown-rump length', { unit: 'mm', min: 1, max: 90, step: 0.1, defaultValue: 20 }),
+      numberInput('crlMm', 'Crown-rump length', { unit: 'mm', min: 1, max: 90, step: 0.1, exampleValue: 20 }),
     ],
     calculate(values) {
       const crl = num(values.crlMm, 20);
@@ -1177,14 +1177,14 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whenToUse: 'Third-trimester fluid assessment or anytime AFI is reported on ultrasound.',
     whyUse: 'AFI categories guide surveillance for fetal well-being, membrane rupture, and maternal conditions (diabetes, etc.).',
     inputs: [
-      numberInput('afi', 'Amniotic fluid index', { unit: 'cm', min: 0, max: 50, step: 0.1, defaultValue: 12, helpText: 'Sum of four-quadrant deepest vertical pockets. Common cutoffs: oligohydramnios AFI <5 cm; borderline 5–8 cm; normal ~5–24 cm; polyhydramnios ≥24 cm (some use ≥25).' }),
+      numberInput('afi', 'Amniotic fluid index', { unit: 'cm', min: 0, max: 50, step: 0.1, exampleValue: 12, helpText: 'Sum of four-quadrant deepest vertical pockets. Common cutoffs: oligohydramnios AFI <5 cm; borderline 5–8 cm; normal ~5–24 cm; polyhydramnios ≥24 cm (some use ≥25).' }),
       yesNo('useMvp', 'Also have maximum vertical pocket (MVP)?', 0),
       numberInput('mvp', 'Maximum vertical pocket (if known)', {
         unit: 'cm',
         min: 0,
         max: 20,
         step: 0.1,
-        defaultValue: 4,
+        exampleValue: 4,
         required: false,
         helpText: 'Cord-free vertical pocket. MVP <2 cm supports oligohydramnios; MVP ≥8 cm supports polyhydramnios. Many guidelines prefer MVP over AFI for oligohydramnios.',
       }),
@@ -1287,9 +1287,9 @@ export const wave6EmPedsCalcs: Calculator[] = [
         min: 1,
         max: 10,
         step: 0.1,
-        defaultValue: 2.5,
+        exampleValue: 2.5,
       }),
-      numberInput('gaWeeks', 'Gestational age', { unit: 'weeks', min: 20, max: 42, step: 0.1, defaultValue: 32 }),
+      numberInput('gaWeeks', 'Gestational age', { unit: 'weeks', min: 20, max: 42, step: 0.1, exampleValue: 32 }),
     ],
     calculate(values) {
       const pattern = String(values.flowPattern ?? 'present');
@@ -1679,7 +1679,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         min: 0,
         max: 10,
         step: 0.5,
-        defaultValue: 6,
+        exampleValue: 6,
         helpText: 'Contemporary ACOG active-phase arrest rules start at ≥6 cm. Below 6 cm is treated as latent labor (not arrest).',
       }),
       yesNo('ruptured', 'Membranes ruptured', 0, 'Active-phase arrest requires ruptured membranes plus the time minima below.'),
@@ -1689,7 +1689,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         min: 0,
         max: 12,
         step: 0.5,
-        defaultValue: 4,
+        exampleValue: 4,
         helpText: 'First stage: arrest if ≥6 cm + ROM and ≥4 h with adequate UCs (≥200 MVU) or ≥6 h if inadequate. Second stage common limits: nullipara 3 h (4 h with epidural); multipara 2 h (3 h with epidural).',
       }),      yesNo('malpresentation', 'Known malposition/CPD concern or nonreassuring fetal status', 0),
     ],
@@ -1817,7 +1817,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         min: 0,
         max: 5000,
         step: 50,
-        defaultValue: 600,
+        exampleValue: 600,
         helpText: 'Prefer quantitative blood loss. ACOG PPH: cumulative ≥1000 mL OR signs of hypovolemia within 24 h of birth (any route). Traditional teaching used ≥500 mL vaginal / ≥1000 mL cesarean.',
       }),
       selectInput('delivery', 'Delivery type', [
@@ -1909,8 +1909,8 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whenToUse: 'Suspected obstetric hemorrhage or hypovolemia when early recognition of shock is needed.',
     whyUse: 'Pregnancy alters baseline HR/BP; shock index can rise before frank hypotension.',
     inputs: [
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, defaultValue: 110, helpText: 'Shock index = HR ÷ SBP. Obstetric bands used here: <0.9 lower concern; 0.9–1.1 concerning; 1.1–1.7 high; ≥1.7 critical.' }),
-      numberInput('sbp', 'Systolic blood pressure', { unit: 'mmHg', min: 50, max: 220, defaultValue: 100, helpText: 'Use the current systolic BP (mmHg). Do not wait for frank hypotension — SI can rise first.' }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, exampleValue: 110, helpText: 'Shock index = HR ÷ SBP. Obstetric bands used here: <0.9 lower concern; 0.9–1.1 concerning; 1.1–1.7 high; ≥1.7 critical.' }),
+      numberInput('sbp', 'Systolic blood pressure', { unit: 'mmHg', min: 50, max: 220, exampleValue: 100, helpText: 'Use the current systolic BP (mmHg). Do not wait for frank hypotension — SI can rise first.' }),
       selectInput('context', 'Context', [
         { label: 'Postpartum / hemorrhage concern', value: 'pph' },
         { label: 'Antepartum', value: 'ante' },      ]),
@@ -2024,7 +2024,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
         { label: '2 g/h', value: 2, description: 'Common US maintenance when urine output and reflexes are adequate' },
       ]),
       yesNo('renalImpair', 'Significant renal impairment / oliguria', null, 'Oliguria <30 mL/h for >2 h, or significant AKI/elevated creatinine — reduce IV maintenance (this tool caps at 1 g/h). This IV-only adjustment is ignored for the fixed-dose IM Pritchard branch.'),
-      numberInput('weightKg', 'Weight (optional, for context)', { unit: 'kg', min: 40, max: 200, defaultValue: 80, required: false }),
+      numberInput('weightKg', 'Weight (optional, for context)', { unit: 'kg', unitKind: 'weight', min: 40, max: 200, exampleValue: 80, required: false }),
     ],
     calculate(values) {
       const ind = String(values.indication ?? 'prophylaxis');
@@ -2134,11 +2134,11 @@ export const wave6EmPedsCalcs: Calculator[] = [
         min: 40,
         max: 300,
         step: 1,
-        defaultValue: 90,
+        exampleValue: 90,
         helpText: 'IADPSG GDM if fasting ≥92 mg/dL (5.1 mmol/L). Overt DM flag if ≥126 mg/dL when that box is on.',
       }),
-      numberInput('h1', '1-hour glucose', { unit: 'mg/dL', min: 40, max: 400, step: 1, defaultValue: 175, helpText: 'IADPSG GDM if 1-hour ≥180 mg/dL (10.0 mmol/L) on 75-g OGTT.' }),
-      numberInput('h2', '2-hour glucose', { unit: 'mg/dL', min: 40, max: 400, step: 1, defaultValue: 140, helpText: 'IADPSG GDM if 2-hour ≥153 mg/dL (8.5 mmol/L). Overt DM flag if ≥200 mg/dL when that box is on.' }),
+      numberInput('h1', '1-hour glucose', { unit: 'mg/dL', min: 40, max: 400, step: 1, exampleValue: 175, helpText: 'IADPSG GDM if 1-hour ≥180 mg/dL (10.0 mmol/L) on 75-g OGTT.' }),
+      numberInput('h2', '2-hour glucose', { unit: 'mg/dL', min: 40, max: 400, step: 1, exampleValue: 140, helpText: 'IADPSG GDM if 2-hour ≥153 mg/dL (8.5 mmol/L). Overt DM flag if ≥200 mg/dL when that box is on.' }),
       yesNo('overtCheck', 'Also flag possible overt diabetes in pregnancy thresholds', 0, 'When Yes, also flags fasting ≥126 mg/dL or 2-hour ≥200 mg/dL (WHO/IADPSG overt-diabetes discussion thresholds).'),
     ],
     calculate(values) {
@@ -2239,9 +2239,13 @@ export const wave6EmPedsCalcs: Calculator[] = [
         { label: '3 minutes', value: 3, description: 'Target ≈ 70–75%' },
         { label: '4 minutes', value: 4, description: 'Target ≈ 75–80%' },
         { label: '5 minutes', value: 5, description: 'Target ≈ 80–85%' },
+        { label: '6 minutes (interpolated)', value: 6, description: 'NRP publishes 5- and 10-min anchors; ≈ 81–87% between them' },
+        { label: '7 minutes (interpolated)', value: 7, description: '≈ 82–89% between the published 5- and 10-min targets' },
+        { label: '8 minutes (interpolated)', value: 8, description: '≈ 83–91% between the published 5- and 10-min targets' },
+        { label: '9 minutes (interpolated)', value: 9, description: '≈ 84–93% between the published 5- and 10-min targets' },
         { label: '10 minutes', value: 10, description: 'Target ≈ 85–95%' },
-      ], 1, 'NRP preductal (right-hand) SpO₂ targets after birth: 1 min 60–65%; 2 min 65–70%; 3 min 70–75%; 4 min 75–80%; 5 min 80–85%; 10 min 85–95%. Titrate blended O₂; HR drives the algorithm.'),
-      numberInput('spo2', 'Measured preductal SpO₂', { unit: '%', min: 10, max: 100, defaultValue: 70, helpText: 'Probe on the right hand/wrist (preductal). Compare to the minute-of-life target window.' }),
+      ], 1, 'NRP preductal (right-hand) SpO₂ targets after birth: 1 min 60–65%; 2 min 65–70%; 3 min 70–75%; 4 min 75–80%; 5 min 80–85%; 10 min 85–95%. Minutes 6–9 are not published by NRP; this tool interpolates linearly between the 5- and 10-minute targets. Titrate blended O₂; HR drives the algorithm.'),
+      numberInput('spo2', 'Measured preductal SpO₂', { unit: '%', min: 10, max: 100, exampleValue: 70, helpText: 'Probe on the right hand/wrist (preductal). Compare to the minute-of-life target window.' }),
       selectInput('startFiO2', 'Initial FiO₂ strategy (term vs preterm context)', [
         { label: '≥35 weeks — start air (21%)', value: 'term' },
         { label: '<35 weeks — often 21–30% per NRP', value: 'preterm' },
@@ -2257,9 +2261,27 @@ export const wave6EmPedsCalcs: Calculator[] = [
         3: { lo: 70, hi: 75 },
         4: { lo: 75, hi: 80 },
         5: { lo: 80, hi: 85 },
+        // NRP publishes 5- and 10-minute anchors only; the 6–9 minute windows
+        // are linear interpolations between them, labelled as such in the UI.
+        6: { lo: 81, hi: 87 },
+        7: { lo: 82, hi: 89 },
+        8: { lo: 83, hi: 91 },
+        9: { lo: 84, hi: 93 },
         10: { lo: 85, hi: 95 },
       };
-      const t = targets[minute] ?? targets[5];
+      const t = targets[minute];
+      if (!t) {
+        // Fail closed instead of silently falling back to the 5-minute target
+        // when a caller supplies an out-of-range minute.
+        return {
+          score: '—',
+          unit: '%',
+          label: 'Select a minute of life (1–10)',
+          interpretation: 'NRP SpO₂ targets are defined per minute of life from 1 to 10 minutes. Choose the minute the saturation was measured.',
+          riskLevel: 'info',
+          details: [{ label: 'Minute', value: 'Required (1–10)' }],
+        };
+      }
       let riskLevel: 'low' | 'moderate' | 'high' | 'info' = 'low';
       let label = 'Within NRP target window';
       if (spo2 < t.lo - 5) {
@@ -2332,7 +2354,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whenToUse: 'Term or preterm newborns with early respiratory distress when TTN and RDS are leading differentials.',
     whyUse: 'Pattern recognition guides expected course, surfactant need, and workup breadth (still exclude pneumonia/PPHN).',
     inputs: [
-      numberInput('gaWeeks', 'Gestational age', { unit: 'weeks', min: 23, max: 43, step: 0.1, defaultValue: 36 }),
+      numberInput('gaWeeks', 'Gestational age', { unit: 'weeks', min: 23, max: 43, step: 0.1, exampleValue: 36 }),
       selectInput('onset', 'Onset of distress', [
         { label: 'Immediate / first minutes–hours', value: 'early' },
         { label: 'After a period of relative wellness', value: 'delayed' },
@@ -2446,11 +2468,11 @@ export const wave6EmPedsCalcs: Calculator[] = [
         min: 0,
         max: 30,
         step: 0.1,
-        defaultValue: 1.5,
+        exampleValue: 1.5,
         helpText: 'Pathologic if direct/conjugated ≥1.0 mg/dL, or ≥20% of total when total ≥5 mg/dL (common teaching thresholds). Always work up conjugated hyperbilirubinemia.',
       }),
-      numberInput('total', 'Total bilirubin', { unit: 'mg/dL', min: 0, max: 50, step: 0.1, defaultValue: 8 }),
-      numberInput('ageDays', 'Age', { unit: 'days', min: 0, max: 180, defaultValue: 21 }),
+      numberInput('total', 'Total bilirubin', { unit: 'mg/dL', min: 0, max: 50, step: 0.1, exampleValue: 8 }),
+      numberInput('ageDays', 'Age', { unit: 'days', min: 0, max: 180, exampleValue: 21 }),
       yesNo('acholic', 'Acholic (pale) stools', 2, 'Pale, clay-colored stools (stool color card) — classic biliary atresia clue; photograph stools if unsure.'),
       yesNo('darkUrine', 'Dark urine staining', 1, 'Urine that stains the diaper yellow-brown (conjugated bilirubin in urine).'),
       yesNo('hepatomegaly', 'Hepatomegaly or splenomegaly', 1, 'Palpable liver or spleen enlargement on exam.'),
@@ -2642,12 +2664,12 @@ export const wave6EmPedsCalcs: Calculator[] = [
     whyUse: 'Structured criteria separate PFAPA from cyclic neutropenia, monogenic autoinflammatory disease, and recurrent infection.',
     inputs: [
       yesNo('recurrentFever', 'Recurrent regularly timed fever episodes', 2, 'Clockwork recurrences: typical PFAPA is 3–7 days of fever every 3–6 (up to 8) weeks, completely well between episodes. Educational Marshall-style wording — not a copyrighted criteria card.'),
-      numberInput('episodeDays', 'Typical episode duration', { unit: 'days', min: 1, max: 21, defaultValue: 4, helpText: 'Helper awards 1 point for ~2–7 day episodes (educational). Typical PFAPA fevers last 3–7 days.' }),
+      numberInput('episodeDays', 'Typical episode duration', { unit: 'days', min: 1, max: 21, exampleValue: 4, helpText: 'Helper awards 1 point for ~2–7 day episodes (educational). Typical PFAPA fevers last 3–7 days.' }),
       numberInput('intervalWeeks', 'Typical interval between episodes', {
         unit: 'weeks',
         min: 1,
         max: 16,
-        defaultValue: 4,
+        exampleValue: 4,
         helpText: 'Helper awards 1 point for ~2–8 week intervals (educational). Typical PFAPA is every 3–6 (up to 8) weeks.',
       }),      yesNo('aphthous', 'Aphthous stomatitis during episodes', 1, 'One or more oral ulcers during the fever episode (not herpetic vesicles).'),
       yesNo('pharyngitis', 'Pharyngitis / exudative tonsillitis (cultures negative)', 1, 'Pharyngeal erythema or exudate with negative strep/culture during the stereotyped episode.'),
@@ -2750,7 +2772,7 @@ export const wave6EmPedsCalcs: Calculator[] = [
       yesNo('purpura', 'Purpura or petechiae (predominantly lower limb) with neither thrombocytopenia nor coagulopathy', 3, 'EULAR/PRINTO/PRES mandatory item: palpable purpura or petechiae, predominantly on the lower limbs, with normal platelets and coagulation.'),
       yesNo('abdominal', 'Acute abdominal pain (diffuse colicky) or GI bleeding / intussusception concern', 1, 'EULAR/PRINTO/PRES: diffuse acute abdominal pain, or GI bleeding, or intussusception. Colicky pain is typical.'),
       yesNo('arthritis', 'Arthritis or arthralgia', 1, 'Acute arthritis (swelling/pain of a joint) or arthralgia (pain without documented swelling).'),
-      yesNo('renal', 'Renal involvement (proteinuria, hematuria, or renal insufficiency)', 1, 'Ankara/EULAR: proteinuria >0.3 g/24 h or morning ACR ≥30 mg/mmol (≥30 mmol/mg) or ≥2+ dipstick; and/or hematuria >5 RBC/HPF or RBC casts; and/or renal insufficiency.'),
+      yesNo('renal', 'Renal involvement (proteinuria, hematuria, or renal insufficiency)', 1, 'Ankara/EULAR: proteinuria >0.3 g/24 h or morning ACR ≥30 mg/mmol (≈300 mg/g, the paired KDIGO A3 threshold; the original publication prints the units as “30 mmol/mg”, which is a unit typo) or ≥2+ dipstick; and/or hematuria >5 RBC/HPF or RBC casts; and/or renal insufficiency.'),
       yesNo('histology', 'Histology: leukocytoclastic vasculitis or proliferative GN with predominant IgA', 1, 'Skin or kidney biopsy showing leukocytoclastic vasculitis or proliferative glomerulonephritis with predominant IgA deposits.'),
       yesNo('scrotal', 'Scrotal edema/orchitis-like involvement (supportive)', 1, 'Acute scrotal swelling or orchitis-like pain — supportive of IgAV but not one of the four Ankara extra criteria.'),
       yesNo('alternate', 'More likely alternate diagnosis (ITP, meningococcemia, other vasculitis)', 0, 'If ITP (low platelets), meningococcemia, or another vasculitis is more likely, do not classify as IgAV — this helper subtracts and blocks classification.'),

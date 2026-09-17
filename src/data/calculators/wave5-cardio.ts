@@ -405,9 +405,9 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'ECG interpretation when LVH is suspected (hypertension, aortic stenosis, cardiomyopathy screening).',
     whyUse: 'Classic, simple voltage criterion; limited sensitivity but good specificity when met.',
     inputs: [
-      numberInput('sV1', 'S-wave amplitude in V1', { unit: 'mm', min: 0, max: 50, step: 0.5, defaultValue: 15, helpText: '1 mm = 0.1 mV standard calibration' }),
-      numberInput('rV5V6', 'Tallest R in V5 or V6', { unit: 'mm', min: 0, max: 50, step: 0.5, defaultValue: 15, helpText: 'Precordial criterion positive if S V1 + this R >35 mm' }),
-      numberInput('rAvl', 'R-wave in aVL (optional limb criterion)', { unit: 'mm', min: 0, max: 30, step: 0.5, defaultValue: 5, required: false, helpText: 'Limb criterion positive if R aVL ≥11 mm' }),
+      numberInput('sV1', 'S-wave amplitude in V1', { unit: 'mm', min: 0, max: 50, step: 0.5, exampleValue: 15, helpText: '1 mm = 0.1 mV standard calibration' }),
+      numberInput('rV5V6', 'Tallest R in V5 or V6', { unit: 'mm', min: 0, max: 50, step: 0.5, exampleValue: 15, helpText: 'Precordial criterion positive if S V1 + this R >35 mm' }),
+      numberInput('rAvl', 'R-wave in aVL (optional limb criterion)', { unit: 'mm', min: 0, max: 30, step: 0.5, exampleValue: 5, required: false, helpText: 'Limb criterion positive if R aVL ≥11 mm' }),
     ],
     calculate(values) {
       const sV1 = num(values.sV1, 15);
@@ -476,13 +476,13 @@ export const wave5CardioCalcs: Calculator[] = [
         { label: 'Male', value: 'M', description: 'Cornell voltage positive if R aVL + S V3 >28 mm' },
         { label: 'Female', value: 'F', description: 'Cornell voltage positive if R aVL + S V3 >20 mm' },
       ], undefined, 'Sex-specific Cornell voltage (Casale 1987): >28 mm in men, >20 mm in women.'),
-      numberInput('rAvl', 'R-wave in aVL', { unit: 'mm', min: 0, max: 30, step: 0.5, defaultValue: 8 }),
-      numberInput('sV3', 'S-wave in V3', { unit: 'mm', min: 0, max: 50, step: 0.5, defaultValue: 12 }),
+      numberInput('rAvl', 'R-wave in aVL', { unit: 'mm', min: 0, max: 30, step: 0.5, exampleValue: 8 }),
+      numberInput('sV3', 'S-wave in V3', { unit: 'mm', min: 0, max: 50, step: 0.5, exampleValue: 12 }),
       numberInput('qrsMs', 'QRS duration (optional, for Cornell product)', {
         unit: 'ms',
         min: 60,
         max: 200,
-        defaultValue: 90,
+        exampleValue: 90,
         helpText: 'LIFE product = (voltage + 6 mm for women) × QRS(ms); threshold >2440 mm·ms',
         required: false,
       }),
@@ -571,9 +571,9 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'QT correction when an alternative linear/rate formula to Bazett is desired.',
     whyUse: 'Rautaharju correction is less biased than Bazett at higher heart rates in many comparisons.',
     inputs: [
-      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, defaultValue: 400, helpText: 'Onset of QRS to end of T in the lead with the clearest T-wave end' }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, defaultValue: 70 }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 55, helpText: 'Rautaharju 2014 prolongation ULNs are age- and sex-specific.' }),
+      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, exampleValue: 400, helpText: 'Onset of QRS to end of T in the lead with the clearest T-wave end' }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, exampleValue: 70 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 55, helpText: 'Rautaharju 2014 prolongation ULNs are age- and sex-specific.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
@@ -672,9 +672,9 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'Wide QRS (bundle branch block, pacing, ventricular conduction delay) when assessing repolarization.',
     whyUse: 'QTc includes QRS duration; JT/JTc isolates repolarization and may better reflect TdP risk with wide QRS.',
     inputs: [
-      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, defaultValue: 440, helpText: 'Onset of QRS to end of T; JT = QT − QRS' }),
-      numberInput('qrs', 'QRS duration', { unit: 'ms', min: 60, max: 250, defaultValue: 120 }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, defaultValue: 70 }),
+      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, exampleValue: 440, helpText: 'Onset of QRS to end of T; JT = QT − QRS' }),
+      numberInput('qrs', 'QRS duration', { unit: 'ms', min: 60, max: 250, exampleValue: 120 }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, exampleValue: 70 }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M', description: 'QT(RR,QRS) k = −22 ms; JTrr k = +34 ms' },
         { label: 'Female', value: 'F', description: 'QT(RR,QRS) k = −34 ms; JTrr k = +22 ms' },
@@ -874,8 +874,10 @@ export const wave5CardioCalcs: Calculator[] = [
           ' Recent TE flag: do not adjust target alone — seek specialist input for intensity, adherence, and cancer/APS workup.';
       }
       return {
-        score: `${row.inrLow}-${row.inrHigh}`,
-        unit: 'INR',
+        // Numeric score = the lower limit of the goal range; the full range is
+        // carried in the label, interpretation, and details.
+        score: row.inrLow,
+        unit: 'INR (goal lower limit)',
         label: `INR goal ${row.goal}`,
         interpretation,
         riskLevel: row.riskLevel,
@@ -941,24 +943,24 @@ export const wave5CardioCalcs: Calculator[] = [
         unit: 'mL/min',
         min: 5,
         max: 150,
-        defaultValue: 60,
+        exampleValue: 60,
         helpText: 'Use actual body weight rules per local protocol / label',
       }),
-      numberInput('age', 'Age (for apixaban dose-reduction criteria)', { unit: 'years', min: 18, max: 110, defaultValue: 70, helpText: 'Apixaban AF ABC: Age ≥80 is one of three dose-reduction criteria (need ≥2 of age ≥80, weight ≤60 kg, creatinine ≥1.5 mg/dL for 2.5 mg BID).' }),
-      numberInput('weight', 'Weight (apixaban ABC / edoxaban VTE)', { unit: 'kg', min: 30, max: 250, defaultValue: 80, helpText: 'Apixaban AF ABC: body weight ≤60 kg is one of three dose-reduction criteria. US edoxaban VTE: reduce to 30 mg if weight ≤60 kg (independent of CrCl; still avoid CrCl <15).' }),
+      numberInput('age', 'Age (for apixaban dose-reduction criteria)', { unit: 'years', min: 18, max: 110, exampleValue: 70, helpText: 'Apixaban AF ABC: Age ≥80 is one of three dose-reduction criteria (need ≥2 of age ≥80, weight ≤60 kg, creatinine ≥1.5 mg/dL for 2.5 mg BID).' }),
+      numberInput('weight', 'Weight (apixaban ABC / edoxaban VTE)', { unit: 'kg', unitKind: 'weight', min: 30, max: 250, exampleValue: 80, helpText: 'Apixaban AF ABC: body weight ≤60 kg is one of three dose-reduction criteria. US edoxaban VTE: reduce to 30 mg if weight ≤60 kg (independent of CrCl; still avoid CrCl <15).' }),
       numberInput('creatinine', 'Serum creatinine (for apixaban dose-reduction criteria)', {
-        unit: 'mg/dL',
+        unit: 'mg/dL', unitKind: 'creatinine',
         min: 0.3,
         max: 15,
         step: 0.1,
-        defaultValue: 1.0,
+        exampleValue: 1.0,
         helpText: 'Apixaban AF ABC: creatinine ≥1.5 mg/dL is one of three dose-reduction criteria. Used with age and weight — not a substitute for CrCl.',
       }),
       yesNo(
         'pgpInhibitors',
-        'Certain P-gp inhibitors (edoxaban VTE)',
+        'Certain P-gp inhibitors (edoxaban VTE; dabigatran AF)',
         0,
-        'US Savaysa VTE: reduce to 30 mg if taking verapamil, quinidine, azithromycin, clarithromycin, erythromycin, oral itraconazole, or oral ketoconazole. US AF dosing is not reduced for P-gp inhibitors.',
+        'US Savaysa VTE: reduce to 30 mg if taking verapamil, quinidine, azithromycin, clarithromycin, erythromycin, oral itraconazole, or oral ketoconazole (US AF dosing is not reduced for P-gp inhibitors). US Pradaxa AF: dronedarone or systemic ketoconazole reduces the dose to 75 mg BID at CrCl 30–50 and must not be combined below CrCl 30.',
       ),
     ],
     calculate(values) {
@@ -993,29 +995,35 @@ export const wave5CardioCalcs: Calculator[] = [
             riskLevel = crcl < 15 ? 'high' : 'low';
           }
         } else {
-          // VTE simplified: 10 mg BID ×7d then 5 mg BID; reduction rules differ
-          dose = crcl < 15 ? 'Avoid / specialist (CrCl <15)' : '10 mg BID ×7 days → 5 mg BID (then optional 2.5 mg BID ≥6 mo)';
+          // VTE simplified: 10 mg BID ×7d then 5 mg BID. The US ELIQUIS label
+          // recommends no renal dose adjustment (including ESRD on dialysis);
+          // CrCl <15 was not enrolled, so those recommendations rest on PK/PD data.
+          dose = '10 mg BID ×7 days → 5 mg BID (then optional 2.5 mg BID ≥6 mo)';
           label = 'Apixaban VTE regimen (simplified)';
           interpretation =
-            'VTE treatment uses load then 5 mg BID; extended 2.5 mg BID after ≥6 months in selected patients. Renal extremes need specialist review.';
-          riskLevel = crcl < 30 ? 'high' : 'info';
+            'VTE treatment uses load then 5 mg BID; extended 2.5 mg BID after ≥6 months in selected patients.' +
+            (crcl < 15
+              ? ' US ELIQUIS labeling recommends no dose adjustment for renal impairment, including ESRD on dialysis — patients with CrCl <15 mL/min were not enrolled in the trials, so this band rests on pharmacokinetic/pharmacodynamic data. Specialist review advised.'
+              : '');
+          riskLevel = crcl < 15 ? 'high' : 'info';
         }
       } else if (drug === 'riva') {
         if (ind === 'af') {
           if (crcl > 50) {
-            dose = '20 mg daily with food';
-            label = 'Rivaroxaban AF standard';
+            dose = '20 mg once daily with the evening meal';
+            label = 'Rivaroxaban AF standard dose';
             riskLevel = 'low';
-          } else if (crcl >= 15) {
-            dose = '15 mg daily with food';
-            label = 'Rivaroxaban AF renal dose';
-            riskLevel = 'moderate';
           } else {
-            dose = 'Avoid (CrCl <15)';
-            label = 'Rivaroxaban AF — avoid';
-            riskLevel = 'critical';
+            // US XARELTO label: a single 15 mg once-daily band covers CrCl ≤50,
+            // including ESRD maintained on intermittent hemodialysis. There is no
+            // "avoid" band for AF at CrCl <15 (that rule applies to the VTE and
+            // prophylaxis indications).
+            dose = '15 mg once daily with the evening meal';
+            label = crcl < 30 ? 'Rivaroxaban AF 15 mg band (CrCl <30 not studied)' : 'Rivaroxaban AF reduced dose';
+            riskLevel = crcl < 30 ? 'high' : 'moderate';
           }
-          interpretation = `AF dosing by CrCl ${crcl} mL/min → ${dose}. Take with evening meal.`;
+          interpretation =
+            `AF dosing by CrCl ${crcl} mL/min → ${dose}. The US XARELTO label gives one 15 mg once-daily band for all CrCl ≤50 mL/min (including ESRD on intermittent hemodialysis); patients with CrCl <30 mL/min were not studied, but 15 mg once daily is expected to give exposure similar to moderate impairment.`;
         } else {
           if (crcl < 15) {
             dose = 'Avoid (CrCl <15)';
@@ -1028,29 +1036,41 @@ export const wave5CardioCalcs: Calculator[] = [
           interpretation = `VTE regimen simplified for education: ${dose}. Verify cancer-associated and extended-intensity options separately.`;
         }
       } else if (drug === 'dabi') {
+        // US PRADAXA capsule label: AF CrCl >30 → 150 mg BID; CrCl 15–30 → 75 mg BID;
+        // CrCl <15 or dialysis → dosing recommendations cannot be provided. With the
+        // listed P-gp inhibitors (dronedarone, systemic ketoconazole): reduce to
+        // 75 mg BID at CrCl 30–50 and avoid coadministration below CrCl 30.
+        // VTE treatment: CrCl >30 → 150 mg BID; CrCl ≤30 or dialysis → no recommendation.
+        const pgp = bool(values.pgpInhibitors);
         if (ind === 'af') {
-          if (crcl > 30) {
-            dose = '150 mg BID (110 mg BID in selected elderly/bleed risk — region-specific)';
-            label = 'Dabigatran AF';
-            riskLevel = crcl <= 50 ? 'moderate' : 'low';
+          if (crcl > 50) {
+            dose = '150 mg BID';
+            label = 'Dabigatran AF standard dose';
+            riskLevel = 'low';
+          } else if (crcl > 30) {
+            dose = pgp ? '75 mg BID (P-gp interaction — dronedarone or systemic ketoconazole)' : '150 mg BID';
+            label = pgp ? 'Dabigatran AF — P-gp interaction dose' : 'Dabigatran AF standard dose (CrCl 31–50)';
+            riskLevel = pgp ? 'moderate' : 'low';
           } else if (crcl >= 15) {
-            dose = 'US label may allow 75 mg BID only in specific CrCl 15–30 settings; many regions avoid';
-            label = 'Dabigatran AF — severe CKD caution';
-            riskLevel = 'high';
+            dose = pgp ? 'Avoid coadministration (CrCl <30 with a listed P-gp inhibitor)' : '75 mg BID';
+            label = pgp ? 'Dabigatran AF — avoid P-gp combination' : 'Dabigatran AF — severe renal impairment dose';
+            riskLevel = pgp ? 'high' : 'moderate';
           } else {
-            dose = 'Contraindicated / avoid (CrCl <15)';
-            label = 'Dabigatran — avoid';
-            riskLevel = 'critical';
+            dose = 'Dosing recommendations cannot be provided (CrCl <15 or dialysis)';
+            label = 'Dabigatran AF — no dose recommendation';
+            riskLevel = 'high';
           }
-          interpretation = `Dabigatran is highly renally cleared. CrCl ${crcl} mL/min → ${dose}. Capsules must not be opened.`;
+          interpretation = `Dabigatran is predominantly renally cleared. CrCl ${crcl} mL/min → ${dose}. EU labeling also offers 110 mg BID for selected older or higher-bleeding-risk patients; capsules must not be opened.`;
         } else {
-          dose =
-            crcl <= 30
-              ? 'Avoid / not recommended for VTE treatment when CrCl ≤30 in many labels'
-              : '150 mg BID after parenteral lead-in ≥5 days';
+          const vteAllowed = crcl > 30;
+          dose = vteAllowed
+            ? '150 mg BID after parenteral lead-in ≥5 days'
+            : 'Dosing recommendations cannot be provided (CrCl ≤30 or dialysis)';
           label = 'Dabigatran VTE (simplified)';
-          riskLevel = crcl <= 30 ? 'critical' : 'info';
-          interpretation = `VTE: parenteral anticoagulation ≥5 days then dabigatran 150 mg BID if renal function adequate. CrCl ${crcl}.`;
+          riskLevel = vteAllowed ? 'info' : 'critical';
+          interpretation = vteAllowed
+            ? `VTE: parenteral anticoagulation ≥5 days, then dabigatran 150 mg BID. CrCl ${crcl} mL/min.`
+            : `VTE: parenteral anticoagulation ≥5 days, then dabigatran 150 mg BID when CrCl >30 mL/min${pgp ? ' (review P-gp interactions)' : ''}. CrCl ${crcl} mL/min — the US label gives no dosing recommendation when CrCl ≤30 mL/min or on dialysis.`;
         }
       } else {
         // Edoxaban — US Savaysa: AF CrCl >95 not recommended; 15–50 inclusive → 30 mg.
@@ -1110,8 +1130,8 @@ export const wave5CardioCalcs: Calculator[] = [
           { label: 'CrCl', value: `${crcl} mL/min` },
           { label: 'Weight', value: `${weight} kg` },
           { label: 'Suggested label band', value: dose },
-          ...(drug === 'apix' && ind === 'af' && crcl < 15
-            ? [{ label: 'Severe renal context', value: 'US ELIQUIS dosing is PK/PD-based; clinical outcomes were not studied — specialist review advised' }]
+          ...((drug === 'apix' && crcl < 15) || (drug === 'riva' && ind === 'af' && crcl < 30)
+            ? [{ label: 'Severe renal context', value: 'CrCl below the studied range: US labeling still provides a dose band (apixaban: PK/PD-based, including ESRD on dialysis; rivaroxaban AF: 15 mg once daily), but clinical outcome data are limited — specialist review advised' }]
             : []),
         ],
         recommendations: [
@@ -1123,29 +1143,41 @@ export const wave5CardioCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'DOAC doses depend on CrCl (and for apixaban AF: age/weight/creatinine criteria). For apixaban AF at CrCl <15 mL/min / ESRD, US ELIQUIS labeling does not impose a standalone avoid rule; dosing is based on PK/PD data because clinical efficacy/safety studies did not enroll this population, so specialist and local-label review are important. US edoxaban (Savaysa): AF avoid CrCl >95, 51–95 → 60 mg, 15–50 → 30 mg; VTE 60 mg after parenteral lead-in, reduce to 30 mg if CrCl 15–50, weight ≤60 kg, or selected P-gp inhibitors (no CrCl >95 ban). Labels differ by region.',
+        'DOAC doses depend on CrCl (and for apixaban AF: age/weight/creatinine criteria). US labels as of 2026: apixaban AF 5 mg BID, or 2.5 mg BID with ≥2 ABC criteria, and no renal dose adjustment for VTE even on dialysis (CrCl <15 rests on PK/PD data); rivaroxaban AF 20 mg once daily if CrCl >50 and a single 15 mg once-daily band for CrCl ≤50, including ESRD on hemodialysis — the "avoid below 15" rule applies to the rivaroxaban VTE and prophylaxis indications, not AF; dabigatran AF 150 mg BID if CrCl >30, 75 mg BID if CrCl 15–30, and no dosing recommendation below 15 or on dialysis, with 75 mg BID if dronedarone or systemic ketoconazole is co-prescribed at CrCl 30–50 and no combination below 30; edoxaban AF 60 mg for CrCl >50–95, 30 mg for CrCl 15–50, and do not use above CrCl 95, while VTE is 60 mg after a parenteral lead-in, reduced to 30 mg for CrCl 15–50, weight ≤60 kg, or selected P-gp inhibitors. Labels differ by region.',
       formula:
-        'Drug + indication + CrCl (± apixaban ABC; edoxaban VTE also weight ≤60 kg and selected P-gp inhibitors) → label dose band',
+        'Drug + indication + CrCl (± apixaban ABC; dabigatran AF also CrCl 15–50 with listed P-gp inhibitors; edoxaban VTE also weight ≤60 kg and selected P-gp inhibitors) → label dose band',
       validation: 'Educational synthesis of US/EU product characteristics; always confirm latest label.',
       references: [
         {
-          title: '2019 AHA/ACC/HRS Focused Update of the 2014 AF Guideline',
-          citation: 'January CT et al. Circulation. 2019',
-          year: 2019,
-          pmid: '30686041',
-          doi: '10.1161/CIR.0000000000000665',
+          title: '2023 ACC/AHA/ACCP/HRS Guideline for the Diagnosis and Management of Atrial Fibrillation',
+          citation: 'Joglar JA et al. Circulation. 2024;149(1):e1–e156',
+          year: 2024,
+          pmid: '38033089',
+          doi: '10.1161/CIR.0000000000001193',
         },
         {
           title: 'SAVAYSA (edoxaban) prescribing information',
           citation: 'Daiichi Sankyo. US FDA label',
-          year: 2015,
-          url: 'https://www.accessdata.fda.gov/drugsatfda_docs/label/2015/206316s002lbl.pdf',
+          year: 2025,
+          url: 'https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=e77d3400-56ad-11e3-949a-0800200c9a66',
         },
         {
           title: 'ELIQUIS (apixaban) prescribing information',
           citation: 'Bristol-Myers Squibb / Pfizer. US FDA label',
           year: 2026,
           url: 'https://www.accessdata.fda.gov/drugsatfda_docs/label/2026/202155s042lbl.pdf',
+        },
+        {
+          title: 'XARELTO (rivaroxaban) prescribing information',
+          citation: 'Janssen Pharmaceuticals. US FDA label (revision effective 2026-09-10)',
+          year: 2026,
+          url: 'https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=10db92f9-2300-4a80-836b-673e1ae91610',
+        },
+        {
+          title: 'PRADAXA (dabigatran etexilate) capsules prescribing information',
+          citation: 'Boehringer Ingelheim. US FDA label (revision effective 2025-06-25)',
+          year: 2025,
+          url: 'https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=ba74e3cd-b06f-4145-b284-5fd6b84ff3c9',
         },
       ],
     },
@@ -1156,6 +1188,8 @@ export const wave5CardioCalcs: Calculator[] = [
     pearls: [
       'Cockcroft–Gault (not eGFR alone) is what most DOAC trials/labels used.',
       'Mechanical valves and moderate–severe MS: do not use DOAC.',
+      'Rivaroxaban AF does not have an "avoid" band at CrCl <15: the US label is 20 mg (CrCl >50) or 15 mg (CrCl ≤50, including hemodialysis).',
+      'Dabigatran AF is 75 mg BID at CrCl 15–30 in the US label; below 15 or on dialysis no dose can be recommended.',
       'Edoxaban CrCl >95 warning is AF-only (US). VTE still uses 60 mg if CrCl >50 unless weight ≤60 kg or selected P-gp inhibitors.',
       'Edoxaban 30 mg renal band is CrCl 15–50 inclusive (CrCl 50 is reduced, not 60 mg).',
     ],
@@ -1179,8 +1213,8 @@ export const wave5CardioCalcs: Calculator[] = [
         { label: 'Therapeutic — once daily (1.5 mg/kg daily)', value: 'tx_daily' },
         { label: 'NSTE-ACS / conservative (1 mg/kg q12h style)', value: 'acs' },
       ]),
-      numberInput('weight', 'Actual body weight', { unit: 'kg', min: 30, max: 250, step: 0.1, defaultValue: 80 }),
-      numberInput('crcl', 'Creatinine clearance', { unit: 'mL/min', min: 5, max: 150, defaultValue: 80, helpText: 'CrCl <30 mL/min triggers renal-adjusted dosing (prophylaxis 30 mg daily; treatment typically 1 mg/kg daily).' }),
+      numberInput('weight', 'Actual body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 250, step: 0.1, exampleValue: 80 }),
+      numberInput('crcl', 'Creatinine clearance', { unit: 'mL/min', min: 5, max: 150, exampleValue: 80, helpText: 'CrCl <30 mL/min triggers renal-adjusted dosing (prophylaxis 30 mg daily; treatment typically 1 mg/kg daily).' }),
     ],
     calculate(values) {
       const intent = String(values.intent ?? 'ppx');
@@ -1285,7 +1319,7 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'Adults with ACS when initiating unfractionated heparin per weight-based protocol.',
     whyUse: 'Weight-based dosing with caps is standard; errors in bolus/infusion are common.',
     inputs: [
-      numberInput('weight', 'Actual body weight', { unit: 'kg', min: 30, max: 250, step: 0.1, defaultValue: 80 }),
+      numberInput('weight', 'Actual body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 250, step: 0.1, exampleValue: 80 }),
       selectInput('protocol', 'Protocol style', [
         {
           label: 'Fibrinolysis / many STEMI pathways: 60 U/kg bolus (max 4000), 12 U/kg/h (max 1000)',
@@ -1382,18 +1416,22 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'When Lp(a) has been measured for primary/secondary prevention risk refinement.',
     whyUse: 'Elevated Lp(a) is a causal, genetically determined ASCVD risk enhancer.',
     inputs: [
-      selectInput('unit', 'Unit', [
-        { label: 'mg/dL', value: 'mg' },
-        { label: 'nmol/L', value: 'nmol' },
-      ]),
-      numberInput('lpa', 'Lipoprotein(a)', { min: 0, max: 500, step: 1, defaultValue: 30 }),
+      numberInput('lpa', 'Lipoprotein(a)', {
+        unit: 'mg/dL',
+        unitKind: 'lpa',
+        min: 0,
+        max: 500,
+        step: 1,
+        exampleValue: 30,
+        helpText: 'Risk bands are defined in mg/dL; select nmol/L to enter molar results (÷2.5 approximation — assays are not interchangeable).',
+      }),
     ],
     calculate(values) {
-      const unit = String(values.unit ?? 'mg');
-      const raw = num(values.lpa, 30);
-      // Approximate conversion often cited ~2.5 nmol/L per 1 mg/dL (assay-dependent!)
-      const mg = unit === 'mg' ? raw : raw / 2.5;
-      const nmol = unit === 'nmol' ? raw : raw * 2.5;
+      // The shared unit selector converts to mg/dL; the molar display keeps the
+      // approximate ~2.5 nmol/L per 1 mg/dL relationship the bands were written
+      // against (assay-dependent).
+      const mg = num(values.lpa, 30);
+      const nmol = mg * 2.5;
 
       let label = '';
       let riskLevel: 'low' | 'moderate' | 'high' | 'critical' = 'low';
@@ -1425,7 +1463,6 @@ export const wave5CardioCalcs: Calculator[] = [
           ' Conversion mg/dL↔nmol/L is assay-dependent; prefer lab-reported unit thresholds when available.',
         riskLevel,
         details: [
-          { label: 'Entered', value: `${raw} ${unit === 'mg' ? 'mg/dL' : 'nmol/L'}` },
           { label: 'Approx mg/dL', value: String(round(mg, 1)) },
           { label: 'Approx nmol/L', value: String(round(nmol, 0)) },
         ],
@@ -1474,7 +1511,7 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'When ApoB is available for residual risk assessment or discordance with LDL-C/non-HDL.',
     whyUse: 'ApoB counts atherogenic particles and may better reflect risk when discordant with LDL-C.',
     inputs: [
-      numberInput('apob', 'ApoB', { unit: 'mg/dL', min: 20, max: 250, defaultValue: 90 }),
+      numberInput('apob', 'ApoB', { unit: 'mg/dL', min: 20, max: 250, exampleValue: 90 }),
       selectInput('context', 'Clinical risk context', [
         { label: 'Low / moderate primary prevention', value: 'low' },
         { label: 'High-risk primary prevention / risk enhancers', value: 'high' },
@@ -1559,7 +1596,7 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'Severe hypertriglyceridemia management and patient counseling on pancreatitis risk.',
     whyUse: 'Risk rises steeply at very high TG; thresholds guide urgency of therapy.',
     inputs: [
-      numberInput('tg', 'Triglycerides', { unit: 'mg/dL', min: 30, max: 10000, step: 1, defaultValue: 400 }),
+      numberInput('tg', 'Triglycerides', { unit: 'mg/dL', min: 30, max: 10000, step: 1, exampleValue: 400 }),
       yesNo('priorPancreatitis', 'Prior hypertriglyceridemic pancreatitis', 0),
       yesNo('diabetes', 'Uncontrolled diabetes / marked hyperglycemia', 0),
       yesNo('alcohol', 'Heavy alcohol use', 0),
@@ -1857,7 +1894,7 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'AAA repair risk communication using age, shock, and comorbidity points.',
     whyUse: 'Simple score correlating with perioperative mortality after aneurysm repair.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 75 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 75 }),
       yesNo('shock', 'Shock (SBP <90 mmHg)', 17, 'Original Samy GAS: shock = SBP <90 mmHg. Vasopressor need to keep SBP ≥90 may be counted as shock present.'),
       yesNo('myocardial', 'Myocardial disease (MI, angina, heart failure)', 7),
       yesNo('cerebrovascular', 'Cerebrovascular disease (stroke / TIA)', 10),
@@ -2116,7 +2153,7 @@ export const wave5CardioCalcs: Calculator[] = [
         { label: 'BNP', value: 'bnp' },
         { label: 'NT-proBNP', value: 'nt' },
       ]),
-      numberInput('level', 'Level', { min: 0, max: 50000, step: 1, defaultValue: 150, helpText: 'pg/mL (ng/L). Common perioperative elevation cutoffs used here: BNP ≥92 pg/mL or NT-proBNP ≥300 pg/mL.' }),
+      numberInput('level', 'Level', { min: 0, max: 50000, step: 1, exampleValue: 150, helpText: 'pg/mL (ng/L). Common perioperative elevation cutoffs used here: BNP ≥92 pg/mL or NT-proBNP ≥300 pg/mL.' }),
       selectInput('ageBand', 'Age band (NT-proBNP context)', [
         { label: '<50 years', value: 'lt50' },
         { label: '50–75 years', value: '50_75' },

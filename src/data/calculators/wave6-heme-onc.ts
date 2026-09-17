@@ -254,6 +254,17 @@ export const wave6HemeOncCalcs: Calculator[] = [
   // ─── 3. SIC score ─────────────────────────────────────────────────────────
   {
     id: 'sic-score',
+    // Explicit branch declaration: the four-organ SOFA branch and the
+    // precomputed-sum branch require different fields.
+    isQuestionnaire: true,
+    questionnaire: {
+      modeInputId: 'sofaMode',
+      directModeValues: ['direct'],
+      activeInputIdsByMode: {
+        organs: ['respSofa', 'cvSofa', 'hepSofa', 'renalSofa'],
+        direct: ['directSofa'],
+      },
+    },
     name: 'SIC Score (Sepsis-Induced Coagulopathy)',
     shortName: 'SIC',
     description: 'Calculates the ISTH Sepsis-Induced Coagulopathy score from INR, platelets, and 4 SOFA organ domains.',
@@ -414,6 +425,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whyUse: 'Standardized international bleeding score; abnormal cutoff: adult men ≥4, adult women ≥6, children <18y ≥3.',
     isQuestionnaire: true,
     questionnaire: {
+      directInputIds: ['cohort', 'directTotal'],
       modeInputId: 'entryMode',
       directModeValues: ['direct'],
       activeInputIdsByMode: {
@@ -439,7 +451,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
         min: 0,
         max: 56,
         step: 1,
-        defaultValue: 2,
+        exampleValue: 2,
         helpText: 'Only used when "Enter precomputed ISTH-BAT total" is selected.',
       }),
 
@@ -744,7 +756,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
         unit: '×10⁹/L',
         min: 0,
         max: 1000,
-        defaultValue: 15,
+        exampleValue: 15,
         helpText: 'Same as ×10³/µL. Compare with the indication-specific educational threshold.',
       }),
     ],
@@ -861,7 +873,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
         { label: 'Acute coronary syndrome / ongoing ischemia', value: 'acs', description: 'ACS or active ischemia — many aim ≥8 g/dL; individualize with cardiology. Not the same as isolated anemic chest pain without ACS (use symptomatic).' },
         { label: 'Symptomatic anemia (chest pain, severe dyspnea, hypotension)', value: 'symptomatic', description: 'Transfuse for ischemic chest pain, severe dyspnea at rest, or hypotension/tachycardia attributable to anemia — even if Hb is above another context’s number. Mild fatigue alone does not count.' },
       ], undefined, 'Restrictive Hb strategy for stable, euvolemic adults (often 7 g/dL ICU/sepsis/selected GI; ~8 g/dL postop/CVD/symptoms). Massive hemorrhage is not a threshold scenario. Pick the single best-matching context.'),
-      numberInput('hb', 'Current hemoglobin', { unit: 'g/dL', min: 3, max: 18, step: 0.1, defaultValue: 7.5, helpText: 'g/dL (divide g/L by 10). Recheck after a single-unit transfusion when stable.' }),
+      numberInput('hb', 'Current hemoglobin', { unit: 'g/dL', min: 3, max: 18, step: 0.1, exampleValue: 7.5, helpText: 'g/dL (divide g/L by 10). Recheck after a single-unit transfusion when stable.' }),
     ],
     calculate(values) {
       const ctx = String(values.context ?? 'icu');
@@ -956,8 +968,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'Interpreting differential counts, chronic myelomonocytic leukemia screens, recovery, or infection patterns.',
     whyUse: 'Absolute counts are more meaningful than percentages alone; monocytosis may flag CMML, recovery, or inflammation.',
     inputs: [
-      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 200, step: 0.1, defaultValue: 8 }),
-      numberInput('monoPct', 'Monocytes', { unit: '%', min: 0, max: 100, step: 0.1, defaultValue: 8 }),
+      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 200, step: 0.1, exampleValue: 8 }),
+      numberInput('monoPct', 'Monocytes', { unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 8 }),
     ],
     calculate(values) {
       const wbc = num(values.wbc, 8);
@@ -1035,8 +1047,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'Allergy, parasite, drug reaction, asthma, or hypereosinophilic syndrome workups.',
     whyUse: 'Severity bands guide urgency of organ evaluation (heart, lung, neuro) for hypereosinophilia.',
     inputs: [
-      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 200, step: 0.1, defaultValue: 8 }),
-      numberInput('eosPct', 'Eosinophils', { unit: '%', min: 0, max: 100, step: 0.1, defaultValue: 3 }),
+      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 200, step: 0.1, exampleValue: 8 }),
+      numberInput('eosPct', 'Eosinophils', { unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 3 }),
     ],
     calculate(values) {
       const wbc = num(values.wbc, 8);
@@ -1237,9 +1249,9 @@ export const wave6HemeOncCalcs: Calculator[] = [
         { label: 'Mechanical aortic valve (typical goal 2.0–3.0)', value: 'mech-aortic' },
         { label: 'Mechanical mitral valve (goal 2.5–3.5)', value: 'mech-mitral' },
       ], 'af-vte', 'Bands follow the selected goal. Bileaflet mechanical AVR without additional risk factors is often 2.0–3.0; mechanical mitral (and many higher-risk mechanical valves) 2.5–3.5. On-X AVR after 3 months may use 1.5–2.0 with aspirin — not modeled here.'),
-      numberInput('pt', 'Patient PT', { unit: 'sec', min: 5, max: 120, step: 0.1, defaultValue: 22 }),
-      numberInput('mnpt', 'Mean normal PT (MNPT)', { unit: 'sec', min: 8, max: 20, step: 0.1, defaultValue: 12 }),
-      numberInput('isi', 'Reagent ISI', { min: 0.8, max: 2.5, step: 0.01, defaultValue: 1.0, helpText: 'International Sensitivity Index of thromboplastin' }),
+      numberInput('pt', 'Patient PT', { unit: 'sec', min: 5, max: 120, step: 0.1, exampleValue: 22 }),
+      numberInput('mnpt', 'Mean normal PT (MNPT)', { unit: 'sec', min: 8, max: 20, step: 0.1, exampleValue: 12 }),
+      numberInput('isi', 'Reagent ISI', { min: 0.8, max: 2.5, step: 0.01, exampleValue: 1.0, helpText: 'International Sensitivity Index of thromboplastin' }),
     ],
     calculate(values) {
       const pt = num(values.pt, 22);
@@ -1403,8 +1415,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'Unfractionated heparin monitoring teaching, lupus anticoagulant screens, or factor deficiency workups.',
     whyUse: 'Normalizes raw aPTT seconds to the local control; heparin therapeutic ranges are reagent-specific (anti-Xa preferred).',
     inputs: [
-      numberInput('aptt', 'Patient aPTT', { unit: 'sec', min: 10, max: 300, step: 0.1, defaultValue: 60 }),
-      numberInput('control', 'Control / mean normal aPTT', { unit: 'sec', min: 15, max: 50, step: 0.1, defaultValue: 30 }),
+      numberInput('aptt', 'Patient aPTT', { unit: 'sec', min: 10, max: 300, step: 0.1, exampleValue: 60 }),
+      numberInput('control', 'Control / mean normal aPTT', { unit: 'sec', min: 15, max: 50, step: 0.1, exampleValue: 30 }),
     ],
     calculate(values) {
       const aptt = num(values.aptt, 60);
@@ -1494,7 +1506,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
         min: 0,
         max: 5,
         step: 0.01,
-        defaultValue: 0.5,
+        exampleValue: 0.5,
         helpText: 'Peak LMWH usually ~4 h after dose; UFH often random on steady infusion',
       }),
     ],
@@ -1595,7 +1607,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whyUse: 'Structures red-flag features that usually mandate inpatient IV antibiotics even if MASCC falls in the low-risk band (≥21).',
     inputs: [
       yesNo('fever', 'Fever ≥38.3 °C once or ≥38.0 °C sustained ≥1 h', 0),
-      numberInput('anc', 'ANC', { unit: '/µL', min: 0, max: 2000, defaultValue: 400, helpText: 'Absolute neutrophil count. Classic FN uses ANC <500 (or <1000 with expected fall). ANC <100 adds a risk point here.' }),
+      numberInput('anc', 'ANC', { unit: '/µL', min: 0, max: 2000, exampleValue: 400, helpText: 'Absolute neutrophil count. Classic FN uses ANC <500 (or <1000 with expected fall). ANC <100 adds a risk point here.' }),
       yesNo('hypotension', 'Hypotension / shock / needing pressors', 3, 'SBP <90 mmHg, MAP <65 mmHg, or vasopressors — not a one-off orthostatic dip that resolved with fluids.'),
       yesNo('hypoxia', 'Respiratory distress or O₂ sat <90–92% on RA', 3),
       yesNo('altered', 'Altered mental status', 2, 'New confusion, lethargy, or drop in GCS attributed to the current illness — not baseline dementia or sedative effect alone.'),
@@ -1996,8 +2008,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'Cancer patients with elevated calcium or symptoms (polyuria, confusion, constipation, dehydration).',
     whyUse: 'Severity bands guide fluids, bisphosphonates/denosumab, calcitonin, and urgency of care.',
     inputs: [
-      numberInput('calcium', 'Serum total calcium', { unit: 'mg/dL', min: 5, max: 20, step: 0.1, defaultValue: 11.5 }),
-      numberInput('albumin', 'Serum albumin', { unit: 'g/dL', min: 1, max: 5.5, step: 0.1, defaultValue: 3.0 }),
+      numberInput('calcium', 'Serum total calcium', { unit: 'mg/dL', min: 5, max: 20, step: 0.1, exampleValue: 11.5 }),
+      numberInput('albumin', 'Serum albumin', { unit: 'g/dL', min: 1, max: 5.5, step: 0.1, exampleValue: 3.0 }),
       yesNo('symptoms', 'Symptoms of hypercalcemia present', 0, 'Polyuria/polydipsia, constipation, nausea, anorexia, dehydration, weakness, or milder confusion (use the neuro box for stupor).'),
       yesNo('neuro', 'Significant neuropsychiatric symptoms / stupor', 0, 'Stupor, somnolence, or marked confusion attributed to hypercalcemia. Use the milder-symptoms box for polyuria, constipation, or mild confusion.'),
     ],
@@ -2272,7 +2284,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'Profound neutropenia with abdominal pain, fever, or diarrhea after intensive chemotherapy.',
     whyUse: 'Highlights when to obtain CT, start broad antibiotics, and involve surgery without delaying resuscitation.',
     inputs: [
-      numberInput('anc', 'ANC', { unit: '/µL', min: 0, max: 2000, defaultValue: 100, helpText: 'Profound neutropenia (ANC <500, especially <100) is the usual setting for typhlitis.' }),
+      numberInput('anc', 'ANC', { unit: '/µL', min: 0, max: 2000, exampleValue: 100, helpText: 'Profound neutropenia (ANC <500, especially <100) is the usual setting for typhlitis.' }),
       yesNo('fever', 'Fever (≥38.3 °C once or ≥38.0 °C sustained ≥1 h)', 1),
       yesNo('rLQPain', 'Right lower quadrant or diffuse abdominal pain', 2),
       yesNo('diarrhea', 'Diarrhea (sometimes bloody)', 1),

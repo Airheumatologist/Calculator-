@@ -20,7 +20,7 @@ export const wave3PedsObCalcs: Calculator[] = [
       numberInput('totalScore', 'Total New Ballard score (if known)', {
         min: -10,
         max: 50,
-        defaultValue: 30,
+        exampleValue: 30,
         helpText: 'Used when mode = total. Typical range −10 to 50. Prefer the official pictorial sheet when available.',
         required: false,
       }),
@@ -540,21 +540,21 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'NICU teaching on illness severity in the first 12 hours of life (not a substitute for full SNAPPE-II software).',
     whyUse: 'Illustrates how physiology + perinatal factors stratify neonatal mortality risk.',
     inputs: [
-      numberInput('map', 'Lowest mean arterial pressure', { unit: 'mmHg', min: 10, max: 80, defaultValue: 35, helpText: 'Worst (lowest) MAP in the first 12 hours of life (SNAP-II epoch).' }),
-      numberInput('temp', 'Lowest temperature', { unit: '°C', min: 30, max: 40, step: 0.1, defaultValue: 36.6, helpText: 'Worst (lowest) temperature in the first 12 hours of life. UI remains in °C; official SNAP-II bands are >96 °F (>35.6 °C) = 0, 95–96 °F (35.0–35.6 °C) = 8, and <95 °F (<35.0 °C) = 15.' }),
-      numberInput('pao2', 'Lowest PaO₂', { unit: 'mmHg', min: 20, max: 500, defaultValue: 80, helpText: 'Paired with FiO₂ from the same blood gas. SNAP-II oxygenation is PO₂ (mmHg) ÷ FiO₂ as percent (e.g. 80 mmHg on 40% O₂ = 2.0), not the ARDS P/F in mmHg.' }),
-      numberInput('fio2', 'FiO₂ at that PaO₂', { unit: 'fraction', min: 0.21, max: 1, step: 0.01, defaultValue: 0.4, helpText: 'Enter as a fraction (0.21–1.00). SNAP-II ratio = PaO₂ / (FiO₂ × 100). Example: PaO₂ 80 on FiO₂ 0.40 → 80/40 = 2.0.' }),
-      numberInput('ph', 'Lowest serum pH', { min: 6.5, max: 7.6, step: 0.01, defaultValue: 7.25, helpText: 'Worst (lowest) pH in the first 12 hours of life.' }),
+      numberInput('map', 'Lowest mean arterial pressure', { unit: 'mmHg', min: 10, max: 80, exampleValue: 35, helpText: 'Worst (lowest) MAP in the first 12 hours of life (SNAP-II epoch).' }),
+      numberInput('temp', 'Lowest temperature', { unit: '°C', min: 30, max: 40, step: 0.1, exampleValue: 36.6, helpText: 'Worst (lowest) temperature in the first 12 hours of life. UI remains in °C; official SNAP-II bands are >96 °F (>35.6 °C) = 0, 95–96 °F (35.0–35.6 °C) = 8, and <95 °F (<35.0 °C) = 15.' }),
+      numberInput('pao2', 'Lowest PaO₂', { unit: 'mmHg', min: 20, max: 500, exampleValue: 80, helpText: 'Paired with FiO₂ from the same blood gas. SNAP-II oxygenation is PO₂ (mmHg) ÷ FiO₂ as percent (e.g. 80 mmHg on 40% O₂ = 2.0), not the ARDS P/F in mmHg.' }),
+      numberInput('fio2', 'FiO₂ at that PaO₂', { unit: 'fraction', unitKind: 'fio2', min: 0.21, max: 1, step: 0.01, exampleValue: 0.4, helpText: 'SNAP-II ratio = PaO₂ / (FiO₂ × 100). Example: PaO₂ 80 on FiO₂ 0.40 → 80/40 = 2.0.' }),
+      numberInput('ph', 'Lowest serum pH', { min: 6.5, max: 7.6, step: 0.01, exampleValue: 7.25, helpText: 'Worst (lowest) pH in the first 12 hours of life.' }),
       numberInput('seizures', 'Multiple seizures (count as yes if ≥1 multiple episode cluster)', {
         min: 0,
         max: 1,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: '1 = multiple seizures in the first 12 h of life; 0 = none or a single seizure. Official SNAP-II item is multiple seizures (yes/no) in that 12 h window.',
       }),
-      numberInput('uop', 'Urine output', { unit: 'mL/kg/h', min: 0, max: 5, step: 0.1, defaultValue: 1, helpText: 'Urine output over the first 12 hours of life (mL/kg/h).' }),
-      numberInput('birthWeight', 'Birth weight', { unit: 'g', min: 300, max: 8000, defaultValue: 1500 }),
-      numberInput('sga', 'SGA (birth weight <3rd–5th %ile)', { min: 0, max: 1, defaultValue: 0, helpText: '1 = yes, 0 = no. Official SNAPPE-II SGA is <3rd percentile.' }),
-      numberInput('apgar5', '5-minute Apgar', { min: 0, max: 10, defaultValue: 7, helpText: 'Official SNAPPE-II adds points if 5-minute Apgar <7. Enter the 5-minute score (0–10).' }),
+      numberInput('uop', 'Urine output', { unit: 'mL/kg/h', min: 0, max: 5, step: 0.1, exampleValue: 1, helpText: 'Urine output over the first 12 hours of life (mL/kg/h).' }),
+      numberInput('birthWeight', 'Birth weight', { unit: 'g', min: 300, max: 8000, exampleValue: 1500 }),
+      numberInput('sga', 'SGA (birth weight <3rd–5th %ile)', { min: 0, max: 1, exampleValue: 0, helpText: '1 = yes, 0 = no. Official SNAPPE-II SGA is <3rd percentile.' }),
+      numberInput('apgar5', '5-minute Apgar', { min: 0, max: 10, exampleValue: 7, helpText: 'Official SNAPPE-II adds points if 5-minute Apgar <7. Enter the 5-minute score (0–10).' }),
     ],
     calculate(values) {
       // SNAP-II physiology bands (Richardson 2001) plus SNAPPE-II perinatal add-ons.
@@ -658,14 +658,14 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'Teaching mortality risk stratification for infants ≤32 weeks at admission (educational).',
     whyUse: 'Highlights major CRIB-II predictors in a bedside-friendly form.',
     inputs: [
-      numberInput('ga', 'Gestational age', { unit: 'weeks', min: 22, max: 32, step: 0.1, defaultValue: 28, helpText: 'Official CRIB-II is for infants ≤32 weeks at admission.' }),
-      numberInput('bw', 'Birth weight', { unit: 'g', min: 300, max: 2500, defaultValue: 1000 }),
+      numberInput('ga', 'Gestational age', { unit: 'weeks', min: 22, max: 32, step: 0.1, exampleValue: 28, helpText: 'Official CRIB-II is for infants ≤32 weeks at admission.' }),
+      numberInput('bw', 'Birth weight', { unit: 'g', min: 300, max: 2500, exampleValue: 1000 }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
       ]),
-      numberInput('temp', 'Admission temperature', { unit: '°C', min: 30, max: 40, step: 0.1, defaultValue: 36.5, helpText: 'Temperature on admission to the NICU (not later nadir).' }),
-      numberInput('be', 'Base excess (most negative first 12 h)', { unit: 'mEq/L', min: -30, max: 10, step: 0.1, defaultValue: -4, helpText: 'Most negative base excess in the first 12 hours of life.' }),
+      numberInput('temp', 'Admission temperature', { unit: '°C', min: 30, max: 40, step: 0.1, exampleValue: 36.5, helpText: 'Temperature on admission to the NICU (not later nadir).' }),
+      numberInput('be', 'Base excess (most negative first 12 h)', { unit: 'mEq/L', min: -30, max: 10, step: 0.1, exampleValue: -4, helpText: 'Most negative base excess in the first 12 hours of life.' }),
     ],
     calculate(values) {
       const ga = num(values.ga, 28);
@@ -1174,8 +1174,8 @@ export const wave3PedsObCalcs: Calculator[] = [
         { label: 'Weight (kg)', value: 'weight' },
         { label: 'Length (cm)', value: 'length' },
       ], 'weight', 'Measured length with a validated tape is preferred in true emergencies. Weight is a fallback. Educational color bands — confirm with the current Broselow edition.'),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 3, max: 40, step: 0.1, defaultValue: 12, helpText: 'Use measured or estimated weight in kg. Length-based zone is preferred when a tape is available.' }),
-      numberInput('length', 'Length / height', { unit: 'cm', min: 45, max: 150, defaultValue: 85, helpText: 'Crown-to-heel length in cm, supine. Educational zones: Grey 46–60, Pink 60–68, Red 68–75, Purple 75–85, Yellow 85–97, White 97–110, Blue 110–122, Orange 122–137, Green 137–150.' }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 3, max: 40, step: 0.1, exampleValue: 12, helpText: 'Use measured or estimated weight in kg. Length-based zone is preferred when a tape is available.' }),
+      numberInput('length', 'Length / height', { unit: 'cm', min: 45, max: 150, exampleValue: 85, helpText: 'Crown-to-heel length in cm, supine. Educational zones: Grey 46–60, Pink 60–68, Red 68–75, Purple 75–85, Yellow 85–97, White 97–110, Blue 110–122, Orange 122–137, Green 137–150.' }),
     ],
     calculate(values) {
       const method = String(values.method ?? 'weight');
@@ -1248,13 +1248,13 @@ export const wave3PedsObCalcs: Calculator[] = [
     id: 'pediatric-ett-size',
     name: 'Pediatric Uncuffed ETT Size',
     shortName: 'ETT Size',
-    description: 'Uncuffed endotracheal tube internal diameter estimate: age/4 + 4 (and common cuffed adjustment).',
+    description: 'For children ≥2 years only: estimates endotracheal tube internal diameter with the age-based Cole formula (and common cuffed adjustment).',
     category: 'pediatrics',
     tags: ['airway', 'ett', 'intubation', 'pediatric', 'dosing'],
-    whenToUse: 'Children ≥1–2 years when estimating oral ETT size for intubation (not neonates).',
-    whyUse: 'Classic Cole formula for uncuffed tubes; cuffed tubes often ~0.5 mm smaller.',
+    whenToUse: 'Children ≥2 years when estimating oral ETT size for intubation. Do not use this age formula for neonates, infants, or children under 2 years.',
+    whyUse: 'The Cole age formula is a rough guide in the ≥2-year band; cuffed tubes are commonly estimated ~0.5 mm smaller. Younger children need neonatal/infant weight- or length-based guidance.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 0.5, max: 16, step: 0.5, defaultValue: 4, helpText: 'Cole uncuffed ID (mm) ≈ age(years)/4 + 4. Not for neonates (use weight-based sizing). Have tubes 0.5 mm larger and smaller ready.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 0.5, max: 16, step: 0.5, exampleValue: 4, helpText: 'Age formula is in scope only for children ≥2 years: Cole uncuffed ID (mm) ≈ age(years)/4 + 4. For age <2 years, use neonatal/infant weight- or length-based ETT guidance; this tool will not provide an age-formula size. Have tubes 0.5 mm larger and smaller ready.' }),
       selectInput('tubeType', 'Tube type', [
         { label: 'Uncuffed', value: 'uncuffed' },
         { label: 'Cuffed (≈ uncuffed − 0.5)', value: 'cuffed' },
@@ -1263,6 +1263,25 @@ export const wave3PedsObCalcs: Calculator[] = [
     calculate(values) {
       const age = num(values.age, 4);
       const type = String(values.tubeType ?? 'uncuffed');
+
+      if (age < 2) {
+        return {
+          score: '—',
+          label: 'Age-based ETT formula not applicable (<2 years)',
+          interpretation: 'No age-formula ETT size is provided for children under 2 years. Use neonatal/infant weight- or length-based ETT sizing guidance (such as a validated length-based tape) and follow current PALS/airway and local protocol; do not infer a tube size from this calculator.',
+          riskLevel: 'info' as const,
+          details: [
+            { label: 'Age entered', value: `${age} years` },
+            { label: 'Age-formula scope', value: 'Not applicable below 2 years' },
+            { label: 'Alternative', value: 'Neonatal/infant weight- or length-based guidance' },
+          ],
+          recommendations: [
+            'Use neonatal/infant weight- or length-based ETT sizing guidance',
+            'Follow current PALS/airway and local protocol; do not use the Cole age formula here',
+          ],
+        };
+      }
+
       const uncuffed = age / 4 + 4;
       const cuffed = uncuffed - 0.5;
       const size = type === 'cuffed' ? cuffed : uncuffed;
@@ -1289,11 +1308,13 @@ export const wave3PedsObCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Uncuffed ETT ID (mm) ≈ age(years)/4 + 4. Cuffed tubes commonly sized ~0.5 mm smaller. Depth often age/2 + 12 cm orally.',
-      formula: 'Uncuffed = age/4 + 4; Cuffed ≈ formula − 0.5',
-      validation: 'Classic teaching formulas; individual anatomy and cuffed-tube practice vary — clinical confirmation required.',
+      summary: 'For children ≥2 years, uncuffed ETT ID (mm) ≈ age(years)/4 + 4; cuffed tubes are commonly estimated ~0.5 mm smaller. The age formula is not provided for children <2 years; use neonatal/infant weight- or length-based guidance instead. Depth often age/2 + 12 cm orally in the same older-child teaching band.',
+      formula: 'Age ≥2 years only: uncuffed = age/4 + 4; cuffed ≈ formula − 0.5. Age <2 years: no age formula — use neonatal/infant weight- or length-based guidance.',
+      validation: 'WHO describes the age formula as a rough guide for normally nourished children >2 years; individual anatomy and cuffed-tube practice vary, so confirm clinically and follow current PALS/airway guidance.',
       references: [
         { title: 'Pediatric formulas for the anesthesiologist', citation: 'Cole F. AMA J Dis Child. 1957;94(6):672-673', year: 1957, pmid: '13478300', doi: '10.1001/archpedi.1957.04030070084009' },
+        { title: 'Pocket Book of Hospital Care for Children — Endotracheal tube size by age', citation: 'World Health Organization. Table 28: age formula is a rough guide for normally nourished children >2 years', year: 2013, url: 'https://www.ncbi.nlm.nih.gov/books/NBK154433/?report=printable' },
+        { title: 'Part 8: Pediatric Advanced Life Support', citation: '2025 American Heart Association and American Academy of Pediatrics Guidelines for CPR and ECC — cuffed ETT size, position, and cuff pressure require clinical attention', year: 2025, url: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/pediatric-advanced-life-support' },
       ],
     },
     nextSteps: [
@@ -1318,8 +1339,8 @@ export const wave3PedsObCalcs: Calculator[] = [
         { label: '1–10 years (use age in formula)', value: 'child' },
         { label: '>10 years', value: 'teen' },
       ], 'neonate', 'PALS hypotension if SBP <60 (term neonate), <70 (infant 1–12 mo), <70+2×age(years) for 1–10 y, <90 if >10 y. The years field only applies to the 1–10 y band.'),
-      numberInput('ageYears', 'Age in years (if 1–10)', { min: 1, max: 10, step: 0.5, defaultValue: 4, helpText: 'Used only when age band is 1–10 years. Threshold = 70 + 2×age. Ignored for neonate/infant/teen bands.' }),
-      numberInput('sbp', 'Measured systolic BP', { unit: 'mmHg', min: 30, max: 200, defaultValue: 85, helpText: 'Use a correctly sized cuff. Hypotension is a late finding — also assess HR, CRT, and mentation for compensated shock.' }),
+      numberInput('ageYears', 'Age in years (if 1–10)', { min: 1, max: 10, step: 0.5, exampleValue: 4, helpText: 'Used only when age band is 1–10 years. Threshold = 70 + 2×age. Ignored for neonate/infant/teen bands.' }),
+      numberInput('sbp', 'Measured systolic BP', { unit: 'mmHg', min: 30, max: 200, exampleValue: 85, helpText: 'Use a correctly sized cuff. Hypotension is a late finding — also assess HR, CRT, and mentation for compensated shock.' }),
     ],
     calculate(values) {
       const band = String(values.ageBand ?? 'child');
@@ -1392,7 +1413,7 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'Children needing maintenance IV fluids when calculating daily/hourly volume.',
     whyUse: 'Classic weight-based maintenance estimate used worldwide.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', min: 1, max: 100, step: 0.1, defaultValue: 15, helpText: 'Holliday-Segar daily: first 10 kg → 100 mL/kg; next 10 kg → 50 mL/kg; each kg >20 → 20 mL/kg. Hourly 4/2/1 is the same math. Deficit replacement is separate.' }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 1, max: 100, step: 0.1, exampleValue: 15, helpText: 'Holliday-Segar daily: first 10 kg → 100 mL/kg; next 10 kg → 50 mL/kg; each kg >20 → 20 mL/kg. Hourly 4/2/1 is the same math. Deficit replacement is separate.' }),
     ],
     calculate(values) {
       const w = num(values.weight, 15);
@@ -1455,10 +1476,10 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'Children with rising creatinine when staging AKI severity.',
     whyUse: 'KDIGO stages guide monitoring intensity and nephrology involvement; same fold-change stages apply in pediatrics.',
     inputs: [
-      numberInput('baselineCr', 'Baseline creatinine', { unit: 'mg/dL', min: 0.1, max: 10, step: 0.01, defaultValue: 0.4, helpText: 'Prior nadir or documented baseline from the relevant window — not an unrelated historical value.' }),
-      numberInput('currentCr', 'Current creatinine', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.01, defaultValue: 0.6, helpText: 'KDIGO Stage 1: ≥0.3 mg/dL rise within 48 h, or ≥1.5× baseline within 7 days. Use a creatinine from that window as baseline/current. A 0.3 rise over weeks is not AKI.' }),
+      numberInput('baselineCr', 'Baseline creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 10, step: 0.01, exampleValue: 0.4, helpText: 'Prior nadir or documented baseline from the relevant acute kidney injury window — not an unrelated historical value. The absolute Stage 3 criterion uses this baseline to assess the acute rise. Select µmol/L for SI lab reports.' }),
+      numberInput('currentCr', 'Current creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.01, exampleValue: 0.6, helpText: 'KDIGO Stage 1: ≥0.3 mg/dL rise within 48 h, or ≥1.5× baseline within 7 days. For the absolute Stage 3 criterion, current Cr must be ≥4.0 mg/dL and have an acute rise of ≥0.5 mg/dL from baseline. Use values from the relevant AKI window. Select µmol/L for SI lab reports.' }),
       yesNo('dialysis', 'Renal replacement therapy initiated', null, 'Any RRT (HD, PD, CRRT) for this AKI episode is KDIGO Stage 3 regardless of creatinine; this is an override gate, not an additive point item.'),
-      yesNo('egfr35', 'eGFR <35 mL/min/1.73m² (for patients <18 y) — stage 3 criterion', null, 'Pediatric KDIGO Stage 3 criterion: eGFR <35 in patients <18 years. Adult Stage 3 also includes Cr ≥4.0 mg/dL (applied automatically from current Cr). This is an override gate, not an additive point item.'),
+      yesNo('egfr35', 'eGFR <35 mL/min/1.73m² (for patients <18 y) — stage 3 criterion', null, 'Pediatric KDIGO Stage 3 criterion: eGFR <35 in patients <18 years. The separate absolute creatinine gate is current Cr ≥4.0 mg/dL with an acute rise ≥0.5 mg/dL from baseline. These are override gates, not additive point items.'),
     ],
     calculate(values) {
       const base = num(values.baselineCr, 0.4);
@@ -1477,9 +1498,10 @@ export const wave3PedsObCalcs: Calculator[] = [
 
       const ratio = cur / base;
       const absRise = cur - base;
+      const absoluteStage3 = cur >= 4 && absRise >= 0.5;
 
       let stage = 0;
-      if (dialysis || egfr35 || ratio >= 3 || cur >= 4) stage = 3;
+      if (dialysis || egfr35 || ratio >= 3 || absoluteStage3) stage = 3;
       else if (ratio >= 2) stage = 2;
       else if (ratio >= 1.5 || absRise >= 0.3) stage = 1;
 
@@ -1489,8 +1511,8 @@ export const wave3PedsObCalcs: Calculator[] = [
 
       const interpretation =
         stage === 0
-          ? `Current Cr ${cur} vs baseline ${base} (×${round(ratio, 2)}). Does not meet KDIGO creatinine criteria for AKI (needs ≥1.5× baseline or +0.3 mg/dL). Still consider UOP criteria.`
-          : `KDIGO creatinine stage ${stage}: current ${cur} mg/dL vs baseline ${base} (×${round(ratio, 2)}${absRise >= 0.3 ? `; Δ+${round(absRise, 2)}` : ''})${dialysis ? '; RRT' : ''}${egfr35 ? '; eGFR <35' : ''}. Integrate urine output staging if available.`;
+          ? `Current Cr ${cur} vs baseline ${base} (×${round(ratio, 2)}). Does not meet KDIGO creatinine criteria for AKI (needs ≥1.5× baseline or +0.3 mg/dL; Cr ≥4.0 mg/dL also needs an acute rise of ≥0.5 mg/dL for the absolute Stage 3 criterion). Still consider UOP criteria.`
+          : `KDIGO creatinine stage ${stage}: current ${cur} mg/dL vs baseline ${base} (×${round(ratio, 2)}${absRise >= 0.3 ? `; Δ+${round(absRise, 2)}` : ''})${absoluteStage3 ? '; Cr ≥4.0 with acute Δ≥0.5' : cur >= 4 ? '; Cr ≥4.0 but acute Δ<0.5 (absolute Stage 3 gate not met)' : ''}${dialysis ? '; RRT' : ''}${egfr35 ? '; eGFR <35' : ''}. Integrate urine output staging if available.`;
 
       return {
         score: stage,
@@ -1500,6 +1522,13 @@ export const wave3PedsObCalcs: Calculator[] = [
         details: [
           { label: 'Fold change', value: `×${round(ratio, 2)}` },
           { label: 'Absolute rise', value: `${round(absRise, 2)} mg/dL` },
+          {
+            label: 'Absolute Cr Stage 3 gate',
+            value:
+              cur >= 4
+                ? `${absoluteStage3 ? 'Met' : 'Not met'} (requires current Cr ≥4.0 mg/dL and acute Δ≥0.5 mg/dL)`
+                : 'Not applicable (current Cr <4.0 mg/dL)',
+          },
         ],
         recommendations:
           stage >= 2
@@ -1511,8 +1540,8 @@ export const wave3PedsObCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'KDIGO Cr: Stage 1 = ≥1.5–1.9× baseline or ≥0.3 mg/dL rise; Stage 2 = 2.0–2.9×; Stage 3 = ≥3×, Cr ≥4.0, RRT, or eGFR <35 in <18 y.',
-      formula: 'Stage by max of fold-change, absolute rise, RRT, pediatric eGFR criterion',
+        'KDIGO Cr: Stage 1 = ≥1.5–1.9× baseline or ≥0.3 mg/dL rise; Stage 2 = 2.0–2.9×; Stage 3 = ≥3×, Cr ≥4.0 mg/dL with an acute rise ≥0.5 mg/dL, RRT, or eGFR <35 in <18 y.',
+      formula: 'Stage by max of fold-change, current Cr ≥4.0 mg/dL plus acute rise ≥0.5 mg/dL, RRT, and pediatric eGFR criterion',
       validation: 'KDIGO 2012 criteria used in pediatric nephrology; UOP criteria are parallel (not fully entered here).',
       references: [
         { title: 'KDIGO Clinical Practice Guideline for Acute Kidney Injury', citation: 'KDIGO Acute Kidney Injury Work Group. Kidney Int Suppl. 2012;2:1-138', year: 2012, doi: '10.1038/kisup.2012.1',
@@ -1539,9 +1568,9 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'Hospitalized children when assessing oliguria or AKI by urine volume.',
     whyUse: 'Weight-normalized UOP is more meaningful than absolute mL/h in pediatrics.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', min: 1, max: 100, step: 0.1, defaultValue: 12 }),
-      numberInput('urineMl', 'Urine volume', { unit: 'mL', min: 0, max: 5000, defaultValue: 120 }),
-      numberInput('hours', 'Collection period', { unit: 'hours', min: 0.5, max: 48, step: 0.5, defaultValue: 6, helpText: 'UOP (mL/kg/h) = volume ÷ weight ÷ hours. KDIGO stage 1 oliguria is <0.5 mL/kg/h for ≥6–12 h; neonates/young infants often use <1 mL/kg/h.' }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 1, max: 100, step: 0.1, exampleValue: 12 }),
+      numberInput('urineMl', 'Urine volume', { unit: 'mL', min: 0, max: 5000, exampleValue: 120 }),
+      numberInput('hours', 'Collection period', { unit: 'hours', min: 0.5, max: 48, step: 0.5, exampleValue: 6, helpText: 'UOP (mL/kg/h) = volume ÷ weight ÷ hours. KDIGO stage 1 oliguria is <0.5 mL/kg/h for ≥6–12 h; neonates/young infants often use <1 mL/kg/h.' }),
       selectInput('ageGroup', 'Age group (threshold context)', [
         { label: 'Neonate / young infant (oliguria often <1 mL/kg/h)', value: 'neonate' },
         { label: 'Child (KDIGO-style <0.5 mL/kg/h)', value: 'child' },
@@ -1990,16 +2019,16 @@ export const wave3PedsObCalcs: Calculator[] = [
     inputs: [
       yesNo('wellAppearing', 'Well-appearing', 1, 'Apply only in the intended age band (classic Philadelphia 29–56 days). Ill-appearing infants are never low-risk. Well = interacting, normal work of breathing and circulation (Pediatric Assessment Triangle).'),
       yesNo('noFocus', 'No focal infection on exam', 1, 'No otitis, soft-tissue infection, bone/joint infection, or other focal bacterial source on exam. Focal infection fails low-risk.'),
-      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0, max: 50, step: 0.1, defaultValue: 8, helpText: 'Low-risk if WBC 5–15 ×10³/µL (tool applies this automatically).' }),
+      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0, max: 50, step: 0.1, exampleValue: 8, helpText: 'Low-risk if WBC 5–15 ×10³/µL (tool applies this automatically).' }),
       numberInput('bands', 'Band-to-neutrophil ratio (or enter bands %/100)', {
         min: 0,
         max: 1,
         step: 0.01,
-        defaultValue: 0.1,
+        exampleValue: 0.1,
         helpText: 'Enter immature:total neutrophil ratio (bands + other immature / total neutrophils). Example: 8 bands and 40 segs → 8/48 = 0.17. Do not enter band % as 0.xx unless that equals the I:T ratio. Low-risk if <0.2.',
       }),
-      numberInput('uaWbc', 'UA WBC', { unit: '/hpf', min: 0, max: 100, defaultValue: 2, helpText: 'Low-risk if UA <10 WBC/hpf (tool applies this automatically).' }),
-      numberInput('csfWbc', 'CSF WBC', { unit: '/µL', min: 0, max: 5000, defaultValue: 2, helpText: 'Low-risk if CSF <8 WBC/µL (Philadelphia). Tool applies this automatically.' }),
+      numberInput('uaWbc', 'UA WBC', { unit: '/hpf', min: 0, max: 100, exampleValue: 2, helpText: 'Low-risk if UA <10 WBC/hpf (tool applies this automatically).' }),
+      numberInput('csfWbc', 'CSF WBC', { unit: '/µL', min: 0, max: 5000, exampleValue: 2, helpText: 'Low-risk if CSF <8 WBC/µL (Philadelphia). Tool applies this automatically.' }),
       yesNo('csfGramPos', 'CSF Gram stain positive', 1, 'Any organisms on CSF Gram stain fails low-risk (Philadelphia).'),
       yesNo('cxrAbn', 'Abnormal CXR (if obtained)', 1, 'Any infiltrate or other abnormal CXR, if a film was obtained, fails low-risk. If CXR not obtained, leave No.'),
       yesNo('stoolWbc', 'Stool WBC positive if diarrhea (if applicable)', 1, 'If diarrhea is present, stool WBC positive fails low-risk. If no diarrhea, leave No.'),
@@ -2057,11 +2086,11 @@ export const wave3PedsObCalcs: Calculator[] = [
     inputs: [
       yesNo('wellAppearing', 'Well-appearing / nontoxic', 1, 'Classic Boston 28–89 days. Well/nontoxic on Pediatric Assessment Triangle; ill-appearing infants are never low-risk.'),
       yesNo('noFocus', 'No ear, soft tissue, or bone infection on exam', 1, 'Boston: no otitis, soft-tissue, or bone/joint infection. Focal bacterial source fails low-risk.'),
-      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0, max: 50, step: 0.1, defaultValue: 10, helpText: 'Low-risk if WBC <20 ×10³/µL (tool applies this automatically).' }),
-      numberInput('uaWbc', 'UA WBC', { unit: '/hpf', min: 0, max: 100, defaultValue: 2, helpText: 'Low-risk if UA <10 WBC/hpf (Boston). Tool applies this automatically.' }),
-      numberInput('csfWbc', 'CSF WBC', { unit: '/µL', min: 0, max: 5000, defaultValue: 2, helpText: 'Low-risk if CSF <10 WBC/µL (Boston). Tool applies this automatically.' }),
+      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0, max: 50, step: 0.1, exampleValue: 10, helpText: 'Low-risk if WBC <20 ×10³/µL (tool applies this automatically).' }),
+      numberInput('uaWbc', 'UA WBC', { unit: '/hpf', min: 0, max: 100, exampleValue: 2, helpText: 'Low-risk if UA <10 WBC/hpf (Boston). Tool applies this automatically.' }),
+      numberInput('csfWbc', 'CSF WBC', { unit: '/µL', min: 0, max: 5000, exampleValue: 2, helpText: 'Low-risk if CSF <10 WBC/µL (Boston). Tool applies this automatically.' }),
       yesNo('cxrAbn', 'Infiltrate on CXR (if obtained)', 1, 'Any infiltrate on CXR, if obtained, fails low-risk. If CXR not obtained, leave No.'),
-      numberInput('stoolWbc', 'Stool WBC /hpf if diarrhea (0 if N/A)', { min: 0, max: 100, defaultValue: 0, required: false, helpText: 'If diarrhea present, stool ≥5 WBC/hpf fails Boston low-risk. Enter 0 if no diarrhea / not applicable.' }),
+      numberInput('stoolWbc', 'Stool WBC /hpf if diarrhea (0 if N/A)', { min: 0, max: 100, exampleValue: 0, required: false, helpText: 'If diarrhea present, stool ≥5 WBC/hpf fails Boston low-risk. Enter 0 if no diarrhea / not applicable.' }),
     ],
     calculate(values) {
       const reasons: string[] = [];
@@ -2122,8 +2151,8 @@ export const wave3PedsObCalcs: Calculator[] = [
       ], '0-28', 'Kuppermann/PECARN febrile infant ≤60 days. ≤28 days is never “low-risk discharge” here even if labs are negative.'),
       yesNo('illAppearing', 'Ill-appearing', 1, 'Ill/toxic on Pediatric Assessment Triangle (appearance, work of breathing, circulation). Ill-appearing infants are never low-risk.'),
       yesNo('uaPos', 'Positive urinalysis (LE, nitrite, or WBC per rule definition)', 1, 'Positive UA: any leukocyte esterase (including trace), any nitrite, or >5 WBC/HPF (Kuppermann/PECARN).'),
-      numberInput('anc', 'Absolute neutrophil count', { unit: 'cells/µL', min: 0, max: 30000, defaultValue: 4000, helpText: 'Tool applies ANC >4090 as a fail automatically.' }),
-      numberInput('pct', 'Procalcitonin', { unit: 'ng/mL', min: 0, max: 100, step: 0.01, defaultValue: 0.2, helpText: 'Tool applies PCT >1.71 ng/mL as a fail automatically.' }),
+      numberInput('anc', 'Absolute neutrophil count', { unit: 'cells/µL', min: 0, max: 30000, exampleValue: 4000, helpText: 'Tool applies ANC >4090 as a fail automatically.' }),
+      numberInput('pct', 'Procalcitonin', { unit: 'ng/mL', min: 0, max: 100, step: 0.01, exampleValue: 0.2, helpText: 'Tool applies PCT >1.71 ng/mL as a fail automatically.' }),
     ],
     calculate(values) {
       const age = String(values.ageBand ?? '29-60');
@@ -2196,11 +2225,11 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'Children with ≥5 days of fever and 2–3 clinical KD features when applying supplemental lab criteria.',
     whyUse: 'Incomplete KD needs lab + echo algorithm to avoid missed coronary risk.',
     inputs: [
-      numberInput('feverDays', 'Days of fever', { min: 1, max: 30, defaultValue: 5 }),
+      numberInput('feverDays', 'Days of fever', { min: 1, max: 30, exampleValue: 5 }),
       numberInput('clinicalFeatures', 'Number of classic KD clinical features (besides fever)', {
         min: 0,
         max: 5,
-        defaultValue: 2,
+        exampleValue: 2,
         helpText: 'AHA principal features: (1) nonexudative bulbar conjunctival injection; (2) oral — cracked lips, strawberry tongue, or injected pharynx; (3) rash (not vesicular); (4) extremity erythema/edema or periungual peeling; (5) cervical lymphadenopathy ≥1.5 cm, usually unilateral.',
       }),
       yesNo('crpHigh', 'CRP ≥3.0 mg/dL (30 mg/L)'),
@@ -2447,7 +2476,7 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'Calculating deficit replacement volume for oral rehydration.',
     whyUse: 'Deficit (mL) ≈ weight(kg) × % dehydration × 10; WHO Plan B uses ~75 mL/kg over 4 h for some dehydration.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', min: 2, max: 80, step: 0.1, defaultValue: 12 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 2, max: 80, step: 0.1, exampleValue: 12 }),
       selectInput('mode', 'Method', [
         { label: 'Percent dehydration (deficit)', value: 'percent' },
         { label: 'WHO Plan B (some dehydration ~75 mL/kg)', value: 'who-b' },
@@ -2457,10 +2486,10 @@ export const wave3PedsObCalcs: Calculator[] = [
         min: 1,
         max: 15,
         step: 0.5,
-        defaultValue: 5,
+        exampleValue: 5,
         helpText: 'Mild ~3–5%, moderate ~6–9%, severe ≥10%',
       }),
-      numberInput('hours', 'Replacement period', { unit: 'hours', min: 1, max: 24, defaultValue: 4 }),
+      numberInput('hours', 'Replacement period', { unit: 'hours', min: 1, max: 24, exampleValue: 4 }),
     ],
     calculate(values) {
       const w = num(values.weight, 12);
@@ -2520,9 +2549,9 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'Active labor teaching when comparing dilation progress to time expectations (not a full WHO partograph).',
     whyUse: 'Flags slower-than-expected progress for closer evaluation of power/passenger/passage.',
     inputs: [
-      numberInput('dilationStart', 'Cervix at reference time', { unit: 'cm', min: 0, max: 10, step: 0.5, defaultValue: 6, helpText: 'Contemporary ACOG active phase is often ≥6 cm. Enter the dilation from the reference exam you are comparing against.' }),
-      numberInput('dilationNow', 'Current cervix', { unit: 'cm', min: 0, max: 10, step: 0.5, defaultValue: 7, helpText: 'Most recent sterile digital exam. Complete (10 cm) ends first-stage partogram tracking.' }),
-      numberInput('hours', 'Hours since reference exam', { min: 0.5, max: 24, step: 0.5, defaultValue: 2, helpText: 'Time between the two exams. Educational arrest alert: no change ≥4 h in active phase (≥6 cm).' }),
+      numberInput('dilationStart', 'Cervix at reference time', { unit: 'cm', min: 0, max: 10, step: 0.5, exampleValue: 6, helpText: 'Contemporary ACOG active phase is often ≥6 cm. Enter the dilation from the reference exam you are comparing against.' }),
+      numberInput('dilationNow', 'Current cervix', { unit: 'cm', min: 0, max: 10, step: 0.5, exampleValue: 7, helpText: 'Most recent sterile digital exam. Complete (10 cm) ends first-stage partogram tracking.' }),
+      numberInput('hours', 'Hours since reference exam', { min: 0.5, max: 24, step: 0.5, exampleValue: 2, helpText: 'Time between the two exams. Educational arrest alert: no change ≥4 h in active phase (≥6 cm).' }),
       selectInput('parity', 'Parity context', [
         { label: 'Nulliparous', value: 'nullip' },
         { label: 'Multiparous', value: 'multip' },
@@ -2760,10 +2789,10 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'After abnormal 1-hour glucose challenge when interpreting 3-hour 100-g OGTT by Carpenter-Coustan criteria.',
     whyUse: 'Common US diagnostic thresholds for GDM on 3-hour OGTT (2 or more elevations).',
     inputs: [
-      numberInput('fasting', 'Fasting glucose', { unit: 'mg/dL', min: 40, max: 300, defaultValue: 90, helpText: 'Carpenter-Coustan 100-g 3-h OGTT: fasting ≥95, 1 h ≥180, 2 h ≥155, 3 h ≥140 mg/dL. GDM if ≥2 values meet/exceed. Do not mix with NDDG cutoffs.' }),
-      numberInput('h1', '1-hour glucose', { unit: 'mg/dL', min: 40, max: 400, defaultValue: 170 }),
-      numberInput('h2', '2-hour glucose', { unit: 'mg/dL', min: 40, max: 400, defaultValue: 150 }),
-      numberInput('h3', '3-hour glucose', { unit: 'mg/dL', min: 40, max: 400, defaultValue: 130 }),
+      numberInput('fasting', 'Fasting glucose', { unit: 'mg/dL', min: 40, max: 300, exampleValue: 90, helpText: 'Carpenter-Coustan 100-g 3-h OGTT: fasting ≥95, 1 h ≥180, 2 h ≥155, 3 h ≥140 mg/dL. GDM if ≥2 values meet/exceed. Do not mix with NDDG cutoffs.' }),
+      numberInput('h1', '1-hour glucose', { unit: 'mg/dL', min: 40, max: 400, exampleValue: 170 }),
+      numberInput('h2', '2-hour glucose', { unit: 'mg/dL', min: 40, max: 400, exampleValue: 150 }),
+      numberInput('h3', '3-hour glucose', { unit: 'mg/dL', min: 40, max: 400, exampleValue: 130 }),
     ],
     calculate(values) {
       const fasting = num(values.fasting, 90);
@@ -2832,16 +2861,16 @@ export const wave3PedsObCalcs: Calculator[] = [
         { label: 'Umbilical artery (preferred for fetal status)', value: 'artery' },
         { label: 'Umbilical vein', value: 'vein' },
       ], 'artery', 'Artery better reflects fetal acid–base status; vein reflects placental/maternal side. Paired samples are ideal.'),
-      numberInput('ph', 'pH', { min: 6.5, max: 7.6, step: 0.01, defaultValue: 7.2, helpText: 'Umbilical artery pH <7.0 is a commonly cited severe-acidemia threshold (with base deficit ≥12) linked to encephalopathy risk.' }),
+      numberInput('ph', 'pH', { min: 6.5, max: 7.6, step: 0.01, exampleValue: 7.2, helpText: 'Umbilical artery pH <7.0 is a commonly cited severe-acidemia threshold (with base deficit ≥12) linked to encephalopathy risk.' }),
       numberInput('be', 'Base excess (enter negative for deficit)', {
         unit: 'mEq/L',
         min: -30,
         max: 10,
         step: 0.1,
-        defaultValue: -6,
+        exampleValue: -6,
         helpText: 'e.g. −12 means base deficit 12',
       }),
-      numberInput('pco2', 'PCO₂ (optional)', { unit: 'mmHg', min: 10, max: 120, defaultValue: 55, required: false }),
+      numberInput('pco2', 'PCO₂ (optional)', { unit: 'mmHg', min: 10, max: 120, exampleValue: 55, required: false }),
     ],
     calculate(values) {
       const vessel = String(values.vessel ?? 'artery');
@@ -2913,8 +2942,8 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'Antenatal visits after ~20–24 weeks when measuring SFH for growth surveillance.',
     whyUse: 'Simple screen: SFH (cm) roughly equals weeks ±2–3 cm; larger deviations prompt ultrasound.',
     inputs: [
-      numberInput('weeks', 'Gestational age', { unit: 'weeks', min: 20, max: 42, step: 0.1, defaultValue: 28, helpText: 'Use best obstetric dates. SFH screening is typically after 20–24 weeks.' }),
-      numberInput('sfh', 'Symphysis-fundal height', { unit: 'cm', min: 15, max: 50, step: 0.5, defaultValue: 28, helpText: 'Empty bladder. Measure from the superior border of the pubic symphysis to the uterine fundus along the abdominal curve. Teaching band: SFH (cm) ≈ weeks ±2–3 cm.' }),
+      numberInput('weeks', 'Gestational age', { unit: 'weeks', min: 20, max: 42, step: 0.1, exampleValue: 28, helpText: 'Use best obstetric dates. SFH screening is typically after 20–24 weeks.' }),
+      numberInput('sfh', 'Symphysis-fundal height', { unit: 'cm', min: 15, max: 50, step: 0.5, exampleValue: 28, helpText: 'Empty bladder. Measure from the superior border of the pubic symphysis to the uterine fundus along the abdominal curve. Teaching band: SFH (cm) ≈ weeks ±2–3 cm.' }),
     ],
     calculate(values) {
       const weeks = num(values.weeks, 28);
@@ -2982,10 +3011,10 @@ export const wave3PedsObCalcs: Calculator[] = [
         { label: 'HC + AC + FL (Hadlock)', value: 'hcacfl' },
         { label: 'BPD + HC + AC + FL (Hadlock)', value: 'full' },
       ]),
-      numberInput('bpd', 'BPD', { unit: 'cm', min: 2, max: 12, step: 0.01, defaultValue: 8.5, helpText: 'Centimeters, not millimeters (divide machine mm by 10: 85 mm → 8.5 cm). Hadlock coefficients expect cm.' }),
-      numberInput('hc', 'HC', { unit: 'cm', min: 10, max: 40, step: 0.1, defaultValue: 30, helpText: 'Centimeters, not millimeters (divide machine mm by 10).' }),
-      numberInput('ac', 'AC', { unit: 'cm', min: 10, max: 45, step: 0.1, defaultValue: 28, helpText: 'Centimeters, not millimeters (divide machine mm by 10). AC carries the most weight in most Hadlock formulas.' }),
-      numberInput('fl', 'FL', { unit: 'cm', min: 1, max: 10, step: 0.01, defaultValue: 6.2, helpText: 'Centimeters, not millimeters (divide machine mm by 10: 62 mm → 6.2 cm).' }),
+      numberInput('bpd', 'BPD', { unit: 'cm', min: 2, max: 12, step: 0.01, exampleValue: 8.5, helpText: 'Centimeters, not millimeters (divide machine mm by 10: 85 mm → 8.5 cm). Hadlock coefficients expect cm.' }),
+      numberInput('hc', 'HC', { unit: 'cm', min: 10, max: 40, step: 0.1, exampleValue: 30, helpText: 'Centimeters, not millimeters (divide machine mm by 10).' }),
+      numberInput('ac', 'AC', { unit: 'cm', min: 10, max: 45, step: 0.1, exampleValue: 28, helpText: 'Centimeters, not millimeters (divide machine mm by 10). AC carries the most weight in most Hadlock formulas.' }),
+      numberInput('fl', 'FL', { unit: 'cm', min: 1, max: 10, step: 0.01, exampleValue: 6.2, helpText: 'Centimeters, not millimeters (divide machine mm by 10: 62 mm → 6.2 cm).' }),
     ],
     calculate(values) {
       const formula = String(values.formula ?? 'hcacfl');

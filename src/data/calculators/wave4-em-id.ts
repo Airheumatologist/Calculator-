@@ -17,27 +17,48 @@ export const wave4EmIdCalcs: Calculator[] = [
     inputs: [
       yesNo('ddimerPos', 'Abnormal D-dimer after stopping anticoagulation (~3–5 weeks off therapy)', 2, 'Measure off anticoagulation ~3–5 weeks after stopping. Abnormal = above the local assay cutoff (qualitative positive or quantitative above the lab’s post-treatment threshold).'),
       yesNo('age50orLess', 'Age ≤50 years', 1),
-      yesNo('male', 'Male sex', 1),
+      selectInput('sex', 'Sex', [
+        { label: 'Female (0)', value: 'F', points: 0 },
+        { label: 'Male (+1)', value: 'M', points: 1 },
+      ], undefined, 'DASH assigns +1 for male sex; female sex contributes 0 sex points.'),
       yesNo('hormone', 'Hormone use at the time of initial VTE (women only; −2)', -2,
-        'Estrogen-containing contraception or HRT associated with index VTE'),
+        'Estrogen-containing contraception or HRT associated with the index VTE; this −2 item applies only to women.'),
     ],
     calculate(values) {
       let score = 0;
+      const sex = values.sex === 'M' ? 'M' : values.sex === 'F' ? 'F' : null;
+      const isMale = sex === 'M';
+      const isFemale = sex === 'F';
+      const hormone = bool(values.hormone);
       if (bool(values.ddimerPos)) score += 2;
       if (bool(values.age50orLess)) score += 1;
-      if (bool(values.male)) score += 1;
-      if (bool(values.hormone)) score -= 2;
+      if (isMale) score += 1;
+      if (isFemale && hormone) score -= 2;
+
+      const maleHormoneConflict = isMale && hormone;
+      const sexLabel = isMale ? 'Male (+1)' : isFemale ? 'Female (0)' : 'Not specified';
+      const hormoneLabel = !isFemale
+        ? maleHormoneConflict
+          ? 'Not applicable for male profile; ignored (0 points)'
+          : 'Not applicable (women only)'
+        : hormone
+          ? 'Yes (−2)'
+          : 'No (0)';
+      const details = [
+        { label: 'Points', value: `D-dimer ${bool(values.ddimerPos) ? '+2' : '0'}, age ≤50 ${bool(values.age50orLess) ? '+1' : '0'}, ${sexLabel}, hormone ${hormoneLabel}` },
+        { label: 'Typical cut', value: '≤1 lower risk; ≥2 higher risk' },
+      ];
 
       if (score <= 1) {
         return {
           score,
           label: 'Low recurrence risk (DASH ≤1)',
-          interpretation: `DASH ${score}: annual recurrent VTE risk roughly ~3–4% in derivation cohorts. Discontinuation after short-term therapy may be reasonable with shared decision-making if no other indication to continue.`,
+          interpretation: `DASH ${score}: annual recurrent VTE risk roughly ~3–4% in derivation cohorts. Discontinuation after short-term therapy may be reasonable with shared decision-making if no other indication to continue.${maleHormoneConflict ? ' Hormone-associated VTE is not applicable to a male profile and was not scored.' : ''}`,
           riskLevel: 'low' as const,
-          details: [
-            { label: 'Points', value: 'D-dimer +2, age ≤50 +1, male +1, hormone −2' },
-            { label: 'Typical cut', value: '≤1 lower risk; ≥2 higher risk' },
-          ],
+          details,
+          alerts: maleHormoneConflict
+            ? ['Hormone-associated VTE scoring applies to women only; no −2 deduction was applied to this male profile.']
+            : undefined,
           recommendations: [
             'Discuss stopping anticoagulation if bleed risk / preference favors stop',
             'Counsel on VTE warning symptoms and future risk situations',
@@ -48,12 +69,15 @@ export const wave4EmIdCalcs: Calculator[] = [
       return {
         score,
         label: 'Higher recurrence risk (DASH ≥2)',
-        interpretation: `DASH ${score}: higher estimated annual recurrence (often ~6–10%+ depending on score). Extended anticoagulation generally preferred if bleeding risk acceptable.`,
+        interpretation: `DASH ${score}: higher estimated annual recurrence (often ~6–10%+ depending on score). Extended anticoagulation generally preferred if bleeding risk acceptable.${maleHormoneConflict ? ' Hormone-associated VTE is not applicable to a male profile and was not scored.' : ''}`,
         riskLevel: score >= 4 ? ('high' as const) : ('moderate' as const),
         details: [
-          { label: 'Points', value: 'D-dimer +2, age ≤50 +1, male +1, hormone −2' },
+          ...details.slice(0, 1),
           { label: 'Range', value: 'Approximately −2 to +4' },
         ],
+        alerts: maleHormoneConflict
+          ? ['Hormone-associated VTE scoring applies to women only; no −2 deduction was applied to this male profile.']
+          : undefined,
         recommendations: [
           'Favor extended anticoagulation if low–moderate bleed risk',
           'Prefer DOAC when no contraindication',
@@ -115,7 +139,7 @@ export const wave4EmIdCalcs: Calculator[] = [
         { label: 'Intermediate', value: 'mid', description: 'Educational band: around the local cutoff up to ~1000 µg/L FEU. Vienna uses quantitative D-dimer — this is not the published nomogram.' },
         { label: 'High / positive', value: 'high', description: 'Clearly elevated (educational: above ~1000 µg/L FEU or markedly above the local cutoff).' },
       ]),
-      numberInput('age', 'Age (optional context)', { unit: 'years', min: 18, max: 100, step: 1, defaultValue: 55, required: false }),
+      numberInput('age', 'Age (optional context)', { unit: 'years', min: 18, max: 100, step: 1, exampleValue: 55, required: false }),
     ],
     calculate(values) {
       const sex = String(values.sex ?? 'F');
@@ -971,7 +995,8 @@ export const wave4EmIdCalcs: Calculator[] = [
     category: 'infectious-disease',
     tags: ['pyelonephritis', 'uti', 'admission', 'disposition', 'sepsis'],
     whenToUse: 'Adults (and older adolescents) with acute pyelonephritis when deciding ED discharge vs admit.',
-    whyUse: 'Structures IDSA-aligned reasons that usually favor hospitalization and IV therapy.',
+    whyUse:
+      'Structures common reasons that favor hospitalization; antimicrobial selection remains a current-guideline, culture-, resistance-, and patient-factor decision.',
     inputs: [
       yesNo('sepsis', 'Sepsis / septic shock physiology', 3),
       yesNo('unstable', 'Hemodynamic instability or high fever with instability risk', 2, 'Hypotension, high fever with ill appearance, or inability to maintain perfusion — not an isolated low-grade fever in a well patient.'),
@@ -1027,7 +1052,7 @@ export const wave4EmIdCalcs: Calculator[] = [
         interpretation: `Score ${score}: no major admission flags selected. Healthy non-pregnant patients who tolerate oral therapy may be treated as outpatients with close follow-up.`,
         riskLevel: 'low' as const,
         recommendations: [
-          'Oral fluoroquinolone or other guideline-appropriate agent by susceptibilities',
+          'Select oral therapy using the current guideline pathway, urine culture/susceptibility results, recent local resistance data, and patient-specific factors',
           'Return precautions for vomiting, worsening pain, or fever persistence',
           'Culture-guided adjustment',
         ],
@@ -1035,10 +1060,20 @@ export const wave4EmIdCalcs: Calculator[] = [
     },
     evidence: {
       summary:
-        'Hospitalize pyelonephritis for sepsis, inability to take oral therapy, obstruction, pregnancy/complicated hosts, failed outpatient care, or imaging complications.',
+        'Hospitalize pyelonephritis for sepsis, inability to take oral therapy, obstruction, pregnancy/complicated hosts, failed outpatient care, or imaging complications. When outpatient oral therapy is appropriate, use the current guideline pathway and tailor treatment to local resistance data, patient factors, and urine culture/susceptibility results.',
       formula: 'Educational admission checklist aligned with IDSA UTI guidance themes',
-      validation: 'Disposition aid — not a prospective derivation score; local resistance and pregnancy pathways apply.',
+      validation:
+        'Disposition aid — not a prospective derivation score or antibiotic selector; current guideline, local resistance, culture/susceptibility, and pregnancy pathways apply.',
       references: [
+        {
+          title:
+            'Clinical Practice Guideline by Infectious Diseases Society of America (IDSA): 2025 Guideline on Management and Treatment of Complicated Urinary Tract Infections — Selection of Antibiotic Therapy for Complicated UTI',
+          citation: 'Trautner BW et al. Clin Infect Dis. 2025',
+          year: 2025,
+          pmid: '41419213',
+          doi: '10.1093/cid/ciaf460',
+          url: 'https://www.idsociety.org/practice-guideline/complicated-urinary-tract-infections/',
+        },
         {
           title: 'International clinical practice guidelines for acute uncomplicated cystitis and pyelonephritis in women',
           citation: 'Gupta K et al. Clin Infect Dis. 2011;52:e103-e120',
@@ -1050,7 +1085,10 @@ export const wave4EmIdCalcs: Calculator[] = [
     },
     nextSteps: [
       { condition: 'Admit flags', actions: ['IV abx', 'Source control', 'Monitor'] },
-      { condition: 'Outpatient eligible', actions: ['Oral abx', 'Close follow-up'] },
+      {
+        condition: 'Outpatient eligible',
+        actions: ['Oral therapy per current guideline and local susceptibility data', 'Close follow-up'],
+      },
     ],
     pearls: [
       'Obstructed pyelonephritis is a urologic emergency (stent/nephrostomy).',
@@ -1361,14 +1399,14 @@ export const wave4EmIdCalcs: Calculator[] = [
     whyUse:
       'Age × 10 µg/L FEU (age × 0.01 mg/L) after age 50 improves specificity without major sensitivity loss (ADJUST-PE).',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, step: 1, defaultValue: 65 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, step: 1, exampleValue: 65 }),
       numberInput('ddimer', 'Measured D-dimer', {
-        unit: 'µg/L FEU',
+        unit: 'ng/mL FEU', unitKind: 'ddimer',
         min: 0,
         max: 50000,
         step: 10,
-        defaultValue: 600,
-        helpText: 'Use fibrinogen-equivalent units (FEU). If your lab reports ng/mL FEU, values are numerically equal to µg/L FEU.',
+        exampleValue: 600,
+        helpText: 'Select the reported unit: ng/mL FEU and µg/L FEU are numerically equal, and DDU assays are converted ×2 into FEU.',
       }),
       selectInput('pretest', 'Pretest probability context', [
         { label: 'Low / PE unlikely (Wells/PERC pathway eligible)', value: 'low' },
@@ -1954,7 +1992,7 @@ export const wave4EmIdCalcs: Calculator[] = [
         min: 0,
         max: 100000,
         step: 0.1,
-        defaultValue: 8,
+        exampleValue: 8,
         helpText: 'Use same assay units for both values (ng/L common for hs-Tn)',
       }),
       numberInput('t1', 'Troponin T1 (later)', {
@@ -1962,14 +2000,14 @@ export const wave4EmIdCalcs: Calculator[] = [
         min: 0,
         max: 100000,
         step: 0.1,
-        defaultValue: 20,
+        exampleValue: 20,
       }),
       numberInput('hours', 'Interval between draws', {
         unit: 'hours',
         min: 0.5,
         max: 24,
         step: 0.5,
-        defaultValue: 3,
+        exampleValue: 3,
       }),
       selectInput('sexUrl', 'Sex-specific URL context (optional)', [
         { label: 'Not specified', value: 'na' },
@@ -1981,7 +2019,7 @@ export const wave4EmIdCalcs: Calculator[] = [
         min: 1,
         max: 50,
         step: 1,
-        defaultValue: 5,
+        exampleValue: 5,
         helpText: 'Example only — use your assay’s validated 0/1h or 0/3h absolute delta',
       }),
     ],

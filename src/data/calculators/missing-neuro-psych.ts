@@ -349,6 +349,8 @@ export const missingNeuroPsychCalcs: Calculator[] = [
     shortName: 'ASPECTS',
     isQuestionnaire: true,
     questionnaire: {
+      directModeValues: ['direct'],
+      directInputIds: ['score'],
       modeInputId: 'mode',
       activeInputIdsByMode: {
         checkboxes: ['reg_c', 'reg_l', 'reg_ic', 'reg_i', 'reg_m1', 'reg_m2', 'reg_m3', 'reg_m4', 'reg_m5', 'reg_m6'],
@@ -380,13 +382,13 @@ export const missingNeuroPsychCalcs: Calculator[] = [
       numberInput('score', 'ASPECTS total (if direct entry)', {
         min: 0,
         max: 10,
-        defaultValue: 10,
+        exampleValue: 10,
         helpText: '10 = no early change in MCA territory regions',
       }),
       numberInput('regionsLost', 'Number of ASPECTS regions involved (if counting)', {
         min: 0,
         max: 10,
-        defaultValue: 0,
+        exampleValue: 0,
         helpText: 'Ganglionic slice: C caudate, L lentiform, IC posterior limb internal capsule, I insula, M1–M3 cortex. Supraganglionic: M4–M6 cortex. Subtract 1 per region involved.',
       }),
     ],

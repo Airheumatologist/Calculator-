@@ -4,9 +4,11 @@ import {
   getRangeViolations,
   getStepViolations,
   isMissingValue,
+  isRequiredInput,
   rangeViolationMessage,
   stepViolationMessage,
 } from '../utils/helpers';
+import { getCanonicalValue, getUnitOptions, unitInputId } from '../utils/units';
 
 type Values = Record<string, number | string | boolean | null>;
 
@@ -15,6 +17,7 @@ interface Props {
   values: Values;
   onChange: (id: string, value: number | string | boolean | null, optionIndex?: number) => void;
   onReset: () => void;
+  onLoadExample: () => void;
   /** IDs that are relevant to the currently selected questionnaire branch. */
   activeInputIds?: string[];
   /** Active inputs currently missing an explicit answer. */
@@ -23,10 +26,8 @@ interface Props {
   selectedOptionIndices?: Record<string, number>;
 }
 
-function numberFieldError(
-  input: CalcInput,
-  value: number | string | boolean | null
-): string | null {
+function numberFieldError(input: CalcInput, values: Values): string | null {
+  const value = input.unitKind ? getCanonicalValue(input, values) : (values[input.id] ?? null);
   const [violation] = getRangeViolations([input], { [input.id]: value });
   if (violation) return rangeViolationMessage(violation.direction);
   const [stepViolation] = getStepViolations([input], { [input.id]: value });
@@ -123,11 +124,73 @@ function OptionGroup({
   );
 }
 
+interface UnitToggleProps {
+  inputId: string;
+  label: string;
+  options: { value: string; label: string; description: string }[];
+  selected?: string;
+  invalid?: boolean;
+  onSelect: (value: string) => void;
+}
+
+/**
+ * Inline unit selector for unit-aware number fields. Same radio semantics as
+ * `OptionGroup`, sized to sit inside the number row.
+ */
+function UnitToggle({ inputId, label, options, selected, invalid, onSelect }: UnitToggleProps) {
+  const ids = options.map((option) => domId(inputId, `unit-${option.value.replace(/[^a-zA-Z0-9]/g, '-')}`));
+  const focusIndex = Math.max(
+    0,
+    options.findIndex((option) => option.value === selected)
+  );
+
+  function handleKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+    const forward = ARROW_NEXT.includes(e.key);
+    const backward = ARROW_PREV.includes(e.key);
+    if ((!forward && !backward) || options.length === 0) return;
+    e.preventDefault();
+    const next = (focusIndex + (forward ? 1 : -1) + options.length) % options.length;
+    onSelect(options[next].value);
+    e.currentTarget.querySelectorAll<HTMLButtonElement>('[role="radio"]')[next]?.focus();
+  }
+
+  return (
+    <div
+      className="unit-toggle"
+      role="radiogroup"
+      aria-label={`${label} units`}
+      aria-invalid={invalid || undefined}
+      aria-required
+      onKeyDown={handleKeyDown}
+    >
+      {options.map((option, i) => {
+        const isSelected = option.value === selected;
+        return (
+          <button
+            key={option.value}
+            id={ids[i]}
+            type="button"
+            role="radio"
+            aria-checked={isSelected}
+            aria-label={option.description}
+            tabIndex={i === focusIndex ? 0 : -1}
+            className={`unit-btn ${isSelected ? 'selected' : ''}`}
+            onClick={() => onSelect(option.value)}
+          >
+            {option.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export function CalculatorForm({
   inputs,
   values,
   onChange,
   onReset,
+  onLoadExample,
   activeInputIds,
   missingInputIds,
   selectedOptionIndices,
@@ -136,26 +199,46 @@ export function CalculatorForm({
     <div className="panel">
       <div className="panel-header">
         Inputs
-        <button type="button" className="reset-btn" onClick={onReset}>
-          Reset
-        </button>
+        <div className="form-actions">
+          <button type="button" className="example-btn" onClick={onLoadExample}>
+            Load example
+          </button>
+          <button type="button" className="reset-btn" onClick={onReset}>
+            Reset
+          </button>
+        </div>
       </div>
       <div className="panel-body">
         {inputs.map((input) => {
           const value = values[input.id] ?? null;
           const isActive = activeInputIds ? activeInputIds.includes(input.id) : true;
-          const fieldError = isActive && input.type === 'number' ? numberFieldError(input, value) : null;
+          const fieldError = isActive && input.type === 'number' ? numberFieldError(input, values) : null;
+          const unitOptions = input.unitKind ? getUnitOptions(input.unitKind) : [];
+          const unitChoice = input.unitKind ? String(values[unitInputId(input.id)] ?? '') : '';
+          const unitSelected = unitOptions.find((option) => option.value === unitChoice);
+          const unitIncomplete = Boolean(
+            isActive &&
+              input.unitKind &&
+              !isMissingValue(value, true) &&
+              !unitSelected &&
+              (missingInputIds
+                ? missingInputIds.includes(unitInputId(input.id))
+                : isRequiredInput(input))
+          );
           const incomplete = isActive && !fieldError && (
             missingInputIds
               ? missingInputIds.includes(input.id)
-              : input.required === true && isMissingValue(value, input.type === 'number')
+              : isRequiredInput(input) && isMissingValue(value, input.type === 'number')
           );
 
           const labelId = domId(input.id, 'label');
           const fieldId = domId(input.id, 'field');
           const helpId = domId(input.id, 'help');
           const errorId = domId(input.id, 'error');
-          const describedBy = [input.helpText ? helpId : null, fieldError || incomplete ? errorId : null]
+          const describedBy = [
+            input.helpText ? helpId : null,
+            fieldError || incomplete || unitIncomplete ? errorId : null,
+          ]
             .filter(Boolean)
             .join(' ');
 
@@ -201,14 +284,34 @@ export function CalculatorForm({
                         onChange(input.id, v === '' ? null : Number(v));
                       }}
                     />
-                    {input.unit && <span className="unit">{input.unit}</span>}
+                    {input.unitKind ? (
+                      <UnitToggle
+                        inputId={input.id}
+                        label={input.label}
+                        options={unitOptions.map(({ value: optionValue, label, description }) => ({
+                          value: optionValue,
+                          label,
+                          description,
+                        }))}
+                        selected={unitSelected?.value}
+                        invalid={unitIncomplete}
+                        onSelect={(optionValue) => onChange(unitInputId(input.id), optionValue)}
+                      />
+                    ) : (
+                      input.unit && <span className="unit">{input.unit}</span>
+                    )}
                   </div>
                   {fieldError && (
                     <p className="input-error" id={errorId}>
                       {fieldError}
                     </p>
                   )}
-                  {incomplete && (
+                  {unitIncomplete && (
+                    <p className="input-hint-required" id={errorId}>
+                      Select units for {input.label}
+                    </p>
+                  )}
+                  {incomplete && !unitIncomplete && (
                     <p className="input-hint-required" id={errorId}>
                       Required
                     </p>

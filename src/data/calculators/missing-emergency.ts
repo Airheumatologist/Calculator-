@@ -216,12 +216,12 @@ export const missingEmergencyCalcs: Calculator[] = [
       yesNo('hemoptysis', 'Hemoptysis', 1, 'Coughing up blood or blood-streaked sputum attributed to this presentation (not chronic bronchitis streaking alone).'),
       yesNo('peLikely', 'PE is the most likely diagnosis', 1, 'Clinician gestalt: PE is more likely than the next competing diagnosis (same idea as Wells “PE more likely than alternative”).'),
       numberInput('ddimer', 'D-dimer', {
-        unit: 'ng/mL (FEU)',
+        unit: 'ng/mL FEU', unitKind: 'ddimer',
         min: 0,
         max: 20000,
         step: 10,
-        defaultValue: 500,
-        helpText: 'Use same units as local assay; thresholds assume FEU ng/mL.',
+        exampleValue: 500,
+        helpText: 'Pick the unit your assay reports; µg/mL and DDU values are converted to ng/mL FEU, which is what the 500 / 1000 thresholds use.',
       }),
     ],
     calculate(values) {
@@ -725,8 +725,8 @@ export const missingEmergencyCalcs: Calculator[] = [
     whenToUse: 'Trauma, hemorrhage risk, sepsis, or any undifferentiated illness when occult hypoperfusion is a concern.',
     whyUse: 'May rise before frank hypotension; correlates with transfusion need, lactate, and mortality in several cohorts.',
     inputs: [
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 20, max: 300, step: 1, defaultValue: 90, helpText: 'SI = HR / SBP. Normal often ~0.5–0.7; ≥0.9 is a common occult-shock concern threshold.' }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 40, max: 300, step: 1, defaultValue: 120, helpText: 'Use the same-time SBP as the HR (not a later treated pressure).' }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 20, max: 300, step: 1, exampleValue: 90, helpText: 'SI = HR / SBP. Normal often ~0.5–0.7; ≥0.9 is a common occult-shock concern threshold.' }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 40, max: 300, step: 1, exampleValue: 120, helpText: 'Use the same-time SBP as the HR (not a later treated pressure).' }),
     ],
     calculate(values) {
       const hr = num(values.hr, 0);
@@ -1028,16 +1028,17 @@ export const missingEmergencyCalcs: Calculator[] = [
     whenToUse: 'Suspected necrotizing soft tissue infection when labs are available; adjunct only.',
     whyUse: 'Helps risk-stratify; low score does not rule out NSTI if clinical suspicion is high.',
     inputs: [
-      numberInput('crp', 'CRP', { unit: 'mg/L', min: 0, max: 600, step: 1, defaultValue: 50, helpText: 'Use mg/L (not mg/dL). ≥150 mg/L scores +4.' }),
-      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0, max: 100, step: 0.1, defaultValue: 12, helpText: '15–25: +1; >25: +2' }),
-      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 3, max: 22, step: 0.1, defaultValue: 13, helpText: '11–13.5: +1; <11: +2' }),
-      numberInput('na', 'Sodium', { unit: 'mmol/L', min: 100, max: 180, step: 1, defaultValue: 138, helpText: '<135 mmol/L scores +2' }),
+      numberInput('crp', 'CRP', { unit: 'mg/L', min: 0, max: 600, step: 1, exampleValue: 50, helpText: 'Use mg/L (not mg/dL). ≥150 mg/L scores +4.' }),
+      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0, max: 100, step: 0.1, exampleValue: 12, helpText: '15–25: +1; >25: +2' }),
+      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 3, max: 22, step: 0.1, exampleValue: 13, helpText: '11–13.5: +1; <11: +2' }),
+      numberInput('na', 'Sodium', { unit: 'mmol/L', min: 100, max: 180, step: 1, exampleValue: 138, helpText: '<135 mmol/L scores +2' }),
       numberInput('cr', 'Creatinine', {
         unit: 'mg/dL',
+        unitKind: 'creatinine',
         min: 0.1,
         max: 20,
         step: 0.1,
-        defaultValue: 1.0,
+        exampleValue: 1.0,
         helpText: 'Score uses >1.6 mg/dL (≈141 µmol/L).',
       }),
       numberInput('glucose', 'Glucose', {
@@ -1045,7 +1046,7 @@ export const missingEmergencyCalcs: Calculator[] = [
         min: 20,
         max: 1000,
         step: 1,
-        defaultValue: 110,
+        exampleValue: 110,
         helpText: 'Score uses >180 mg/dL (≈10 mmol/L).',
       }),
     ],
@@ -1109,8 +1110,10 @@ export const missingEmergencyCalcs: Calculator[] = [
     evidence: {
       summary:
         'LRINEC: CRP≥150 (+4); WBC 15–25 (+1) or >25 (+2); Hb 11–13.5 (+1) or <11 (+2); Na<135 (+2); Cr>1.6 mg/dL (+2); glucose>180 mg/dL (+1).',
-      formula: 'Sum 0–13; ≤5 low, 6–7 intermediate, ≥8 high (classic cutoffs).',
-      validation: 'Wong et al. 2004; external performance variable — clinical judgment supersedes score.',
+      formula:
+        'Sum 0–13. The derivation paper published ≥6 as the risk cutoff (PPV 92%, NPV 96%, AUROC 0.98/0.98 in the developmental/validation cohorts); the ≤5 / 6–7 / ≥8 split shown here is the widely used refinement of that single cutoff, not a separate derivation.',
+      validation:
+        'Wong et al. 2004 (Singapore derivation and validation cohorts of 314/140 patients); external performance is variable and later series report lower discrimination, so clinical judgment and surgical exploration supersede the score.',
       references: [
         {
           title: 'The LRINEC (Laboratory Risk Indicator for Necrotizing Fasciitis) score',
@@ -1141,8 +1144,8 @@ export const missingEmergencyCalcs: Calculator[] = [
     whenToUse: 'Major burns for rapid prognostic estimate and burn-center communication.',
     whyUse: 'Simple mortality correlate; revised Baux adds inhalation injury weight.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 0, max: 120, step: 1, defaultValue: 40 }),
-      numberInput('tbsa', 'TBSA burned', { unit: '%', min: 0, max: 100, step: 1, defaultValue: 20, helpText: 'Partial- + full-thickness (2nd/3rd degree) only; exclude isolated first-degree/superficial erythema. Estimate with Lund-Browder (preferred) or Rule of Nines; patient palm ≈ 1%.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 0, max: 120, step: 1, exampleValue: 40 }),
+      numberInput('tbsa', 'TBSA burned', { unit: '%', min: 0, max: 100, step: 1, exampleValue: 20, helpText: 'Partial- + full-thickness (2nd/3rd degree) only; exclude isolated first-degree/superficial erythema. Estimate with Lund-Browder (preferred) or Rule of Nines; patient palm ≈ 1%.' }),
       yesNo('inhalation', 'Inhalation injury (+17 on revised Baux)', 17, 'Clinically diagnosed inhalation injury (closed-space fire, carbonaceous sputum, facial burns/singed hairs plus airway signs) or bronchoscopy-confirmed.'),
     ],
     calculate(values) {
@@ -1226,10 +1229,10 @@ export const missingEmergencyCalcs: Calculator[] = [
         { label: 'Male (0)', value: 0 },
         { label: 'Female (+1)', value: 1 },
       ]),
-      numberInput('age', 'Age', { unit: 'years', min: 0, max: 120, step: 1, defaultValue: 40 }),
+      numberInput('age', 'Age', { unit: 'years', min: 0, max: 120, step: 1, exampleValue: 40 }),
       yesNo('inhalation', 'Inhalation injury (+1)', 1, 'Clinically diagnosed inhalation injury (closed-space fire, carbonaceous sputum, facial burns/singed hairs plus airway signs) or bronchoscopy-confirmed.'),
       yesNo('fullThickness', 'Full-thickness burn present (+1)', 1, 'Any full-thickness (3rd degree) area adds +1 in addition to TBSA-category points.'),
-      numberInput('tbsa', 'TBSA burned', { unit: '%', min: 0, max: 100, step: 1, defaultValue: 20, helpText: 'Partial- + full-thickness (2nd/3rd degree) only; exclude isolated first-degree/superficial erythema. Estimate with Lund-Browder (preferred) or Rule of Nines; patient palm ≈ 1%. Full-thickness presence is scored separately (+1).' }),
+      numberInput('tbsa', 'TBSA burned', { unit: '%', min: 0, max: 100, step: 1, exampleValue: 20, helpText: 'Partial- + full-thickness (2nd/3rd degree) only; exclude isolated first-degree/superficial erythema. Estimate with Lund-Browder (preferred) or Rule of Nines; patient palm ≈ 1%. Full-thickness presence is scored separately (+1).' }),
     ],
     calculate(values) {
       const sexPts = num(values.sex, 0) === 1 ? 1 : 0;

@@ -223,7 +223,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
         { label: 'School age (6–11 years)', value: 'school' },
         { label: 'Adolescent (12–15 years)', value: 'teen' },
       ]),
-      numberInput('hr', 'Measured heart rate', { unit: 'bpm', min: 30, max: 280, defaultValue: 120, helpText: 'Count for a full 60 s at rest (or from monitor). Interpret against the selected age band and awake vs sleeping state.' }),
+      numberInput('hr', 'Measured heart rate', { unit: 'bpm', min: 30, max: 280, exampleValue: 120, helpText: 'Count for a full 60 s at rest (or from monitor). Interpret against the selected age band and awake vs sleeping state.' }),
       selectInput('state', 'Patient state', [
         { label: 'Awake / resting', value: 'awake' },
         { label: 'Sleeping (lower end expected)', value: 'sleep' },
@@ -316,7 +316,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
         { label: 'School age (6–11 years)', value: 'school' },
         { label: 'Adolescent (12–15 years)', value: 'teen' },
       ]),
-      numberInput('rr', 'Measured respiratory rate', { unit: '/min', min: 5, max: 120, defaultValue: 30, helpText: 'Count for a full 60 s at rest in a calm child. Interpret against the selected age band.' }),
+      numberInput('rr', 'Measured respiratory rate', { unit: '/min', min: 5, max: 120, exampleValue: 30, helpText: 'Count for a full 60 s at rest in a calm child. Interpret against the selected age band.' }),
     ],
     calculate(values) {
       const band = String(values.ageBand ?? 'infant');
@@ -399,12 +399,12 @@ export const wave5PedsIdCalcs: Calculator[] = [
         { label: '1–10 years (formula: 70 + 2×age)', value: 'child' },
         { label: '>10 years', value: 'teen' },
       ]),
-      numberInput('ageYears', 'Age in years (if 1–10)', { min: 1, max: 10, step: 0.5, defaultValue: 4, helpText: 'Used only when age band is “1–10 years (formula: 70 + 2×age)”. Ignored for neonate, infant, and >10 years.' }),
+      numberInput('ageYears', 'Age in years (if 1–10)', { min: 1, max: 10, step: 0.5, exampleValue: 4, helpText: 'Used only when age band is “1–10 years (formula: 70 + 2×age)”. Ignored for neonate, infant, and >10 years.' }),
       numberInput('sbp', 'Measured SBP (optional compare)', {
         unit: 'mmHg',
         min: 30,
         max: 220,
-        defaultValue: 90,
+        exampleValue: 90,
         helpText: 'Leave meaningful value to compare against minimum',
         required: false,
       }),
@@ -510,13 +510,13 @@ export const wave5PedsIdCalcs: Calculator[] = [
     whenToUse: 'After selecting ETT size, estimate initial oral insertion depth in children (not neonates).',
     whyUse: 'Provides a starting lip-mark depth; must be confirmed with auscultation, ETCO₂, and imaging when available.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 0.5, max: 16, step: 0.5, defaultValue: 4 }),
+      numberInput('age', 'Age', { unit: 'years', min: 0.5, max: 16, step: 0.5, exampleValue: 4 }),
       numberInput('weight', 'Weight (optional neonatal/alt formula)', {
-        unit: 'kg',
+        unit: 'kg', unitKind: 'weight',
         min: 2,
         max: 80,
         step: 0.1,
-        defaultValue: 16,
+        exampleValue: 16,
         helpText: 'Weight-based depth ≈ weight(kg)/2 + 6 sometimes used in infants',
         required: false,
       }),
@@ -595,7 +595,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
     whenToUse: 'Cardiac arrest with shockable rhythm (VF/pVT) in children when preparing defibrillator energy.',
     whyUse: 'Weight-based joules differ from adult fixed doses; under-/overdosing is common without quick math.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', min: 2, max: 100, step: 0.1, defaultValue: 15 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 2, max: 100, step: 0.1, exampleValue: 15 }),
       selectInput('shock', 'Shock number', [
         { label: 'First shock (2 J/kg)', value: 'first' },
         { label: 'Subsequent shocks (4 J/kg)', value: 'next' },
@@ -675,7 +675,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
     whenToUse: 'Pediatric cardiac arrest when preparing IV/IO epinephrine.',
     whyUse: 'Converts weight to mg and mL of 1:10,000 concentration to reduce dosing errors.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', min: 1, max: 100, step: 0.1, defaultValue: 15 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 1, max: 100, step: 0.1, exampleValue: 15 }),
       selectInput('route', 'Route / concentration context', [
         { label: 'IV/IO — 1:10,000 (0.1 mg/mL) standard arrest', value: 'iv' },
         { label: 'ET tube — deprecated (not in current AHA PALS arrest algorithm)', value: 'et', description: 'Current AHA PALS arrest algorithm omits an endotracheal epinephrine dose; select IV/IO.' },
@@ -759,7 +759,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
     whenToUse: 'Hypovolemic or distributive shock in children when ordering an isotonic crystalloid bolus.',
     whyUse: 'Rapid mL/kg math for 10 vs 20 mL/kg strategies (cardiac/renal caution often uses 10 mL/kg).',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', min: 1, max: 100, step: 0.1, defaultValue: 15 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 1, max: 100, step: 0.1, exampleValue: 15 }),
       selectInput('dose', 'Bolus size', [
         { label: '20 mL/kg (typical initial, non-cardiac)', value: 20 },
         { label: '10 mL/kg (cardiac / carefully titrated)', value: 10 },
@@ -778,8 +778,10 @@ export const wave5PedsIdCalcs: Calculator[] = [
       const vol10 = round(10 * w, 0);
       const vol20 = round(20 * w, 0);
       const both = dose !== 10 && dose !== 20;
+      // "Both" still headlines the typical initial 20 mL/kg bolus; the 10 mL/kg
+      // volume stays visible in the label, interpretation, and details.
       const selectedVolume = dose === 10 ? vol10 : vol20;
-      const score: number | string = both ? `${vol10} / ${vol20}` : selectedVolume;
+      const score: number = both ? vol20 : selectedVolume;
       const label = both
         ? `${fluidLabel}: 10 mL/kg = ${vol10} mL · 20 mL/kg = ${vol20} mL`
         : `${fluidLabel}: ${dose} mL/kg = ${selectedVolume} mL`;
@@ -846,7 +848,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
         { label: '11–14 years ~50–70', value: 'earlyTeen' },
         { label: '15–18 years ~40–60', value: 'lateTeen' },
       ]),
-      numberInput('weight', 'Weight', { unit: 'kg', min: 1, max: 120, step: 0.1, defaultValue: 12 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 1, max: 120, step: 0.1, exampleValue: 12 }),
       selectInput('stress', 'Illness / activity multiplier', [
         { label: 'Baseline / healthy (×1.0)', value: 1, description: 'Well child, usual activity, no catch-up growth needed' },
         { label: 'Mild stress / catch-up (×1.2)', value: 1.2, description: 'Catch-up after FTT or mild acute illness (uncomplicated infection, recovering, increased activity). Not hospitalized critical illness.' },
@@ -942,7 +944,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
         'Examples: weight gain well below expected for age (term infant often <20 g/day over weeks, or flattening on a WHO velocity chart), or down-crossing not already captured as ≥2 major percentile lines. Use growth-chart / WHO velocity, not a single weight.'),
       yesNo('redFlags', 'Red flags (vomiting, diarrhea, neglect concern, chronic disease signs)', 2,
         'Persistent vomiting or diarrhea, signs of neglect/food insecurity, or exam findings of chronic disease. Adds 2 points.'),
-      numberInput('ageMonths', 'Age', { unit: 'months', min: 0, max: 216, defaultValue: 12 }),
+      numberInput('ageMonths', 'Age', { unit: 'months', min: 0, max: 216, exampleValue: 12 }),
     ],
     calculate(values) {
       const score =
@@ -971,7 +973,9 @@ export const wave5PedsIdCalcs: Calculator[] = [
           interpretation: `Helper score ${score}: multiple criteria consistent with failure to thrive / undernutrition. Needs structured workup, feeding plan, and close follow-up; consider hospitalization if severe or unsafe.`,
         },
         {
-          max: 20,
+          // Highest reachable score is 3 (WFA z band) + 1 + 1 + 1 + 2 (red
+          // flags) = 8; the terminal bucket is capped at that, not at 20.
+          max: 8,
           level: 'critical',
           label: 'Severe / high-risk FTT',
           interpretation: `Helper score ${score}: severe z-band and/or red flags. Urgent comprehensive assessment including medical, nutritional, and psychosocial domains.`,
@@ -1037,8 +1041,8 @@ export const wave5PedsIdCalcs: Calculator[] = [
     whenToUse: '≥35-week newborns with measured TSB when estimating approximate Bhutani risk zone (not a full nomogram plot).',
     whyUse: 'Hour of age matters as much as absolute TSB; risk zones stratify later significant hyperbilirubinemia and guide follow-up intensity (phototherapy uses separate AAP thresholds).',
     inputs: [
-      numberInput('ageHours', 'Age', { unit: 'hours', min: 12, max: 144, defaultValue: 48 }),
-      numberInput('tsb', 'Total serum bilirubin', { unit: 'mg/dL', min: 1, max: 30, step: 0.1, defaultValue: 10 }),
+      numberInput('ageHours', 'Age', { unit: 'hours', min: 12, max: 144, exampleValue: 48 }),
+      numberInput('tsb', 'Total serum bilirubin', { unit: 'mg/dL', min: 1, max: 30, step: 0.1, exampleValue: 10 }),
       selectInput('ga', 'Gestational age context', [
         { label: '≥38 weeks, well', value: 'lowRiskPop' },
         { label: '35–37+6 weeks or other risk factors present', value: 'higherRiskPop' },
@@ -1139,11 +1143,11 @@ export const wave5PedsIdCalcs: Calculator[] = [
         unit: 'weeks',
         min: 35,
         max: 42,
-        defaultValue: 40,
+        exampleValue: 40,
         helpText: 'AAP 2022 tables start at 35 completed weeks. ≥40 weeks uses the 40-week curve. With any neurotoxicity risk factor besides GA, ≥38 weeks share one curve.',
       }),
-      numberInput('ageHours', 'Age', { unit: 'hours', min: 6, max: 336, defaultValue: 48 }),
-      numberInput('tsb', 'Total serum bilirubin', { unit: 'mg/dL', min: 1, max: 35, step: 0.1, defaultValue: 14 }),
+      numberInput('ageHours', 'Age', { unit: 'hours', min: 6, max: 336, exampleValue: 48 }),
+      numberInput('tsb', 'Total serum bilirubin', { unit: 'mg/dL', min: 1, max: 35, step: 0.1, exampleValue: 14 }),
       selectInput('risk', 'Neurotoxicity risk factors other than GA', [
         { label: 'None besides gestational age', value: 'none', description: 'Use the GA-specific no-risk-factor phototherapy curve' },
         { label: 'Any (albumin <3.0, hemolysis, sepsis, instability)', value: 'any', description: 'Any one AAP Table 2 factor besides GA uses the with-risk-factors curve' },
@@ -1239,11 +1243,11 @@ export const wave5PedsIdCalcs: Calculator[] = [
         unit: 'weeks',
         min: 35,
         max: 42,
-        defaultValue: 40,
+        exampleValue: 40,
         helpText: 'AAP 2022 exchange tables start at 35 completed weeks. No extra neurotoxicity risk: ≥38 weeks share one curve. Any extra risk: ≥38 weeks share one curve.',
       }),
-      numberInput('ageHours', 'Age', { unit: 'hours', min: 6, max: 336, defaultValue: 48 }),
-      numberInput('tsb', 'Total serum bilirubin', { unit: 'mg/dL', min: 1, max: 45, step: 0.1, defaultValue: 22 }),
+      numberInput('ageHours', 'Age', { unit: 'hours', min: 6, max: 336, exampleValue: 48 }),
+      numberInput('tsb', 'Total serum bilirubin', { unit: 'mg/dL', min: 1, max: 45, step: 0.1, exampleValue: 22 }),
       selectInput('risk', 'Neurotoxicity risk factors other than GA', [
         { label: 'None besides gestational age', value: 'none', description: 'Use the GA-specific no-risk-factor exchange curve' },
         { label: 'Any (albumin <3.0, hemolysis, sepsis, instability)', value: 'any', description: 'Any one AAP Table 2 factor besides GA uses the with-risk-factors curve' },
@@ -1340,7 +1344,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
     whenToUse: 'Children with croup (laryngotracheitis) when ordering dexamethasone.',
     whyUse: 'Common practice uses 0.15–0.6 mg/kg once (max often 10–16 mg); calculates absolute mg and mL if concentration known.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', min: 3, max: 80, step: 0.1, defaultValue: 12 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 3, max: 80, step: 0.1, exampleValue: 12 }),
       selectInput('regimen', 'Dose regimen', [
         { label: '0.15 mg/kg (evidence-supported lower dose)', value: 0.15 },
         { label: '0.3 mg/kg', value: 0.3 },
@@ -1350,7 +1354,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
         unit: 'mg',
         min: 5,
         max: 20,
-        defaultValue: 10,
+        exampleValue: 10,
         helpText: 'Many centers cap at 10 mg; some allow up to 16 mg',
       }),
       numberInput('conc', 'Oral concentration (optional)', {
@@ -1358,7 +1362,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
         min: 0.1,
         max: 10,
         step: 0.1,
-        defaultValue: 1,
+        exampleValue: 1,
         helpText: 'For volume estimate of oral liquid',
         required: false,
       }),
@@ -1461,7 +1465,7 @@ export const wave5PedsIdCalcs: Calculator[] = [
         unit: '%',
         min: 50,
         max: 100,
-        defaultValue: 96,
+        exampleValue: 96,
         required: false,
       }),
     ],
@@ -2233,12 +2237,15 @@ export const wave5PedsIdCalcs: Calculator[] = [
         { label: '2–11 months', value: 'infant' },
         { label: '12–59 months', value: 'child' },
       ]),
-      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 10, max: 120, defaultValue: 50, helpText: 'Count for a full 60 s in a calm child; do not use a 15 s ×4 count. Fast breathing: ≥50/min if 2–11 months; ≥40/min if 12–59 months.' }),
-      yesNo('chestIndrawing', 'Chest indrawing', 1,
+      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 10, max: 120, exampleValue: 50, helpText: 'Count for a full 60 s in a calm child; do not use a 15 s ×4 count. Fast breathing: ≥50/min if 2–11 months; ≥40/min if 12–59 months.' }),
+      yesNo('chestIndrawing', 'Chest indrawing', null,
         'Inward movement of the lower chest wall on inspiration while the child is calm (not isolated intercostal recession or crying).'),
-      yesNo('danger', 'General danger sign (not able to drink, persistent vomiting, convulsions, lethargy/unconscious, stridor in calm child)', 2),
-      yesNo('spo2Low', 'SpO₂ <90% (if pulse oximetry available)', 2),
-      yesNo('malnutrition', 'Severe acute malnutrition (context)', 2),
+      yesNo('danger', 'General danger sign (not able to drink, persistent vomiting, convulsions, lethargy/unconscious, stridor in calm child)', null,
+        'Any one general danger sign defines severe pneumonia — this classification is not additive.'),
+      yesNo('spo2Low', 'SpO₂ <90% (if pulse oximetry available)', null,
+        'Hypoxaemia outranks the fast-breathing/indrawing class and defines severe pneumonia.'),
+      yesNo('malnutrition', 'Severe acute malnutrition (context)', null,
+        'Severe acute malnutrition is a severe-disease flag in this helper, not an additive point.'),
     ],
     calculate(values) {
       const age = String(values.ageBand ?? 'infant');
@@ -2250,33 +2257,33 @@ export const wave5PedsIdCalcs: Calculator[] = [
       let label = 'Cough/cold (no pneumonia)';
       let score = 0;
       let riskLevel: 'low' | 'moderate' | 'high' | 'critical' = 'low';
-      if (danger || (indraw && danger)) {
-        // WHO: general danger signs or oxygen need → severe
+      // WHO IMCI ladder for 2–59 months with cough/difficult breathing:
+      // danger signs (or hypoxaemia/SAM flags here) outrank everything, then
+      // chest indrawing, then fast breathing alone, then cough/cold.
+      if (danger) {
         label = 'Severe pneumonia (or very severe disease)';
         score = 2;
         riskLevel = 'critical';
-      } else if (indraw || (fast && indraw)) {
-        // With 2014 updates, chest indrawing pneumonia may be treated as pneumonia (non-severe) in some algorithms when no danger signs
-        label = indraw && !danger ? 'Pneumonia (chest indrawing, no danger signs)' : 'Pneumonia';
+      } else if (indraw && fast) {
+        label = 'Pneumonia (fast breathing + indrawing)';
         score = 1;
         riskLevel = 'moderate';
-        if (fast && indraw) {
-          label = 'Pneumonia (fast breathing + indrawing)';
-        }
+      } else if (indraw) {
+        // 2014 IMCI update: indrawing pneumonia without danger signs is treated
+        // as pneumonia (oral amoxicillin, outpatient follow-up).
+        label = 'Pneumonia (chest indrawing, no danger signs)';
+        score = 1;
+        riskLevel = 'moderate';
       } else if (fast) {
         label = 'Pneumonia (fast breathing)';
         score = 1;
         riskLevel = 'moderate';
       }
-      if (danger) {
-        label = 'Severe pneumonia / possible serious bacterial infection';
-        score = 2;
-        riskLevel = 'critical';
-      }
       return {
         score,
+        unit: 'class (0–2)',
         label,
-        interpretation: `WHO-style class: ${label}. Age band ${age === 'infant' ? '2–11 mo (fast breathing ≥50)' : '12–59 mo (fast breathing ≥40)'}; RR ${rr}/min (${fast ? 'fast' : 'not fast'}). Chest indrawing: ${indraw ? 'yes' : 'no'}. Danger/O₂/SAM flags: ${danger ? 'yes' : 'no'}. Follow current WHO/IMCI antibiotic and referral charts for your country.`,
+        interpretation: `WHO-style class ${score}/2 (non-additive): ${label}. Any single severe feature (general danger sign, SpO₂ <90%, or severe acute malnutrition) defines severe pneumonia regardless of the other answers; otherwise fast breathing or chest indrawing defines pneumonia and cough/cold is class 0. Age band ${age === 'infant' ? '2–11 mo (fast breathing ≥50)' : '12–59 mo (fast breathing ≥40)'}; RR ${rr}/min (${fast ? 'fast' : 'not fast'}). Chest indrawing: ${indraw ? 'yes' : 'no'}. Danger/O₂/SAM flags: ${danger ? 'yes' : 'no'}. Follow current WHO/IMCI antibiotic and referral charts for your country.`,
         riskLevel,
         details: [
           { label: 'Fast breathing', value: fast ? 'Yes' : 'No' },
@@ -2293,7 +2300,8 @@ export const wave5PedsIdCalcs: Calculator[] = [
     evidence: {
       summary:
         'WHO IMCI classifies childhood pneumonia using age-specific fast-breathing cutoffs, chest indrawing, and general danger signs (with SpO₂ where available).',
-      formula: 'Fast breathing (≥50 if 2–11 mo; ≥40 if 12–59 mo) ± indrawing ± danger signs',
+      formula:
+        'Class 2 if any severe feature (general danger sign, SpO₂ <90%, severe acute malnutrition); else class 1 if fast breathing (≥50 if 2–11 mo; ≥40 if 12–59 mo) or chest indrawing; else class 0. Non-additive.',
       validation: 'Cornerstone of global child-health programs; updates refined management of chest-indrawing pneumonia.',
       references: [
         {

@@ -139,9 +139,9 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'Adults hospitalized with acute decompensated heart failure for in-hospital mortality risk stratification.',
     whyUse: 'Simple bedside tree from a large US registry; identifies low- vs high-risk groups using three variables.',
     inputs: [
-      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, step: 1, defaultValue: 30 }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, defaultValue: 120 }),
-      numberInput('cr', 'Serum creatinine', { unit: 'mg/dL', min: 0.2, max: 20, step: 0.1, defaultValue: 1.2 }),
+      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, step: 1, exampleValue: 30 }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, exampleValue: 120 }),
+      numberInput('cr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.2, max: 20, step: 0.1, exampleValue: 1.2, helpText: 'Select µmol/L for SI lab reports.' }),
     ],
     calculate(values) {
       const bun = num(values.bun, 30);
@@ -234,11 +234,11 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'Adults admitted with heart failure when estimating 30-day mortality risk from admission variables.',
     whyUse: 'Published 30-day integer model (age, RR, SBP credits, BUN, Na, comorbidities). Hemoglobin is in the 1-year model only.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 75 }),
-      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 8, max: 60, defaultValue: 20, helpText: 'Table 4 adds RR after clamping to 20–45 /min (RR <20 counts as 20).' }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, defaultValue: 120, helpText: 'SBP contributes negative credits (higher SBP lowers the score).' }),
-      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, defaultValue: 30, helpText: 'Added 1 point per mg/dL, capped at 60.' }),
-      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 110, max: 160, defaultValue: 138, helpText: 'Na <136 mEq/L adds +10. Hemoglobin is not in the 30-day model.' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 75 }),
+      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 8, max: 60, exampleValue: 20, helpText: 'Table 4 adds RR after clamping to 20–45 /min (RR <20 counts as 20).' }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, exampleValue: 120, helpText: 'SBP contributes negative credits (higher SBP lowers the score).' }),
+      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, exampleValue: 30, helpText: 'Added 1 point per mg/dL, capped at 60.' }),
+      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 110, max: 160, exampleValue: 138, helpText: 'Na <136 mEq/L adds +10. Hemoglobin is not in the 30-day model.' }),
       yesNo('cvd', 'Cerebrovascular disease', 10),
       yesNo('dementia', 'Dementia', 20),
       yesNo('copd', 'COPD', 10),
@@ -364,11 +364,11 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'Adults admitted with acute HF for in-hospital mortality risk estimate from admission variables.',
     whyUse: 'Published integer point tables (age, SBP, BUN, heart rate, sodium, COPD +2, non-black race +3).',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, defaultValue: 72 }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, defaultValue: 130 }),
-      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, defaultValue: 25 }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 200, defaultValue: 80 }),
-      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 110, max: 160, defaultValue: 138 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 72 }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 250, exampleValue: 130 }),
+      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, exampleValue: 25 }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 200, exampleValue: 80 }),
+      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 110, max: 160, exampleValue: 138 }),
       yesNo('copd', 'COPD', 2),
       selectInput('race', 'Race category (GWTG variable)', [
         { label: 'Black (0)', value: 'black', points: 0, description: 'Black race as coded in GWTG-HF (0 points; lower in-hospital mortality in derivation)' },
@@ -646,9 +646,9 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'When EDV and ESV are known from echocardiography, ventriculography, or other imaging.',
     whyUse: 'Fundamental relationships: SV = EDV − ESV; EF = SV/EDV; CO = SV × HR.',
     inputs: [
-      numberInput('edv', 'End-diastolic volume (EDV)', { unit: 'mL', min: 20, max: 500, defaultValue: 120 }),
-      numberInput('esv', 'End-systolic volume (ESV)', { unit: 'mL', min: 5, max: 400, defaultValue: 50 }),
-      numberInput('hr', 'Heart rate (optional, for CO)', { unit: 'bpm', min: 30, max: 220, defaultValue: 70, required: false }),
+      numberInput('edv', 'End-diastolic volume (EDV)', { unit: 'mL', min: 20, max: 500, exampleValue: 120 }),
+      numberInput('esv', 'End-systolic volume (ESV)', { unit: 'mL', min: 5, max: 400, exampleValue: 50 }),
+      numberInput('hr', 'Heart rate (optional, for CO)', { unit: 'bpm', min: 30, max: 220, exampleValue: 70, required: false }),
     ],
     calculate(values) {
       const edv = num(values.edv, 120);
@@ -752,8 +752,8 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'When CO and BSA are known (PA catheter, echo estimates, pulse contour) for perfusion assessment.',
     whyUse: 'Indexes CO to body size; used in Forrester classification, shock algorithms, and transplant/MCS evaluation.',
     inputs: [
-      numberInput('co', 'Cardiac output (CO)', { unit: 'L/min', min: 0.5, max: 15, step: 0.1, defaultValue: 5.0 }),
-      numberInput('bsa', 'Body surface area (BSA)', { unit: 'm²', min: 0.5, max: 3.5, step: 0.01, defaultValue: 1.9 }),
+      numberInput('co', 'Cardiac output (CO)', { unit: 'L/min', min: 0.5, max: 15, step: 0.1, exampleValue: 5.0 }),
+      numberInput('bsa', 'Body surface area (BSA)', { unit: 'm²', min: 0.5, max: 3.5, step: 0.01, exampleValue: 1.9 }),
     ],
     calculate(values) {
       const co = num(values.co, 5);
@@ -833,16 +833,60 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'When MAP, CVP (or RAP), and CO are available to characterize vasomotor tone.',
     whyUse: 'Distinguishes vasodilatory vs vasoconstricted shock and guides pressor/vasodilator therapy.',
     inputs: [
-      numberInput('map', 'Mean arterial pressure (MAP)', { unit: 'mmHg', min: 20, max: 200, defaultValue: 70 }),
-      numberInput('cvp', 'CVP / RAP', { unit: 'mmHg', min: 0, max: 40, defaultValue: 8 }),
-      numberInput('co', 'Cardiac output (CO)', { unit: 'L/min', min: 0.5, max: 15, step: 0.1, defaultValue: 5.0 }),
+      numberInput('map', 'Mean arterial pressure (MAP)', { unit: 'mmHg', min: 20, max: 200, exampleValue: 70 }),
+      numberInput('cvp', 'CVP / RAP', { unit: 'mmHg', min: 0, max: 40, exampleValue: 8 }),
+      numberInput('co', 'Cardiac output (CO)', { unit: 'L/min', min: 0.5, max: 15, step: 0.1, exampleValue: 5.0 }),
     ],
     calculate(values) {
-      const map = num(values.map, 70);
-      const cvp = num(values.cvp, 8);
-      const co = num(values.co, 5);
-      if (co <= 0) {
-        return { score: 0, label: 'Invalid CO', interpretation: 'CO must be > 0.', riskLevel: 'info' };
+      // Do not silently substitute illustrative values when this calculator is
+      // called directly (the form-level required-input gate handles the UI).
+      const map = num(values.map, Number.NaN);
+      const cvp = num(values.cvp, Number.NaN);
+      const co = num(values.co, Number.NaN);
+      const invalidDetails = [
+        { label: 'MAP', value: `${map} mmHg` },
+        { label: 'CVP', value: `${cvp} mmHg` },
+        { label: 'CO', value: `${co} L/min` },
+        { label: 'Formula', value: '80 × (MAP − CVP) / CO' },
+      ];
+      if (!Number.isFinite(map) || !Number.isFinite(cvp) || !Number.isFinite(co) || co <= 0) {
+        return {
+          score: '—',
+          unit: 'dyn·s·cm⁻⁵',
+          label: 'Invalid MAP/CVP/CO input',
+          interpretation: 'MAP, CVP, and CO must be finite measurements, and CO must be > 0. No SVR is available until the inputs are verified.',
+          riskLevel: 'info',
+          details: invalidDetails,
+        };
+      }
+      if (map < cvp) {
+        return {
+          score: '—',
+          unit: 'dyn·s·cm⁻⁵',
+          label: 'Invalid MAP/CVP gradient',
+          interpretation: 'MAP is below CVP, producing a negative pressure gradient that is inconsistent with the forward-flow SVR model. Verify pressure measurements, transducer leveling/zeroing, units, and timing; no clinical SVR is available.',
+          riskLevel: 'info',
+          details: [
+            ...invalidDetails.slice(0, 3),
+            { label: 'MAP − CVP', value: `${map - cvp} mmHg` },
+            invalidDetails[3],
+          ],
+        };
+      }
+      if (map === cvp) {
+        return {
+          score: 0,
+          unit: 'dyn·s·cm⁻⁵',
+          label: 'Zero MAP−CVP gradient',
+          interpretation: 'MAP equals CVP, so the published equation returns a zero-gradient SVR of 0 dyn·s·cm⁻⁵. This extreme, measurement-sensitive result should be verified before clinical use.',
+          riskLevel: 'info',
+          details: [
+            ...invalidDetails.slice(0, 3),
+            { label: 'MAP − CVP', value: '0 mmHg' },
+            invalidDetails[3],
+          ],
+          recommendations: ['Verify MAP and CVP/RAP measurements and transducer leveling/zeroing', 'Integrate with flow and perfusion findings before acting on the result'],
+        };
       }
       const svr = round((80 * (map - cvp)) / co, 0);
       const wood = round((map - cvp) / co, 1);
@@ -893,7 +937,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'SVR estimates left-sided afterload from the pressure drop across the systemic circulation divided by flow, scaled by 80 for dyn units.',
+      summary: 'SVR estimates systemic vascular resistance from the pressure drop across the systemic circulation divided by forward flow, scaled by 80 for dyn units. MAP = CVP is retained as the equation\'s zero-gradient result; MAP < CVP is rejected because it produces a negative pressure drop inconsistent with this forward-flow interpretation.',
       formula: 'SVR = 80 × (MAP − CVP) / CO (dyn·s·cm⁻⁵); Wood units = (MAP − CVP) / CO',
       validation: 'Standard critical care hemodynamic equation.',
       references: [
@@ -922,9 +966,9 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'Right heart catheterization interpretation for pulmonary hypertension and transplant evaluation.',
     whyUse: 'Defines precapillary component of PH; guides PAH vs left-heart disease physiology.',
     inputs: [
-      numberInput('mpap', 'Mean pulmonary artery pressure (mPAP)', { unit: 'mmHg', min: 5, max: 80, defaultValue: 25 }),
-      numberInput('pcwp', 'PCWP / PAWP', { unit: 'mmHg', min: 0, max: 50, defaultValue: 12 }),
-      numberInput('co', 'Cardiac output (CO)', { unit: 'L/min', min: 0.5, max: 15, step: 0.1, defaultValue: 5.0 }),
+      numberInput('mpap', 'Mean pulmonary artery pressure (mPAP)', { unit: 'mmHg', min: 5, max: 80, exampleValue: 25 }),
+      numberInput('pcwp', 'PCWP / PAWP', { unit: 'mmHg', min: 0, max: 50, exampleValue: 12 }),
+      numberInput('co', 'Cardiac output (CO)', { unit: 'L/min', min: 0.5, max: 15, step: 0.1, exampleValue: 5.0 }),
     ],
     calculate(values) {
       const mpap = num(values.mpap, 25);
@@ -1006,8 +1050,8 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'QT correction when an alternative to Bazett/Fridericia is desired; Framingham performs well across HR ranges.',
     whyUse: 'Linear formula derived from Framingham Heart Study; less HR-biased than Bazett at extremes.',
     inputs: [
-      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, defaultValue: 400 }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, defaultValue: 70 }),
+      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, exampleValue: 400 }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, exampleValue: 70 }),
     ],
     calculate(values) {
       const qt = num(values.qt, 400);
@@ -1084,18 +1128,32 @@ export const wave2CardiologyCalcs: Calculator[] = [
     id: 'qtc-hodges',
     name: 'Corrected QT (Hodges)',
     shortName: 'QTc Hodges',
-    description: 'QTc using the Hodges formula: QTc = QT + 1.75 × (HR − 60).',
+    description: 'Adult ECG QTc using the Hodges formula: QTc = QT + 1.75 × (HR − 60), with guarded QT/heart-rate inputs.',
     category: 'cardiology',
     tags: ['ecg', 'qt', 'qtc', 'hodges'],
-    whenToUse: 'QT correction with a linear heart-rate formula alternative to Bazett.',
-    whyUse: 'Simple linear correction; often better than Bazett at high/low HR.',
+    whenToUse: 'Adults with a measured QT interval and representative heart rate on an interpretable ECG when a linear alternative to Bazett is desired; do not use with marked RR variability or an unreliable T-wave end.',
+    whyUse: 'Simple linear correction; often better than Bazett at high/low HR. This helper fails closed unless QT and HR are finite, positive, and within its declared adult input ranges.',
     inputs: [
-      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, defaultValue: 400 }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, defaultValue: 70 }),
+      numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, exampleValue: 400, helpText: 'Measure from QRS onset to the end of the T wave (not the U wave) on an interpretable ECG; accepted input range is 200–800 ms.' }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, exampleValue: 70, helpText: 'Use a representative rate from the same tracing; accepted input range is 30–220 bpm. Do not apply rate correction when RR variability is large.' }),
     ],
     calculate(values) {
-      const qt = num(values.qt, 400);
-      const hr = num(values.hr, 70);
+      const qt = num(values.qt);
+      const hr = num(values.hr);
+      if (!Number.isFinite(qt) || !Number.isFinite(hr) || qt < 200 || qt > 800 || hr < 30 || hr > 220) {
+        return {
+          score: '—',
+          unit: 'ms',
+          label: 'Invalid QT/HR input',
+          interpretation: 'QT must be finite and within 200–800 ms, and heart rate must be finite and within 30–220 bpm. No QTc is available outside this adult ECG input range.',
+          riskLevel: 'info',
+          details: [
+            { label: 'QT input', value: `${qt} ms` },
+            { label: 'Heart rate input', value: `${hr} bpm` },
+            { label: 'Formula', value: 'QTc = QT + 1.75×(HR−60)' },
+          ],
+        };
+      }
       const qtc = round(qt + 1.75 * (hr - 60), 0);
 
       let riskLevel: 'normal' | 'moderate' | 'high' | 'critical' = 'normal';
@@ -1139,9 +1197,9 @@ export const wave2CardiologyCalcs: Calculator[] = [
       };
     },
     evidence: {
-      summary: 'Hodges linear formula: QTc = QT + 1.75×(HR−60) with QT in milliseconds.',
+      summary: 'Hodges linear formula: QTc = QT + 1.75×(HR−60) with QT in milliseconds. This adult helper accepts only finite QT 200–800 ms and HR 30–220 bpm; it does not calculate outside those declared ranges.',
       formula: 'QTc_Hodges = QT + 1.75 × (HR − 60)',
-      validation: 'One of several linear/nonlinear corrections superior to Bazett at extreme HR in comparative studies.',
+      validation: 'One of several linear/nonlinear corrections superior to Bazett at extreme HR in comparative studies. AHA/ACCF/HRS recommends visual validation of QT measurement and avoiding rate correction when RR variability is large or the T-wave end is unreliable.',
       references: [
         {
           title: "Bazett's QT correction reviewed: evidence that a linear QT correction for heart rate is better",
@@ -1161,12 +1219,19 @@ export const wave2CardiologyCalcs: Calculator[] = [
           pmid: '15534815',
           doi: '10.1016/j.jelectrocard.2004.08.030',
         },
+        {
+          title: 'AHA/ACCF/HRS recommendations for the standardization and interpretation of the ECG: Part IV: the ST segment, T and U waves, and the QT interval',
+          citation: 'Rautaharju PM et al. Circulation. 2009',
+          year: 2009,
+          pmid: '19228821',
+          doi: '10.1161/CIRCULATIONAHA.108.191096',
+        },
       ],
     },
     nextSteps: [
       { condition: 'Prolonged QTc', actions: ['Medication review', 'Electrolytes', 'Repeat ECG'] },
     ],
-    pearls: ['At HR 60, Hodges QTc equals raw QT.', 'Fridericia is often preferred in drug studies; be consistent within a patient.'],
+    pearls: ['At HR 60, Hodges QTc equals raw QT.', 'Use a representative, interpretable ECG measurement; AHA/ACCF/HRS advises against rate correction with marked RR variability or an unreliable T-wave end.', 'Fridericia is often preferred in drug studies; be consistent within a patient.'],
   },
   {
     id: 'qt-prolongation-risk',
@@ -1273,7 +1338,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'When a serum digoxin level is available and clinical context (efficacy vs toxicity) is being reviewed.',
     whyUse: 'Modern HF targets favor lower levels (≈0.5–0.9 ng/mL); toxicity risk rises as levels increase, especially >2 ng/mL.',
     inputs: [
-      numberInput('level', 'Serum digoxin level', { unit: 'ng/mL', min: 0, max: 20, step: 0.1, defaultValue: 0.8, helpText: 'Draw ≥6–8 h after the last dose; prefer steady state (~5–7 days, longer in CKD). Units ng/mL = µg/L.' }),
+      numberInput('level', 'Serum digoxin level', { unit: 'ng/mL', min: 0, max: 20, step: 0.1, exampleValue: 0.8, helpText: 'Draw ≥6–8 h after the last dose; prefer steady state (~5–7 days, longer in CKD). Units ng/mL = µg/L.' }),
       selectInput('indication', 'Primary context', [
         { label: 'Heart failure rate/symptom adjunct', value: 'hf' },
         { label: 'Atrial fibrillation rate control', value: 'af' },
@@ -1671,9 +1736,9 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'Patients evaluated for cardiac surgery when a simple mortality risk index is desired.',
     whyUse: 'Parsimonious score with discrimination comparable to more complex models in some surgical series.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 70, helpText: 'ACEF uses age in years in the numerator (Age / EF%).' }),
-      numberInput('ef', 'LVEF', { unit: '%', min: 10, max: 80, defaultValue: 50, helpText: 'Ejection fraction as a percent (e.g. 40, not 0.40).' }),
-      numberInput('cr', 'Serum creatinine', { unit: 'mg/dL', min: 0.3, max: 15, step: 0.1, defaultValue: 1.0, helpText: 'Adds +1 to ACEF only if Cr >2.0 mg/dL (not ≥2.0).' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 70, helpText: 'ACEF uses age in years in the numerator (Age / EF%).' }),
+      numberInput('ef', 'LVEF', { unit: '%', min: 10, max: 80, exampleValue: 50, helpText: 'Ejection fraction as a percent (e.g. 40, not 0.40).' }),
+      numberInput('cr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.3, max: 15, step: 0.1, exampleValue: 1.0, helpText: 'Adds +1 to ACEF only if Cr >2.0 mg/dL (not ≥2.0). Select µmol/L for SI lab reports.' }),
     ],
     calculate(values) {
       const age = num(values.age, 70);
@@ -1750,7 +1815,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'Adults undergoing major cardiac surgery for in-hospital mortality estimate and consent discussion (alongside STS).',
     whyUse: 'EuroSCORE II recalibrated the original additive/logistic EuroSCORE on 2010 data. Official reporting should still confirm with euroscore.org / STS.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, defaultValue: 70, helpText: 'Xi = 1 if age ≤60, then +1 per year above 60' }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 70, helpText: 'Xi = 1 if age ≤60, then +1 per year above 60' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'm' },
         { label: 'Female', value: 'f' },
@@ -1759,7 +1824,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
         unit: 'mL/min',
         min: 5,
         max: 200,
-        defaultValue: 90,
+        exampleValue: 90,
         helpText: '>85 normal; 51–85 moderate; ≤50 severe (ignored if on dialysis)',
       }),
       yesNo('dialysis', 'On dialysis', null),
@@ -1936,7 +2001,7 @@ export const wave2CardiologyCalcs: Calculator[] = [
       yesNo('age75', 'Age > 75 years', 4),
       yesNo('anemia', 'Anemia (Hct <39% men / <36% women)', 3),
       yesNo('dm', 'Diabetes mellitus', 3),
-      numberInput('contrast', 'Contrast volume', { unit: 'mL', min: 0, max: 1000, step: 10, defaultValue: 200 }),
+      numberInput('contrast', 'Contrast volume', { unit: 'mL', min: 0, max: 1000, step: 10, exampleValue: 200 }),
       selectInput('egfr', 'eGFR category (mL/min/1.73 m²)', [
         { label: '≥ 60', value: 0, points: 0 },
         { label: '40–59', value: 2, points: 2 },
@@ -2031,8 +2096,8 @@ export const wave2CardiologyCalcs: Calculator[] = [
     whenToUse: 'When CI and PCWP (or clinical surrogates) are available in acute HF/MI shock phenotyping.',
     whyUse: 'Classic 2×2 profile that guides diuretics, inotropes, and vasodilators.',
     inputs: [
-      numberInput('ci', 'Cardiac index (CI)', { unit: 'L/min/m²', min: 0.5, max: 6, step: 0.1, defaultValue: 2.4, helpText: 'Forrester cutoff: CI ≤2.2 = cold (hypoperfusion); >2.2 = warm.' }),
-      numberInput('pcwp', 'PCWP (wedge)', { unit: 'mmHg', min: 0, max: 50, defaultValue: 16, helpText: 'Forrester cutoff: PCWP >18 mmHg = wet (congestion); ≤18 = dry. Clinical wet/cold exam approximates if no catheter.' }),
+      numberInput('ci', 'Cardiac index (CI)', { unit: 'L/min/m²', min: 0.5, max: 6, step: 0.1, exampleValue: 2.4, helpText: 'Forrester cutoff: CI ≤2.2 = cold (hypoperfusion); >2.2 = warm.' }),
+      numberInput('pcwp', 'PCWP (wedge)', { unit: 'mmHg', min: 0, max: 50, exampleValue: 16, helpText: 'Forrester cutoff: PCWP >18 mmHg = wet (congestion); ≤18 = dry. Clinical wet/cold exam approximates if no catheter.' }),
     ],
     calculate(values) {
       const ci = num(values.ci, 2.4);
