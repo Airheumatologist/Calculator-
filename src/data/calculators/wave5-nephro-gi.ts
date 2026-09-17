@@ -709,7 +709,7 @@ export const wave5NephroGiCalcs: Calculator[] = [
     whyUse: 'Spot estimates support HTN and edema counseling; 24h collection remains more accurate when feasible.',
     inputs: [
       numberInput('una', 'Spot urine sodium', { unit: 'mEq/L', min: 1, max: 300, exampleValue: 80 }),
-      numberInput('ucr', 'Spot urine creatinine', { unit: 'mg/dL', min: 1, max: 400, exampleValue: 100 }),
+      numberInput('ucr', 'Spot urine creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 1, max: 400, exampleValue: 100, helpText: 'Select µmol/L for SI lab reports; the Kawasaki ratio is taken in mg/dL.' }),
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 50 }),
       numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 200, step: 0.1, exampleValue: 70 }),
       numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, exampleValue: 170 }),

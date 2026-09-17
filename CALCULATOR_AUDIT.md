@@ -214,16 +214,26 @@ Verified green at the end of the pass: `vitest` 45 files / 410 tests, `tsc -b`,
 `oxlint`, `vite build`. Worktree remains uncommitted.
 
 **Units — rollout completed.** The pass-2/3 `unitKind` convention now covers
-every number field whose own unit is one of the shared families: 75 weight (`kg`),
-44 creatinine (`mg/dL`; serum, plasma, and spot-urine fields, excluding
-creatinine *clearance* which is mL/min), 11 FiO₂ (`fraction`), and 3 D-dimer
-(`ng/mL FEU`) fields — 133 unit-aware fields, 0 remaining. The 7 creatinine
-fields missed by the pass-2 sweep live in `nephrology-endo`, `wave2-cardiology`,
-`wave2-general-lab`, `wave2-pulm-id`, `wave3-nephro-icu`, `wave3-peds-ob`,
-`missing-emergency`, `missing-heme-id-nephro`, `wave5-nephro-gi`,
-`wave6-psych-sleep`, and `wave7-highuse`; each now converts before range
-validation and before `calculate()` (equivalence per calculator is covered by the
-registry-wide unit tests).
+every number field whose own unit is one of the shared families: **76 weight**
+(`kg`), **44 creatinine** (`mg/dL`; serum, plasma, and spot-urine fields,
+excluding creatinine *clearance*, which is mL/min), **11 FiO₂** (`fraction`), and
+**3 D-dimer** (`ng/mL FEU`) fields — 134 unit-aware fields across the four audit
+families, 0 remaining, out of **148** `unitKind` declarations across the ten
+families total. The creatinine fields missed by the pass-2 sweep live in
+`nephrology-endo`, `wave2-cardiology`, `wave2-general-lab`, `wave2-pulm-id`,
+`wave3-nephro-icu`, `wave3-peds-ob`, `missing-emergency`,
+`missing-heme-id-nephro`, `wave5-nephro-gi`, `wave6-psych-sleep`, and
+`wave7-highuse`; each now converts before range validation and before
+`calculate()` (equivalence per calculator is covered by the registry-wide unit
+tests).
+
+The last gap was `sodium-excretion`'s spot-urine creatinine field, found in the
+post-commit re-measurement: the earlier text-based scan over-counted coverage
+because a neighbouring declaration on the same line satisfied its match, so
+coverage is now asserted from the registry instead —
+`tests/unit-coverage.test.ts` fails if any input whose declared unit and id/label
+match one of the four families lacks the matching `unitKind` (and guards against
+bulk deletion of declarations).
 
 **Per-ID leftovers closed.**
 
