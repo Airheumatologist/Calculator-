@@ -37,7 +37,6 @@ npm run dev
 Open **http://localhost:5173**
 
 ```bash
-npm test          # vitest: registry validation + calculator fixtures
 npm run build     # typecheck + production bundle → dist/
 npm run preview   # serve the production build
 npm run lint      # oxlint
@@ -339,7 +338,7 @@ select, or a direct branch with no declared fields.
 ```
 
 **Chunking.** The registry is ~2.9 MB minified and is consumed synchronously (`export const calculators`),
-so it cannot be lazy-loaded without breaking `npm test` (vitest imports the named export). `vite.config.ts` therefore uses
+so it cannot be lazy-loaded. `vite.config.ts` therefore uses
 `build.rollupOptions.output.manualChunks` to emit one chunk per data family (`calc-base`,
 `calc-missing-a/b`, `calc-wave2-a/b` … `calc-wave6-a/b`) plus a `vendor-react` chunk. Total transfer for a
 cold first load is unchanged, but the chunks download in parallel and a change to one data family
@@ -436,7 +435,7 @@ No backend, migrations, or API changes required — the registry is the source o
 ## Design notes
 
 - **Data-driven UI** — one form + one result component render any calculator from its schema.
-- **Pure `calculate` functions** — easy to unit test; no side effects.
+- **Pure `calculate` functions** — deterministic; no side effects.
 - **Sticky live panel** — score stays visible while scrolling inputs on desktop.
 - **Risk colors** — `low` / `normal` (green), `moderate` / `info` (amber), `high` (orange), `critical` (red).
 - **Search** — matches name, short name, description, category, and tags.

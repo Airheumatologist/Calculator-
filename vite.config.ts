@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// The calculator registry (src/data/calculators/*.ts) is ~3.7 MB of TypeScript that
-// tests/*.test.ts require as a synchronous named export, so it cannot be lazy-loaded.
+// The calculator registry (src/data/calculators/*.ts) is ~3.7 MB of TypeScript consumed
+// as a synchronous named export, so it cannot be lazy-loaded.
 // Splitting it into per-family chunks keeps every emitted chunk small enough to be
 // fetched in parallel and revalidated independently when one data family changes.
 const DATA_FAMILIES = [
