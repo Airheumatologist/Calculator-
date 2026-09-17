@@ -211,13 +211,13 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: '4–10 (1)', value: 1 },
         { label: '10.1–20 or 3.1–3.9 (2)', value: 2 },
         { label: '≥20.1 or ≤3 (4)', value: 4 },
-      ]),
+      ], undefined, 'White cell count in ×10⁹/L: 4–10 scores 1, 10.1–20 or 3.1–3.9 scores 2, and ≥20.1 or ≤3 scores 4 points.'),
       selectInput('hb', 'Hemoglobin (g/dL)', [
         { label: '13–16 (1)', value: 1 },
         { label: '11.5–12.9 or 16.1–17 (2)', value: 2 },
         { label: '10–11.4 or 17.1–18 (4)', value: 4 },
         { label: '≤9.9 or ≥18.1 (8)', value: 8 },
-      ]),
+      ], undefined, 'Hemoglobin in g/dL: 13–16 scores 1, 11.5–12.9 or 16.1–17 scores 2, 10–11.4 or 17.1–18 scores 4, and ≤9.9 or ≥18.1 scores 8 points.'),
       selectInput('sodium', 'Sodium (mmol/L)', [
         { label: '≥136 (1)', value: 1, description: 'Na ≥136 mmol/L' },
         { label: '131–135 (2)', value: 2, description: 'Na 131–135 mmol/L' },
@@ -251,7 +251,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: '101–500 (2)', value: 2 },
         { label: '501–999 (4)', value: 4 },
         { label: '≥1000 (8)', value: 8 },
-      ]),
+      ], undefined, 'Operative blood loss in mL: ≤100 scores 1, 101–500 scores 2, 501–999 scores 4, and ≥1000 scores 8 points. Estimate from the anesthetic record.'),
       selectInput('peritoneal', 'Peritoneal soiling', [
         { label: 'None (1)', value: 1, description: 'No peritoneal contamination' },
         { label: 'Minor (serous) (2)', value: 2, description: 'Serous fluid only; no pus or bowel content' },
@@ -495,7 +495,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
     whyUse:
       'NELA audit drivers (physiology, ASA, peritoneal soiling, malignancy, urgency) strongly associate with death after emergency laparotomy.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 16, max: 110, exampleValue: 70 }),
+      numberInput('age', 'Age', { unit: 'years', min: 16, max: 110, exampleValue: 70, helpText: 'Age in years at operation; older age is one of the strongest NELA mortality drivers and enters the official model continuously.' }),
       selectInput('asa', 'ASA', [
         { label: 'I–II', value: 1, description: 'ASA I healthy or II mild systemic disease' },
         { label: 'III', value: 2, description: 'ASA III severe systemic disease' },
@@ -510,7 +510,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: '≥100 mmHg', value: 0 },
         { label: '90–99', value: 1 },
         { label: '<90', value: 2 },
-      ]),
+      ], undefined, 'Systolic BP on admission or at the time of the decision to operate: ≥100 mmHg, 90–99, or <90 — hypotension adds the most physiology points.'),
       selectInput('gcs', 'GCS', [
         { label: '15', value: 0, description: 'GCS 15 (E4 V5 M6) — alert, oriented, obeys' },
         { label: '12–14', value: 1, description: 'GCS 12–14' },
@@ -525,7 +525,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: '4–12 ×10⁹/L', value: 0 },
         { label: 'Abnormal mild (2–3.9 or 12.1–20)', value: 1 },
         { label: 'Markedly abnormal (<2 or >20)', value: 2 },
-      ]),
+      ], undefined, 'WBC in ×10⁹/L as a NELA physiology marker: 4–12 normal, mild abnormality (2–3.9 or 12.1–20), or marked (<2 or >20).'),
       selectInput('soiling', 'Peritoneal soiling', [
         { label: 'None / serous', value: 0, description: 'No contamination, or serous fluid only' },
         { label: 'Local pus', value: 1, description: 'Localized collection of pus' },
@@ -745,15 +745,15 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: '≤50 (0)', value: 0 },
         { label: '51–80 (3)', value: 3 },
         { label: '>80 (16)', value: 16 },
-      ]),
+      ], undefined, 'Age: 50 or younger scores 0, 51–80 scores 3, and over 80 scores 16 points — the largest single ARISCAT weight.'),
       selectInput('spo2', 'Preoperative SpO₂', [
         { label: '≥96% (0)', value: 0 },
         { label: '91–95% (8)', value: 8 },
         { label: '≤90% (24)', value: 24 },
-      ]),
+      ], undefined, 'Preoperative SpO₂: 96% or higher scores 0, 91–95% scores 8, and 90% or lower scores 24 points. Use the room-air value.'),
       yesNo('respInfection', 'Respiratory infection in the last month', 17,
         'Upper or lower respiratory infection in the past month that required treatment (not an untreated lingering cough).'),
-      yesNo('anemia', 'Preoperative anemia (Hb ≤10 g/dL)', 11),
+      yesNo('anemia', 'Preoperative anemia (Hb ≤10 g/dL)', 11, 'Preoperative hemoglobin 10 g/dL or lower scores 11 points; treatable anemia often warrants evaluation before elective surgery.'),
       selectInput('incision', 'Surgical incision', [
         { label: 'Peripheral (0)', value: 0, description: 'Extremity, breast, lower abdominal/pelvic (includes laparoscopic lower abdomen)' },
         { label: 'Upper abdominal (15)', value: 15, description: 'Incision above the umbilicus' },
@@ -763,7 +763,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: '<2 h (0)', value: 0 },
         { label: '2–3 h (16)', value: 16 },
         { label: '>3 h (23)', value: 23 },
-      ]),
+      ], undefined, 'Surgical duration: under 2 hours scores 0, 2–3 hours scores 16, and over 3 hours scores 23 points.'),
       yesNo('emergency', 'Emergency procedure', 8,
         'Unscheduled / emergency operation (not a booked elective case).'),
     ],
@@ -861,8 +861,8 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: 'ASA 1 (0)', value: 0 },
         { label: 'ASA 2 (1)', value: 1 },
         { label: 'ASA 3–5 (2)', value: 2 },
-      ]),
-      yesNo('female', 'Female sex', 1),
+      ], undefined, 'ASA physical status class: ASA 1 scores 0, ASA 2 scores 1, and ASA 3–5 scores 2 points.'),
+      yesNo('female', 'Female sex', 1, 'Female sex adds 1 point in the Rogers VTE model.'),
       selectInput('workRvu', 'Work RVU band (complexity)', [
         { label: '<10 (0)', value: 0, description: 'Hernia / cholecystectomy often <10' },
         { label: '10–17 (2)', value: 2 },
@@ -887,19 +887,19 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
       selectInput('albumin', 'Albumin', [
         { label: '≥3.5 g/dL (0)', value: 0 },
         { label: '<3.5 g/dL (1)', value: 1 },
-      ]),
+      ], undefined, 'Albumin below 3.5 g/dL adds 1 point; use the preoperative value.'),
       selectInput('bilirubin', 'Bilirubin', [
         { label: '≤1.0 mg/dL (0)', value: 0 },
         { label: '>1.0 mg/dL (1)', value: 1 },
-      ]),
+      ], undefined, 'Bilirubin above 1.0 mg/dL adds 1 point; a mildly elevated value from benign causes still scores.'),
       selectInput('sodium', 'Sodium', [
         { label: '≤145 mEq/L (0)', value: 0 },
         { label: '>145 mEq/L (2)', value: 2 },
-      ]),
+      ], undefined, 'Sodium above 145 mEq/L adds 2 points — the largest single Rogers item.'),
       selectInput('hct', 'Hematocrit', [
         { label: '>38% (0)', value: 0 },
         { label: '≤38% (1)', value: 1 },
-      ]),
+      ], undefined, 'Hematocrit 38% or lower adds 1 point; both anemia and hemoconcentration are captured elsewhere in the full model.'),
     ],
     calculate(values) {
       const score =
@@ -1099,7 +1099,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
           value: 4,
           description: 'Old traumatic wounds with retained devitalized tissue; existing clinical infection or perforated viscera',
         },
-      ]),
+      ], undefined, 'Class I clean (no tract entered, no inflammation), II clean-contaminated (controlled entry of respiratory/alimentary/genital/urinary tract), III contaminated (acute non-purulent inflammation, gross spillage, or major break in technique), IV dirty/infected (existing infection, perforated viscus, or old traumatic wound).'),
     ],
     calculate(values) {
       const c = num(values.woundClass, 1);
@@ -1206,13 +1206,13 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: '≥7.2 and <10.9 (1)', value: 1 },
         { label: '≥10.9 and <14.0 (2)', value: 2 },
         { label: '≥14.0 (3)', value: 3 },
-      ]),
+      ], undefined, 'WBC in ×10⁹/L: below 7.2 scores 0, 7.2–10.8 scores 1, 10.9–13.9 scores 2, and 14.0 or higher scores 3 points.'),
       selectInput('neutPct', 'Neutrophils %', [
         { label: '<62 (0)', value: 0 },
         { label: '≥62 and <75 (2)', value: 2 },
         { label: '≥75 and <83 (3)', value: 3 },
         { label: '≥83 (4)', value: 4 },
-      ]),
+      ], undefined, 'Neutrophil percentage: below 62 scores 0, 62–74 scores 2, 75–82 scores 3, and 83 or higher scores 4 points.'),
       selectInput('symptomDuration', 'Symptom duration', [
         { label: '<24 hours', value: 'lt24', description: 'Onset to assessment <24 h — early CRP table (high CRP can score 5 or drop to 1)' },
         { label: '>24 hours', value: 'gt24', description: 'Onset to assessment >24 h — late CRP table (CRP ≥152 scores 1)' },
@@ -1321,7 +1321,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Female (0)', value: 0 },
         { label: 'Male (2)', value: 2 },
-      ]),
+      ], undefined, 'Male sex adds 2 points to the Lintula score; the instrument was derived in children but is also studied in adults.'),
       selectInput('intensity', 'Intensity of pain', [
         { label: 'Mild or moderate (0)', value: 0, description: 'Mild or moderate pain — Lintula scores 0' },
         { label: 'Severe (2)', value: 2, description: 'Severe abdominal pain — Lintula +2 only for severe' },
@@ -1332,7 +1332,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         'Pain localized to the RLQ (McBurney). Distinct from migration/relocation.'),
       yesNo('vomiting', 'Vomiting', 2,
         'Vomiting (not nausea alone).'),
-      yesNo('fever', 'Fever (temperature ≥37.5°C / 99.5°F)', 3),
+      yesNo('fever', 'Fever (temperature ≥37.5°C / 99.5°F)', 3, 'Temperature 37.5°C (99.5°F) or higher adds 3 points; a reported fever without measurement still counts in the original instrument.'),
       yesNo('guarding', 'Guarding', 4,
         'Involuntary abdominal-wall tension over the RLQ (not voluntary splinting alone).'),
       yesNo('rebound', 'Rebound tenderness', 7,
@@ -1425,7 +1425,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         'Tenderness on palpation of the right lower quadrant.'),
       yesNo('rebound', 'Rebound tenderness (3 points)', 3,
         'Pain on sudden release of RLQ palpation, greater than the pain of compression.'),
-      yesNo('wbc', 'WBC >12 ×10⁹/L (2 points)', 2),
+      yesNo('wbc', 'WBC >12 ×10⁹/L (2 points)', 2, 'WBC above 12 ×10⁹/L scores 2 points. The full score also includes right-lower-quadrant tenderness, rebound, and ultrasound findings; ≥8 is usually the high-probability threshold.'),
       yesNo('usPositive', 'Ultrasound positive for appendicitis (6 points)', 6,
         'Noncompressible, dilated appendix (often ≥6–7 mm) with inflammatory signs on graded-compression US; operator-dependent.'),
     ],
@@ -1925,7 +1925,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
           label: 'V — Shattered kidney OR avulsion of hilum / devascularized kidney',
           value: 5,
         },
-      ]),
+      ], undefined, 'AAST kidney grades: I contusion or non-expanding subcapsular hematoma, II cortical laceration <1 cm or non-expanding perirenal hematoma, III laceration >1 cm without collecting-system rupture, IV laceration through the collecting system or main vessel injury with contained hemorrhage, V shattered kidney or hilar avulsion.'),
       yesNo('hemodynamicUnstable', 'Hemodynamic instability attributable to renal injury', 0,
         'SBP <90 mmHg, need for ongoing transfusion, or other shock attributed to the kidney injury (not another source).'),
     ],
@@ -2034,7 +2034,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
           label: 'V — Shattered spleen OR hilar vascular injury with total devascularization',
           value: 5,
         },
-      ]),
+      ], undefined, 'AAST spleen grades: I subcapsular <10% or laceration <1 cm, II subcapsular 10–50% or laceration 1–3 cm, III subcapsular >50% or laceration >3 cm, IV segmental/hilar vessel injury with >25% devascularization, V shattered spleen or total devascularization.'),
       yesNo('contrastBlush', 'Active contrast extravasation / blush on CT', 0,
         'Arterial-phase contrast blush or active extravasation from the spleen.'),
       yesNo('unstable', 'Hemodynamically unstable', 0,
@@ -2139,7 +2139,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
           label: 'V — Disruption >75% of lobe OR >3 segments OR juxtahepatic venous injury',
           value: 5,
         },
-      ]),
+      ], undefined, 'AAST liver grades: I subcapsular <10% or laceration <1 cm, II subcapsular 10–50% or laceration 1–3 cm, III subcapsular >50% or laceration >3 cm, IV parenchymal disruption of 25–75% of a lobe, V disruption >75% of a lobe or juxtahepatic venous injury.'),
       yesNo('unstable', 'Hemodynamically unstable', 0,
         'SBP <90 mmHg, need for ongoing transfusion, or other shock attributed to hepatic bleeding.'),
       yesNo('blush', 'Active extravasation on CT', 0,
@@ -2469,6 +2469,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         max: 100,
         step: 0.01,
         exampleValue: 1.2,
+        helpText: 'Free PSA in ng/mL from the same assay as the total PSA; the ratio is free ÷ total × 100, and a lower percentage points toward prostate cancer in the 4–10 ng/mL total range.',
       }),
       numberInput('totalPsa', 'Total PSA', {
         unit: 'ng/mL',
@@ -2574,29 +2575,29 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
       selectInput('entryMode', 'Input method', [
         { label: 'Primary + Secondary Gleason patterns (recommended)', value: 'patterns' },
         { label: 'Direct Gleason score / Grade Group category', value: 'direct' },
-      ], 'patterns'),
+      ], 'patterns', 'Pattern mode derives the Grade Group from primary and secondary patterns; direct mode accepts a reported Gleason category. Use direct mode only when the pathology report already states the pattern pair.'),
       selectInput('primaryPattern', 'Primary (most predominant) architectural pattern', [
         { label: 'Pattern 3 — well-formed discrete individual glands', value: 3, points: 3 },
         { label: 'Pattern 4 — fused, ill-defined, or cribriform glands', value: 4, points: 4 },
         { label: 'Pattern 5 — solid sheets, cords, single cells, or comedonecrosis', value: 5, points: 5 },
-      ], 3),
+      ], 3, 'Primary (most predominant) pattern: 3 well-formed discrete glands, 4 fused/ill-defined or cribriform glands, 5 solid sheets, cords, single cells, or comedonecrosis.'),
       selectInput('secondaryPattern', 'Secondary (second most predominant) pattern', [
         { label: 'Pattern 3 — well-formed discrete individual glands', value: 3, points: 3 },
         { label: 'Pattern 4 — fused, ill-defined, or cribriform glands', value: 4, points: 4 },
         { label: 'Pattern 5 — solid sheets, cords, single cells, or comedonecrosis', value: 5, points: 5 },
-      ], 3),
+      ], 3, 'Second most predominant pattern using the same definitions; the primary/secondary order matters because 3+4 and 4+3 map to different Grade Groups.'),
       selectInput('tertiaryPattern', 'Tertiary pattern (if identified on biopsy or prostatectomy)', [
         { label: 'None / Not present', value: 0 },
         { label: 'Pattern 4 tertiary (minor component <5%)', value: 4 },
         { label: 'Pattern 5 tertiary (minor high-grade component <5%)', value: 5 },
-      ], 0),
+      ], 0, 'Tertiary high-grade component under 5% (pattern 4 or 5). On biopsy, a tertiary pattern 5 upgrades the score; use \'none\' when the report does not mention one.'),
       selectInput('directGleason', 'Direct Gleason category', [
         { label: 'Grade Group 1: Gleason ≤6 (3+3)', value: '6' },
         { label: 'Grade Group 2: Gleason 3+4=7', value: '3+4' },
         { label: 'Grade Group 3: Gleason 4+3=7', value: '4+3' },
         { label: 'Grade Group 4: Gleason 8 (4+4, 3+5, 5+3)', value: '8' },
         { label: 'Grade Group 5: Gleason 9–10 (4+5, 5+4, 5+5)', value: '9' },
-      ], '6'),
+      ], '6', 'Use the Grade Group the report states: GG1 ≤6 (3+3), GG2 3+4=7, GG3 4+3=7, GG4 Gleason 8 (4+4, 3+5, 5+3), GG5 Gleason 9–10 (4+5, 5+4, 5+5).'),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'patterns');
@@ -2765,7 +2766,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: 'Primary (0)', value: 0, description: 'First diagnosis of NMIBC' },
         { label: '≤1 rec/year (2)', value: 2, description: 'Recurrent, with ≤1 recurrence per year' },
         { label: '>1 rec/year (4)', value: 4, description: 'Recurrent, with >1 recurrence per year' },
-      ]),
+      ], undefined, 'Prior recurrence rate: primary tumor 0 points, one or fewer recurrences per year 2 points, more than one per year 4 points.'),
       selectInput('category', 'T category', [
         { label: 'Ta (0)', value: 0, description: 'Non-invasive papillary tumor confined to the epithelium' },
         { label: 'T1 (1 rec / 4 prog)', value: 1, description: 'Invades lamina propria (not muscularis propria). Recurrence +1; progression +4' },
@@ -2914,12 +2915,12 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Female (0)', value: 0 },
         { label: 'Male (2)', value: 2 },
-      ]),
+      ], undefined, 'Male sex adds 2 points to the STONE score.'),
       selectInput('timing', 'Timing (duration of pain to presentation)', [
         { label: '>24 hours (0)', value: 0 },
         { label: '6–24 hours (1)', value: 1 },
         { label: '<6 hours (3)', value: 3 },
-      ]),
+      ], undefined, 'Duration of pain at presentation: over 24 hours 0, 6–24 hours 1, under 6 hours 3 points — the acute onset carries the most weight.'),
       selectInput('origin', 'Origin (race / ethnicity as in original US score)', [
         { label: 'Black / African American (0)', value: 0 },
         { label: 'Non-Black (3)', value: 3 },
@@ -2928,7 +2929,7 @@ export const wave5SurgUroEntCalcs: Calculator[] = [
         { label: 'Neither (0)', value: 0 },
         { label: 'Nausea alone (1)', value: 1 },
         { label: 'Vomiting alone or both (2)', value: 2 },
-      ]),
+      ], undefined, 'Nausea or vomiting: neither 0, nausea alone 1, vomiting alone or both 2 points.'),
       selectInput('hematuria', 'Hematuria on urine dipstick', [
         { label: 'Absent (0)', value: 0 },
         { label: 'Present (3)', value: 3 },

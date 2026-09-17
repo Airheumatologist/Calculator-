@@ -13,11 +13,11 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Newly diagnosed DLBCL treated in the rituximab era for OS risk groups.',
     whyUse: 'Reclassifies classic IPI into three clinically useful strata (very good / good / poor) better aligned with R-CHOP outcomes.',
     inputs: [
-      yesNo('age', 'Age > 60 years', 1),
-      yesNo('ldh', 'Serum LDH > upper limit of normal', 1),
-      yesNo('ecog', 'ECOG performance status ≥ 2', 1, 'ECOG 2 = ambulatory, all self-care, unable to work, up and about >50% of waking hours. 0 = fully active; 1 = strenuous activity limited but light work OK; 3 = limited self-care, in bed/chair >50% of waking hours; 4 = completely disabled.'),
-      yesNo('stage', 'Ann Arbor stage III or IV', 1),
-      yesNo('extranodal', 'More than one extranodal site', 1, 'Count distinct extranodal organs/sites (each organ/site once).'),
+      yesNo('age', 'Age > 60 years', 1, 'Age over 60 years is one of the five R-IPI risk factors.', true),
+      yesNo('ldh', 'Serum LDH > upper limit of normal', 1, 'Serum LDH above the upper limit of normal is one of the R-IPI risk factors.', true),
+      yesNo('ecog', 'ECOG performance status ≥ 2', 1, 'ECOG 2 = ambulatory, all self-care, unable to work, up and about >50% of waking hours. 0 = fully active; 1 = strenuous activity limited but light work OK; 3 = limited self-care, in bed/chair >50% of waking hours; 4 = completely disabled.', false),
+      yesNo('stage', 'Ann Arbor stage III or IV', 1, 'Ann Arbor stage III or IV is one of the R-IPI risk factors.', true),
+      yesNo('extranodal', 'More than one extranodal site', 1, 'Count distinct extranodal organs/sites (each organ/site once).', false),
     ],
     calculate(values) {
       const score =
@@ -101,12 +101,12 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Newly diagnosed DLBCL when deciding CNS staging intensity and prophylaxis strategies.',
     whyUse: 'Stratifies 2-year CNS relapse risk into low / intermediate / high groups to support prophylaxis discussions.',
     inputs: [
-      yesNo('age', 'Age > 60 years', 1),
-      yesNo('ldh', 'Serum LDH > upper limit of normal', 1),
-      yesNo('ecog', 'ECOG performance status ≥ 2', 1, 'ECOG 2 = ambulatory, all self-care, unable to work, up and about >50% of waking hours. 0 = fully active; 1 = strenuous activity limited but light work OK; 3 = limited self-care, in bed/chair >50% of waking hours; 4 = completely disabled.'),
-      yesNo('stage', 'Ann Arbor stage III or IV', 1),
-      yesNo('extranodal', 'More than one extranodal site', 1, 'Count distinct extranodal organs/sites (each organ/site once).'),
-      yesNo('kidneyAdrenal', 'Kidney and/or adrenal involvement', 1, 'Also counted in the extranodal-site factor if >1 extranodal site overall.'),
+      yesNo('age', 'Age > 60 years', 1, 'Age over 60 years is one of the CNS-IPI risk factors for CNS relapse.', true),
+      yesNo('ldh', 'Serum LDH > upper limit of normal', 1, 'Serum LDH above the upper limit of normal is one of the CNS-IPI risk factors.', true),
+      yesNo('ecog', 'ECOG performance status ≥ 2', 1, 'ECOG 2 = ambulatory, all self-care, unable to work, up and about >50% of waking hours. 0 = fully active; 1 = strenuous activity limited but light work OK; 3 = limited self-care, in bed/chair >50% of waking hours; 4 = completely disabled.', false),
+      yesNo('stage', 'Ann Arbor stage III or IV', 1, 'Ann Arbor stage III or IV is one of the CNS-IPI risk factors.', true),
+      yesNo('extranodal', 'More than one extranodal site', 1, 'Count distinct extranodal organs/sites (each organ/site once).', false),
+      yesNo('kidneyAdrenal', 'Kidney and/or adrenal involvement', 1, 'Also counted in the extranodal-site factor if >1 extranodal site overall.', false),
     ],
     calculate(values) {
       const score =
@@ -194,11 +194,11 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Primary myelofibrosis for risk stratification at diagnosis or later (dynamic).',
     whyUse: 'Hb-weighted model predicts survival and frames transplant / JAK inhibitor discussions.',
     inputs: [
-      yesNo('age', 'Age > 65 years', 1),
-      yesNo('wbc', 'WBC > 25 × 10⁹/L', 1),
-      yesNo('hb', 'Hemoglobin < 10 g/dL', 2, 'Worth 2 points in DIPSS'),
-      yesNo('blasts', 'Circulating blasts ≥ 1%', 1),
-      yesNo('symptoms', 'Constitutional symptoms (IWG-MRT)', 1, 'Weight loss >10% of baseline in the past year, and/or unexplained fever, and/or excessive (drenching) sweats, persisting >1 month. Fatigue, pruritus, or bone pain alone do not count.'),
+      yesNo('age', 'Age > 65 years', 1, 'Age over 65 years scores 1 point in DIPSS.', true),
+      yesNo('wbc', 'WBC > 25 × 10⁹/L', 1, 'WBC above 25 × 10⁹/L scores 1 point in DIPSS.', false),
+      yesNo('hb', 'Hemoglobin < 10 g/dL', 2, 'Worth 2 points in DIPSS', true),
+      yesNo('blasts', 'Circulating blasts ≥ 1%', 1, 'Circulating blasts of 1% or more score 1 point in DIPSS.', true),
+      yesNo('symptoms', 'Constitutional symptoms (IWG-MRT)', 1, 'Weight loss >10% of baseline in the past year, and/or unexplained fever, and/or excessive (drenching) sweats, persisting >1 month. Fatigue, pruritus, or bone pain alone do not count.', false),
     ],
     calculate(values) {
       const score =
@@ -288,10 +288,10 @@ export const wave4HemeOncCalcs: Calculator[] = [
         { label: 'Intermediate-1 (1–2 DIPSS points) → 1', value: 1 },
         { label: 'Intermediate-2 (3–4 DIPSS points) → 2', value: 2 },
         { label: 'High (5–6 DIPSS points) → 3', value: 3 },
-      ], undefined, 'Map the current DIPSS integer (age>65, WBC>25, Hb<10 worth 2, blasts≥1%, IWG-MRT symptoms) onto these bands, then add the three plus factors.'),
-      yesNo('unfavorableKaryotype', 'Unfavorable karyotype', 1, 'Complex karyotype or sole/two abnormalities including +8, −7/7q−, i(17q), inv(3), −5/5q−, 12p−, or 11q23 rearrangement'),
-      yesNo('platelets', 'Platelets < 100 × 10⁹/L', 1),
-      yesNo('transfusion', 'RBC transfusion need', 1, 'Tick if the patient currently requires RBC transfusions (typically started for Hb <10 g/dL). Do not tick a remote one-off that has resolved.'),
+      ], 2, 'Map the current DIPSS integer (age>65, WBC>25, Hb<10 worth 2, blasts≥1%, IWG-MRT symptoms) onto these bands, then add the three plus factors.'),
+      yesNo('unfavorableKaryotype', 'Unfavorable karyotype', 1, 'Complex karyotype or sole/two abnormalities including +8, −7/7q−, i(17q), inv(3), −5/5q−, 12p−, or 11q23 rearrangement', false),
+      yesNo('platelets', 'Platelets < 100 × 10⁹/L', 1, 'Platelets below 100 × 10⁹/L score 1 point in DIPSS-plus.', true),
+      yesNo('transfusion', 'RBC transfusion need', 1, 'Tick if the patient currently requires RBC transfusions (typically started for Hb <10 g/dL). Do not tick a remote one-off that has resolved.', false),
     ],
     calculate(values) {
       const score =
@@ -370,7 +370,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Newly diagnosed chronic-phase CML before or at TKI start (historical risk grouping).',
     whyUse: 'Still reported in trials and labels; frames baseline risk though ELTS is preferred for TKI-era long-term survival.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 1, max: 120, exampleValue: 50 }),
+      numberInput('age', 'Age', { helpText: 'Age in years at diagnosis; the Sokal formula uses (age/10)² as its age term.', unit: 'years', min: 1, max: 120, exampleValue: 50 }),
       numberInput('spleen', 'Spleen size below costal margin', {
         unit: 'cm',
         min: 0,
@@ -379,8 +379,8 @@ export const wave4HemeOncCalcs: Calculator[] = [
         exampleValue: 0,
         helpText: 'Clinical exam, cm below left costal margin in the midclavicular line; 0 if not palpable',
       }),
-      numberInput('platelets', 'Platelet count', { unit: '×10⁹/L', min: 10, max: 3000, exampleValue: 300 }),
-      numberInput('blasts', 'Peripheral blood blasts', { unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
+      numberInput('platelets', 'Platelet count', { helpText: 'Platelet count in ×10⁹/L at diagnosis; enter the value in the units shown on the field.', unit: '×10⁹/L', min: 10, max: 3000, exampleValue: 300 }),
+      numberInput('blasts', 'Peripheral blood blasts', { helpText: 'Peripheral blood blasts as a percentage at diagnosis; the Sokal formula uses (blasts/5)².', unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
     ],
     calculate(values) {
       const age = num(values.age, 50);
@@ -458,12 +458,12 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Newly diagnosed chronic-phase CML risk stratification (historical Euro score).',
     whyUse: 'Complementary to Sokal; developed in interferon era and still cited alongside Sokal/EUTOS/ELTS.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 1, max: 120, exampleValue: 50 }),
+      numberInput('age', 'Age', { helpText: 'Age in years at diagnosis; Hasford adds 0.666 × (age − 43) for patients over 50.', unit: 'years', min: 1, max: 120, exampleValue: 50 }),
       numberInput('spleen', 'Spleen size below costal margin', { unit: 'cm', min: 0, max: 40, step: 0.5, exampleValue: 0, helpText: 'Clinical exam, cm below left costal margin in the midclavicular line; 0 if not palpable' }),
-      numberInput('blasts', 'Peripheral blood blasts', { unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
-      numberInput('eosinophils', 'Peripheral eosinophils', { unit: '%', min: 0, max: 50, step: 0.1, exampleValue: 2 }),
-      numberInput('basophils', 'Peripheral basophils', { unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
-      numberInput('platelets', 'Platelet count', { unit: '×10⁹/L', min: 10, max: 3000, exampleValue: 300 }),
+      numberInput('blasts', 'Peripheral blood blasts', { helpText: 'Peripheral blood blasts as a percentage; Hasford adds 0.042 × blasts.', unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
+      numberInput('eosinophils', 'Peripheral eosinophils', { helpText: 'Peripheral eosinophils as a percentage; Hasford adds 0.058 × eosinophils.', unit: '%', min: 0, max: 50, step: 0.1, exampleValue: 2 }),
+      numberInput('basophils', 'Peripheral basophils', { helpText: 'Peripheral basophils as a percentage; Hasford adds 0.041 × basophils.', unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
+      numberInput('platelets', 'Platelet count', { helpText: 'Platelet count in ×10⁹/L; the Hasford platelet term is positive above 1500 and negative below 1500.', unit: '×10⁹/L', min: 10, max: 3000, exampleValue: 300 }),
     ],
     calculate(values) {
       const age = num(values.age, 50);
@@ -546,7 +546,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whyUse: 'Minimal inputs; originally validated for CCyR probability on imatinib (not identical to ELTS long-term survival model).',
     inputs: [
       numberInput('spleen', 'Spleen size below costal margin', { unit: 'cm', min: 0, max: 40, step: 0.5, exampleValue: 0, helpText: 'Clinical exam, cm below left costal margin in the midclavicular line; 0 if not palpable' }),
-      numberInput('basophils', 'Peripheral basophils', { unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
+      numberInput('basophils', 'Peripheral basophils', { helpText: 'Peripheral basophils as a percentage; EUTOS = 7 × basophils (%) + 4 × spleen size (cm below the costal margin).', unit: '%', min: 0, max: 30, step: 0.1, exampleValue: 1 }),
     ],
     calculate(values) {
       const spleen = num(values.spleen, 0);
@@ -683,9 +683,9 @@ export const wave4HemeOncCalcs: Calculator[] = [
         { label: 'ISS I', value: 1, description: 'β₂-microglobulin <3.5 mg/L AND albumin ≥3.5 g/dL' },
         { label: 'ISS II', value: 2, description: 'Neither ISS I nor ISS III' },
         { label: 'ISS III', value: 3, description: 'β₂-microglobulin ≥5.5 mg/L (albumin any)' },
-      ], undefined, 'Use the ISS (Greipp) calculator in this app if needed. High-risk CA = del(17p) and/or t(4;14) and/or t(14;16) by iFISH.'),
-      yesNo('highLdh', 'LDH > upper limit of normal', 1),
-      yesNo('highRiskCa', 'High-risk CA by iFISH', 1, 'del(17p) and/or t(4;14) and/or t(14;16)'),
+      ], 2, 'Use the ISS (Greipp) calculator in this app if needed. High-risk CA = del(17p) and/or t(4;14) and/or t(14;16) by iFISH.'),
+      yesNo('highLdh', 'LDH > upper limit of normal', 1, 'LDH above the upper limit of normal is one of the high-risk features used in R-ISS.', true),
+      yesNo('highRiskCa', 'High-risk CA by iFISH', 1, 'del(17p) and/or t(4;14) and/or t(14;16)', false),
     ],
     calculate(values) {
       const iss = num(values.iss, 1);
@@ -774,11 +774,11 @@ export const wave4HemeOncCalcs: Calculator[] = [
           value: 3,
           description: 'High M-protein = IgG >7 g/dL, IgA >5 g/dL, or urine light chain >12 g/24 h. Advanced lytic lesions = multiple punched-out osteolytic lesions (not a solitary plasmacytoma).',
         },
-      ], undefined, 'Pick the highest burden category that applies. Stage I requires ALL low-burden features; Stage III needs only ONE high-burden feature; Stage II is everything in between.'),
+      ], 3, 'Pick the highest burden category that applies. Stage I requires ALL low-burden features; Stage III needs only ONE high-burden feature; Stage II is everything in between.'),
       selectInput('creatinine', 'Creatinine substage', [
         { label: 'A — Creatinine < 2.0 mg/dL (<177 µmol/L)', value: 'A' },
         { label: 'B — Creatinine ≥ 2.0 mg/dL (≥177 µmol/L)', value: 'B' },
-      ]),
+      ], 'A', 'Creatinine substage A when creatinine is below 2.0 mg/dL (177 µmol/L), and B when it is 2.0 mg/dL or higher.'),
     ],
     calculate(values) {
       const stage = num(values.stageFeatures, 2);
@@ -852,7 +852,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
         { label: 'II — Lymphocytosis + spleen and/or liver enlargement (± nodes)', value: 2, description: 'Palpable splenomegaly and/or hepatomegaly; nodes may also be present' },
         { label: 'III — Lymphocytosis + anemia (Hb < 11 g/dL)', value: 3, description: 'Hb <11 g/dL from CLL (exclude hemolysis/other causes when assigning stage). Outranks nodes/organomegaly.' },
         { label: 'IV — Lymphocytosis + thrombocytopenia (Plt < 100 × 10⁹/L)', value: 4, description: 'Platelets <100 × 10⁹/L from CLL (exclude ITP when assigning stage). Highest Rai stage if present.' },
-      ], undefined, 'Select the highest applicable stage. Anemia (III, Hb <11) or thrombocytopenia (IV, Plt <100) outranks lymphadenopathy or organomegaly even if those are also present. Lymphocytosis is required at every stage.'),
+      ], 2, 'Select the highest applicable stage. Anemia (III, Hb <11) or thrombocytopenia (IV, Plt <100) outranks lymphadenopathy or organomegaly even if those are also present. Lymphocytosis is required at every stage.'),
     ],
     calculate(values) {
       const stage = num(values.rai, 0);
@@ -927,7 +927,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
           label: 'C — Hb < 10 g/dL and/or platelets < 100 × 10⁹/L (any area count)',
           value: 'C',
         },
-      ], undefined, 'Five lymphoid areas: cervical, axillary, inguinal, spleen, liver. Involvement of both sides of one region counts as ONE area (max 5). Palpable enlargement.'),
+      ], 'B', 'Five lymphoid areas: cervical, axillary, inguinal, spleen, liver. Involvement of both sides of one region counts as ONE area (max 5). Palpable enlargement.'),
     ],
     calculate(values) {
       const stage = String(values.binet ?? 'A');
@@ -994,11 +994,11 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'CLL prognostic counseling when molecular/FISH and β2-microglobulin results are available.',
     whyUse: 'Integrates genetics with clinical factors for four OS risk groups in the chemoimmunotherapy era (still used with BTKi/BCL2 contexts).',
     inputs: [
-      yesNo('age', 'Age > 65 years', 1),
-      yesNo('stage', 'Advanced stage (Rai I–IV or Binet B–C)', 1),
-      yesNo('b2m', 'β₂-microglobulin > 3.5 mg/L', 2, 'CLL-IPI uses a fixed cutoff of >3.5 mg/L (2 points), not the institutional ULN.'),
-      yesNo('ighv', 'IGHV unmutated (≥98% identity to germline)', 2, 'Unmutated = ≥98% identity to germline (CLL-IPI / ERIC). Mutated = <98%. 97.0–97.9% is mutated on the 98% convention; use the report’s stated cutoff if the lab uses 97%.'),
-      yesNo('tp53', 'del(17p) and/or TP53 mutation', 4),
+      yesNo('age', 'Age > 65 years', 1, 'Age over 65 years scores 1 point in the CLL-IPI.', true),
+      yesNo('stage', 'Advanced stage (Rai I–IV or Binet B–C)', 1, 'Advanced stage — Rai I–IV or Binet B–C — scores 1 point in the CLL-IPI.', true),
+      yesNo('b2m', 'β₂-microglobulin > 3.5 mg/L', 2, 'CLL-IPI uses a fixed cutoff of >3.5 mg/L (2 points), not the institutional ULN.', false),
+      yesNo('ighv', 'IGHV unmutated (≥98% identity to germline)', 2, 'Unmutated = ≥98% identity to germline (CLL-IPI / ERIC). Mutated = <98%. 97.0–97.9% is mutated on the 98% convention; use the report’s stated cutoff if the lab uses 97%.', true),
+      yesNo('tp53', 'del(17p) and/or TP53 mutation', 4, 'del(17p) and/or TP53 mutation scores 4 points, the strongest single factor in the CLL-IPI.', false),
     ],
     calculate(values) {
       const score =
@@ -1076,10 +1076,10 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Newly diagnosed PTCL (especially PTCL-NOS) risk stratification.',
     whyUse: 'Four-factor model tailored to PTCL; simpler alternative to IPI in T-cell lymphoma literature.',
     inputs: [
-      yesNo('age', 'Age > 60 years', 1),
-      yesNo('ecog', 'ECOG performance status ≥ 2', 1, 'ECOG 2 = ambulatory, all self-care, unable to work, up and about >50% of waking hours. 0 = fully active; 1 = strenuous activity limited but light work OK; 3 = limited self-care, in bed/chair >50% of waking hours; 4 = completely disabled.'),
-      yesNo('ldh', 'LDH > upper limit of normal', 1),
-      yesNo('marrow', 'Bone marrow involvement', 1),
+      yesNo('age', 'Age > 60 years', 1, 'Age over 60 years is one of the four PIT risk factors.', true),
+      yesNo('ecog', 'ECOG performance status ≥ 2', 1, 'ECOG 2 = ambulatory, all self-care, unable to work, up and about >50% of waking hours. 0 = fully active; 1 = strenuous activity limited but light work OK; 3 = limited self-care, in bed/chair >50% of waking hours; 4 = completely disabled.', false),
+      yesNo('ldh', 'LDH > upper limit of normal', 1, 'LDH above the upper limit of normal is one of the PIT risk factors.', true),
+      yesNo('marrow', 'Bone marrow involvement', 1, 'Bone marrow involvement is one of the PIT risk factors.', false),
     ],
     calculate(values) {
       const score =
@@ -1152,9 +1152,9 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Aggressive NHL / DLBCL in patients age ≤60 for risk grouping without the age factor.',
     whyUse: 'Focuses on LDH, performance status, and stage — the dominant factors in younger adults.',
     inputs: [
-      yesNo('ldh', 'Serum LDH > upper limit of normal', 1, 'Original aaIPI is for age ≤60; if >60 use full IPI/R-IPI.'),
-      yesNo('ecog', 'ECOG performance status ≥ 2', 1, 'ECOG 2 = ambulatory, all self-care, unable to work, up and about >50% of waking hours. 0 = fully active; 1 = strenuous activity limited but light work OK; 3 = limited self-care, in bed/chair >50% of waking hours; 4 = completely disabled.'),
-      yesNo('stage', 'Ann Arbor stage III or IV', 1),
+      yesNo('ldh', 'Serum LDH > upper limit of normal', 1, 'Original aaIPI is for age ≤60; if >60 use full IPI/R-IPI.', true),
+      yesNo('ecog', 'ECOG performance status ≥ 2', 1, 'ECOG 2 = ambulatory, all self-care, unable to work, up and about >50% of waking hours. 0 = fully active; 1 = strenuous activity limited but light work OK; 3 = limited self-care, in bed/chair >50% of waking hours; 4 = completely disabled.', false),
+      yesNo('stage', 'Ann Arbor stage III or IV', 1, 'Ann Arbor stage III or IV scores 1 point in the age-adjusted IPI.', true),
     ],
     calculate(values) {
       const score =
@@ -1233,23 +1233,23 @@ export const wave4HemeOncCalcs: Calculator[] = [
         { label: '50–59 years (1)', value: 1 },
         { label: '60–69 years (2)', value: 2 },
         { label: '≥ 70 years (3)', value: 3 },
-      ]),
+      ], 2, 'Age bands score 0 points under 50, 1 at 50–59, 2 at 60–69, and 3 at 70 or older.'),
       selectInput('ecogPts', 'ECOG performance status', [
         { label: '0–1 (0)', value: 0, description: '0 = fully active; 1 = strenuous activity limited but light work OK' },
         { label: '2–4 (2)', value: 2, description: '2 = ambulatory, all self-care, unable to work, up >50% of waking hours; 3 = limited self-care, in bed/chair >50%; 4 = completely disabled' },
-      ], undefined, 'Oken/Zubrod scale. MIPI awards 0 points for ECOG 0–1 and 2 points for ECOG 2–4.'),
+      ], 0, 'Oken/Zubrod scale. MIPI awards 0 points for ECOG 0–1 and 2 points for ECOG 2–4.'),
       selectInput('ldhPts', 'LDH / ULN ratio', [
         { label: '< 0.67 (0)', value: 0 },
         { label: '0.67–0.99 (1)', value: 1 },
         { label: '1.00–1.49 (2)', value: 2 },
         { label: '≥ 1.50 (3)', value: 3 },
-      ], undefined, 'Ratio = this patient’s LDH ÷ that lab’s ULN (not raw U/L).'),
+      ], 1, 'Ratio = this patient’s LDH ÷ that lab’s ULN (not raw U/L).'),
       selectInput('wbcPts', 'WBC (×10⁹/L)', [
         { label: '< 6.7 (0)', value: 0 },
         { label: '6.7–9.9 (1)', value: 1 },
         { label: '10.0–14.9 (2)', value: 2 },
         { label: '≥ 15.0 (3)', value: 3 },
-      ]),
+      ], 1, 'WBC bands score 0 below 6.7, 1 at 6.7–9.9, 2 at 10.0–14.9, and 3 at 15.0 × 10⁹/L or above.'),
     ],
     calculate(values) {
       const score = num(values.agePts) + num(values.ecogPts) + num(values.ldhPts) + num(values.wbcPts);
@@ -1312,8 +1312,8 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'When BSA is needed for mg/m² dosing, cardiac index, or other indexed parameters.',
     whyUse: 'Simple square-root formula widely accepted and easy to verify at the bedside.',
     inputs: [
-      numberInput('height', 'Height', { unit: 'cm', min: 50, max: 250, step: 0.1, exampleValue: 170 }),
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 10, max: 400, step: 0.1, exampleValue: 70 }),
+      numberInput('height', 'Height', { helpText: 'Height in cm; the Mosteller formula is the square root of (height × weight / 3600).', unit: 'cm', min: 50, max: 250, step: 0.1, exampleValue: 170 }),
+      numberInput('weight', 'Weight', { helpText: 'Weight in kg from the same measurement set as the height.', unit: 'kg', unitKind: 'weight', min: 10, max: 400, step: 0.1, exampleValue: 70 }),
     ],
     calculate(values) {
       const h = num(values.height, 170);
@@ -1372,13 +1372,13 @@ export const wave4HemeOncCalcs: Calculator[] = [
     whenToUse: 'Adult solid-tumor patients with febrile neutropenia who appear clinically stable at presentation (not for unstable patients or most hematologic malignancies).',
     whyUse: 'Helps identify who remains high-risk for complications despite apparent stability; complements MASCC.',
     inputs: [
-      yesNo('scopeConfirmed', 'Solid tumor with confirmed stable febrile neutropenia', null, 'Target population: adult solid tumor receiving chemo with confirmed FN (fever ≥38.0°C and ANC <1000/µL) and clinically stable (no shock/organ failure).'),
-      yesNo('ecog', 'ECOG performance status ≥ 2', 2, 'ECOG 2 = ambulatory, all self-care, unable to work, up and about >50% of waking hours. 0 = fully active; 1 = strenuous activity limited but light work OK; 3 = limited self-care, in bed/chair >50% of waking hours; 4 = completely disabled.'),
-      yesNo('copd', 'COPD', 1, 'COPD on chronic treatment — not remote childhood asthma.'),
-      yesNo('cvd', 'Chronic cardiovascular disease', 1, 'Documented CHF, ischemic heart disease, or arrhythmia. Hypertension alone does not count.'),
-      yesNo('mucositis', 'Mucositis NCI grade ≥ 2', 1, 'CTCAE/NCI-CTC grade 2 = moderate pain, modified diet, oral intake preserved. Grade 3+ = severe pain interfering with oral intake. Tick if ≥2.'),
-      yesNo('monocytes', 'Monocytes < 200/µL (< 0.2 × 10⁹/L)', 1),
-      yesNo('hyperglycemia', 'Stress-induced hyperglycemia', 2, 'e.g., glucose ≥121 mg/dL without prior diabetes in validation context'),
+      yesNo('scopeConfirmed', 'Solid tumor with confirmed stable febrile neutropenia', null, 'Target population: adult solid tumor receiving chemo with confirmed FN (fever ≥38.0°C and ANC <1000/µL) and clinically stable (no shock/organ failure).', true),
+      yesNo('ecog', 'ECOG performance status ≥ 2', 2, 'ECOG 2 = ambulatory, all self-care, unable to work, up and about >50% of waking hours. 0 = fully active; 1 = strenuous activity limited but light work OK; 3 = limited self-care, in bed/chair >50% of waking hours; 4 = completely disabled.', true),
+      yesNo('copd', 'COPD', 1, 'COPD on chronic treatment — not remote childhood asthma.', false),
+      yesNo('cvd', 'Chronic cardiovascular disease', 1, 'Documented CHF, ischemic heart disease, or arrhythmia. Hypertension alone does not count.', false),
+      yesNo('mucositis', 'Mucositis NCI grade ≥ 2', 1, 'CTCAE/NCI-CTC grade 2 = moderate pain, modified diet, oral intake preserved. Grade 3+ = severe pain interfering with oral intake. Tick if ≥2.', false),
+      yesNo('monocytes', 'Monocytes < 200/µL (< 0.2 × 10⁹/L)', 1, 'Monocytes below 200/µL (0.2 × 10⁹/L) score 1 point in CISNE.', true),
+      yesNo('hyperglycemia', 'Stress-induced hyperglycemia', 2, 'e.g., glucose ≥121 mg/dL without prior diabetes in validation context', false),
     ],
     calculate(values) {
       if (!bool(values.scopeConfirmed)) {
@@ -1905,7 +1905,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
       selectInput('entryMode', 'Scoring method', [
         { label: 'Complete 24-descriptor checklist', value: 'survey' },
         { label: 'Enter precomputed SLEDAI-2K total (0–105)', value: 'direct' },
-      ], 'survey'),
+      ], 'survey', 'Choose the 24-descriptor SLEDAI-2K checklist, or enter a precomputed total (0–105). Only the selected mode\'s fields are used.'),
       numberInput('directTotal', 'Precomputed SLEDAI-2K total', {
         min: 0,
         max: 105,
@@ -1914,36 +1914,36 @@ export const wave4HemeOncCalcs: Calculator[] = [
       }),
 
       // Weight 8 Descriptors (Central Nervous System & Vascular)
-      yesNo('seizure', 'Seizure (recent onset at visit or in preceding 10 days, exclude metabolic/drugs)', 8),
-      yesNo('psychosis', 'Psychosis (severe disturbance in ability to function, hallucinations/delusions)', 8),
-      yesNo('organicBrain', 'Organic brain syndrome (altered mental function, impaired memory/orientation)', 8),
-      yesNo('visual', 'Visual disturbance (retinal cytoid bodies, optic neuritis, retinal hemorrhage)', 8),
-      yesNo('cranialNerve', 'Cranial nerve disorder (new sensory or motor cranial neuropathy)', 8),
-      yesNo('lupusHeadache', 'Lupus headache (severe persistent headache, unresponsive to narcotics)', 8),
-      yesNo('cva', 'Cerebrovascular accident (new CVA; infarction required)', 8, 'New-onset cerebrovascular accident attributable to SLE; exclude arteriosclerosis. Do not score an isolated transient ischemic attack without infarction.'),
-      yesNo('vasculitis', 'Vasculitis (ulceration, gangrene, tender periungual infarcts, splinter hemorrhages)', 8),
+      yesNo('seizure', 'Seizure (recent onset at visit or in preceding 10 days, exclude metabolic/drugs)', 8, 'Seizure at the visit or in the preceding 10 days scores 8 points; exclude metabolic, infectious and drug causes.', false),
+      yesNo('psychosis', 'Psychosis (severe disturbance in ability to function, hallucinations/delusions)', 8, 'Psychosis with a severe disturbance in the ability to function scores 8 points; exclude other causes.', false),
+      yesNo('organicBrain', 'Organic brain syndrome (altered mental function, impaired memory/orientation)', 8, 'Organic brain syndrome with altered mental function or impaired memory/orientation scores 8 points.', false),
+      yesNo('visual', 'Visual disturbance (retinal cytoid bodies, optic neuritis, retinal hemorrhage)', 8, 'Lupus visual disturbance — retinal cytoid bodies, optic neuritis or retinal hemorrhage — scores 8 points.', false),
+      yesNo('cranialNerve', 'Cranial nerve disorder (new sensory or motor cranial neuropathy)', 8, 'New sensory or motor cranial neuropathy scores 8 points.', false),
+      yesNo('lupusHeadache', 'Lupus headache (severe persistent headache, unresponsive to narcotics)', 8, 'Severe persistent lupus headache unresponsive to narcotics scores 8 points.', false),
+      yesNo('cva', 'Cerebrovascular accident (new CVA; infarction required)', 8, 'New-onset cerebrovascular accident attributable to SLE; exclude arteriosclerosis. Do not score an isolated transient ischemic attack without infarction.', false),
+      yesNo('vasculitis', 'Vasculitis (ulceration, gangrene, tender periungual infarcts, splinter hemorrhages)', 8, 'Vasculitis with ulceration, gangrene, tender periungual infarcts or splinter hemorrhages scores 8 points.', false),
 
       // Weight 4 Descriptors (Musculoskeletal & Renal)
-      yesNo('arthritis', 'Arthritis (≥2 joints with pain and signs of inflammation: swelling/effusion)', 4),
-      yesNo('myositis', 'Myositis (proximal muscle weakness/ache with elevated CPK/aldolase or EMG)', 4),
-      yesNo('urinaryCasts', 'Urinary casts (granular or red blood cell casts)', 4),
-      yesNo('hematuria', 'Hematuria (>5 red blood cells/hpf, exclude stone, infection, menses)', 4),
-      yesNo('proteinuria', 'Proteinuria (>0.5 g/24h; persistent/ongoing, new, or increased)', 4, 'Score if present at the visit or during the preceding 10 days. SLEDAI-2K permits persistent/ongoing proteinuria, not only new onset or recent increase.'),
-      yesNo('pyuria', 'Pyuria (>5 white blood cells/hpf, exclude infection)', 4),
+      yesNo('arthritis', 'Arthritis (≥2 joints with pain and signs of inflammation: swelling/effusion)', 4, 'Arthritis in two or more joints with pain and inflammatory signs scores 4 points.', false),
+      yesNo('myositis', 'Myositis (proximal muscle weakness/ache with elevated CPK/aldolase or EMG)', 4, 'Proximal muscle weakness or ache with raised CPK/aldolase or EMG changes scores 4 points.', false),
+      yesNo('urinaryCasts', 'Urinary casts (granular or red blood cell casts)', 4, 'Granular or red blood cell casts in the urine score 4 points.', false),
+      yesNo('hematuria', 'Hematuria (>5 red blood cells/hpf, exclude stone, infection, menses)', 4, 'More than 5 red blood cells per high-power field scores 4 points; exclude stone, infection and menses.', false),
+      yesNo('proteinuria', 'Proteinuria (>0.5 g/24h; persistent/ongoing, new, or increased)', 4, 'Score if present at the visit or during the preceding 10 days. SLEDAI-2K permits persistent/ongoing proteinuria, not only new onset or recent increase.', true),
+      yesNo('pyuria', 'Pyuria (>5 white blood cells/hpf, exclude infection)', 4, 'More than 5 white blood cells per high-power field scores 4 points; exclude infection.', false),
 
       // Weight 2 Descriptors (Mucocutaneous, Serosal & Immunologic)
-      yesNo('rash', 'Inflammatory lupus rash (malar or maculopapular; persistent, new, or recurrent)', 2, 'Score if present at the visit or during the preceding 10 days. SLEDAI-2K permits persistent/ongoing rash.'),
-      yesNo('alopecia', 'Alopecia (abnormal patchy or diffuse hair loss; persistent, new, or recurrent)', 2, 'Score if present at the visit or during the preceding 10 days. SLEDAI-2K permits persistent/ongoing alopecia.'),
-      yesNo('mucosalUlcers', 'Mucosal ulcers (oral or nasal ulcerations)', 2),
-      yesNo('pleurisy', 'Pleurisy (pleuritic chest pain with pleural rub, effusion, or thickening)', 2),
-      yesNo('pericarditis', 'Pericarditis (pericardial pain with rub, effusion, or ECG confirmation)', 2),
-      yesNo('lowComplement', 'Low complement (decreased C3 or C4 below lower limit of laboratory normal)', 2),
-      yesNo('antiDna', 'Increased DNA binding (>25% binding by Farr assay or above laboratory reference)', 2),
+      yesNo('rash', 'Inflammatory lupus rash (malar or maculopapular; persistent, new, or recurrent)', 2, 'Score if present at the visit or during the preceding 10 days. SLEDAI-2K permits persistent/ongoing rash.', false),
+      yesNo('alopecia', 'Alopecia (abnormal patchy or diffuse hair loss; persistent, new, or recurrent)', 2, 'Score if present at the visit or during the preceding 10 days. SLEDAI-2K permits persistent/ongoing alopecia.', false),
+      yesNo('mucosalUlcers', 'Mucosal ulcers (oral or nasal ulcerations)', 2, 'Oral or nasal ulcerations score 2 points in this implementation of SLEDAI-2K.', false),
+      yesNo('pleurisy', 'Pleurisy (pleuritic chest pain with pleural rub, effusion, or thickening)', 2, 'Pleuritic chest pain with a rub, effusion or pleural thickening scores 2 points.', false),
+      yesNo('pericarditis', 'Pericarditis (pericardial pain with rub, effusion, or ECG confirmation)', 2, 'Pericardial pain with rub, effusion or ECG confirmation scores 2 points.', false),
+      yesNo('lowComplement', 'Low complement (decreased C3 or C4 below lower limit of laboratory normal)', 2, 'C3 or C4 below the laboratory lower limit scores 2 points.', false),
+      yesNo('antiDna', 'Increased DNA binding (>25% binding by Farr assay or above laboratory reference)', 2, 'Increased DNA binding above the laboratory reference (or more than 25% by Farr assay) scores 2 points.', true),
 
       // Weight 1 Descriptors (Constitutional & Hematologic)
-      yesNo('fever', 'Fever (>38°C / 100.4°F, excluding infectious cause)', 1),
-      yesNo('thrombocytopenia', 'Thrombocytopenia (<100 × 10⁹/L platelets, exclude drug-induced)', 1),
-      yesNo('leukopenia', 'Leukopenia (<3.0 × 10⁹/L white blood cells, exclude drug-induced)', 1),
+      yesNo('fever', 'Fever (>38°C / 100.4°F, excluding infectious cause)', 1, 'Fever above 38 °C (100.4 °F) without an infectious cause scores 1 point.', false),
+      yesNo('thrombocytopenia', 'Thrombocytopenia (<100 × 10⁹/L platelets, exclude drug-induced)', 1, 'Platelets below 100 × 10⁹/L score 1 point; exclude drug-induced thrombocytopenia.', false),
+      yesNo('leukopenia', 'Leukopenia (<3.0 × 10⁹/L white blood cells, exclude drug-induced)', 1, 'WBC below 3.0 × 10⁹/L scores 1 point; exclude drug-induced leukopenia.', false),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');
@@ -2057,7 +2057,7 @@ export const wave4HemeOncCalcs: Calculator[] = [
       selectInput('entryMode', 'Scoring method', [
         { label: 'Score 4 anatomical regions', value: 'survey' },
         { label: 'Enter precomputed PASI total (0–72)', value: 'direct' },
-      ], 'survey'),
+      ], 'survey', 'Choose the four-region PASI scoring, or enter a precomputed total (0–72). Only the selected mode\'s fields are used.'),
       numberInput('directTotal', 'Precomputed PASI total', {
         min: 0,
         max: 72,
@@ -2075,28 +2075,28 @@ export const wave4HemeOncCalcs: Calculator[] = [
         { label: '4 — 50%–69% of head surface', value: 4, points: 4 },
         { label: '5 — 70%–89% of head surface', value: 5, points: 5 },
         { label: '6 — 90%–100% of head surface', value: 6, points: 6 },
-      ], 0),
+      ], 0, 'Area involvement for this region: 0 = 0%, 1 = under 10%, 2 = 10–29%, 3 = 30–49%, 4 = 50–69%, 5 = 70–89%, 6 = 90–100%.'),
       selectInput('head_erythema', 'Head & Neck: Erythema (redness)', [
         { label: '0 — None', value: 0, points: 0 },
         { label: '1 — Slight / light pink', value: 1, points: 1 },
         { label: '2 — Moderate / red', value: 2, points: 2 },
         { label: '3 — Severe / very red', value: 3, points: 3 },
         { label: '4 — Very severe / extreme red', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Severity in this region: 0 = none, 1 = slight, 2 = moderate, 3 = severe, 4 = very severe. Each region is area × severity sum, weighted 0.1.'),
       selectInput('head_induration', 'Head & Neck: Induration (thickness)', [
         { label: '0 — None', value: 0, points: 0 },
         { label: '1 — Slight / barely palpable', value: 1, points: 1 },
         { label: '2 — Moderate / distinct plaque elevation', value: 2, points: 2 },
         { label: '3 — Severe / marked elevation with rounded edges', value: 3, points: 3 },
         { label: '4 — Very severe / maximal plaque thickness', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Severity in this region: 0 = none, 1 = slight, 2 = moderate, 3 = severe, 4 = very severe. Induration is plaque thickness.'),
       selectInput('head_desquamation', 'Head & Neck: Desquamation (scaling)', [
         { label: '0 — None', value: 0, points: 0 },
         { label: '1 — Slight / fine partial scaling', value: 1, points: 1 },
         { label: '2 — Moderate / coarse scaling over majority of lesion', value: 2, points: 2 },
         { label: '3 — Severe / thick tenacious scales covering lesions', value: 3, points: 3 },
         { label: '4 — Very severe / very thick dense scaling across all lesions', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Severity in this region: 0 = none, 1 = slight, 2 = moderate, 3 = severe, 4 = very severe. Desquamation is scaling.'),
 
       // Upper Limbs (weight 0.2, 20% BSA)
       selectInput('upper_area', 'Upper Limbs: Area involvement score', [
@@ -2107,28 +2107,28 @@ export const wave4HemeOncCalcs: Calculator[] = [
         { label: '4 — 50%–69% of upper limb surface', value: 4, points: 4 },
         { label: '5 — 70%–89% of upper limb surface', value: 5, points: 5 },
         { label: '6 — 90%–100% of upper limb surface', value: 6, points: 6 },
-      ], 0),
+      ], 0, 'Area involvement for this region: 0 = 0%, 1 = under 10%, 2 = 10–29%, 3 = 30–49%, 4 = 50–69%, 5 = 70–89%, 6 = 90–100%.'),
       selectInput('upper_erythema', 'Upper Limbs: Erythema (redness)', [
         { label: '0 — None', value: 0, points: 0 },
         { label: '1 — Slight / light pink', value: 1, points: 1 },
         { label: '2 — Moderate / red', value: 2, points: 2 },
         { label: '3 — Severe / very red', value: 3, points: 3 },
         { label: '4 — Very severe / extreme red', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Severity in this region: 0 = none, 1 = slight, 2 = moderate, 3 = severe, 4 = very severe. Each region is area × severity sum, weighted 0.2.'),
       selectInput('upper_induration', 'Upper Limbs: Induration (thickness)', [
         { label: '0 — None', value: 0, points: 0 },
         { label: '1 — Slight / barely palpable', value: 1, points: 1 },
         { label: '2 — Moderate / distinct plaque elevation', value: 2, points: 2 },
         { label: '3 — Severe / marked elevation with rounded edges', value: 3, points: 3 },
         { label: '4 — Very severe / maximal plaque thickness', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Severity in this region: 0 = none, 1 = slight, 2 = moderate, 3 = severe, 4 = very severe. Induration is plaque thickness.'),
       selectInput('upper_desquamation', 'Upper Limbs: Desquamation (scaling)', [
         { label: '0 — None', value: 0, points: 0 },
         { label: '1 — Slight / fine partial scaling', value: 1, points: 1 },
         { label: '2 — Moderate / coarse scaling over majority of lesion', value: 2, points: 2 },
         { label: '3 — Severe / thick tenacious scales covering lesions', value: 3, points: 3 },
         { label: '4 — Very severe / very thick dense scaling across all lesions', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Severity in this region: 0 = none, 1 = slight, 2 = moderate, 3 = severe, 4 = very severe. Desquamation is scaling.'),
 
       // Trunk (weight 0.3, 30% BSA)
       selectInput('trunk_area', 'Trunk: Area involvement score', [
@@ -2139,28 +2139,28 @@ export const wave4HemeOncCalcs: Calculator[] = [
         { label: '4 — 50%–69% of trunk surface', value: 4, points: 4 },
         { label: '5 — 70%–89% of trunk surface', value: 5, points: 5 },
         { label: '6 — 90%–100% of trunk surface', value: 6, points: 6 },
-      ], 0),
+      ], 0, 'Area involvement for this region: 0 = 0%, 1 = under 10%, 2 = 10–29%, 3 = 30–49%, 4 = 50–69%, 5 = 70–89%, 6 = 90–100%.'),
       selectInput('trunk_erythema', 'Trunk: Erythema (redness)', [
         { label: '0 — None', value: 0, points: 0 },
         { label: '1 — Slight / light pink', value: 1, points: 1 },
         { label: '2 — Moderate / red', value: 2, points: 2 },
         { label: '3 — Severe / very red', value: 3, points: 3 },
         { label: '4 — Very severe / extreme red', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Severity in this region: 0 = none, 1 = slight, 2 = moderate, 3 = severe, 4 = very severe. Each region is area × severity sum, weighted 0.3.'),
       selectInput('trunk_induration', 'Trunk: Induration (thickness)', [
         { label: '0 — None', value: 0, points: 0 },
         { label: '1 — Slight / barely palpable', value: 1, points: 1 },
         { label: '2 — Moderate / distinct plaque elevation', value: 2, points: 2 },
         { label: '3 — Severe / marked elevation with rounded edges', value: 3, points: 3 },
         { label: '4 — Very severe / maximal plaque thickness', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Severity in this region: 0 = none, 1 = slight, 2 = moderate, 3 = severe, 4 = very severe. Induration is plaque thickness.'),
       selectInput('trunk_desquamation', 'Trunk: Desquamation (scaling)', [
         { label: '0 — None', value: 0, points: 0 },
         { label: '1 — Slight / fine partial scaling', value: 1, points: 1 },
         { label: '2 — Moderate / coarse scaling over majority of lesion', value: 2, points: 2 },
         { label: '3 — Severe / thick tenacious scales covering lesions', value: 3, points: 3 },
         { label: '4 — Very severe / very thick dense scaling across all lesions', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Severity in this region: 0 = none, 1 = slight, 2 = moderate, 3 = severe, 4 = very severe. Desquamation is scaling.'),
 
       // Lower Limbs (weight 0.4, 40% BSA)
       selectInput('lower_area', 'Lower Limbs: Area involvement score', [
@@ -2171,28 +2171,28 @@ export const wave4HemeOncCalcs: Calculator[] = [
         { label: '4 — 50%–69% of lower limb surface', value: 4, points: 4 },
         { label: '5 — 70%–89% of lower limb surface', value: 5, points: 5 },
         { label: '6 — 90%–100% of lower limb surface', value: 6, points: 6 },
-      ], 0),
+      ], 0, 'Area involvement for this region: 0 = 0%, 1 = under 10%, 2 = 10–29%, 3 = 30–49%, 4 = 50–69%, 5 = 70–89%, 6 = 90–100%.'),
       selectInput('lower_erythema', 'Lower Limbs: Erythema (redness)', [
         { label: '0 — None', value: 0, points: 0 },
         { label: '1 — Slight / light pink', value: 1, points: 1 },
         { label: '2 — Moderate / red', value: 2, points: 2 },
         { label: '3 — Severe / very red', value: 3, points: 3 },
         { label: '4 — Very severe / extreme red', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Severity in this region: 0 = none, 1 = slight, 2 = moderate, 3 = severe, 4 = very severe. Each region is area × severity sum, weighted 0.4.'),
       selectInput('lower_induration', 'Lower Limbs: Induration (thickness)', [
         { label: '0 — None', value: 0, points: 0 },
         { label: '1 — Slight / barely palpable', value: 1, points: 1 },
         { label: '2 — Moderate / distinct plaque elevation', value: 2, points: 2 },
         { label: '3 — Severe / marked elevation with rounded edges', value: 3, points: 3 },
         { label: '4 — Very severe / maximal plaque thickness', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Severity in this region: 0 = none, 1 = slight, 2 = moderate, 3 = severe, 4 = very severe. Induration is plaque thickness.'),
       selectInput('lower_desquamation', 'Lower Limbs: Desquamation (scaling)', [
         { label: '0 — None', value: 0, points: 0 },
         { label: '1 — Slight / fine partial scaling', value: 1, points: 1 },
         { label: '2 — Moderate / coarse scaling over majority of lesion', value: 2, points: 2 },
         { label: '3 — Severe / thick tenacious scales covering lesions', value: 3, points: 3 },
         { label: '4 — Very severe / very thick dense scaling across all lesions', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Severity in this region: 0 = none, 1 = slight, 2 = moderate, 3 = severe, 4 = very severe. Desquamation is scaling.'),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');

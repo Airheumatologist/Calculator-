@@ -552,7 +552,7 @@ export const wave3PedsObCalcs: Calculator[] = [
         helpText: '1 = multiple seizures in the first 12 h of life; 0 = none or a single seizure. Official SNAP-II item is multiple seizures (yes/no) in that 12 h window.',
       }),
       numberInput('uop', 'Urine output', { unit: 'mL/kg/h', min: 0, max: 5, step: 0.1, exampleValue: 1, helpText: 'Urine output over the first 12 hours of life (mL/kg/h).' }),
-      numberInput('birthWeight', 'Birth weight', { unit: 'g', min: 300, max: 8000, exampleValue: 1500 }),
+      numberInput('birthWeight', 'Birth weight', { helpText: 'Birth weight in grams, ideally the first weight after delivery; SNAPPE-II scores it in bands alongside the physiology and urine-output domains.', unit: 'g', min: 300, max: 8000, exampleValue: 1500 }),
       numberInput('sga', 'SGA (birth weight <3rd–5th %ile)', { min: 0, max: 1, exampleValue: 0, helpText: '1 = yes, 0 = no. Official SNAPPE-II SGA is <3rd percentile.' }),
       numberInput('apgar5', '5-minute Apgar', { min: 0, max: 10, exampleValue: 7, helpText: 'Official SNAPPE-II adds points if 5-minute Apgar <7. Enter the 5-minute score (0–10).' }),
     ],
@@ -659,11 +659,11 @@ export const wave3PedsObCalcs: Calculator[] = [
     whyUse: 'Highlights major CRIB-II predictors in a bedside-friendly form.',
     inputs: [
       numberInput('ga', 'Gestational age', { unit: 'weeks', min: 22, max: 32, step: 0.1, exampleValue: 28, helpText: 'Official CRIB-II is for infants ≤32 weeks at admission.' }),
-      numberInput('bw', 'Birth weight', { unit: 'g', min: 300, max: 2500, exampleValue: 1000 }),
+      numberInput('bw', 'Birth weight', { helpText: 'Birth weight in grams; CRIB-II uses it in 500–2500 g bands and it is one of the strongest predictors in the score.', unit: 'g', min: 300, max: 2500, exampleValue: 1000 }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
-      ]),
+      ], 'M', 'Infant sex, used with birth weight and temperature in the CRIB-II calculation.'),
       numberInput('temp', 'Admission temperature', { unit: '°C', min: 30, max: 40, step: 0.1, exampleValue: 36.5, helpText: 'Temperature on admission to the NICU (not later nadir).' }),
       numberInput('be', 'Base excess (most negative first 12 h)', { unit: 'mEq/L', min: -30, max: 10, step: 0.1, exampleValue: -4, helpText: 'Most negative base excess in the first 12 hours of life.' }),
     ],
@@ -1478,8 +1478,8 @@ export const wave3PedsObCalcs: Calculator[] = [
     inputs: [
       numberInput('baselineCr', 'Baseline creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 10, step: 0.01, exampleValue: 0.4, helpText: 'Prior nadir or documented baseline from the relevant acute kidney injury window — not an unrelated historical value. The absolute Stage 3 criterion uses this baseline to assess the acute rise. Select µmol/L for SI lab reports.' }),
       numberInput('currentCr', 'Current creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.01, exampleValue: 0.6, helpText: 'KDIGO Stage 1: ≥0.3 mg/dL rise within 48 h, or ≥1.5× baseline within 7 days. For the absolute Stage 3 criterion, current Cr must be ≥4.0 mg/dL and have an acute rise of ≥0.5 mg/dL from baseline. Use values from the relevant AKI window. Select µmol/L for SI lab reports.' }),
-      yesNo('dialysis', 'Renal replacement therapy initiated', null, 'Any RRT (HD, PD, CRRT) for this AKI episode is KDIGO Stage 3 regardless of creatinine; this is an override gate, not an additive point item.'),
-      yesNo('egfr35', 'eGFR <35 mL/min/1.73m² (for patients <18 y) — stage 3 criterion', null, 'Pediatric KDIGO Stage 3 criterion: eGFR <35 in patients <18 years. The separate absolute creatinine gate is current Cr ≥4.0 mg/dL with an acute rise ≥0.5 mg/dL from baseline. These are override gates, not additive point items.'),
+      yesNo('dialysis', 'Renal replacement therapy initiated', null, 'Any RRT (HD, PD, CRRT) for this AKI episode is KDIGO Stage 3 regardless of creatinine; this is an override gate, not an additive point item.', false),
+      yesNo('egfr35', 'eGFR <35 mL/min/1.73m² (for patients <18 y) — stage 3 criterion', null, 'Pediatric KDIGO Stage 3 criterion: eGFR <35 in patients <18 years. The separate absolute creatinine gate is current Cr ≥4.0 mg/dL with an acute rise ≥0.5 mg/dL from baseline. These are override gates, not additive point items.', false),
     ],
     calculate(values) {
       const base = num(values.baselineCr, 0.4);
@@ -1568,13 +1568,13 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'Hospitalized children when assessing oliguria or AKI by urine volume.',
     whyUse: 'Weight-normalized UOP is more meaningful than absolute mL/h in pediatrics.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 1, max: 100, step: 0.1, exampleValue: 12 }),
-      numberInput('urineMl', 'Urine volume', { unit: 'mL', min: 0, max: 5000, exampleValue: 120 }),
+      numberInput('weight', 'Weight', { helpText: 'Current weight in kg; the output rate is expressed as mL/kg/h, so use the most recent measured weight.', unit: 'kg', unitKind: 'weight', min: 1, max: 100, step: 0.1, exampleValue: 12 }),
+      numberInput('urineMl', 'Urine volume', { helpText: 'Total urine volume in mL for the collection period; a catheter or weighed nappy gives the most reliable measurement.', unit: 'mL', min: 0, max: 5000, exampleValue: 120 }),
       numberInput('hours', 'Collection period', { unit: 'hours', min: 0.5, max: 48, step: 0.5, exampleValue: 6, helpText: 'UOP (mL/kg/h) = volume ÷ weight ÷ hours. KDIGO stage 1 oliguria is <0.5 mL/kg/h for ≥6–12 h; neonates/young infants often use <1 mL/kg/h.' }),
       selectInput('ageGroup', 'Age group (threshold context)', [
         { label: 'Neonate / young infant (oliguria often <1 mL/kg/h)', value: 'neonate' },
         { label: 'Child (KDIGO-style <0.5 mL/kg/h)', value: 'child' },
-      ]),
+      ], 'child', 'Age sets the oliguria threshold: neonates are often flagged below 1 mL/kg/h, children below 0.5 mL/kg/h.'),
     ],
     calculate(values) {
       const w = num(values.weight, 12);
@@ -1656,15 +1656,15 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'Children with blunt torso trauma when deciding need for abdominal CT.',
     whyUse: 'Identifies very low-risk children who may avoid CT radiation if no predictors present.',
     inputs: [
-      yesNo('abdominalWall', 'Evidence of abdominal wall trauma / seat-belt or handlebar injury', 1, 'Published predictor: abdominal wall trauma, including a seat-belt or handlebar sign. Abdominal tenderness is a separate predictor below.'),
-      yesNo('abdominalTenderness', 'Abdominal tenderness', 1, 'Published predictor: tenderness on abdominal examination, separate from abdominal-wall trauma.'),
-      yesNo('peritoneal', 'Peritoneal irritation (rebound, guarding, rigidity)', null, 'Not one of the published 7-variable Holmes predictors — document as an extra clinical modifier, but do not count it in the PECARN predictor total.'),
-      yesNo('thoracic', 'Thoracic wall trauma', 1, 'Chest wall trauma (contusion, crepitus, or seat-belt sign on the thorax).'),
-      yesNo('complainsPain', 'Complains of abdominal pain', 1, 'Child verbalizes abdominal pain, or a preverbal child has clear abdominal pain behavior.'),
-      yesNo('decreasedBreath', 'Decreased breath sounds', 1, 'Asymmetric or decreased breath sounds on auscultation.'),
-      yesNo('vomiting', 'Vomiting', 1, 'Vomiting after the injury (not lifetime or unrelated vomiting).'),
-      yesNo('gcsLow', 'GCS ≤13 or altered mentation', 1, 'GCS ≤13 (rule uses GCS <14). GCS 14–15 is the low-risk mental-status band.'),
-      yesNo('distracting', 'Distracting painful injury (optional clinical judgment)', null, 'Not in the published 7-variable rule — extra clinical modifier, not part of the PECARN predictor count.'),
+      yesNo('abdominalWall', 'Evidence of abdominal wall trauma / seat-belt or handlebar injury', 1, 'Published predictor: abdominal wall trauma, including a seat-belt or handlebar sign. Abdominal tenderness is a separate predictor below.', false),
+      yesNo('abdominalTenderness', 'Abdominal tenderness', 1, 'Published predictor: tenderness on abdominal examination, separate from abdominal-wall trauma.', true),
+      yesNo('peritoneal', 'Peritoneal irritation (rebound, guarding, rigidity)', null, 'Not one of the published 7-variable Holmes predictors — document as an extra clinical modifier, but do not count it in the PECARN predictor total.', false),
+      yesNo('thoracic', 'Thoracic wall trauma', 1, 'Chest wall trauma (contusion, crepitus, or seat-belt sign on the thorax).', false),
+      yesNo('complainsPain', 'Complains of abdominal pain', 1, 'Child verbalizes abdominal pain, or a preverbal child has clear abdominal pain behavior.', true),
+      yesNo('decreasedBreath', 'Decreased breath sounds', 1, 'Asymmetric or decreased breath sounds on auscultation.', false),
+      yesNo('vomiting', 'Vomiting', 1, 'Vomiting after the injury (not lifetime or unrelated vomiting).', true),
+      yesNo('gcsLow', 'GCS ≤13 or altered mentation', 1, 'GCS ≤13 (rule uses GCS <14). GCS 14–15 is the low-risk mental-status band.', false),
+      yesNo('distracting', 'Distracting painful injury (optional clinical judgment)', null, 'Not in the published 7-variable rule — extra clinical modifier, not part of the PECARN predictor count.', false),
     ],
     calculate(values) {
       const predictors = [
@@ -1763,8 +1763,8 @@ export const wave3PedsObCalcs: Calculator[] = [
         { label: 'Irritable or mildly lethargic', value: 1, description: 'Difficult to console or less interactive than usual but still arousable' },
         { label: 'Lethargic, poorly responsive', value: 2, description: 'Difficult to arouse; poor eye contact; not interacting' },
       ], 0, 'Poorly responsive / lethargic is a severe-band finding even if WOB looks moderate.'),
-      yesNo('apnea', 'Apnea observed', 0, 'Cessation of breathing ≥15–20 s, or a shorter pause with bradycardia or cyanosis (AAP bronchiolitis).'),
-      yesNo('highRisk', 'High-risk host (prematurity, hemodynamically significant CHD, immunodeficiency, etc.)', 0, 'Prematurity (especially <12 weeks postnatal or ex-preemie), hemodynamically significant CHD, immunodeficiency, chronic lung disease, or neuromuscular disease — lower admission threshold even if the exam is mild.'),
+      yesNo('apnea', 'Apnea observed', 0, 'Cessation of breathing ≥15–20 s, or a shorter pause with bradycardia or cyanosis (AAP bronchiolitis).', false),
+      yesNo('highRisk', 'High-risk host (prematurity, hemodynamically significant CHD, immunodeficiency, etc.)', 0, 'Prematurity (especially <12 weeks postnatal or ex-preemie), hemodynamically significant CHD, immunodeficiency, chronic lung disease, or neuromuscular disease — lower admission threshold even if the exam is mild.', false),
     ],
     calculate(values) {
       const sum =
@@ -1867,7 +1867,7 @@ export const wave3PedsObCalcs: Calculator[] = [
         { label: '90–93%', value: 1, description: 'Room-air SpO₂ 90–93% (moderate–severe band)' },
         { label: '<90%', value: 2, description: 'Room-air SpO₂ <90% (severe / life-threatening hypoxia)' },
       ], 0, 'Score on room air when safe. Cyanosis, SpO₂ <90%, or exhaustion maps to life-threatening features via the next item.'),
-      yesNo('altered', 'Altered consciousness / exhaustion / cyanosis', 0, 'Any of: drowsy/confused, exhaustion, or central cyanosis — GINA life-threatening features. Forces the life-threatening band regardless of domain sum.'),
+      yesNo('altered', 'Altered consciousness / exhaustion / cyanosis', 0, 'Any of: drowsy/confused, exhaustion, or central cyanosis — GINA life-threatening features. Forces the life-threatening band regardless of domain sum.', false),
     ],
     calculate(values) {
       const sum =
@@ -2017,8 +2017,8 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'Febrile infants (classically 29–56 days) when applying Philadelphia low-risk criteria.',
     whyUse: 'Historical well-validated set of low-risk criteria including LP in the original pathway.',
     inputs: [
-      yesNo('wellAppearing', 'Well-appearing', 1, 'Apply only in the intended age band (classic Philadelphia 29–56 days). Ill-appearing infants are never low-risk. Well = interacting, normal work of breathing and circulation (Pediatric Assessment Triangle).'),
-      yesNo('noFocus', 'No focal infection on exam', 1, 'No otitis, soft-tissue infection, bone/joint infection, or other focal bacterial source on exam. Focal infection fails low-risk.'),
+      yesNo('wellAppearing', 'Well-appearing', 1, 'Apply only in the intended age band (classic Philadelphia 29–56 days). Ill-appearing infants are never low-risk. Well = interacting, normal work of breathing and circulation (Pediatric Assessment Triangle).', true),
+      yesNo('noFocus', 'No focal infection on exam', 1, 'No otitis, soft-tissue infection, bone/joint infection, or other focal bacterial source on exam. Focal infection fails low-risk.', true),
       numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0, max: 50, step: 0.1, exampleValue: 8, helpText: 'Low-risk if WBC 5–15 ×10³/µL (tool applies this automatically).' }),
       numberInput('bands', 'Band-to-neutrophil ratio (or enter bands %/100)', {
         min: 0,
@@ -2029,9 +2029,9 @@ export const wave3PedsObCalcs: Calculator[] = [
       }),
       numberInput('uaWbc', 'UA WBC', { unit: '/hpf', min: 0, max: 100, exampleValue: 2, helpText: 'Low-risk if UA <10 WBC/hpf (tool applies this automatically).' }),
       numberInput('csfWbc', 'CSF WBC', { unit: '/µL', min: 0, max: 5000, exampleValue: 2, helpText: 'Low-risk if CSF <8 WBC/µL (Philadelphia). Tool applies this automatically.' }),
-      yesNo('csfGramPos', 'CSF Gram stain positive', 1, 'Any organisms on CSF Gram stain fails low-risk (Philadelphia).'),
-      yesNo('cxrAbn', 'Abnormal CXR (if obtained)', 1, 'Any infiltrate or other abnormal CXR, if a film was obtained, fails low-risk. If CXR not obtained, leave No.'),
-      yesNo('stoolWbc', 'Stool WBC positive if diarrhea (if applicable)', 1, 'If diarrhea is present, stool WBC positive fails low-risk. If no diarrhea, leave No.'),
+      yesNo('csfGramPos', 'CSF Gram stain positive', 1, 'Any organisms on CSF Gram stain fails low-risk (Philadelphia).', false),
+      yesNo('cxrAbn', 'Abnormal CXR (if obtained)', 1, 'Any infiltrate or other abnormal CXR, if a film was obtained, fails low-risk. If CXR not obtained, leave No.', false),
+      yesNo('stoolWbc', 'Stool WBC positive if diarrhea (if applicable)', 1, 'If diarrhea is present, stool WBC positive fails low-risk. If no diarrhea, leave No.', false),
     ],
     calculate(values) {
       const reasons: string[] = [];
@@ -2084,12 +2084,12 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'Febrile infants (classically 28–89 days) when applying Boston low-risk laboratory criteria.',
     whyUse: 'Another classic low-risk rule set still referenced in teaching and comparisons.',
     inputs: [
-      yesNo('wellAppearing', 'Well-appearing / nontoxic', 1, 'Classic Boston 28–89 days. Well/nontoxic on Pediatric Assessment Triangle; ill-appearing infants are never low-risk.'),
-      yesNo('noFocus', 'No ear, soft tissue, or bone infection on exam', 1, 'Boston: no otitis, soft-tissue, or bone/joint infection. Focal bacterial source fails low-risk.'),
+      yesNo('wellAppearing', 'Well-appearing / nontoxic', 1, 'Classic Boston 28–89 days. Well/nontoxic on Pediatric Assessment Triangle; ill-appearing infants are never low-risk.', true),
+      yesNo('noFocus', 'No ear, soft tissue, or bone infection on exam', 1, 'Boston: no otitis, soft-tissue, or bone/joint infection. Focal bacterial source fails low-risk.', true),
       numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0, max: 50, step: 0.1, exampleValue: 10, helpText: 'Low-risk if WBC <20 ×10³/µL (tool applies this automatically).' }),
       numberInput('uaWbc', 'UA WBC', { unit: '/hpf', min: 0, max: 100, exampleValue: 2, helpText: 'Low-risk if UA <10 WBC/hpf (Boston). Tool applies this automatically.' }),
       numberInput('csfWbc', 'CSF WBC', { unit: '/µL', min: 0, max: 5000, exampleValue: 2, helpText: 'Low-risk if CSF <10 WBC/µL (Boston). Tool applies this automatically.' }),
-      yesNo('cxrAbn', 'Infiltrate on CXR (if obtained)', 1, 'Any infiltrate on CXR, if obtained, fails low-risk. If CXR not obtained, leave No.'),
+      yesNo('cxrAbn', 'Infiltrate on CXR (if obtained)', 1, 'Any infiltrate on CXR, if obtained, fails low-risk. If CXR not obtained, leave No.', false),
       numberInput('stoolWbc', 'Stool WBC /hpf if diarrhea (0 if N/A)', { min: 0, max: 100, exampleValue: 0, required: false, helpText: 'If diarrhea present, stool ≥5 WBC/hpf fails Boston low-risk. Enter 0 if no diarrhea / not applicable.' }),
     ],
     calculate(values) {
@@ -2149,8 +2149,8 @@ export const wave3PedsObCalcs: Calculator[] = [
         { label: '≤28 days', value: '0-28', description: '≤28 days: higher baseline IBI risk — this helper never labels this band “low-risk discharge”' },
         { label: '29–60 days', value: '29-60', description: '29–60 days: PECARN low-risk pathway eligible if well-appearing with negative labs' },
       ], '0-28', 'Kuppermann/PECARN febrile infant ≤60 days. ≤28 days is never “low-risk discharge” here even if labs are negative.'),
-      yesNo('illAppearing', 'Ill-appearing', 1, 'Ill/toxic on Pediatric Assessment Triangle (appearance, work of breathing, circulation). Ill-appearing infants are never low-risk.'),
-      yesNo('uaPos', 'Positive urinalysis (LE, nitrite, or WBC per rule definition)', 1, 'Positive UA: any leukocyte esterase (including trace), any nitrite, or >5 WBC/HPF (Kuppermann/PECARN).'),
+      yesNo('illAppearing', 'Ill-appearing', 1, 'Ill/toxic on Pediatric Assessment Triangle (appearance, work of breathing, circulation). Ill-appearing infants are never low-risk.', false),
+      yesNo('uaPos', 'Positive urinalysis (LE, nitrite, or WBC per rule definition)', 1, 'Positive UA: any leukocyte esterase (including trace), any nitrite, or >5 WBC/HPF (Kuppermann/PECARN).', false),
       numberInput('anc', 'Absolute neutrophil count', { unit: 'cells/µL', min: 0, max: 30000, exampleValue: 4000, helpText: 'Tool applies ANC >4090 as a fail automatically.' }),
       numberInput('pct', 'Procalcitonin', { unit: 'ng/mL', min: 0, max: 100, step: 0.01, exampleValue: 0.2, helpText: 'Tool applies PCT >1.71 ng/mL as a fail automatically.' }),
     ],
@@ -2225,22 +2225,22 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'Children with ≥5 days of fever and 2–3 clinical KD features when applying supplemental lab criteria.',
     whyUse: 'Incomplete KD needs lab + echo algorithm to avoid missed coronary risk.',
     inputs: [
-      numberInput('feverDays', 'Days of fever', { min: 1, max: 30, exampleValue: 5 }),
+      numberInput('feverDays', 'Days of fever', { helpText: 'Days of fever when the labs were drawn; the platelet criterion applies after day 7, and CRP or ESR is required to pursue the incomplete Kawasaki workup.', min: 1, max: 30, exampleValue: 5 }),
       numberInput('clinicalFeatures', 'Number of classic KD clinical features (besides fever)', {
         min: 0,
         max: 5,
         exampleValue: 2,
         helpText: 'AHA principal features: (1) nonexudative bulbar conjunctival injection; (2) oral — cracked lips, strawberry tongue, or injected pharynx; (3) rash (not vesicular); (4) extremity erythema/edema or periungual peeling; (5) cervical lymphadenopathy ≥1.5 cm, usually unilateral.',
       }),
-      yesNo('crpHigh', 'CRP ≥3.0 mg/dL (30 mg/L)'),
-      yesNo('esrHigh', 'ESR ≥40 mm/h'),
-      yesNo('anemia', 'Anemia for age', 1, 'Yes if Hb below the lab age-specific lower limit of normal (AHA “anemia for age”).'),
-      yesNo('pltHigh', 'Platelets ≥450,000 after day 7 of fever'),
-      yesNo('albuminLow', 'Albumin ≤3.0 g/dL'),
-      yesNo('altHigh', 'ALT elevated for age/lab'),
-      yesNo('wbcHigh', 'WBC ≥15,000/µL'),
-      yesNo('uaWbc', 'Urine ≥10 WBC/hpf (sterile pyuria)'),
-      yesNo('echoPos', 'Echo positive (coronary Z-score criteria / other KD echo findings)', 1, 'Yes if LAD or RCA Z ≥2.5, coronary aneurysm, or ≥3 supportive findings (LV dysfunction, mitral regurgitation, pericardial effusion, or Z 2–2.5).'),
+      yesNo('crpHigh', 'CRP ≥3.0 mg/dL (30 mg/L)', undefined, 'CRP 3.0 mg/dL (30 mg/L) or higher is one of the two required inflammatory markers and counts as a laboratory criterion.', true),
+      yesNo('esrHigh', 'ESR ≥40 mm/h', undefined, 'ESR 40 mm/h or higher is one of the two required inflammatory markers and counts as a laboratory criterion.', true),
+      yesNo('anemia', 'Anemia for age', 1, 'Yes if Hb below the lab age-specific lower limit of normal (AHA “anemia for age”).', true),
+      yesNo('pltHigh', 'Platelets ≥450,000 after day 7 of fever', undefined, 'Platelets 450 000/µL or higher after day 7 of fever count as a supporting laboratory criterion.', false),
+      yesNo('albuminLow', 'Albumin ≤3.0 g/dL', undefined, 'Albumin 3.0 g/dL or lower is a supporting laboratory criterion for incomplete Kawasaki disease.', false),
+      yesNo('altHigh', 'ALT elevated for age/lab', undefined, 'ALT elevated for age and the laboratory reference range is a supporting laboratory criterion.', false),
+      yesNo('wbcHigh', 'WBC ≥15,000/µL', undefined, 'WBC 15 000/µL or higher is a supporting laboratory criterion.', true),
+      yesNo('uaWbc', 'Urine ≥10 WBC/hpf (sterile pyuria)', undefined, 'Sterile pyuria with 10 or more WBC per high-power field is a supporting laboratory criterion.', false),
+      yesNo('echoPos', 'Echo positive (coronary Z-score criteria / other KD echo findings)', 1, 'Yes if LAD or RCA Z ≥2.5, coronary aneurysm, or ≥3 supportive findings (LV dysfunction, mitral regurgitation, pericardial effusion, or Z 2–2.5).', false),
     ],
     calculate(values) {
       const feverDays = num(values.feverDays, 5);
@@ -2476,11 +2476,11 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'Calculating deficit replacement volume for oral rehydration.',
     whyUse: 'Deficit (mL) ≈ weight(kg) × % dehydration × 10; WHO Plan B uses ~75 mL/kg over 4 h for some dehydration.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 2, max: 80, step: 0.1, exampleValue: 12 }),
+      numberInput('weight', 'Weight', { helpText: 'Current weight in kg; both the deficit and the maintenance volume are calculated from it.', unit: 'kg', unitKind: 'weight', min: 2, max: 80, step: 0.1, exampleValue: 12 }),
       selectInput('mode', 'Method', [
         { label: 'Percent dehydration (deficit)', value: 'percent' },
         { label: 'WHO Plan B (some dehydration ~75 mL/kg)', value: 'who-b' },
-      ]),
+      ], 'percent', 'Choose percent dehydration for an explicit deficit, or WHO Plan B (~75 mL/kg) for some dehydration.'),
       numberInput('percent', 'Estimated dehydration', {
         unit: '%',
         min: 1,
@@ -2489,7 +2489,7 @@ export const wave3PedsObCalcs: Calculator[] = [
         exampleValue: 5,
         helpText: 'Mild ~3–5%, moderate ~6–9%, severe ≥10%',
       }),
-      numberInput('hours', 'Replacement period', { unit: 'hours', min: 1, max: 24, exampleValue: 4 }),
+      numberInput('hours', 'Replacement period', { helpText: 'Replacement period in hours — the deficit is planned over this time, while maintenance is a 24-hour estimate.', unit: 'hours', min: 1, max: 24, exampleValue: 4 }),
     ],
     calculate(values) {
       const w = num(values.weight, 12);
@@ -2555,9 +2555,9 @@ export const wave3PedsObCalcs: Calculator[] = [
       selectInput('parity', 'Parity context', [
         { label: 'Nulliparous', value: 'nullip' },
         { label: 'Multiparous', value: 'multip' },
-      ]),
-      yesNo('ruptured', 'Membranes ruptured', 0),
-      yesNo('adequateMvus', 'Adequate contractions (if IUPC; ≥200 MVU)', 0),
+      ], 'nullip', 'Nulliparous labour has slower expected progress than multiparous labour, so the alert thresholds differ.'),
+      yesNo('ruptured', 'Membranes ruptured', 0, 'Membranes ruptured; document the time of rupture, since prolonged rupture changes management thresholds.', false),
+      yesNo('adequateMvus', 'Adequate contractions (if IUPC; ≥200 MVU)', 0, 'Adequate uterine activity on IUPC (200 Montevideo units or more) means poor progress is unlikely to be caused by weak contractions.', true),
     ],
     calculate(values) {
       const start = num(values.dilationStart, 6);
@@ -2644,12 +2644,12 @@ export const wave3PedsObCalcs: Calculator[] = [
     whenToUse: 'New hypertension after 20 weeks without clear chronic HTN history.',
     whyUse: 'Gestational HTN vs preeclampsia drives monitoring intensity and delivery timing.',
     inputs: [
-      yesNo('after20', 'New BP ≥140/90 after 20 weeks on ≥2 occasions', 1, 'SBP ≥140 or DBP ≥90 on two occasions ≥4 hours apart after 20 weeks, previously normal BP (ACOG).'),
-      yesNo('severeBp', 'Severe-range BP ≥160/110 confirmed', 1, 'SBP ≥160 or DBP ≥110 confirmed within ~15 minutes; do not wait 4 hours to treat.'),
-      yesNo('chronicHtn', 'Known chronic hypertension before 20 weeks / pre-pregnancy'),
-      yesNo('proteinuria', 'Proteinuria (≥300 mg/24h or PCR ≥0.3)'),
-      yesNo('endOrgan', 'End-organ criteria (plt <100k, Cr >1.1 or doubling, LFTs ≥2× ULN, pulmonary edema, neuro/visual symptoms)'),
-      yesNo('resolvedPostpartum', 'BP normalized by 12 weeks postpartum (if known)'),
+      yesNo('after20', 'New BP ≥140/90 after 20 weeks on ≥2 occasions', 1, 'SBP ≥140 or DBP ≥90 on two occasions ≥4 hours apart after 20 weeks, previously normal BP (ACOG).', true),
+      yesNo('severeBp', 'Severe-range BP ≥160/110 confirmed', 1, 'SBP ≥160 or DBP ≥110 confirmed within ~15 minutes; do not wait 4 hours to treat.', false),
+      yesNo('chronicHtn', 'Known chronic hypertension before 20 weeks / pre-pregnancy', undefined, 'Known chronic hypertension before 20 weeks or pre-pregnancy changes the diagnosis from gestational hypertension to chronic hypertension.', false),
+      yesNo('proteinuria', 'Proteinuria (≥300 mg/24h or PCR ≥0.3)', undefined, 'Proteinuria of 300 mg/24 h or more, or protein:creatinine ratio 0.3 or more, indicates preeclampsia rather than gestational hypertension.', false),
+      yesNo('endOrgan', 'End-organ criteria (plt <100k, Cr >1.1 or doubling, LFTs ≥2× ULN, pulmonary edema, neuro/visual symptoms)', undefined, 'Any end-organ criterion — platelets below 100 000, creatinine above 1.1 mg/dL or doubled, transaminases twice the upper limit of normal, pulmonary edema, or neuro/visual symptoms — means preeclampsia with severe features.', false),
+      yesNo('resolvedPostpartum', 'BP normalized by 12 weeks postpartum (if known)', undefined, 'Blood pressure normalizing by 12 weeks postpartum supports gestational rather than chronic hypertension.', false),
     ],
     calculate(values) {
       const after20 = bool(values.after20);
@@ -2790,9 +2790,9 @@ export const wave3PedsObCalcs: Calculator[] = [
     whyUse: 'Common US diagnostic thresholds for GDM on 3-hour OGTT (2 or more elevations).',
     inputs: [
       numberInput('fasting', 'Fasting glucose', { unit: 'mg/dL', min: 40, max: 300, exampleValue: 90, helpText: 'Carpenter-Coustan 100-g 3-h OGTT: fasting ≥95, 1 h ≥180, 2 h ≥155, 3 h ≥140 mg/dL. GDM if ≥2 values meet/exceed. Do not mix with NDDG cutoffs.' }),
-      numberInput('h1', '1-hour glucose', { unit: 'mg/dL', min: 40, max: 400, exampleValue: 170 }),
-      numberInput('h2', '2-hour glucose', { unit: 'mg/dL', min: 40, max: 400, exampleValue: 150 }),
-      numberInput('h3', '3-hour glucose', { unit: 'mg/dL', min: 40, max: 400, exampleValue: 130 }),
+      numberInput('h1', '1-hour glucose', { helpText: '1-hour value of the 100 g OGTT; the Carpenter–Coustan threshold is 180 mg/dL or higher.', unit: 'mg/dL', min: 40, max: 400, exampleValue: 170 }),
+      numberInput('h2', '2-hour glucose', { helpText: '2-hour value of the 100 g OGTT; the Carpenter–Coustan threshold is 155 mg/dL or higher.', unit: 'mg/dL', min: 40, max: 400, exampleValue: 150 }),
+      numberInput('h3', '3-hour glucose', { helpText: '3-hour value of the 100 g OGTT; the Carpenter–Coustan threshold is 140 mg/dL or higher.', unit: 'mg/dL', min: 40, max: 400, exampleValue: 130 }),
     ],
     calculate(values) {
       const fasting = num(values.fasting, 90);
@@ -2870,7 +2870,7 @@ export const wave3PedsObCalcs: Calculator[] = [
         exampleValue: -6,
         helpText: 'e.g. −12 means base deficit 12',
       }),
-      numberInput('pco2', 'PCO₂ (optional)', { unit: 'mmHg', min: 10, max: 120, exampleValue: 55, required: false }),
+      numberInput('pco2', 'PCO₂ (optional)', { helpText: 'PCO₂ in mmHg from the umbilical artery (preferred) or vein; acidosis is judged from pH together with the base deficit.', unit: 'mmHg', min: 10, max: 120, exampleValue: 55, required: false }),
     ],
     calculate(values) {
       const vessel = String(values.vessel ?? 'artery');
@@ -3010,7 +3010,7 @@ export const wave3PedsObCalcs: Calculator[] = [
         { label: 'BPD + AC + FL (Hadlock)', value: 'bpdacfl' },
         { label: 'HC + AC + FL (Hadlock)', value: 'hcacfl' },
         { label: 'BPD + HC + AC + FL (Hadlock)', value: 'full' },
-      ]),
+      ], 'full', 'Choose the biometry set you have: AC + FL, BPD + AC + FL, HC + AC + FL, or all four measurements (Hadlock).'),
       numberInput('bpd', 'BPD', { unit: 'cm', min: 2, max: 12, step: 0.01, exampleValue: 8.5, helpText: 'Centimeters, not millimeters (divide machine mm by 10: 85 mm → 8.5 cm). Hadlock coefficients expect cm.' }),
       numberInput('hc', 'HC', { unit: 'cm', min: 10, max: 40, step: 0.1, exampleValue: 30, helpText: 'Centimeters, not millimeters (divide machine mm by 10).' }),
       numberInput('ac', 'AC', { unit: 'cm', min: 10, max: 45, step: 0.1, exampleValue: 28, helpText: 'Centimeters, not millimeters (divide machine mm by 10). AC carries the most weight in most Hadlock formulas.' }),

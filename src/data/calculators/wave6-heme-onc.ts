@@ -40,7 +40,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
       selectInput('nadir', 'Nadir platelet count', [
         { label: '≤20 ×10⁹/L', value: -2, points: -2 },
         { label: '>20 ×10⁹/L', value: 2, points: 2 },
-      ], 2),
+      ], 2, 'Use the lowest platelet count during the episode, not the count at presentation — a nadir ≤20 ×10⁹/L subtracts 2 points.'),
       selectInput('thrombosis', 'Thrombosis related to heparin course', [
         { label: 'None', value: 0, points: 0, description: 'No new or progressive thrombosis on this heparin course.' },
         { label: 'New venous/arterial thrombosis (≥ day 4 typical context)', value: 3, points: 3, description: 'New VTE or arterial thrombosis attributed to the heparin course (typical-onset: on/after day 4).' },
@@ -52,9 +52,9 @@ export const wave6HemeOncCalcs: Calculator[] = [
       yesNo('chronicTCP', 'Chronic thrombocytopenic disorder present', -1, 'Known thrombocytopenia predating heparin (e.g. ITP, MDS, cirrhosis, chemo) — competing cause, not the acute HIT fall.'),
       yesNo('newDrug', 'Newly started non-heparin drug known to cause thrombocytopenia', -2, 'Only if newly started and a plausible culprit (e.g. vancomycin, linezolid, piperacillin, GP IIb/IIIa inhibitor, chemotherapy). Cuker Table 2 item 8b = −2.'),
       yesNo('severeInfection', 'Severe infection', -2, 'Clinically severe infection as a competing cause of thrombocytopenia (e.g. septic shock), not every positive culture.'),
-      yesNo('dic', 'Severe DIC (e.g., fibrinogen <100 mg/dL and D-dimer >5 µg/mL)', -2),
-      yesNo('arterialDevice', 'Indwelling arterial device (IABP, VAD, ECMO)', -2),
-      yesNo('cpb', 'Cardiopulmonary bypass within prior 96 hours', -1),
+      yesNo('dic', 'Severe DIC (e.g., fibrinogen <100 mg/dL and D-dimer >5 µg/mL)', -2, '-2 points when severe DIC is present (for example fibrinogen <100 mg/dL with D-dimer >5 µg/mL), because consumptive coagulopathy is the competing explanation.'),
+      yesNo('arterialDevice', 'Indwelling arterial device (IABP, VAD, ECMO)', -2, '-2 points for an indwelling arterial device (IABP, VAD, ECMO), a common non-HIT cause of thrombocytopenia in this population.'),
+      yesNo('cpb', 'Cardiopulmonary bypass within prior 96 hours', -1, '-1 point if cardiopulmonary bypass was performed within the preceding 96 hours.'),
       yesNo('noOtherCause', 'No other apparent cause of thrombocytopenia', 3, 'Award only if none of the competing-cause items (chronic TCP, new drug, severe infection, DIC, arterial device, CPB) are Yes — the calculator gates this.'),
     ],
     calculate(values) {
@@ -189,11 +189,11 @@ export const wave6HemeOncCalcs: Calculator[] = [
         { label: '≥120 ×10⁹/L (0 pts)', value: 0, points: 0 },
         { label: '80–<120 ×10⁹/L or >30% fall in 24 h (1 pt)', value: 1, points: 1 },
         { label: '<80 ×10⁹/L or >50% fall in 24 h (3 pts)', value: 3, points: 3 },
-      ]),
+      ], undefined, 'Use the count at assessment, or the fall within 24 hours: >30% fall scores 1 point and >50% scores 3 — the fall criterion is what makes JAAM sensitive early.'),
       selectInput('ptRatio', 'Prothrombin time ratio (patient/normal)', [
         { label: '<1.2 (0 pts)', value: 0, points: 0 },
         { label: '≥1.2 (1 pt)', value: 1, points: 1 },
-      ]),
+      ], undefined, 'Prothrombin time ratio = patient PT ÷ the laboratory\'s normal PT; a ratio of 1.2 or more adds 1 point.'),
       selectInput('fdp', 'FDP (or equivalent fibrin-related marker)', [
         { label: '<10 µg/mL (0 pts)', value: 0, points: 0 },
         { label: '10–<25 µg/mL (1 pt)', value: 1, points: 1 },
@@ -284,21 +284,21 @@ export const wave6HemeOncCalcs: Calculator[] = [
         { label: '≤1.2 (0 pts)', value: 0, points: 0 },
         { label: '>1.2 to ≤1.4 (1 pt)', value: 1, points: 1 },
         { label: '>1.4 (2 pts)', value: 2, points: 2 },
-      ], 0),
+      ], 0, 'INR from the same draw as the platelets: ≤1.2 = 0, >1.2 to ≤1.4 = 1, >1.4 = 2 points. SIC also requires at least 3 points from the platelet and INR domains combined.'),
       selectInput('platelets', 'Platelet count (×10⁹/L)', [
         { label: '≥150 (0 pts)', value: 0, points: 0 },
         { label: '100 to <150 (1 pt)', value: 1, points: 1 },
         { label: '<100 (2 pts)', value: 2, points: 2 },
-      ], 0),
+      ], 0, 'Platelet count in ×10⁹/L from that same draw: ≥150 = 0, 100 to <150 = 1, <100 = 2 points.'),
       selectInput('sofaMode', 'SOFA assessment mode', [
         { label: 'Score 4 individual organ systems (respiratory, CV, hepatic, renal)', value: 'organs' },
         { label: 'Enter precomputed 4-domain SOFA sum', value: 'direct' },
-      ], 'organs'),
+      ], 'organs', 'Choose whether to score the four SOFA organ systems here or paste a precomputed 4-domain SOFA sum.'),
       selectInput('directSofa', 'Precomputed 4-domain SOFA sum', [
         { label: '0 (0 pts)', value: 0, points: 0, description: 'All 4 allowed domains score 0' },
         { label: '1 (1 pt)', value: 1, points: 1, description: 'Four-domain SOFA sum = 1' },
         { label: '≥2 (2 pts)', value: 2, points: 2, description: 'Four-domain SOFA sum ≥2 (SIC caps at 2)' },
-      ], 0),
+      ], 0, 'Precomputed sum of the respiratory, cardiovascular, hepatic and renal SOFA points: 0 = 0, 1 = 1, and a sum of 2 or more = 2 points.'),
 
       // 4 Individual Organ Systems (excluding CNS & Coagulation per ISTH SIC criteria)
       selectInput('respSofa', 'Respiratory (PaO₂/FiO₂ ratio)', [
@@ -307,28 +307,28 @@ export const wave6HemeOncCalcs: Calculator[] = [
         { label: 'PaO₂/FiO₂ <300 (2 pts)', value: 2, points: 2 },
         { label: 'PaO₂/FiO₂ <200 with mechanical ventilation (3 pts)', value: 3, points: 3 },
         { label: 'PaO₂/FiO₂ <100 with mechanical ventilation (4 pts)', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Respiratory SOFA: PaO₂/FiO₂ ≥400 = 0, <400 = 1, <300 = 2, <200 with mechanical ventilation = 3, <100 with mechanical ventilation = 4.'),
       selectInput('cvSofa', 'Cardiovascular (MAP & vasopressors)', [
         { label: 'MAP ≥70 mmHg (0 pts)', value: 0, points: 0 },
         { label: 'MAP <70 mmHg (1 pt)', value: 1, points: 1 },
         { label: 'Dopamine ≤5 µg/kg/min or any Dobutamine (2 pts)', value: 2, points: 2 },
         { label: 'Dopamine >5 or Epinephrine/Norepinephrine ≤0.1 µg/kg/min (3 pts)', value: 3, points: 3 },
         { label: 'Dopamine >15 or Epinephrine/Norepinephrine >0.1 µg/kg/min (4 pts)', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Cardiovascular SOFA: MAP ≥70 = 0, MAP <70 = 1, then dopamine or dobutamine, and escalating norepinephrine or epinephrine doses for 2–4.'),
       selectInput('hepSofa', 'Hepatic (Total Bilirubin)', [
         { label: '<1.2 mg/dL [<20 µmol/L] (0 pts)', value: 0, points: 0 },
         { label: '1.2–1.9 mg/dL [20–32 µmol/L] (1 pt)', value: 1, points: 1 },
         { label: '2.0–5.9 mg/dL [33–101 µmol/L] (2 pts)', value: 2, points: 2 },
         { label: '6.0–11.9 mg/dL [102–204 µmol/L] (3 pts)', value: 3, points: 3 },
         { label: '≥12.0 mg/dL [≥204 µmol/L] (4 pts)', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Hepatic SOFA from total bilirubin: <1.2 mg/dL = 0, rising through the 1.2–1.9, 2.0–5.9 and 6.0–11.9 bands to ≥12 mg/dL (≥204 µmol/L) = 4.'),
       selectInput('renalSofa', 'Renal (Serum Creatinine)', [
         { label: '<1.2 mg/dL [<110 µmol/L] (0 pts)', value: 0, points: 0 },
         { label: '1.2–1.9 mg/dL [110–170 µmol/L] (1 pt)', value: 1, points: 1 },
         { label: '2.0–3.4 mg/dL [171–299 µmol/L] (2 pts)', value: 2, points: 2 },
         { label: '3.5–4.9 mg/dL [300–440 µmol/L] or urine output <500 mL/d (3 pts)', value: 3, points: 3 },
         { label: '≥5.0 mg/dL [>440 µmol/L] or urine output <200 mL/d (4 pts)', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Renal SOFA from creatinine or urine output: <1.2 mg/dL = 0, rising to ≥5.0 mg/dL or urine output <200 mL/day = 4.'),
     ],
     calculate(values) {
       const inr = num(values.inr);
@@ -448,12 +448,12 @@ export const wave6HemeOncCalcs: Calculator[] = [
       selectInput('entryMode', 'Scoring method', [
         { label: 'Score 14 bleeding domains', value: 'survey' },
         { label: 'Enter precomputed ISTH-BAT total', value: 'direct' },
-      ], 'survey'),
+      ], 'survey', 'Choose to score the 14 bleeding domains or to paste a precomputed total; the domains sum to 0–56.'),
       selectInput('cohort', 'Patient cohort & cutoff', [
         { label: 'Adult male (abnormal ≥4)', value: 'male' },
         { label: 'Adult female (abnormal ≥6)', value: 'female' },
         { label: 'Child <18 years (abnormal ≥3)', value: 'child' },
-      ], 'male'),
+      ], 'male', 'Cohort sets the abnormal cut-off: adult men ≥4, adult women ≥6, and children under 18 years ≥3.'),
       numberInput('directTotal', 'Precomputed ISTH-BAT total score', {
         min: 0,
         max: 56,
@@ -469,84 +469,84 @@ export const wave6HemeOncCalcs: Calculator[] = [
         { label: '2 — Consultation only (medical evaluation sought)', value: 2, points: 2 },
         { label: '3 — Packing, cautery, or antifibrinolytics', value: 3, points: 3 },
         { label: '4 — Blood transfusion, factor replacement, or DDAVP', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Domain 1: score the worst lifetime pattern — more than 5 nosebleeds a year, or episodes lasting longer than 10 minutes, scores 1.'),
       selectInput('cutaneous', '2. Cutaneous (bruising / purpura)', [
         { label: '0 — None or trivial', value: 0, points: 0 },
         { label: '1 — ≥5 bruises (>1 cm) in exposed areas', value: 1, points: 1 },
         { label: '2 — Consultation only', value: 2, points: 2 },
         { label: '3 — Extensive bruising', value: 3, points: 3 },
         { label: '4 — Spontaneous hematoma requiring blood transfusion', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Domain 2: five or more bruises over 1 cm in exposed areas score 1, extensive bruising scores 3, and a transfusion-requiring haematoma scores 4.'),
       selectInput('minorWounds', '3. Bleeding from minor wounds', [
         { label: '0 — None or trivial (≤5 episodes/year, <10 min)', value: 0, points: 0 },
         { label: '1 — Frequent (>5/year) or prolonged (>10 min)', value: 1, points: 1 },
         { label: '2 — Consultation only', value: 2, points: 2 },
         { label: '3 — Surgical hemostasis required', value: 3, points: 3 },
         { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Domain 3: bleeding from minor wounds more than 5 times a year, or longer than 10 minutes per episode, scores 1.'),
       selectInput('oralCavity', '4. Oral cavity bleeding', [
         { label: '0 — None or trivial', value: 0, points: 0 },
         { label: '1 — Gum bleeding or bites to lips/tongue', value: 1, points: 1 },
         { label: '2 — Consultation only', value: 2, points: 2 },
         { label: '3 — Surgical hemostasis or antifibrinolytics', value: 3, points: 3 },
         { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Domain 4: gum bleeding or bites to the lips and tongue score 1, while surgical haemostasis or antifibrinolytics score 3.'),
       selectInput('gi', '5. Gastrointestinal bleeding', [
         { label: '0 — None or trivial', value: 0, points: 0 },
         { label: '1 — Spontaneous bleeding not from ulcer/PHTN/hemorrhoids/angiodysplasia', value: 1, points: 1 },
         { label: '2 — Consultation only', value: 2, points: 2 },
         { label: '3 — Surgical/endoscopic hemostasis or antifibrinolytic', value: 3, points: 3 },
         { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Domain 5: only spontaneous gastrointestinal bleeding not explained by ulcer disease, portal hypertension, haemorrhoids or angiodysplasia scores here.'),
       selectInput('hematuria', '6. Hematuria', [
         { label: '0 — None or trivial', value: 0, points: 0 },
         { label: '1 — Macroscopic hematuria present', value: 1, points: 1 },
         { label: '2 — Consultation only', value: 2, points: 2 },
         { label: '3 — Surgical hemostasis or iron replacement', value: 3, points: 3 },
         { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Domain 6: macroscopic haematuria scores 1; surgical haemostasis or iron replacement scores 3.'),
       selectInput('toothExtraction', '7. Tooth extraction bleeding', [
         { label: '0 — None / not applicable / no bleeding in extractions', value: 0, points: 0 },
         { label: '1 — Reported in ≤25% of extractions, no intervention', value: 1, points: 1 },
         { label: '2 — Reported in >25% of extractions, no intervention', value: 2, points: 2 },
         { label: '3 — Resuturing or packing', value: 3, points: 3 },
         { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Domain 7: leave at 0 if the patient has never had an extraction; otherwise score the worst one, with bleeding in more than 25% of extractions scoring 2.'),
       selectInput('surgery', '8. Surgical bleeding', [
         { label: '0 — None / not applicable / no surgical challenges', value: 0, points: 0 },
         { label: '1 — Reported in ≤25% of surgeries, no intervention', value: 1, points: 1 },
         { label: '2 — Reported in >25% of surgeries, no intervention', value: 2, points: 2 },
         { label: '3 — Surgical hemostasis or antifibrinolytic', value: 3, points: 3 },
         { label: '4 — Blood transfusion, replacement therapy, or DDAVP', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Domain 8: leave at 0 if the patient has never had surgery; score the worst operation, with bleeding in more than 25% of surgeries scoring 2.'),
       selectInput('menorrhagia', '9. Menorrhagia (females only)', [
         { label: '0 — None / male / normal menses', value: 0, points: 0 },
         { label: '1 — Consultation / pads >every 2h / clots-flooding / PBAC >100', value: 1, points: 1 },
         { label: '2 — Time off work/school >2/year or single-agent therapy', value: 2, points: 2 },
         { label: '3 — Combined antifibrinolytic + hormonal therapy or since menarche >12 months', value: 3, points: 3 },
         { label: '4 — Hospital admission, transfusion/replacement/DDAVP, D&C, ablation, or hysterectomy', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Domain 9 applies to women only — leave at 0 for men or normal menses; pads needed every 2 hours, clots with flooding, or a PBAC over 100 scores 1.'),
       selectInput('postpartum', '10. Postpartum hemorrhage (females only)', [
         { label: '0 — None / male / no deliveries with PPH', value: 0, points: 0 },
         { label: '1 — Consultation / oxytocin / lochia >6 weeks', value: 1, points: 1 },
         { label: '2 — Antifibrinolytic or iron therapy', value: 2, points: 2 },
         { label: '3 — Transfusion/replacement/DDAVP, exam under anesthesia, or balloon/packing/tamponade', value: 3, points: 3 },
         { label: '4 — Critical care or surgery (e.g., ICU, hysterectomy, embolization)', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Domain 10 applies to women who have delivered — leave at 0 for men or when no delivery was complicated by postpartum haemorrhage.'),
       selectInput('muscleHematoma', '11. Muscle hematoma', [
         { label: '0 — Never', value: 0, points: 0 },
         { label: '1 — Post-trauma, no treatment', value: 1, points: 1 },
         { label: '2 — Spontaneous, no treatment', value: 2, points: 2 },
         { label: '3 — Spontaneous or traumatic, requiring DDAVP or replacement therapy', value: 3, points: 3 },
         { label: '4 — Spontaneous or traumatic, requiring transfusion or surgery', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Domain 11: a post-traumatic haematoma needing no treatment scores 1, a spontaneous one scores 2, and any requiring DDAVP or replacement scores 3.'),
       selectInput('hemarthrosis', '12. Hemarthrosis (joint bleeding)', [
         { label: '0 — Never', value: 0, points: 0 },
         { label: '1 — Post-trauma, no treatment', value: 1, points: 1 },
         { label: '2 — Spontaneous, no treatment', value: 2, points: 2 },
         { label: '3 — Spontaneous or traumatic, requiring DDAVP or replacement therapy', value: 3, points: 3 },
         { label: '4 — Spontaneous or traumatic, requiring transfusion or surgery', value: 4, points: 4 },
-      ], 0),
+      ], 0, 'Domain 12: joint bleeding scores 1 if post-traumatic and untreated, 2 if spontaneous, and 3 if it needed DDAVP or replacement therapy.'),
       selectInput('cns', '13. Central nervous system bleeding', [
         { label: '0 — Never', value: 0, points: 0 },
         { label: '3 — Subdural hematoma, any intervention', value: 3, points: 3 },
@@ -664,11 +664,11 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whyUse: 'Simple bedside score with low/intermediate/high major-bleed strata used alongside VTE-BLEED and clinical judgment.',
     inputs: [
       yesNo('recentBleed', 'Recent major bleeding', 2, 'Typically a major bleed <15–30 days before index VTE (Ruíz-Giménez 2008 often <15 days; later RIETE reports use <30 days). Major ≈ ISTH: Hb drop ≥2 g/dL, ≥2 U RBC, or critical-site bleed. Remote GI bleed does not count.'),
-      yesNo('creatinine', 'Creatinine >1.2 mg/dL (>106 µmol/L)', 1.5),
-      yesNo('anemia', 'Anemia (Hb <13 g/dL men, <12 g/dL women)', 1.5),
+      yesNo('creatinine', 'Creatinine >1.2 mg/dL (>106 µmol/L)', 1.5, '1.5 points when creatinine exceeds 1.2 mg/dL (>106 µmol/L); use the value at the index VTE admission.'),
+      yesNo('anemia', 'Anemia (Hb <13 g/dL men, <12 g/dL women)', 1.5, '1.5 points for baseline anaemia — haemoglobin below 13 g/dL in men or below 12 g/dL in women.'),
       yesNo('malignancy', 'Active cancer (RIETE)', 1, 'Typically diagnosed in the last 3 months, metastatic, or currently treated — not remote cured history.'),
       yesNo('overtPE', 'Clinically overt pulmonary embolism', 1, 'Index event is symptomatic PE (not isolated DVT). “Overt” = clinically diagnosed PE presentation in the RIETE derivation.'),
-      yesNo('age75', 'Age >75 years', 1),
+      yesNo('age75', 'Age >75 years', 1, '1 point if the patient is older than 75 years at the index VTE event.'),
     ],
     calculate(values) {
       const score = round(
@@ -975,8 +975,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'Interpreting differential counts, chronic myelomonocytic leukemia screens, recovery, or infection patterns.',
     whyUse: 'Absolute counts are more meaningful than percentages alone; monocytosis may flag CMML, recovery, or inflammation.',
     inputs: [
-      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 200, step: 0.1, exampleValue: 8 }),
-      numberInput('monoPct', 'Monocytes', { unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 8 }),
+      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 200, step: 0.1, exampleValue: 8, helpText: 'Total WBC in ×10³/µL from the same specimen as the differential; the absolute monocyte count is WBC × the monocyte fraction.' }),
+      numberInput('monoPct', 'Monocytes', { unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 8, helpText: 'Monocyte percentage from the differential — the tool converts it to the absolute count that CMML thresholds use (≥1.0 ×10³/µL).' }),
     ],
     calculate(values) {
       const wbc = num(values.wbc, 8);
@@ -1054,8 +1054,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'Allergy, parasite, drug reaction, asthma, or hypereosinophilic syndrome workups.',
     whyUse: 'Severity bands guide urgency of organ evaluation (heart, lung, neuro) for hypereosinophilia.',
     inputs: [
-      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 200, step: 0.1, exampleValue: 8 }),
-      numberInput('eosPct', 'Eosinophils', { unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 3 }),
+      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 200, step: 0.1, exampleValue: 8, helpText: 'Total WBC in ×10³/µL from the same specimen as the differential used for the eosinophil percentage.' }),
+      numberInput('eosPct', 'Eosinophils', { unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 3, helpText: 'Eosinophil percentage from the differential; the absolute count (WBC × fraction) is what separates mild, moderate and severe eosinophilia.' }),
     ],
     calculate(values) {
       const wbc = num(values.wbc, 8);
@@ -1155,7 +1155,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
       selectInput('bili', 'Indirect / total bilirubin', [
         { label: 'Normal', value: 0, points: 0, description: 'Bilirubin within local reference.' },
         { label: 'Elevated (unconjugated predominant)', value: 1, points: 1, description: 'Raised bilirubin with unconjugated/indirect predominance (hemolysis pattern), not isolated conjugated/cholestatic rise.' },
-      ]),
+      ], undefined, 'Score the bilirubin as elevated only when the unconjugated (indirect) fraction predominates — a raised conjugated fraction points away from haemolysis.'),
       selectInput('retic', 'Reticulocyte response', [
         { label: 'Not increased', value: 0, points: 0, description: 'Reticulocyte % at/below local ULN and absolute retic not elevated.' },
         { label: 'Increased', value: 1, points: 1, description: 'Reticulocyte % above local ULN (often >2%) or elevated absolute reticulocyte count.' },
@@ -1256,8 +1256,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
         { label: 'Mechanical aortic valve (typical goal 2.0–3.0)', value: 'mech-aortic' },
         { label: 'Mechanical mitral valve (goal 2.5–3.5)', value: 'mech-mitral' },
       ], 'af-vte', 'Bands follow the selected goal. Bileaflet mechanical AVR without additional risk factors is often 2.0–3.0; mechanical mitral (and many higher-risk mechanical valves) 2.5–3.5. On-X AVR after 3 months may use 1.5–2.0 with aspirin — not modeled here.'),
-      numberInput('pt', 'Patient PT', { unit: 'sec', min: 5, max: 120, step: 0.1, exampleValue: 22 }),
-      numberInput('mnpt', 'Mean normal PT (MNPT)', { unit: 'sec', min: 8, max: 20, step: 0.1, exampleValue: 12 }),
+      numberInput('pt', 'Patient PT', { unit: 'sec', min: 5, max: 120, step: 0.1, exampleValue: 22, helpText: 'Patient prothrombin time in seconds with the reagent that generated the MNPT; the INR is (PT ÷ MNPT) raised to the reagent ISI.' }),
+      numberInput('mnpt', 'Mean normal PT (MNPT)', { unit: 'sec', min: 8, max: 20, step: 0.1, exampleValue: 12, helpText: 'The laboratory\'s mean normal PT for that thromboplastin (usually 11–13 s); substituting a textbook value invalidates the INR.' }),
       numberInput('isi', 'Reagent ISI', { min: 0.8, max: 2.5, step: 0.01, exampleValue: 1.0, helpText: 'International Sensitivity Index of thromboplastin' }),
     ],
     calculate(values) {
@@ -1422,8 +1422,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'Unfractionated heparin monitoring teaching, lupus anticoagulant screens, or factor deficiency workups.',
     whyUse: 'Normalizes raw aPTT seconds to the local control; heparin therapeutic ranges are reagent-specific (anti-Xa preferred).',
     inputs: [
-      numberInput('aptt', 'Patient aPTT', { unit: 'sec', min: 10, max: 300, step: 0.1, exampleValue: 60 }),
-      numberInput('control', 'Control / mean normal aPTT', { unit: 'sec', min: 15, max: 50, step: 0.1, exampleValue: 30 }),
+      numberInput('aptt', 'Patient aPTT', { unit: 'sec', min: 10, max: 300, step: 0.1, exampleValue: 60, helpText: 'Patient aPTT in seconds from the same reagent as the control; a ratio only transfers between laboratories when the reagent matches.' }),
+      numberInput('control', 'Control / mean normal aPTT', { unit: 'sec', min: 15, max: 50, step: 0.1, exampleValue: 30, helpText: 'The laboratory\'s mean normal/control aPTT for that reagent. Therapeutic UFH ranges are reagent-specific and are now usually replaced by anti-Xa levels.' }),
     ],
     calculate(values) {
       const aptt = num(values.aptt, 60);
@@ -1613,22 +1613,22 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'Adult cancer patient with fever and neutropenia when triaging home oral therapy vs admission.',
     whyUse: 'Structures red-flag features that usually mandate inpatient IV antibiotics even if MASCC falls in the low-risk band (≥21).',
     inputs: [
-      yesNo('fever', 'Fever ≥38.3 °C once or ≥38.0 °C sustained ≥1 h', 0),
+      yesNo('fever', 'Fever ≥38.3 °C once or ≥38.0 °C sustained ≥1 h', 0, 'Fever meets the standard definition with a single oral temperature ≥38.3 °C, or ≥38.0 °C sustained for at least 1 hour; record the site and method.'),
       numberInput('anc', 'ANC', { unit: '/µL', min: 0, max: 2000, exampleValue: 400, helpText: 'Absolute neutrophil count. Classic FN uses ANC <500 (or <1000 with expected fall). ANC <100 adds a risk point here.' }),
       yesNo('hypotension', 'Hypotension / shock / needing pressors', 3, 'SBP <90 mmHg, MAP <65 mmHg, or vasopressors — not a one-off orthostatic dip that resolved with fluids.'),
-      yesNo('hypoxia', 'Respiratory distress or O₂ sat <90–92% on RA', 3),
+      yesNo('hypoxia', 'Respiratory distress or O₂ sat <90–92% on RA', 3, '3 red-flag points for respiratory distress or oxygen saturation below 90–92% on room air — an immediate reason for inpatient IV antibiotics.'),
       yesNo('altered', 'Altered mental status', 2, 'New confusion, lethargy, or drop in GCS attributed to the current illness — not baseline dementia or sedative effect alone.'),
       yesNo('severeMucositis', 'Severe mucositis or inability to take PO', 2, 'WHO oral mucositis ≥3 (liquids only) or cannot swallow oral medications.'),
       yesNo('uncontrolledCancer', 'Uncontrolled / progressive cancer', 1, 'Not in remission; progressive, refractory, or newly diagnosed uncontrolled disease (MASCC-style burden).'),
       yesNo('allogeneic', 'Allogeneic transplant or profound expected prolonged neutropenia', 3, 'Allo-HCT, or anticipated ANC ≤100/µL for ≥7 days (IDSA/NCCN high-risk FN).'),
-      yesNo('inpatientAtFever', 'Already inpatient when fever developed', 2),
+      yesNo('inpatientAtFever', 'Already inpatient when fever developed', 2, '2 red-flag points if the fever developed while the patient was already an inpatient, a recognised high-risk feature.'),
       yesNo('comorbid', 'Significant comorbidity (COPD, HF, renal/hepatic failure)', 1, 'Clinically significant COPD (e.g. O₂-dependent), decompensated HF, CrCl <30, or Child-Pugh B/C — not every comorbidity on the problem list.'),
       yesNo('highRiskChemo', 'High-risk regimen (AML induction, etc.)', 2, 'AML/ALL induction, allo-HCT conditioning, or other regimens with expected ANC ≤100/µL for ≥7 days.'),
       selectInput('burden', 'Symptom burden / clinical stability', [
         { label: 'Mild symptoms, stable', value: 0, points: 0, description: 'Comfortable, no limitation of activity; would consider sending home if otherwise low-risk.' },
         { label: 'Moderate symptoms', value: 1, points: 1, description: 'Some limitation; still talking/eating; not shocky but not fully well.' },
         { label: 'Severe symptoms / clinical concern', value: 2, points: 2, description: 'Looks unwell, mostly in bed; would not send home.' },
-      ]),
+      ], undefined, 'Overall symptom burden and clinical stability: mild and stable scores 0, moderate 1, and severe symptoms or clinical concern 2 red-flag points.'),
     ],
     calculate(values) {
       const anc = num(values.anc, 400);
@@ -1749,13 +1749,13 @@ export const wave6HemeOncCalcs: Calculator[] = [
         { label: 'Very high (stomach, pancreas) — 2 pts', value: 2, points: 2 },
         { label: 'High (lung, lymphoma, gyn, bladder, testicular) — 1 pt', value: 1, points: 1 },
         { label: 'Other solid tumors — 0 pts', value: 0, points: 0 },
-      ]),
-      yesNo('bmi35', 'BMI ≥35 kg/m²', 1),
-      yesNo('hb', 'Hemoglobin <10 g/dL or using ESA', 1),
-      yesNo('wbc', 'WBC >11 ×10⁹/L', 1),
-      yesNo('plt', 'Platelets ≥350 ×10⁹/L', 1),
+      ], undefined, 'Khorana site weighting: stomach or pancreas 2 points, lung, lymphoma, gynaecological, bladder or testicular 1 point, other solid tumours 0.'),
+      yesNo('bmi35', 'BMI ≥35 kg/m²', 1, '1 point for a BMI of 35 kg/m² or more, the obesity threshold used in the Khorana model.'),
+      yesNo('hb', 'Hemoglobin <10 g/dL or using ESA', 1, '1 point for haemoglobin below 10 g/dL, or current use of an erythropoiesis-stimulating agent.'),
+      yesNo('wbc', 'WBC >11 ×10⁹/L', 1, '1 point for a white cell count above 11 ×10⁹/L (11,000/µL) before starting systemic therapy.'),
+      yesNo('plt', 'Platelets ≥350 ×10⁹/L', 1, '1 point for a platelet count of 350 ×10⁹/L or more before starting systemic therapy.'),
       yesNo('ddimer', 'D-dimer elevated (Vienna CATS–style biomarker)', 1, 'Optional Vienna CATS-style enrichment. Derivation used a study-specific cutoff (Ay 2010: 75th percentile ≈ 1.44 µg/mL FEU), not generic above-local-ULN. Leave No if that cutoff is unknown.'),
-      yesNo('priorVte', 'Prior VTE', 1),
+      yesNo('priorVte', 'Prior VTE', 1, '1 point for a previous VTE — one of the strongest single predictors in the Vienna CATS extension.'),
     ],
     calculate(values) {
       const score =
@@ -1930,7 +1930,7 @@ export const wave6HemeOncCalcs: Calculator[] = [
       yesNo('labTls', 'Laboratory TLS criteria met (≥2 metabolic abnormalities)', 0, 'Cairo-Bishop laboratory TLS = ≥2 of uric acid ≥8 mg/dL, K ≥6.0 mEq/L, phosphorus ≥4.5 mg/dL (adult; peds often ≥6.5), Ca ≤7.0 mg/dL (or 25% change from baseline) in the same 24 h, day −3 to +7 of therapy.'),
       yesNo('aki', 'Creatinine ≥1.5× ULN or AKI / oliguria attributed to TLS', 1, 'Cr ≥1.5× the laboratory ULN, KDIGO AKI, or oliguria attributed to TLS — not chronic CKD baseline.'),
       yesNo('cardiac', 'Cardiac arrhythmia, sudden death, or symptomatic cardiac involvement', 1, 'Arrhythmia (including VT/VF), sudden death, or symptomatic cardiac involvement from TLS electrolyte shifts — not chronic AF that predates TLS.'),
-      yesNo('seizure', 'Seizure, tetany, or symptomatic hypocalcemia (neuromuscular)', 1),
+      yesNo('seizure', 'Seizure, tetany, or symptomatic hypocalcemia (neuromuscular)', 1, 'Counts as a clinical TLS complication: seizure, tetany or symptomatic hypocalcaemia in the neuromuscular domain.'),
     ],
     calculate(values) {
       const lab = bool(values.labTls);
@@ -2015,8 +2015,8 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'Cancer patients with elevated calcium or symptoms (polyuria, confusion, constipation, dehydration).',
     whyUse: 'Severity bands guide fluids, bisphosphonates/denosumab, calcitonin, and urgency of care.',
     inputs: [
-      numberInput('calcium', 'Serum total calcium', { unit: 'mg/dL', min: 5, max: 20, step: 0.1, exampleValue: 11.5 }),
-      numberInput('albumin', 'Serum albumin', { unit: 'g/dL', min: 1, max: 5.5, step: 0.1, exampleValue: 3.0 }),
+      numberInput('calcium', 'Serum total calcium', { unit: 'mg/dL', min: 5, max: 20, step: 0.1, exampleValue: 11.5, helpText: 'Serum total calcium in mg/dL from the same draw as the albumin; when albumin is unreliable (paraprotein, critical illness) interpret the ionised calcium instead.' }),
+      numberInput('albumin', 'Serum albumin', { unit: 'g/dL', min: 1, max: 5.5, step: 0.1, exampleValue: 3.0, helpText: 'Serum albumin in g/dL for the correction: corrected calcium = measured Ca + 0.8 × (4.0 − albumin).' }),
       yesNo('symptoms', 'Symptoms of hypercalcemia present', 0, 'Polyuria/polydipsia, constipation, nausea, anorexia, dehydration, weakness, or milder confusion (use the neuro box for stupor).'),
       yesNo('neuro', 'Significant neuropsychiatric symptoms / stupor', 0, 'Stupor, somnolence, or marked confusion attributed to hypercalcemia. Use the milder-symptoms box for polyuria, constipation, or mild confusion.'),
     ],
@@ -2104,15 +2104,15 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'Cancer patients with new/worsening back pain, radiculopathy, or neurologic deficits.',
     whyUse: 'Delays in MRI and steroids/RT/surgery worsen permanent paralysis risk—checklist prioritizes urgency.',
     inputs: [
-      yesNo('cancerHistory', 'Known cancer or strong suspicion of malignancy', 1),
+      yesNo('cancerHistory', 'Known cancer or strong suspicion of malignancy', 1, '1 red flag for a known or strongly suspected malignancy — cancer patients need a lower imaging threshold than the general population.'),
       yesNo('backPain', 'New or progressive back/neck pain', 1, 'New, progressive, or unexplained spine pain in a cancer patient — not chronic mechanical back pain unchanged from baseline.'),
       yesNo('nightPain', 'Nocturnal or recumbency pain', 1, 'Spine pain that wakes the patient or is worse lying down (classic MSCC pain pattern).'),
-      yesNo('radicular', 'Radicular pain / band-like torso pain', 1),
+      yesNo('radicular', 'Radicular pain / band-like torso pain', 1, '1 red flag for radicular pain or band-like truncal pain, which localises the level for urgent MRI.'),
       yesNo('weakness', 'Limb weakness', 3, 'New or progressive motor deficit in arms or legs — including subtle hip-flexor weakness or foot drop. Not chronic chemo deconditioning alone.'),
       yesNo('sensory', 'Sensory level or progressive sensory loss', 2, 'A truncal sensory level, saddle sensory change, or clearly progressive sensory loss — not chronic neuropathy.'),
       yesNo('bowelBladder', 'Bowel/bladder dysfunction or saddle anesthesia', 3, 'New urinary retention/incontinence, fecal incontinence, or saddle anesthesia — emergency MSCC features.'),
       yesNo('ataxia', 'Ataxia / proprioceptive loss', 2, 'New gait ataxia or proprioceptive loss suggesting cord/column involvement.'),
-      yesNo('escalatingOpioids', 'Rapidly escalating analgesic needs for spine pain', 1),
+      yesNo('escalatingOpioids', 'Rapidly escalating analgesic needs for spine pain', 1, '1 red flag when analgesic requirements for spinal pain escalate rapidly despite standard dosing.'),
     ],
     calculate(values) {
       const score =
@@ -2194,16 +2194,16 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whenToUse: 'Suspected SVC syndrome (facial swelling, collaterals, dyspnea) in malignancy or catheter-related thrombosis.',
     whyUse: 'Stratifies need for airway management, steroids/RT/stent, and tissue diagnosis sequencing.',
     inputs: [
-      yesNo('facialSwelling', 'Facial / neck swelling or plethora', 1),
-      yesNo('armSwelling', 'Upper extremity edema', 1),
-      yesNo('collaterals', 'Visible chest wall collaterals', 1),
-      yesNo('dyspnea', 'Dyspnea or orthopnea', 2),
+      yesNo('facialSwelling', 'Facial / neck swelling or plethora', 1, '1 point for facial or neck swelling, plethora or distended neck veins.'),
+      yesNo('armSwelling', 'Upper extremity edema', 1, '1 point for upper-extremity oedema, reflecting obstruction above the azygos inflow.'),
+      yesNo('collaterals', 'Visible chest wall collaterals', 1, '1 point for visible chest-wall collateral veins, a marker of chronic obstruction.'),
+      yesNo('dyspnea', 'Dyspnea or orthopnea', 2, '2 points for dyspnoea or orthopnoea, which increase both airway and venous-congestion urgency.'),
       yesNo('stridor', 'Stridor or critical airway compromise', 4, 'Audible stridor or threatened airway — oncologic emergency regardless of other points.'),
-      yesNo('laryngeal', 'Hoarseness / laryngeal edema concern', 2),
+      yesNo('laryngeal', 'Hoarseness / laryngeal edema concern', 2, '2 points for hoarseness or concern for laryngeal oedema — an airway emergency.'),
       yesNo('cerebral', 'Headache, confusion, or cerebral edema signs', 3, 'Headache worse when supine, confusion, or other cerebral-edema signs from impaired SVC drainage — not chronic tension headache.'),
       yesNo('syncope', 'Syncope or hemodynamic instability', 3, 'Syncope, near-syncope on bending, or hypotension attributed to impaired venous return.'),
-      yesNo('knownMass', 'Known mediastinal mass / lung cancer / lymphoma', 1),
-      yesNo('centralLine', 'Indwelling central venous catheter', 1),
+      yesNo('knownMass', 'Known mediastinal mass / lung cancer / lymphoma', 1, '1 point for a known mediastinal mass, lung cancer or lymphoma.'),
+      yesNo('centralLine', 'Indwelling central venous catheter', 1, '1 point for an indwelling central venous catheter, which raises the probability of a catheter-related thrombus.'),
     ],
     calculate(values) {
       const score =
@@ -2292,9 +2292,9 @@ export const wave6HemeOncCalcs: Calculator[] = [
     whyUse: 'Highlights when to obtain CT, start broad antibiotics, and involve surgery without delaying resuscitation.',
     inputs: [
       numberInput('anc', 'ANC', { unit: '/µL', min: 0, max: 2000, exampleValue: 100, helpText: 'Profound neutropenia (ANC <500, especially <100) is the usual setting for typhlitis.' }),
-      yesNo('fever', 'Fever (≥38.3 °C once or ≥38.0 °C sustained ≥1 h)', 1),
-      yesNo('rLQPain', 'Right lower quadrant or diffuse abdominal pain', 2),
-      yesNo('diarrhea', 'Diarrhea (sometimes bloody)', 1),
+      yesNo('fever', 'Fever (≥38.3 °C once or ≥38.0 °C sustained ≥1 h)', 1, '1 point for fever meeting the standard definition (≥38.3 °C once, or ≥38.0 °C sustained at least 1 hour).'),
+      yesNo('rLQPain', 'Right lower quadrant or diffuse abdominal pain', 2, '2 points for right-lower-quadrant or diffuse abdominal pain, the leading presenting feature of typhlitis.'),
+      yesNo('diarrhea', 'Diarrhea (sometimes bloody)', 1, '1 point for diarrhoea, which may be bloody.'),
       yesNo('distension', 'Abdominal distension / peritonitis signs', 3, 'Distension plus peritonitis: rebound, guarding, or a rigid abdomen — surgical-emergency features.'),
       yesNo('mucositis', 'Concurrent severe mucositis', 1, 'WHO oral mucositis ≥3 (liquid diet only) or CTCAE ≥3.'),
       yesNo('hypotension', 'Sepsis / hypotension', 3, 'SBP <90 mmHg, MAP <65 mmHg, or vasopressors in this FN/abdominal presentation.'),

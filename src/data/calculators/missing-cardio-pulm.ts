@@ -12,12 +12,12 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'Adults undergoing noncardiac surgery for preoperative cardiac risk stratification.',
     whyUse: 'Simple, validated 6-factor index used widely in perioperative medicine and guidelines.',
     inputs: [
-      yesNo('highRiskSx', 'High-risk surgery (intraperitoneal, intrathoracic, or suprainguinal vascular)', 1, 'Lee 1999 high-risk surgery = intraperitoneal, intrathoracic, or suprainguinal vascular operations. Laparoscopic intraperitoneal procedures (including cholecystectomy) meet the original intraperitoneal definition; do not score breast, endoscopic, or cataract surgery.'),
-      yesNo('ihd', 'History of ischemic heart disease', 1, 'MI, positive stress test, current angina, nitrate use, or Q waves'),
-      yesNo('hf', 'History of heart failure', 1, 'History of HF, pulmonary edema, or PND; bilateral rales or S3 on exam; or CXR with pulmonary vascular redistribution (Lee 1999).'),
-      yesNo('cvd', 'History of cerebrovascular disease (stroke or TIA)', 1),
-      yesNo('dmInsulin', 'Diabetes mellitus treated with insulin', 1),
-      yesNo('cr', 'Preoperative creatinine > 2.0 mg/dL (177 µmol/L)', 1),
+      yesNo('highRiskSx', 'High-risk surgery (intraperitoneal, intrathoracic, or suprainguinal vascular)', 1, 'Lee 1999 high-risk surgery = intraperitoneal, intrathoracic, or suprainguinal vascular operations. Laparoscopic intraperitoneal procedures (including cholecystectomy) meet the original intraperitoneal definition; do not score breast, endoscopic, or cataract surgery.', true),
+      yesNo('ihd', 'History of ischemic heart disease', 1, 'MI, positive stress test, current angina, nitrate use, or Q waves', true),
+      yesNo('hf', 'History of heart failure', 1, 'History of HF, pulmonary edema, or PND; bilateral rales or S3 on exam; or CXR with pulmonary vascular redistribution (Lee 1999).', false),
+      yesNo('cvd', 'History of cerebrovascular disease (stroke or TIA)', 1, 'History of stroke or transient ischemic attack; one of the six RCRI risk factors, each worth 1 point.', false),
+      yesNo('dmInsulin', 'Diabetes mellitus treated with insulin', 1, 'Diabetes requiring insulin therapy counts as the RCRI diabetes criterion; diet-controlled or oral-agent-only diabetes does not.', false),
+      yesNo('cr', 'Preoperative creatinine > 2.0 mg/dL (177 µmol/L)', 1, 'Preoperative creatinine above 2.0 mg/dL (177 µmol/L); use the value closest to the day of surgery.', false),
     ],
     calculate(values) {
       const keys = ['highRiskSx', 'ihd', 'hf', 'cvd', 'dmInsulin', 'cr'];
@@ -91,10 +91,10 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'Adults with community-acquired pneumonia when BUN/urea is unavailable (e.g., clinic or prehospital).',
     whyUse: 'Bedside alternative to CURB-65 for site-of-care decisions without blood tests.',
     inputs: [
-      yesNo('confusion', 'Confusion (new disorientation to person/place/time)', 1),
-      yesNo('rr', 'Respiratory rate ≥ 30/min', 1),
-      yesNo('bp', 'SBP < 90 mmHg or DBP ≤ 60 mmHg', 1),
-      yesNo('age', 'Age ≥ 65 years', 1),
+      yesNo('confusion', 'Confusion (new disorientation to person/place/time)', 1, 'New disorientation to person, place or time — the \'C\' in CRB-65.', false),
+      yesNo('rr', 'Respiratory rate ≥ 30/min', 1, 'Respiratory rate 30 breaths/min or faster scores 1 point.', true),
+      yesNo('bp', 'SBP < 90 mmHg or DBP ≤ 60 mmHg', 1, 'Systolic blood pressure below 90 mmHg, or diastolic 60 mmHg or lower, scores 1 point.', false),
+      yesNo('age', 'Age ≥ 65 years', 1, 'Age 65 years or older scores 1 point.', true),
     ],
     calculate(values) {
       const score =
@@ -236,14 +236,14 @@ export const missingCardioPulmCalcs: Calculator[] = [
         exampleValue: 40,
         helpText: 'Age-adjusted thresholds use age ≤50 years versus age >50 years; enter age before scoring RR and oxygenation.',
       }),
-      yesNo('sbp', 'Systolic BP < 90 mmHg', 2, undefined, false),
+      yesNo('sbp', 'Systolic BP < 90 mmHg', 2, 'Systolic blood pressure below 90 mmHg scores 2 points in SMART-COP.', false),
       yesNo('multilobar', 'Multilobar chest radiograph involvement', 1, 'Infiltrate involving more than one lobe on CXR (or equivalent CT).', false),
-      yesNo('albumin', 'Albumin < 3.5 g/dL (35 g/L)', 1, undefined, false),
+      yesNo('albumin', 'Albumin < 3.5 g/dL (35 g/L)', 1, 'Albumin below 3.5 g/dL (35 g/L) scores 1 point (the \'P\' for protein).', false),
       yesNo('rr', 'Respiratory rate elevated (age-adjusted)', 1, 'Age ≤50: RR ≥25; age >50: RR ≥30', false),
-      yesNo('hr', 'Heart rate ≥ 125 bpm', 1, undefined, false),
+      yesNo('hr', 'Heart rate ≥ 125 bpm', 1, 'Heart rate 125 bpm or faster scores 1 point.', false),
       yesNo('confusion', 'New onset confusion', 1, 'New disorientation to person, place, or time (or abbreviated mental test ≤8). Do not score chronic baseline dementia without acute change.', false),
       yesNo('oxygen', 'Low oxygenation (age-adjusted)', 2, 'Age ≤50: PaO₂ <70, SpO₂ ≤93%, or PaO₂/FiO₂ <333; age >50: PaO₂ <60, SpO₂ ≤90%, or PaO₂/FiO₂ <250', false),
-      yesNo('ph', 'Arterial pH < 7.35', 2, undefined, false),
+      yesNo('ph', 'Arterial pH < 7.35', 2, 'Arterial pH below 7.35 scores 2 points (oxygenation/acidosis domain).', false),
     ],
     calculate(values) {
       const age = num(values.age, Number.NaN);
@@ -507,12 +507,12 @@ export const missingCardioPulmCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 0 },
         { label: 'Male (+6)', value: 6 },
-      ]),
-      yesNo('riskCad', 'Known CAD or ≥3 risk factors', 4, 'Yes if known CAD (prior MI, coronary revascularization, or documented stenosis) OR ≥3 of: family history of CAD, dyslipidemia, diabetes, hypertension, current smoker.'),
-      yesNo('diaphoresis', 'Diaphoresis', 3, 'Sweating associated with this pain episode'),
-      yesNo('radiates', 'Pain radiates to arm or shoulder', 5),
-      yesNo('pleuritic', 'Pain occurred or worsened with inspiration', -4),
-      yesNo('reproduced', 'Pain reproduced by palpation', -6),
+      ], 6, 'Male sex adds 6 points to the EDACS score; female sex adds none.'),
+      yesNo('riskCad', 'Known CAD or ≥3 risk factors', 4, 'Yes if known CAD (prior MI, coronary revascularization, or documented stenosis) OR ≥3 of: family history of CAD, dyslipidemia, diabetes, hypertension, current smoker.', false),
+      yesNo('diaphoresis', 'Diaphoresis', 3, 'Sweating associated with this pain episode', true),
+      yesNo('radiates', 'Pain radiates to arm or shoulder', 5, 'Pain radiating to the arm or shoulder adds 5 points — the heaviest single EDACS item.', true),
+      yesNo('pleuritic', 'Pain occurred or worsened with inspiration', -4, 'Pleuritic pain — occurring or worsening with inspiration — subtracts 4 points.', false),
+      yesNo('reproduced', 'Pain reproduced by palpation', -6, 'Pain reproduced by palpation subtracts 6 points, since it points away from acute coronary syndrome.', false),
     ],
     calculate(values) {
       const age = num(values.age, 55);
@@ -594,11 +594,11 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'Patients with AF on or considering warfarin to stratify major hemorrhage risk.',
     whyUse: 'Simple score from a large ATRIA cohort; complements stroke risk assessment.',
     inputs: [
-      yesNo('anemia', 'Anemia (hemoglobin <13 g/dL men or <12 g/dL women)', 3),
-      yesNo('renal', 'Severe renal disease (eGFR <30 mL/min or dialysis)', 3),
-      yesNo('age75', 'Age ≥ 75 years', 2),
-      yesNo('priorBleed', 'Any prior hemorrhage diagnosis', 1),
-      yesNo('htn', 'Diagnosed hypertension', 1),
+      yesNo('anemia', 'Anemia (hemoglobin <13 g/dL men or <12 g/dL women)', 3, 'Hemoglobin below 13 g/dL in men, or below 12 g/dL in women, scores 3 points.', false),
+      yesNo('renal', 'Severe renal disease (eGFR <30 mL/min or dialysis)', 3, 'Severe renal disease — eGFR below 30 mL/min/1.73 m² or dialysis — scores 3 points.', false),
+      yesNo('age75', 'Age ≥ 75 years', 2, 'Age 75 years or older scores 2 points.', false),
+      yesNo('priorBleed', 'Any prior hemorrhage diagnosis', 1, 'Any prior hemorrhage diagnosis scores 1 point in ATRIA; anemia and severe renal disease are the heavier bleed predictors (3 points each).', false),
+      yesNo('htn', 'Diagnosed hypertension', 1, 'Diagnosed hypertension scores 1 point.', true),
     ],
     calculate(values) {
       const score =
@@ -664,12 +664,12 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'Patients with AF being considered for warfarin vs DOAC when TTR quality is a concern.',
     whyUse: 'Identifies who is less likely to achieve good INR control on VKA—favor DOAC if eligible.',
     inputs: [
-      yesNo('female', 'Sex: female', 1),
-      yesNo('age60', 'Age < 60 years', 1),
-      yesNo('medHx', 'Medical history: ≥2 of HTN, DM, CAD/MI, PAD, CHF, prior stroke, pulmonary disease, hepatic or renal disease', 1),
-      yesNo('treatment', 'Treatment: interacting drugs (e.g., amiodarone)', 1, 'Interacting drugs in SAMe-TT2R2 typically means amiodarone (the derivation example). Score other strong CYP2C9/VKORC1 warfarin interactors per local protocol.'),
-      yesNo('tobacco', 'Tobacco use within past 2 years', 2),
-      yesNo('race', 'Race: non-white', 2),
+      yesNo('female', 'Sex: female', 1, 'Female sex scores 1 point in the SAMe-TT₂R₂ score.', true),
+      yesNo('age60', 'Age < 60 years', 1, 'Age under 60 years scores 1 point.', false),
+      yesNo('medHx', 'Medical history: ≥2 of HTN, DM, CAD/MI, PAD, CHF, prior stroke, pulmonary disease, hepatic or renal disease', 1, 'Two or more of hypertension, diabetes, CAD/MI, peripheral arterial disease, CHF, prior stroke, pulmonary disease, or hepatic/renal disease scores 1 point.', true),
+      yesNo('treatment', 'Treatment: interacting drugs (e.g., amiodarone)', 1, 'Interacting drugs in SAMe-TT2R2 typically means amiodarone (the derivation example). Score other strong CYP2C9/VKORC1 warfarin interactors per local protocol.', false),
+      yesNo('tobacco', 'Tobacco use within past 2 years', 2, 'Tobacco use within the past 2 years scores 2 points — the T of SAMe-TT₂R₂, and one of the two 2-point items (with non-white race).', false),
+      yesNo('race', 'Race: non-white', 2, 'Non-white race scores 2 points — the R of SAMe-TT₂R₂; the other four items (female, age >60, medical history, treatment) are worth 1 each.', false),
     ],
     calculate(values) {
       const score =
@@ -723,10 +723,10 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'Suspected ACS with LBBB (or ventricular paced rhythm in adapted use) when STEMI diagnosis is uncertain.',
     whyUse: 'Highly specific criteria for occlusion MI when concordant changes are present.',
     inputs: [
-      yesNo('concordantSte', 'Concordant ST elevation ≥1 mm in any lead with positive QRS', 5, 'STE ≥1 mm at the J-point in a lead whose major QRS is positive (same direction as QRS).'),
-      yesNo('concordantStd', 'Concordant ST depression ≥1 mm in V1–V3', 3, 'STD ≥1 mm at the J-point in V1, V2, or V3.'),
-      yesNo('discordantSte5', 'Excessively discordant ST elevation ≥5 mm (original criterion)', 2, 'STE ≥5 mm at the J-point in a lead whose major QRS is negative (QS or rS). Original rule — insensitive.'),
-      yesNo('smithModified', 'Modified Smith criterion positive (ST/S ratio ≤ −0.25) if ≥5 mm not used', 0, 'In a lead with discordant STE: (STE mm at J-point)/(S-wave depth mm) ≤ −0.25, i.e. STE ≥25% of S-wave. Optional; does not add original points.'),
+      yesNo('concordantSte', 'Concordant ST elevation ≥1 mm in any lead with positive QRS', 5, 'STE ≥1 mm at the J-point in a lead whose major QRS is positive (same direction as QRS).', true),
+      yesNo('concordantStd', 'Concordant ST depression ≥1 mm in V1–V3', 3, 'STD ≥1 mm at the J-point in V1, V2, or V3.', false),
+      yesNo('discordantSte5', 'Excessively discordant ST elevation ≥5 mm (original criterion)', 2, 'STE ≥5 mm at the J-point in a lead whose major QRS is negative (QS or rS). Original rule — insensitive.', false),
+      yesNo('smithModified', 'Modified Smith criterion positive (ST/S ratio ≤ −0.25) if ≥5 mm not used', 0, 'In a lead with discordant STE: (STE mm at J-point)/(S-wave depth mm) ≤ −0.25, i.e. STE ≥25% of S-wave. Optional; does not add original points.', false),
     ],
     calculate(values) {
       const score =
@@ -889,12 +889,12 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'Acute hypoxemic respiratory failure evaluation for ARDS diagnosis and severity.',
     whyUse: 'Standard international definition guiding lung-protective strategies and trial eligibility.',
     inputs: [
-      yesNo('timing', 'Timing: within 1 week of known clinical insult or new/worsening respiratory symptoms', 0, 'Must begin within 1 week of a known insult (e.g., pneumonia, sepsis, aspiration, trauma) or new/worsening respiratory symptoms.'),
-      yesNo('imaging', 'Imaging: bilateral opacities not fully explained by effusions, lobar/lung collapse, or nodules', 0, 'CXR or CT: bilateral opacities consistent with pulmonary edema, not fully explained by effusion, collapse, or nodules.'),
-      yesNo('origin', 'Origin: respiratory failure not fully explained by cardiac failure or fluid overload', 0, 'Need objective assessment (e.g., echo) if no risk factor present'),
+      yesNo('timing', 'Timing: within 1 week of known clinical insult or new/worsening respiratory symptoms', 0, 'Must begin within 1 week of a known insult (e.g., pneumonia, sepsis, aspiration, trauma) or new/worsening respiratory symptoms.', true),
+      yesNo('imaging', 'Imaging: bilateral opacities not fully explained by effusions, lobar/lung collapse, or nodules', 0, 'CXR or CT: bilateral opacities consistent with pulmonary edema, not fully explained by effusion, collapse, or nodules.', true),
+      yesNo('origin', 'Origin: respiratory failure not fully explained by cardiac failure or fluid overload', 0, 'Need objective assessment (e.g., echo) if no risk factor present', true),
       numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 80, helpText: 'Arterial PaO2 on the same ABG as the FiO2 below' }),
       numberInput('fio2', 'FiO₂', { unit: 'fraction', unitKind: 'fio2', min: 0.21, max: 1, step: 0.01, exampleValue: 0.5, helpText: 'Berlin: mild P/F 201–300, moderate 101–200, severe ≤100 (all with PEEP/CPAP ≥5).' }),
-      yesNo('peep', 'PEEP or CPAP ≥ 5 cmH₂O', 0, 'Invasive PEEP or noninvasive CPAP/PEEP ≥5 cm H2O is required for the Berlin definition.'),
+      yesNo('peep', 'PEEP or CPAP ≥ 5 cmH₂O', 0, 'Invasive PEEP or noninvasive CPAP/PEEP ≥5 cm H2O is required for the Berlin definition.', true),
     ],
     calculate(values) {
       const timing = bool(values.timing);
@@ -1051,7 +1051,7 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whyUse: 'Strong hemodynamic correlate of prognosis in cardiogenic shock (e.g., SHOCK trial analyses).',
     inputs: [
       numberInput('map', 'Mean arterial pressure (MAP)', { unit: 'mmHg', min: 20, max: 200, exampleValue: 70, helpText: 'If MAP not measured: DBP + (SBP − DBP)/3' }),
-      numberInput('co', 'Cardiac output (CO)', { unit: 'L/min', min: 0.5, max: 15, step: 0.1, exampleValue: 4.0 }),
+      numberInput('co', 'Cardiac output (CO)', { helpText: 'Cardiac output in L/min from thermodilution, Fick or echocardiography; cardiac power output = (MAP × CO) / 451.', unit: 'L/min', min: 0.5, max: 15, step: 0.1, exampleValue: 4.0 }),
     ],
     calculate(values) {
       const map = num(values.map, 70);
@@ -1122,8 +1122,8 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whenToUse: 'Trauma, sepsis, or hemorrhage triage when occult shock is a concern, especially in older adults.',
     whyUse: 'Age adjustment improves prediction of mortality/transfusion need vs raw shock index in some studies.',
     inputs: [
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 20, max: 250, exampleValue: 100 }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 40, max: 250, exampleValue: 110 }),
+      numberInput('hr', 'Heart rate', { helpText: 'Heart rate in bpm from the same vital-sign set as the blood pressure.', unit: 'bpm', min: 20, max: 250, exampleValue: 100 }),
+      numberInput('sbp', 'Systolic BP', { helpText: 'Systolic blood pressure in mmHg; shock index is HR / SBP, and the age-adjusted threshold defines the abnormal band.', unit: 'mmHg', min: 40, max: 250, exampleValue: 110 }),
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 65, helpText: 'Adult ASI bands (≥50 / ≥70) are for adults. Not validated in children — use classic shock index (~0.9) in pediatrics.' }),
     ],
     calculate(values) {
@@ -1221,20 +1221,20 @@ export const missingCardioPulmCalcs: Calculator[] = [
     whyUse:
       'AHA 2023 scientific statement and 2024 PREVENT equations replace race-based PCEs with a CKM-aware, race-free base model using lipids, BP, BMI, eGFR, diabetes, smoking, antihypertensive and statin therapy. This tool is the base equation only (no UACR/HbA1c/SDI add-on).',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 30, max: 79, exampleValue: 55 }),
+      numberInput('age', 'Age', { helpText: 'Age in years; the PREVENT equations are intended for adults aged 30–79 and are sex-specific.', unit: 'years', min: 30, max: 79, exampleValue: 55 }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
-      ]),
-      numberInput('totalChol', 'Total cholesterol', { unit: 'mg/dL', min: 100, max: 400, exampleValue: 200 }),
-      numberInput('hdl', 'HDL cholesterol', { unit: 'mg/dL', min: 20, max: 120, exampleValue: 50 }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 80, max: 200, exampleValue: 130 }),
-      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 50, step: 0.1, exampleValue: 28 }),
-      numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 15, max: 140, exampleValue: 90 }),
-      yesNo('diabetes', 'Diabetes mellitus', null),
-      yesNo('smoker', 'Current smoker', null),
-      yesNo('bpTx', 'On antihypertensive therapy', null),
-      yesNo('statin', 'On statin', null),
+      ], 'M', 'Sex selects the male or female PREVENT equation set.'),
+      numberInput('totalChol', 'Total cholesterol', { helpText: 'Total cholesterol in mg/dL from a fasting or non-fasting lipid panel.', unit: 'mg/dL', min: 100, max: 400, exampleValue: 200 }),
+      numberInput('hdl', 'HDL cholesterol', { helpText: 'HDL cholesterol in mg/dL; higher HDL lowers the predicted risk.', unit: 'mg/dL', min: 20, max: 120, exampleValue: 50 }),
+      numberInput('sbp', 'Systolic BP', { helpText: 'Systolic blood pressure in mmHg; use the average of seated readings.', unit: 'mmHg', min: 80, max: 200, exampleValue: 130 }),
+      numberInput('bmi', 'BMI', { helpText: 'BMI in kg/m² from measured height and weight.', unit: 'kg/m²', min: 15, max: 50, step: 0.1, exampleValue: 28 }),
+      numberInput('egfr', 'eGFR', { helpText: 'eGFR in mL/min/1.73 m² from the most recent creatinine; PREVENT includes kidney function in the risk estimate.', unit: 'mL/min/1.73 m²', min: 15, max: 140, exampleValue: 90 }),
+      yesNo('diabetes', 'Diabetes mellitus', null, 'Diabetes mellitus, treated or untreated, enters the PREVENT equations as a risk factor.', false),
+      yesNo('smoker', 'Current smoker', null, 'Current smoking status; former and never smokers do not count.', false),
+      yesNo('bpTx', 'On antihypertensive therapy', null, 'Antihypertensive therapy status is required by PREVENT even when blood pressure is at goal.', true),
+      yesNo('statin', 'On statin', null, 'Current statin use enters the PREVENT equations as a treatment variable.', false),
     ],
     calculate(values) {
       const age = num(values.age, 55);

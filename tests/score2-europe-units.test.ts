@@ -102,18 +102,49 @@ describe('SCORE2 European cholesterol unit handling', () => {
     expect(commonMgResult.label).toBe(mmolResult.label);
   });
 
+  /**
+   * The declared `min` / `max` on the two lipid fields are the same 2–12 and
+   * 0.5–3.5 mmol/L window `calculate()` enforces internally, so an implausible
+   * entry is now caught by the shared range gate before the calculator runs —
+   * it still fails closed and never returns a SCORE2 percentage, but the
+   * message is the generic "too high / too low" one rather than the
+   * calculator's own "Invalid lipid values" sentence.
+   */
   it.each([
-    { unit: 'mmol/L', totalChol: 1.9, hdl: 1.3 },
-    { unit: 'mmol/L', totalChol: 5.5, hdl: 0.4 },
-    { unit: 'mg/dL', totalChol: 70, hdl: 50 },
-    { unit: 'mg/dL', totalChol: 212, hdl: 10 },
-  ])('fails closed for implausible $unit lipid values', ({ unit, ...lipids }) => {
+    { unit: 'mmol/L', totalChol: 1.9, hdl: 1.3, direction: /too low/i },
+    { unit: 'mmol/L', totalChol: 5.5, hdl: 0.4, direction: /too low/i },
+    { unit: 'mg/dL', totalChol: 70, hdl: 50, direction: /too low/i },
+    { unit: 'mg/dL', totalChol: 212, hdl: 10, direction: /too low/i },
+    { unit: 'mmol/L', totalChol: 40, hdl: 1.3, direction: /too high/i },
+    { unit: 'mg/dL', totalChol: 212, hdl: 400, direction: /too high/i },
+  ])('fails closed for implausible $unit lipid values', ({ unit, direction, ...lipids }) => {
     const calc = calculator();
     const values = {
       ...getExampleFormValues(calc),
       [unitInputId('totalChol')]: unit,
       [unitInputId('hdl')]: unit,
       ...lipids,
+    };
+    const result = productionResult(calc, values);
+
+    expect(result).toMatchObject({ score: '—', riskLevel: 'info' });
+    expect(result.label).toMatch(direction);
+    expect(result.interpretation).toMatch(/minimum|maximum/);
+  });
+
+  /**
+   * In-range but internally impossible lipids (total cholesterol at or below
+   * HDL) still reach `calculate()`, which is the only gate that can see both
+   * values at once.
+   */
+  it('keeps the calculator fail-closed when total cholesterol does not exceed HDL', () => {
+    const calc = calculator();
+    const values = {
+      ...getExampleFormValues(calc),
+      [unitInputId('totalChol')]: 'mmol/L',
+      [unitInputId('hdl')]: 'mmol/L',
+      totalChol: 2.5,
+      hdl: 3,
     };
     const result = productionResult(calc, values);
 

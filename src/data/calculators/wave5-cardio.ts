@@ -213,14 +213,14 @@ export const wave5CardioCalcs: Calculator[] = [
           value: 3,
           description: 'Marked HF symptoms interfering with daily life and recurrent hospitalizations despite GDMT',
         },
-      ]),
+      ], undefined, 'Stage A = risk factors only, B = structural/pre-HF (no symptoms), C = current or prior symptoms, D = advanced/refractory. Progression is one-way — a patient never returns to an earlier stage.'),
       selectInput('nyhaHint', 'Current NYHA (optional context for stage C/D)', [
         { label: 'Not applicable / unknown', value: 0 },
         { label: 'NYHA I', value: 1, description: 'No limitation of ordinary physical activity' },
         { label: 'NYHA II', value: 2, description: 'Slight limitation; ordinary activity causes HF symptoms (fatigue, palpitation, dyspnea)' },
         { label: 'NYHA III', value: 3, description: 'Marked limitation; less than ordinary activity causes symptoms' },
         { label: 'NYHA IV', value: 4, description: 'Symptoms at rest; any physical activity increases discomfort' },
-      ]),
+      ], undefined, 'Optional functional class for context in stages C/D. NYHA describes symptoms today and can move in either direction; the ACC/AHA stage does not.'),
     ],
     calculate(values) {
       const s = num(values.stage, 0);
@@ -298,15 +298,15 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'Patients with HFrEF (typically LVEF ≤40%) to audit GDMT completeness.',
     whyUse: 'Four-pillar therapy reduces mortality; checklist highlights gaps for titration visits.',
     inputs: [
-      yesNo('ras', 'ARNI, ACE inhibitor, or ARB in use (target or maximally tolerated)', 1),
-      yesNo('bb', 'Evidence-based β-blocker (carvedilol / bisoprolol / metoprolol succinate)', 1),
-      yesNo('mra', 'Mineralocorticoid receptor antagonist (spironolactone / eplerenone)', 1),
-      yesNo('sglt2', 'SGLT2 inhibitor (dapagliflozin / empagliflozin, etc.)', 1),
+      yesNo('ras', 'ARNI, ACE inhibitor, or ARB in use (target or maximally tolerated)', 1, 'Counts as in use when the patient is on an ARNI, ACE inhibitor, or ARB at any dose (target or maximally tolerated). Record \'no\' if not yet started or stopped for a contraindication with no substitute.'),
+      yesNo('bb', 'Evidence-based β-blocker (carvedilol / bisoprolol / metoprolol succinate)', 1, 'Only carvedilol, bisoprolol, or metoprolol succinate count as evidence-based β-blockers; other β-blockers (e.g. atenolol, metoprolol tartrate) do not satisfy the pillar.'),
+      yesNo('mra', 'Mineralocorticoid receptor antagonist (spironolactone / eplerenone)', 1, 'Spironolactone or eplerenone at any tolerated dose counts; eplerenone is preferred when gynecomastia is limiting. Check potassium and eGFR before counting it.'),
+      yesNo('sglt2', 'SGLT2 inhibitor (dapagliflozin / empagliflozin, etc.)', 1, 'Any SGLT2 inhibitor (dapagliflozin, empagliflozin, or equivalent) counts, with or without diabetes.'),
       yesNo('arniPreferred', 'Using ARNI (sacubitril/valsartan) rather than ACEI/ARB alone', 0, 'Preferred RAS inhibitor when eligible'),
-      yesNo('loop', 'Loop diuretic as needed for congestion', 0),
-      yesNo('ivabradine', 'Ivabradine (if eligible: sinus rhythm, resting HR ≥70 on max BB)', 0),
-      yesNo('hydralNitrates', 'Hydralazine + nitrate (selected self-identified Black patients / ACEI-intolerant)', 0),
-      yesNo('deviceEligible', 'ICD and/or CRT indicated and addressed (implanted or declined after counseling)', 0),
+      yesNo('loop', 'Loop diuretic as needed for congestion', 0, 'Loop diuretic for congestion is a symptom adjunct, not a longevity pillar; it does not add to the 4-pillar total, so answer Yes only when the patient takes one.'),
+      yesNo('ivabradine', 'Ivabradine (if eligible: sinus rhythm, resting HR ≥70 on max BB)', 0, 'Yes only when truly eligible: sinus rhythm, resting HR 70/min or above, on a maximally tolerated β-blocker, and in stable HFrEF. It is not scored among the four pillars.'),
+      yesNo('hydralNitrates', 'Hydralazine + nitrate (selected self-identified Black patients / ACEI-intolerant)', 0, 'Yes for hydralazine plus an oral nitrate, typically self-identified Black patients on optimal therapy or ACEI/ARB-intolerant patients. Both components are required.'),
+      yesNo('deviceEligible', 'ICD and/or CRT indicated and addressed (implanted or declined after counseling)', 0, 'Yes when ICD and/or CRT has been implanted or was considered and declined after counseling. Not a medication pillar — it is tracked separately from the four-drug total.'),
     ],
     calculate(values) {
       const pillars = [
@@ -476,8 +476,8 @@ export const wave5CardioCalcs: Calculator[] = [
         { label: 'Male', value: 'M', description: 'Cornell voltage positive if R aVL + S V3 >28 mm' },
         { label: 'Female', value: 'F', description: 'Cornell voltage positive if R aVL + S V3 >20 mm' },
       ], undefined, 'Sex-specific Cornell voltage (Casale 1987): >28 mm in men, >20 mm in women.'),
-      numberInput('rAvl', 'R-wave in aVL', { unit: 'mm', min: 0, max: 30, step: 0.5, exampleValue: 8 }),
-      numberInput('sV3', 'S-wave in V3', { unit: 'mm', min: 0, max: 50, step: 0.5, exampleValue: 12 }),
+      numberInput('rAvl', 'R-wave in aVL', { unit: 'mm', min: 0, max: 30, step: 0.5, exampleValue: 8, helpText: 'R-wave amplitude in aVL in mm (1 mm = 0.1 mV) measured from the isoelectric line to the R peak; enter the largest R in aVL.' }),
+      numberInput('sV3', 'S-wave in V3', { unit: 'mm', min: 0, max: 50, step: 0.5, exampleValue: 12, helpText: 'S-wave depth in V3 in mm, measured from the isoelectric line to the S nadir. Cornell voltage = R aVL + S V3; thresholds are ≥28 mm men, ≥20 mm women.' }),
       numberInput('qrsMs', 'QRS duration (optional, for Cornell product)', {
         unit: 'ms',
         min: 60,
@@ -572,12 +572,12 @@ export const wave5CardioCalcs: Calculator[] = [
     whyUse: 'Rautaharju correction is less biased than Bazett at higher heart rates in many comparisons.',
     inputs: [
       numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, exampleValue: 400, helpText: 'Onset of QRS to end of T in the lead with the clearest T-wave end' }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, exampleValue: 70 }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, exampleValue: 70, helpText: 'Heart rate in beats/min from the ECG used for the QT measurement; QTc = QT × (120 + HR) ÷ 180.' }),
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 55, helpText: 'Rautaharju 2014 prolongation ULNs are age- and sex-specific.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
-      ]),
+      ], undefined, 'Sex sets the upper reference limit used for the flag (male ~450 ms, female ~460 ms) after the Rautaharju correction.'),
     ],
     calculate(values) {
       const qt = num(values.qt, 400);
@@ -673,12 +673,12 @@ export const wave5CardioCalcs: Calculator[] = [
     whyUse: 'QTc includes QRS duration; JT/JTc isolates repolarization and may better reflect TdP risk with wide QRS.',
     inputs: [
       numberInput('qt', 'QT interval', { unit: 'ms', min: 200, max: 800, exampleValue: 440, helpText: 'Onset of QRS to end of T; JT = QT − QRS' }),
-      numberInput('qrs', 'QRS duration', { unit: 'ms', min: 60, max: 250, exampleValue: 120 }),
-      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, exampleValue: 70 }),
+      numberInput('qrs', 'QRS duration', { unit: 'ms', min: 60, max: 250, exampleValue: 120, helpText: 'QRS duration in ms from the same ECG; JT = QT − QRS, so a wide QRS shortens the JT and this field must match the tracing used.' }),
+      numberInput('hr', 'Heart rate', { unit: 'bpm', min: 30, max: 220, exampleValue: 70, helpText: 'Heart rate in beats/min at the time of the ECG; it drives the rate correction applied to the JT interval.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M', description: 'QT(RR,QRS) k = −22 ms; JTrr k = +34 ms' },
         { label: 'Female', value: 'F', description: 'QT(RR,QRS) k = −34 ms; JTrr k = +22 ms' },
-      ]),
+      ], undefined, 'Sex selects the reference threshold for the corrected JT (male ~450 ms, female ~460 ms).'),
       selectInput('method', 'Rate correction method', [
         { label: 'Rautaharju QT(RR,QRS) — VCD-adjusted QT', value: 'qt_rr_qrs' },
         { label: 'Rautaharju JTrr — linear JT rate adjustment', value: 'jtrr' },
@@ -794,8 +794,8 @@ export const wave5CardioCalcs: Calculator[] = [
         { label: 'Mechanical valve + prior TE despite therapeutic INR', value: 'valve_te' },
         { label: 'On-X aortic valve (after agreed lower-INR protocol period)', value: 'onx' },
         { label: 'Antiphospholipid syndrome (standard intensity if warfarin chosen)', value: 'aps' },
-      ]),
-      yesNo('recentTe', 'Recent thromboembolism on warfarin (consider higher target / add antiplatelet per specialist)', 0),
+      ], undefined, 'Pick the clinical scenario: most AF and VTE target 2.0–3.0; mechanical mitral valves, older-generation aortic valves, and antiphospholipid syndrome target 2.5–3.5. On-X aortic valves may use a lower range under a specific protocol.'),
+      yesNo('recentTe', 'Recent thromboembolism on warfarin (consider higher target / add antiplatelet per specialist)', 0, 'Yes if a thromboembolic event occurred on warfarin — a higher target range or added antiplatelet is usually considered with specialist input.'),
     ],
     calculate(values) {
       const ind = String(values.indication ?? 'af');
@@ -934,11 +934,11 @@ export const wave5CardioCalcs: Calculator[] = [
         { label: 'Rivaroxaban', value: 'riva' },
         { label: 'Dabigatran', value: 'dabi' },
         { label: 'Edoxaban', value: 'edox' },
-      ]),
+      ], undefined, 'Choose the specific agent: renal dose bands differ by drug and indication, and none are interchangeable even at equal CrCl.'),
       selectInput('indication', 'Indication', [
         { label: 'Nonvalvular AF (stroke prevention)', value: 'af' },
         { label: 'VTE treatment (acute / maintenance phase simplified)', value: 'vte' },
-      ]),
+      ], undefined, 'AF stroke prevention uses one set of bands; VTE treatment uses another. Select the indication before reading the dose band, because the same CrCl can land in different bands.'),
       numberInput('crcl', 'Creatinine clearance (Cockcroft–Gault)', {
         unit: 'mL/min',
         min: 5,
@@ -1212,8 +1212,8 @@ export const wave5CardioCalcs: Calculator[] = [
         { label: 'Therapeutic — twice daily (1 mg/kg q12h)', value: 'tx_bid' },
         { label: 'Therapeutic — once daily (1.5 mg/kg daily)', value: 'tx_daily' },
         { label: 'NSTE-ACS / conservative (1 mg/kg q12h style)', value: 'acs' },
-      ]),
-      numberInput('weight', 'Actual body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 250, step: 0.1, exampleValue: 80 }),
+      ], undefined, 'Prophylaxis uses fixed 30–40 mg dosing; therapeutic 1 mg/kg q12h or 1.5 mg/kg daily is weight-based. Select the intent first — the weight matters mainly on the therapeutic branches.'),
+      numberInput('weight', 'Actual body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 250, step: 0.1, exampleValue: 80, helpText: 'Actual body weight in kg; therapeutic dosing is weight-based and obese patients may need dose capping per local protocol. Select lb if the recorded weight is imperial.' }),
       numberInput('crcl', 'Creatinine clearance', { unit: 'mL/min', min: 5, max: 150, exampleValue: 80, helpText: 'CrCl <30 mL/min triggers renal-adjusted dosing (prophylaxis 30 mg daily; treatment typically 1 mg/kg daily).' }),
     ],
     calculate(values) {
@@ -1319,7 +1319,7 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'Adults with ACS when initiating unfractionated heparin per weight-based protocol.',
     whyUse: 'Weight-based dosing with caps is standard; errors in bolus/infusion are common.',
     inputs: [
-      numberInput('weight', 'Actual body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 250, step: 0.1, exampleValue: 80 }),
+      numberInput('weight', 'Actual body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 250, step: 0.1, exampleValue: 80, helpText: 'Actual body weight in kg for the 60 U/kg bolus and 12 U/kg/h infusion; caps are applied automatically (bolus 4000 U, infusion 1000 U/h).' }),
       selectInput('protocol', 'Protocol style', [
         {
           label: 'Fibrinolysis / many STEMI pathways: 60 U/kg bolus (max 4000), 12 U/kg/h (max 1000)',
@@ -1333,7 +1333,7 @@ export const wave5CardioCalcs: Calculator[] = [
           label: 'PCI lab high-intensity (no GP IIb/IIIa): ~70–100 U/kg bolus — select mid 70 U/kg, no infusion estimate',
           value: 'pci',
         },
-      ]),
+      ], undefined, 'Choose the protocol style: STEMI/fibrinolysis and NSTE-ACS share 60 U/kg (max 4000 U) plus 12 U/kg/h (max 1000 U/h); the PCI high-intensity branch gives a single 70–100 U/kg bolus with no infusion estimate.'),
     ],
     calculate(values) {
       const w = num(values.weight, 80);
@@ -1511,7 +1511,7 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'When ApoB is available for residual risk assessment or discordance with LDL-C/non-HDL.',
     whyUse: 'ApoB counts atherogenic particles and may better reflect risk when discordant with LDL-C.',
     inputs: [
-      numberInput('apob', 'ApoB', { unit: 'mg/dL', min: 20, max: 250, exampleValue: 90 }),
+      numberInput('apob', 'ApoB', { unit: 'mg/dL', min: 20, max: 250, exampleValue: 90, helpText: 'Apolipoprotein B in mg/dL from a fasting or nonfasting lipid panel. Very-high-risk secondary goals are often <65 mg/dL and moderate-risk goals <100 mg/dL.' }),
       selectInput('context', 'Clinical risk context', [
         { label: 'Low / moderate primary prevention', value: 'low' },
         { label: 'High-risk primary prevention / risk enhancers', value: 'high' },
@@ -1596,10 +1596,10 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'Severe hypertriglyceridemia management and patient counseling on pancreatitis risk.',
     whyUse: 'Risk rises steeply at very high TG; thresholds guide urgency of therapy.',
     inputs: [
-      numberInput('tg', 'Triglycerides', { unit: 'mg/dL', min: 30, max: 10000, step: 1, exampleValue: 400 }),
-      yesNo('priorPancreatitis', 'Prior hypertriglyceridemic pancreatitis', 0),
-      yesNo('diabetes', 'Uncontrolled diabetes / marked hyperglycemia', 0),
-      yesNo('alcohol', 'Heavy alcohol use', 0),
+      numberInput('tg', 'Triglycerides', { unit: 'mg/dL', min: 30, max: 10000, step: 1, exampleValue: 400, helpText: 'Triglycerides in mg/dL (divide mmol/L by 0.0113). Risk climbs steeply for values above 1000 mg/dL, and the reported band drives urgency of therapy.' }),
+      yesNo('priorPancreatitis', 'Prior hypertriglyceridemic pancreatitis', 0, 'Yes if the patient has had an episode of hypertriglyceridemic pancreatitis — the recurrence threshold is lower than the first-event threshold.'),
+      yesNo('diabetes', 'Uncontrolled diabetes / marked hyperglycemia', 0, 'Yes for uncontrolled diabetes or marked hyperglycemia, which both raises triglycerides and independently worsens outcome in HTG pancreatitis.'),
+      yesNo('alcohol', 'Heavy alcohol use', 0, 'Yes for heavy alcohol use; alcohol multiplies pancreatitis risk in severe hypertriglyceridemia even though it does not raise triglycerides by itself.'),
     ],
     calculate(values) {
       const tg = num(values.tg, 400);
@@ -1697,14 +1697,14 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'Suspected cardiogenic shock to structure documentation of hypotension + hypoperfusion ± hemodynamics.',
     whyUse: 'Standard criteria improve recognition and shock-team activation language.',
     inputs: [
-      yesNo('hypotension', 'Sustained SBP <90 mmHg or need for vasopressors/inotropes to maintain BP', 1),
-      yesNo('mapLow', 'MAP <60–65 mmHg (or profound relative hypotension from baseline)', 1),
-      yesNo('hypoperfusion', 'Clinical hypoperfusion (cool extremities, oliguria, altered mentation, lactate elevation)', 1),
-      yesNo('lactate', 'Lactate >2 mmol/L or rising', 1),
-      yesNo('ciLow', 'Cardiac index ≤2.2 L/min/m² (if measured)', 1),
-      yesNo('pcwpHigh', 'PCWP ≥15 mmHg or echo evidence of elevated left filling pressures', 1),
-      yesNo('congestion', 'Pulmonary congestion / elevated natriuretic peptides', 1),
-      yesNo('notDistributive', 'Shock not primarily distributive/hypovolemic/obstructive after assessment', 1),
+      yesNo('hypotension', 'Sustained SBP <90 mmHg or need for vasopressors/inotropes to maintain BP', 1, 'Sustained SBP below 90 mmHg, or vasopressors/inotropes needed to keep BP up, is the entry criterion for the classic cardiogenic shock cluster.'),
+      yesNo('mapLow', 'MAP <60–65 mmHg (or profound relative hypotension from baseline)', 1, 'MAP below 60–65 mmHg, or a profound drop from the patient\'s baseline, supports the hypoperfusion picture even when a single systolic reading looks acceptable.'),
+      yesNo('hypoperfusion', 'Clinical hypoperfusion (cool extremities, oliguria, altered mentation, lactate elevation)', 1, 'Cool extremities, oliguria, altered mentation, or a rising lactate — any clinical marker of poor end-organ perfusion counts.'),
+      yesNo('lactate', 'Lactate >2 mmol/L or rising', 1, 'Lactate above 2 mmol/L, or a rising trend on serial draws, indicates inadequate perfusion and supports the shock designation.'),
+      yesNo('ciLow', 'Cardiac index ≤2.2 L/min/m² (if measured)', 1, 'Cardiac index 2.2 L/min/m² or lower when a measurement (PAC, echo-derived) is available; do not infer it from blood pressure alone.'),
+      yesNo('pcwpHigh', 'PCWP ≥15 mmHg or echo evidence of elevated left filling pressures', 1, 'PCWP 15 mmHg or higher, or echo evidence of elevated left-sided filling pressures, distinguishes cardiogenic from hypovolemic/low-filling shock.'),
+      yesNo('congestion', 'Pulmonary congestion / elevated natriuretic peptides', 1, 'Pulmonary congestion on exam or imaging, or elevated natriuretic peptides, supports the cardiogenic mechanism.'),
+      yesNo('notDistributive', 'Shock not primarily distributive/hypovolemic/obstructive after assessment', 1, 'Yes only after distributive (sepsis, anaphylaxis), hypovolemic, and obstructive causes have been considered — the label presumes a cardiac pump failure.'),
     ],
     calculate(values) {
       const flags = {
@@ -1804,9 +1804,9 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'Patients with ruptured AAA being considered for open or endovascular repair risk discussion.',
     whyUse: 'Simple bedside score associated with operative mortality; not an absolute futility rule.',
     inputs: [
-      yesNo('age76', 'Age >76 years', 1),
-      yesNo('cr', 'Serum creatinine >190 µmol/L (~>2.1 mg/dL)', 1),
-      yesNo('hb', 'Hemoglobin <9 g/dL', 1),
+      yesNo('age76', 'Age >76 years', 1, 'Age above 76 years scores 1 point (77 or older). The Hardman index uses age >76, not ≥76.'),
+      yesNo('cr', 'Serum creatinine >190 µmol/L (~>2.1 mg/dL)', 1, 'Serum creatinine above 190 µmol/L (about 2.1 mg/dL) scores 1 point. Use the highest preoperative value.'),
+      yesNo('hb', 'Hemoglobin <9 g/dL', 1, 'Hemoglobin below 9 g/dL scores 1 point; transfusing before measurement changes the score, so record the value that prompted repair.'),
       yesNo('ischemia', 'Ischemic ECG changes', 1, 'Typically new ST-segment depression or T-wave inversion consistent with ischemia, not isolated nonspecific ST–T changes.'),
       yesNo('loc', 'Loss of consciousness (collapse)', 1, 'Original Hardman 1996 scores any preoperative loss of consciousness / collapse, not only LOC after presentation.'),
     ],
@@ -1894,11 +1894,11 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'AAA repair risk communication using age, shock, and comorbidity points.',
     whyUse: 'Simple score correlating with perioperative mortality after aneurysm repair.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 75 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 75, helpText: 'Age in years; the Glasgow Aneurysm Score adds the age directly to the comorbidity points (score = age + 7/10/14 point items).' }),
       yesNo('shock', 'Shock (SBP <90 mmHg)', 17, 'Original Samy GAS: shock = SBP <90 mmHg. Vasopressor need to keep SBP ≥90 may be counted as shock present.'),
-      yesNo('myocardial', 'Myocardial disease (MI, angina, heart failure)', 7),
-      yesNo('cerebrovascular', 'Cerebrovascular disease (stroke / TIA)', 10),
-      yesNo('renal', 'Renal disease (Cr >150 µmol/L or on dialysis — original definition)', 14),
+      yesNo('myocardial', 'Myocardial disease (MI, angina, heart failure)', 7, 'Myocardial disease — prior MI, angina, or heart failure — scores 7 points.'),
+      yesNo('cerebrovascular', 'Cerebrovascular disease (stroke / TIA)', 10, 'Cerebrovascular disease — stroke or TIA — scores 10 points.'),
+      yesNo('renal', 'Renal disease (Cr >150 µmol/L or on dialysis — original definition)', 14, 'Renal disease in the original definition — creatinine above 150 µmol/L or dialysis dependence — scores 14 points, the largest item.'),
     ],
     calculate(values) {
       const age = num(values.age, 75);
@@ -1978,18 +1978,18 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'Preoperative evaluation or functional capacity estimation when formal exercise testing is unavailable.',
     whyUse: 'Validated questionnaire correlating with VO₂ peak; <4 METs flags higher perioperative risk discussions.',
     inputs: [
-      yesNo('q1', 'Can you take care of yourself (eat, dress, bathe, use toilet)? (+2.75)', 2.75),
-      yesNo('q2', 'Can you walk indoors such as around your house? (+1.75)', 1.75),
-      yesNo('q3', 'Can you walk a block or two on level ground? (+2.75)', 2.75),
-      yesNo('q4', 'Can you climb a flight of stairs or walk up a hill? (+5.50)', 5.5),
-      yesNo('q5', 'Can you run a short distance? (+8.00)', 8),
-      yesNo('q6', 'Can you do light work around the house (dusting, washing dishes)? (+2.70)', 2.7),
-      yesNo('q7', 'Can you do moderate work around the house (vacuuming, sweeping floors, carrying groceries)? (+3.50)', 3.5),
-      yesNo('q8', 'Can you do heavy work around the house (scrubbing floors, moving heavy furniture)? (+8.00)', 8),
-      yesNo('q9', 'Can you do yard work (raking leaves, weeding, pushing a mower)? (+4.50)', 4.5),
-      yesNo('q10', 'Can you have sexual relations? (+5.25)', 5.25),
-      yesNo('q11', 'Can you participate in moderate recreational activities (golf, bowling, dancing, doubles tennis, throwing a baseball/football)? (+6.00)', 6),
-      yesNo('q12', 'Can you participate in strenuous sports (swimming, singles tennis, football, basketball, skiing)? (+7.50)', 7.5),
+      yesNo('q1', 'Can you take care of yourself (eat, dress, bathe, use toilet)? (+2.75)', 2.75, 'DASI self-care item worth 2.75 points; answer from what the patient actually does, not what they think they could manage.'),
+      yesNo('q2', 'Can you walk indoors such as around your house? (+1.75)', 1.75, 'Indoor walking item worth 1.75 points — the lowest-weight activity in the DASI.'),
+      yesNo('q3', 'Can you walk a block or two on level ground? (+2.75)', 2.75, 'Walking a block or two on level ground is worth 2.75 points.'),
+      yesNo('q4', 'Can you climb a flight of stairs or walk up a hill? (+5.50)', 5.5, 'Climbing a flight of stairs or walking up a hill is worth 5.50 points.'),
+      yesNo('q5', 'Can you run a short distance? (+8.00)', 8, 'Running a short distance is worth 8.00 points, one of the two highest-weight items.'),
+      yesNo('q6', 'Can you do light work around the house (dusting, washing dishes)? (+2.70)', 2.7, 'Light housework (dusting, washing dishes) is worth 2.70 points.'),
+      yesNo('q7', 'Can you do moderate work around the house (vacuuming, sweeping floors, carrying groceries)? (+3.50)', 3.5, 'Moderate housework (vacuuming, sweeping, carrying groceries) is worth 3.50 points.'),
+      yesNo('q8', 'Can you do heavy work around the house (scrubbing floors, moving heavy furniture)? (+8.00)', 8, 'Heavy housework (scrubbing floors, moving furniture) is worth 8.00 points.'),
+      yesNo('q9', 'Can you do yard work (raking leaves, weeding, pushing a mower)? (+4.50)', 4.5, 'Yard work (raking, weeding, pushing a mower) is worth 4.50 points.'),
+      yesNo('q10', 'Can you have sexual relations? (+5.25)', 5.25, 'Sexual relations are worth 5.25 points on the DASI.'),
+      yesNo('q11', 'Can you participate in moderate recreational activities (golf, bowling, dancing, doubles tennis, throwing a baseball/football)? (+6.00)', 6, 'Moderate recreation (golf, bowling, dancing, doubles tennis, throwing a ball) is worth 6.00 points.'),
+      yesNo('q12', 'Can you participate in strenuous sports (swimming, singles tennis, football, basketball, skiing)? (+7.50)', 7.5, 'Strenuous sports (swimming, singles tennis, football, basketball, skiing) are worth 7.50 points.'),
     ],
     calculate(values) {
       const weights = [2.75, 1.75, 2.75, 5.5, 8, 2.7, 3.5, 8, 4.5, 5.25, 6, 7.5];
@@ -2079,7 +2079,7 @@ export const wave5CardioCalcs: Calculator[] = [
         { label: 'Jogging, singles tennis, hiking (~7–9 METs)', value: 8, description: 'Slow jog, singles tennis, hiking with a pack, vigorous calisthenics' },
         { label: 'Running, competitive sports, heavy labor (~≥10 METs)', value: 10, description: 'Running, swimming laps, competitive sports, heavy manual labor, or ski/soccer-level effort' },
       ], undefined, 'Pick the highest activity the patient can perform comfortably without stopping for chest pain, dyspnea, or fatigue. 1 MET ≈ rest (3.5 mL O₂/kg/min). ACC/AHA perioperative: ≥4 METs (stairs) is a common capacity cutoff.'),
-      yesNo('limitedByChest', 'Limited by chest pain, dyspnea, or syncope', 0),
+      yesNo('limitedByChest', 'Limited by chest pain, dyspnea, or syncope', 0, 'Yes when chest pain, dyspnea, or syncope stops the activity; the MET estimate then overstates safe capacity and the symptom itself carries perioperative weight.'),
     ],
     calculate(values) {
       const mets = num(values.activity, 4.5);
@@ -2152,13 +2152,13 @@ export const wave5CardioCalcs: Calculator[] = [
       selectInput('assay', 'Assay', [
         { label: 'BNP', value: 'bnp' },
         { label: 'NT-proBNP', value: 'nt' },
-      ]),
+      ], undefined, 'Select which peptide the lab reported: BNP and NT-proBNP use different scales, so the same number means very different things.'),
       numberInput('level', 'Level', { min: 0, max: 50000, step: 1, exampleValue: 150, helpText: 'pg/mL (ng/L). Common perioperative elevation cutoffs used here: BNP ≥92 pg/mL or NT-proBNP ≥300 pg/mL.' }),
       selectInput('ageBand', 'Age band (NT-proBNP context)', [
         { label: '<50 years', value: 'lt50' },
         { label: '50–75 years', value: '50_75' },
         { label: '>75 years', value: 'gt75' },
-      ]),
+      ], undefined, 'Age band applies to NT-proBNP interpretation, where acceptable values rise with age; BNP bands do not use it.'),
     ],
     calculate(values) {
       const assay = String(values.assay ?? 'nt');
@@ -2599,15 +2599,15 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'Patients with ventricular preexcitation (WPW pattern) for risk discussion and referral urgency.',
     whyUse: 'Certain clinical and electrophysiologic features mark higher risk of rapid conduction and SCD.',
     inputs: [
-      yesNo('symptomatic', 'Symptomatic (palpitations, presyncope, syncope) or documented AVRT', 1),
-      yesNo('preexcitedAF', 'Documented preexcited AF or polymorphic wide-complex tachycardia', 1),
-      yesNo('shortSPERRI', 'Shortest preexcited RR in AF ≤250 ms (or SPERRI ≤250 ms on EPS)', 1),
-      yesNo('multipleAP', 'Multiple accessory pathways suspected/proven', 1),
-      yesNo('septalAP', 'Posteroseptal / midseptal pathway location (ablation risk / specific concerns)', 0),
-      yesNo('ebstein', 'Ebstein anomaly or other structural heart disease', 1),
-      yesNo('familySCD', 'Family history of WPW-related SCD (rare syndromes)', 1),
-      yesNo('intermittentLoss', 'Intermittent sudden loss of preexcitation on ECG/ambulatory monitor (lower-risk marker)', 0),
-      yesNo('abruptBlockExercise', 'Abrupt complete loss of preexcitation on exercise testing (lower-risk marker)', 0),
+      yesNo('symptomatic', 'Symptomatic (palpitations, presyncope, syncope) or documented AVRT', 1, 'Palpitations, presyncope, or syncope, or a documented AV reentrant tachycardia, marks a symptomatic (higher-risk) accessory pathway.'),
+      yesNo('preexcitedAF', 'Documented preexcited AF or polymorphic wide-complex tachycardia', 1, 'Documented preexcited atrial fibrillation — or a polymorphic wide-complex tachycardia — scores as a high-risk feature; these can degenerate into ventricular fibrillation.'),
+      yesNo('shortSPERRI', 'Shortest preexcited RR in AF ≤250 ms (or SPERRI ≤250 ms on EPS)', 1, 'Shortest preexcited RR interval in AF of 250 ms or less (equivalent to a shortest preexcited RR on EPS) predicts rapid conduction over the pathway.'),
+      yesNo('multipleAP', 'Multiple accessory pathways suspected/proven', 1, 'Multiple accessory pathways, suspected or proven, raise risk and complicate ablation planning.'),
+      yesNo('septalAP', 'Posteroseptal / midseptal pathway location (ablation risk / specific concerns)', 0, 'Posteroseptal or midseptal pathway location — a procedural/anatomic concern rather than a spontaneous-risk marker, since ablation near the septum carries AV block risk.'),
+      yesNo('ebstein', 'Ebstein anomaly or other structural heart disease', 1, 'Ebstein anomaly or other structural heart disease is associated with multiple pathways and higher event rates.'),
+      yesNo('familySCD', 'Family history of WPW-related SCD (rare syndromes)', 1, 'Family history of WPW-related sudden cardiac death is rare but scores as a high-risk feature.'),
+      yesNo('intermittentLoss', 'Intermittent sudden loss of preexcitation on ECG/ambulatory monitor (lower-risk marker)', 0, 'Intermittent sudden loss of preexcitation on ECG or ambulatory monitoring is a lower-risk marker (the pathway has longer refractory properties) but does not exclude risk.'),
+      yesNo('abruptBlockExercise', 'Abrupt complete loss of preexcitation on exercise testing (lower-risk marker)', 0, 'Abrupt, complete loss of preexcitation during exercise testing is a favorable (lower-risk) marker — note that gradual loss does not carry the same meaning.'),
     ],
     calculate(values) {
       const highFlags = [
@@ -2706,12 +2706,12 @@ export const wave5CardioCalcs: Calculator[] = [
     whenToUse: 'Choosing anticoagulant class in AF when valve disease is present.',
     whyUse: 'DOACs are not appropriate for true valvular AF (moderate–severe MS or mechanical valve); VKA is required.',
     inputs: [
-      yesNo('modSevMS', 'Moderate or severe mitral stenosis (typically rheumatic)', 1),
-      yesNo('mechanicalValve', 'Mechanical prosthetic heart valve (any position)', 1),
-      yesNo('bioprosthetic', 'Bioprosthetic valve or valve repair only', 0),
-      yesNo('modSevMR', 'Moderate–severe mitral regurgitation (without MS)', 0),
-      yesNo('asOrAR', 'Significant aortic stenosis or regurgitation', 0),
-      yesNo('otherNative', 'Other native valve disease without MS/mechanical prosthesis', 0),
+      yesNo('modSevMS', 'Moderate or severe mitral stenosis (typically rheumatic)', 1, 'Yes for moderate-to-severe (typically rheumatic) mitral stenosis — DOACs are not appropriate and a VKA is required.'),
+      yesNo('mechanicalValve', 'Mechanical prosthetic heart valve (any position)', 1, 'Yes for any mechanical prosthetic valve, in any position — this alone makes the AF \'valvular\' for anticoagulation purposes and mandates a VKA.'),
+      yesNo('bioprosthetic', 'Bioprosthetic valve or valve repair only', 0, 'Bioprosthetic valves and valve repairs do not make the AF valvular in the anticoagulation sense; answer Yes for context only, it does not force a VKA.'),
+      yesNo('modSevMR', 'Moderate–severe mitral regurgitation (without MS)', 0, 'Moderate-to-severe mitral regurgitation without stenosis does not make the AF valvular — DOACs remain an option.'),
+      yesNo('asOrAR', 'Significant aortic stenosis or regurgitation', 0, 'Significant aortic stenosis or regurgitation does not make the AF valvular by this definition; it is tracked for context only.'),
+      yesNo('otherNative', 'Other native valve disease without MS/mechanical prosthesis', 0, 'Other native valve disease without mitral stenosis or a mechanical prosthesis does not reclassify the AF — DOACs remain appropriate for most eligible patients.'),
     ],
     calculate(values) {
       const valvular = bool(values.modSevMS) || bool(values.mechanicalValve);

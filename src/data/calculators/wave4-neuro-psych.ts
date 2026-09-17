@@ -32,6 +32,26 @@ const iqcodeShortItems = [
   "Using his/her intelligence to understand what's going on and to reason things through",
 ] as const;
 
+/** Per-item help text for the Short IQCODE items (parallel to `iqcodeShortItems`). */
+const iqcodeShortHelp = [
+  'Compared with 10 years ago, remembering things about family and friends: 1 much improved, 2 a bit improved, 3 not much change, 4 a bit worse, 5 much worse.',
+  'Remembering recent events: 1–5 from much improved to much worse, relative to 10 years ago.',
+  'Recalling conversations from a few days earlier: 1–5. This item is sensitive to early amnestic decline.',
+  'Remembering their own address and telephone number: 1–5.',
+  'Remembering the day and month: 1–5; marked worsening here suggests more advanced disorientation.',
+  'Remembering where things are usually kept: 1–5.',
+  'Remembering where to find an object that has been put in a different place: 1–5.',
+  'Knowing how to use familiar household machines: 1–5 — a functional (not purely memory) item.',
+  'Learning to use a new household gadget: 1–5; new learning is typically affected early.',
+  'Learning new things in general: 1–5.',
+  'Following a story in a book or on television: 1–5.',
+  'Making decisions about everyday matters: 1–5.',
+  'Handling money for shopping: 1–5 — a key instrumental activity of daily living.',
+  'Handling financial matters such as the pension or the bank: 1–5.',
+  'Handling everyday arithmetic (how much food to buy, how long between visits): 1–5.',
+  'Using their intelligence to understand and reason through situations: 1–5.',
+];
+
 const irlsSeverityOptions = [
   { label: '0 — None', value: 0 },
   { label: '1 — Mild', value: 1 },
@@ -375,20 +395,17 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         'gaze',
         'Gaze preference / conjugate deviation present',
         2,
-        'Present if conjugate deviation, or the patient cannot shift gaze past midline.',
-      ),
+        'Present if conjugate deviation, or the patient cannot shift gaze past midline.', true),
       yesNo(
         'arm',
         'Arm weakness — cannot hold arm up against gravity for 10 s',
         1,
-        'Ask the patient to hold both arms up (or the weaker arm) against gravity for 10 seconds.',
-      ),
+        'Ask the patient to hold both arms up (or the weaker arm) against gravity for 10 seconds.', true),
       yesNo(
         'loc',
         'LOC: incorrect on ≥1 of 2 orientation questions AND fails ≥1 of 2 commands',
         1,
-        'Questions (NIHSS 1b): “What is your age?” and “What month is it?” Commands (NIHSS 1c): “Close your eyes.” then “Make a fist” / open and close your hand. Score Yes only if orientation is abnormal (1b ≥1) AND commands are abnormal (1c ≥1). Do not score for questions or commands alone.',
-      ),
+        'Questions (NIHSS 1b): “What is your age?” and “What month is it?” Commands (NIHSS 1c): “Close your eyes.” then “Make a fist” / open and close your hand. Score Yes only if orientation is abnormal (1b ≥1) AND commands are abnormal (1c ≥1). Do not score for questions or commands alone.', false),
     ],
     calculate(values) {
       const score = (bool(values.gaze) ? 2 : 0) + (bool(values.arm) ? 1 : 0) + (bool(values.loc) ? 1 : 0);
@@ -566,7 +583,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '<70 years (2)', value: 2 },
         { label: '70–79 years (1)', value: 1 },
         { label: '≥80 years (0)', value: 0 },
-      ]),
+      ], 2, 'Age band: under 70 scores 2, 70–79 scores 1, and 80 or older scores 0 FUNC points (older age predicts worse functional outcome).'),
       selectInput('gcs', 'GCS', [
         { label: 'GCS ≥9 (2)', value: 2, description: 'Best eye + verbal + motor total ≥9' },
         { label: 'GCS ≤8 (0)', value: 0, description: 'Best eye + verbal + motor total ≤8' },
@@ -578,7 +595,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
           { label: 'Lobar (2)', value: 2, description: 'Cortex / lobar white matter (not deep nuclei or cerebellum/brainstem)' },
           { label: 'Deep (1)', value: 1, description: 'Basal ganglia, thalamus, or internal capsule' },
           { label: 'Infratentorial (0)', value: 0, description: 'Brainstem or cerebellum' },
-        ],
+        ], 2, 'ICH location: lobar 2, deep 1, infratentorial 0 points. FUNC estimates 90-day functional independence, not mortality.',
       ),
       selectInput('volume', 'ICH volume', [
         { label: '<30 mL (4)', value: 4 },
@@ -674,29 +691,26 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Spontaneous ICH with CTA performed or planned when assessing risk of hematoma expansion.',
     whyUse: 'Structures recognition of spot sign and companion clinical risk factors linked to growth and poor outcome.',
     inputs: [
-      yesNo('ctaDone', 'CTA available for review', 0),
+      yesNo('ctaDone', 'CTA available for review', 0, 'Yes when a CTA is available to review. The spot sign cannot be assessed without contrast imaging, so a No here means the expansion-risk estimate rests on clinical features alone.', true),
       yesNo(
         'spotSign',
         'Spot sign present (≥1 focus of contrast within hematoma, discontinuous from vessels)',
         2,
-        'Arterial-phase CTA: ≥1 focus of contrast pooling in the hematoma, discontinuous from vessels, attenuation ≥120 HU (or ≥2× hematoma), any size/morphology; exclude calcium on NCCT.',
-      ),
-      yesNo('multipleSpots', 'Multiple spot signs or large/serpiginous spot'),
-      yesNo('earlyPresentation', 'Presentation within 6 hours of onset'),
+        'Arterial-phase CTA: ≥1 focus of contrast pooling in the hematoma, discontinuous from vessels, attenuation ≥120 HU (or ≥2× hematoma), any size/morphology; exclude calcium on NCCT.', true),
+      yesNo('multipleSpots', 'Multiple spot signs or large/serpiginous spot', undefined, 'Multiple spot signs, or a large or serpiginous spot, add 1 point and carry the highest expansion risk.', false),
+      yesNo('earlyPresentation', 'Presentation within 6 hours of onset', undefined, 'Presentation within 6 hours of onset adds 1 point; hematoma expansion is most likely in the first hours after ictus.', true),
       yesNo(
         'anticoag',
         'Anticoagulation or coagulopathy',
         1,
-        'Warfarin / DOAC / heparin, or INR >1.4 or platelets <100 ×10⁹/L (local reversal thresholds supersede).',
-      ),
-      yesNo('largeVolume', 'Baseline hematoma volume ≥30 mL', 1, 'ABC/2 or volumetric estimate ≥30 mL.'),
-      yesNo('ivh', 'Intraventricular extension', 1, 'Any blood in the ventricular system on CT.'),
+        'Warfarin / DOAC / heparin, or INR >1.4 or platelets <100 ×10⁹/L (local reversal thresholds supersede).', true),
+      yesNo('largeVolume', 'Baseline hematoma volume ≥30 mL', 1, 'ABC/2 or volumetric estimate ≥30 mL.', true),
+      yesNo('ivh', 'Intraventricular extension', 1, 'Any blood in the ventricular system on CT.', false),
       yesNo(
         'bpUncontrolled',
         'SBP still markedly elevated / hard to control',
         1,
-        'e.g. SBP still ≥150–180 mmHg, or not at local ICH target (often SBP <140).',
-      ),
+        'e.g. SBP still ≥150–180 mmHg, or not at local ICH target (often SBP <140).', false),
     ],
     calculate(values) {
       const cta = bool(values.ctaDone);
@@ -802,7 +816,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         exampleValue: 15,
         helpText: 'Best eye + verbal + motor (3–15). Re-grade after resuscitation/EVD — hydrocephalus can lower GCS reversibly.',
       }),
-      yesNo('motorDeficit', 'Major focal motor deficit present (hemiparesis/hemiplegia)', 0, 'Limb hemiparesis or hemiplegia. Isolated cranial-nerve palsy (e.g. III, VI, VII) does not count as a major focal motor deficit for WFNS.'),
+      yesNo('motorDeficit', 'Major focal motor deficit present (hemiparesis/hemiplegia)', 0, 'Limb hemiparesis or hemiplegia. Isolated cranial-nerve palsy (e.g. III, VI, VII) does not count as a major focal motor deficit for WFNS.', false),
     ],
     calculate(values) {
       const gcs = num(values.gcs, 15);
@@ -924,8 +938,8 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         -1,
         'Thick = cisternal blood completely filling ≥1 cistern or vertical layer ≥1 mm; thin = all blood <1 mm. IVH = any intraventricular blood.',
       ),
-      yesNo('secured', 'Aneurysm secured (clipped/coiled)', 0),
-      yesNo('nimodipine', 'Nimodipine ongoing', 0),
+      yesNo('secured', 'Aneurysm secured (clipped/coiled)', 0, 'Yes when the aneurysm has been clipped or coiled; an unsecured aneurysm shifts the early risk toward rebleeding rather than delayed cerebral ischemia.', true),
+      yesNo('nimodipine', 'Nimodipine ongoing', 0, 'Yes when nimodipine is running; it is the standard prophylaxis, and its absence during the DCI window is a care gap worth flagging.', true),
     ],
     calculate(values) {
       const day = num(values.day, 5);
@@ -1026,9 +1040,9 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         exampleValue: 15,
         helpText: 'Eye (1–4) + verbal (1–5) + motor (1–6). Use T/P modifiers if intubated/paralyzed; score best responses.',
       }),
-      yesNo('intubated', 'Intubated / chemically paralyzed (GCS limited)', 0, 'Cannot score a full verbal GCS — report T/P modifiers; this tool flags GCS as confounded if still >8.'),
-      yesNo('postTraumaticAmnesia', 'Post-traumatic amnesia present', 0, 'Inability to form new memories after the injury. PTA >24 h suggests more than mild TBI.'),
-      yesNo('loc', 'Loss of consciousness reported', 0, 'Any witnessed or reported LOC after the injury. Duration >30 min suggests more than mild TBI.'),
+      yesNo('intubated', 'Intubated / chemically paralyzed (GCS limited)', 0, 'Cannot score a full verbal GCS — report T/P modifiers; this tool flags GCS as confounded if still >8.', false),
+      yesNo('postTraumaticAmnesia', 'Post-traumatic amnesia present', 0, 'Inability to form new memories after the injury. PTA >24 h suggests more than mild TBI.', false),
+      yesNo('loc', 'Loss of consciousness reported', 0, 'Any witnessed or reported LOC after the injury. Duration >30 min suggests more than mild TBI.', true),
     ],
     calculate(values) {
       const gcs = num(values.gcs, 15);
@@ -1134,18 +1148,18 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       selectInput('entryMode', 'Entry mode', [
         { label: 'Complete 22-item symptom checklist', value: 'survey' },
         { label: 'Direct totals override', value: 'direct' },
-      ]),
+      ], 'survey', 'Questionnaire mode sums the 22 symptom ratings (0–6 each) into a severity score (0–132); direct mode accepts an existing total. Symptom count and severity are reported separately.'),
       numberInput('numSymptoms', 'Number of symptoms endorsed (0–22, direct mode)', {
         min: 0,
         max: 22,
         exampleValue: 0,
-        helpText: 'Used only if direct override is selected.',
+        helpText: 'Direct-entry mode only: count how many of the 22 symptoms were rated above zero. Leave blank when the checklist mode is used — the count is derived automatically.',
       }),
       numberInput('severity', 'Symptom severity sum (0–132, direct mode)', {
         min: 0,
         max: 132,
         exampleValue: 0,
-        helpText: 'Used only if direct override is selected.',
+        helpText: 'Direct-entry mode only: the sum of the 22 symptom ratings, each 0–6 (maximum 132). Leave blank when the checklist mode is used.',
       }),
       selectInput('headache', 'Headache', [
         { label: '0 — None', value: 0 },
@@ -1155,7 +1169,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 2, 'Rate the worst headache in the last 24 hours from 0 (none) to 6 (very severe); the athlete/patient should answer for themselves where possible.'),
       selectInput('pressure_head', 'Pressure in head', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1164,7 +1178,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 1, 'Pressure in the head, 0–6. Ask about the symptom as it is today rather than at the moment of injury.'),
       selectInput('neck_pain', 'Neck pain', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1173,7 +1187,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 1, 'Neck pain or tenderness, 0–6; severe neck pain also warrants cervical spine assessment before return to play decisions.'),
       selectInput('nausea_vomiting', 'Nausea or vomiting', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1182,7 +1196,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 1, 'Nausea or vomiting, 0–6; persistent vomiting suggests a more significant injury and warrants medical evaluation.'),
       selectInput('dizziness', 'Dizziness', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1191,7 +1205,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 2, 'Dizziness, 0–6. Balance and vestibular findings belong with the balance examination, but rate the symptom here.'),
       selectInput('blurred_vision', 'Blurred vision', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1200,7 +1214,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 0, 'Blurred vision, 0–6; any visual field or acuity change warrants a more thorough examination.'),
       selectInput('balance_problems', 'Balance problems', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1209,7 +1223,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 2, 'Balance problems, 0–6 — rate the subjective symptom, separately from any tandem-gait testing.'),
       selectInput('sensitivity_light', 'Sensitivity to light', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1218,7 +1232,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 1, 'Sensitivity to light, 0–6.'),
       selectInput('sensitivity_noise', 'Sensitivity to noise', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1227,7 +1241,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 1, 'Sensitivity to noise, 0–6.'),
       selectInput('feeling_slowed', 'Feeling slowed down', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1236,7 +1250,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 1, 'Feeling slowed down, 0–6.'),
       selectInput('feeling_fog', 'Feeling like in a fog', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1245,7 +1259,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 1, 'Feeling like you are in a fog, 0–6.'),
       selectInput('dont_feel_right', 'Don\'t feel right', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1254,7 +1268,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 1, 'Just not feeling right, 0–6 — a common residual symptom even when other scores improve.'),
       selectInput('diff_concentrating', 'Difficulty concentrating', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1263,7 +1277,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 1, 'Difficulty concentrating, 0–6.'),
       selectInput('diff_remembering', 'Difficulty remembering', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1272,7 +1286,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 1, 'Difficulty remembering, 0–6; correlate with the cognitive screening portion of the SCAT.'),
       selectInput('fatigue_low_energy', 'Fatigue or low energy', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1281,7 +1295,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 2, 'Fatigue or low energy, 0–6.'),
       selectInput('confusion', 'Confusion', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1290,7 +1304,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 0, 'Confusion, 0–6; any current confusion is a red flag for return to play.'),
       selectInput('drowsiness', 'Drowsiness', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1299,7 +1313,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 1, 'Drowsiness, 0–6; increasing drowsiness warrants urgent reassessment.'),
       selectInput('more_emotional', 'More emotional', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1308,7 +1322,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 1, 'Feeling more emotional, 0–6.'),
       selectInput('irritability', 'Irritability', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1317,7 +1331,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 1, 'Irritability, 0–6.'),
       selectInput('sadness', 'Sadness', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1326,7 +1340,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 0, 'Sadness, 0–6; screen for mood disorder if it persists past the expected recovery window.'),
       selectInput('nervous_anxious', 'Nervous or anxious', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1335,7 +1349,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 1, 'Nervousness or anxiety, 0–6.'),
       selectInput('trouble_falling_asleep', 'Trouble falling asleep', [
         { label: '0 — None', value: 0 },
         { label: '1 — Very mild', value: 1 },
@@ -1344,7 +1358,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderate-severe', value: 4 },
         { label: '5 — Severe', value: 5 },
         { label: '6 — Very severe', value: 6 },
-      ]),
+      ], 1, 'Trouble falling asleep, 0–6; sleep disturbance prolongs concussion recovery and is a treatment target.'),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');
@@ -1491,11 +1505,11 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
             value: 6,
             description: 'Competition if stage 5 was asymptomatic',
           },
-        ],
+        ], 4, 'Pick the last completed or the next proposed stage. Each step needs at least 24 hours and symptom-free progression; any symptom recurrence means stepping back one stage.',
       ),
-      yesNo('symptomFreeRest', 'Asymptomatic at current stage (24 h minimum typically)', 0, 'No return of concussion symptoms at this stage for at least 24 h (longer in children/adolescents).'),
-      yesNo('returnToLearn', 'Return-to-learn successful / school tolerance adequate', 0, 'Usual school/work cognitive load tolerated without significant symptom provocation.'),
-      yesNo('medicalClearance', 'Medical clearance documented for contact stages', 0),
+      yesNo('symptomFreeRest', 'Asymptomatic at current stage (24 h minimum typically)', 0, 'No return of concussion symptoms at this stage for at least 24 h (longer in children/adolescents).', true),
+      yesNo('returnToLearn', 'Return-to-learn successful / school tolerance adequate', 0, 'Usual school/work cognitive load tolerated without significant symptom provocation.', true),
+      yesNo('medicalClearance', 'Medical clearance documented for contact stages', 0, 'Yes when clearance has been documented; Stages 5 and 6 (contact practice and return to competition) require medical clearance before progression.', false),
     ],
     calculate(values) {
       const stage = num(values.stage, 1);
@@ -1726,26 +1740,22 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         'f1',
         'Feature 1 — Altered mental status OR fluctuating course',
         1,
-        'Acute change from baseline mental status, or fluctuating course over the past 24 hours (nurse, family, or chart).',
-      ),
+        'Acute change from baseline mental status, or fluctuating course over the past 24 hours (nurse, family, or chart).', true),
       yesNo(
         'f2',
         'Feature 2 — Inattention (e.g., ≥2 months-backwards errors / digit span errors)',
         1,
-        'Say: “Name the months backwards from December to July.” Inattention = ≥2 months-backwards errors, a pause >15 s or perseveration, or cannot start.',
-      ),
+        'Say: “Name the months backwards from December to July.” Inattention = ≥2 months-backwards errors, a pause >15 s or perseveration, or cannot start.', true),
       yesNo(
         'f3',
         'Feature 3 — Altered level of consciousness (RASS ≠ 0 or not alert)',
         1,
-        'Any RASS other than 0 (not alert and calm). If unarousable (RASS −4/−5), do not diagnose delirium this round — reassess when arousable.',
-      ),
+        'Any RASS other than 0 (not alert and calm). If unarousable (RASS −4/−5), do not diagnose delirium this round — reassess when arousable.', false),
       yesNo(
         'f4',
         'Feature 4 — Disorganized thinking (illogical answers / unclear flow)',
         1,
-        'Set A yes/no: Will a stone float on water? Are there fish in the sea? Does 1 lb weigh more than 2 lb? Can you use a hammer to pound a nail? Then: “Hold up this many fingers” (show 2); “Now the same with the other hand” (do not demonstrate). Disorganized = ≥2 errors.',
-      ),
+        'Set A yes/no: Will a stone float on water? Are there fish in the sea? Does 1 lb weigh more than 2 lb? Can you use a hammer to pound a nail? Then: “Hold up this many fingers” (show 2); “Now the same with the other hand” (do not demonstrate). Disorganized = ≥2 errors.', true),
     ],
     calculate(values) {
       const f1 = bool(values.f1);
@@ -1935,7 +1945,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       selectInput('entryMode', 'Entry mode', [
         { label: 'Complete 16-item Short IQCODE questionnaire', value: 'survey' },
         { label: 'Direct average score override', value: 'direct' },
-      ]),
+      ], 'survey', 'Questionnaire mode averages the 16 short-form items (1–5); direct mode accepts an existing average. An average at or below 3.0 means no significant decline by informant report.'),
       numberInput('average', 'IQCODE average score (1.0–5.0, direct mode)', {
         min: 1,
         max: 5,
@@ -1947,9 +1957,9 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: 'Short IQCODE (16 items)', value: 'short' },
         { label: 'Full IQCODE (26 items)', value: 'full' },
         { label: 'Not specified', value: 'na' },
-      ]),
+      ], undefined, 'Short (16-item) or full (26-item) IQCODE — used only to label a direct-override score, since the two forms give comparable averages.'),
       ...iqcodeShortItems.map((label, i) =>
-        selectInput(`iq${i + 1}`, `${i + 1}. ${label}`, [...iqcodeLikert], 3),
+        selectInput(`iq${i + 1}`, `${i + 1}. ${label}`, [...iqcodeLikert], 3, iqcodeShortHelp[i]),
       ),
     ],
     calculate(values) {
@@ -2056,50 +2066,42 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         'q1',
         'Problems with judgment (e.g., bad financial decisions, odd gifts)',
         1,
-        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.',
-      ),
+        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.', true),
       yesNo(
         'q2',
         'Reduced interest in hobbies/activities',
         1,
-        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.',
-      ),
+        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.', true),
       yesNo(
         'q3',
         'Repeats questions, stories, or statements',
         1,
-        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.',
-      ),
+        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.', true),
       yesNo(
         'q4',
         'Trouble learning how to use a tool, appliance, or gadget (e.g. TV remote, microwave)',
         1,
-        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.',
-      ),
+        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.', false),
       yesNo(
         'q5',
         'Forgets correct month or year',
         1,
-        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.',
-      ),
+        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.', false),
       yesNo(
         'q6',
         'Difficulty handling complicated financial affairs (bills, taxes, checkbook)',
         1,
-        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.',
-      ),
+        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.', true),
       yesNo(
         'q7',
         'Difficulty remembering appointments',
         1,
-        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.',
-      ),
+        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.', true),
       yesNo(
         'q8',
         'Consistent problems with thinking and/or memory',
         1,
-        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.',
-      ),
+        'Has there been a CHANGE in the last several years caused by thinking/memory problems? Yes = change; No = no change. Prefer an informant.', false),
     ],
     calculate(values) {
       const keys = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
@@ -2285,108 +2287,108 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       selectInput('entryMode', 'Entry mode', [
         { label: 'Complete 19-item clinician rating', value: 'survey' },
         { label: 'Direct score override', value: 'direct' },
-      ]),
+      ], 'survey', 'Clinician rating mode sums the 19 items (0–38); direct mode accepts an existing CSDD total. Scores depend on both a caregiver interview and direct observation.'),
       numberInput('score', 'Cornell total score (0–38, direct mode)', {
         min: 0,
         max: 38,
         exampleValue: 6,
-        helpText: 'Used only if direct override is selected.',
+        helpText: 'Direct-entry mode only: enter an existing CSDD total (0–38). Ignored when the 19-item clinician rating is scored instead.',
       }),
       selectInput('csdd_anxiety', '1. Anxiety (anxious expression, rumination, worrying)', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 1, 'Anxiety — anxious expression, rumination, worrying: 0 absent, 1 mild or intermittent, 2 severe.'),
       selectInput('csdd_sadness', '2. Sadness (sad expression, sad voice, tearfulness)', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 2, 'Sadness — sad expression, sad voice, tearfulness: 0–2.'),
       selectInput('csdd_reactivity', '3. Lack of reactivity to pleasant events', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 1, 'Lack of reactivity to pleasant events: 0–2.'),
       selectInput('csdd_irritability', '4. Irritability (short-tempered, easily annoyed)', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 1, 'Irritability — short-tempered, easily annoyed: 0–2.'),
       selectInput('csdd_agitation', '5. Agitation (restlessness, hand-wringing, pacing)', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 0, 'Agitation — restlessness, hand-wringing, pacing: 0–2.'),
       selectInput('csdd_retardation', '6. Retardation (slow movement, slow speech, slow reactions)', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 0, 'Retardation — slow movement, slow speech, slow reactions: 0–2. Distinguish from parkinsonism before scoring it as mood-related.'),
       selectInput('csdd_somatic', '7. Multiple physical complaints (score 0 if GI only)', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 0, 'Multiple physical complaints: 0–2, but score 0 when the complaints are gastrointestinal only.'),
       selectInput('csdd_loss_interest', '8. Loss of interest (less involved in usual activities)', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 1, 'Loss of interest — less involved in usual activities: 0–2; corroborate with the caregiver.'),
       selectInput('csdd_appetite', '9. Appetite loss (eating less than usual)', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 1, 'Appetite loss — eating less than usual: 0–2.'),
       selectInput('csdd_weight', '10. Weight loss (severe = >5 lbs in past month)', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 0, 'Weight loss: 0–2, with 2 reserved for severe loss (more than 5 lb in the past month).'),
       selectInput('csdd_energy', '11. Lack of energy (fatigues easily, unable to sustain activity)', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 1, 'Lack of energy — fatigues easily, cannot sustain activity: 0–2.'),
       selectInput('csdd_diurnal', '12. Diurnal variation of mood (symptoms worse in morning)', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 0, 'Diurnal mood variation, worse in the morning: 0–2.'),
       selectInput('csdd_initial_insomnia', '13. Difficulty falling asleep (later than usual)', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 0, 'Difficulty falling asleep later than usual: 0–2.'),
       selectInput('csdd_middle_insomnia', '14. Multiple nocturnal awakenings', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 0, 'Multiple nocturnal awakenings: 0–2.'),
       selectInput('csdd_early_awakening', '15. Early morning awakening (earlier than usual)', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 0, 'Early morning awakening earlier than usual: 0–2.'),
       selectInput('csdd_suicide', '16. Suicide (feels life not worth living, wishes to die, gestures)', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 0, 'Suicidal thinking — feels life is not worth living, wishes to die, or makes gestures: 0–2. Any score above 0 requires an immediate safety assessment.'),
       selectInput('csdd_self_esteem', '17. Poor self-esteem (self-blame, self-depreciation, guilt)', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 0, 'Poor self-esteem — self-blame, self-depreciation, guilt: 0–2.'),
       selectInput('csdd_pessimism', '18. Pessimism (anticipation of the worst)', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 0, 'Pessimism — anticipating the worst: 0–2.'),
       selectInput('csdd_delusions', '19. Mood-congruent delusions (poverty, illness, guilt)', [
         { label: '0 — Absent', value: 0 },
         { label: '1 — Mild or intermittent', value: 1 },
         { label: '2 — Severe', value: 2 },
-      ]),
+      ], 0, 'Mood-congruent delusions (poverty, illness, guilt): 0–2.'),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');
@@ -2509,11 +2511,11 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       selectInput('entryMode', 'Entry mode', [
         { label: 'Complete 12-item ZBI Short Form questionnaire', value: 'survey' },
         { label: 'Direct total score override', value: 'direct' },
-      ]),
+      ], 'survey', 'Questionnaire mode sums the 12 short-form items (0–48); direct mode accepts an existing total. The ZBI-12 threshold of 17 or more indicates high burden.'),
       selectInput('form', 'Form (if direct override)', [
         { label: 'ZBI-12 short (0–48)', value: 'z12' },
         { label: 'ZBI-22 classic (0–88)', value: 'z22' },
-      ]),
+      ], undefined, 'ZBI-12 short (0–48) or ZBI-22 classic (0–88) — used only to label a direct-override total, since the bands differ.'),
       numberInput('score', 'Total score (direct mode)', {
         min: 0,
         max: 88,
@@ -2526,84 +2528,84 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
-      ], 1),
+      ], 1, 'Not enough time for yourself because of the time spent caring: 0 never to 4 nearly always.'),
       selectInput('z2', 'ZBI-22 item 3 (ZBI-12 item 2). Do you feel stressed between caring for your relative and trying to meet other responsibilities for your family or work?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
-      ], 1),
+      ], 1, 'Stressed between caring and other family or work responsibilities: 0–4.'),
       selectInput('z3', 'ZBI-22 item 5 (ZBI-12 item 3). Do you feel angry when you are around your relative?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
-      ], 1),
+      ], 1, 'Angry when around the relative: 0–4.'),
       selectInput('z4', 'ZBI-22 item 6 (ZBI-12 item 4). Do you feel that your relative currently affects your relationship with other family members or friends in a negative way?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
-      ], 1),
+      ], 1, 'The relative negatively affects relationships with other family or friends: 0–4.'),
       selectInput('z5', 'ZBI-22 item 9 (ZBI-12 item 5). Do you feel strained when you are around your relative?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
-      ], 1),
+      ], 1, 'Strained when around the relative: 0–4.'),
       selectInput('z6', 'ZBI-22 item 10 (ZBI-12 item 6). Do you feel that your health has suffered because of your involvement with your relative?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
-      ], 1),
+      ], 1, 'Health has suffered because of involvement with the relative: 0–4.'),
       selectInput('z7', 'ZBI-22 item 11 (ZBI-12 item 7). Do you feel that you don’t have as much privacy as you would like because of your relative?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
-      ], 1),
+      ], 1, 'Not as much privacy as wanted because of the relative: 0–4.'),
       selectInput('z8', 'ZBI-22 item 12 (ZBI-12 item 8). Do you feel that your social life has suffered because you are caring for your relative?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
-      ], 1),
+      ], 1, 'Social life has suffered because of caregiving: 0–4.'),
       selectInput('z9', 'ZBI-22 item 17 (ZBI-12 item 9). Do you feel you have lost control of your life since your relative’s illness?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
-      ], 1),
+      ], 1, 'Feeling of having lost control of life since the relative\'s illness: 0–4.'),
       selectInput('z10', 'ZBI-22 item 19 (ZBI-12 item 10). Do you feel uncertain about what to do about your relative?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
-      ], 0),
+      ], 0, 'Feeling uncertain about what to do about the relative: 0–4.'),
       selectInput('z11', 'ZBI-22 item 20 (ZBI-12 item 11). Do you feel you should be doing more for your relative?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
-      ], 1),
+      ], 1, 'Feeling you should be doing more for the relative: 0–4.'),
       selectInput('z12', 'ZBI-22 item 21 (ZBI-12 item 12). Do you feel you could do a better job in caring for your relative?', [
         { label: '0 — Never', value: 0 },
         { label: '1 — Rarely', value: 1 },
         { label: '2 — Sometimes', value: 2 },
         { label: '3 — Quite frequently', value: 3 },
         { label: '4 — Nearly always', value: 4 },
-      ], 1),
+      ], 1, 'Feeling you could do a better job caring for the relative: 0–4.'),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');
@@ -2764,7 +2766,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       selectInput('entryMode', 'Entry mode', [
         { label: 'Complete 19-item PSQI (7 components)', value: 'survey' },
         { label: 'Direct global score override', value: 'direct' },
-      ], 'survey'),
+      ], 'survey', 'Questionnaire mode computes the 7 component scores from the 19 self-rated items (global 0–21); direct mode accepts an existing global score. A global score above 5 indicates poor sleep quality.'),
       numberInput('global', 'PSQI global score (0–21, direct mode)', {
         min: 0,
         max: 21,
@@ -2777,6 +2779,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       }),
       numberInput('q1BedMin', 'Q1: Usual bedtime (minutes)', {
         min: 0, max: 59, step: 1, exampleValue: 30,
+        helpText: 'Minutes past the hour of usual bedtime (0–59); the tool combines this with the hour field to compute time in bed and sleep efficiency.',
       }),
       numberInput('q2LatencyMin', 'Q2: Minutes to fall asleep', {
         unit: 'min', min: 0, max: 240, step: 1, exampleValue: 15,
@@ -2788,20 +2791,21 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       }),
       numberInput('q3WakeMin', 'Q3: Usual get-up time (minutes)', {
         min: 0, max: 59, step: 1, exampleValue: 30,
+        helpText: 'Minutes past the hour of usual get-up time (0–59); paired with the sleep-onset and wake-time fields for sleep duration.',
       }),
       numberInput('q4HoursSlept', 'Q4: Hours of actual sleep per night', {
         unit: 'hours', min: 0, max: 16, step: 0.25, exampleValue: 7,
         helpText: 'Hours actually slept, not hours in bed. >7 = C3 0; 6–7 = 1; 5–6 = 2; <5 = 3.',
       }),
-      selectInput('q5a', 'Q5a: Cannot get to sleep within 30 minutes', psqiFreqOptions, 0),
-      selectInput('q5b', 'Q5b: Wake up in the middle of the night or early morning', psqiFreqOptions, 0),
-      selectInput('q5c', 'Q5c: Have to get up to use the bathroom', psqiFreqOptions, 0),
-      selectInput('q5d', 'Q5d: Cannot breathe comfortably', psqiFreqOptions, 0),
-      selectInput('q5e', 'Q5e: Cough or snore loudly', psqiFreqOptions, 0),
-      selectInput('q5f', 'Q5f: Feel too cold', psqiFreqOptions, 0),
-      selectInput('q5g', 'Q5g: Feel too hot', psqiFreqOptions, 0),
-      selectInput('q5h', 'Q5h: Had bad dreams', psqiFreqOptions, 0),
-      selectInput('q5i', 'Q5i: Have pain', psqiFreqOptions, 0),
+      selectInput('q5a', 'Q5a: Cannot get to sleep within 30 minutes', psqiFreqOptions, 0, 'Cannot get to sleep within 30 minutes: 0 not in the past month, 1 less than weekly, 2 once or twice a week, 3 three or more times a week.'),
+      selectInput('q5b', 'Q5b: Wake up in the middle of the night or early morning', psqiFreqOptions, 0, 'Waking in the middle of the night or early morning: 0–3 by weekly frequency over the past month.'),
+      selectInput('q5c', 'Q5c: Have to get up to use the bathroom', psqiFreqOptions, 0, 'Having to get up to use the bathroom: 0–3. Frequent nocturia is a common secondary cause of poor sleep quality.'),
+      selectInput('q5d', 'Q5d: Cannot breathe comfortably', psqiFreqOptions, 0, 'Cannot breathe comfortably: 0–3; a frequent answer should prompt evaluation for sleep-disordered breathing.'),
+      selectInput('q5e', 'Q5e: Cough or snore loudly', psqiFreqOptions, 0, 'Coughing or snoring loudly: 0–3; this is the PSQI\'s only snoring item, and it is not a substitute for an OSA screen.'),
+      selectInput('q5f', 'Q5f: Feel too cold', psqiFreqOptions, 0, 'Feeling too cold: 0–3.'),
+      selectInput('q5g', 'Q5g: Feel too hot', psqiFreqOptions, 0, 'Feeling too hot: 0–3.'),
+      selectInput('q5h', 'Q5h: Had bad dreams', psqiFreqOptions, 0, 'Having bad dreams: 0–3.'),
+      selectInput('q5i', 'Q5i: Have pain', psqiFreqOptions, 0, 'Having pain: 0–3; frequent pain-related awakenings warrant a pain assessment alongside the sleep plan.'),
       selectInput('q5j', 'Q5j: Other reason(s) for trouble sleeping', psqiFreqOptions, 0, 'If no other reason, choose 0. Frequency of the other reason only; the 5 bed-partner items are not scored.'),
       selectInput('q6Quality', 'Q6: Overall sleep quality', [
         { label: '0 — Very good', value: 0 },
@@ -2810,7 +2814,7 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         { label: '3 — Very bad', value: 3 },
       ], 0, 'Component 1 is this item.'),
       selectInput('q7Meds', 'Q7: Taken medicine to help you sleep (prescribed or over the counter)', psqiFreqOptions, 0, 'Component 6 is this item.'),
-      selectInput('q8StayAwake', 'Q8: Trouble staying awake while driving, eating, or socializing', psqiFreqOptions, 0),
+      selectInput('q8StayAwake', 'Q8: Trouble staying awake while driving, eating, or socializing', psqiFreqOptions, 0, 'Trouble staying awake while driving, eating, or socializing: 0 not in the past month to 3 three or more times a week. Any sleepiness while driving needs counseling regardless of the total score.'),
       selectInput('q9Enthusiasm', 'Q9: Problem keeping up enough enthusiasm to get things done', [
         { label: '0 — No problem at all', value: 0 },
         { label: '1 — Only a very slight problem', value: 1 },
@@ -2972,23 +2976,23 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
       selectInput('entryMode', 'Entry mode', [
         { label: 'Complete 10-item IRLSSG questionnaire', value: 'survey' },
         { label: 'Direct total score override', value: 'direct' },
-      ]),
+      ], 'survey', 'Questionnaire mode sums the 10 IRLS items (0–40); direct mode accepts an existing total. Scores are only interpretable after the diagnosis of RLS has been clinically confirmed.'),
       numberInput('score', 'IRLS total (0–40, direct mode)', {
         min: 0,
         max: 40,
         exampleValue: 15,
-        helpText: 'Used only if direct override is selected.',
+        helpText: 'Direct-entry mode only: enter an existing IRLS total (0–40). Ignored when the 10-item questionnaire is scored instead.',
       }),
-      selectInput('irls1', '1. Overall discomfort in legs/arms due to RLS', irlsSeverityOptions, 1),
-      selectInput('irls2', '2. Need to move arms/legs because of RLS', irlsSeverityOptions, 1),
-      selectInput('irls3', '3. Relief of arm/leg discomfort from moving around (reverse-scored anchors)', irlsReliefOptions, 1),
-      selectInput('irls4', '4. Sleep disturbance due to RLS symptoms', irlsSeverityOptions, 1),
-      selectInput('irls5', '5. Daytime tiredness or sleepiness due to RLS', irlsSeverityOptions, 1),
-      selectInput('irls6', '6. Overall severity of RLS over the past week', irlsSeverityOptions, 1),
-      selectInput('irls7', '7. How often did RLS symptoms occur?', irlsFrequencyOptions, 1),
-      selectInput('irls8', '8. Average duration of RLS symptoms on typical day', irlsDurationOptions, 1),
-      selectInput('irls9', '9. Impact on daily activities (family, work, social)', irlsSeverityOptions, 1),
-      selectInput('irls10', '10. Mood disturbance from RLS (depressed, irritable, anxious)', irlsSeverityOptions, 1),
+      selectInput('irls1', '1. Overall discomfort in legs/arms due to RLS', irlsSeverityOptions, 1, 'Overall discomfort in the legs or arms from RLS: 0 none, 1 mild, 2 moderate, 3 severe, 4 very severe.'),
+      selectInput('irls2', '2. Need to move arms/legs because of RLS', irlsSeverityOptions, 1, 'Urge to move the arms or legs because of RLS symptoms: 0–4.'),
+      selectInput('irls3', '3. Relief of arm/leg discomfort from moving around (reverse-scored anchors)', irlsReliefOptions, 1, 'Relief from moving around, reverse scored: 4 no relief, 3 slight, 2 moderate, 1 complete relief, 0 when the question does not apply because there are no symptoms.'),
+      selectInput('irls4', '4. Sleep disturbance due to RLS symptoms', irlsSeverityOptions, 1, 'Sleep disturbance due to RLS symptoms: 0–4.'),
+      selectInput('irls5', '5. Daytime tiredness or sleepiness due to RLS', irlsSeverityOptions, 1, 'Daytime tiredness or sleepiness due to RLS: 0–4. This item drives much of the functional impact.'),
+      selectInput('irls6', '6. Overall severity of RLS over the past week', irlsSeverityOptions, 1, 'Overall severity of RLS over the past week: 0 none to 4 very severe.'),
+      selectInput('irls7', '7. How often did RLS symptoms occur?', irlsFrequencyOptions, 1, 'Frequency of RLS symptoms: 0 none, 1 one day a week or less, 2 two to three days, 3 four to five days, 4 six to seven days a week.'),
+      selectInput('irls8', '8. Average duration of RLS symptoms on typical day', irlsDurationOptions, 1, 'Average duration of symptoms on a typical day: 0 none, 1 under 1 hour, 2 one to three hours, 3 three to eight hours, 4 eight hours or more per 24 hours.'),
+      selectInput('irls9', '9. Impact on daily activities (family, work, social)', irlsSeverityOptions, 1, 'Impact on daily activities (family, work, social): 0–4.'),
+      selectInput('irls10', '10. Mood disturbance from RLS (depressed, irritable, anxious)', irlsSeverityOptions, 1, 'Mood disturbance from RLS (depressed, irritable, anxious): 0–4.'),
     ],
     calculate(values) {
       const mode = String(values.entryMode ?? 'survey');
@@ -3090,17 +3094,15 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         'trauma',
         'Lifetime trauma exposure criterion (required before scoring symptoms)',
         null,
-        'NCPTSD gate — Sometimes things happen that are unusually frightening, horrible, or traumatic (serious accident/fire, physical or sexual assault, disaster, war, seeing someone killed/seriously injured, or a loved one dying by homicide/suicide). Have you ever experienced this kind of event?',
-      ),
-      yesNo('q1', '1. In the past month: nightmares or unwanted thoughts of the event(s)', 1),
-      yesNo('q2', '2. In the past month: tried hard not to think about it or avoided situations that remind you', 1),
-      yesNo('q3', '3. In the past month: been constantly on guard, watchful, or easily startled', 1),
-      yesNo('q4', '4. In the past month: felt numb or detached from people, activities, or surroundings', 1),
+        'NCPTSD gate — Sometimes things happen that are unusually frightening, horrible, or traumatic (serious accident/fire, physical or sexual assault, disaster, war, seeing someone killed/seriously injured, or a loved one dying by homicide/suicide). Have you ever experienced this kind of event?', true),
+      yesNo('q1', '1. In the past month: nightmares or unwanted thoughts of the event(s)', 1, 'In the past month, nightmares or unwanted thoughts of the traumatic event(s). Score only after the trauma-exposure gate is endorsed.', true),
+      yesNo('q2', '2. In the past month: tried hard not to think about it or avoided situations that remind you', 1, 'In the past month, trying hard not to think about the event or avoiding reminders. This is the avoidance item.', true),
+      yesNo('q3', '3. In the past month: been constantly on guard, watchful, or easily startled', 1, 'In the past month, being constantly on guard, watchful, or easily startled. This is the hyperarousal item.', true),
+      yesNo('q4', '4. In the past month: felt numb or detached from people, activities, or surroundings', 1, 'In the past month, feeling numb or detached from people, activities, or surroundings.', false),
       yesNo(
         'q5',
         '5. In the past month: felt guilty or unable to stop blaming yourself or others for the event(s) or problems they caused',
-        1,
-      ),
+        1, 'In the past month, feeling guilty or unable to stop blaming yourself or others for the event or its consequences. Three or more positive items suggest PTSD and warrant formal assessment.', false),
     ],
     calculate(values) {
       const trauma = bool(values.trauma);
@@ -3192,9 +3194,9 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         exampleValue: 10,
         helpText: 'Enter the scored total from the official/institutional CIWA-B form (typically ~20 items, 0–80). Do not score items from this screen.',
       }),
-      yesNo('seizureHx', 'History of withdrawal seizures', 0),
-      yesNo('highDose', 'High-dose or prolonged benzodiazepine use', 0, 'High-dose often >40 mg diazepam-equivalent per day, or daily use for weeks–months (local protocol).'),
-      yesNo('concurrentAlcohol', 'Concurrent alcohol use disorder', 0),
+      yesNo('seizureHx', 'History of withdrawal seizures', 0, 'Yes for a history of withdrawal seizures: this raises the risk of complicated benzodiazepine withdrawal and mandates a monitored taper plan.', false),
+      yesNo('highDose', 'High-dose or prolonged benzodiazepine use', 0, 'High-dose often >40 mg diazepam-equivalent per day, or daily use for weeks–months (local protocol).', true),
+      yesNo('concurrentAlcohol', 'Concurrent alcohol use disorder', 0, 'Yes for concurrent alcohol use disorder; combined withdrawal is more severe and often needs different monitoring and treatment than benzodiazepine withdrawal alone.', false),
     ],
     calculate(values) {
       const score = num(values.score, 10);
@@ -3296,26 +3298,24 @@ export const wave4NeuroPsychCalcs: Calculator[] = [
         'f',
         'ORT is sex-specific. Family-history alcohol, illegal-drug, and preadolescent sexual-abuse weights differ by sex — see each item. Do not trust a generic +N chip on those items.',
       ),
-      yesNo('fhAlcohol', 'Family history: alcohol abuse (+1 F / +3 M)', null, 'Webster ORT: +1 if female, +3 if male.'),
-      yesNo('fhIllegal', 'Family history: illegal drug abuse (+2 F / +3 M)', null, 'Webster ORT: +2 if female, +3 if male.'),
-      yesNo('fhRx', 'Family history: prescription drug abuse', 4, '+4 points regardless of sex.'),
-      yesNo('phAlcohol', 'Personal history: alcohol abuse', 3, '+3 points regardless of sex.'),
-      yesNo('phIllegal', 'Personal history: illegal drug abuse', 4, '+4 points regardless of sex.'),
-      yesNo('phRx', 'Personal history: prescription drug abuse', 5, '+5 points regardless of sex.'),
-      yesNo('age', 'Age 16–45 years', 1, '+1 if current age is 16–45 years.'),
+      yesNo('fhAlcohol', 'Family history: alcohol abuse (+1 F / +3 M)', null, 'Webster ORT: +1 if female, +3 if male.', false),
+      yesNo('fhIllegal', 'Family history: illegal drug abuse (+2 F / +3 M)', null, 'Webster ORT: +2 if female, +3 if male.', false),
+      yesNo('fhRx', 'Family history: prescription drug abuse', 4, 'Webster ORT: +4 points when a family member abuses prescription drugs, whether the patient is female or male.', false),
+      yesNo('phAlcohol', 'Personal history: alcohol abuse', 3, '+3 points regardless of sex.', true),
+      yesNo('phIllegal', 'Personal history: illegal drug abuse', 4, 'Webster ORT: +4 points when the patient has used illegal drugs, whether the patient is female or male.', false),
+      yesNo('phRx', 'Personal history: prescription drug abuse', 5, '+5 points regardless of sex.', false),
+      yesNo('age', 'Age 16–45 years', 1, '+1 if current age is 16–45 years.', true),
       yesNo(
         'sexualAbuse',
         'History of preadolescent sexual abuse (+3 F / +0 M)',
         null,
-        'Webster ORT: +3 if female, +0 if male (still record the history).',
-      ),
+        'Webster ORT: +3 if female, +0 if male (still record the history).', false),
       yesNo(
         'psychAdd',
         'Psychiatric history: ADHD, OCD, bipolar, or schizophrenia',
         2,
-        '+2 if any of ADHD, OCD, bipolar disorder, or schizophrenia.',
-      ),
-      yesNo('psychDep', 'Psychiatric history: depression', 1, '+1 if depression history.'),
+        '+2 if any of ADHD, OCD, bipolar disorder, or schizophrenia.', false),
+      yesNo('psychDep', 'Psychiatric history: depression', 1, '+1 if depression history.', true),
     ],
     calculate(values) {
       const female = String(values.sex ?? 'f') === 'f';

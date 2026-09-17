@@ -953,10 +953,10 @@ export const wave7PreventionCalcs: Calculator[] = [
       selectInput('sex', 'Sex', SEX_MF, 'male', 'Sex selects the published SMART2 coefficient set; it is a model input, not a scored item.'),
       yesNo('smoker', 'Current smoker', null, 'Current tobacco smoking. Former smokers score as No.', false),
       yesNo('diabetes', 'Diabetes mellitus', null, 'Diabetes mellitus (type 1 or 2) at assessment; a published SMART2 predictor of recurrent events.', true),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, exampleValue: 130, helpText: 'Office systolic BP in mmHg, treated or untreated; the model centres SBP at 120 mmHg.' }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, exampleValue: 130, helpText: 'Office systolic BP in mmHg, treated or untreated; it enters the linear predictor as a continuous term, so higher values raise the modelled risk.' }),
       numberInput('nonhdl', 'Non-HDL cholesterol', { unit: 'mmol/L', unitKind: 'cholesterol', min: 1, max: 10, step: 0.1, exampleValue: 3.2, helpText: 'Total cholesterol − HDL. Enter the reported value and pick its unit (mmol/L or mg/dL) — the app converts.' }),
-      numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 15, max: 150, exampleValue: 80, helpText: 'eGFR in mL/min/1.73 m²; the SMART2 model applies a log-linear eGFR term, so low values raise residual risk.' }),
-      numberInput('yearsSince', 'Years since first CVD event', { unit: 'years', min: 0, max: 40, step: 0.5, exampleValue: 5, helpText: 'Years since the first vascular event (0 if the index event is current); longer follow-up lowers the annual hazard in the model.' }),
+      numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 15, max: 150, exampleValue: 80, helpText: 'eGFR in mL/min/1.73 m² (CKD-EPI); the model includes eGFR and its squared term, so low values raise the estimated residual risk.' }),
+      numberInput('yearsSince', 'Years since first CVD event', { unit: 'years', min: 0, max: 40, step: 0.5, exampleValue: 5, helpText: 'Years since the first vascular event (0 if the index event is current); the interval is a model predictor, and a longer interval raises the estimated 10-year risk.' }),
       selectInput('location', 'Index / established vascular territory', [
         { label: 'Coronary artery disease', value: 'cad', description: 'Prior MI, angina, or coronary revascularization' },
         { label: 'Cerebrovascular disease (stroke/TIA)', value: 'cevd', description: 'Ischemic stroke or TIA' },
@@ -1140,7 +1140,7 @@ export const wave7PreventionCalcs: Calculator[] = [
         step: 0.1,
         exampleValue: 0,
         required: false,
-        helpText: 'UK small-area deprivation; 0 = average. Leave 0 if unknown / assumed 0 if unknown.',
+        helpText: 'UK small-area deprivation score for the practice postcode; 0 = average. Leave 0 if unknown — the model then assumes average deprivation.',
       }),
     ],
     calculate(values) {

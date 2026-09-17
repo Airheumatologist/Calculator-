@@ -13,9 +13,9 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'Shock, anemia, hypoxemia workups when quantifying blood O₂ carrying capacity.',
     whyUse: 'CaO₂ is the content term in DO₂ and O₂ extraction calculations.',
     inputs: [
-      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 3, max: 22, step: 0.1, exampleValue: 12 }),
-      numberInput('sao2', 'SaO₂ (or SpO₂)', { unit: '%', min: 40, max: 100, exampleValue: 98 }),
-      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 90 }),
+      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 3, max: 22, step: 0.1, exampleValue: 12, helpText: 'Hemoglobin in g/dL; each gram carries about 1.34 mL O₂, so anemia lowers CaO₂ almost linearly. Use the value drawn with the gas sample.' }),
+      numberInput('sao2', 'SaO₂ (or SpO₂)', { unit: '%', min: 40, max: 100, exampleValue: 98, helpText: 'Arterial oxygen saturation in % from a co-oximetry ABG; a pulse oximeter reading can substitute when the ABG saturation is unavailable.' }),
+      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 90, helpText: 'Arterial PaO₂ in mmHg from the same sample; its dissolved-oxygen contribution is small (0.003 × PaO₂) compared with the hemoglobin-bound fraction.' }),
     ],
     calculate(values) {
       const hb = num(values.hb, 12);
@@ -109,9 +109,9 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'When mixed venous (or sometimes central venous as surrogate) gases available for O₂ balance.',
     whyUse: 'Needed for AV O₂ difference, O₂ER, and Fick-based calculations.',
     inputs: [
-      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 3, max: 22, step: 0.1, exampleValue: 12 }),
-      numberInput('svo2', 'SvO₂ (mixed venous)', { unit: '%', min: 20, max: 100, exampleValue: 70 }),
-      numberInput('pvo2', 'PvO₂', { unit: 'mmHg', min: 10, max: 100, exampleValue: 40 }),
+      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 3, max: 22, step: 0.1, exampleValue: 12, helpText: 'Hemoglobin in g/dL from the same time as the mixed venous gas; a mismatch between arterial and venous Hb values distorts the AV difference.' }),
+      numberInput('svo2', 'SvO₂ (mixed venous)', { unit: '%', min: 20, max: 100, exampleValue: 70, helpText: 'Mixed venous oxygen saturation in % from a pulmonary artery catheter sample (a central venous value is a crude surrogate).' }),
+      numberInput('pvo2', 'PvO₂', { unit: 'mmHg', min: 10, max: 100, exampleValue: 40, helpText: 'Mixed venous PvO₂ in mmHg from the PA catheter gas; it contributes the small dissolved-oxygen term.' }),
     ],
     calculate(values) {
       const hb = num(values.hb, 12);
@@ -202,11 +202,11 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'Shock / high-risk ICU when arterial and mixed venous contents (or saturations with shared Hb) are known.',
     whyUse: 'Summarizes balance between O₂ delivery and consumption; rises when delivery falls or demand rises.',
     inputs: [
-      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 3, max: 22, step: 0.1, exampleValue: 12 }),
-      numberInput('sao2', 'SaO₂', { unit: '%', min: 40, max: 100, exampleValue: 98 }),
-      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 90 }),
-      numberInput('svo2', 'SvO₂', { unit: '%', min: 20, max: 100, exampleValue: 70 }),
-      numberInput('pvo2', 'PvO₂', { unit: 'mmHg', min: 10, max: 100, exampleValue: 40 }),
+      numberInput('hb', 'Hemoglobin', { unit: 'g/dL', min: 3, max: 22, step: 0.1, exampleValue: 12, helpText: 'Hemoglobin in g/dL used for both the arterial and venous content terms. Use one value so the extraction ratio reflects saturation differences, not Hb changes.' }),
+      numberInput('sao2', 'SaO₂', { unit: '%', min: 40, max: 100, exampleValue: 98, helpText: 'Arterial saturation in % from the ABG used for the arterial content term.' }),
+      numberInput('pao2', 'PaO₂', { unit: 'mmHg', min: 20, max: 600, exampleValue: 90, helpText: 'Arterial PaO₂ in mmHg; it adds only a small dissolved-oxygen term to CaO₂.' }),
+      numberInput('svo2', 'SvO₂', { unit: '%', min: 20, max: 100, exampleValue: 70, helpText: 'Mixed venous saturation in %; a falling SvO₂ is the main driver of a rising extraction ratio.' }),
+      numberInput('pvo2', 'PvO₂', { unit: 'mmHg', min: 10, max: 100, exampleValue: 40, helpText: 'Mixed venous PvO₂ in mmHg, paired with the SvO₂ from the same PA catheter sample.' }),
     ],
     calculate(values) {
       const hb = num(values.hb, 12);
@@ -309,9 +309,9 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'Ventilated patients (classically pediatric) when grading ventilatory support intensity.',
     whyUse: 'Integrates rate, peak airway pressure, and CO₂; higher VI = more intense support.',
     inputs: [
-      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 5, max: 80, exampleValue: 20 }),
-      numberInput('pip', 'Peak inspiratory pressure (PIP)', { unit: 'cm H₂O', min: 5, max: 60, exampleValue: 25 }),
-      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 15, max: 120, exampleValue: 45 }),
+      numberInput('rr', 'Respiratory rate', { unit: '/min', min: 5, max: 80, exampleValue: 20, helpText: 'Set respiratory rate per minute from the ventilator; VI = RR × PIP × PaCO₂ ÷ 1000, so a rate change moves the index proportionally.' }),
+      numberInput('pip', 'Peak inspiratory pressure (PIP)', { unit: 'cm H₂O', min: 5, max: 60, exampleValue: 25, helpText: 'Peak inspiratory pressure in cmH₂O from the ventilator; it enters the index directly, which is why higher PIP at the same PaCO₂ means more intense support.' }),
+      numberInput('paco2', 'PaCO₂', { unit: 'mmHg', min: 15, max: 120, exampleValue: 45, helpText: 'Arterial PaCO₂ in mmHg from a gas drawn at those ventilator settings; the index is higher when a high rate and pressure are needed to achieve the same CO₂.' }),
     ],
     calculate(values) {
       const rr = num(values.rr, 20);
@@ -495,8 +495,8 @@ export const wave4IcuVentCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
-      ]),
-      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 220, exampleValue: 170 }),
+      ], undefined, 'Sex selects the ARDSNet constant: male 50 + 0.91 × (height in cm − 152.4), female 45.5 + 0.91 × (height − 152.4).'),
+      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 220, exampleValue: 170, helpText: 'Height in cm used with the sex-specific ARDSNet constant to compute PBW; tidal-volume targets are mL/kg of this value, not actual body weight.' }),
     ],
     calculate(values) {
       const male = String(values.sex ?? 'M') === 'M';
@@ -556,8 +556,8 @@ export const wave4IcuVentCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
-      ]),
-      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 220, exampleValue: 170 }),
+      ], undefined, 'Sex sets the PBW constant (male 50, female 45.5 plus 0.91 per cm over 152.4); the tidal volume is then mL/kg of PBW.'),
+      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 220, exampleValue: 170, helpText: 'Height in cm for the PBW calculation that drives the tidal-volume target; keep plateau pressure 30 cmH₂O or lower even when the target volume is reached.' }),
       numberInput('mlPerKg', 'Target mL/kg PBW', {
         unit: 'mL/kg',
         min: 4,
@@ -838,8 +838,8 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'Passive volume-cycled breath with constant flow and plateau hold.',
     whyUse: 'Separates resistive load (ETT, bronchospasm, secretions) from elastic load (Pplat).',
     inputs: [
-      numberInput('pip', 'Peak inspiratory pressure (PIP)', { unit: 'cm H₂O', min: 5, max: 80, step: 0.5, exampleValue: 30 }),
-      numberInput('pplat', 'Plateau pressure', { unit: 'cm H₂O', min: 5, max: 60, step: 0.5, exampleValue: 20 }),
+      numberInput('pip', 'Peak inspiratory pressure (PIP)', { unit: 'cm H₂O', min: 5, max: 80, step: 0.5, exampleValue: 30, helpText: 'Peak inspiratory pressure in cmH₂O from a passive, volume-cycled breath with a constant flow; Raw = (PIP − Pplat) ÷ flow.' }),
+      numberInput('pplat', 'Plateau pressure', { unit: 'cm H₂O', min: 5, max: 60, step: 0.5, exampleValue: 20, helpText: 'Plateau pressure in cmH₂O from an inspiratory hold. The PIP − Pplat difference isolates resistive load (ETT, bronchospasm, secretions) from elastic load.' }),
       numberInput('flow', 'Inspiratory flow', {
         unit: 'L/min',
         min: 10,
@@ -959,6 +959,7 @@ export const wave4IcuVentCalcs: Calculator[] = [
         max: 80,
         step: 0.5,
         exampleValue: 15,
+        helpText: 'Airway resistance in cmH₂O·s/L; τ = Raw × compliance, and roughly three time constants empty 95% of the tidal volume, so a long τ predicts air trapping.',
       }),
       numberInput('crs', 'Compliance (Crs)', {
         unit: 'mL/cm H₂O',
@@ -1077,14 +1078,14 @@ export const wave4IcuVentCalcs: Calculator[] = [
         { label: '36.1–38.0 (0)', value: '36-1-38' },
         { label: '38.1–39.0 (1)', value: '38-1-39' },
         { label: '≥39.1 (2)', value: 'ge39-1' },
-      ]),
+      ], undefined, 'Original NEWS temperature bins in °C: ≤35.0 scores 3, 35.1–36.0 scores 1, 36.1–38.0 scores 0, 38.1–39.0 scores 1, ≥39.1 scores 2.'),
       selectInput('sbp', 'Systolic BP', [
         { label: '≤90 (3)', value: 'le90' },
         { label: '91–100 (2)', value: '91-100' },
         { label: '101–110 (1)', value: '101-110' },
         { label: '111–219 (0)', value: '111-219' },
         { label: '≥220 (3)', value: 'ge220' },
-      ]),
+      ], undefined, 'Original NEWS systolic BP bins in mmHg: ≤90 scores 3, 91–100 scores 2, 101–110 scores 1, 111–219 scores 0, ≥220 scores 3.'),
       selectInput('hr', 'Heart rate', [
         { label: '≤40 (3)', value: 'le40' },
         { label: '41–50 (1)', value: '41-50' },
@@ -1092,7 +1093,7 @@ export const wave4IcuVentCalcs: Calculator[] = [
         { label: '91–110 (1)', value: '91-110' },
         { label: '111–130 (2)', value: '111-130' },
         { label: '≥131 (3)', value: 'ge131' },
-      ]),
+      ], undefined, 'Original NEWS heart-rate bins per minute: ≤40 scores 3, 41–50 scores 1, 51–90 scores 0, 91–110 scores 1, 111–130 scores 2, ≥131 scores 3.'),
       selectInput('conscious', 'Consciousness (AVPU)', [
         { label: 'Alert (0)', value: 0, description: 'A — eyes open, converses spontaneously' },
         { label: 'V, P, or U (3)', value: 3, description: 'V = responds to voice; P = pain; U = unresponsive. Original NEWS has no separate “new confusion” item (that is NEWS2)' },
@@ -1329,8 +1330,8 @@ export const wave4IcuVentCalcs: Calculator[] = [
     whenToUse: 'Serial lactate monitoring during sepsis or shock resuscitation.',
     whyUse: 'Improving lactate is associated with better outcomes; used as a resuscitation trend marker.',
     inputs: [
-      numberInput('initial', 'Initial lactate', { unit: 'mmol/L', min: 0.1, max: 30, step: 0.1, exampleValue: 4.0 }),
-      numberInput('delayed', 'Repeat lactate', { unit: 'mmol/L', min: 0.1, max: 30, step: 0.1, exampleValue: 3.0 }),
+      numberInput('initial', 'Initial lactate', { unit: 'mmol/L', min: 0.1, max: 30, step: 0.1, exampleValue: 4.0, helpText: 'Initial lactate in mmol/L from the presentation or pre-resuscitation draw; the clearance is the percentage fall from this value.' }),
+      numberInput('delayed', 'Repeat lactate', { unit: 'mmol/L', min: 0.1, max: 30, step: 0.1, exampleValue: 3.0, helpText: 'Repeat lactate in mmol/L drawn after the resuscitation interval; a rise instead of a fall produces a negative clearance, which flags non-response.' }),
       numberInput('hours', 'Interval (optional)', { unit: 'hours', min: 0.5, max: 24, step: 0.5, exampleValue: 2, required: false, helpText: 'Typical sepsis protocols resample at 2–6 hours' }),
     ],
     calculate(values) {

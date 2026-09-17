@@ -12,8 +12,8 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'Acute knee injury from blunt trauma or fall (not twisting-only without fall).',
     whyUse: 'High sensitivity alternative/adjunct to Ottawa Knee Rules; mechanism-focused.',
     inputs: [
-      yesNo('mechanism', 'Blunt trauma or fall mechanism', 0),
-      yesNo('ageExtreme', 'Age <12 or >50 years', 0),
+      yesNo('mechanism', 'Blunt trauma or fall mechanism', 0, 'The rule is only valid after a blunt trauma or a fall; twisting injuries without a fall fall outside its derivation.'),
+      yesNo('ageExtreme', 'Age <12 or >50 years', 0, 'Yes for age younger than 12 or older than 50 years — one of the two Pittsburgh criteria for radiography.'),
       yesNo(
         'walk',
         'Unable to walk 4 weight-bearing steps in the ED',
@@ -94,8 +94,8 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whyUse:
       'Structures common high-yield cues (age, inability to walk, limited ROM) for considering hip radiographs. There is no independently derived Ottawa Hip Rule; occult fracture remains possible.',
     inputs: [
-      yesNo('traumaPain', 'Acute hip/groin pain after fall or blunt trauma', 0),
-      yesNo('age65', 'Age ≥65 years', 0),
+      yesNo('traumaPain', 'Acute hip/groin pain after fall or blunt trauma', 0, 'Yes for acute hip or groin pain after a fall or blunt trauma; atraumatic, chronic or referred pain is out of scope for this educational aid.'),
+      yesNo('age65', 'Age ≥65 years', 0, 'Yes at 65 years or older, which raises the occult-fracture risk after even a low-energy fall.'),
       yesNo(
         'walk',
         'Unable to bear weight 4 steps both immediately AND in ED',
@@ -210,10 +210,10 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
         1,
         'Child refuses or is unable to bear weight on the affected limb (not merely a limp).',
       ),
-      yesNo('esr40', 'ESR ≥40 mm/hr', 1),
-      yesNo('fever', 'Fever >38.5 °C', 1),
-      yesNo('wbc12', 'WBC >12,000 cells/mm³', 1),
-      yesNo('crp', 'CRP ≥2.0 mg/dL (Caird addition, optional)', 0),
+      yesNo('esr40', 'ESR ≥40 mm/hr', 1, '1 point if ESR is ≥40 mm/hr — one of the four classic Kocher predictors.'),
+      yesNo('fever', 'Fever >38.5 °C', 1, '1 point if a temperature above 38.5 °C was documented at or before assessment.'),
+      yesNo('wbc12', 'WBC >12,000 cells/mm³', 1, '1 point if the white cell count exceeds 12,000 cells/mm³ (12.0 ×10⁹/L).'),
+      yesNo('crp', 'CRP ≥2.0 mg/dL (Caird addition, optional)', 0, 'Optional Caird addition with no points: yes if CRP is ≥2.0 mg/dL (20 mg/L), which improves discrimination when added to the classic four.'),
     ],
     calculate(values) {
       const classic =
@@ -319,9 +319,9 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'Sudden calf/heel pain, “pop,” or weakness with push-off after sport or trauma.',
     whyUse: 'Positive Thompson is highly suggestive of complete Achilles rupture.',
     inputs: [
-      yesNo('pop', 'Sudden pop or feeling of being kicked in the calf'),
-      yesNo('gap', 'Palpable gap in Achilles tendon'),
-      yesNo('weakPush', 'Weak or absent plantar flexion / push-off'),
+      yesNo('pop', 'Sudden pop or feeling of being kicked in the calf', undefined, '1 finding: a sudden pop or the sensation of being kicked in the calf at the moment of injury.'),
+      yesNo('gap', 'Palpable gap in Achilles tendon', undefined, '1 finding: a palpable defect in the Achilles tendon, best felt with the patient prone and the foot relaxed.'),
+      yesNo('weakPush', 'Weak or absent plantar flexion / push-off', undefined, '1 finding: weak or absent plantar flexion against resistance, or an inability to push off.'),
       yesNo(
         'thompsonPos',
         'Thompson (calf squeeze): NO plantar flexion of foot',
@@ -652,7 +652,7 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
         { label: 'Upper limb (1)', value: 1, description: 'Humerus, radius, or ulna' },
         { label: 'Lower limb (2)', value: 2, description: 'Femur (not pertrochanteric) or tibia' },
         { label: 'Peritrochanteric (3)', value: 3, description: 'Inter-/sub-/pertrochanteric femur — highest site risk' },
-      ]),
+      ], undefined, 'Site scores 1 (upper limb), 2 (lower limb) or 3 (peritrochanteric femur), the highest site risk in the score.'),
       selectInput('pain', 'Pain', [
         { label: 'Mild (1)', value: 1, description: 'Mild pain, not activity-limiting' },
         { label: 'Moderate (2)', value: 2, description: 'More constant pain, not clearly mechanical' },
@@ -661,12 +661,12 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
           value: 3,
           description: 'Pain aggravated by loading/use of the limb (mechanical insufficiency)',
         },
-      ]),
+      ], undefined, 'Pain scores 1 (mild), 2 (moderate) or 3 (functional/mechanical, i.e. pain that limits activity).'),
       selectInput('lesion', 'Lesion type', [
         { label: 'Blastic (1)', value: 1, description: 'Purely sclerotic / osteoblastic on x-ray' },
         { label: 'Mixed (2)', value: 2, description: 'Mixed lytic and blastic' },
         { label: 'Lytic (3)', value: 3, description: 'Purely osteolytic' },
-      ]),
+      ], undefined, 'Lesion type scores 1 (blastic), 2 (mixed) or 3 (lytic) on plain radiographs.'),
       selectInput(
         'size',
         'Size (cortical involvement)',
@@ -881,8 +881,8 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
         undefined,
         'Four potential parts: articular head, greater tuberosity, lesser tuberosity, shaft. Count a part only if displaced ≥1 cm or angulated ≥45°. 1-part = none of the four meet that; 2-part = one displaced segment; 3-part = two; 4-part = three. Head-split and dislocation are separate modifiers already on the form.',
       ),
-      yesNo('headSplit', 'Head-splitting or articular surface involvement', 0),
-      yesNo('dislocation', 'Associated glenohumeral dislocation', 0),
+      yesNo('headSplit', 'Head-splitting or articular surface involvement', 0, 'Yes if the fracture line splits the humeral head or involves the articular surface — it changes the part count and the treatment options.'),
+      yesNo('dislocation', 'Associated glenohumeral dislocation', 0, 'Yes if there is an associated glenohumeral dislocation; in Neer\'s system it counts as an additional part.'),
     ],
     calculate(values) {
       const parts = num(values.parts, 1);
@@ -1416,7 +1416,7 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
       selectInput('mechanism', 'Mechanism', [
         { label: 'Blunt', value: 'blunt' },
         { label: 'Penetrating', value: 'penetrating' },
-      ]),
+      ], undefined, 'Blunt or penetrating — TRISS uses a different coefficient set for each, so the choice changes the probability substantially.'),
       numberInput('rts', 'Revised Trauma Score (RTS)', {
         min: 0,
         max: 8,
@@ -1424,8 +1424,8 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
         exampleValue: 7.84,
         helpText: 'RTS = 0.9368·GCSc + 0.7326·SBPc + 0.2908·RRc',
       }),
-      numberInput('iss', 'ISS', { min: 0, max: 75, step: 1, exampleValue: 9 }),
-      yesNo('age55', 'Age ≥55 years', null),
+      numberInput('iss', 'ISS', { min: 0, max: 75, step: 1, exampleValue: 9, helpText: 'Injury Severity Score 0–75 from the AIS body-region sums; the score is capped at 75. Use the highest-AIS region triple only.' }),
+      yesNo('age55', 'Age ≥55 years', null, 'Yes at 55 years or older; this is the age index (0 or 1) used in the TRISS regression.'),
     ],
     calculate(values) {
       const rts = num(values.rts, 7.84);
@@ -1955,6 +1955,7 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
         max: 99.9,
         step: 0.1,
         exampleValue: 20,
+        helpText: 'Pre-test probability as a percentage (0.1–99.9) before the test result; convert your clinical estimate rather than using prevalence of an unrelated population.',
       }),
       numberInput('lr', 'Likelihood ratio (LR+ or LR−)', {
         min: 0.001,
@@ -2027,8 +2028,8 @@ export const wave2OrthoTraumaCalcs: Calculator[] = [
     whenToUse: 'When a paper reports sens/spec and you need LR+ and LR− for Bayes updating.',
     whyUse: 'LRs transfer more cleanly across prevalence than PPV/NPV.',
     inputs: [
-      numberInput('sens', 'Sensitivity', { unit: '%', min: 0.1, max: 100, step: 0.1, exampleValue: 90 }),
-      numberInput('spec', 'Specificity', { unit: '%', min: 0.1, max: 100, step: 0.1, exampleValue: 80 }),
+      numberInput('sens', 'Sensitivity', { unit: '%', min: 0.1, max: 100, step: 0.1, exampleValue: 90, helpText: 'Sensitivity as a percentage (0.1–100) reported by the study; LR+ = sensitivity / (1 − specificity).' }),
+      numberInput('spec', 'Specificity', { unit: '%', min: 0.1, max: 100, step: 0.1, exampleValue: 80, helpText: 'Specificity as a percentage (0.1–100) reported by the study; LR− = (1 − sensitivity) / specificity.' }),
     ],
     calculate(values) {
       const sensPct = Math.min(100, Math.max(0.1, num(values.sens, 90)));

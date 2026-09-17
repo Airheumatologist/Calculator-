@@ -40,9 +40,9 @@ export const missingEmergencyCalcs: Calculator[] = [
       ),
       yesNo('gcsLow2h', 'GCS <15 at 2 hours after injury', 2, 'High-risk CCHR item: any GCS below 15 when reassessed 2 hours after the injury (not the arrival GCS if it has recovered to 15).'),
       yesNo('openDepressed', 'Suspected open or depressed skull fracture', 2, 'Palpable depression, open laceration over a fracture, or penetrating injury. Clinical suspicion counts — do not wait for CT to score this item.'),
-      yesNo('basalSkull', 'Any sign of basal skull fracture (hemotympanum, raccoon eyes, CSF leak, Battle sign)', 2),
+      yesNo('basalSkull', 'Any sign of basal skull fracture (hemotympanum, raccoon eyes, CSF leak, Battle sign)', 2, 'Any sign of basal skull fracture — hemotympanum, raccoon eyes, CSF otorrhea/rhinorrhea, or Battle sign; scores 2 high-risk points.'),
       yesNo('vomit2', 'Vomiting ≥2 episodes', 2, 'Two or more separate episodes of vomiting after the injury (not a single gag or one emesis).'),
-      yesNo('age65', 'Age ≥65 years', 2),
+      yesNo('age65', 'Age ≥65 years', 2, 'Age 65 years or older; one of the five high-risk criteria that justify CT in this rule (with GCS <15 at 2 h, suspected open/depressed fracture, basal skull signs, and ≥2 vomits).'),
       yesNo('amnesia30', 'Amnesia before impact ≥30 minutes', 1, 'Retrograde amnesia: cannot recall events from ≥30 minutes before impact. Anterograde/post-traumatic amnesia alone does not score this medium-risk item.'),
       yesNo('dangerousMech', 'Dangerous mechanism (pedestrian struck, ejection, fall from ≥3 ft / 5 stairs)', 1, 'Pedestrian or cyclist struck by a motor vehicle; occupant ejected; fall from ≥3 feet or ≥5 stairs. Other mechanisms are not “dangerous” for this rule.'),
     ],
@@ -149,7 +149,7 @@ export const missingEmergencyCalcs: Calculator[] = [
     inputs: [
       yesNo('headache', 'Headache', 1, 'Any headache after the injury (not a remote chronic headache unchanged from baseline).'),
       yesNo('vomiting', 'Vomiting', 1, 'Any vomiting after the injury (New Orleans uses ≥1 episode; Canadian CT Head Rule uses ≥2).'),
-      yesNo('age60', 'Age >60 years'),
+      yesNo('age60', 'Age >60 years', undefined, 'Age over 60 years; a positive New Orleans criterion (CT indicated) in a patient with GCS 15.'),
       yesNo('intox', 'Drug or alcohol intoxication', 1, 'Clinical intoxication impairing a reliable exam (alcohol or drugs). Same operational idea as NEXUS: not a remote history of use.'),
       yesNo('amnesia', 'Persistent anterograde amnesia (short-term memory deficit)', 1, 'Cannot retain new information (e.g. 3-item recall) after the injury — not merely a brief daze that has cleared.'),
       yesNo('traumaClavicle', 'Visible trauma above the clavicle', 1, 'Contusion, abrasion, laceration, or deformity of the face, scalp, or neck (above the clavicles).'),
@@ -310,10 +310,10 @@ export const missingEmergencyCalcs: Calculator[] = [
     whyUse: 'Simple CHESS screen; any positive criterion = higher short-term risk (external sensitivity varies).',
     inputs: [
       yesNo('chf', 'History of congestive heart failure', 1, 'Any prior clinical diagnosis of HF (reduced or preserved EF), not merely a remote murmur.'),
-      yesNo('hct', 'Hematocrit <30%'),
+      yesNo('hct', 'Hematocrit <30%', undefined, 'Hematocrit below 30% from the ED draw; one CHESS criterion for 7-day serious outcome.'),
       yesNo('ecg', 'Abnormal ECG (new changes or non-sinus rhythm)', 1, 'Positive if any new changes vs a prior tracing, or any non-sinus rhythm on any ECG or monitor strip including EMS. Old unchanged abnormalities (e.g. old LBBB/LVH) do not count.'),
       yesNo('sob', 'Shortness of breath', 1, 'Dyspnea as a symptom of this syncope presentation (patient-reported or observed), not a remote COPD history alone.'),
-      yesNo('sbp90', 'Triage systolic BP <90 mmHg'),
+      yesNo('sbp90', 'Triage systolic BP <90 mmHg', undefined, 'Systolic BP below 90 mmHg at triage; one CHESS criterion for 7-day serious outcome.'),
     ],
     calculate(values) {
       const keys = ['chf', 'hct', 'ecg', 'sob', 'sbp90'] as const;
@@ -372,11 +372,11 @@ export const missingEmergencyCalcs: Calculator[] = [
     inputs: [
       yesNo('vasovagalPredis', 'Predisposition to vasovagal symptoms (−1)', -1, 'Triggered by a warm crowded place, prolonged standing, fear, emotion, or pain (prodrome of the index event or a prior typical pattern).'),
       yesNo('heartDisease', 'History of heart disease (+1)', 1, 'CAD, AF/flutter, HF, valvular disease, cardiomyopathy, or non-sinus rhythm / device history.'),
-      yesNo('sbpExtreme', 'Any ED SBP <90 or >180 mmHg (+2)', 2),
+      yesNo('sbpExtreme', 'Any ED SBP <90 or >180 mmHg (+2)', 2, 'Any ED systolic BP below 90 mmHg or above 180 mmHg; scores 2 points.'),
       yesNo('troponinElev', 'Elevated troponin (+2)', 2, 'Any value above the local 99th-percentile upper reference limit (assay-specific).'),
       yesNo('abnQrsAxis', 'Abnormal QRS axis (< −30° or > 100°) (+1)', 1, 'QRS axis < −30° or > 100° on the index ECG (not merely “outside −30 to 100” wording).'),
-      yesNo('qrsWide', 'QRS duration >130 ms (+1)', 1),
-      yesNo('qtcLong', 'Corrected QT interval >480 ms (+2)', 2),
+      yesNo('qrsWide', 'QRS duration >130 ms (+1)', 1, 'QRS duration greater than 130 ms on the ED ECG; scores 1 point.'),
+      yesNo('qtcLong', 'Corrected QT interval >480 ms (+2)', 2, 'Corrected QT interval greater than 480 ms on the ED ECG; scores 2 points.'),
       selectInput('edDx', 'ED diagnosis', [
         { label: 'Neither / other', value: 'other', points: 0, description: 'No clear vasovagal or cardiac diagnosis after the index ED evaluation.' },
         { label: 'Vasovagal syncope (−2)', value: 'vasovagal', points: -2, description: 'ED clinician diagnosis of reflex/vasovagal syncope (prodrome + trigger; no competing cardiac explanation).' },
@@ -479,10 +479,10 @@ export const missingEmergencyCalcs: Calculator[] = [
       yesNo('onAnticoag', 'PE diagnosed while on therapeutic anticoagulation', 1, 'Breakthrough PE despite therapeutic-intensity anticoagulation (not prophylactic dose).'),
       yesNo('ivPain', 'Severe pain needing IV analgesia >24 h', 1, 'Pain requiring parenteral opioids/analgesia expected to last >24 h — a Hestia exclusion, not a PE-severity score.'),
       yesNo('medicalSocial', 'Medical or social reason for hospital stay >24 h', 1, 'Any medical comorbidity or social barrier (no support, cannot inject/take oral AC, unreliable follow-up) requiring >24 h in hospital.'),
-      yesNo('crcl30', 'Creatinine clearance <30 mL/min'),
+      yesNo('crcl30', 'Creatinine clearance <30 mL/min', undefined, 'Creatinine clearance below 30 mL/min (Cockcroft–Gault); a Hestia exclusion for outpatient PE management.'),
       yesNo('liver', 'Severe liver impairment', 1, 'Cirrhosis or clinician-judged severe hepatic impairment.'),
-      yesNo('pregnant', 'Pregnant'),
-      yesNo('hit', 'Documented history of HIT'),
+      yesNo('pregnant', 'Pregnant', undefined, 'Pregnancy is a Hestia exclusion — treat as an inpatient for the initial PE treatment window.'),
+      yesNo('hit', 'Documented history of HIT', undefined, 'Documented heparin-induced thrombocytopenia; a Hestia exclusion that also requires non-heparin anticoagulation.'),
     ],
     calculate(values) {
       const keys = [
@@ -835,17 +835,17 @@ export const missingEmergencyCalcs: Calculator[] = [
         { label: '≤30 / min', value: 'normal', description: 'RR 1–30. Continue to perfusion (not Immediate on RR alone).' },
         { label: '>30 / min', value: 'high', description: 'RR >30 → Immediate (Red) under START. Count for ~10 s × 6 if needed.' },
         { label: 'Not assessed / not breathing', value: 'na', description: 'Use only if the breathing item already classified the patient, or RR not yet counted.' },
-      ]),
+      ], undefined, 'Respiratory rate above 30/min is the Red (Immediate) trigger. Uncorrected apnea is triaged by the breathing item (Expectant/Black), so choose \'not assessed / not breathing\' only when ventilation is already classified or not yet counted.'),
       selectInput('perfusion', 'Perfusion', [
         { label: 'Radial pulse present (or CRT <2 s)', value: 'ok', description: 'Palpable radial pulse, or capillary refill <2 seconds.' },
         { label: 'Radial pulse absent (or CRT >2 s)', value: 'poor', description: 'No radial pulse or capillary refill >2 s → Immediate (Red). Control hemorrhage.' },
         { label: 'Not assessed', value: 'na', description: 'Skip only if already triaged on walking, apnea, or RR >30.' },
-      ]),
+      ], undefined, 'After breathing is controlled: absent radial pulse or capillary refill over 2 seconds is poor perfusion (red).'),
       selectInput('mental', 'Mental status', [
         { label: 'Obeys commands', value: 'obeys', description: 'Follows a simple command (e.g. “squeeze my hand”). Delayed (Yellow) if RR and perfusion were also adequate.' },
         { label: 'Does not obey commands', value: 'not_obey', description: 'Unresponsive, only withdraws/moans, or cannot follow a simple command → Immediate (Red).' },
         { label: 'Not assessed', value: 'na', description: 'Skip only if already triaged on an earlier START branch.' },
-      ]),
+      ], undefined, 'START escalates to red/immediate when the casualty cannot obey simple commands.'),
     ],
     calculate(values) {
       if (bool(values.canWalk)) {
@@ -965,8 +965,8 @@ export const missingEmergencyCalcs: Calculator[] = [
     whenToUse: 'Blunt trauma patients ≥15 years being considered for chest X-ray or chest CT.',
     whyUse: 'If all criteria absent, very low risk of clinically significant thoracic injury; imaging may be avoided.',
     inputs: [
-      yesNo('age60', 'Age >60 years'),
-      yesNo('rapidDecel', 'Rapid deceleration mechanism (e.g., fall >20 ft, MVC >40 mph)'),
+      yesNo('age60', 'Age >60 years', undefined, 'Age over 60 years; one NEXUS criterion that keeps chest imaging on the table.'),
+      yesNo('rapidDecel', 'Rapid deceleration mechanism (e.g., fall >20 ft, MVC >40 mph)', undefined, 'Rapid deceleration mechanism — fall from over 20 ft (2 stories) or MVC over 40 mph; a NEXUS criterion.'),
       yesNo('chestPain', 'Chest pain', 1, 'Any chest pain attributed to this blunt trauma (not a remote chronic pain unchanged from baseline).'),
       yesNo('intox', 'Intoxication', 1, 'Alcohol or drugs impairing alertness (same operational idea as NEXUS C-spine).'),
       yesNo('ams', 'Abnormal alertness / mental status', 1, 'GCS <15, disoriented, or delayed/inappropriate response.'),
@@ -1144,7 +1144,7 @@ export const missingEmergencyCalcs: Calculator[] = [
     whenToUse: 'Major burns for rapid prognostic estimate and burn-center communication.',
     whyUse: 'Simple mortality correlate; revised Baux adds inhalation injury weight.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 0, max: 120, step: 1, exampleValue: 40 }),
+      numberInput('age', 'Age', { unit: 'years', min: 0, max: 120, step: 1, exampleValue: 40, helpText: 'Age in years; classic Baux adds age to %TBSA, and the revised score adds an inhalation-injury penalty.' }),
       numberInput('tbsa', 'TBSA burned', { unit: '%', min: 0, max: 100, step: 1, exampleValue: 20, helpText: 'Partial- + full-thickness (2nd/3rd degree) only; exclude isolated first-degree/superficial erythema. Estimate with Lund-Browder (preferred) or Rule of Nines; patient palm ≈ 1%.' }),
       yesNo('inhalation', 'Inhalation injury (+17 on revised Baux)', 17, 'Clinically diagnosed inhalation injury (closed-space fire, carbonaceous sputum, facial burns/singed hairs plus airway signs) or bronchoscopy-confirmed.'),
     ],
@@ -1228,8 +1228,8 @@ export const missingEmergencyCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Male (0)', value: 0 },
         { label: 'Female (+1)', value: 1 },
-      ]),
-      numberInput('age', 'Age', { unit: 'years', min: 0, max: 120, step: 1, exampleValue: 40 }),
+      ], undefined, 'ABSI adds 1 point for female sex, a mortality coefficient in the original model.'),
+      numberInput('age', 'Age', { unit: 'years', min: 0, max: 120, step: 1, exampleValue: 40, helpText: 'Age in years; ABSI scores age in bands — 1 point for 20 or younger, then 2 (21–40), 3 (41–60), 4 (61–80), 5 for 81 or older.' }),
       yesNo('inhalation', 'Inhalation injury (+1)', 1, 'Clinically diagnosed inhalation injury (closed-space fire, carbonaceous sputum, facial burns/singed hairs plus airway signs) or bronchoscopy-confirmed.'),
       yesNo('fullThickness', 'Full-thickness burn present (+1)', 1, 'Any full-thickness (3rd degree) area adds +1 in addition to TBSA-category points.'),
       numberInput('tbsa', 'TBSA burned', { unit: '%', min: 0, max: 100, step: 1, exampleValue: 20, helpText: 'Partial- + full-thickness (2nd/3rd degree) only; exclude isolated first-degree/superficial erythema. Estimate with Lund-Browder (preferred) or Rule of Nines; patient palm ≈ 1%. Full-thickness presence is scored separately (+1).' }),
@@ -1341,7 +1341,7 @@ export const missingEmergencyCalcs: Calculator[] = [
       yesNo('look', 'L — Look externally (trauma, large incisors, beard, large tongue, etc.)', 1, 'Any concerning external feature: facial trauma, beard, large tongue, protruding incisors, small mandible, or short/thick neck.'),
       yesNo('evaluate', 'E — Evaluate 3-3-2 rule unsatisfactory (mouth opening, hyomental, thyrohyoid)', 1, 'Patient’s own fingerbreadths: 3 between incisors (mouth opening); 3 mentum to hyoid; 2 hyoid to thyroid notch. Unsatisfactory if any interval is less.'),
       yesNo('mallampati', 'M — Mallampati class ≥3', 1, 'Modified Mallampati III (soft palate and uvula base only) or IV (hard palate only). Sitting, tongue out, no phonation.'),
-      yesNo('obstruction', 'O — Obstruction (epiglottitis, abscess, trauma, tumor, angioedema)'),
+      yesNo('obstruction', 'O — Obstruction (epiglottitis, abscess, trauma, tumor, angioedema)', undefined, 'O of LEMON: any obstruction — epiglottitis, abscess, trauma, tumor, or angioedema; counts 1 point toward a difficult airway.'),
       yesNo('neck', 'N — Neck mobility limited', 1, 'Limited cervical extension or inability to assume sniffing position (collar, ankylosis, arthritis, prior fusion).'),
     ],
     calculate(values) {

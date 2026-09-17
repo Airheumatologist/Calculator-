@@ -45,13 +45,13 @@ export const wave4FormulasCalcs: Calculator[] = [
     whenToUse: 'Estimate resting energy needs for nutrition planning when a predictive equation is appropriate.',
     whyUse: 'Classic BMR equations; still used educationally (Mifflin–St Jeor often preferred in modern practice).',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 300, step: 0.1, exampleValue: 70 }),
-      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, exampleValue: 170 }),
-      numberInput('age', 'Age', { unit: 'years', min: 15, max: 100, exampleValue: 40 }),
+      numberInput('weight', 'Weight', { helpText: 'Weight in kg for the revised Harris–Benedict equation; use current weight, or an adjusted body weight in obesity if your protocol specifies.', unit: 'kg', unitKind: 'weight', min: 30, max: 300, step: 0.1, exampleValue: 70 }),
+      numberInput('height', 'Height', { helpText: 'Height in cm measured without shoes; the revised equation uses the metric form directly.', unit: 'cm', min: 120, max: 230, exampleValue: 170 }),
+      numberInput('age', 'Age', { helpText: 'Age in years; the revised Harris–Benedict age term is −5.677 × age for men and −4.330 × age for women.', unit: 'years', min: 15, max: 100, exampleValue: 40 }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
-      ]),
+      ], 'M', 'Sex selects the male or female constant term in the revised Harris–Benedict equation.'),
       selectInput('activity', 'Activity / stress multiplier (optional TDEE)', [
         { label: 'BMR only (×1.0)', value: 1, description: 'No activity multiplier; resting estimate only' },
         { label: 'Sedentary (×1.2)', value: 1.2, description: 'Little or no exercise; desk work / ADLs only' },
@@ -138,13 +138,13 @@ export const wave4FormulasCalcs: Calculator[] = [
     whenToUse: 'Preferred common predictive equation for resting energy needs in many ambulatory adults.',
     whyUse: 'Generally more accurate than Harris–Benedict for contemporary populations.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 300, step: 0.1, exampleValue: 70 }),
-      numberInput('height', 'Height', { unit: 'cm', min: 120, max: 230, exampleValue: 170 }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, exampleValue: 40 }),
+      numberInput('weight', 'Weight', { helpText: 'Weight in kg; Mifflin–St Jeor is the equation the Academy of Nutrition and Dietetics recommends for adults.', unit: 'kg', unitKind: 'weight', min: 30, max: 300, step: 0.1, exampleValue: 70 }),
+      numberInput('height', 'Height', { helpText: 'Height in cm without shoes; the equation adds 5 × height in cm.', unit: 'cm', min: 120, max: 230, exampleValue: 170 }),
+      numberInput('age', 'Age', { helpText: 'Age in years; the equation subtracts 5 × age.', unit: 'years', min: 18, max: 100, exampleValue: 40 }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
-      ]),
+      ], 'M', 'Sex applies the +5 (male) or −161 (female) constant in the Mifflin–St Jeor equation.'),
       selectInput('activity', 'Activity multiplier (optional TDEE)', [
         { label: 'REE only (×1.0)', value: 1, description: 'No activity multiplier; resting estimate only' },
         { label: 'Sedentary (×1.2)', value: 1.2, description: 'Little or no exercise; desk work / ADLs only' },
@@ -226,7 +226,7 @@ export const wave4FormulasCalcs: Calculator[] = [
         { label: 'High / burns-range (~2.0 g/kg)', value: 2.0, description: 'Burns, polytrauma, or continuous RRT-range targets in some protocols' },
         { label: 'Custom (use g/kg field)', value: 0, description: 'Enter a custom g/kg/day in the next field' },
       ], 0.8, 'Protein g/day = kg × g/kg. These are teaching ranges (RDA → illness → ICU/burns), not ICU stress multipliers. Use IBW/AdjBW when the local protocol says so.'),
-      numberInput('customGkg', 'Custom g/kg (if custom)', {
+      numberInput('customGkg', 'Custom g/kg (if custom)', { helpText: 'Custom protein target in g/kg/day, used only when the custom preset is chosen; typical targets run from 0.8 g/kg/day for healthy adults to 1.5–2.5 in critical illness.',
         unit: 'g/kg/day',
         min: 0.4,
         max: 3,
@@ -287,7 +287,7 @@ export const wave4FormulasCalcs: Calculator[] = [
     whyUse: 'Simple bedside estimate of anabolic vs catabolic nitrogen status.',
     inputs: [
       numberInput('proteinIntake', 'Protein intake (24 h)', { unit: 'g/day', min: 0, max: 400, exampleValue: 100, helpText: 'N balance = (protein g / 6.25) − (UUN g + insensible). Complete 24-h collection required.' }),
-      numberInput('uun', 'Urine urea nitrogen (24 h)', { unit: 'g/day', min: 0, max: 50, step: 0.1, exampleValue: 10 }),
+      numberInput('uun', 'Urine urea nitrogen (24 h)', { helpText: '24-hour urine urea nitrogen in g/day; nitrogen balance = protein intake / 6.25 − (UUN + 4 g for non-urea losses).', unit: 'g/day', min: 0, max: 50, step: 0.1, exampleValue: 10 }),
       numberInput('insensible', 'Insensible / fecal N factor', {
         unit: 'g/day',
         min: 2,
@@ -442,10 +442,10 @@ export const wave4FormulasCalcs: Calculator[] = [
     whyUse: 'Standard clinical approximation of urea kinetic dose for thrice-weekly HD.',
     inputs: [
       numberInput('preBun', 'Pre-dialysis BUN', { unit: 'mg/dL', min: 10, max: 200, exampleValue: 60, helpText: 'Daugirdas II: spKt/V = −ln(R − 0.008t) + (4 − 3.5R)×(UF/W); R = post/pre. Common thrice-weekly target spKt/V ≥1.2 (many programs aim ≥1.4).' }),
-      numberInput('postBun', 'Post-dialysis BUN', { unit: 'mg/dL', min: 5, max: 150, exampleValue: 18 }),
-      numberInput('hours', 'Session length', { unit: 'hours', min: 1, max: 8, step: 0.25, exampleValue: 4 }),
-      numberInput('uf', 'Ultrafiltration volume', { unit: 'L', min: 0, max: 8, step: 0.1, exampleValue: 2 }),
-      numberInput('postWeight', 'Post-dialysis weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 200, step: 0.1, exampleValue: 70 }),
+      numberInput('postBun', 'Post-dialysis BUN', { helpText: 'Post-dialysis BUN in mg/dL from the same session as the pre-dialysis value; avoid a sample drawn during rebound.', unit: 'mg/dL', min: 5, max: 150, exampleValue: 18 }),
+      numberInput('hours', 'Session length', { helpText: 'Delivered dialysis session length in hours; the second-generation Daugirdas equation uses actual treatment time.', unit: 'hours', min: 1, max: 8, step: 0.25, exampleValue: 4 }),
+      numberInput('uf', 'Ultrafiltration volume', { helpText: 'Ultrafiltration volume in L removed during the session, taken from the machine\'s delivered total.', unit: 'L', min: 0, max: 8, step: 0.1, exampleValue: 2 }),
+      numberInput('postWeight', 'Post-dialysis weight', { helpText: 'Post-dialysis weight in kg; the volume term uses post-dialysis (dry) weight.', unit: 'kg', unitKind: 'weight', min: 20, max: 200, step: 0.1, exampleValue: 70 }),
     ],
     calculate(values) {
       const pre = num(values.preBun, 60);
@@ -599,7 +599,7 @@ export const wave4FormulasCalcs: Calculator[] = [
     whenToUse: 'Alternative to Parkland for burn shock resuscitation planning (still titrate to endpoints).',
     whyUse: 'Lower starting crystalloid estimate (2 mL/kg/%TBSA) than classic Parkland 4 mL; used in some burn protocols.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 5, max: 200, exampleValue: 70 }),
+      numberInput('weight', 'Weight', { helpText: 'Body weight in kg; the modified Brooke formula gives 2 mL/kg per % TBSA in the first 24 hours, half of it in the first 8 hours.', unit: 'kg', unitKind: 'weight', min: 5, max: 200, exampleValue: 70 }),
       numberInput('tbsa', 'TBSA burned', { unit: '%', min: 1, max: 100, exampleValue: 20, helpText: 'Partial- + full-thickness %TBSA (2nd-degree and deeper). Do not include first-degree/erythema-only. Use Lund–Browder when age-sensitive.' }),
     ],
     calculate(values) {
@@ -663,7 +663,7 @@ export const wave4FormulasCalcs: Calculator[] = [
     whenToUse: 'Pediatric or age-sensitive TBSA estimates when rule-of-nines is too crude.',
     whyUse: 'Head and leg proportions change with age; Lund–Browder is the preferred chart method.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 0, max: 100, step: 0.5, exampleValue: 3 }),
+      numberInput('age', 'Age', { helpText: 'Age in years selects the Lund–Browder head and thigh percentages, which change with growth.', unit: 'years', min: 0, max: 100, step: 0.5, exampleValue: 3 }),
       numberInput('head', 'Head & neck burned', { unit: '% of region 0–100', min: 0, max: 100, exampleValue: 0, helpText: 'Age-specific head + 2% neck. Enter % of this combined region that is 2nd- or 3rd-degree — not first-degree erythema; 100 = entire head and neck; do not enter % of whole-body TBSA.' }),
       numberInput('antTrunk', 'Anterior trunk burned', { unit: '% of region', min: 0, max: 100, exampleValue: 0, helpText: 'Anterior trunk = 13% TBSA. Enter % of this anatomic region that is 2nd- or 3rd-degree; 100 = entire region; do not enter % of whole-body TBSA.' }),
       numberInput('postTrunk', 'Posterior trunk burned', { unit: '% of region', min: 0, max: 100, exampleValue: 0, helpText: 'Posterior trunk = 13% TBSA (buttocks are separate). Enter % of this anatomic region that is 2nd- or 3rd-degree; 100 = entire region.' }),
@@ -759,8 +759,8 @@ export const wave4FormulasCalcs: Calculator[] = [
       selectInput('direction', 'Convert', [
         { label: '°C → °F', value: 'c2f' },
         { label: '°F → °C', value: 'f2c' },
-      ]),
-      numberInput('value', 'Temperature', { min: -50, max: 120, step: 0.1, exampleValue: 37 }),
+      ], 'c2f', 'Choose the conversion direction, then enter the temperature in the matching unit.'),
+      numberInput('value', 'Temperature', { helpText: 'Temperature in the unit selected above; °C to °F uses (C × 9/5) + 32.', min: -50, max: 120, step: 0.1, exampleValue: 37 }),
     ],
     calculate(values) {
       const v = num(values.value, 37);
@@ -806,8 +806,8 @@ export const wave4FormulasCalcs: Calculator[] = [
       selectInput('direction', 'Convert', [
         { label: 'lb → kg', value: 'lb2kg' },
         { label: 'kg → lb', value: 'kg2lb' },
-      ]),
-      numberInput('value', 'Weight', { min: 0.5, max: 800, step: 0.1, exampleValue: 154 }),
+      ], 'lb2kg', 'Choose the direction (lb to kg, or kg to lb) and enter the weight in that unit.'),
+      numberInput('value', 'Weight', { helpText: 'Weight in the unit selected above; 1 lb = 0.45359237 kg exactly.', min: 0.5, max: 800, step: 0.1, exampleValue: 154 }),
     ],
     calculate(values) {
       const v = num(values.value, 154);
@@ -853,8 +853,8 @@ export const wave4FormulasCalcs: Calculator[] = [
       selectInput('direction', 'Convert', [
         { label: 'in → cm', value: 'in2cm' },
         { label: 'cm → in', value: 'cm2in' },
-      ]),
-      numberInput('value', 'Length', { min: 1, max: 300, step: 0.1, exampleValue: 67 }),
+      ], 'in2cm', 'Choose inches to cm, or cm to inches.'),
+      numberInput('value', 'Length', { helpText: 'Length in the unit selected above; 1 inch = 2.54 cm exactly.', min: 1, max: 300, step: 0.1, exampleValue: 67 }),
     ],
     calculate(values) {
       const v = num(values.value, 67);
@@ -900,8 +900,8 @@ export const wave4FormulasCalcs: Calculator[] = [
       selectInput('direction', 'Convert', [
         { label: 'mmHg → kPa', value: 'mm2kpa' },
         { label: 'kPa → mmHg', value: 'kpa2mm' },
-      ]),
-      numberInput('value', 'Pressure', { min: 0, max: 300, step: 0.1, exampleValue: 40 }),
+      ], 'mm2kpa', 'Choose mmHg to kPa, or kPa to mmHg.'),
+      numberInput('value', 'Pressure', { helpText: 'Pressure in the unit selected above; 1 mmHg = 0.133322 kPa.', min: 0, max: 300, step: 0.1, exampleValue: 40 }),
     ],
     calculate(values) {
       const v = num(values.value, 40);
@@ -947,8 +947,8 @@ export const wave4FormulasCalcs: Calculator[] = [
       selectInput('direction', 'Convert', [
         { label: 'kcal → kJ', value: 'kcal2kj' },
         { label: 'kJ → kcal', value: 'kj2kcal' },
-      ]),
-      numberInput('value', 'Energy', { min: 0, max: 20000, step: 1, exampleValue: 2000 }),
+      ], 'kcal2kj', 'Choose kcal to kJ, or kJ to kcal.'),
+      numberInput('value', 'Energy', { helpText: 'Energy in the unit selected above; 1 kcal = 4.184 kJ.', min: 0, max: 20000, step: 1, exampleValue: 2000 }),
     ],
     calculate(values) {
       const v = num(values.value, 2000);
@@ -1074,8 +1074,8 @@ export const wave4FormulasCalcs: Calculator[] = [
     whenToUse: 'Quantifying how many patients are treated for one additional adverse event.',
     whyUse: 'Balances NNT discussions with harm metrics.',
     inputs: [
-      numberInput('controlAE', 'Control adverse event rate', { unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 5 }),
-      numberInput('treatAE', 'Treatment adverse event rate', { unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 8 }),
+      numberInput('controlAE', 'Control adverse event rate', { helpText: 'Adverse-event rate in the control or comparison group as a percentage, over the same follow-up period as the treatment group.', unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 5 }),
+      numberInput('treatAE', 'Treatment adverse event rate', { helpText: 'Adverse-event rate in the treatment group over the same period; NNH = 1 / (treatment rate − control rate).', unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 8 }),
     ],
     calculate(values) {
       const c = num(values.controlAE, 5) / 100;
@@ -1135,8 +1135,8 @@ export const wave4FormulasCalcs: Calculator[] = [
     whenToUse: 'Interpreting binary trial outcomes (benefit direction).',
     whyUse: 'ARR drives NNT; RRR can look large when baseline risk is small.',
     inputs: [
-      numberInput('cer', 'Control event rate (CER)', { unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 20 }),
-      numberInput('eer', 'Experimental event rate (EER)', { unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 15 }),
+      numberInput('cer', 'Control event rate (CER)', { helpText: 'Control event rate as a percentage; absolute risk reduction is CER − EER.', unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 20 }),
+      numberInput('eer', 'Experimental event rate (EER)', { helpText: 'Experimental (treatment) event rate as a percentage; use rates from the same time horizon.', unit: '%', min: 0, max: 100, step: 0.1, exampleValue: 15 }),
     ],
     calculate(values) {
       const cer = num(values.cer, 20) / 100;
@@ -1207,7 +1207,7 @@ export const wave4FormulasCalcs: Calculator[] = [
       selectInput('direction', 'Convert', [
         { label: 'Odds → probability', value: 'o2p' },
         { label: 'Probability → odds', value: 'p2o' },
-      ]),
+      ], 'o2p', 'Choose odds to probability, or probability to odds.'),
       numberInput('value', 'Value', {
         min: 0,
         max: 1000,
@@ -1218,7 +1218,7 @@ export const wave4FormulasCalcs: Calculator[] = [
       selectInput('probUnit', 'If probability input, unit is', [
         { label: 'Percent (0–100)', value: 'pct' },
         { label: 'Fraction (0–1)', value: 'frac' },
-      ]),
+      ], 'pct', 'When the input is a probability, state whether it is a percentage (0–100) or a fraction (0–1).'),
     ],
     calculate(values) {
       const probUnit = String(values.probUnit ?? 'pct');
@@ -1287,9 +1287,9 @@ export const wave4FormulasCalcs: Calculator[] = [
     whenToUse: 'When sens/spec are known and you need predictive values at a given prevalence.',
     whyUse: 'PPV/NPV depend strongly on prevalence; sens/spec alone mislead.',
     inputs: [
-      numberInput('sens', 'Sensitivity', { unit: '%', min: 0.1, max: 100, step: 0.1, exampleValue: 90 }),
-      numberInput('spec', 'Specificity', { unit: '%', min: 0.1, max: 100, step: 0.1, exampleValue: 90 }),
-      numberInput('prev', 'Prevalence (pre-test probability)', { unit: '%', min: 0.1, max: 99.9, step: 0.1, exampleValue: 10 }),
+      numberInput('sens', 'Sensitivity', { helpText: 'Sensitivity as a percentage; keep the test threshold consistent with the study, since PPV and NPV depend on prevalence.', unit: '%', min: 0.1, max: 100, step: 0.1, exampleValue: 90 }),
+      numberInput('spec', 'Specificity', { helpText: 'Specificity as a percentage; keep the test threshold consistent with the study, since PPV and NPV depend on prevalence.', unit: '%', min: 0.1, max: 100, step: 0.1, exampleValue: 90 }),
+      numberInput('prev', 'Prevalence (pre-test probability)', { helpText: 'Pre-test probability (prevalence) as a percentage; this drives the post-test probabilities.', unit: '%', min: 0.1, max: 99.9, step: 0.1, exampleValue: 10 }),
     ],
     calculate(values) {
       const sens = Math.min(0.999, Math.max(0.001, num(values.sens, 90) / 100));
@@ -1351,13 +1351,13 @@ export const wave4FormulasCalcs: Calculator[] = [
       selectInput('mode', 'Input mode', [
         { label: 'Sensitivity & specificity', value: 'ss' },
         { label: '2×2 counts (TP FP FN TN)', value: 'table' },
-      ]),
-      numberInput('sens', 'Sensitivity (if sens/spec mode)', { unit: '%', min: 0.1, max: 99.9, step: 0.1, exampleValue: 90 }),
-      numberInput('spec', 'Specificity (if sens/spec mode)', { unit: '%', min: 0.1, max: 99.9, step: 0.1, exampleValue: 90 }),
-      numberInput('tp', 'True positives', { min: 0, max: 100000, exampleValue: 90 }),
-      numberInput('fp', 'False positives', { min: 0, max: 100000, exampleValue: 10 }),
-      numberInput('fn', 'False negatives', { min: 0, max: 100000, exampleValue: 10 }),
-      numberInput('tn', 'True negatives', { min: 0, max: 100000, exampleValue: 90 }),
+      ], 'ss', 'Choose whether to enter sensitivity and specificity, or the raw 2×2 counts (TP, FP, FN, TN).'),
+      numberInput('sens', 'Sensitivity (if sens/spec mode)', { helpText: 'Sensitivity as a percentage in sensitivity/specificity mode; DOR = (sensitivity × specificity) / ((100 − sensitivity) × (100 − specificity)).', unit: '%', min: 0.1, max: 99.9, step: 0.1, exampleValue: 90 }),
+      numberInput('spec', 'Specificity (if sens/spec mode)', { helpText: 'Specificity as a percentage in sensitivity/specificity mode; the calculation uses the odds of a positive test result.', unit: '%', min: 0.1, max: 99.9, step: 0.1, exampleValue: 90 }),
+      numberInput('tp', 'True positives', { helpText: 'True positives in the 2×2 table; the counts are used only in table mode.', min: 0, max: 100000, exampleValue: 90 }),
+      numberInput('fp', 'False positives', { helpText: 'False positives in the 2×2 table; the counts are used only in table mode.', min: 0, max: 100000, exampleValue: 10 }),
+      numberInput('fn', 'False negatives', { helpText: 'False negatives in the 2×2 table; the counts are used only in table mode.', min: 0, max: 100000, exampleValue: 10 }),
+      numberInput('tn', 'True negatives', { helpText: 'True negatives in the 2×2 table; the counts are used only in table mode.', min: 0, max: 100000, exampleValue: 90 }),
     ],
     calculate(values) {
       let dor: number;
@@ -1442,8 +1442,8 @@ export const wave4FormulasCalcs: Calculator[] = [
     whenToUse: 'Quick CI around a success proportion (e.g., response rate x/n).',
     whyUse: 'Wilson interval behaves better than simple Wald p±1.96√(p(1-p)/n) near 0 or 1.',
     inputs: [
-      numberInput('successes', 'Events / successes (x)', { min: 0, max: 1000000, exampleValue: 20 }),
-      numberInput('n', 'Sample size (n)', { min: 1, max: 1000000, exampleValue: 100 }),
+      numberInput('successes', 'Events / successes (x)', { helpText: 'Number of events or successes (x) observed; the Wilson interval is used because it behaves well near 0% and 100%.', min: 0, max: 1000000, exampleValue: 20 }),
+      numberInput('n', 'Sample size (n)', { helpText: 'Total sample size (n); it must be at least as large as the number of successes.', min: 1, max: 1000000, exampleValue: 100 }),
     ],
     calculate(values) {
       const x = num(values.successes, 20);
@@ -1524,12 +1524,12 @@ export const wave4FormulasCalcs: Calculator[] = [
         helpText: 'Use 50% if unknown (most conservative)',
         required: false,
       }),
-      numberInput('margin', 'Desired margin of error (half-width)', { unit: '%', min: 0.5, max: 20, step: 0.5, exampleValue: 5 }),
+      numberInput('margin', 'Desired margin of error (half-width)', { helpText: 'Desired half-width of the confidence interval in percentage points — enter 5 for a plus-or-minus 5% margin.', unit: '%', min: 0.5, max: 20, step: 0.5, exampleValue: 5 }),
       selectInput('confidence', 'Confidence level', [
         { label: '90% (Z≈1.645)', value: 1.645 },
         { label: '95% (Z≈1.96)', value: 1.96 },
         { label: '99% (Z≈2.576)', value: 2.576 },
-      ]),
+      ], 1.96, 'Confidence level for the sample-size calculation; higher confidence requires a larger sample.'),
     ],
     calculate(values) {
       const p = num(values.p, 50) / 100;
@@ -1596,7 +1596,7 @@ export const wave4FormulasCalcs: Calculator[] = [
     whyUse: 'MCV directs differential (iron/thalassemia vs bleed/hemolysis/CKD vs B12/folate/etc.).',
     inputs: [
       numberInput('mcv', 'MCV', { unit: 'fL', min: 40, max: 150, exampleValue: 78, helpText: 'Teaching cutoffs: microcytic <80 fL; normocytic 80–100 fL; macrocytic >100 fL (lab ranges vary slightly).' }),
-      numberInput('hb', 'Hemoglobin (optional)', { unit: 'g/dL', min: 3, max: 20, step: 0.1, exampleValue: 10, required: false }),
+      numberInput('hb', 'Hemoglobin (optional)', { helpText: 'Optional hemoglobin in g/dL; when entered, the anemia severity band is reported alongside the MCV classification.', unit: 'g/dL', min: 3, max: 20, step: 0.1, exampleValue: 10, required: false }),
     ],
     calculate(values) {
       const mcv = num(values.mcv, 78);
@@ -1683,7 +1683,7 @@ export const wave4FormulasCalcs: Calculator[] = [
         exampleValue: 16,
         helpText: 'Common upper limit of normal ~14.5% (lab-specific)',
       }),
-      numberInput('rdwUl', 'RDW upper limit of normal', { unit: '%', min: 12, max: 16, step: 0.1, exampleValue: 14.5 }),
+      numberInput('rdwUl', 'RDW upper limit of normal', { helpText: 'Upper limit of normal for RDW at your laboratory, usually 14.5–16%; the pattern depends on whether RDW exceeds this value.', unit: '%', min: 12, max: 16, step: 0.1, exampleValue: 14.5 }),
     ],
     calculate(values) {
       const mcv = num(values.mcv, 75);

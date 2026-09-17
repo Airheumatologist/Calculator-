@@ -566,7 +566,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
         max: 30,
         step: 0.1,
         exampleValue: 6,
-        helpText: 'Select the reported unit; mEq/L is converted ×1.2 to mg/dL (≈ mg/dL ÷ 1.2 in the other direction). Therapeutic seizure-prophylaxis range is roughly 4.8–8.4 mg/dL.',
+        helpText: 'Serum magnesium in the unit your lab reports — the unit selector handles any mEq/L conversion before the comparison. Therapeutic seizure-prophylaxis range is roughly 4.8–8.4 mg/dL.',
       }),
     ],
     calculate(values) {

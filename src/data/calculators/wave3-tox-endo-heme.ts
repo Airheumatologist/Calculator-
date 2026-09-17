@@ -14,13 +14,13 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
     whenToUse: 'Suspected toxic alcohol ingestion with measured and calculated osmolality ± known ethanol level.',
     whyUse: 'Elevated osmolar gap suggests unmeasured osmotically active solutes (alcohols, acetone, severe hyperlipidemia/proteins, mannitol).',
     inputs: [
-      numberInput('measured', 'Measured serum osmolality', { unit: 'mOsm/kg', min: 200, max: 500, exampleValue: 320 }),
-      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 140 }),
-      numberInput('glucose', 'Glucose', { unit: 'mg/dL', min: 20, max: 1000, exampleValue: 100 }),
-      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, exampleValue: 14 }),
+      numberInput('measured', 'Measured serum osmolality', { helpText: 'Measured serum osmolality in mOsm/kg from the lab (freezing-point depression). Compare it with the calculated osmolality to derive the osmolar gap.', unit: 'mOsm/kg', min: 200, max: 500, exampleValue: 320 }),
+      numberInput('na', 'Sodium', { helpText: 'Serum sodium in mEq/L; the calculated osmolality counts it as 2 × Na.', unit: 'mEq/L', min: 100, max: 180, exampleValue: 140 }),
+      numberInput('glucose', 'Glucose', { helpText: 'Serum glucose in mg/dL; the formula divides by 18 to convert it to mmol/L.', unit: 'mg/dL', min: 20, max: 1000, exampleValue: 100 }),
+      numberInput('bun', 'BUN', { helpText: 'BUN in mg/dL; the formula divides by 2.8. Creatinine is not part of the calculated osmolality.', unit: 'mg/dL', min: 1, max: 200, exampleValue: 14 }),
       numberInput('ethanol', 'Ethanol (if known)', { unit: 'mg/dL', min: 0, max: 600, exampleValue: 0, helpText: 'Leave 0 if not measured', required: false }),
-      numberInput('methanol', 'Methanol level (if known)', { unit: 'mg/dL', min: 0, max: 500, exampleValue: 0, required: false }),
-      numberInput('eg', 'Ethylene glycol level (if known)', { unit: 'mg/dL', min: 0, max: 500, exampleValue: 0, required: false }),
+      numberInput('methanol', 'Methanol level (if known)', { helpText: 'Measured methanol level in mg/dL if available; ethanol co-ingestion raises the gap but competes for metabolism and can delay toxicity.', unit: 'mg/dL', min: 0, max: 500, exampleValue: 0, required: false }),
+      numberInput('eg', 'Ethylene glycol level (if known)', { helpText: 'Measured ethylene glycol level in mg/dL if available; the gap shrinks as the parent alcohol is metabolized, so a normal gap does not exclude late toxicity.', unit: 'mg/dL', min: 0, max: 500, exampleValue: 0, required: false }),
     ],
     calculate(values) {
       const measured = num(values.measured, 320);
@@ -289,11 +289,11 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
     whenToUse: 'Acetaminophen overdose when IV NAC is indicated (nomogram, unknown time, fulminant pathway, etc.).',
     whyUse: 'Standard three-bag protocol doses are weight-based; errors in bag preparation are common.',
     inputs: [
-      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 3, max: 200, step: 0.1, exampleValue: 70 }),
+      numberInput('weight', 'Body weight', { helpText: 'Actual body weight in kg. Most 21-hour IV NAC protocols calculate the dose using a maximum of 100 kg — confirm the cap setting below.', unit: 'kg', unitKind: 'weight', min: 3, max: 200, step: 0.1, exampleValue: 70 }),
       selectInput('cap150', 'Cap weight at 100 kg for dosing? (common practice)', [
         { label: 'Yes — use max 100 kg for dose calc', value: 'cap', description: 'Many protocols cap IV NAC at 100 kg (this tool’s default). Confirm local policy.' },
         { label: 'No — use actual weight', value: 'actual', description: 'Use actual body weight even if >100 kg (some massive-OD / local protocols).' },
-      ]),
+      ], undefined, 'Many protocols cap the weight used for IV NAC dosing at 100 kg; choose actual weight only if your local protocol requires it.'),
     ],
     calculate(values) {
       const rawW = num(values.weight, 70);
@@ -367,7 +367,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         { label: 'From known amount ingested (mg)', value: 'amount', description: 'vials = ingested mg / 0.5 (1 vial binds ≈0.5 mg digoxin). Acute tablets sometimes use amount × 0.8 as body load.' },
         { label: 'Empiric acute overdose', value: 'empiric-acute', description: 'Empiric starting estimate 10 vials (some protocols 20 if arrest / life-threatening instability).' },
         { label: 'Empiric chronic toxicity', value: 'empiric-chronic', description: 'Empiric chronic estimate 6 vials (many start with 3–6). Treat clinical toxicity, not the number alone.' },
-      ]),
+      ], undefined, 'Choose how the Fab dose is estimated: a steady-state level, a known ingested amount, or empiric vials for acute or chronic toxicity.'),
       numberInput('level', 'Serum digoxin', {
         unit: 'ng/mL',
         min: 0,
@@ -376,8 +376,8 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         exampleValue: 4,
         helpText: 'Post-distribution level preferred',
       }),
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 3, max: 200, exampleValue: 70 }),
-      numberInput('amountMg', 'Amount ingested (digoxin)', { unit: 'mg', min: 0, max: 50, step: 0.25, exampleValue: 5 }),
+      numberInput('weight', 'Weight', { helpText: 'Body weight in kg, used when the vial estimate is derived from a serum digoxin level.', unit: 'kg', unitKind: 'weight', min: 3, max: 200, exampleValue: 70 }),
+      numberInput('amountMg', 'Amount ingested (digoxin)', { helpText: 'Total ingested digoxin in mg when the exposure is known; one vial binds approximately 0.5 mg of digoxin.', unit: 'mg', min: 0, max: 50, step: 0.25, exampleValue: 5 }),
     ],
     calculate(values) {
       const method = String(values.method ?? 'level');
@@ -469,11 +469,11 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
     whenToUse: 'Known or suspected salicylate poisoning with a quantitative level.',
     whyUse: 'Levels guide urgency, but chronic toxicity is severe at lower concentrations than acute.',
     inputs: [
-      numberInput('level', 'Serum salicylate', { unit: 'mg/dL', min: 0, max: 200, step: 0.1, exampleValue: 45 }),
+      numberInput('level', 'Serum salicylate', { helpText: 'Serum salicylate in mg/dL; for acute ingestions interpret a level drawn at least 6 hours after ingestion, since absorption can be delayed.', unit: 'mg/dL', min: 0, max: 200, step: 0.1, exampleValue: 45 }),
       selectInput('chronicity', 'Context', [
         { label: 'Acute single ingestion', value: 'acute' },
         { label: 'Chronic / repeated supratherapeutic', value: 'chronic' },
-      ]),
+      ], undefined, 'Acute single ingestion versus chronic or repeated supratherapeutic use — chronic salicylism is dangerous at lower levels and often presents later.'),
       yesNo('altered', 'Altered mental status / severe symptoms', 0, 'AMS, seizure, pulmonary edema, or severe tachypnea — clinical severity overrides the numeric band.'),
       yesNo('acidemia', 'Acidemia (low pH / falling HCO₃)', 0, 'Arterial or venous pH below normal, or falling bicarbonate on serial gases — treat as severe.'),
     ],
@@ -578,12 +578,12 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
     whenToUse: 'Confirmed or highly suspected methanol or ethylene glycol poisoning.',
     whyUse: 'ADH inhibition is time-critical; weight-based dosing and redosing with HD differ from standard q12h.',
     inputs: [
-      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 3, max: 200, step: 0.1, exampleValue: 70 }),
+      numberInput('weight', 'Body weight', { helpText: 'Body weight in kg; the loading dose is 15 mg/kg and maintenance doses are 10–15 mg/kg per protocol.', unit: 'kg', unitKind: 'weight', min: 3, max: 200, step: 0.1, exampleValue: 70 }),
       selectInput('phase', 'Dose to calculate', [
         { label: 'Loading dose (15 mg/kg)', value: 'load' },
         { label: 'Early maintenance (10 mg/kg) — doses 2–5', value: 'maint10' },
         { label: 'Later maintenance (15 mg/kg) — dose ≥6', value: 'maint15' },
-      ]),
+      ], undefined, 'Choose the dose being prepared: loading 15 mg/kg, early maintenance 10 mg/kg for doses 2–5, or later maintenance 15 mg/kg from dose 6 onward.'),
       yesNo('onHd', 'Currently on hemodialysis (dosing interval shortens)', 0, 'On HD, give q4h typically; redose more often'),
     ],
     calculate(values) {
@@ -651,14 +651,14 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
     whenToUse: 'Recurrent opioid respiratory depression after bolus naloxone, especially long-acting opioids.',
     whyUse: 'Provides a practical starting infusion when boluses must be repeated frequently.',
     inputs: [
-      numberInput('bolus', 'Effective bolus dose that restored ventilation', {
+      numberInput('bolus', 'Effective bolus dose that restored ventilation', { helpText: 'Total naloxone bolus dose in mg that restored adequate ventilation; the starting infusion is roughly two-thirds of that bolus per hour.',
         unit: 'mg',
         min: 0.04,
         max: 10,
         step: 0.02,
         exampleValue: 0.4,
       }),
-      numberInput('weight', 'Weight (optional, for µg/kg/h display)', {
+      numberInput('weight', 'Weight (optional, for µg/kg/h display)', { helpText: 'Optional weight in kg — used only to display the rate as µg/kg/h, not to compute the rule-of-thumb infusion.',
         unit: 'kg', unitKind: 'weight',
         min: 3,
         max: 200,
@@ -733,7 +733,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       yesNo('tremor', 'Tremor', 1, 'Visible tremor at rest or with posture, typically greater in the legs.'),
       yesNo('hyperreflexia', 'Hyperreflexia', 1, 'Pathologically brisk reflexes, greater in the legs than arms. Favors serotonin toxicity over NMS (which has bradyreflexia).'),
       yesNo('hypertonia', 'Hypertonia', 1, 'Increased tone, greater in the legs. Contrast NMS lead-pipe rigidity with bradyreflexia.'),
-      yesNo('temp38', 'Temperature >38 °C'),
+      yesNo('temp38', 'Temperature >38 °C', undefined, 'Temperature above 38 °C counts toward the hyperthermia domain; fever above 41 °C with rigidity suggests severe serotonin toxicity.'),
     ],
     calculate(values) {
       if (!bool(values.serotonergic)) {
@@ -826,9 +826,9 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       yesNo('rigidity', 'Severe muscle rigidity (“lead-pipe”)', 1, 'Sustained lead-pipe resistance through the range of motion. Bradyreflexia favors NMS over serotonin-syndrome clonus/hyperreflexia.'),
       yesNo('ck', 'Elevated CK / rhabdomyolysis evidence', 1, 'Typically ≥4× ULN or frank rhabdomyolysis — not a mild postoperative CK bump.'),
       yesNo('ams', 'Altered mental status', 1, 'New drowsiness, mutism, delirium, or catatonia — not baseline psychiatric illness.'),
-      yesNo('autonomic', 'Autonomic instability (labile BP, tachycardia, diaphoresis, incontinence)'),
-      yesNo('bradyreflexia', 'Bradyreflexia / normal reflexes (vs hyperreflexia of SS)'),
-      yesNo('otherExcluded', 'Infectious / other causes judged less likely or excluded'),
+      yesNo('autonomic', 'Autonomic instability (labile BP, tachycardia, diaphoresis, incontinence)', undefined, 'Autonomic instability such as labile blood pressure, tachycardia, diaphoresis or incontinence, in a patient with recent dopamine-antagonist exposure.'),
+      yesNo('bradyreflexia', 'Bradyreflexia / normal reflexes (vs hyperreflexia of SS)', undefined, 'Normal or reduced reflexes favor neuroleptic malignant syndrome; serotonin syndrome instead causes hyperreflexia and clonus.'),
+      yesNo('otherExcluded', 'Infectious / other causes judged less likely or excluded', undefined, 'Count when infectious, metabolic and other causes have been judged less likely or excluded; a plausible competing diagnosis weakens the case for NMS.'),
     ],
     calculate(values) {
       const exposure = bool(values.exposure);
@@ -928,14 +928,14 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
     whenToUse: 'Altered patient with possible anticholinergic overdose (antihistamines, TCAs, atropine, plants).',
     whyUse: 'Rapid toxidrome pattern recognition guides physostigmine consideration and differential.',
     inputs: [
-      yesNo('ams', 'Delirium / altered mental status (“mad as a hatter”)'),
-      yesNo('flushed', 'Flushed skin (“red as a beet”)'),
+      yesNo('ams', 'Delirium / altered mental status (“mad as a hatter”)', undefined, 'Delirium or altered mental status — the \'mad as a hatter\' element of the anticholinergic toxidrome.'),
+      yesNo('flushed', 'Flushed skin (“red as a beet”)', undefined, 'Flushed, hot, dry skin (\'red as a beet\'); sweating is typically absent in anticholinergic poisoning.'),
       yesNo('dry', 'Dry skin/mucosa (“dry as a bone”)', 1, 'Axillae and mucous membranes dry — contrast diaphoretic sympathomimetic toxidrome.'),
       yesNo('mydriasis', 'Mydriasis (“blind as a bat”)', 1, 'Dilated pupils that react poorly to light.'),
       yesNo('fever', 'Hyperthermia (“hot as a hare”)', 1, 'Temperature typically ≥38 °C, or hot dry skin without a documented temp.'),
-      yesNo('urinary', 'Urinary retention (“full as a flask”)'),
+      yesNo('urinary', 'Urinary retention (“full as a flask”)', undefined, 'Urinary retention (\'full as a flask\') from anticholinergic bladder relaxation.'),
       yesNo('tachy', 'Sinus tachycardia', 1, 'HR typically >100 bpm in sinus rhythm.'),
-      yesNo('decreasedBS', 'Decreased bowel sounds'),
+      yesNo('decreasedBS', 'Decreased bowel sounds', undefined, 'Decreased bowel sounds or ileus; the full picture also includes mydriasis and absent sweating.'),
     ],
     calculate(values) {
       const keys = ['ams', 'flushed', 'dry', 'mydriasis', 'fever', 'urinary', 'tachy', 'decreasedBS'] as const;
@@ -993,10 +993,10 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
     whenToUse: 'Suspected organophosphate, carbamate, nerve agent, or nicotine excess with secretory toxidrome.',
     whyUse: 'Early recognition drives atropine, pralidoxime (for OP), decontamination, and airway support.',
     inputs: [
-      yesNo('salivation', 'Salivation / secretions'),
-      yesNo('lacrimation', 'Lacrimation'),
-      yesNo('urination', 'Urination'),
-      yesNo('diarrhea', 'Diarrhea / defecation'),
+      yesNo('salivation', 'Salivation / secretions', undefined, 'Increased salivation and airway secretions (SLUDGE/DUMBELS); onset can be minutes after organophosphate exposure.'),
+      yesNo('lacrimation', 'Lacrimation', undefined, 'Tearing as part of the muscarinic cholinergic toxidrome.'),
+      yesNo('urination', 'Urination', undefined, 'Urinary incontinence or urgency from muscarinic over-activity.'),
+      yesNo('diarrhea', 'Diarrhea / defecation', undefined, 'Diarrhea or fecal incontinence as part of the cholinergic syndrome.'),
       yesNo(
         'gi',
         'GI upset / emesis (one combined feature)',
@@ -1009,11 +1009,11 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         null,
         'If GI upset is also selected, the pair contributes one combined GI feature—not two points.',
       ),
-      yesNo('bronchorrhea', 'Bronchorrhea / bronchospasm'),
+      yesNo('bronchorrhea', 'Bronchorrhea / bronchospasm', undefined, 'Bronchorrhea or bronchospasm — the most immediately life-threatening muscarinic effect; suction and atropine are time-critical.'),
       yesNo('bradycardia', 'Bradycardia (muscarinic)', 1, 'HR typically <60 bpm (may be preceded by nicotinic tachycardia).'),
-      yesNo('miosis', 'Miosis'),
-      yesNo('muscle', 'Muscle weakness / fasciculations (nicotinic)'),
-      yesNo('ams', 'Altered mental status / seizures'),
+      yesNo('miosis', 'Miosis', undefined, 'Pinpoint pupils; classic for muscarinic toxicity but not required to make the diagnosis.'),
+      yesNo('muscle', 'Muscle weakness / fasciculations (nicotinic)', undefined, 'Nicotinic effects such as fasciculations, weakness or paralysis; progressive weakness predicts respiratory failure.'),
+      yesNo('ams', 'Altered mental status / seizures', undefined, 'Central effects such as altered mental status, seizures or coma indicate severe cholinergic poisoning.'),
     ],
     calculate(values) {
       const giSelected = bool(values.gi);
@@ -1106,12 +1106,12 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
     whyUse: 'The classic triad plus supporting features supports naloxone trial and monitoring plan.',
     inputs: [
       yesNo('respDepression', 'Respiratory depression / hypoventilation', 1, 'RR typically <12, or hypoxemia/hypercapnia from hypoventilation (not just a low SpO2 from pneumonia).'),
-      yesNo('cns', 'CNS depression / coma'),
+      yesNo('cns', 'CNS depression / coma', undefined, 'CNS depression from drowsiness to coma with respiratory depression — the core opioid toxidrome finding.'),
       yesNo('miosis', 'Miosis', 1, 'Pinpoint pupils; may be absent with meperidine, co-ingestants, or extreme hypoxia.'),
-      yesNo('track', 'Track marks / known opioid use context'),
-      yesNo('decreasedBS', 'Decreased bowel sounds'),
-      yesNo('hypothermia', 'Mild hypothermia'),
-      yesNo('responseNaloxone', 'Clear response to naloxone (if given)'),
+      yesNo('track', 'Track marks / known opioid use context', undefined, 'Track marks or a documented history of opioid use raise the likelihood when the presentation is otherwise consistent.'),
+      yesNo('decreasedBS', 'Decreased bowel sounds', undefined, 'Opioid-induced ileus with decreased bowel sounds supports the diagnosis but is nonspecific.'),
+      yesNo('hypothermia', 'Mild hypothermia', undefined, 'Mild hypothermia is common in opioid poisoning; profound hypothermia suggests a co-ingestant or another cause.'),
+      yesNo('responseNaloxone', 'Clear response to naloxone (if given)', undefined, 'A clear ventilatory response to naloxone strongly supports opioid toxicity; repeated doses may be needed for long-acting opioids.'),
     ],
     calculate(values) {
       const triad =
@@ -1194,7 +1194,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         exampleValue: 1,
         helpText: '20 cigarettes = 1 pack; e.g. 10 cig/day = 0.5',
       }),
-      numberInput('years', 'Years smoked', { unit: 'years', min: 0, max: 80, step: 0.5, exampleValue: 30 }),
+      numberInput('years', 'Years smoked', { helpText: 'Years of smoking, averaged across the smoking career; pack-years = packs smoked per day × years smoked.', unit: 'years', min: 0, max: 80, step: 0.5, exampleValue: 30 }),
       numberInput('cpd', 'Or cigarettes per day (optional override)', {
         unit: 'cig/day',
         min: 0,
@@ -1372,14 +1372,14 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
     whenToUse: 'Counseling on intake, documenting exposure, or estimating ethanol load.',
     whyUse: 'Volume × ABV is more accurate than “number of drinks” when pour sizes vary.',
     inputs: [
-      numberInput('volume', 'Drink volume', { unit: 'mL', min: 1, max: 5000, exampleValue: 355 }),
+      numberInput('volume', 'Drink volume', { helpText: 'Volume of one drink in mL — use the container size or a measured pour rather than an assumed standard drink.', unit: 'mL', min: 1, max: 5000, exampleValue: 355 }),
       numberInput('abv', 'Alcohol by volume (ABV)', { unit: '%', min: 0.1, max: 95, step: 0.1, exampleValue: 5, helpText: 'Label % ABV. Typical: beer ~4–7%, wine ~12%, spirits ~40%.' }),
-      numberInput('count', 'Number of such drinks', { unit: 'drinks', min: 1, max: 30, exampleValue: 1 }),
+      numberInput('count', 'Number of such drinks', { helpText: 'How many drinks of that size were consumed in the period being assessed.', unit: 'drinks', min: 1, max: 30, exampleValue: 1 }),
       selectInput('standardDef', 'Standard drink definition', [
         { label: 'US (14 g alcohol)', value: 'us' },
         { label: 'UK unit (8 g alcohol)', value: 'uk' },
         { label: 'WHO / many EU (10 g)', value: 'who' },
-      ]),
+      ], undefined, 'Standard-drink definition used in your region: US 14 g ethanol, UK unit 8 g, or WHO / many EU countries 10 g.'),
     ],
     calculate(values) {
       const volume = num(values.volume, 355);
@@ -1461,7 +1461,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
-      ]),
+      ], undefined, 'Sex selects the Navy circumference equation used to estimate body-fat percentage.'),
       numberInput('height', 'Height', { unit: 'in', min: 48, max: 90, step: 0.1, exampleValue: 70, helpText: 'All circumferences and height in inches (cm ÷ 2.54).' }),
       numberInput('neck', 'Neck circumference', { unit: 'in', min: 8, max: 30, step: 0.1, exampleValue: 15, helpText: 'Just inferior to the larynx; tape perpendicular to the long axis of the neck.' }),
       numberInput('waist', 'Abdomen / waist circumference', {
@@ -1589,7 +1589,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'female' },
         { label: 'Male', value: 'male' },
-      ]),
+      ], undefined, 'Sex determines which WHO waist-to-hip ratio thresholds are applied to the risk band.'),
       numberInput('waist', 'Waist circumference', { unit: 'cm', min: 40, max: 200, exampleValue: 90, helpText: 'WHO: midpoint between the lowest rib and the iliac crest, at end-expiration. Same units as hip (cm).' }),
       numberInput('hip', 'Hip circumference', { unit: 'cm', min: 50, max: 200, exampleValue: 100, helpText: 'Widest circumference over the buttocks. Same units as waist (cm).' }),
     ],
@@ -1705,7 +1705,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         { label: 'Peripheral / rim calcifications (2)', value: 2, description: 'Complete or incomplete calcified rim' },
         { label: 'Punctate echogenic foci (3)', value: 3, description: '<1 mm non-shadowing foci, not large comet-tail (microcalcification correlate)' },
       ], undefined, 'ACR: large comet-tail ≥1 mm V-shaped in cysts (0); macrocalcification with shadow (1); rim (2); punctate <1 mm (3). If multiple types coexist, ACR sums points — this picker stores one value, so choose the highest-point type or pick the bin matching a 1–3 sum.'),
-      numberInput('size', 'Largest diameter', { unit: 'cm', min: 0.1, max: 10, step: 0.1, exampleValue: 1.5 }),
+      numberInput('size', 'Largest diameter', { helpText: 'Largest nodule diameter in cm; the TR category together with size determines whether FNA or ultrasound follow-up is indicated.', unit: 'cm', min: 0.1, max: 10, step: 0.1, exampleValue: 1.5 }),
     ],
     calculate(values) {
       const compositionPoints: Record<string, number> = {
@@ -2038,7 +2038,7 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         { label: '>35 °C / >95 °F (0)', value: 0, points: 0 },
         { label: '32–35 °C / 89.6–95 °F (10)', value: 10, points: 10 },
         { label: '<32 °C / <89.6 °F (20)', value: 20, points: 20 },
-      ]),
+      ], undefined, 'Thermoregulatory dysfunction: 0 points above 35 °C, 10 points at 32–35 °C, 20 points below 32 °C.'),
       selectInput('cns', 'Central nervous system effects (worst)', [
         { label: 'Absent (0)', value: 0, points: 0, description: 'Alert; no CNS depression.' },
         { label: 'Somnolent / lethargy (10)', value: 10, points: 10, description: 'Drowsy but arousable; slowed responses.' },
@@ -2061,17 +2061,17 @@ export const wave3ToxEndoHemeCalcs: Calculator[] = [
         { label: 'HR 50–59 (10)', value: 10, points: 10 },
         { label: 'HR 40–49 (20)', value: 20, points: 20 },
         { label: 'HR <40 (30)', value: 30, points: 30 },
-      ]),
-      yesNo('ecg', 'Other ECG changes (QT prolongation, low voltage, bundle-branch block, nonspecific ST-T, heart block)', 10),
-      yesNo('effusion', 'Pericardial and/or pleural effusion', 10),
-      yesNo('pulmEdema', 'Pulmonary edema', 15),
-      yesNo('cardiomegaly', 'Cardiomegaly', 15),
-      yesNo('hypotension', 'Hypotension', 20),
+      ], undefined, 'Bradycardia bands: 0 points at HR ≥60, 10 points at 50–59, 20 points at 40–49, and 30 points below 40 bpm. Score the current rate even in atrial fibrillation.'),
+      yesNo('ecg', 'Other ECG changes (QT prolongation, low voltage, bundle-branch block, nonspecific ST-T, heart block)', 10, 'Other ECG changes such as QT prolongation, low voltage, bundle-branch block, nonspecific ST-T changes or heart block score in the cardiovascular domain.'),
+      yesNo('effusion', 'Pericardial and/or pleural effusion', 10, 'Pericardial and/or pleural effusion on imaging or echocardiography scores in the cardiovascular/body-fluid domain.'),
+      yesNo('pulmEdema', 'Pulmonary edema', 15, 'Pulmonary edema not explained by cardiac failure supports decompensated hypothyroidism in this score.'),
+      yesNo('cardiomegaly', 'Cardiomegaly', 15, 'Cardiomegaly on chest imaging scores in the cardiovascular domain of the myxedema coma scale.'),
+      yesNo('hypotension', 'Hypotension', 20, 'Hypotension scores 20 points in the cardiovascular domain; shock is a marker of severe myxedema coma.'),
       yesNo('hyponatremia', 'Hyponatremia', 10, 'Each listed metabolic abnormality is +10 (max 50).'),
-      yesNo('hypoglycemia', 'Hypoglycemia', 10),
-      yesNo('hypoxemia', 'Hypoxemia', 10),
-      yesNo('hypercarbia', 'Hypercarbia', 10),
-      yesNo('decreasedGfr', 'Decrease in GFR', 10),
+      yesNo('hypoglycemia', 'Hypoglycemia', 10, 'Hypoglycemia scores 10 points in the metabolic domain; check a bedside glucose in any suspected myxedema coma.'),
+      yesNo('hypoxemia', 'Hypoxemia', 10, 'Hypoxemia (low PaO₂ or SpO₂) scores in the metabolic domain; hypoventilation is a common cause.'),
+      yesNo('hypercarbia', 'Hypercarbia', 10, 'Hypercarbia (elevated PaCO₂) reflects hypoventilation and scores in the metabolic domain.'),
+      yesNo('decreasedGfr', 'Decrease in GFR', 10, 'A decrease in GFR scores 10 points; the metabolic domain caps at 50 points overall.'),
     ],
     calculate(values) {
       const score =

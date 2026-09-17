@@ -19,24 +19,24 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         { label: '40–49 years (1)', value: 1 },
         { label: '50–59 years (2)', value: 2 },
         { label: '≥60 years (3)', value: 3 },
-      ]),
+      ], 2, 'Age band: under 40 scores 0, 40–49 scores 1, 50–59 scores 2, 60 or older scores 3. With the weight-category item (up to 3) this is the largest single contribution on the ADA test.'),
       selectInput('sex', 'Sex', [
         { label: 'Female (0)', value: 0 },
         { label: 'Male (1)', value: 1 },
-      ]),
-      yesNo('gdm', 'History of gestational diabetes (women)', 1, 'Score yes only if GDM in a prior pregnancy. Men and never-pregnant patients score no.'),
+      ], 0, 'Male sex scores 1 point, female 0, on the ADA risk test.'),
+      yesNo('gdm', 'History of gestational diabetes (women)', 1, 'Score yes only if GDM in a prior pregnancy. Men and never-pregnant patients score no.', false),
       selectInput('family', 'Mother, father, sister, or brother with diabetes', [
         { label: 'No (0)', value: 0 },
         { label: 'Yes (1)', value: 1 },
-      ]),
+      ], 1, 'A parent, sibling, or child with diabetes scores 1 point; more distant relatives do not count on this version.'),
       selectInput('htn', 'Diagnosed with high blood pressure or on BP meds', [
         { label: 'No (0)', value: 0 },
         { label: 'Yes (1)', value: 1 },
-      ]),
+      ], 1, 'Diagnosed hypertension or current BP medication scores 1 point.'),
       selectInput('activity', 'Physically active', [
         { label: 'Yes (0)', value: 0 },
         { label: 'No (1)', value: 1 },
-      ], undefined, 'ADA wording: physically active — typically regular activity most days; “No” scores +1.'),
+      ], 0, 'ADA wording: physically active — typically regular activity most days; “No” scores +1.'),
       selectInput('weight', 'Weight category (relative to height chart / BMI bands)', [
         { label: 'Normal weight band (0)', value: 0, description: 'BMI <25, or not overweight on the official ADA height-specific lb chart' },
         { label: 'Overweight band (1)', value: 1, description: 'BMI 25–29.9 (CDC/digital ADA mapping of the paper chart)' },
@@ -126,38 +126,38 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         { label: '45–54 years (2)', value: 2 },
         { label: '55–64 years (3)', value: 3 },
         { label: '≥65 years (4)', value: 4 },
-      ]),
+      ], 2, 'Age band: under 45 scores 0, 45–54 scores 2, 55–64 scores 3, 65 or older scores 4.'),
       selectInput('bmi', 'BMI category', [
         { label: '<25 kg/m² (0)', value: 0 },
         { label: '25–30 kg/m² (1)', value: 1 },
         { label: '>30 kg/m² (3)', value: 3 },
-      ]),
+      ], 1, 'BMI: under 25 scores 0, 25–30 scores 1, above 30 scores 3; waist-based categories can substitute when BMI is unavailable.'),
       selectInput('waist', 'Waist circumference', [
         { label: 'Men <94 / Women <80 cm (0)', value: 0 },
         { label: 'Men 94–102 / Women 80–88 cm (3)', value: 3 },
         { label: 'Men >102 / Women >88 cm (4)', value: 4 },
-      ], undefined, 'Measure midway between the lowest rib and iliac crest. Use sex-specific cm cutoffs as labeled.'),
+      ], 3, 'Measure midway between the lowest rib and iliac crest. Use sex-specific cm cutoffs as labeled.'),
       selectInput('activity', 'Daily physical activity ≥30 min', [
         { label: 'Yes (0)', value: 0, description: '≥30 min/day of physical activity, including work activity (official FINDRISC wording).' },
         { label: 'No (2)', value: 2, description: 'Less than 30 min/day of activity including work — scores +2.' },
-      ], undefined, 'FINDRISC: at least 30 minutes of physical activity daily, at work or during leisure. “No” scores +2.'),
+      ], 0, 'FINDRISC: at least 30 minutes of physical activity daily, at work or during leisure. “No” scores +2.'),
       selectInput('veg', 'Daily vegetables, fruit, or berries', [
         { label: 'Every day (0)', value: 0 },
         { label: 'Not every day (1)', value: 1 },
-      ]),
+      ], 1, 'Daily intake of vegetables, fruit, or berries scores 0; not every day scores 1.'),
       selectInput('bpMeds', 'Ever taken medication for high blood pressure', [
         { label: 'No (0)', value: 0 },
         { label: 'Yes (2)', value: 2 },
-      ]),
+      ], 2, 'Ever having taken medication for high blood pressure scores 2 points, even if BP is now controlled.'),
       selectInput('highGlu', 'Ever found to have high blood glucose', [
         { label: 'No (0)', value: 0 },
         { label: 'Yes (5)', value: 5 },
-      ], undefined, 'Official FINDRISC: ever found to have high blood glucose at a health examination, during an illness, or during pregnancy (includes GDM / stress hyperglycemia).'),
+      ], 0, 'Official FINDRISC: ever found to have high blood glucose at a health examination, during an illness, or during pregnancy (includes GDM / stress hyperglycemia).'),
       selectInput('family', 'Family history of diabetes', [
         { label: 'No (0)', value: 0 },
         { label: 'Yes — grandparent, aunt, uncle, or first cousin only (3)', value: 3 },
         { label: 'Yes — parent, brother, sister, or child (5)', value: 5 },
-      ]),
+      ], 3, 'Family history: a grandparent, aunt, uncle, or first cousin scores 3; a parent, sibling, or child scores 5. Pick the closest affected relative.'),
     ],
     calculate(values) {
       const score =
@@ -254,7 +254,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       selectInput('useA1c', 'Include A1c in interpretation', [
         { label: 'Yes', value: 1 },
         { label: 'No', value: 0 },
-      ]),
+      ], 1, 'Include the A1c row in the interpretation. A1c 5.7–6.4% is prediabetes and ≥6.5% is diabetes; discordant tests require a repeat or a second method.'),
       numberInput('fpg', 'Fasting plasma glucose (optional)', {
         unit: 'mg/dL',
         min: 40,
@@ -266,7 +266,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       selectInput('useFpg', 'Include FPG', [
         { label: 'Yes', value: 1 },
         { label: 'No', value: 0 },
-      ]),
+      ], 1, 'Include fasting plasma glucose: 100–125 mg/dL is prediabetes and ≥126 mg/dL is diabetes. Fasting means no calories for at least 8 hours.'),
       numberInput('ogtt', '2-hour OGTT plasma glucose (optional)', {
         unit: 'mg/dL',
         min: 40,
@@ -278,8 +278,8 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       selectInput('useOgtt', 'Include 2-h OGTT', [
         { label: 'Yes', value: 1 },
         { label: 'No', value: 0 },
-      ]),
-      yesNo('symptoms', 'Classic hyperglycemic symptoms + random glucose ≥200 mg/dL', 1, 'Classic symptoms: polyuria, polydipsia, unexplained weight loss. Random (not fasting) plasma glucose ≥200 mg/dL plus these symptoms diagnoses diabetes without a confirmatory second test.'),
+      ], 0, 'Include the 2-hour 75 g OGTT value: 140–199 mg/dL is prediabetes and ≥200 mg/dL is diabetes.'),
+      yesNo('symptoms', 'Classic hyperglycemic symptoms + random glucose ≥200 mg/dL', 1, 'Classic symptoms: polyuria, polydipsia, unexplained weight loss. Random (not fasting) plasma glucose ≥200 mg/dL plus these symptoms diagnoses diabetes without a confirmatory second test.', false),
     ],
     calculate(values) {
       const useA1c = num(values.useA1c, 1) === 1;
@@ -437,9 +437,9 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
       selectInput('measured', 'Glucose measured?', [
         { label: 'Yes', value: 1 },
         { label: 'No / not available', value: 0 },
-      ]),
-      yesNo('severe', 'Severe cognitive impairment requiring assistance (Level 3)', 1, 'Level 3: altered mental or physical status requiring help from another person to treat (glucagon, IV dextrose, or being given carbs). Any glucose counts as Level 3.'),
-      yesNo('symptoms', 'Hypoglycemic symptoms present', 0, 'Adrenergic or neuroglycopenic symptoms (sweat, tremor, palpitations, confusion, hunger). Supportive, but Level 1–2 are defined by glucose; Level 3 by assistance.'),
+      ], 1, 'Answer Yes only when a glucose value is available. Level 1 is <70 mg/dL, Level 2 is <54 mg/dL, and Level 3 is any severe event needing help; with no measurement only Level 3 can be documented.'),
+      yesNo('severe', 'Severe cognitive impairment requiring assistance (Level 3)', 1, 'Level 3: altered mental or physical status requiring help from another person to treat (glucagon, IV dextrose, or being given carbs). Any glucose counts as Level 3.', false),
+      yesNo('symptoms', 'Hypoglycemic symptoms present', 0, 'Adrenergic or neuroglycopenic symptoms (sweat, tremor, palpitations, confusion, hunger). Supportive, but Level 1–2 are defined by glucose; Level 3 by assistance.', true),
     ],
     calculate(values) {
       const glucoseProvided = !isMissingValue(values.glucose, true);
@@ -558,11 +558,12 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         min: 5,
         max: 300,
         exampleValue: 40,
+        helpText: 'Total daily insulin in units (basal plus bolus) from the current regimen; the ISF is the rule constant divided by this number, so the estimate shifts a lot in small changes.',
       }),
       selectInput('rule', 'Rule', [
         { label: '1800 rule (rapid-acting analog)', value: 1800 },
         { label: '1500 rule (regular insulin)', value: 1500 },
-      ]),
+      ], 1800, '1800 is the usual estimate for rapid-acting analogs; 1500 is the classic rule for regular insulin. Select the constant that matches the insulin actually prescribed.'),
     ],
     calculate(values) {
       const tdd = num(values.tdd, 40);
@@ -630,11 +631,12 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         min: 5,
         max: 300,
         exampleValue: 40,
+        helpText: 'Total daily insulin in units; the ICR is the rule constant divided by TDD, so a larger TDD gives a tighter (smaller) carb ratio.',
       }),
       selectInput('rule', 'Rule constant', [
         { label: '500 rule (common analog starting point)', value: 500 },
         { label: '450 rule (more aggressive / some regular insulin teaching)', value: 450 },
-      ]),
+      ], 500, '500 is the common starting constant for rapid-acting analogs; 450 gives a more aggressive ratio and is sometimes taught with regular insulin.'),
     ],
     calculate(values) {
       const tdd = num(values.tdd, 40);
@@ -692,8 +694,8 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
     whenToUse: 'Estimating units of rapid-acting insulin to correct hyperglycemia above target.',
     whyUse: 'Standard formula for correction boluses; combine carefully with meal bolus and IOB.',
     inputs: [
-      numberInput('bg', 'Current glucose', { unit: 'mg/dL', min: 40, max: 600, exampleValue: 250 }),
-      numberInput('target', 'Target glucose', { unit: 'mg/dL', min: 80, max: 180, exampleValue: 120 }),
+      numberInput('bg', 'Current glucose', { unit: 'mg/dL', min: 40, max: 600, exampleValue: 250, helpText: 'Current blood glucose in mg/dL from a meter or CGM; the dose is (current − target) ÷ ISF, so a value at or below target is reported as zero.' }),
+      numberInput('target', 'Target glucose', { unit: 'mg/dL', min: 80, max: 180, exampleValue: 120, helpText: 'Target glucose in mg/dL for a correction, commonly 100–120 (140 in some protocols); raising the target lowers the computed dose.' }),
       numberInput('isf', 'Insulin sensitivity factor', {
         unit: 'mg/dL per unit',
         min: 5,
@@ -708,6 +710,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         step: 0.1,
         exampleValue: 0,
         required: false,
+        helpText: 'Optional insulin on board in units from an active mealtime bolus; it is subtracted from the correction, so leaving it out risks stacking.',
       }),
     ],
     calculate(values) {
@@ -780,7 +783,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
     whenToUse: 'Rough starting TDD estimate for insulin-naive or regimen redesign (supervised).',
     whyUse: 'Weight-based ranges provide a safe starting framework before titration.',
     inputs: [
-      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 250, exampleValue: 70 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 250, exampleValue: 70, helpText: 'Body weight in kg for the units/kg estimate; select lb if your recorded weight is imperial. Use actual weight unless your protocol specifies otherwise.' }),
       selectInput('factor', 'Units per kg per day', [
         { label: '0.3 U/kg (insulin-sensitive / new T1D honeymoon / elderly frail)', value: 0.3 },
         { label: '0.4 U/kg (conservative type 1 start)', value: 0.4 },
@@ -788,8 +791,8 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         { label: '0.6 U/kg (somewhat resistant)', value: 0.6 },
         { label: '0.8 U/kg (insulin resistant / many type 2)', value: 0.8 },
         { label: '1.0 U/kg (high resistance)', value: 1.0 },
-      ], 0.5),
-      yesNo('ketosis', 'Active ketosis / high A1c marked glucotoxicity (use caution)', 0),
+      ], 0.5, 'Units/kg/day: 0.3–0.5 for type 1 or insulin-sensitive patients, up to 0.8–1.0 for marked insulin resistance. Start at the lower end when hypoglycemia risk is high.'),
+      yesNo('ketosis', 'Active ketosis / high A1c marked glucotoxicity (use caution)', 0, 'Yes for active ketosis or a markedly glucotoxic presentation: start lower than the weight-based estimate and correct with fluids and short-acting insulin first.', false),
     ],
     calculate(values) {
       const wt = num(values.weight, 70);
@@ -846,7 +849,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
     whenToUse: 'Designing MDI or reviewing pump basal total from known TDD.',
     whyUse: 'Classic 50/50 starting split; adjustable for dawn phenomenon or high carb intake.',
     inputs: [
-      numberInput('tdd', 'Total daily insulin', { unit: 'units', min: 5, max: 400, exampleValue: 40 }),
+      numberInput('tdd', 'Total daily insulin', { unit: 'units', min: 5, max: 400, exampleValue: 40, helpText: 'Total daily insulin in units from the existing regimen; the split divides it into basal and prandial portions, so errors here propagate to every subsequent dose.' }),
       numberInput('basalPct', 'Basal percentage', {
         unit: '%',
         min: 30,
@@ -858,6 +861,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         min: 1,
         max: 6,
         exampleValue: 3,
+        helpText: 'Number of meals that receive a prandial bolus (1–6); the prandial total is divided across this many injections to give an average per-meal dose.',
       }),
     ],
     calculate(values) {
@@ -918,19 +922,19 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         { label: 'Methylprednisolone', value: 'mp', description: '≈1.25× prednisone-equivalent (4 mg MP ≈ 5 mg prednisone).' },
         { label: 'Dexamethasone', value: 'dex', description: '≈6.25× prednisone-equivalent (0.75 mg dex ≈ 5 mg prednisone). Long-acting; hyperglycemia can last >24 h.' },
         { label: 'Hydrocortisone', value: 'hc', description: '≈0.25× prednisone-equivalent (20 mg HC ≈ 5 mg prednisone).' },
-      ], undefined, 'Converts to prednisone-equivalent for educational glycemic-risk banding. Does not output an insulin dose.'),
+      ], 'pred', 'Converts to prednisone-equivalent for educational glycemic-risk banding. Does not output an insulin dose.'),
       numberInput('dose', 'Daily dose', { unit: 'mg', min: 1, max: 500, exampleValue: 40, helpText: 'Total daily milligrams of the selected steroid (not prednisone-equivalent — conversion is applied).' }),
       selectInput('diabetes', 'Diabetes status', [
         { label: 'No known diabetes', value: 'none' },
         { label: 'Prediabetes', value: 'pre' },
         { label: 'Type 2 diabetes', value: 't2' },
         { label: 'Type 1 / insulin-deficient', value: 't1' },
-      ]),
+      ], 't2', 'Diabetes status drives monitoring intensity: known type 1 or insulin-deficient patients need the tightest plan, prediabetes often only postprandial testing, and no known diabetes still warrants screening during high-dose therapy.'),
       selectInput('timing', 'Dosing schedule', [
         { label: 'Once daily morning', value: 'am' },
         { label: 'Divided / evening dose', value: 'div' },
         { label: 'Continuous / high-dose multi-day', value: 'cont' },
-      ]),
+      ], 'am', 'Once-daily morning steroids peak in the afternoon and evening — check post-lunch and post-dinner glucose. Divided or evening doses flatten the pattern; continuous high-dose therapy can raise glucose around the clock.'),
     ],
     calculate(values) {
       const steroid = String(values.steroid ?? 'pred');
@@ -1036,7 +1040,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
     whenToUse: 'When TSH and free T4 are available and a pattern-based differential is needed.',
     whyUse: 'Rapid pattern recognition guides next labs (T3, antibodies, imaging, pituitary workup).',
     inputs: [
-      numberInput('tsh', 'TSH', { unit: 'mIU/L', min: 0, max: 200, step: 0.01, exampleValue: 2.5 }),
+      numberInput('tsh', 'TSH', { unit: 'mIU/L', min: 0, max: 200, step: 0.01, exampleValue: 2.5, helpText: 'TSH in mIU/L from the same draw as the free T4; the tool compares it with the reference limits you enter, so a low TSH with a low FT4 flags central hypothyroidism or non-thyroidal illness.' }),
       numberInput('ft4', 'Free T4', {
         unit: 'ng/dL',
         min: 0.1,
@@ -1045,11 +1049,11 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         exampleValue: 1.2,
         helpText: 'Use lab-specific reference; defaults assume ~0.8–1.8 ng/dL',
       }),
-      numberInput('tshLow', 'TSH lower ref limit', { unit: 'mIU/L', min: 0.01, max: 1, step: 0.01, exampleValue: 0.4 }),
-      numberInput('tshHigh', 'TSH upper ref limit', { unit: 'mIU/L', min: 2, max: 10, step: 0.1, exampleValue: 4.5 }),
-      numberInput('ft4Low', 'FT4 lower ref limit', { unit: 'ng/dL', min: 0.3, max: 1.2, step: 0.1, exampleValue: 0.8 }),
-      numberInput('ft4High', 'FT4 upper ref limit', { unit: 'ng/dL', min: 1.2, max: 3, step: 0.1, exampleValue: 1.8 }),
-      yesNo('ill', 'Acute non-thyroidal illness (sick euthyroid context)', 0),
+      numberInput('tshLow', 'TSH lower ref limit', { unit: 'mIU/L', min: 0.01, max: 1, step: 0.01, exampleValue: 0.4, helpText: 'Lower reference limit for TSH at your laboratory (typically 0.4–0.5 mIU/L); values below it are flagged low.' }),
+      numberInput('tshHigh', 'TSH upper ref limit', { unit: 'mIU/L', min: 2, max: 10, step: 0.1, exampleValue: 4.5, helpText: 'Upper reference limit for TSH at your laboratory (typically 4.0–5.0 mIU/L); values above it are flagged high.' }),
+      numberInput('ft4Low', 'FT4 lower ref limit', { unit: 'ng/dL', min: 0.3, max: 1.2, step: 0.1, exampleValue: 0.8, helpText: 'Lower reference limit for free T4 in ng/dL (commonly 0.8); enter your lab\'s figure so the pattern bands align with the report.' }),
+      numberInput('ft4High', 'FT4 upper ref limit', { unit: 'ng/dL', min: 1.2, max: 3, step: 0.1, exampleValue: 1.8, helpText: 'Upper reference limit for free T4 in ng/dL (commonly 1.8) from the same laboratory assay.' }),
+      yesNo('ill', 'Acute non-thyroidal illness (sick euthyroid context)', 0, 'Yes during acute non-thyroidal illness: TSH and T4 patterns are unreliable in sick euthyroid states, so defer definitive thyroid diagnoses until recovery when possible.', false),
     ],
     calculate(values) {
       const tsh = num(values.tsh, 2.5);
@@ -1170,16 +1174,16 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
     whenToUse: 'Estimating full replacement dose in adults; use lower starts in elderly or cardiac disease.',
     whyUse: '≈1.6 µg/kg body weight is a common full-replacement starting estimate in healthy adults (often IBW in obesity).',
     inputs: [
-      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 200, exampleValue: 70 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 200, exampleValue: 70, helpText: 'Body weight in kg for the µg/kg estimate; many clinicians use ideal or adjusted body weight in obesity. Select lb if your value is imperial.' }),
       selectInput('approach', 'Dosing approach', [
         { label: 'Full replacement ~1.6 µg/kg (healthy adult)', value: 1.6 },
         { label: 'Conservative ~1.0 µg/kg', value: 1.0 },
         { label: 'Partial / residual function ~0.5 µg/kg start estimate', value: 0.5 },
-      ]),
+      ], 1.6, 'Full replacement ≈1.6 µg/kg in healthy adults; 1.0 µg/kg when starting cautiously; 0.5 µg/kg when residual thyroid function is expected. Round to available tablet strengths.'),
       selectInput('risk', 'Cardiac / elderly caution', [
         { label: 'No — candidate for full replacement estimate', value: 'full' },
         { label: 'Yes — start low (e.g., 25–50 µg) and titrate', value: 'low' },
-      ]),
+      ], 'full', 'Yes for elderly patients or known cardiac disease: start at 25–50 µg and titrate, because the full weight-based dose can precipitate ischemia or arrhythmia.'),
     ],
     calculate(values) {
       const wt = num(values.weight, 70);
@@ -1254,12 +1258,12 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         exampleValue: 10.8,
         helpText: 'Prefer albumin-corrected calcium (corrected = measured + 0.8×(4 − albumin g/dL)) or ionized Ca',
       }),
-      numberInput('pth', 'Intact PTH', { unit: 'pg/mL', min: 1, max: 2000, exampleValue: 90 }),
-      numberInput('caLow', 'Calcium lower ref', { unit: 'mg/dL', min: 7, max: 9, step: 0.1, exampleValue: 8.5 }),
-      numberInput('caHigh', 'Calcium upper ref', { unit: 'mg/dL', min: 9.5, max: 11, step: 0.1, exampleValue: 10.5 }),
-      numberInput('pthLow', 'PTH lower ref', { unit: 'pg/mL', min: 5, max: 20, exampleValue: 15 }),
-      numberInput('pthHigh', 'PTH upper ref', { unit: 'pg/mL', min: 40, max: 90, exampleValue: 65 }),
-      yesNo('ckd', 'Known advanced CKD / ESRD', 0),
+      numberInput('pth', 'Intact PTH', { unit: 'pg/mL', min: 1, max: 2000, exampleValue: 90, helpText: 'Intact PTH in pg/mL (ng/L is equivalent) from a calcium/albumin draw taken at the same time.' }),
+      numberInput('caLow', 'Calcium lower ref', { unit: 'mg/dL', min: 7, max: 9, step: 0.1, exampleValue: 8.5, helpText: 'Lower reference limit for albumin-corrected total calcium in mg/dL (commonly 8.5); values below it are treated as hypocalcemia.' }),
+      numberInput('caHigh', 'Calcium upper ref', { unit: 'mg/dL', min: 9.5, max: 11, step: 0.1, exampleValue: 10.5, helpText: 'Upper reference limit for albumin-corrected total calcium in mg/dL (commonly 10.2).' }),
+      numberInput('pthLow', 'PTH lower ref', { unit: 'pg/mL', min: 5, max: 20, exampleValue: 15, helpText: 'Lower reference limit for intact PTH in pg/mL at your laboratory (typically 10–15); a low or inappropriately normal PTH with hypocalcemia suggests hypoparathyroidism.' }),
+      numberInput('pthHigh', 'PTH upper ref', { unit: 'pg/mL', min: 40, max: 90, exampleValue: 65, helpText: 'Upper reference limit for intact PTH in pg/mL (typically 65); a high PTH with hypercalcemia points toward primary hyperparathyroidism, while a high PTH with low calcium suggests secondary causes.' }),
+      yesNo('ckd', 'Known advanced CKD / ESRD', 0, 'Yes for advanced CKD/ESRD: PTH targets are CKD-stage specific (KDIGO), and the calcium–PTH pairing does not follow the usual primary hyperparathyroidism logic.', false),
     ],
     calculate(values) {
       const ca = num(values.ca, 10.8);
@@ -1461,20 +1465,20 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
     whenToUse: 'Quick bedside tally of clinical risk factors before opening official FRAX or deciding on densitometry.',
     whyUse: 'Highlights who needs DXA, fall prevention, and treatment discussion. Official FRAX (Sheffield) is required for 10-year major osteoporotic and hip fracture probabilities.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 40, max: 100, exampleValue: 65 }),
+      numberInput('age', 'Age', { unit: 'years', min: 40, max: 100, exampleValue: 65, helpText: 'Age in years, one of the two FRAX inputs that cannot be reconstructed from a checklist; enter it even though this tool does not compute probabilities.' }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
-      ]),
+      ], 'F', 'Sex sets the baseline FRAX risk curves; enter it with the clinical risk factors before opening the official calculator.'),
       numberInput('bmi', 'BMI (optional risk flag if low)', { unit: 'kg/m²', min: 12, max: 50, exampleValue: 24, required: false, helpText: 'This checklist flags BMI <20 as one clinical risk (not a FRAX probability). Leave blank if unknown.' }),
-      yesNo('priorFx', 'Prior osteoporotic fracture'),
-      yesNo('parentHip', 'Parent fractured hip'),
-      yesNo('smoker', 'Current smoking'),
-      yesNo('steroid', 'Glucocorticoids (≥3 months prednisone ≥5 mg/day equivalent)'),
-      yesNo('ra', 'Rheumatoid arthritis'),
-      yesNo('secondary', 'Secondary osteoporosis (e.g., type 1 DM, osteogenesis imperfecta adult, hyperthyroid, hypogonadism, malnutrition, malabsorption, chronic liver disease)'),
-      yesNo('alcohol', 'Alcohol ≥3 units/day'),
-      yesNo('lowBmd', 'Known low BMD / T-score ≤ −2.5 (if measured)'),
+      yesNo('priorFx', 'Prior osteoporotic fracture', undefined, 'Prior fragility (low-trauma) fracture counts as 1 clinical risk factor and independently raises treatment consideration.', false),
+      yesNo('parentHip', 'Parent fractured hip', undefined, 'A parent who fractured a hip counts as 1 clinical risk factor on FRAX.', true),
+      yesNo('smoker', 'Current smoking', undefined, 'Current smoking counts; former smoking does not appear in FRAX, so answer Yes only for active use.', false),
+      yesNo('steroid', 'Glucocorticoids (≥3 months prednisone ≥5 mg/day equivalent)', undefined, 'Glucocorticoid exposure for 3 months or more at prednisone ≥5 mg/day (or equivalent) counts as 1 risk factor.', false),
+      yesNo('ra', 'Rheumatoid arthritis', undefined, 'Rheumatoid arthritis counts as 1 clinical risk factor — the diagnosis itself, not just its treatment.', false),
+      yesNo('secondary', 'Secondary osteoporosis (e.g., type 1 DM, osteogenesis imperfecta adult, hyperthyroid, hypogonadism, malnutrition, malabsorption, chronic liver disease)', undefined, 'Secondary osteoporosis such as type 1 diabetes, adult osteogenesis imperfecta, untreated hyperthyroidism, hypogonadism, malnutrition, malabsorption, or chronic liver disease counts as 1 risk factor.', false),
+      yesNo('alcohol', 'Alcohol ≥3 units/day', undefined, 'Alcohol intake of 3 or more units per day counts as 1 clinical risk factor.', false),
+      yesNo('lowBmd', 'Known low BMD / T-score ≤ −2.5 (if measured)', undefined, 'Known low bone mineral density (T-score ≤ −2.5) counts; when a DXA T-score is entered in FRAX it replaces the clinical risk factor, so avoid double-counting.', false),
     ],
     calculate(values) {
       const age = num(values.age, 65);
@@ -1599,12 +1603,12 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         exampleValue: -2.2,
         helpText: 'Usually lumbar spine, total hip, or femoral neck',
       }),
-      yesNo('fragilityFx', 'Fragility fracture (hip/spine) regardless of T-score', 0),
+      yesNo('fragilityFx', 'Fragility fracture (hip/spine) regardless of T-score', 0, 'Yes for a hip or spine fragility fracture regardless of the T-score: a low-trauma fracture moves the patient into the osteoporosis clinical category even when bone density is above −2.5.', false),
       selectInput('site', 'Site', [
         { label: 'Femoral neck / total hip', value: 'hip' },
         { label: 'Lumbar spine', value: 'spine' },
         { label: 'Other / 1/3 radius', value: 'other' },
-      ]),
+      ], 'spine', 'WHO categories come from the lowest central site (femoral neck, total hip, or lumbar spine). Radius or other peripheral sites are reported but not used for WHO classification.'),
     ],
     calculate(values) {
       const t = num(values.tscore, -2.2);
@@ -1678,11 +1682,11 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
     whenToUse: 'When BMI is already calculated and category labeling is needed.',
     whyUse: 'Standard adult WHO cutoffs for underweight through class III obesity.',
     inputs: [
-      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 10, max: 80, step: 0.1, exampleValue: 27 }),
+      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 10, max: 80, step: 0.1, exampleValue: 27, helpText: 'BMI in kg/m²; if you measured it from weight and height, enter the calculated value. WHO bands: <18.5 underweight, 18.5–24.9 normal, 25–29.9 overweight, ≥30 obese (classes I–III).' }),
       selectInput('asian', 'Asian-specific cutoffs helper', [
         { label: 'Standard WHO', value: 0, description: 'Global WHO: overweight ≥25, obesity ≥30.' },
         { label: 'Note Asian lower risk thresholds (info only)', value: 1, description: 'WHO Asian public-health action points: increased risk often from BMI ≥23; obesity from ≥25. Does not change the WHO class label — adds a note only.' },
-      ], undefined, 'Does not rescore the WHO class. Select the Asian note if counseling a patient for whom lower BMI metabolic-risk thresholds are used.'),
+      ], 0, 'Does not rescore the WHO class. Select the Asian note if counseling a patient for whom lower BMI metabolic-risk thresholds are used.'),
     ],
     calculate(values) {
       const bmi = num(values.bmi, 27);
@@ -1777,11 +1781,11 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         exampleValue: 85,
         helpText: 'Enter the CDC BMI-for-age percentile from the growth chart/EMR — not the adult BMI number. Categories: <5th underweight; 5th–84th healthy; 85th–94th overweight; ≥95th obesity; ≥99th often treated as severe obesity.',
       }),
-      numberInput('age', 'Age', { unit: 'years', min: 2, max: 19, exampleValue: 10 }),
+      numberInput('age', 'Age', { unit: 'years', min: 2, max: 19, exampleValue: 10, helpText: 'Age in years at the time of the measurement; the CDC percentile bands apply from 2 to 19 years, and adult BMI cutoffs do not apply in this range.' }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
-      ]),
+      ], 'M', 'Percentiles are read from sex-specific CDC growth charts, so record the sex whose chart produced the percentile you entered.'),
     ],
     calculate(values) {
       const p = num(values.percentile, 85);
@@ -1862,8 +1866,8 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
     whyUse: 'FLI <30 rules out and ≥60 rules in steatosis with reasonable accuracy in validation cohorts.',
     inputs: [
       numberInput('tg', 'Triglycerides', { unit: 'mg/dL', min: 30, max: 1000, exampleValue: 150, helpText: 'Use mg/dL (mmol/L × 88.5 ≈ mg/dL). Fasting sample as in original FLI.' }),
-      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 60, step: 0.1, exampleValue: 28 }),
-      numberInput('ggt', 'GGT', { unit: 'U/L', min: 5, max: 1000, exampleValue: 40 }),
+      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 60, step: 0.1, exampleValue: 28, helpText: 'BMI in kg/m² as a continuous variable (entered logarithmically in the FLI formula); use the measured value, not a category.' }),
+      numberInput('ggt', 'GGT', { unit: 'U/L', min: 5, max: 1000, exampleValue: 40, helpText: 'Gamma-glutamyl transferase in U/L from a current panel; FLI <30 rules out and ≥60 rules in steatosis in the validation cohorts.' }),
       numberInput('waist', 'Waist circumference', { unit: 'cm', min: 50, max: 180, exampleValue: 96, helpText: 'Measure at the midpoint between the last rib and the iliac crest (standing).' }),
     ],
     calculate(values) {
@@ -1945,14 +1949,14 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
     whenToUse: 'Simple lab-based screen for NAFLD/MASLD steatosis risk.',
     whyUse: 'HSI <30 rules out and >36 rules in steatosis in original Korean derivation.',
     inputs: [
-      numberInput('alt', 'ALT', { unit: 'U/L', min: 5, max: 1000, exampleValue: 45 }),
-      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 1000, exampleValue: 30 }),
-      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 60, step: 0.1, exampleValue: 28 }),
+      numberInput('alt', 'ALT', { unit: 'U/L', min: 5, max: 1000, exampleValue: 45, helpText: 'ALT in U/L from a fasting or routine panel; the AST/ALT ratio term makes a relatively high ALT raise the score.' }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 1000, exampleValue: 30, helpText: 'AST in U/L from the same panel as the ALT.' }),
+      numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 60, step: 0.1, exampleValue: 28, helpText: 'BMI in kg/m²; HSI below 30 makes steatosis unlikely and above 36 makes it likely.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female (+2)', value: 'F' },
-      ]),
-      yesNo('diabetes', 'Diabetes mellitus (+2)', 2),
+      ], 'M', 'Female sex adds 2 points in the HSI formula; male is the reference.'),
+      yesNo('diabetes', 'Diabetes mellitus (+2)', 2, 'Diabetes mellitus adds 2 points, whether diet-, oral-, or insulin-treated.', false),
     ],
     calculate(values) {
       const alt = num(values.alt, 45);
@@ -2034,28 +2038,28 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         { label: 'Monthly (2)', value: 2, description: 'About once a month.' },
         { label: 'Weekly (3)', value: 3, description: 'About once a week.' },
         { label: 'Daily or almost daily (4)', value: 4, description: 'Most days.' },
-      ], undefined, 'NIDA Quick Screen: In the PAST YEAR, how often have you had ≥5 drinks in a day (men) or ≥4 (women)? Any answer other than Never is a positive screen.'),
+      ], 1, 'NIDA Quick Screen: In the PAST YEAR, how often have you had ≥5 drinks in a day (men) or ≥4 (women)? Any answer other than Never is a positive screen.'),
       selectInput('tobacco', 'Tobacco products — past year use frequency', [
         { label: 'Never (0)', value: 0 },
         { label: 'Once or twice (1)', value: 1 },
         { label: 'Monthly (2)', value: 2 },
         { label: 'Weekly (3)', value: 3 },
         { label: 'Daily or almost daily (4)', value: 4 },
-      ], undefined, 'In the PAST YEAR, how often have you used tobacco products (cigarettes, cigars, chew, vaping nicotine)?'),
+      ], 4, 'In the PAST YEAR, how often have you used tobacco products (cigarettes, cigars, chew, vaping nicotine)?'),
       selectInput('rx', 'Prescription drugs for nonmedical reasons — past year frequency', [
         { label: 'Never (0)', value: 0 },
         { label: 'Once or twice (1)', value: 1 },
         { label: 'Monthly (2)', value: 2 },
         { label: 'Weekly (3)', value: 3 },
         { label: 'Daily or almost daily (4)', value: 4 },
-      ], undefined, 'In the PAST YEAR, how often have you used prescription drugs for nonmedical reasons (reasons or doses other than prescribed, or someone else’s Rx)? Includes opioid painkillers, stimulants, and sedatives/benzodiazepines.'),
+      ], 0, 'In the PAST YEAR, how often have you used prescription drugs for nonmedical reasons (reasons or doses other than prescribed, or someone else’s Rx)? Includes opioid painkillers, stimulants, and sedatives/benzodiazepines.'),
       selectInput('illegal', 'Illegal drugs — past year frequency', [
         { label: 'Never (0)', value: 0 },
         { label: 'Once or twice (1)', value: 1 },
         { label: 'Monthly (2)', value: 2 },
         { label: 'Weekly (3)', value: 3 },
         { label: 'Daily or almost daily (4)', value: 4 },
-      ], undefined, 'In the PAST YEAR, how often have you used illegal drugs (e.g. marijuana/cannabis, cocaine, heroin, methamphetamine, hallucinogens, MDMA/ecstasy)?'),
+      ], 0, 'In the PAST YEAR, how often have you used illegal drugs (e.g. marijuana/cannabis, cocaine, heroin, methamphetamine, hallucinogens, MDMA/ecstasy)?'),
     ],
     calculate(values) {
       const alcohol = num(values.alcohol, 0);
@@ -2151,17 +2155,17 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
         { label: 'Planning to quit in next 30 days (preparation)', value: 2 },
         { label: 'Quit within the past 6 months (action)', value: 3 },
         { label: 'Quit more than 6 months ago (maintenance)', value: 4 },
-      ]),
+      ], 1, 'Pick the statement the patient most agrees with: precontemplation (not thinking of quitting in 6 months), contemplation (within 6 months), preparation (within 30 days), action (quit within 6 months), or maintenance (quit over 6 months ago).'),
       selectInput('importance', 'Importance of quitting (0–10)', [
         { label: '0–3 low', value: 1, description: 'Ask: “On a 0–10 scale, how important is quitting to you right now?” 0–3 = low.' },
         { label: '4–6 medium', value: 2, description: 'Importance 4–6: ambivalent — use motivational interviewing / 5R.' },
         { label: '7–10 high', value: 3, description: 'Importance 7–10: ready on importance; if confidence is low, focus on practical supports and combination NRT/meds.' },
-      ], undefined, 'Patient self-rating 0 (not important) to 10 (extremely important).'),
+      ], 2, 'Ask the patient to rate importance 0 (not at all) to 10 (extremely), then choose the band that contains the rating: 0–3 low, 4–6 medium, 7–10 high.'),
       selectInput('confidence', 'Confidence in quitting (0–10)', [
         { label: '0–3 low', value: 1, description: 'Ask: “If you decided to quit now, how confident are you (0–10)?” 0–3 = low self-efficacy.' },
         { label: '4–6 medium', value: 2, description: 'Confidence 4–6: identify barriers (withdrawal, household smokers, stress).' },
         { label: '7–10 high', value: 3, description: 'Confidence 7–10: good self-efficacy — set a quit date and offer pharmacotherapy.' },
-      ], undefined, 'Patient self-rating 0 (not at all confident) to 10 (extremely confident).'),
+      ], 1, 'Ask the patient to rate confidence 0 (not at all) to 10 (extremely), then choose the band that contains the rating: 0–3 low, 4–6 medium, 7–10 high.'),
     ],
     calculate(values) {
       const stage = num(values.stage, 0);
@@ -2235,7 +2239,7 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
     inputs: [
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 60, max: 300, exampleValue: 138, helpText: 'ACC/AHA 2017: average ≥2 readings on ≥2 occasions. Seated, back supported, cuff on bare arm after ≥5 min rest. Category uses the higher of SBP or DBP stage.' }),
       numberInput('dbp', 'Diastolic BP', { unit: 'mmHg', min: 30, max: 200, exampleValue: 88, helpText: 'Normal <80; elevated requires DBP <80 with SBP 120–129; stage 1 includes 80–89; stage 2 ≥90; crisis ≥120 with SBP ≥180.' }),
-      yesNo('crisisSymptoms', 'Severe BP with end-organ symptoms (encephalopathy, chest pain, acute HF, etc.)', 0, 'New encephalopathy, stroke, ACS/chest pain, acute HF, aortic dissection, or acute kidney injury with severe BP. With BP ≥180/120 this is emergency (not urgency).'),
+      yesNo('crisisSymptoms', 'Severe BP with end-organ symptoms (encephalopathy, chest pain, acute HF, etc.)', 0, 'New encephalopathy, stroke, ACS/chest pain, acute HF, aortic dissection, or acute kidney injury with severe BP. With BP ≥180/120 this is emergency (not urgency).', false),
     ],
     calculate(values) {
       const sbp = num(values.sbp, 138);
@@ -2341,8 +2345,8 @@ export const wave4PrimaryEndoCalcs: Calculator[] = [
     whenToUse: 'From paired systolic and diastolic BP when assessing pulse pressure width.',
     whyUse: 'Wide PP associated with arterial stiffness and CV risk; narrow PP may reflect low stroke volume.',
     inputs: [
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 300, exampleValue: 140 }),
-      numberInput('dbp', 'Diastolic BP', { unit: 'mmHg', min: 20, max: 200, exampleValue: 70 }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 50, max: 300, exampleValue: 140, helpText: 'Systolic BP in mmHg from the same reading as the diastolic value; pulse pressure = SBP − DBP.' }),
+      numberInput('dbp', 'Diastolic BP', { unit: 'mmHg', min: 20, max: 200, exampleValue: 70, helpText: 'Diastolic BP in mmHg from the same cuff reading. Avoid mixing values from different visits, since pulse pressure changes with each measurement.' }),
     ],
     calculate(values) {
       const sbp = num(values.sbp, 140);

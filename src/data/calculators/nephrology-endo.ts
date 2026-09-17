@@ -12,13 +12,13 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whenToUse: 'Drug dosing adjustments based on renal function.',
     whyUse: 'Still used in many FDA drug labels despite CKD-EPI for staging.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 70 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 70, helpText: 'Age in years at the dosing date; the (140 − age) term makes each extra year lower the estimate. CG assumes stable kidney function — it is not validated during AKI.' }),
       numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 300, exampleValue: 70, helpText: 'Original Cockcroft–Gault uses actual body weight; many pharmacies substitute IBW or AdjBW in obesity.' }),
       numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 1.2, helpText: 'Serum creatinine; select µmol/L for SI lab reports.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 1 },
         { label: 'Female (×0.85)', value: 0.85 },
-      ], 1),
+      ], 1, 'Female multiplies the result by 0.85; male uses the unadjusted value.'),
     ],
     calculate(values) {
       const age = num(values.age);
@@ -66,11 +66,11 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whyUse: 'Preferred equation in current KDIGO/NKF guidance (2021 race-free).',
     inputs: [
       numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 1.2, helpText: 'mg/dL, IDMS-traceable creatinine. 2021 race-free CKD-EPI.' }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 70 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 70, helpText: 'Age in years on the collection date; the 2021 race-free equation uses age directly, so eGFR falls with each added year.' }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
-      ], 'F'),
+      ], 'F', 'Female applies the ×1.012 coefficient, male ×1.0. Report the GFR category (G1–G5) alongside the number, not the number alone.'),
     ],
     calculate(values) {
       const scr = num(values.scr);
@@ -140,11 +140,11 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whyUse: 'Still appears on older lab reports.',
     inputs: [
       numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 1.0, helpText: 'mg/dL. Legacy equation; prefer 2021 CKD-EPI for clinical staging.' }),
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 50 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, exampleValue: 50, helpText: 'Age in years at the collection date, one of the four variables (with sex, creatinine, and a 175 constant). Legacy: prefer 2021 CKD-EPI for new estimates.' }),
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 1 },
         { label: 'Female', value: 0.742 },
-      ]),
+      ], 1, 'Female applies the ×0.742 factor in the 4-variable MDRD equation; male uses the unadjusted value.'),
     ],
     calculate(values) {
       const scr = num(values.scr, 1);
@@ -219,7 +219,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whyUse: 'Classic tool; limited if diuretics used (prefer FeUrea).',
     inputs: [
       numberInput('pna', 'Plasma Na', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 140, helpText: 'Simultaneous plasma and spot urine. Unreliable on diuretics — use FeUrea.' }),
-      numberInput('una', 'Urine Na', { unit: 'mEq/L', min: 1, max: 300, exampleValue: 20 }),
+      numberInput('una', 'Urine Na', { unit: 'mEq/L', min: 1, max: 300, exampleValue: 20, helpText: 'Spot urine sodium in mEq/L, drawn at the same time as the plasma sodium and creatinine. Unreliable after diuretics — use FeUrea instead.' }),
       numberInput('pcr', 'Plasma creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 2.0, helpText: 'Select µmol/L for SI lab reports; both fields convert to mg/dL before the ratio is taken.' }),
       numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 1, max: 500, exampleValue: 100, helpText: 'Select µmol/L (or mmol/L-equivalent SI reporting) if the urine chemistry is reported in SI units.' }),
     ],
@@ -278,9 +278,9 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whyUse: 'Urea handling less affected by loop diuretics than sodium.',
     inputs: [
       numberInput('purea', 'Plasma urea (BUN)', { unit: 'mg/dL', min: 1, max: 200, exampleValue: 40, helpText: 'Simultaneous plasma and urine. Prefer FeUrea over FENa when the patient is on diuretics. Use the same units for plasma and urine urea (both mg/dL).' }),
-      numberInput('uurea', 'Urine urea', { unit: 'mg/dL', min: 1, max: 2000, exampleValue: 200 }),
-      numberInput('pcr', 'Plasma creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 2, helpText: 'Select µmol/L for SI lab reports.' }),
-      numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 1, max: 500, exampleValue: 100, helpText: 'Select µmol/L for SI lab reports.' }),
+      numberInput('uurea', 'Urine urea', { unit: 'mg/dL', min: 1, max: 2000, exampleValue: 200, helpText: 'Spot urine urea in mg/dL, paired with a same-time plasma urea; both sides must be mg/dL for this ratio.' }),
+      numberInput('pcr', 'Plasma creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 2, helpText: 'Plasma creatinine from the same draw as the urine creatinine; select µmol/L for SI lab reports and the engine converts before the ratio is taken.' }),
+      numberInput('ucr', 'Urine creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 1, max: 500, exampleValue: 100, helpText: 'Urine creatinine from the spot specimen that accompanies the plasma sample; select µmol/L for SI lab reports so both sides of the ratio are converted.' }),
     ],
     calculate(values) {
       const purea = num(values.purea, 40);
@@ -317,9 +317,9 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whenToUse: 'Metabolic acidosis differential (HAGMA vs NAGMA).',
     whyUse: 'Core acid-base calculation.',
     inputs: [
-      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 140 }),
-      numberInput('cl', 'Chloride', { unit: 'mEq/L', min: 70, max: 140, exampleValue: 104 }),
-      numberInput('hco3', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 50, exampleValue: 24 }),
+      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 140, helpText: 'Serum sodium in mEq/L from the same chemistry panel as the chloride and bicarbonate.' }),
+      numberInput('cl', 'Chloride', { unit: 'mEq/L', min: 70, max: 140, exampleValue: 104, helpText: 'Serum chloride in mEq/L from the same panel; AG = Na − (Cl + HCO₃⁻).' }),
+      numberInput('hco3', 'Bicarbonate', { unit: 'mEq/L', min: 1, max: 50, exampleValue: 24, helpText: 'Serum bicarbonate (total CO₂) in mEq/L from the same panel; the tool reports the gap with and without the potassium-free K correction where applicable.' }),
       numberInput('albumin', 'Albumin (optional correction)', { unit: 'g/dL', min: 1, max: 6, step: 0.1, exampleValue: 4.0, required: false, helpText: 'Optional. Correction ≈ +2.5 mEq/L per 1 g/dL albumin below 4. Leave blank to report the uncorrected gap.' }),
     ],
     calculate(values) {
@@ -370,7 +370,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whyUse: 'Rough estimate; ionized calcium preferred.',
     inputs: [
       numberInput('ca', 'Total calcium', { unit: 'mg/dL', min: 4, max: 16, step: 0.1, exampleValue: 8.0, helpText: 'Total (not ionized) calcium in mg/dL. Prefer ionized Ca in critically ill patients.' }),
-      numberInput('alb', 'Albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, exampleValue: 2.5 }),
+      numberInput('alb', 'Albumin', { unit: 'g/dL', min: 1, max: 6, step: 0.1, exampleValue: 2.5, helpText: 'Serum albumin in g/dL from the same draw as the total calcium. Corrected Ca = measured Ca + 0.8 × (4.0 − albumin); confirm with ionized calcium when it matters.' }),
     ],
     calculate(values) {
       const ca = num(values.ca, 8);
@@ -401,12 +401,12 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whenToUse: 'Hyperglycemia, DKA, HHS to estimate true sodium.',
     whyUse: 'Hyperglycemia lowers measured Na; correction guides free water status.',
     inputs: [
-      numberInput('na', 'Measured sodium', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 130 }),
-      numberInput('glu', 'Glucose', { unit: 'mg/dL', min: 50, max: 2000, exampleValue: 400 }),
+      numberInput('na', 'Measured sodium', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 130, helpText: 'Measured (dilutional) serum sodium in mEq/L. The correction adds the chosen factor (1.6–2.4) per 100 mg/dL of glucose above 100.' }),
+      numberInput('glu', 'Glucose', { unit: 'mg/dL', min: 50, max: 2000, exampleValue: 400, helpText: 'Serum glucose in mg/dL from the same draw; multiply a mmol/L result by 18 to reach mg/dL.' }),
       selectInput('factor', 'Correction factor', [
         { label: '1.6 per 100 mg/dL (classic)', value: 1.6, description: 'Katz 1973: add 1.6 mEq/L for every 100 mg/dL glucose above 100.' },
         { label: '2.4 per 100 mg/dL (Hillier)', value: 2.4, description: 'Hillier 1999: add 2.4 mEq/L for every 100 mg/dL glucose above 100 — often used in marked hyperglycemia.' },
-      ], undefined, 'Adds factor × max(glucose − 100, 0)/100 mEq/L; correction applies only above 100 mg/dL. Classic Katz 1.6; Hillier 2.4 for marked hyperglycemia.'),
+      ], 1.6, 'Adds factor × max(glucose − 100, 0)/100 mEq/L; correction applies only above 100 mg/dL. Classic Katz 1.6; Hillier 2.4 for marked hyperglycemia.'),
     ],
     calculate(values) {
       const na = num(values.na, 130);
@@ -444,7 +444,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whenToUse: 'Metabolic acidosis to detect mixed disorders.',
     whyUse: 'If measured PaCO₂ differs from expected, additional respiratory disorder present.',
     inputs: [
-      numberInput('hco3', 'HCO₃⁻', { unit: 'mEq/L', min: 1, max: 40, exampleValue: 12 }),
+      numberInput('hco3', 'HCO₃⁻', { unit: 'mEq/L', min: 1, max: 40, exampleValue: 12, helpText: 'Measured serum HCO₃⁻ in mEq/L; Winter\'s formula predicts PaCO₂ = 1.5 × HCO₃⁻ + 8 ± 2, and a measured value outside that range implies a second disorder.' }),
       numberInput('paco2', 'Measured PaCO₂', { unit: 'mmHg', min: 5, max: 100, exampleValue: 28, helpText: 'Arterial PCO₂. Expected compensation ≈ 1.5 × HCO₃ + 8 (±2 mmHg).' }),
     ],
     calculate(values) {
@@ -497,9 +497,9 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whenToUse: 'Hyponatremia workup, toxic alcohol suspicion.',
     whyUse: 'Calculated osm for hyponatremia tonicity; gap screens toxic alcohols/other osmoles.',
     inputs: [
-      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 140 }),
-      numberInput('glu', 'Glucose', { unit: 'mg/dL', min: 40, max: 2000, exampleValue: 100 }),
-      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, exampleValue: 14 }),
+      numberInput('na', 'Sodium', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 140, helpText: 'Serum sodium in mEq/L; osmolality uses 2 × Na, so any sodium error is doubled.' }),
+      numberInput('glu', 'Glucose', { unit: 'mg/dL', min: 40, max: 2000, exampleValue: 100, helpText: 'Serum glucose in mg/dL (mmol/L × 18); it contributes glucose ÷ 18 to calculated osmolality.' }),
+      numberInput('bun', 'BUN', { unit: 'mg/dL', min: 1, max: 200, exampleValue: 14, helpText: 'BUN in mg/dL; contributes BUN ÷ 2.8. Remember urea in mmol/L is not interchangeable with BUN in mg/dL.' }),
       numberInput('etoh', 'Ethanol (optional)', { unit: 'mg/dL', min: 0, max: 500, exampleValue: 0, required: false, helpText: 'Optional; leave 0 if none. Ethanol contribution ≈ EtOH (mg/dL) / 4.6.' }),
       numberInput('measured', 'Measured osm (optional)', { unit: 'mOsm/kg', min: 0, max: 500, exampleValue: 0, required: false, helpText: 'Leave 0 to skip the osmolal gap. Gap >10 is typically elevated.' }),
     ],
@@ -587,14 +587,14 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whenToUse: 'Hypernatremia fluid replacement planning.',
     whyUse: 'Guides free water replacement rate (avoid overly rapid correction).',
     inputs: [
-      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 300, exampleValue: 70 }),
-      numberInput('na', 'Serum Na', { unit: 'mEq/L', min: 145, max: 200, exampleValue: 155 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 300, exampleValue: 70, helpText: 'Current body weight; switch the selector to lb if the chart is imperial — the engine converts before applying the TBW fraction.' }),
+      numberInput('na', 'Serum Na', { unit: 'mEq/L', min: 145, max: 200, exampleValue: 155, helpText: 'Serum sodium in mEq/L. The deficit is zero when Na equals the goal, so a patient already at goal needs no free water.' }),
       numberInput('goalNa', 'Goal Na', { unit: 'mEq/L', min: 140, max: 150, exampleValue: 140, helpText: 'Usually 140 mEq/L. Correct chronic hypernatremia ≤10 mEq/L/day.' }),
       selectInput('tbw', 'TBW fraction', [
         { label: 'Young men (0.6)', value: 0.6, description: 'Total body water ≈ 0.6 × weight in young men.' },
         { label: 'Young women / elderly men (0.5)', value: 0.5, description: 'TBW ≈ 0.5 × weight in young women or elderly men.' },
         { label: 'Elderly women (0.45)', value: 0.45, description: 'TBW ≈ 0.45 × weight in elderly women.' },
-      ], undefined, 'TBW fraction × weight × (Na/goal − 1) = free-water deficit. Pick the row matching sex/age; do not invent a custom fraction here.'),
+      ], 0.6, 'TBW fraction × weight × (Na/goal − 1) = free-water deficit. Pick the row matching sex/age; do not invent a custom fraction here.'),
     ],
     calculate(values) {
       const wt = num(values.weight, 70);
@@ -630,8 +630,8 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whenToUse: 'Severe acidemia when bicarbonate therapy considered (selected cases).',
     whyUse: 'Rough dosing guide; treat underlying cause primarily.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 300, exampleValue: 70 }),
-      numberInput('hco3', 'Current HCO₃', { unit: 'mEq/L', min: 1, max: 24, exampleValue: 10 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 300, exampleValue: 70, helpText: 'Body weight for the 0.5 × weight × (goal − current) estimate; a smaller patient needs proportionally fewer mEq.' }),
+      numberInput('hco3', 'Current HCO₃', { unit: 'mEq/L', min: 1, max: 24, exampleValue: 10, helpText: 'Current serum HCO₃⁻ in mEq/L; only the gap to the goal value drives the deficit, and the goal field is set separately.' }),
       numberInput('goal', 'Goal HCO₃', { unit: 'mEq/L', min: 10, max: 24, exampleValue: 15, helpText: 'Deficit ≈ 0.5 × weight × (goal − current). Give only a portion and reassess; Vd increases as pH falls.' }),
     ],
     calculate(values) {
@@ -664,7 +664,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whenToUse: 'Weight classification and health risk counseling.',
     whyUse: 'Standard anthropometric index.',
     inputs: [
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 400, step: 0.1, exampleValue: 70 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 400, step: 0.1, exampleValue: 70, helpText: 'Measured weight; select lb for pounds and the engine converts to kg for the kg/m² calculation.' }),
       numberInput('height', 'Height', { unit: 'cm', min: 100, max: 250, exampleValue: 170, helpText: 'Centimetres (not inches). BMI = kg / m².' }),
     ],
     calculate(values) {
@@ -717,7 +717,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Male', value: 'M' },
         { label: 'Female', value: 'F' },
-      ]),
+      ], 'M', 'Devine formula basis: male 50 kg + 2.3 kg per inch over 5 ft; female 45.5 kg + 2.3 kg per inch over 5 ft.'),
     ],
     calculate(values) {
       const cm = num(values.height, 170);
@@ -757,8 +757,8 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whenToUse: 'Obese patients for selected drug dosing.',
     whyUse: 'Accounts for partial distribution into adipose tissue.',
     inputs: [
-      numberInput('tbw', 'Total body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 400, exampleValue: 100 }),
-      numberInput('ibw', 'Ideal body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 150, exampleValue: 70 }),
+      numberInput('tbw', 'Total body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 400, exampleValue: 100, helpText: 'Actual measured total body weight (select lb if needed). Adjusted body weight = IBW + 0.4 × (TBW − IBW).' }),
+      numberInput('ibw', 'Ideal body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 150, exampleValue: 70, helpText: 'Ideal body weight from the Devine equation — calculate it in the IBW tool or enter the figure your pharmacy uses.' }),
       numberInput('factor', 'Correction factor', { unit: '', min: 0.2, max: 0.5, step: 0.05, exampleValue: 0.4, helpText: 'Usually 0.4 (40% of excess weight); some drugs use 0.3–0.5. AdjBW = IBW + factor × (TBW − IBW).' }),
     ],
     calculate(values) {
@@ -793,7 +793,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whyUse: 'Mosteller is simple and widely accepted.',
     inputs: [
       numberInput('height', 'Height', { unit: 'cm', min: 50, max: 250, exampleValue: 170, helpText: 'Centimetres. Mosteller BSA = √([Ht(cm)×Wt(kg)]/3600).' }),
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 10, max: 400, exampleValue: 70 }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 10, max: 400, exampleValue: 70, helpText: 'Measured weight; Mosteller BSA = √(height × weight ÷ 3600), so the height field must come from the same measurement.' }),
     ],
     calculate(values) {
       const h = num(values.height, 170);
@@ -859,7 +859,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whyUse: 'Simple surrogate without clamp studies.',
     inputs: [
       numberInput('glucose', 'Fasting glucose', { unit: 'mg/dL', min: 50, max: 400, exampleValue: 100, helpText: 'Fasting plasma glucose in mg/dL (divide mmol/L by 0.0555). HOMA-IR = (glucose × insulin) / 405.' }),
-      numberInput('insulin', 'Fasting insulin', { unit: 'µU/mL', min: 1, max: 100, step: 0.1, exampleValue: 10 }),
+      numberInput('insulin', 'Fasting insulin', { unit: 'µU/mL', min: 1, max: 100, step: 0.1, exampleValue: 10, helpText: 'Fasting insulin in µU/mL (mIU/L is numerically identical), drawn with the fasting glucose after at least 8 hours without calories.' }),
     ],
     calculate(values) {
       const g = num(values.glucose, 100);
@@ -918,8 +918,8 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whenToUse: 'Standard lipid panel when TG <400 mg/dL.',
     whyUse: 'Most common calculated LDL method.',
     inputs: [
-      numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 50, max: 500, exampleValue: 200 }),
-      numberInput('hdl', 'HDL', { unit: 'mg/dL', min: 10, max: 120, exampleValue: 50 }),
+      numberInput('tc', 'Total cholesterol', { unit: 'mg/dL', min: 50, max: 500, exampleValue: 200, helpText: 'Total cholesterol from the same fasting panel as the HDL and triglycerides; Friedewald is invalid once TG ≥400 mg/dL.' }),
+      numberInput('hdl', 'HDL', { unit: 'mg/dL', min: 10, max: 120, exampleValue: 50, helpText: 'HDL from the same panel. Friedewald: LDL = TC − HDL − (TG ÷ 5) with all values in mg/dL.' }),
       numberInput('tg', 'Triglycerides', { unit: 'mg/dL', min: 30, max: 1000, exampleValue: 150, helpText: 'Friedewald invalid if TG ≥400 mg/dL — use direct LDL or Martin–Hopkins.' }),
     ],
     calculate(values) {
@@ -980,7 +980,7 @@ export const nephrologyEndoCalcs: Calculator[] = [
     whenToUse: 'Chemotherapy, febrile neutropenia risk, clozapine monitoring.',
     whyUse: 'Defines neutropenia severity.',
     inputs: [
-      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 100, step: 0.1, exampleValue: 4.0 }),
+      numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 100, step: 0.1, exampleValue: 4.0, helpText: 'WBC in ×10³/µL (identical to ×10⁹/L); ANC = WBC × (segmented neutrophils % + bands %) ÷ 100.' }),
       numberInput('neut', 'Neutrophils (segs)', { unit: '%', min: 0, max: 100, exampleValue: 50, helpText: 'Segmented neutrophils as % of WBC. ANC = WBC × (segs% + bands%) / 100, reported per µL.' }),
       numberInput('bands', 'Bands', { unit: '%', min: 0, max: 50, exampleValue: 0, helpText: 'Include bands (immature neutrophils) with segs. Enter 0 if the differential does not report bands.' }),
     ],
