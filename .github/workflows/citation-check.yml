@@ -1,0 +1,35 @@
+name: Citation identifier check (network)
+
+# Offline structural checks run in ci.yml (pull requests) and deploy.yml (before
+# publishing). This workflow is the network half: it resolves every PMID against
+# NCBI and every DOI against Crossref, which is what caught N9 (three references
+# carrying identifiers for unrelated papers). It is deliberately separate from
+# the deploy path so a slow or rate-limited API can never block a release.
+
+on:
+  schedule:
+    # Mondays 12:17 UTC. Off-the-hour to avoid the scheduled-run stampede.
+    - cron: '17 12 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  identifiers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # No `npm ci`: scripts/check-citations.mjs imports only Node built-ins.
+      - name: Citation integrity (offline structure)
+        run: node scripts/check-citations.mjs
+
+      - name: Resolve PMIDs and DOIs (network)
+        run: node scripts/check-citations.mjs --network --doi --urls

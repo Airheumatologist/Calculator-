@@ -14,9 +14,16 @@
  * `--doi`: also resolve every distinct DOI against Crossref and report ones
  * that do not resolve.
  *
+ * `--urls`: also fetch every distinct reference URL and report ones that are
+ * definitively dead (HTTP 404/410). Bot-blocked (`403`) and transient
+ * (`429`/`5xx`, DNS/timeout) responses are counted but NOT treated as
+ * failures — the pass-3 sweep found 11 legitimate bot-`403`s, so a URL check
+ * that failed on those would be noise, not signal.
+ *
  * Usage:
  *   node scripts/check-citations.mjs
  *   node scripts/check-citations.mjs --network
+ *   node scripts/check-citations.mjs --network --doi --urls
  *   node scripts/check-citations.mjs --dir /tmp/calc-old        # compare a copy
  */
 import { readdirSync, readFileSync } from 'node:fs';
@@ -74,6 +81,7 @@ export function collectReferences(dir) {
           year: yearField(obj[0]),
           pmid: field(obj[0], 'pmid'),
           doi: field(obj[0], 'doi'),
+          url: field(obj[0], 'url'),
         });
       }
     }
@@ -148,6 +156,51 @@ async function resolveDois(refs, issues) {
   }
 }
 
+const URL_CONCURRENCY = 6;
+const URL_TIMEOUT_MS = 20000;
+/** Several publishers and Federal sites reject obviously-non-browser agents. */
+const URL_USER_AGENT =
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) ' +
+  'Chrome/126.0.0.0 Safari/537.36 medcalc-live-citation-check';
+
+async function fetchUrlStatus(url) {
+  try {
+    const res = await fetch(url, {
+      redirect: 'follow',
+      headers: { 'user-agent': URL_USER_AGENT, accept: 'text/html,application/pdf,*/*' },
+      signal: AbortSignal.timeout(URL_TIMEOUT_MS),
+    });
+    // Drain the body so the connection can be released.
+    await res.arrayBuffer().catch(() => {});
+    return { status: res.status };
+  } catch (error) {
+    return { status: 0, error: error.message };
+  }
+}
+
+async function resolveUrls(refs, issues) {
+  const urls = [...new Set(refs.map((r) => r.url).filter(Boolean))];
+  let ok = 0;
+  const unverified = [];
+  const dead = [];
+  for (let i = 0; i < urls.length; i += URL_CONCURRENCY) {
+    const batch = urls.slice(i, i + URL_CONCURRENCY);
+    const results = await Promise.all(batch.map((url) => fetchUrlStatus(url)));
+    results.forEach((result, index) => {
+      const url = batch[index];
+      if (result.status >= 200 && result.status < 300) ok += 1;
+      else if (result.status === 404 || result.status === 410) dead.push(`${url} (HTTP ${result.status})`);
+      else unverified.push(`${url} (${result.status || result.error || 'no response'})`);
+    });
+  }
+  for (const url of dead) issues.push(`DEAD URL ${url}`);
+  console.log(
+    `URL liveness: ${ok} ok, ${unverified.length} unverified (bot-blocked or transient), ${dead.length} dead`
+  );
+  for (const url of unverified.slice(0, 12)) console.log(`  unverified: ${url}`);
+  if (unverified.length > 12) console.log(`  …and ${unverified.length - 12} more unverified`);
+}
+
 const refs = collectReferences(dataDir);
 problems.push(...structuralChecks(refs));
 
@@ -156,6 +209,9 @@ if (flags.has('--network') || flags.has('--doi')) {
 }
 if (flags.has('--doi')) {
   await resolveDois(refs, problems);
+}
+if (flags.has('--urls')) {
+  await resolveUrls(refs, problems);
 }
 
 console.log(`Checked ${refs.length} references in ${dataDir}`);

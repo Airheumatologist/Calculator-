@@ -39,6 +39,9 @@ jobs:
       - name: Calculator tests
         run: npm test
 
+      - name: Citation integrity (offline)
+        run: npm run check:citations
+
       - name: Build production site
         run: npm run build
 

@@ -1584,12 +1584,10 @@ export const wave7RheumClassCalcs: Calculator[] = [
     calculate(values) {
       const withBx = str(values.path) === 'with';
       const age = str(values.ageOnset, 'lt18');
-      // Keep old saved single-select answers meaningful while allowing the
-      // three current skin manifestations to be scored independently.
-      const legacySkin = str(values.skin);
-      const gottronPapules = bool(values.gottronPapules) || legacySkin === 'gottron-papules';
-      const gottronSign = bool(values.gottronSign) || legacySkin === 'gottron-sign';
-      const heliotrope = bool(values.heliotrope) || legacySkin === 'heliotrope';
+      // The three characteristic skin manifestations are scored independently.
+      const gottronPapules = bool(values.gottronPapules);
+      const gottronSign = bool(values.gottronSign);
+      const heliotrope = bool(values.heliotrope);
       let score = 0;
       if (age === '18-39') score += withBx ? 1.5 : 1.3;
       else if (age === 'ge40') score += withBx ? 2.2 : 2.1;

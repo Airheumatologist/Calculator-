@@ -1669,19 +1669,8 @@ export const wave5GeneralMiscCalcs: AuditedQuestionnaireCalculator[] = [
         return aid ? Math.max(worst, 2) : worst;
       };
 
-      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.haq_dress === undefined && values.haq_c1 === undefined)) {
+      if (mode === 'direct' || (values.total !== undefined && values.entryMode === undefined && values.haq_dress === undefined)) {
         score = round(num(values.total, 0), 3);
-      } else if (values.haq_c1 !== undefined && values.haq_dress === undefined) {
-        const c1 = bool(values.haq_c1_aid) ? Math.max(num(values.haq_c1, 0), 2) : num(values.haq_c1, 0);
-        const c2 = bool(values.haq_c2_aid) ? Math.max(num(values.haq_c2, 0), 2) : num(values.haq_c2, 0);
-        const c3 = bool(values.haq_c3_aid) ? Math.max(num(values.haq_c3, 0), 2) : num(values.haq_c3, 0);
-        const c4 = bool(values.haq_c4_aid) ? Math.max(num(values.haq_c4, 0), 2) : num(values.haq_c4, 0);
-        const c5 = bool(values.haq_c5_aid) ? Math.max(num(values.haq_c5, 0), 2) : num(values.haq_c5, 0);
-        const c6 = bool(values.haq_c6_aid) ? Math.max(num(values.haq_c6, 0), 2) : num(values.haq_c6, 0);
-        const c7 = bool(values.haq_c7_aid) ? Math.max(num(values.haq_c7, 0), 2) : num(values.haq_c7, 0);
-        const c8 = bool(values.haq_c8_aid) ? Math.max(num(values.haq_c8, 0), 2) : num(values.haq_c8, 0);
-        catScores = [c1, c2, c3, c4, c5, c6, c7, c8];
-        score = round(catScores.reduce((a, b) => a + b, 0) / 8, 3);
       } else {
         const c1 = categoryScore([num(values.haq_dress, 0), num(values.haq_shampoo, 0)], bool(values.haq_c1_aid));
         const c2 = categoryScore([num(values.haq_chair, 0), num(values.haq_bed, 0)], bool(values.haq_c2_aid));

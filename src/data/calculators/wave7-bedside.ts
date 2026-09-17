@@ -809,14 +809,10 @@ export const wave7BedsideCalcs: Calculator[] = [
       const rhythm = rhythmRaw === 'af' || rhythmRaw.includes('atrial fibrillation') ? 'af' : 'sr';
       const rhythmLabel = rhythm === 'af' ? 'Atrial fibrillation (AF)' : 'Sinus rhythm (SR)';
 
-      // `biomarker` is retained as the assay input id for continuity with the
-      // prior form; these aliases also keep direct callers unambiguous while
-      // the form exposes one assay and one measured value.
-      const assayRaw = str(values.biomarker ?? values.biomarkerType ?? values.assay ?? 'nt', 'nt').toLowerCase();
+      const assayRaw = str(values.biomarker, 'nt').toLowerCase();
       const assay = assayRaw === 'none' ? 'none' : assayRaw === 'bnp' ? 'bnp' : 'nt';
       const assayLabel = assay === 'bnp' ? 'BNP' : assay === 'nt' ? 'NT-proBNP' : 'Not measured';
-      const rawBiomarkerValue =
-        values.biomarkerValue ?? values.npValue ?? values.level ?? (assay === 'bnp' ? values.bnp : values.ntprobnp);
+      const rawBiomarkerValue = values.biomarkerValue;
       const hasBiomarkerValue = !isMissingValue(rawBiomarkerValue, true);
       const biomarkerValue = hasBiomarkerValue ? Math.max(num(rawBiomarkerValue, 0), 0) : null;
 

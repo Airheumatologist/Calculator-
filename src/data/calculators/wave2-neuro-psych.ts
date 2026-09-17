@@ -1547,7 +1547,8 @@ export const wave2NeuroPsychCalcs: Calculator[] = [
         },
         {
           title: 'Adult Outpatient Brief Suicide Safety Assessment Guide',
-          citation: 'National Institute of Mental Health (NIMH), ASQ Toolkit',
+          citation: 'National Institute of Mental Health (NIMH), ASQ Toolkit (guide revision dated 2025-12-03)',
+          year: 2025,
           url: 'https://www.nimh.nih.gov/research/research-conducted-at-nimh/asq-toolkit-materials/adult-outpatient/adult-outpatient-brief-suicide-safety-assessment-guide',
         },
       ],
