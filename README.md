@@ -1,14 +1,4 @@
-# MedCalc Live
-
-MDCalc-style clinical calculator web application with **1000+ medical calculators**, **live scores** as you interact with inputs, plus **evidence** and **next steps** for every tool.
-
-```
-  __  __          _  ____      _         _     _
- |  \/  | ___  __| |/ ___|__ _| | ___   | |   (_)_   _____
- | |\/| |/ _ \/ _` | |   / _` | |/ __|  | |   | \ \ / / _ \
- | |  | |  __/ (_| | |__| (_| | | (__   | |___| |\ V /  __/
- |_|  |_|\___|\__,_|\____\__,_|_|\___|  |_____|_| \_/ \___|
-```
+Clinical calculator web application with **1000+ medical calculators**, **live scores** as you interact with inputs, plus **evidence** and **suggested actions** for every tool.
 
 > **Educational use only.** Not a medical device. Not a substitute for clinical judgment, institutional protocols, or primary literature.
 
@@ -21,7 +11,7 @@ MDCalc-style clinical calculator web application with **1000+ medical calculator
 | **1000+ calculators** | Cardiology, critical care, pulmonary, nephrology, GI, neurology, psychiatry, EM, pediatrics, OB, hematology, ID, toxicology, endocrinology, oncology, rheumatology, dermatology, surgery, urology, ENT, ophthalmology, geriatrics, general |
 | **Live scoring** | Results update immediately as you click selectors or change numbers — no submit button |
 | **Evidence panel** | Summary, formula, validation notes, and literature references with **PMID / DOI / URL** links |
-| **Next steps** | Condition-based clinical actions (MDCalc-style guidance) |
+| **Suggested actions** | Condition-based clinical actions |
 | **Search & filter** | Full-text search plus specialty category chips |
 
 ---
@@ -107,7 +97,7 @@ npm run lint      # oxlint
 ### Directory layout
 
 ```
-mdcalc/
+./
 ├── index.html                 # SPA entry shell
 ├── package.json
 ├── vite.config.ts
@@ -293,11 +283,11 @@ select, or a direct branch with no declared fields.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  HEADER  [MedCalc Live]  [======== search ========]  900+   │
+│  HEADER  [================ search ================]         │
 ├─────────────────────────────────────────────────────────────┤
 │  breadcrumb · title · description                           │
 │  ┌─────────────────────┐  ┌─────────────────────┐           │
-│  │ When to use         │  │ Why use             │           │
+│  │ Indications         │  │ Rationale           │           │
 │  └─────────────────────┘  └─────────────────────┘           │
 │                                                             │
 │  ┌──────────────────────────────┐  ┌─────────────────────┐  │
@@ -312,7 +302,7 @@ select, or a direct branch with no declared fields.
 │           │                                  ▲              │
 │           └──────── calculate(values) ───────┘              │
 │                                                             │
-│  [ Next steps ]  [ Evidence ]                               │
+│  [ Suggested actions ]  [ Evidence ]                        │
 │  ┌─────────────────────────────────────────────────────┐    │
 │  │ condition-based actions  /  formula + refs          │    │
 │  └─────────────────────────────────────────────────────┘    │
@@ -444,7 +434,7 @@ No backend, migrations, or API changes required — the registry is the source o
 
 ## Disclaimer
 
-MedCalc Live is for **education and decision-support learning** only.
+This application is for **education and decision-support learning** only.
 
 - Not FDA/CE cleared as a medical device  
 - Some scores use simplified educational approximations (called out in-app)  

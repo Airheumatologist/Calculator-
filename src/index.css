@@ -84,34 +84,6 @@ a {
   margin: 0 auto;
 }
 
-.logo-mark {
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
-  background: #f3faf8;
-  color: var(--brand);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  text-decoration: none;
-}
-
-.logo-mark .logo-md {
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-}
-
-.logo-mark .logo-calc {
-  font-size: 0.58rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  margin-top: 1px;
-}
-
 .header-search {
   flex: 1;
   position: relative;

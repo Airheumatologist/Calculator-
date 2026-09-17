@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 export function Layout() {
   const navigate = useNavigate();
@@ -21,10 +21,6 @@ export function Layout() {
     <>
       <header className="app-header">
         <div className="app-header-inner">
-          <Link to="/" className="logo-mark" aria-label="MedCalc home">
-            <span className="logo-md">MD+</span>
-            <span className="logo-calc">CALC</span>
-          </Link>
           <div className="header-search">
             <input
               type="search"

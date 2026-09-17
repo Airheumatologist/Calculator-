@@ -1,8 +1,8 @@
 {
-  "name": "medcalc-live",
+  "name": "clinical-calculators",
   "private": true,
   "version": "1.0.0",
-  "description": "MDCalc-style medical calculator web app with 1000+ live-scoring clinical tools",
+  "description": "Medical calculator web app with 1000+ live-scoring clinical tools",
   "type": "module",
   "scripts": {
     "dev": "vite",

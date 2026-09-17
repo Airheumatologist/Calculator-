@@ -131,11 +131,11 @@ export function CalculatorPage() {
 
       <div className="when-why">
         <div className="meta-block">
-          <h2>When to use</h2>
+          <h2>Indications</h2>
           <p>{calc.whenToUse}</p>
         </div>
         <div className="meta-block">
-          <h2>Why use</h2>
+          <h2>Rationale</h2>
           <p>{calc.whyUse}</p>
         </div>
       </div>
@@ -170,7 +170,7 @@ export function CalculatorPage() {
 
       <div className="info-tabs">
         <button type="button" className={`tab-btn ${tab === 'next' ? 'active' : ''}`} onClick={() => setTab('next')}>
-          Next steps
+          Suggested actions
         </button>
         <button
           type="button"

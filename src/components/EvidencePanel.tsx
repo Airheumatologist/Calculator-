@@ -85,7 +85,7 @@ export function EvidencePanel({ calc }: { calc: Calculator }) {
         </ul>
         {calc.pearls && calc.pearls.length > 0 && (
           <>
-            <h3 style={{ marginTop: '1rem' }}>Pearls & Pitfalls</h3>
+            <h3 style={{ marginTop: '1rem' }}>Clinical pearls</h3>
             <ul className="pearl-list">
               {calc.pearls.map((p) => (
                 <li key={p}>{p}</li>
