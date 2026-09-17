@@ -48,6 +48,23 @@ import { wave7RheumActivityCalcs } from './wave7-rheum-activity';
 import { wave7BedsideCalcs } from './wave7-bedside';
 import { wave7HighuseCalcs } from './wave7-highuse';
 import { wave7FillinsCalcs } from './wave7-fillins';
+import { wave8EmStaplesCalcs } from './wave8-em-staples';
+import { wave8EmCardioAirwayCalcs } from './wave8-em-cardio-airway';
+import { wave8CardiologyCalcs } from './wave8-cardiology';
+import { wave8NeuroStrokeCalcs } from './wave8-neuro-stroke';
+import { wave8NeuroGeneralCalcs } from './wave8-neuro-general';
+import { wave8PsychCalcs } from './wave8-psych';
+import { wave8HemeOncCalcs } from './wave8-heme-onc';
+import { wave8TransfusionCardioOncCalcs } from './wave8-transfusion-cardioonc';
+import { wave8LiverCalcs } from './wave8-liver';
+import { wave8GiCalcs } from './wave8-gi';
+import { wave8NephroMetabolicCalcs } from './wave8-nephro-metabolic';
+import { wave8EndoNutritionCalcs } from './wave8-endo-nutrition';
+import { wave8PedsObCalcs } from './wave8-peds-ob';
+import { wave8PulmIcuCalcs } from './wave8-pulm-icu';
+import { wave8TraumaOrthoCalcs } from './wave8-trauma-ortho';
+import { wave8IdGeriCalcs } from './wave8-id-geri';
+import { wave8MiscScreeningCalcs } from './wave8-misc-screening';
 
 export const calculators: Calculator[] = [
   ...cardiologyCalcs,
@@ -98,6 +115,23 @@ export const calculators: Calculator[] = [
   ...wave7BedsideCalcs,
   ...wave7HighuseCalcs,
   ...wave7FillinsCalcs,
+  ...wave8EmStaplesCalcs,
+  ...wave8EmCardioAirwayCalcs,
+  ...wave8CardiologyCalcs,
+  ...wave8NeuroStrokeCalcs,
+  ...wave8NeuroGeneralCalcs,
+  ...wave8PsychCalcs,
+  ...wave8HemeOncCalcs,
+  ...wave8TransfusionCardioOncCalcs,
+  ...wave8LiverCalcs,
+  ...wave8GiCalcs,
+  ...wave8NephroMetabolicCalcs,
+  ...wave8EndoNutritionCalcs,
+  ...wave8PedsObCalcs,
+  ...wave8PulmIcuCalcs,
+  ...wave8TraumaOrthoCalcs,
+  ...wave8IdGeriCalcs,
+  ...wave8MiscScreeningCalcs,
 ];
 
 assertUniqueCalculatorIds(calculators);
