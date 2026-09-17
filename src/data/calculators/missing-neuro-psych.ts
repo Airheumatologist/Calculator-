@@ -38,7 +38,7 @@ export const missingNeuroPsychCalcs: Calculator[] = [
           value: 5,
           description: 'Deep coma (typically GCS 3–6): no purposeful response. Decerebrate (extensor) posturing. Moribund appearance.',
         },
-      ], undefined, 'Grade from the current bedside exam (headache, meningismus, alertness, motor). Cranial-nerve palsy alone does not raise Grade II to III. Original Hunt–Hess: serious systemic disease (HTN, DM, severe atherosclerosis, COPD) or severe angiographic vasospasm bumps the patient one grade worse. Report WFNS (GCS + motor deficit) as well.'),
+      ], 2, 'Grade from the current bedside exam (headache, meningismus, alertness, motor). Cranial-nerve palsy alone does not raise Grade II to III. Original Hunt–Hess: serious systemic disease (HTN, DM, severe atherosclerosis, COPD) or severe angiographic vasospasm bumps the patient one grade worse. Report WFNS (GCS + motor deficit) as well.'),
     ],
     calculate(values) {
       const grade = num(values.grade, 1);
@@ -133,9 +133,9 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         { label: 'No SAH', value: 0, description: 'No cisternal or fissure subarachnoid blood' },
         { label: 'Thin SAH (focal or diffuse, <1 mm layers)', value: 1, description: 'SAH present but does not completely fill any cistern or fissure; layers <1 mm' },
         { label: 'Thick SAH (completely filling ≥1 cistern/fissure or ≥1 mm layers)', value: 2, description: 'Blood completely filling at least one cistern or fissure, or vertical layers ≥1 mm' },
-      ], undefined, 'Use the admission noncontrast CT. Thick vs thin is about filling cisterns/fissures, not about intraparenchymal hematoma (that is not SAH burden).'),
+      ], 2, 'Use the admission noncontrast CT. Thick vs thin is about filling cisterns/fissures, not about intraparenchymal hematoma (that is not SAH burden).'),
       yesNo('ivh', 'Intraventricular hemorrhage present', null,
-        'Any IVH on CT (even small) counts. Isolated IVH without cisternal SAH maps to modified Fisher 2 in this tool.'),
+        'Any IVH on CT (even small) counts. Isolated IVH without cisternal SAH maps to modified Fisher 2 in this tool.', true),
     ],
     calculate(values) {
       const sah = num(values.sah, 0);
@@ -251,10 +251,10 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         { label: '≥30 mL (1)', value: 1, description: 'ABC/2 volume ≥30 mL' },
       ], 0, 'ABC/2 method on axial CT: A = largest hemorrhage diameter (cm), B = diameter perpendicular to A, C = number of slices × slice thickness (cm). Volume (mL) ≈ A×B×C / 2.'),
       yesNo('ivh', 'Intraventricular hemorrhage present', 1,
-        'Any blood in the ventricular system on CT (even small).'),
+        'Any blood in the ventricular system on CT (even small).', true),
       yesNo('infra', 'Infratentorial origin', 1,
-        'Brainstem or cerebellar origin (not merely downward extension of a supratentorial hematoma).'),
-      yesNo('age80', 'Age ≥80 years', 1),
+        'Brainstem or cerebellar origin (not merely downward extension of a supratentorial hematoma).', false),
+      yesNo('age80', 'Age ≥80 years', 1, 'Age 80 years or older at presentation; scores 1 point in the 0-6 ICH score.', false),
     ],
     calculate(values) {
       const score =
@@ -368,17 +368,17 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         { label: 'Anatomical region checkboxes (10 MCA regions)', value: 'checkboxes' },
         { label: 'Enter ASPECTS total directly', value: 'direct' },
         { label: 'Count regions with early ischemic change (10 − count)', value: 'regions' },
-      ], 'checkboxes'),
-      yesNo('reg_c', 'C — Caudate head early ischemic change (hypoattenuation / loss of gray-white)', 0),
-      yesNo('reg_l', 'L — Lentiform nucleus early ischemic change', 0),
-      yesNo('reg_ic', 'IC — Internal capsule (posterior limb) early ischemic change', 0),
-      yesNo('reg_i', 'I — Insular ribbon early ischemic change', 0),
-      yesNo('reg_m1', 'M1 — Anterior MCA cortex (ganglionic level)', 0),
-      yesNo('reg_m2', 'M2 — MCA cortex lateral to insular ribbon (ganglionic level)', 0),
-      yesNo('reg_m3', 'M3 — Posterior MCA cortex (ganglionic level)', 0),
-      yesNo('reg_m4', 'M4 — Anterior MCA territory (supraganglionic level, superior to M1)', 0),
-      yesNo('reg_m5', 'M5 — Lateral MCA territory (supraganglionic level, superior to M2)', 0),
-      yesNo('reg_m6', 'M6 — Posterior MCA territory (supraganglionic level, superior to M3)', 0),
+      ], 'checkboxes', 'Region-by-region checkboxes are the reference method; the direct and count branches must describe the same scan. ASPECTS = 10 - regions involved.'),
+      yesNo('reg_c', 'C — Caudate head early ischemic change (hypoattenuation / loss of gray-white)', 0, 'Caudate head hypoattenuation or loss of the gray-white border; each involved region subtracts 1 point from 10.', true),
+      yesNo('reg_l', 'L — Lentiform nucleus early ischemic change', 0, 'Lentiform nucleus: obscuration of the lentiform gray matter; each involved region subtracts 1 point from 10.', false),
+      yesNo('reg_ic', 'IC — Internal capsule (posterior limb) early ischemic change', 0, 'Posterior limb of the internal capsule: decreased attenuation; each involved region subtracts 1 point from 10.', true),
+      yesNo('reg_i', 'I — Insular ribbon early ischemic change', 0, 'Insular ribbon: loss of the normal gray-white ribbon of the insular cortex; subtract 1 point from 10.', false),
+      yesNo('reg_m1', 'M1 — Anterior MCA cortex (ganglionic level)', 0, 'Anterior MCA cortex at the ganglionic level, anterior to the insular ribbon; subtract 1 point from 10.', false),
+      yesNo('reg_m2', 'M2 — MCA cortex lateral to insular ribbon (ganglionic level)', 0, 'MCA cortex lateral to the insular ribbon at the ganglionic level; subtract 1 point from 10.', true),
+      yesNo('reg_m3', 'M3 — Posterior MCA cortex (ganglionic level)', 0, 'Posterior MCA cortex at the ganglionic level, posterior to the insular ribbon; subtract 1 point from 10.', false),
+      yesNo('reg_m4', 'M4 — Anterior MCA territory (supraganglionic level, superior to M1)', 0, 'Anterior MCA cortex above the ganglionic level, superior to M1; subtract 1 point from 10.', false),
+      yesNo('reg_m5', 'M5 — Lateral MCA territory (supraganglionic level, superior to M2)', 0, 'Lateral MCA cortex above the ganglionic level, superior to M2; subtract 1 point from 10.', false),
+      yesNo('reg_m6', 'M6 — Posterior MCA territory (supraganglionic level, superior to M3)', 0, 'Posterior MCA cortex above the ganglionic level, superior to M3; subtract 1 point from 10.', false),
       numberInput('score', 'ASPECTS total (if direct entry)', {
         min: 0,
         max: 10,
@@ -510,7 +510,7 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         { label: '4 — Moderately severe; unable to walk/attend bodily needs without assistance', value: 4, description: 'Needs another person to walk AND/OR to attend bodily needs (toilet, dressing, feeding, hygiene). Not constantly bedridden; can be left alone for some periods.' },
         { label: '5 — Severe disability; bedridden, incontinent, constant nursing care', value: 5, description: 'Bedridden, incontinent, and requires constant nursing care and attention. Cannot be left alone safely.' },
         { label: '6 — Dead', value: 6, description: 'Death (trial/outcome coding).' },
-      ], undefined, 'Score current global function vs pre-event usual activities (Wilson structured-interview distinctions). Independent in affairs = shopping, meals, finances, local travel without another person’s help. Walking unassisted = no person required (aid OK). Bodily needs = toilet, dressing, feeding, hygiene. Use a structured mRS interview when available.'),
+      ], 3, 'Score current global function vs pre-event usual activities (Wilson structured-interview distinctions). Independent in affairs = shopping, meals, finances, local travel without another person’s help. Walking unassisted = no person required (aid OK). Bodily needs = toilet, dressing, feeding, hygiene. Use a structured mRS interview when available.'),
     ],
     calculate(values) {
       const score = num(values.mrs, 0);
@@ -586,28 +586,28 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         { label: '2 — Eyelids closed but open to loud voice', value: 2 },
         { label: '1 — Eyelids closed but open to pain', value: 1 },
         { label: '0 — Eyelids remain closed with pain', value: 0 },
-      ], undefined, 'If closed, open the lids. Tracking = follow a finger slowly horizontally and vertically, or blink to command. Do not score 0 solely because lids are swollen (note as untestable).'),
+      ], 1, 'If closed, open the lids. Tracking = follow a finger slowly horizontally and vertically, or blink to command. Do not score 0 solely because lids are swollen (note as untestable).'),
       selectInput('motor', 'Motor response (M)', [
         { label: '4 — Thumbs-up, fist, or peace sign to command', value: 4 },
         { label: '3 — Localizing to pain', value: 3 },
         { label: '2 — Flexion response to pain', value: 2 },
         { label: '1 — Extension response to pain', value: 1 },
         { label: '0 — No response to pain or generalized myoclonus status', value: 0 },
-      ], undefined, 'Pain stimulus = supraorbital / TMJ pressure or nail bed. Localizing = hand above the clavicle toward the stimulus. Score the best arm.'),
+      ], 2, 'Pain stimulus = supraorbital / TMJ pressure or nail bed. Localizing = hand above the clavicle toward the stimulus. Score the best arm.'),
       selectInput('brainstem', 'Brainstem reflexes (B)', [
         { label: '4 — Pupil and corneal reflexes present', value: 4 },
         { label: '3 — One pupil wide and fixed', value: 3, description: 'Wide/fixed ≈ pupil ≥5 mm and unreactive' },
         { label: '2 — Pupil OR corneal reflex absent', value: 2 },
         { label: '1 — Pupil AND corneal reflexes absent', value: 1 },
         { label: '0 — Absent pupil, corneal, and cough reflex', value: 0, description: 'Pupils + corneal + cough all absent' },
-      ], undefined, 'Wide/fixed ≈ pupil ≥5 mm and unreactive. Corneal = saline drop or wisp. Cough = tracheal suction if intubated. B0 = pupils + corneal + cough all absent.'),
+      ], 2, 'Wide/fixed ≈ pupil ≥5 mm and unreactive. Corneal = saline drop or wisp. Cough = tracheal suction if intubated. B0 = pupils + corneal + cough all absent.'),
       selectInput('respiration', 'Respiration (R)', [
         { label: '4 — Not intubated, regular breathing', value: 4, description: 'Not intubated; regular breathing pattern' },
         { label: '3 — Not intubated, Cheyne–Stokes', value: 3, description: 'Not intubated; cyclic crescendo–decrescendo tidal volume with interposed apneas' },
         { label: '2 — Not intubated, irregular breathing', value: 2, description: 'Not intubated; irregular breathing that is not Cheyne–Stokes' },
         { label: '1 — Breathes above ventilator rate', value: 1, description: 'Intubated and over-breathing the set rate' },
         { label: '0 — Breathes at ventilator rate or apnea', value: 0, description: 'Intubated and breathing at the set rate, or apneic' },
-      ], undefined, 'If intubated, score 1 if over-breathing the ventilator and 0 if breathing at the set rate or apneic.'),
+      ], 1, 'If intubated, score 1 if over-breathing the ventilator and 0 if breathing at the set rate or apneic.'),
     ],
     calculate(values) {
       const e = num(values.eye, 4);
@@ -692,13 +692,13 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         { label: 'Several days (1)', value: 1 },
         { label: 'More than half the days (2)', value: 2 },
         { label: 'Nearly every day (3)', value: 3 },
-      ], undefined, 'Over the last 2 weeks, how often have you been bothered by the following?'),
+      ], 2, 'Over the last 2 weeks, how often have you been bothered by the following?'),
       selectInput('q2', '2. Feeling down, depressed, or hopeless', [
         { label: 'Not at all (0)', value: 0 },
         { label: 'Several days (1)', value: 1 },
         { label: 'More than half the days (2)', value: 2 },
         { label: 'Nearly every day (3)', value: 3 },
-      ], undefined, 'Over the last 2 weeks, how often have you been bothered by the following?'),
+      ], 2, 'Over the last 2 weeks, how often have you been bothered by the following?'),
     ],
     calculate(values) {
       const score = num(values.q1) + num(values.q2);
@@ -755,25 +755,25 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         { label: '2–4 times a month (2)', value: 2 },
         { label: '2–3 times a week (3)', value: 3 },
         { label: '4 or more times a week (4)', value: 4 },
-      ], undefined, 'In the past year.'),
+      ], 3, 'In the past year.'),
       selectInput('q2', '2. How many standard drinks do you have on a typical drinking day?', [
         { label: '1–2 (0)', value: 0 },
         { label: '3–4 (1)', value: 1 },
         { label: '5–6 (2)', value: 2 },
         { label: '7–9 (3)', value: 3 },
         { label: '10 or more (4)', value: 4 },
-      ], undefined, 'Past year. One US standard drink ≈ 14 g alcohol (12 oz 5% beer, 5 oz 12% wine, 1.5 oz 40% spirits). WHO AUDIT uses 10 g — use the definition your local AUDIT-C was validated with.'),
+      ], 1, 'Past year. One US standard drink ≈ 14 g alcohol (12 oz 5% beer, 5 oz 12% wine, 1.5 oz 40% spirits). WHO AUDIT uses 10 g — use the definition your local AUDIT-C was validated with.'),
       selectInput('q3', '3. How often do you have 6 or more drinks on one occasion?', [
         { label: 'Never (0)', value: 0 },
         { label: 'Less than monthly (1)', value: 1 },
         { label: 'Monthly (2)', value: 2 },
         { label: 'Weekly (3)', value: 3 },
         { label: 'Daily or almost daily (4)', value: 4 },
-      ], undefined, 'Past year; same standard-drink definition as Q2.'),
+      ], 2, 'Past year; same standard-drink definition as Q2.'),
       selectInput('sex', 'Sex (for common cutoffs)', [
         { label: 'Male / assigned male', value: 'male' },
         { label: 'Female / assigned female', value: 'female' },
-      ]),
+      ], 'male', 'Sets which common cutoff is displayed: at least 4 in men, at least 3 in women. Sex contributes no points.'),
     ],
     calculate(values) {
       const score = num(values.q1) + num(values.q2) + num(values.q3);
@@ -858,68 +858,68 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         { label: '81–100 (1)', value: 1, description: 'Resting HR 81–100' },
         { label: '101–120 (2)', value: 2, description: 'Resting HR 101–120' },
         { label: '>120 (4)', value: 4, description: 'Resting HR >120' },
-      ], undefined, 'Resting rate after sitting or lying 1 minute. Do not score immediately after walking to the room.'),
+      ], 1, 'Resting rate after sitting or lying 1 minute. Do not score immediately after walking to the room.'),
       selectInput('sweating', 'Sweating (unrelated to room temp)', [
         { label: 'No report of chills or flushing (0)', value: 0, description: 'No chills, flushing, or observable sweat' },
         { label: 'Subjective chills or flushing (1)', value: 1, description: 'Patient reports chills or flushing; skin not yet moist' },
         { label: 'Flushed or observable moistness face (2)', value: 2, description: 'Flushed face or observable moistness, not beads of sweat' },
         { label: 'Beads of sweat on brow or face (3)', value: 3, description: 'Discrete beads of sweat on brow or face' },
         { label: 'Sweat streaming off face (4)', value: 4, description: 'Sweat streaming off the face' },
-      ], undefined, 'Over the past ½ hour, not room temperature or activity.'),
+      ], 2, 'Over the past ½ hour, not room temperature or activity.'),
       selectInput('restlessness', 'Restlessness', [
         { label: 'Able to sit still (0)', value: 0, description: 'Sits still during the assessment' },
         { label: 'Reports difficulty sitting still, but is able to (1)', value: 1, description: 'Patient reports difficulty sitting still but remains seated' },
         { label: 'Frequent shifting or extraneous movements of legs/arms (3)', value: 3, description: 'Observed frequent shifting or extraneous limb movements' },
         { label: 'Unable to sit still for more than a few seconds (5)', value: 5, description: 'Cannot remain seated more than a few seconds' },
-      ], undefined, 'Observe during the interview; do not score based on history of restlessness earlier today.'),
+      ], 1, 'Observe during the interview; do not score based on history of restlessness earlier today.'),
       selectInput('pupils', 'Pupil size', [
         { label: 'Pinned or normal for room light (0)', value: 0, description: 'Pupils pinned or appropriate for ambient light' },
         { label: 'Possibly larger than normal for room light (1)', value: 1, description: 'Possibly larger than expected for room light; not frankly dilated' },
         { label: 'Moderately dilated (2)', value: 2, description: 'Moderately dilated; iris still well seen' },
         { label: 'So dilated that only rim of iris is visible (5)', value: 5, description: 'Only a rim of iris visible around a widely dilated pupil' },
-      ], undefined, 'Observe in the current room light; do not dim or brighten the room to score.'),
+      ], 1, 'Observe in the current room light; do not dim or brighten the room to score.'),
       selectInput('aches', 'Bone or joint aches', [
         { label: 'Not present (0)', value: 0, description: 'No bone, joint, or muscle aching attributed to withdrawal' },
         { label: 'Mild diffuse discomfort (1)', value: 1, description: 'Patient reports mild diffuse aching; not rubbing joints; able to sit still' },
         { label: 'Patient reports severe diffuse aching of joints/muscles (2)', value: 2, description: 'Severe aching by report, but not rubbing joints or unable to sit (that is 4)' },
         { label: 'Patient is rubbing joints/muscles and is unable to sit still because of discomfort (4)', value: 4, description: 'Observed rubbing joints/muscles and unable to sit still because of the pain' },
-      ], undefined, 'If preexisting pain, score only the additional opioid-withdrawal component.'),
+      ], 2, 'If preexisting pain, score only the additional opioid-withdrawal component.'),
       selectInput('rhinorrhea', 'Runny nose or tearing (not from cold/allergy)', [
         { label: 'Not present (0)', value: 0, description: 'No nasal stuffiness, rhinorrhea, or lacrimation' },
         { label: 'Nasal stuffiness or unusually moist eyes (1)', value: 1, description: 'Stuffiness or moist eyes only; no running nose or streaming tears' },
         { label: 'Nose running or tearing (2)', value: 2, description: 'Observable rhinorrhea or tearing, not constantly streaming' },
         { label: 'Nose constantly running or tears streaming down cheeks (4)', value: 4, description: 'Constant rhinorrhea or tears streaming down the cheeks' },
-      ], undefined, 'Not from a concurrent URI or allergy. Observe during the assessment.'),
+      ], 1, 'Not from a concurrent URI or allergy. Observe during the assessment.'),
       selectInput('gi', 'GI upset', [
         { label: 'No GI symptoms (0)', value: 0, description: 'No cramps, nausea, vomiting, or diarrhea in the last ½ hour' },
         { label: 'Stomach cramps (1)', value: 1, description: 'Cramps only; no nausea, vomiting, or loose stool' },
         { label: 'Nausea or loose stool (2)', value: 2, description: 'Nausea or loose stool (not yet vomiting or diarrhea)' },
         { label: 'Vomiting or diarrhea (3)', value: 3, description: 'Vomiting or diarrhea (not multiple episodes — that is 5)' },
         { label: 'Multiple episodes of diarrhea or vomiting (5)', value: 5, description: 'Repeated vomiting or diarrhea during the last ½ hour' },
-      ], undefined, 'Symptoms over the last ½ hour.'),
+      ], 1, 'Symptoms over the last ½ hour.'),
       selectInput('tremor', 'Tremor (observe outstretched hands)', [
         { label: 'No tremor (0)', value: 0, description: 'No tremor felt or seen with arms outstretched, fingers spread' },
         { label: 'Tremor can be felt, but not observed (1)', value: 1, description: 'Fine tremor felt fingertip-to-fingertip; not visible' },
         { label: 'Slight tremor observable (2)', value: 2, description: 'Visible tremor with arms outstretched; not present at rest and not gross twitching' },
         { label: 'Gross tremor or muscle twitching (4)', value: 4, description: 'Gross tremor or muscle twitching, even without outstretched arms' },
-      ], undefined, 'Arms outstretched, fingers spread. Feel fingertip-to-fingertip, then observe.'),
+      ], 2, 'Arms outstretched, fingers spread. Feel fingertip-to-fingertip, then observe.'),
       selectInput('yawning', 'Yawning', [
         { label: 'No yawning (0)', value: 0, description: 'No yawns during the assessment' },
         { label: 'Yawning once or twice during assessment (1)', value: 1, description: '1–2 yawns observed during the assessment' },
         { label: 'Yawning three or more times during assessment (2)', value: 2, description: '≥3 yawns during the assessment, but not several per minute' },
         { label: 'Yawning several times/minute (4)', value: 4, description: 'Several yawns per minute' },
-      ], undefined, 'Count yawns during this assessment only, not by history.'),
+      ], 2, 'Count yawns during this assessment only, not by history.'),
       selectInput('anxiety', 'Anxiety or irritability', [
         { label: 'None (0)', value: 0, description: 'No irritability or anxiousness reported or observed' },
         { label: 'Patient reports increasing irritability or anxiousness (1)', value: 1, description: 'Reported irritability or anxiety; not obvious on observation' },
         { label: 'Patient obviously irritable/anxious (2)', value: 2, description: 'Obviously irritable or anxious on observation; still able to complete the assessment' },
         { label: 'Patient so irritable/anxious that participation in assessment is difficult (4)', value: 4, description: 'So irritable or anxious that the assessment is difficult to complete' },
-      ], undefined, 'Observe affect during the interview; ask whether the patient feels anxious or irritable.'),
+      ], 1, 'Observe affect during the interview; ask whether the patient feels anxious or irritable.'),
       selectInput('gooseflesh', 'Gooseflesh skin', [
         { label: 'Skin is smooth (0)', value: 0, description: 'Skin smooth; no palpable or visible piloerection' },
         { label: 'Piloerection of skin can be felt or hairs standing up on arms (3)', value: 3, description: 'Piloerection felt, or hairs standing on the arms, but not prominent' },
         { label: 'Prominent piloerection (5)', value: 5, description: 'Prominent, easily seen gooseflesh' },
-      ], undefined, 'Observe and palpate the arms; room should not be cold enough to cause piloerection on its own.'),
+      ], 0, 'Observe and palpate the arms; room should not be cold enough to cause piloerection on its own.'),
     ],
     calculate(values) {
       const keys = [
@@ -1018,24 +1018,24 @@ export const missingNeuroPsychCalcs: Calculator[] = [
     whyUse: 'Mnemonic covering classic risk factors; educational aid — clinical judgment always required.',
     inputs: [
       yesNo('sex', 'Sex: male', 1,
-        'Assigned/identified male (original SAD PERSONS item).'),
+        'Assigned/identified male (original SAD PERSONS item).', true),
       yesNo('age', 'Age <19 or >45 years', 1,
-        'Age is <19 or >45 years at the time of assessment.'),
+        'Age is <19 or >45 years at the time of assessment.', false),
       yesNo('depression', 'Depression or hopelessness', 1,
-        'Current depressive episode or expressed hopelessness (not remote history alone).'),
+        'Current depressive episode or expressed hopelessness (not remote history alone).', true),
       yesNo('previous', 'Previous suicide attempt or psychiatric care', 1,
-        'Prior suicide attempt or inpatient/outpatient psychiatric treatment.'),
+        'Prior suicide attempt or inpatient/outpatient psychiatric treatment.', true),
       yesNo('ethanol', 'Excessive ethanol or drug use', 1,
-        'Current heavy alcohol use or illicit/misused drugs (not remote or occasional use).'),
+        'Current heavy alcohol use or illicit/misused drugs (not remote or occasional use).', true),
       yesNo('rational', 'Rational thinking loss (psychosis, organic brain syndrome)', 1,
-        'Psychosis, delirium, or organic brain syndrome impairing judgment.'),
+        'Psychosis, delirium, or organic brain syndrome impairing judgment.', false),
       yesNo('social', 'Social supports lacking', 1,
-        'No reliable person available; socially isolated.'),
+        'No reliable person available; socially isolated.', true),
       yesNo('organized', 'Organized plan for suicide', 1,
-        'Specific method, time, and/or place contemplated — not vague ideation alone.'),
-      yesNo('spouse', 'No spouse (single, divorced, widowed, separated)', 1),
+        'Specific method, time, and/or place contemplated — not vague ideation alone.', false),
+      yesNo('spouse', 'No spouse (single, divorced, widowed, separated)', 1, 'Single, divorced, widowed, or separated scores 1 point; married or with a stable partner scores 0.', true),
       yesNo('sickness', 'Sickness (chronic/debilitating illness)', 1,
-        'Chronic, debilitating, or severe medical illness.'),
+        'Chronic, debilitating, or severe medical illness.', false),
     ],
     calculate(values) {
       const keys = ['sex', 'age', 'depression', 'previous', 'ethanol', 'rational', 'social', 'organized', 'spouse', 'sickness'];
@@ -1225,25 +1225,29 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         'feature1',
         'Feature 1: Acute change from mental status baseline OR fluctuating course (past 24h)',
         1,
-        'Required for CAM-ICU positive. Ask nurse/family and review RASS trend: acute change from baseline OR fluctuating course in the past 24 hours.'
+        'Required for CAM-ICU positive. Ask nurse/family and review RASS trend: acute change from baseline OR fluctuating course in the past 24 hours.',
+        true
       ),
       yesNo(
         'feature2',
         'Feature 2: Inattention (e.g., ASE letters: >2 errors on SAVEAHAART, or ASE pictures abnormal)',
         1,
-        'Required for CAM-ICU positive. ASE letters: read SAVEAHAART, squeeze on each “A”; >2 errors = inattention. If RASS −4 or −5, unable to assess (do not call CAM−).'
+        'Required for CAM-ICU positive. ASE letters: read SAVEAHAART, squeeze on each “A”; >2 errors = inattention. If RASS −4 or −5, unable to assess (do not call CAM−).',
+        true
       ),
       yesNo(
         'feature3',
         'Feature 3: Altered level of consciousness (current RASS ≠ 0, or other than alert/calm)',
         1,
-        'Current RASS ≠ 0. If RASS −4 or −5, unable to assess (do not call CAM−).'
+        'Current RASS ≠ 0. If RASS −4 or −5, unable to assess (do not call CAM−).',
+        true
       ),
       yesNo(
         'feature4',
         'Feature 4: Disorganized thinking (yes/no questions + command; >1 error)',
         1,
-        '4 questions (Will a stone float on water? Are there fish in the sea? Does one pound weigh more than two pounds? Can you use a hammer to pound a nail?) + command: hold up this many fingers (show 2), then same with the other hand without demonstrating. Disorganized thinking if >1 error.'
+        '4 questions (Will a stone float on water? Are there fish in the sea? Does one pound weigh more than two pounds? Can you use a hammer to pound a nail?) + command: hold up this many fingers (show 2), then same with the other hand without demonstrating. Disorganized thinking if >1 error.',
+        false
       ),
     ],
     calculate(values) {
@@ -1348,7 +1352,7 @@ export const missingNeuroPsychCalcs: Calculator[] = [
         { label: '−3 Moderate sedation — movement or eye opening to voice but no eye contact', value: -3, description: 'To voice: any movement or eye opening, but no eye contact. Distinguishes from −2 (which requires brief eye contact).' },
         { label: '−4 Deep sedation — no response to voice; movement/eye opening to physical stimulation', value: -4, description: 'No response to voice. After shake shoulder then sternal rub: any movement or eye opening. If RASS −4/−5, CAM-ICU is unable to assess.' },
         { label: '−5 Unarousable — no response to voice or physical stimulation', value: -5, description: 'No response to voice or to physical stimulation (sternal rub).' },
-      ], undefined, '1) Observe: if alert/restless/agitated score 0 to +4. 2) If not alert, call name loudly and ask to look at speaker (repeat once): −1 sustained eye contact ≥10 s; −2 eye contact <10 s; −3 movement or eye opening to voice, no eye contact. 3) If no voice response, shake shoulder then sternal rub: −4 any movement to physical stimulation; −5 none.'),
+      ], 1, '1) Observe: if alert/restless/agitated score 0 to +4. 2) If not alert, call name loudly and ask to look at speaker (repeat once): −1 sustained eye contact ≥10 s; −2 eye contact <10 s; −3 movement or eye opening to voice, no eye contact. 3) If no voice response, shake shoulder then sternal rub: −4 any movement to physical stimulation; −5 none.'),
     ],
     calculate(values) {
       const score = num(values.rass, 0);
@@ -1424,26 +1428,26 @@ export const missingNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Risk stratification after TIA when imaging and short-term recurrence history are available.',
     whyUse: 'Improves prediction of early stroke after TIA beyond ABCD² alone.',
     inputs: [
-      yesNo('age', 'Age ≥60', 1),
+      yesNo('age', 'Age ≥60', 1, 'Age 60 years or older; scores 1 point. The age item is dichotomous, not banded.', true),
       yesNo('bp', 'BP ≥140/90 at presentation', 1,
-        'Either systolic ≥140 or diastolic ≥90 mmHg at the TIA presentation (ABCD²).'),
+        'Either systolic ≥140 or diastolic ≥90 mmHg at the TIA presentation (ABCD²).', true),
       selectInput('clinical', 'Clinical features', [
         { label: 'Other symptoms (0)', value: 0, description: 'No unilateral weakness and no speech disturbance (e.g. sensory, visual, vertigo only)' },
         { label: 'Speech disturbance without weakness (1)', value: 1, description: 'Dysarthria or aphasia without unilateral weakness' },
         { label: 'Unilateral weakness (2)', value: 2, description: 'Unilateral motor weakness of face, arm, and/or leg (highest ABCD² clinical points even if speech is also affected)' },
-      ]),
+      ], 1, 'Other symptoms 0; speech disturbance without weakness 1; unilateral weakness 2. Use the highest applicable category.'),
       selectInput('duration', 'Duration of symptoms', [
         { label: '<10 min (0)', value: 0 },
         { label: '10–59 min (1)', value: 1 },
         { label: '≥60 min (2)', value: 2 },
-      ], undefined, 'Longest duration of the index TIA symptoms, in minutes.'),
-      yesNo('dm', 'Diabetes mellitus', 1),
+      ], 1, 'Longest duration of the index TIA symptoms, in minutes.'),
+      yesNo('dm', 'Diabetes mellitus', 1, 'Diabetes mellitus, type 1 or 2, treated or untreated; scores 1 point.', false),
       yesNo('dualTia', 'Dual TIA: ≥2 TIAs in past 7 days (including index)', 2,
-        'Two or more distinct TIA episodes in the past 7 days, counting the index event.'),
+        'Two or more distinct TIA episodes in the past 7 days, counting the index event.', false),
       yesNo('stenosis', 'Ipsilateral ≥50% carotid (or intracranial) stenosis', 2,
-        '≥50% stenosis ipsilateral to the symptomatic hemisphere (cervical carotid or equivalent intracranial).'),
+        '≥50% stenosis ipsilateral to the symptomatic hemisphere (cervical carotid or equivalent intracranial).', true),
       yesNo('dwi', 'Acute DWI lesion attributable to symptoms', 2,
-        'Acute ischemic lesion on DWI in a territory that explains the TIA symptoms.'),
+        'Acute ischemic lesion on DWI in a territory that explains the TIA symptoms.', true),
     ],
     calculate(values) {
       const abcd2 =
@@ -1535,17 +1539,17 @@ export const missingNeuroPsychCalcs: Calculator[] = [
     whyUse: 'Widely adopted severity ladder from wish to die through intent/plan and recent behavior.',
     inputs: [
       yesNo('wishDead', '1. Wish to be dead (passive ideation)', null,
-        'Use official C-SSRS screener wording (Columbia Lighthouse Project card) — do not treat these paraphrases as the licensed interview. Common screener window for ideation is the past month (plus lifetime on the full instrument). Training/certification is required for some health-system uses.'),
+        'Use official C-SSRS screener wording (Columbia Lighthouse Project card) — do not treat these paraphrases as the licensed interview. Common screener window for ideation is the past month (plus lifetime on the full instrument). Training/certification is required for some health-system uses.', true),
       yesNo('siNonSpecific', '2. Non-specific active suicidal thoughts', null,
-        'Official C-SSRS screener wording; typical ideation window is the past month.'),
+        'Official C-SSRS screener wording; typical ideation window is the past month.', false),
       yesNo('siMethod', '3. Active suicidal ideation with any method (no plan/intent)', null,
-        'Official C-SSRS screener wording; typical ideation window is the past month.'),
+        'Official C-SSRS screener wording; typical ideation window is the past month.', false),
       yesNo('siIntent', '4. Active suicidal ideation with some intent to act (no specific plan)', null,
-        'Official C-SSRS screener wording; typical ideation window is the past month.'),
+        'Official C-SSRS screener wording; typical ideation window is the past month.', false),
       yesNo('siPlanIntent', '5. Active suicidal ideation with specific plan and intent', null,
-        'Official C-SSRS screener wording; typical ideation window is the past month.'),
+        'Official C-SSRS screener wording; typical ideation window is the past month.', false),
       yesNo('behavior', 'Suicidal behavior (actual/aborted/interrupted attempt or preparatory acts) in past 3 months', null,
-        'Past 3 months. Use official C-SSRS behavior definitions on the licensed screener card. This is an independent risk override, not an additive point item.'),
+        'Past 3 months. Use official C-SSRS behavior definitions on the licensed screener card. This is an independent risk override, not an additive point item.', false),
     ],
     calculate(values) {
       const wish = bool(values.wishDead);
@@ -1684,16 +1688,17 @@ export const missingNeuroPsychCalcs: Calculator[] = [
           i === 0
             ? 'Has there ever been a period of time when you were not your usual self and you… — then the 13 items. Score baseline personality as No.'
             : 'Same stem: a period when you were not your usual self.',
+          [true, false, true, true, true, true, true, true, false, false, true, false, false][i],
         ),
       ),
       yesNo('samePeriod', 'Several of the above ever happened during the same period of time?', 0,
-        'Several of these happened during the same period of time (required for a positive MDQ).'),
+        'Several of these happened during the same period of time (required for a positive MDQ).', true),
       selectInput('impairment', 'How much of a problem did any of this cause?', [
         { label: 'No problem', value: 0, description: 'No functional impact' },
         { label: 'Minor problem', value: 1, description: 'Noticeable but did not impair work, family, money, legal issues, or cause fights' },
         { label: 'Moderate problem', value: 2, description: 'Caused problems such as being unable to work; family, money, or legal troubles; or getting into arguments or fights — this is the MDQ positive threshold (with ≥7 symptoms and same-period clustering)' },
         { label: 'Serious problem', value: 3, description: 'Major disruption (e.g. job loss, hospitalization, serious legal trouble). Also meets the MDQ impairment criterion.' },
-      ], undefined, 'Official MDQ: “How much of a problem did any of these cause you — like being unable to work; having family, money or legal troubles; getting into arguments or fights?” Positive screen requires moderate or serious (not minor).'),
+      ], 2, 'Official MDQ: “How much of a problem did any of these cause you — like being unable to work; having family, money or legal troubles; getting into arguments or fights?” Positive screen requires moderate or serious (not minor).'),
     ],
     calculate(values) {
       let symptomCount = 0;

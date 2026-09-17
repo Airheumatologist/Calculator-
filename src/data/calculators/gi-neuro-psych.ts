@@ -136,7 +136,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
       numberInput('bili', 'Bilirubin', { unit: 'mg/dL', min: 0.1, max: 50, step: 0.1, exampleValue: 2.0, helpText: 'Total bilirubin in mg/dL; this historical implementation floors values below 1.0.' }),
       numberInput('inr', 'INR', { min: 0.8, max: 20, step: 0.1, exampleValue: 1.5, helpText: 'This historical implementation floors INR below 1.0.' }),
       numberInput('creat', 'Creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 15, step: 0.1, exampleValue: 1.0, helpText: 'Historical MELD handling: floor at 1.0, cap at 4.0; dialysis ≥2× in the past week (or 24 h CVVHD) sets Cr to 4.0.' }),
-      yesNo('dialysis', 'Dialysis ≥2 times in past week (or 24h CVVHD)', null, 'Historical MELD handling sets creatinine to 4.0 mg/dL; this is not the current MELD 3.0 creatinine rule.'),
+      yesNo('dialysis', 'Dialysis ≥2 times in past week (or 24h CVVHD)', null, 'Historical MELD handling sets creatinine to 4.0 mg/dL; this is not the current MELD 3.0 creatinine rule.', false),
     ],
     calculate(values) {
       let bili = Math.max(num(values.bili, 2), 1);
@@ -187,7 +187,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
       selectInput('entryMode', 'Input mode', [
         { label: 'Primary OPTN laboratory values', value: 'labs' },
         { label: 'Enter precomputed MELD 3.0 score', value: 'direct' },
-      ], 'labs'),
+      ], 'labs', 'Primary values runs the OPTN MELD 3.0 equation from labs, age, sex, and dialysis; the precomputed branch accepts an existing MELD 3.0 score and skips the formula.'),
       numberInput('age', 'Age at waitlist registration', { unit: 'years', min: 12, max: 120, step: 1, exampleValue: 55, helpText: 'Use age at registration: adult formula at ≥18 years; adolescent formula at 12–17 years.' }),
       selectInput('sex', 'Sex for MELD 3.0 calculation', [
         { label: 'Male', value: 'male' },
@@ -198,7 +198,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
       numberInput('albumin', 'Serum albumin', { unit: 'g/dL', min: 0.1, max: 6, step: 0.1, exampleValue: 3.0, helpText: 'Bounded to 1.5–3.5 g/dL per OPTN policy.' }),
       numberInput('creat', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 20, step: 0.1, exampleValue: 1.2, helpText: 'Values below 1.0 are set to 1.0; values above 3.0 are set to 3.0. Dialysis also sets creatinine to 3.0.' }),
       numberInput('na', 'Serum sodium', { unit: 'mEq/L', min: 100, max: 160, step: 1, exampleValue: 135, helpText: 'Bounded to 125–137 mEq/L per OPTN policy.' }),
-      yesNo('dialysis', 'Dialysis ≥2 times or ≥24h CVVHD within prior 7 days', 0, 'If yes, serum creatinine is set to 3.0 mg/dL. OPTN policy specifies dialysis twice or 24 hours of CVVHD; CVVH/SLED are not interchangeable terms here.'),
+      yesNo('dialysis', 'Dialysis ≥2 times or ≥24h CVVHD within prior 7 days', 0, 'If yes, serum creatinine is set to 3.0 mg/dL. OPTN policy specifies dialysis twice or 24 hours of CVVHD; CVVH/SLED are not interchangeable terms here.', false),
       numberInput('directMeld', 'Precomputed MELD 3.0 score (6–40)', { min: 6, max: 40, exampleValue: 15, helpText: 'Only used when "Enter precomputed MELD 3.0 score" is selected; do not apply a second sodium adjustment.' }),
     ],
     calculate(values) {
@@ -352,20 +352,22 @@ export const giNeuroPsychCalcs: Calculator[] = [
         { label: '90–99 (2)', value: 2 },
         { label: '<90 (3)', value: 3 },
       ], 0, 'Systolic BP in mmHg at this presentation.'),
-      yesNo('hr100', 'Heart rate ≥100 bpm', 1, 'Pulse ≥100 beats/min at this presentation.'),
-      yesNo('melena', 'Melena', 1, 'Black tarry stool attributed to the current bleed (not just dark stool from iron/bismuth).'),
-      yesNo('syncope', 'Syncope', 2, 'Transient loss of consciousness with the current bleed presentation.'),
+      yesNo('hr100', 'Heart rate ≥100 bpm', 1, 'Pulse ≥100 beats/min at this presentation.', true),
+      yesNo('melena', 'Melena', 1, 'Black tarry stool attributed to the current bleed (not just dark stool from iron/bismuth).', true),
+      yesNo('syncope', 'Syncope', 2, 'Transient loss of consciousness with the current bleed presentation.', false),
       yesNo(
         'liver',
         'Hepatic disease',
         2,
         'Known history or clinical/laboratory evidence of chronic or acute liver disease (Blatchford 2000).',
+        false,
       ),
       yesNo(
         'heart',
         'Cardiac failure',
         2,
         'Known history or clinical/radiographic evidence of heart failure.',
+        false,
       ),
     ],
     calculate(values) {
@@ -419,7 +421,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
         { label: '<60 (0)', value: 0 },
         { label: '60–79 (1)', value: 1 },
         { label: '≥80 (2)', value: 2 },
-      ]),
+      ], 1, 'Age band for the pre-endoscopy Rockall score.'),
       selectInput('shock', 'Shock', [
         { label: 'No shock HR≤100 SBP≥100 (0)', value: 0, description: 'HR ≤100 bpm and SBP ≥100 mmHg' },
         { label: 'Tachycardia HR>100 SBP≥100 (1)', value: 1, description: 'HR >100 bpm with SBP still ≥100 mmHg' },
@@ -473,14 +475,14 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Suspected appendicitis to guide imaging/surgery decisions.',
     whyUse: 'Structured clinical probability; imaging still common.',
     inputs: [
-      yesNo('migration', 'Migration of pain to RLQ', 1, 'Yes if pain began elsewhere (typically periumbilical or epigastric) and later moved to the right lower quadrant.'),
-      yesNo('anorexia', 'Anorexia', 1, 'Loss of appetite with this illness.'),
-      yesNo('nausea', 'Nausea / vomiting', 1, 'Either nausea or vomiting counts (Alvarado MANTRELS).'),
-      yesNo('rlq', 'RLQ tenderness', 2, 'Tenderness maximal in the right lower quadrant (typically McBurney’s point).'),
-      yesNo('rebound', 'Rebound tenderness', 1, 'Pain on sudden release of RLQ pressure (Blumberg), not only on pressing.'),
-      yesNo('fever', 'Temperature ≥37.3°C', 1, 'Alvarado fever cutoff is ≥37.3°C (99.1°F) — lower than a 38.0°C “fever” rule.'),
-      yesNo('leukocytosis', 'Leukocytosis >10,000/µL', 2, 'WBC >10,000/µL (10 × 10⁹/L).'),
-      yesNo('leftshift', 'Left shift (neutrophilia)', 1, 'Yes if neutrophil left shift / neutrophilia (Alvarado: typically PMNs ≥75%).'),
+      yesNo('migration', 'Migration of pain to RLQ', 1, 'Yes if pain began elsewhere (typically periumbilical or epigastric) and later moved to the right lower quadrant.', true),
+      yesNo('anorexia', 'Anorexia', 1, 'Loss of appetite with this illness.', true),
+      yesNo('nausea', 'Nausea / vomiting', 1, 'Either nausea or vomiting counts (Alvarado MANTRELS).', true),
+      yesNo('rlq', 'RLQ tenderness', 2, 'Tenderness maximal in the right lower quadrant (typically McBurney’s point).', true),
+      yesNo('rebound', 'Rebound tenderness', 1, 'Pain on sudden release of RLQ pressure (Blumberg), not only on pressing.', false),
+      yesNo('fever', 'Temperature ≥37.3°C', 1, 'Alvarado fever cutoff is ≥37.3°C (99.1°F) — lower than a 38.0°C “fever” rule.', true),
+      yesNo('leukocytosis', 'Leukocytosis >10,000/µL', 2, 'WBC >10,000/µL (10 × 10⁹/L).', true),
+      yesNo('leftshift', 'Left shift (neutrophilia)', 1, 'Yes if neutrophil left shift / neutrophilia (Alvarado: typically PMNs ≥75%).', false),
     ],
     calculate(values) {
       const score =
@@ -520,11 +522,11 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Acute pancreatitis severity (admission portion shown).',
     whyUse: 'Classic criteria; BISAP/APACHE often more practical early.',
     inputs: [
-      yesNo('age', 'Age > 55 years', 1, 'Admission (not 48-hour) criteria. Complete Ranson also needs 48 h Hct drop, BUN rise, Ca, PaO₂, base deficit, and fluid sequestration — not in this tool.'),
-      yesNo('wbc', 'WBC > 16,000/µL', 1, 'Admission WBC >16,000/µL (16 × 10⁹/L).'),
-      yesNo('glu', 'Glucose > 200 mg/dL', 1, 'Admission glucose >200 mg/dL (≈ 11.1 mmol/L).'),
-      yesNo('ldh', 'LDH > 350 U/L', 1, 'Admission LDH >350 U/L.'),
-      yesNo('ast', 'AST > 250 U/L', 1, 'Admission AST (SGOT) >250 U/L.'),
+      yesNo('age', 'Age > 55 years', 1, 'Admission (not 48-hour) criteria. Complete Ranson also needs 48 h Hct drop, BUN rise, Ca, PaO₂, base deficit, and fluid sequestration — not in this tool.', true),
+      yesNo('wbc', 'WBC > 16,000/µL', 1, 'Admission WBC >16,000/µL (16 × 10⁹/L).', true),
+      yesNo('glu', 'Glucose > 200 mg/dL', 1, 'Admission glucose >200 mg/dL (≈ 11.1 mmol/L).', false),
+      yesNo('ldh', 'LDH > 350 U/L', 1, 'Admission LDH >350 U/L.', true),
+      yesNo('ast', 'AST > 250 U/L', 1, 'Admission AST (SGOT) >250 U/L.', false),
     ],
     calculate(values) {
       const score = ['age', 'wbc', 'glu', 'ldh', 'ast'].reduce((s, k) => s + (bool(values[k]) ? 1 : 0), 0);
@@ -554,21 +556,23 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Early severity assessment in acute pancreatitis (first 24h).',
     whyUse: 'Simple, uses data available early; predicts mortality.',
     inputs: [
-      yesNo('bun', 'BUN > 25 mg/dL', 1, 'Use findings from the first 24 hours of presentation (Wu 2008). BUN >25 mg/dL (urea ≈ 8.9 mmol/L).'),
+      yesNo('bun', 'BUN > 25 mg/dL', 1, 'Use findings from the first 24 hours of presentation (Wu 2008). BUN >25 mg/dL (urea ≈ 8.9 mmol/L).', true),
       yesNo(
         'ams',
         'Impaired mental status',
         1,
         'Yes if GCS <15, or disorientation, lethargy, or coma (Wu 2008).',
+        false,
       ),
       yesNo(
         'sirs',
         'SIRS (≥2 criteria)',
         1,
         'Yes if ≥2 of: temperature <36 or >38°C; HR >90; RR >20; WBC <4 or >12 ×10⁹/L or >10% bands.',
+        true,
       ),
-      yesNo('age', 'Age > 60 years', 1),
-      yesNo('pleural', 'Pleural effusion', 1, 'Yes if pleural effusion on CXR, CT, or ultrasound (any side).'),
+      yesNo('age', 'Age > 60 years', 1, 'Age above 60 years scores 1 point (61 or older). BISAP totals of 3 or more mark higher mortality and organ-failure risk in the first 24 hours.', true),
+      yesNo('pleural', 'Pleural effusion', 1, 'Yes if pleural effusion on CXR, CT, or ultrasound (any side).', false),
     ],
     calculate(values) {
       const score = ['bun', 'ams', 'sirs', 'age', 'pleural'].reduce((s, k) => s + (bool(values[k]) ? 1 : 0), 0);
@@ -596,8 +600,8 @@ export const giNeuroPsychCalcs: Calculator[] = [
     whenToUse: 'Patients with recent TIA symptoms.',
     whyUse: 'Guides urgency of workup (though urgent workup increasingly universal).',
     inputs: [
-      yesNo('age', 'Age ≥ 60', 1, 'Age at the TIA presentation.'),
-      yesNo('bp', 'BP ≥140/90 at presentation', 1, 'Yes if SBP ≥140 mmHg or DBP ≥90 mmHg at this presentation (either counts — both are not required).'),
+      yesNo('age', 'Age ≥ 60', 1, 'Age at the TIA presentation.', true),
+      yesNo('bp', 'BP ≥140/90 at presentation', 1, 'Yes if SBP ≥140 mmHg or DBP ≥90 mmHg at this presentation (either counts — both are not required).', true),
       selectInput('clinical', 'Clinical features', [
         { label: 'Other symptoms (0)', value: 0, description: 'Sensory, visual, vertigo, or other TIA symptoms without speech disturbance or unilateral weakness' },
         { label: 'Speech disturbance without weakness (1)', value: 1, description: 'Dysarthria or aphasia without focal motor weakness' },
@@ -608,7 +612,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
         { label: '10–59 min (1)', value: 1 },
         { label: '≥60 min (2)', value: 2 },
       ], 0, 'Duration of the longest TIA spell being scored (minutes until symptoms fully resolved).'),
-      yesNo('dm', 'Diabetes', 1, 'Known diagnosis of diabetes mellitus (treated or documented).'),
+      yesNo('dm', 'Diabetes', 1, 'Known diagnosis of diabetes mellitus (treated or documented).', false),
     ],
     calculate(values) {
       const score = (bool(values.age) ? 1 : 0) + (bool(values.bp) ? 1 : 0) + num(values.clinical) + num(values.duration) + (bool(values.dm) ? 1 : 0);
@@ -983,24 +987,28 @@ export const giNeuroPsychCalcs: Calculator[] = [
         'Have you ever felt you should Cut down on your drinking?',
         1,
         'Lifetime (“ever”) question — not limited to the past year.',
+        true,
       ),
       yesNo(
         'a',
         'Have people Annoyed you by criticizing your drinking?',
         1,
         'Lifetime (“ever”) question — not limited to the past year.',
+        true,
       ),
       yesNo(
         'g',
         'Have you ever felt bad or Guilty about your drinking?',
         1,
         'Lifetime (“ever”) question — not limited to the past year.',
+        false,
       ),
       yesNo(
         'e',
         'Have you ever had a drink first thing in the morning to steady your nerves or to get rid of a hangover (Eye-opener)?',
         1,
         'Lifetime (“ever”) question — not limited to the past year.',
+        false,
       ),
     ],
     calculate(values) {
@@ -1239,7 +1247,7 @@ export const giNeuroPsychCalcs: Calculator[] = [
         exampleValue: 26,
         helpText: 'Enter the total from the official MoCA form (mocatest.org); do not administer items from this screen.',
       }),
-      yesNo('edu', '≤12 years education (+1 if applicable)', 1, 'Add 1 point if ≤12 years of education, only if the raw total is <30 (cannot exceed 30).'),
+      yesNo('edu', '≤12 years education (+1 if applicable)', 1, 'Add 1 point if ≤12 years of education, only if the raw total is <30 (cannot exceed 30).', true),
     ],
     calculate(values) {
       let score = num(values.score, 26);

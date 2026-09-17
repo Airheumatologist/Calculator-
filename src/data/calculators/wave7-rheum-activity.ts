@@ -824,21 +824,21 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     whenToUse: 'Continuous SLE activity scoring when swollen joints, proteinuria, cytopenias, and organ items are available.',
     whyUse: 'More sensitive to change than SLEDAI-2K; validated remission ≤2.08 and mild ≤7.64 cutoffs.',
     inputs: [
-      yesNo('arthritis', 'Arthritis (clinician: present)', null, 'SLE inflammatory arthritis this visit. Still enter SJC28 — both terms are in the formula.'),
+      yesNo('arthritis', 'Arthritis (clinician: present)', null, 'SLE inflammatory arthritis this visit. Still enter SJC28 — both terms are in the formula.', true),
       numberInput('sjc', 'Swollen joint count (0–28)', {
         min: 0,
         max: 28,
         exampleValue: 0,
         helpText: '28 joints: shoulders, elbows, wrists, MCP 1–5, PIP 1–5, knees. Used even if the arthritis flag is No.',
       }),
-      yesNo('mucocutVasc', 'Mucocutaneous vasculitis', null, 'Cutaneous vasculitis (e.g. palpable purpura or vasculitic ulcers limited to skin) — not visceral vasculitis (use systemic vasculitis).'),
-      yesNo('localRash', 'Localized cutaneous rash (above the neck)', null, 'Active inflammatory rash confined above the neck (e.g. malar). Exclude damage/scarring.'),
-      yesNo('generalRash', 'Generalized cutaneous rash', null, 'Active inflammatory rash involving skin below the neck. Exclude damage/scarring.'),
-      yesNo('alopecia', 'Alopecia', null, 'Abnormal increased hair loss this visit (active). Do not score scarring alopecia (that is damage).'),
-      yesNo('ulcers', 'Mucosal ulcers', null, 'Oral or nasal ulcers attributable to SLE this visit.'),
-      yesNo('hypoC', 'Hypocomplementaemia (low C3 and/or C4)', null, 'C3 and/or C4 below the local laboratory lower limit of normal.'),
-      yesNo('dsdna', 'Increased anti-dsDNA', null, 'Anti-dsDNA above the local assay ULN / reported as positive on the assay used.'),
-      yesNo('pprot', 'Proteinuria >500 mg/24 h', null, 'Binary PProt. Amount is entered separately and only weights the score when this is Yes.'),
+      yesNo('mucocutVasc', 'Mucocutaneous vasculitis', null, 'Cutaneous vasculitis (e.g. palpable purpura or vasculitic ulcers limited to skin) — not visceral vasculitis (use systemic vasculitis).', false),
+      yesNo('localRash', 'Localized cutaneous rash (above the neck)', null, 'Active inflammatory rash confined above the neck (e.g. malar). Exclude damage/scarring.', true),
+      yesNo('generalRash', 'Generalized cutaneous rash', null, 'Active inflammatory rash involving skin below the neck. Exclude damage/scarring.', false),
+      yesNo('alopecia', 'Alopecia', null, 'Abnormal increased hair loss this visit (active). Do not score scarring alopecia (that is damage).', false),
+      yesNo('ulcers', 'Mucosal ulcers', null, 'Oral or nasal ulcers attributable to SLE this visit.', false),
+      yesNo('hypoC', 'Hypocomplementaemia (low C3 and/or C4)', null, 'C3 and/or C4 below the local laboratory lower limit of normal.', true),
+      yesNo('dsdna', 'Increased anti-dsDNA', null, 'Anti-dsDNA above the local assay ULN / reported as positive on the assay used.', true),
+      yesNo('pprot', 'Proteinuria >500 mg/24 h', null, 'Binary PProt. Amount is entered separately and only weights the score when this is Yes.', false),
       numberInput('prot', 'Proteinuria amount', {
         unit: 'mg/24 h',
         min: 0,
@@ -847,7 +847,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         exampleValue: 0,
         helpText: 'Used as ln(Prot) only when PProt is Yes. Enter 0 if no proteinuria.',
       }),
-      yesNo('thromb', 'Thrombocytopenia (<100 × 10⁹/L)', null),
+      yesNo('thromb', 'Thrombocytopenia (<100 × 10⁹/L)', null, 'Platelets below 100 ×10⁹/L. The tool needs the flag and the platelet count to agree — if the count is under 100, set the flag to Yes, otherwise the ln(platelet) term is not computed.', false),
       numberInput('platCount', 'Platelet count', {
         unit: '×10⁹/L',
         min: 1,
@@ -855,7 +855,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         exampleValue: 250,
         helpText: 'Used as ln(PlatCount) only when thrombocytopenia is Yes.',
       }),
-      yesNo('leuk', 'Leukopenia (<3 × 10⁹/L)', null),
+      yesNo('leuk', 'Leukopenia (<3 × 10⁹/L)', null, 'Leukopenia below 3 ×10⁹/L. Enter Yes together with the WBC so the ln(WBC) term is applied; a mismatch between flag and count invalidates the score.', false),
       numberInput('leukCount', 'Leukocyte count', {
         unit: '×10⁹/L',
         min: 0.1,
@@ -864,12 +864,12 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         exampleValue: 6,
         helpText: 'Used as ln(LeukCount) only when leukopenia is Yes.',
       }),
-      yesNo('neuropsych', 'Neuropsychiatric SLE', null, 'Current NPSLE (e.g. seizure, psychosis, organic brain syndrome, acute confusional state, stroke/cranial neuropathy attributed to SLE). Exclude damage and infection.'),
-      yesNo('systemicVasc', 'Systemic vasculitis', null, 'Visceral/systemic vasculitis (not the mucocutaneous-only item above).'),
-      yesNo('cardioPulm', 'Cardiac / pulmonary involvement', null, 'Myocarditis, lung parenchymal involvement, or related cardiopulmonary SLE activity — not isolated serositis (use the serositis item).'),
-      yesNo('myositis', 'Myositis', null, 'Proximal weakness plus raised CK and/or EMG/MRI/biopsy myositis. Exclude steroid myopathy and statin myopathy.'),
-      yesNo('serositis', 'Serositis', null, 'Pleuritis or pericarditis: pain >1 day, rub, or effusion attributable to SLE.'),
-      yesNo('hemolytic', 'Haemolytic anaemia', null, 'Anaemia plus evidence of haemolysis (positive direct Coombs + raised LDH + low haptoglobin) — not any anaemia.'),
+      yesNo('neuropsych', 'Neuropsychiatric SLE', null, 'Current NPSLE (e.g. seizure, psychosis, organic brain syndrome, acute confusional state, stroke/cranial neuropathy attributed to SLE). Exclude damage and infection.', false),
+      yesNo('systemicVasc', 'Systemic vasculitis', null, 'Visceral/systemic vasculitis (not the mucocutaneous-only item above).', false),
+      yesNo('cardioPulm', 'Cardiac / pulmonary involvement', null, 'Myocarditis, lung parenchymal involvement, or related cardiopulmonary SLE activity — not isolated serositis (use the serositis item).', false),
+      yesNo('myositis', 'Myositis', null, 'Proximal weakness plus raised CK and/or EMG/MRI/biopsy myositis. Exclude steroid myopathy and statin myopathy.', false),
+      yesNo('serositis', 'Serositis', null, 'Pleuritis or pericarditis: pain >1 day, rub, or effusion attributable to SLE.', false),
+      yesNo('hemolytic', 'Haemolytic anaemia', null, 'Anaemia plus evidence of haemolysis (positive direct Coombs + raised LDH + low haptoglobin) — not any anaemia.', false),
     ],
     calculate(values) {
       const arthritis = yn(values.arthritis);
@@ -1088,8 +1088,8 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     whyUse: 'Attainment of LLDAS is associated with less damage and fewer flares.',
     inputs: [
       numberInput('sledai', 'SLEDAI-2K', { min: 0, max: 105, exampleValue: 2, helpText: 'Enter the total from the official SLEDAI-2K form (copyrighted — do not administer items from this screen). LLDAS requires ≤4 with no major organ activity.' }),
-      yesNo('majorOrgan', 'Major organ activity present (renal, CNS, cardiopulmonary, vasculitis, myositis, fever, haemolysis, or GI)', null, 'Fails LLDAS if any renal, CNS, cardiopulmonary, vasculitis, myositis, fever, haemolytic anaemia, or GI lupus activity — even when SLEDAI-2K ≤4.'),
-      yesNo('newActivity', 'New activity vs previous assessment', null, 'Any new lupus activity feature compared with the previous assessment fails LLDAS, even if SLEDAI remains ≤4.'),
+      yesNo('majorOrgan', 'Major organ activity present (renal, CNS, cardiopulmonary, vasculitis, myositis, fever, haemolysis, or GI)', null, 'Fails LLDAS if any renal, CNS, cardiopulmonary, vasculitis, myositis, fever, haemolytic anaemia, or GI lupus activity — even when SLEDAI-2K ≤4.', false),
+      yesNo('newActivity', 'New activity vs previous assessment', null, 'Any new lupus activity feature compared with the previous assessment fails LLDAS, even if SLEDAI remains ≤4.', false),
       numberInput('pga', 'Physician global assessment (0–3)', {
         min: 0,
         max: 3,
@@ -1098,7 +1098,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         helpText: 'SELENA-SLEDAI PGA; LLDAS requires ≤1.',
       }),
       numberInput('predDose', 'Prednisone (or equivalent)', { unit: 'mg/day', min: 0, max: 80, step: 0.5, exampleValue: 5, helpText: 'Current daily prednisone-equivalent. LLDAS requires ≤7.5 mg/day.' }),
-      yesNo('intoleranceIS', 'Intolerance of standard immunosuppressives / antimalarials', null, 'Fail (Yes) if current standard maintenance antimalarial/IS/approved biologic is not tolerated. Not on IS/HCQ is allowed (answer No). Investigational drugs do not count as standard maintenance.'),
+      yesNo('intoleranceIS', 'Intolerance of standard immunosuppressives / antimalarials', null, 'Fail (Yes) if current standard maintenance antimalarial/IS/approved biologic is not tolerated. Not on IS/HCQ is allowed (answer No). Investigational drugs do not count as standard maintenance.', false),
     ],
     calculate(values) {
       const sledai = num(values.sledai, 0);
@@ -1201,7 +1201,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         helpText: 'SELENA 0–3 scale. DORIS requires PGA <0.5 (0.5 fails).',
       }),
       numberInput('predDose', 'Prednisone (or equivalent)', { unit: 'mg/day', min: 0, max: 80, step: 0.5, exampleValue: 0, helpText: 'Complete remission requires 0 mg/day; on-treatment allows ≤5 mg/day with stable antimalarial/IS/biologic.' }),
-      yesNo('serologyPositive', 'Serology positive (low complement and/or anti-dsDNA)', null, 'Allowed in DORIS clinical remission; still recorded.'),
+      yesNo('serologyPositive', 'Serology positive (low complement and/or anti-dsDNA)', null, 'Allowed in DORIS clinical remission; still recorded.', true),
     ],
     calculate(values) {
       const mode = str(values.mode, 'on-tx');
@@ -1495,11 +1495,11 @@ export const wave7RheumActivityCalcs: Calculator[] = [
         'gpa',
         'ENT-absence is scored +1 whenever true, including MPA/PAN (so the item always changes the result).',
       ),
-      yesNo('age65', 'Age >65 years', 1),
-      yesNo('cardiac', 'Cardiac insufficiency / cardiomyopathy', 1, 'Cardiomyopathy or cardiac insufficiency attributable to vasculitis — not incidental CAD or hypertensive heart disease alone.'),
-      yesNo('gi', 'Gastrointestinal involvement', 1, 'Vasculitis-related GI involvement: bleeding, perforation, infarction, or pancreatitis — not isolated mild pain.'),
-      yesNo('renal', 'Renal insufficiency (creatinine ≥150 µmol/L / 1.7 mg/dL)', 1),
-      yesNo('entAbsent', 'Absence of ENT involvement', 1, 'Protective when ENT is present (score 0). Absence of sinusitis/otitis/rhinitis/nasal crusts adds +1 in the 2011 revision, including in MPA/PAN so the item stays live.'),
+      yesNo('age65', 'Age >65 years', 1, 'Age above 65 years scores 1 of the 5 points. The revised 2011 FFS uses >65, not ≥65.', true),
+      yesNo('cardiac', 'Cardiac insufficiency / cardiomyopathy', 1, 'Cardiomyopathy or cardiac insufficiency attributable to vasculitis — not incidental CAD or hypertensive heart disease alone.', false),
+      yesNo('gi', 'Gastrointestinal involvement', 1, 'Vasculitis-related GI involvement: bleeding, perforation, infarction, or pancreatitis — not isolated mild pain.', false),
+      yesNo('renal', 'Renal insufficiency (creatinine ≥150 µmol/L / 1.7 mg/dL)', 1, 'Renal insufficiency as creatinine 150 µmol/L or higher (about 1.7 mg/dL) scores 1 point; enter the highest value before induction therapy.', true),
+      yesNo('entAbsent', 'Absence of ENT involvement', 1, 'Protective when ENT is present (score 0). Absence of sinusitis/otitis/rhinitis/nasal crusts adds +1 in the 2011 revision, including in MPA/PAN so the item stays live.', false),
     ],
     calculate(values) {
       const disease = str(values.disease, 'gpa');
@@ -1831,7 +1831,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
           { label: 'Female (0)', value: 0, points: 0 },
           { label: 'Male (+1)', value: 1, points: 1 },
         ],
-        0,
+        0, 'Male sex adds 1 GAP point; female is the reference (0). The subtype adjustment (CTD-ILD or iNSIP, −2 points) is applied after the GAP sum.',
       ),
       selectInput(
         'ageBand',
@@ -1841,7 +1841,7 @@ export const wave7RheumActivityCalcs: Calculator[] = [
           { label: '61–65 years (+1)', value: 1, points: 1 },
           { label: '>65 years (+2)', value: 2, points: 2 },
         ],
-        0,
+        0, 'Age band: 60 years or younger scores 0, 61–65 scores 1, and over 65 scores 2 GAP points.',
       ),
       selectInput(
         'fvc',
@@ -2371,7 +2371,15 @@ export const wave7RheumActivityCalcs: Calculator[] = [
     tags: ['sparcc', 'enthesitis', 'spa', 'psa', 'axspa'],
     whenToUse: 'Quantifying enthesitis in axSpA or PsA, alongside MASES or LEI.',
     whyUse: '16-site index with good reliability; includes peripheral sites often missed by MASES.',
-    inputs: SPARCC_SITES.map((s) => yesNo(s.id, s.label, 1, 'Score Yes if this enthesis is tender to ~4 kg digital pressure. Each side is a separate point.')),
+    inputs: SPARCC_SITES.map((s) =>
+      yesNo(
+        s.id,
+        s.label,
+        1,
+        'Score Yes if this enthesis is tender to ~4 kg digital pressure. Each side is a separate point.',
+        ['gtL', 'achillesL', 'achillesR', 'latEpiL'].includes(s.id),
+      ),
+    ),
     calculate(values) {
       const rows = SPARCC_SITES.map((s) => ({ ...s, v: yn(values[s.id]) }));
       const score = rows.reduce((a, r) => a + r.v, 0);

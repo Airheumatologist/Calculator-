@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { readdirSync, readFileSync } from 'node:fs';
+import path from 'node:path';
 import { calculators } from '../src/data/calculators';
 import type { Calculator } from '../src/types/calculator';
 import {
@@ -36,18 +38,123 @@ function productionResult(calc: Calculator, values: Record<string, number | stri
 
 const DISPLAY_TEXT = /NaN|undefined|Infinity|null/;
 
+/**
+ * Data files whose calculators may still be missing an `exampleValue`. Files
+ * outside this list must load a complete example, so the working set can only
+ * grow. The list covers (a) the files a sweep run reports as partial and
+ * (b) files whose backfill exists in the working tree but is not part of this
+ * commit — they are allowed to stay partial here and are expected to be removed
+ * from the list as their examples land. When the list is empty the strict
+ * assertion (`expect(offenders).toEqual([])`) can take over.
+ */
+const PENDING_EXAMPLE_BACKFILL = [
+  'cardiology.ts',
+  'critical-care.ts',
+  'extra.ts',
+  'missing-cardio-pulm.ts',
+  'missing-emergency.ts',
+  'missing-gi-liver.ts',
+  'nephrology-endo.ts',
+  'wave2-cardiology.ts',
+  'wave2-general-lab.ts',
+  'wave2-neuro-psych.ts',
+  'wave2-oncology.ts',
+  'wave2-ortho-trauma.ts',
+  'wave2-pulm-id.ts',
+  'wave3-cardio-vasc.ts',
+  'wave3-em-surgery.ts',
+  'wave3-gi-hep.ts',
+  'wave3-nephro-icu.ts',
+  'wave3-peds-ob.ts',
+  'wave3-tox-endo-heme.ts',
+  'wave4-em-id.ts',
+  'wave4-formulas.ts',
+  'wave4-heme-onc.ts',
+  'wave4-icu-vent.ts',
+  'wave4-neuro-psych.ts',
+  'wave4-primary-endo.ts',
+  'wave5-cardio.ts',
+  'wave5-general-misc.ts',
+  'wave5-nephro-gi.ts',
+  'wave5-surg-uro-ent.ts',
+  'wave5-tox-psych.ts',
+  'wave6-clinical-residual.ts',
+  'wave6-em-peds.ts',
+  'wave6-heme-onc.ts',
+  'wave6-psych-sleep.ts',
+  'wave6-scores-residual.ts',
+  'wave7-fillins.ts',
+  'wave7-highuse.ts',
+  'wave7-rheum-class.ts',
+];
+
 describe('registry-wide example sweep (pass 2)', () => {
   const complete = calculators.filter(
     (calc) => getMissingQuestionnaireInputs(calc, getExampleFormValues(calc)).length === 0
   );
 
-  it('covers the majority of the registry with complete loadable examples', () => {
-    // 330 of the 1004 calculators carry enough `exampleValue`s to load a
-    // complete example; the rest are large questionnaires where the example is
-    // intentionally partial. Tracked as a **Later** item.
-    console.info(`Complete loadable examples: ${complete.length}/${calculators.length}`);
-    expect(complete.length).toBeGreaterThan(300);
-    expect(complete.length).toBeLessThanOrEqual(calculators.length);
+  it('gives every calculator outside the declared backfill set a complete loadable example', () => {
+    // "Load example" must produce a calculable case for every registry entry;
+    // an example that still trips the missing-input gate is the bug this
+    // asserts against.
+    //
+    // 2026-09-16: the backfill is in progress. `PENDING_EXAMPLE_BACKFILL` lists
+    // the data files whose required inputs still lack an `exampleValue`; every
+    // file *not* on that list must already be complete, so the set of working
+    // examples can only grow. When the list is empty, replace the assertion
+    // below with `expect(offenders).toEqual([])`.
+    const offenders = calculators
+      .map((calc) => ({
+        id: calc.id,
+        missing: getMissingQuestionnaireInputs(calc, getExampleFormValues(calc)).map((item) => item.id),
+      }))
+      .filter(({ missing }) => missing.length > 0)
+      .map(({ id, missing }) => `${id}: ${missing.join(', ')}`);
+
+    const dataDir = path.resolve(process.cwd(), 'src/data/calculators');
+    const fileOf = new Map<string, string>();
+    for (const file of readdirSync(dataDir)) {
+      if (!file.endsWith('.ts') || file === 'index.ts') continue;
+      const text = readFileSync(path.join(dataDir, file), 'utf8');
+      for (const match of text.matchAll(/^ {4}id: '([A-Za-z0-9._-]+)',$/gm)) {
+        if (!fileOf.has(match[1])) fileOf.set(match[1], file);
+      }
+    }
+
+    const unexpected = offenders
+      .filter((row) => {
+        const id = row.split(':')[0];
+        return !PENDING_EXAMPLE_BACKFILL.includes(fileOf.get(id) ?? 'UNKNOWN');
+      })
+      .filter(Boolean);
+
+    const byFile = new Map<string, string[]>();
+    for (const row of offenders) {
+      const id = row.split(':')[0];
+      const file = fileOf.get(id) ?? 'UNKNOWN';
+      byFile.set(file, [...(byFile.get(file) ?? []), row]);
+    }
+    const pendingFiles = [...byFile.keys()].sort();
+    const drift = pendingFiles.filter((file) => !PENDING_EXAMPLE_BACKFILL.includes(file));
+
+    console.info(
+      `Complete loadable examples: ${complete.length}/${calculators.length} ` +
+        `(pending files: ${pendingFiles.length}, partial calculators: ${offenders.length})`
+    );
+    if (offenders.length > 0) {
+      console.info(
+        'Remaining "Load example" backfill (calculator: missing input ids):\n' +
+          [...byFile.entries()]
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([file, rows]) => `${file} — ${rows.length} calculators\n  ${rows.join('\n  ')}`)
+            .join('\n')
+      );
+    }
+    // Every file that still has gaps must be declared in
+    // PENDING_EXAMPLE_BACKFILL; declaring a file that is already complete is
+    // allowed (tighten the list as backfilled files land).
+    expect(drift).toEqual([]);
+    expect(unexpected).toEqual([]);
   });
 
   it('gates every incomplete example instead of calculating from partial data', () => {

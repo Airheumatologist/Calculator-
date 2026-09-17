@@ -111,16 +111,16 @@ export const wave7PreventionCalcs: Calculator[] = [
     whyUse:
       'Removes sex as a risk item so the same numeric threshold applies to men and women. OAC is recommended at score ≥2 and may be considered at 1.',
     inputs: [
-      yesNo('chf', 'Congestive heart failure / LV dysfunction', 1, 'Clinical HF (HFrEF or HFpEF) or documented moderate–severe LV systolic dysfunction (typically LVEF ≤40%).'),
-      yesNo('htn', 'Hypertension', 1, 'Diagnosed or treated hypertension (history or current therapy), not a single elevated reading.'),
+      yesNo('chf', 'Congestive heart failure / LV dysfunction', 1, 'Clinical HF (HFrEF or HFpEF) or documented moderate–severe LV systolic dysfunction (typically LVEF ≤40%).', true),
+      yesNo('htn', 'Hypertension', 1, 'Diagnosed or treated hypertension (history or current therapy), not a single elevated reading.', true),
       selectInput('age', 'Age', [
         { label: '< 65 years', value: 0, points: 0 },
         { label: '65–74 years', value: 1, points: 1 },
         { label: '≥ 75 years', value: 2, points: 2 },
-      ]),
-      yesNo('dm', 'Diabetes mellitus', 1, 'Type 1 or type 2 diabetes, or glucose-lowering therapy.'),
-      yesNo('stroke', 'Prior stroke / TIA / thromboembolism', 2, 'Prior ischemic stroke, TIA, or systemic (non-CNS) thromboembolism.'),
-      yesNo('vascular', 'Vascular disease (prior MI, PAD, aortic plaque)', 1, 'Prior myocardial infarction, peripheral artery disease, or complex aortic plaque.'),
+      ], 1, 'Age band: under 65 years 0, 65-74 years 1 point, 75 years or older 2 points; this sexless ESC 2024 score has a maximum of 8.'),
+      yesNo('dm', 'Diabetes mellitus', 1, 'Type 1 or type 2 diabetes, or glucose-lowering therapy.', true),
+      yesNo('stroke', 'Prior stroke / TIA / thromboembolism', 2, 'Prior ischemic stroke, TIA, or systemic (non-CNS) thromboembolism.', false),
+      yesNo('vascular', 'Vascular disease (prior MI, PAD, aortic plaque)', 1, 'Prior myocardial infarction, peripheral artery disease, or complex aortic plaque.', true),
     ],
     calculate(values) {
       const score =
@@ -219,8 +219,8 @@ export const wave7PreventionCalcs: Calculator[] = [
       'Uses the validated SCORE2 coefficients with separate total- and HDL-cholesterol terms and region-specific recalibration; use SCORE2-Diabetes, SCORE2-OP, or secondary-prevention tools when those pathways apply.',
     inputs: [
       numberInput('age', 'Age', { unit: 'years', min: 40, max: 69, exampleValue: 55, helpText: 'SCORE2 is validated for ages 40–69. Use SCORE2-OP at age ≥70.' }),
-      selectInput('sex', 'Sex', SEX_MF),
-      yesNo('smoker', 'Current smoker', null, 'Current tobacco smoking. Former smokers are scored as non-smokers.'),
+      selectInput('sex', 'Sex', SEX_MF, 'male', 'Sex selects the published SCORE2 coefficient set; it is a model input, not a scored risk item.'),
+      yesNo('smoker', 'Current smoker', null, 'Current tobacco smoking. Former smokers are scored as non-smokers.', true),
       numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, exampleValue: 140, helpText: 'Office systolic BP, treated or untreated.' }),
       numberInput('totalChol', 'Total cholesterol', {
         unit: 'mmol/L', unitKind: 'cholesterol',
@@ -238,9 +238,9 @@ export const wave7PreventionCalcs: Calculator[] = [
         exampleValue: 1.3,
         helpText: 'Enter the reported value and pick its unit (mmol/L or mg/dL) — the app converts to the mmol/L the equation uses. This is the independent HDL term in the published equation.',
       }),
-      selectInput('region', 'European risk region', REGION_OPTIONS, 'mod'),
-      yesNo('diabetes', 'Diabetes mellitus', null, 'SCORE2 is not intended for diabetes; use SCORE2-Diabetes instead.'),
-      yesNo('ascvd', 'Established ASCVD', null, 'Prior myocardial infarction, stroke/TIA, peripheral arterial disease, or other established ASCVD follows a secondary-prevention pathway.'),
+      selectInput('region', 'European risk region', REGION_OPTIONS, 'mod', 'ESC recalibration region (low, moderate, high, very high): the same risk factors give different absolute risks depending on region.'),
+      yesNo('diabetes', 'Diabetes mellitus', null, 'SCORE2 is not intended for diabetes; use SCORE2-Diabetes instead.', false),
+      yesNo('ascvd', 'Established ASCVD', null, 'Prior myocardial infarction, stroke/TIA, peripheral arterial disease, or other established ASCVD follows a secondary-prevention pathway.', false),
     ],
     calculate(values) {
       const age = num(values.age, 55);
@@ -388,9 +388,9 @@ export const wave7PreventionCalcs: Calculator[] = [
     whenToUse: 'Apparently healthy people aged 70–89 years without established atherosclerotic CVD, including people with diabetes mellitus, for 5- or 10-year incident CVD risk discussion.',
     whyUse: 'Competing-risk SCORE2-OP model (CONOR derivation) with regional recalibration; its published predictors include diabetes and age interactions, making it the ESC 2021 prevention companion to SCORE2 for older adults.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 70, max: 89, exampleValue: 75 }),
-      selectInput('sex', 'Sex', SEX_MF),
-      yesNo('smoker', 'Current smoker', null, 'Current tobacco smoking. Former smokers score as No.'),
+      numberInput('age', 'Age', { unit: 'years', min: 70, max: 89, exampleValue: 75, helpText: 'Age in years; the published model covers 70-89 years and centres age at 73, so values outside that range are extrapolations.' }),
+      selectInput('sex', 'Sex', SEX_MF, 'female', 'Sex selects the SCORE2-OP coefficient set; women and men have separate published equations.'),
+      yesNo('smoker', 'Current smoker', null, 'Current tobacco smoking. Former smokers score as No.', false),
       yesNo(
         'diabetes',
         'History of diabetes mellitus',
@@ -398,7 +398,7 @@ export const wave7PreventionCalcs: Calculator[] = [
         'Published SCORE2-OP includes a history-of-diabetes indicator; the derivation cohort reported type 2 diabetes mellitus.',
         false
       ),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, exampleValue: 140 }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, exampleValue: 140, helpText: 'Seated office systolic BP in mmHg, treated or untreated; the model centres SBP at 150 mmHg.' }),
       numberInput('nonhdl', 'Non-HDL cholesterol', {
         unit: 'mmol/L', unitKind: 'cholesterol',
         min: 1,
@@ -416,7 +416,7 @@ export const wave7PreventionCalcs: Calculator[] = [
         helpText: 'Optional. Enables precise HDL-dependent risk adjustment; enter the value and pick its unit (mmol/L or mg/dL) — the app converts. Defaults to the 1.4 mmol/L cohort median if blank.',
         required: false,
       }),
-      selectInput('region', 'European risk region', REGION_OPTIONS, 'mod'),
+      selectInput('region', 'European risk region', REGION_OPTIONS, 'mod', 'ESC recalibration region for SCORE2-OP; it rescales the whole estimate rather than adding points.'),
     ],
     calculate(values) {
       const age = num(values.age, 75);
@@ -536,10 +536,10 @@ export const wave7PreventionCalcs: Calculator[] = [
     whenToUse: 'People aged 40–69 with type 2 diabetes and without established ASCVD, to estimate 10-year CVD risk (ESC diabetes and prevention guidelines).',
     whyUse: 'Adds glycaemia, diabetes duration, and kidney function on top of SCORE2; better discrimination than applying SCORE2 alone in T2DM.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 40, max: 69, exampleValue: 60 }),
-      selectInput('sex', 'Sex', SEX_MF),
-      yesNo('smoker', 'Current smoker', null, 'Current tobacco smoking. Former smokers score as No.'),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, exampleValue: 140 }),
+      numberInput('age', 'Age', { unit: 'years', min: 40, max: 69, exampleValue: 60, helpText: 'Age in years; SCORE2-Diabetes is derived for ages 40-69 and centres age in the model, so it drifts upward with age.' }),
+      selectInput('sex', 'Sex', SEX_MF, 'male', 'Sex selects the SCORE2-Diabetes coefficient set; it is a model input, not a scored item.'),
+      yesNo('smoker', 'Current smoker', null, 'Current tobacco smoking. Former smokers score as No.', true),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, exampleValue: 140, helpText: 'Office systolic BP in mmHg, treated or untreated; the model centres SBP and includes its interaction with age.' }),
       numberInput('nonhdl', 'Non-HDL cholesterol', {
         unit: 'mmol/L', unitKind: 'cholesterol',
         min: 1,
@@ -550,8 +550,8 @@ export const wave7PreventionCalcs: Calculator[] = [
       }),
       numberInput('duration', 'Diabetes duration', { unit: 'years', min: 0, max: 50, exampleValue: 5, helpText: 'Years since type 2 diabetes diagnosis (age at diagnosis = current age − duration).' }),
       numberInput('hba1c', 'HbA1c', { unit: '%', min: 4.5, max: 14, step: 0.1, exampleValue: 7, helpText: 'NGSP % (not mmol/mol). 7% ≈ 53 mmol/mol; converted internally.' }),
-      numberInput('egfr', 'eGFR (CKD-EPI)', { unit: 'mL/min/1.73 m²', min: 15, max: 150, exampleValue: 90 }),
-      selectInput('region', 'European risk region', REGION_OPTIONS, 'mod'),
+      numberInput('egfr', 'eGFR (CKD-EPI)', { unit: 'mL/min/1.73 m²', min: 15, max: 150, exampleValue: 90, helpText: 'eGFR by CKD-EPI in mL/min/1.73 m²; the model includes eGFR and its interaction, so a lower value raises estimated risk.' }),
+      selectInput('region', 'European risk region', REGION_OPTIONS, 'mod', 'ESC recalibration region; the same predictors yield different absolute risks by region.'),
     ],
     calculate(values) {
       const age = num(values.age, 60);
@@ -699,14 +699,14 @@ export const wave7PreventionCalcs: Calculator[] = [
     whenToUse: 'Adults ≥40 without prior HF (or ASCVD) when discussing incident HF risk and prevention (SGLT2i, BP, weight).',
     whyUse: 'ESC SCORE2-HF brings HF-specific risk onto the SCORE2 regional framework. This build is a transparent published-style model for education.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 40, max: 89, exampleValue: 60 }),
-      selectInput('sex', 'Sex', SEX_MF),
-      yesNo('smoker', 'Current smoker', null, 'Current tobacco smoking. Former smokers score as No.'),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, exampleValue: 130 }),
+      numberInput('age', 'Age', { unit: 'years', min: 40, max: 89, exampleValue: 60, helpText: 'Age in years; the model is derived for adults 40 and older and centres age internally.' }),
+      selectInput('sex', 'Sex', SEX_MF, 'male', 'Sex selects the coefficient set for women or men; it is a model input, not a scored item.'),
+      yesNo('smoker', 'Current smoker', null, 'Current tobacco smoking. Former smokers score as No.', true),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, exampleValue: 130, helpText: 'Office systolic BP in mmHg, treated or untreated; higher values raise the incident heart-failure estimate.' }),
       numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 50, step: 0.1, exampleValue: 27, helpText: 'Weight (kg) ÷ height (m)².' }),
-      yesNo('diabetes', 'Type 2 diabetes', null),
-      numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 15, max: 150, exampleValue: 80 }),
-      selectInput('region', 'European risk region', REGION_OPTIONS, 'mod'),
+      yesNo('diabetes', 'Type 2 diabetes', null, 'Type 2 diabetes mellitus (treated or untreated) as a heart-failure risk factor in this educational model.', true),
+      numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 15, max: 150, exampleValue: 80, helpText: 'eGFR in mL/min/1.73 m²; reduced kidney function is an independent heart-failure risk factor in the model.' }),
+      selectInput('region', 'European risk region', REGION_OPTIONS, 'mod', 'ESC region used to recalibrate the estimate; region changes the absolute risk, not the direction.'),
       numberInput('ntprobnp', 'NT-proBNP (optional)', {
         unit: 'pg/mL',
         min: 0,
@@ -829,14 +829,14 @@ export const wave7PreventionCalcs: Calculator[] = [
       'Adults 40–69 without diabetes or established ASCVD when eGFR and UACR are available and CKD may reclassify SCORE2 risk.',
     whyUse: 'CKD measures improve CVD prediction beyond SCORE2. Official add-on uses eGFR and ACR; this version applies transparent KDIGO-category multipliers.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 40, max: 69, exampleValue: 55 }),
-      selectInput('sex', 'Sex', SEX_MF),
-      yesNo('smoker', 'Current smoker', null, 'Current tobacco smoking. Former smokers score as No.'),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, exampleValue: 140 }),
+      numberInput('age', 'Age', { unit: 'years', min: 40, max: 69, exampleValue: 55, helpText: 'Age in years; the SCORE2 base is derived for ages 40-69 before the KDIGO CKD multiplier is applied.' }),
+      selectInput('sex', 'Sex', SEX_MF, 'female', 'Sex selects the SCORE2 coefficient set for this educational CKD add-on estimate.'),
+      yesNo('smoker', 'Current smoker', null, 'Current tobacco smoking. Former smokers score as No.', false),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, exampleValue: 140, helpText: 'Office systolic BP in mmHg, treated or untreated; it feeds the SCORE2 base estimate.' }),
       numberInput('nonhdl', 'Non-HDL cholesterol', { unit: 'mmol/L', unitKind: 'cholesterol', min: 1, max: 10, step: 0.1, exampleValue: 4, helpText: 'Total cholesterol − HDL. Enter the reported value and pick its unit (mmol/L or mg/dL) — the app converts.' }),
       numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 15, max: 150, exampleValue: 90, helpText: 'CKD-EPI. Educational multiplier: ≥60 ×1.0; 45–59 ×1.3; 30–44 ×1.6; <30 ×2.0.' }),
       numberInput('uacr', 'UACR', { unit: 'mg/g', min: 0, max: 3000, exampleValue: 10, helpText: 'Urine albumin-to-creatinine ratio. 30 mg/g ≈ 3 mg/mmol. Multiplier: <30 ×1.0; 30–300 ×1.3; >300 ×1.6.' }),
-      selectInput('region', 'European risk region', REGION_OPTIONS, 'mod'),
+      selectInput('region', 'European risk region', REGION_OPTIONS, 'mod', 'ESC recalibration region applied to the SCORE2 base before the CKD multiplier.'),
     ],
     calculate(values) {
       const age = num(values.age, 55);
@@ -949,20 +949,20 @@ export const wave7PreventionCalcs: Calculator[] = [
     whenToUse: 'Adults with established CAD, cerebrovascular disease, or PAD (without current acute coronary syndrome work-up) for residual 10-year recurrent-event risk.',
     whyUse: 'SMART2 updates SMART with competing-risk modelling and geographic recalibration so secondary prevention can be intensity-matched to residual risk.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 30, max: 90, exampleValue: 65 }),
-      selectInput('sex', 'Sex', SEX_MF),
-      yesNo('smoker', 'Current smoker', null, 'Current tobacco smoking. Former smokers score as No.'),
-      yesNo('diabetes', 'Diabetes mellitus', null),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, exampleValue: 130 }),
+      numberInput('age', 'Age', { unit: 'years', min: 30, max: 90, exampleValue: 65, helpText: 'Age in years at the current assessment; SMART2 is derived for adults 30-90.' }),
+      selectInput('sex', 'Sex', SEX_MF, 'male', 'Sex selects the published SMART2 coefficient set; it is a model input, not a scored item.'),
+      yesNo('smoker', 'Current smoker', null, 'Current tobacco smoking. Former smokers score as No.', false),
+      yesNo('diabetes', 'Diabetes mellitus', null, 'Diabetes mellitus (type 1 or 2) at assessment; a published SMART2 predictor of recurrent events.', true),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 90, max: 200, exampleValue: 130, helpText: 'Office systolic BP in mmHg, treated or untreated; the model centres SBP at 120 mmHg.' }),
       numberInput('nonhdl', 'Non-HDL cholesterol', { unit: 'mmol/L', unitKind: 'cholesterol', min: 1, max: 10, step: 0.1, exampleValue: 3.2, helpText: 'Total cholesterol − HDL. Enter the reported value and pick its unit (mmol/L or mg/dL) — the app converts.' }),
-      numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 15, max: 150, exampleValue: 80 }),
-      numberInput('yearsSince', 'Years since first CVD event', { unit: 'years', min: 0, max: 40, step: 0.5, exampleValue: 5 }),
+      numberInput('egfr', 'eGFR', { unit: 'mL/min/1.73 m²', min: 15, max: 150, exampleValue: 80, helpText: 'eGFR in mL/min/1.73 m²; the SMART2 model applies a log-linear eGFR term, so low values raise residual risk.' }),
+      numberInput('yearsSince', 'Years since first CVD event', { unit: 'years', min: 0, max: 40, step: 0.5, exampleValue: 5, helpText: 'Years since the first vascular event (0 if the index event is current); longer follow-up lowers the annual hazard in the model.' }),
       selectInput('location', 'Index / established vascular territory', [
         { label: 'Coronary artery disease', value: 'cad', description: 'Prior MI, angina, or coronary revascularization' },
         { label: 'Cerebrovascular disease (stroke/TIA)', value: 'cevd', description: 'Ischemic stroke or TIA' },
         { label: 'Peripheral artery disease', value: 'pad', description: 'Symptomatic PAD (claudication, prior limb revasc, or amputation for ischemia)' },
         { label: 'Polyvascular (more than one bed)', value: 'poly', description: 'Established disease in ≥2 of CAD, cerebrovascular, or PAD' },
-      ]),
+      ], 'cad', 'Index vascular territory drives the baseline hazard: coronary, cerebrovascular, peripheral artery, or polyvascular disease.'),
       numberInput('hscrp', 'hsCRP (optional)', {
         unit: 'mg/L',
         min: 0,
@@ -1096,8 +1096,8 @@ export const wave7PreventionCalcs: Calculator[] = [
     whyUse:
       'QRISK3 is the NICE primary-prevention workhorse and includes ethnicity, deprivation, and several conditions omitted from SCORE2/PCE.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 25, max: 84, exampleValue: 55 }),
-      selectInput('sex', 'Sex', SEX_MF),
+      numberInput('age', 'Age', { unit: 'years', min: 25, max: 84, exampleValue: 55, helpText: 'Age in years; this educational QRISK3-style model covers ages 25-84 and has a strong log-age effect.' }),
+      selectInput('sex', 'Sex', SEX_MF, 'female', 'Sex selects the coefficient set; ethnicity, deprivation, and clinical terms are applied on top of it.'),
       selectInput('ethnicity', 'Ethnicity', [
         { label: 'White / not recorded', value: 'white' },
         { label: 'Indian', value: 'indian' },
@@ -1108,7 +1108,7 @@ export const wave7PreventionCalcs: Calculator[] = [
         { label: 'Black African', value: 'blackAfrican' },
         { label: 'Chinese', value: 'chinese' },
         { label: 'Other ethnic group', value: 'other' },
-      ]),
+      ], 'white', 'Ethnicity group as recorded for QRISK3-style risk estimation; it shifts the baseline hazard independently of the other factors.'),
       selectInput('smoker', 'Smoking status', [
         { label: 'Never', value: 'never', description: 'Never a regular cigarette smoker' },
         { label: 'Ex-smoker', value: 'ex', description: 'Stopped; not currently smoking (QRISK3 former-smoker band)' },
@@ -1116,25 +1116,25 @@ export const wave7PreventionCalcs: Calculator[] = [
         { label: 'Moderate (10–19/day)', value: 'mod', description: '10–19 cigarettes/day (0.5–<1 pack; 1 pack = 20 cigarettes)' },
         { label: 'Heavy (≥20/day)', value: 'heavy', description: '≥20 cigarettes/day (≥1 pack; 1 pack = 20 cigarettes)' },
       ], 'never', 'QRISK3 cigarette bands. 1 pack = 20 cigarettes. Count current daily cigarettes (or recent average).'),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 80, max: 210, exampleValue: 130 }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 80, max: 210, exampleValue: 130, helpText: 'Usual systolic BP in mmHg; QRISK3 uses the standard deviation of recent readings as a separate predictor in the licensed tool.' }),
       numberInput('bmi', 'BMI', { unit: 'kg/m²', min: 15, max: 50, step: 0.1, exampleValue: 26, helpText: 'Weight (kg) ÷ height (m)².' }),
       numberInput('tchdl', 'Total / HDL cholesterol ratio', { min: 1, max: 12, step: 0.1, exampleValue: 4, helpText: 'TC ÷ HDL (unitless; same whether mg/dL or mmol/L). Typical ~3–6. Not non-HDL cholesterol.' }),
       selectInput('diabetes', 'Diabetes', [
         { label: 'None', value: 'none' },
         { label: 'Type 1', value: 't1' },
         { label: 'Type 2', value: 't2' },
-      ]),
-      yesNo('treatedHtn', 'On antihypertensive treatment', null, 'Hypertension diagnosis AND at least one antihypertensive medication (QRISK3 Box 1).'),
-      yesNo('af', 'Atrial fibrillation', null, 'Diagnosed AF (paroxysmal, persistent, or permanent) — not isolated ectopy or sinus tachycardia.'),
-      yesNo('ra', 'Rheumatoid arthritis', null, 'Clinician-diagnosed RA (not osteoarthritis or undifferentiated arthralgia).'),
-      yesNo('ckd', 'Chronic kidney disease (stage 3–5)', null, 'CKD stage 3–5 (eGFR <60 mL/min/1.73 m²), not isolated microalbuminuria.'),
-      yesNo('migraine', 'Migraine', null, 'Coded diagnosis of migraine (with or without aura).'),
-      yesNo('steroids', 'Regular corticosteroid tablets', null, 'Currently taking regular oral or injected (parenteral) glucocorticoids — not inhaled/topical/occasional short courses.'),
-      yesNo('antipsychotic', 'Atypical antipsychotic', null, 'Current atypical antipsychotic (e.g. olanzapine, risperidone, quetiapine, aripiprazole, clozapine).'),
-      yesNo('smi', 'Severe mental illness', null, 'Schizophrenia, bipolar affective disorder, or moderate/severe depression (not mild depression alone).'),
-      yesNo('sle', 'Systemic lupus erythematosus', null),
-      yesNo('ed', 'Erectile dysfunction', null, 'Included for all sexes so the field is live; published QRISK3 applies it in men. Small increment if yes in women (educational).'),
-      yesNo('fhCad', 'Family history of premature CAD', null, 'Angina or heart attack in a 1st-degree relative before age 60 (QRISK3 definition — not AHA 55/65).'),
+      ], 'none', 'Diabetes status: none, type 1, or type 2. Type 1 is modelled separately from type 2 in the QRISK3 predictor set.'),
+      yesNo('treatedHtn', 'On antihypertensive treatment', null, 'Hypertension diagnosis AND at least one antihypertensive medication (QRISK3 Box 1).', true),
+      yesNo('af', 'Atrial fibrillation', null, 'Diagnosed AF (paroxysmal, persistent, or permanent) — not isolated ectopy or sinus tachycardia.', false),
+      yesNo('ra', 'Rheumatoid arthritis', null, 'Clinician-diagnosed RA (not osteoarthritis or undifferentiated arthralgia).', false),
+      yesNo('ckd', 'Chronic kidney disease (stage 3–5)', null, 'CKD stage 3–5 (eGFR <60 mL/min/1.73 m²), not isolated microalbuminuria.', false),
+      yesNo('migraine', 'Migraine', null, 'Coded diagnosis of migraine (with or without aura).', false),
+      yesNo('steroids', 'Regular corticosteroid tablets', null, 'Currently taking regular oral or injected (parenteral) glucocorticoids — not inhaled/topical/occasional short courses.', false),
+      yesNo('antipsychotic', 'Atypical antipsychotic', null, 'Current atypical antipsychotic (e.g. olanzapine, risperidone, quetiapine, aripiprazole, clozapine).', false),
+      yesNo('smi', 'Severe mental illness', null, 'Schizophrenia, bipolar affective disorder, or moderate/severe depression (not mild depression alone).', false),
+      yesNo('sle', 'Systemic lupus erythematosus', null, 'Systemic lupus erythematosus as a QRISK3 clinical condition; it adds risk independently of conventional factors.', false),
+      yesNo('ed', 'Erectile dysfunction', null, 'Included for all sexes so the field is live; published QRISK3 applies it in men. Small increment if yes in women (educational).', false),
+      yesNo('fhCad', 'Family history of premature CAD', null, 'Angina or heart attack in a 1st-degree relative before age 60 (QRISK3 definition — not AHA 55/65).', true),
       numberInput('townsend', 'Townsend deprivation score (optional)', {
         min: -7,        max: 11,
         step: 0.1,

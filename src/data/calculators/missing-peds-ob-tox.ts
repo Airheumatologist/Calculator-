@@ -19,7 +19,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
         { label: '1–3 years (not Acker SIPA — no official cutoff)', value: '1-3', description: 'Acker derived SIPA in ages 4–16 years only; do not apply the 4–6 year cutoff' },
       ], '4-6', 'Acker 2015 SIPA: children 4–16 years. Cutoffs SI >1.22 (4–6 y), >1.0 (7–12 y), >0.9 (13–16 y). 1–3 years is not the derivation population.'),
       numberInput('hr', 'Heart rate', { unit: 'bpm', min: 40, max: 250, exampleValue: 120, helpText: 'SIPA = HR ÷ SBP. Acker cutoffs: >1.22 (4–6 y), >1.0 (7–12 y), >0.9 (13–16 y).' }),
-      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 40, max: 200, exampleValue: 90 }),
+      numberInput('sbp', 'Systolic BP', { unit: 'mmHg', min: 40, max: 200, exampleValue: 90, helpText: 'Systolic BP in mmHg from the same trauma-bay vitals as the heart rate; SIPA = HR ÷ SBP, so cuff or age-cuff size errors propagate directly.' }),
     ],
     calculate(values) {
       const hr = num(values.hr, 120);
@@ -189,9 +189,9 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Well-appearing febrile infants 0–90 days when applying Step-by-Step risk stratification.',
     whyUse: 'Identifies infants at low risk of invasive bacterial infection who may avoid LP/admission in validated pathways.',
     inputs: [
-      yesNo('illAppearing', 'Ill-appearing / clinical suspicion of severe infection', null, 'Ill/toxic on Pediatric Assessment Triangle (appearance, work of breathing, circulation) or clinician suspicion of invasive infection — not a well, playful infant.'),
+      yesNo('illAppearing', 'Ill-appearing / clinical suspicion of severe infection', null, 'Ill/toxic on Pediatric Assessment Triangle (appearance, work of breathing, circulation) or clinician suspicion of invasive infection — not a well, playful infant.', false),
       numberInput('ageDays', 'Age', { unit: 'days', min: 0, max: 90, exampleValue: 40, helpText: 'Age ≤21 days automatically fails the low-risk pathway.' }),
-      yesNo('leukocyturia', 'Leukocyturia (positive UA / dipstick LE or nitrite per local def.)', null, 'LE or nitrite positive on dipstick (or lab UA per local definition).'),
+      yesNo('leukocyturia', 'Leukocyturia (positive UA / dipstick LE or nitrite per local def.)', null, 'LE or nitrite positive on dipstick (or lab UA per local definition).', true),
       numberInput('pct', 'Procalcitonin', { unit: 'ng/mL', min: 0, max: 100, step: 0.01, exampleValue: 0.2, helpText: 'Fails low-risk if PCT ≥0.5 ng/mL (applied automatically).' }),
       numberInput('crp', 'CRP', { unit: 'mg/L', min: 0, max: 400, exampleValue: 10, helpText: 'Fails low-risk if CRP >20 mg/L (applied automatically).' }),
       numberInput('anc', 'Absolute neutrophil count', { unit: '×10³/µL', min: 0, max: 50, step: 0.1, exampleValue: 4, helpText: 'Fails low-risk if ANC >10 ×10³/µL (applied automatically).' }),
@@ -264,16 +264,16 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Counseling candidates for trial of labor after cesarean (TOLAC) using antenatal (not admission) predictors.',
     whyUse: 'Published Grobman 2007 coefficients estimate VBAC probability from age, BMI, race/ethnicity, prior vaginal birth, prior VBAC, and recurring cesarean indication.',
     inputs: [
-      numberInput('age', 'Maternal age', { unit: 'years', min: 15, max: 55, exampleValue: 30 }),
+      numberInput('age', 'Maternal age', { unit: 'years', min: 15, max: 55, exampleValue: 30, helpText: 'Maternal age in years at counseling; Grobman 2007 carries a small positive age coefficient (+0.039 per year).' }),
       numberInput('bmi', 'Prepregnancy BMI', { unit: 'kg/m²', min: 15, max: 60, step: 0.1, exampleValue: 28, helpText: 'Use prepregnancy (not admission) BMI as in the 2007 Grobman antenatal model.' }),
       selectInput('ethnicity', 'Race / ethnicity (as in original model categories)', [
         { label: 'Neither African American nor Hispanic', value: 'other' },
         { label: 'African American', value: 'aa' },
         { label: 'Hispanic', value: 'hispanic' },
-      ]),
-      yesNo('priorVaginal', 'Any prior vaginal delivery', null),
-      yesNo('priorVbac', 'Prior VBAC (successful vaginal birth after a prior cesarean)', null),
-      yesNo('recurringIndication', 'Recurring indication for cesarean (arrest / CPD / FTP)', null),
+      ], 'other', 'Race/ethnicity must use the original model\'s categories: African American (−0.671) and Hispanic (−0.680) subtract from the logit, neither-or-other is the reference. Do not substitute other groupings.'),
+      yesNo('priorVaginal', 'Any prior vaginal delivery', null, 'Any prior vaginal delivery, including a VBAC, adds the largest positive coefficient in the model. Nulliparous-beyond-the-cesarean patients score No.', true),
+      yesNo('priorVbac', 'Prior VBAC (successful vaginal birth after a prior cesarean)', null, 'A prior successful VBAC (after a previous cesarean) adds its own positive coefficient on top of any prior vaginal delivery.', true),
+      yesNo('recurringIndication', 'Recurring indication for cesarean (arrest / CPD / FTP)', null, 'Recurring cesarean indication (arrest of labor, cephalopelvic disproportion, failure to progress) subtracts from the predicted probability.', false),
     ],
     calculate(values) {
       // Grobman WA et al. Obstet Gynecol. 2007;109:806-812. PMID 17400840 (antenatal model; no induction term).
@@ -364,15 +364,15 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Suspected preeclampsia after 20 weeks gestation (or postpartum).',
     whyUse: 'Structures diagnostic criteria including atypical presentations without proteinuria.',
     inputs: [
-      yesNo('bp140', 'BP ≥140/90 mmHg on ≥2 occasions ≥4 h apart (after 20 weeks)', null, 'SBP ≥140 or DBP ≥90 on two occasions ≥4 hours apart after 20 weeks. Severe-range BP is a separate item.'),
-      yesNo('bp160', 'Severe-range BP ≥160/110 mmHg (confirmed)', null, 'SBP ≥160 or DBP ≥110 confirmed within ~15 minutes; do not wait 4 hours to treat.'),
-      yesNo('proteinuria', 'Proteinuria (≥300 mg/24h, PCR ≥0.3, or dipstick 2+ if others unavailable)', null, 'ACOG: ≥300 mg/24 h, protein/creatinine ratio ≥0.3, or dipstick 2+ only if quantitative methods unavailable.'),
-      yesNo('platelets', 'Platelets <100,000/µL', null, 'Severe-feature criterion: platelet count <100 ×10³/µL.'),
-      yesNo('creatinine', 'Serum creatinine >1.1 mg/dL or doubling without other renal disease', null, 'Severe-feature: Cr >1.1 mg/dL or doubling of baseline in the absence of other renal disease.'),
-      yesNo('lfts', 'LFTs ≥2× upper limit of normal', null, 'AST or ALT ≥2× this lab’s ULN (severe feature).'),
-      yesNo('pulmEdema', 'Pulmonary edema', null, 'Clinical or radiographic pulmonary edema — a severe feature.'),
-      yesNo('neuro', 'New cerebral or visual symptoms (e.g., severe headache, scotomata)', null, 'New-onset severe headache unresponsive to usual analgesics, or visual symptoms (scotomata, photopsia, blindness) — severe features.'),
-      yesNo('epigastric', 'Severe persistent RUQ / epigastric pain (not explained otherwise)', null, 'Severe persistent right-upper-quadrant or epigastric pain not accounted for by another diagnosis — severe feature even if LFTs are not yet 2× ULN.'),
+      yesNo('bp140', 'BP ≥140/90 mmHg on ≥2 occasions ≥4 h apart (after 20 weeks)', null, 'SBP ≥140 or DBP ≥90 on two occasions ≥4 hours apart after 20 weeks. Severe-range BP is a separate item.', true),
+      yesNo('bp160', 'Severe-range BP ≥160/110 mmHg (confirmed)', null, 'SBP ≥160 or DBP ≥110 confirmed within ~15 minutes; do not wait 4 hours to treat.', false),
+      yesNo('proteinuria', 'Proteinuria (≥300 mg/24h, PCR ≥0.3, or dipstick 2+ if others unavailable)', null, 'ACOG: ≥300 mg/24 h, protein/creatinine ratio ≥0.3, or dipstick 2+ only if quantitative methods unavailable.', true),
+      yesNo('platelets', 'Platelets <100,000/µL', null, 'Severe-feature criterion: platelet count <100 ×10³/µL.', false),
+      yesNo('creatinine', 'Serum creatinine >1.1 mg/dL or doubling without other renal disease', null, 'Severe-feature: Cr >1.1 mg/dL or doubling of baseline in the absence of other renal disease.', false),
+      yesNo('lfts', 'LFTs ≥2× upper limit of normal', null, 'AST or ALT ≥2× this lab’s ULN (severe feature).', false),
+      yesNo('pulmEdema', 'Pulmonary edema', null, 'Clinical or radiographic pulmonary edema — a severe feature.', false),
+      yesNo('neuro', 'New cerebral or visual symptoms (e.g., severe headache, scotomata)', null, 'New-onset severe headache unresponsive to usual analgesics, or visual symptoms (scotomata, photopsia, blindness) — severe features.', false),
+      yesNo('epigastric', 'Severe persistent RUQ / epigastric pain (not explained otherwise)', null, 'Severe persistent right-upper-quadrant or epigastric pain not accounted for by another diagnosis — severe feature even if LFTs are not yet 2× ULN.', false),
     ],
     calculate(values) {
       const htn = bool(values.bp140) || bool(values.bp160);
@@ -468,7 +468,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
     inputs: [
       numberInput('ldh', 'LDH', { unit: 'U/L', min: 50, max: 5000, exampleValue: 400, helpText: 'Tennessee-style hemolysis often uses LDH ≥600 U/L (or bilirubin ≥1.2 mg/dL or schistocytes).' }),
       numberInput('bili', 'Total bilirubin', { unit: 'mg/dL', min: 0.1, max: 20, step: 0.1, exampleValue: 0.8, helpText: 'Hemolysis support if ≥1.2 mg/dL (Tennessee-style).' }),
-      yesNo('schistocytes', 'Schistocytes / hemolysis on smear (if known)'),
+      yesNo('schistocytes', 'Schistocytes / hemolysis on smear (if known)', undefined, 'Schistocytes, burr cells, or other hemolysis on the peripheral smear; with elevated LDH and low haptoglobin this supports the hemolysis arm of the triad.', false),
       numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 5000, exampleValue: 40, helpText: 'Tennessee/Sibai elevated LFTs: AST or ALT ≥2× this lab’s ULN (classically ≥70 U/L when ULN ≈35).' }),
       numberInput('alt', 'ALT', { unit: 'U/L', min: 5, max: 5000, exampleValue: 40, helpText: 'Same ≥2× ULN rule as AST. Either enzyme meeting the fold-change counts.' }),
       numberInput('astUln', 'AST/ALT ULN (lab)', { unit: 'U/L', min: 20, max: 80, exampleValue: 35, helpText: 'Enter this lab’s AST/ALT upper limit of normal. Tennessee uses ≥2× ULN (default ULN 35 → threshold 70 U/L, matching classic AST ≥70).' }),
@@ -645,16 +645,16 @@ export const missingPedsObToxCalcs: Calculator[] = [
       selectInput('mode', 'Estimation mode', [
         { label: 'Osmolal gap → ethanol', value: 'gap' },
         { label: 'Drinks / Widmark approximate', value: 'widmark' },
-      ]),
+      ], 'gap', 'Osmolal gap branch converts the measured gap × 4.6 and ignores the Widmark fields; the drinks branch uses weight, sex, hours, and elimination rate. Only the selected branch is applied.'),
       numberInput('osmGap', 'Osmolal gap (if gap mode)', { unit: 'mOsm/kg', min: 0, max: 200, exampleValue: 20, helpText: 'Measured osm − calculated osm. EtOH (mg/dL) ≈ gap × 4.6 if the gap is entirely ethanol. Other alcohols also raise the gap.' }),
       numberInput('drinks', 'Standard drinks absorbed (if Widmark)', { min: 0, max: 40, step: 0.5, exampleValue: 4, helpText: 'US standard drink ≈ 14 g ethanol. Educational estimate only — not forensic.' }),
-      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 250, exampleValue: 70 }),
+      numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 30, max: 250, exampleValue: 70, helpText: 'Body weight for the Widmark estimate; select lb if needed — the engine converts before the r-factor multiplication.' }),
       selectInput('sex', 'Sex (Widmark r)', [
         { label: 'Male (r ≈ 0.68)', value: 0.68 },
         { label: 'Female (r ≈ 0.55)', value: 0.55 },
-      ]),
-      numberInput('hours', 'Hours since drinking started (metabolism)', { unit: 'h', min: 0, max: 24, step: 0.5, exampleValue: 2 }),
-      numberInput('beta', 'Elimination rate', { unit: 'mg/dL/h', min: 10, max: 40, exampleValue: 15 }),
+      ], 0.68, 'Widmark r factor: approximately 0.68 for men and 0.55 for women, reflecting different total body water fractions.'),
+      numberInput('hours', 'Hours since drinking started (metabolism)', { unit: 'h', min: 0, max: 24, step: 0.5, exampleValue: 2, helpText: 'Hours elapsed since drinking began; the estimate subtracts β × hours, so a longer interval lowers the projected level.' }),
+      numberInput('beta', 'Elimination rate', { unit: 'mg/dL/h', min: 10, max: 40, exampleValue: 15, helpText: 'Assumed zero-order elimination rate, typically 15–20 mg/dL/h (range 10–40); higher values model a faster metabolizer and lower the estimate.' }),
     ],
     calculate(values) {
       const mode = String(values.mode ?? 'gap');
@@ -742,7 +742,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
     inputs: [
       numberInput('hours', 'Time since acute ingestion', { unit: 'hours', min: 4, max: 24, step: 0.5, exampleValue: 4, helpText: 'Nomogram starts at 4 hours after a single acute ingestion. Levels before 4 h cannot be plotted.' }),
       numberInput('level', 'Acetaminophen level', { unit: 'µg/mL (mcg/mL)', min: 0, max: 500, exampleValue: 150, helpText: 'Same as mcg/mL. Treatment (150) line starts at 150 µg/mL at 4 h and halves about every 4 h.' }),
-      yesNo('chronicOrUnknown', 'Chronic, staggered, or unknown time (not nomogram-eligible)', null),
+      yesNo('chronicOrUnknown', 'Chronic, staggered, or unknown time (not nomogram-eligible)', null, 'Yes for chronic, staggered, or unknown-time ingestions — the Rumack-Matthew nomogram and its 150 µg/mL treatment line do not apply. Yes switches the tool to a non-nomogram warning.', false),
     ],
     calculate(values) {
       if (bool(values.chronicOrUnknown)) {
@@ -851,13 +851,13 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whyUse: 'Core pharmacokinetic relationship for rapidly achieving a target plasma concentration.',
     inputs: [
       numberInput('cp', 'Target concentration (Cp)', { unit: 'mg/L', min: 0.01, max: 500, step: 0.1, exampleValue: 20, helpText: 'Keep units consistent: mg/L × L/kg × kg = mg. µg/mL is numerically equal to mg/L.' }),
-      numberInput('vd', 'Volume of distribution (Vd)', { unit: 'L/kg', min: 0.05, max: 20, step: 0.05, exampleValue: 0.7 }),
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 1, max: 300, step: 0.1, exampleValue: 70 }),
+      numberInput('vd', 'Volume of distribution (Vd)', { unit: 'L/kg', min: 0.05, max: 20, step: 0.05, exampleValue: 0.7, helpText: 'Volume of distribution in L/kg for the specific drug (e.g. ~0.7 for many small molecules, much larger for lipophilic agents); this is the dominant driver of the dose.' }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 1, max: 300, step: 0.1, exampleValue: 70, helpText: 'Dosing weight in kg — choose TBW, IBW, or adjusted body weight per the drug\'s guidance, then select lb if your source value is imperial.' }),
       selectInput('bioavailability', 'Bioavailability (F)', [
         { label: 'IV (F = 1)', value: 1 },
         { label: 'Oral F = 0.8', value: 0.8 },
         { label: 'Oral F = 0.5', value: 0.5 },
-      ]),
+      ], 1, 'IV sets F = 1. An oral loading dose must be divided by F (choose 0.8 or 0.5), which raises the dose when absorption is incomplete.'),
     ],
     calculate(values) {
       const cp = num(values.cp, 20);
@@ -903,8 +903,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Titrating vasoactive or other continuous infusions with known concentration.',
     whyUse: 'Prevents unit errors when programming pumps.',
     inputs: [
-      numberInput('dose', 'Desired dose', { unit: 'mcg/kg/min', min: 0.01, max: 200, step: 0.01, exampleValue: 5 }),
-      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 1, max: 300, step: 0.1, exampleValue: 70 }),
+      numberInput('dose', 'Desired dose', { unit: 'mcg/kg/min', min: 0.01, max: 200, step: 0.01, exampleValue: 5, helpText: 'Target dose in mcg/kg/min (many vasoactives use 0.01–1; up to 200 for high-dose settings). Rate (mL/h) = dose × weight × 60 ÷ bag concentration.' }),
+      numberInput('weight', 'Weight', { unit: 'kg', unitKind: 'weight', min: 1, max: 300, step: 0.1, exampleValue: 70, helpText: 'Patient weight in kg for the weight-based dose; select lb if the recorded weight is imperial — the engine converts first.' }),
       numberInput('concentration', 'Drug concentration', { unit: 'mcg/mL', min: 0.1, max: 100000, exampleValue: 1600, helpText: '1 mg/mL = 1000 mcg/mL — unit mismatches are a common serious error. Confirm the bag label.' }),
     ],
     calculate(values) {
@@ -955,8 +955,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whyUse: 'Raw retic % overestimates production when Hct is low; RPI accounts for shift/maturation.',
     inputs: [
       numberInput('retic', 'Reticulocyte count', { unit: '%', min: 0.1, max: 30, step: 0.1, exampleValue: 2, helpText: 'Corrected retic = retic% × (Hct / normal Hct). RPI = corrected / maturation factor (1–2.5 by Hct). RPI <2 suggests hypoproliferation; ≥3 adequate response.' }),
-      numberInput('hct', 'Hematocrit', { unit: '%', min: 5, max: 60, exampleValue: 30 }),
-      numberInput('normalHct', 'Normal Hct reference', { unit: '%', min: 35, max: 50, exampleValue: 45 }),
+      numberInput('hct', 'Hematocrit', { unit: '%', min: 5, max: 60, exampleValue: 30, helpText: 'Measured hematocrit in % from the same draw as the reticulocyte percentage; the correction multiplies retic % by Hct ÷ normal Hct.' }),
+      numberInput('normalHct', 'Normal Hct reference', { unit: '%', min: 35, max: 50, exampleValue: 45, helpText: 'Reference (normal) hematocrit for the patient\'s sex/age, typically 45% for men and 40% for women; the RPI maturation factor also steps on the measured Hct.' }),
     ],
     calculate(values) {
       const retic = num(values.retic, 2);
@@ -1034,7 +1034,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whyUse: 'Absolute counts are more informative than percentages alone.',
     inputs: [
       numberInput('wbc', 'WBC', { unit: '×10³/µL', min: 0.1, max: 200, step: 0.1, exampleValue: 6, helpText: 'ALC = WBC × (% lymphocytes / 100). Pediatric reference ranges are age-dependent and higher in infants.' }),
-      numberInput('lymphPct', 'Lymphocytes', { unit: '%', min: 0, max: 100, exampleValue: 30 }),
+      numberInput('lymphPct', 'Lymphocytes', { unit: '%', min: 0, max: 100, exampleValue: 30, helpText: 'Automated differential lymphocyte percentage (0–100), not the absolute count; ALC = WBC × % ÷ 100.' }),
     ],
     calculate(values) {
       const wbc = num(values.wbc, 6);
@@ -1105,14 +1105,14 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whyUse: 'Provides a rough total deficit estimate; correction rate limits are critical.',
     inputs: [
       numberInput('weight', 'Body weight', { unit: 'kg', unitKind: 'weight', min: 20, max: 300, exampleValue: 70, helpText: 'Na deficit (mEq) = TBW × (desired − actual). Guides total replacement, not rate. Typical limit ≤8–10 mEq/L in 24 h if chronic.' }),
-      numberInput('na', 'Current serum Na', { unit: 'mEq/L', min: 90, max: 140, exampleValue: 120 }),
-      numberInput('goalNa', 'Desired Na', { unit: 'mEq/L', min: 120, max: 140, exampleValue: 130 }),
+      numberInput('na', 'Current serum Na', { unit: 'mEq/L', min: 90, max: 140, exampleValue: 120, helpText: 'Current serum sodium in mEq/L; the deficit is zero (or negative, and not displayed) when the measured Na is already at or above the desired value.' }),
+      numberInput('goalNa', 'Desired Na', { unit: 'mEq/L', min: 120, max: 140, exampleValue: 130, helpText: 'Desired serum sodium in mEq/L, commonly 130–140 depending on symptoms and chronicity; the goal sets the (goal − current) gap and therefore the whole deficit.' }),
       selectInput('tbw', 'TBW fraction', [
         { label: 'Young men (0.6)', value: 'young-men' },
         { label: 'Young women / elderly men (0.5)', value: 'young-women-elderly-men' },
         { label: 'Elderly women (0.45)', value: 'elderly-women' },
         { label: 'Children approx (0.6)', value: 'children' },
-      ], 'young-men'),
+      ], 'young-men', 'Total body water fraction used to scale body weight: about 0.6 for young men, 0.5 for young women or elderly men, 0.45 for elderly women, 0.6 for children.'),
     ],
     calculate(values) {
       const wt = num(values.weight, 70);
@@ -1175,7 +1175,7 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whyUse: 'Compensation is hypoventilation; if PCO₂ differs from expected, mixed disorder likely.',
     inputs: [
       numberInput('hco3', 'HCO₃⁻', { unit: 'mEq/L', min: 26, max: 60, exampleValue: 36, helpText: 'Expected PaCO₂ ≈ 0.7 × HCO₃ + 20 (±5). Compensation rarely raises PCO₂ above ~55–60 mmHg.' }),
-      numberInput('paco2', 'Measured PaCO₂', { unit: 'mmHg', min: 20, max: 100, exampleValue: 45 }),
+      numberInput('paco2', 'Measured PaCO₂', { unit: 'mmHg', min: 20, max: 100, exampleValue: 45, helpText: 'Measured arterial PaCO₂ in mmHg; expected PaCO₂ = 0.7 × HCO₃⁻ + 20 (roughly ±5), so a value below that range indicates a concurrent respiratory alkalosis.' }),
     ],
     calculate(values) {
       const hco3 = num(values.hco3, 36);
@@ -1237,11 +1237,11 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whyUse: 'Translocational hyponatremia from glucose; corrected Na guides free-water status.',
     inputs: [
       numberInput('na', 'Measured sodium', { unit: 'mEq/L', min: 100, max: 180, exampleValue: 128, helpText: 'Na_corrected = Na_measured + factor × (glucose − 100)/100. Katz 1.6 is classic; Hillier 2.4 may be more accurate at very high glucose.' }),
-      numberInput('glu', 'Serum glucose', { unit: 'mg/dL', min: 100, max: 2000, exampleValue: 500 }),
+      numberInput('glu', 'Serum glucose', { unit: 'mg/dL', min: 100, max: 2000, exampleValue: 500, helpText: 'Serum glucose in mg/dL from the same draw as the sodium; only the amount above 100 mg/dL drives the correction.' }),
       selectInput('factor', 'Correction factor per 100 mg/dL glucose >100', [
         { label: '1.6 (Katz classic)', value: 1.6 },
         { label: '2.4 (Hillier)', value: 2.4 },
-      ]),
+      ], 2.4, 'Correction factor per 100 mg/dL of glucose above 100: 1.6 (Katz, classic) or 2.4 (Hillier, better with glucose >400). Higher glucose and the 2.4 factor give a larger corrected sodium.'),
     ],
     calculate(values) {
       const na = num(values.na, 128);
@@ -1299,12 +1299,12 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whenToUse: 'Dating pregnancy when LMP is known (confirm with ultrasound when possible).',
     whyUse: "Naegele's rule is the classic EDD estimate: LMP + 280 days.",
     inputs: [
-      numberInput('lmpYear', 'LMP year', { min: 2020, max: 2035, exampleValue: 2026 }),
-      numberInput('lmpMonth', 'LMP month', { min: 1, max: 12, exampleValue: 1 }),
+      numberInput('lmpYear', 'LMP year', { min: 2020, max: 2035, exampleValue: 2026, helpText: 'Calendar year of the first day of the last menstrual period; enter the LMP date even when the cycle was irregular — the cycle-length field adjusts the EDD.' }),
+      numberInput('lmpMonth', 'LMP month', { min: 1, max: 12, exampleValue: 1, helpText: 'Calendar month (1–12) of the last menstrual period\'s first day.' }),
       numberInput('lmpDay', 'LMP day', { min: 1, max: 31, exampleValue: 15, helpText: 'Day of month of the first day of the last menstrual period (not the last day of bleeding).' }),
-      numberInput('refYear', 'Reference (today) year', { min: 2020, max: 2035, exampleValue: 2026 }),
-      numberInput('refMonth', 'Reference month', { min: 1, max: 12, exampleValue: 7 }),
-      numberInput('refDay', 'Reference day', { min: 1, max: 31, exampleValue: 27 }),
+      numberInput('refYear', 'Reference (today) year', { min: 2020, max: 2035, exampleValue: 2026, helpText: 'Year of the date you are calculating for (today\'s date), used to report current gestational age.' }),
+      numberInput('refMonth', 'Reference month', { min: 1, max: 12, exampleValue: 7, helpText: 'Month (1–12) of the reference date used for the gestational-age calculation.' }),
+      numberInput('refDay', 'Reference day', { min: 1, max: 31, exampleValue: 27, helpText: 'Day of month (1–31) of the reference date; gestational age is computed from the day count between LMP and this date.' }),
       numberInput('cycleLength', 'Cycle length', { unit: 'days', min: 21, max: 45, exampleValue: 28, helpText: 'EDD shifts by (cycle − 28) days. First-trimester ultrasound is preferred if LMP is uncertain.' }),
     ],
     calculate(values) {
@@ -1366,8 +1366,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
       selectInput('method', 'Method', [
         { label: 'Traub-Johnson (preferred here)', value: 'tj' },
         { label: 'Simple BMI-method at BMI 50th≈18 (approx)', value: 'bmi18' },
-      ]),
-      numberInput('actualWt', 'Actual weight (optional, for %IBW)', { unit: 'kg', unitKind: 'weight', min: 0, max: 200, step: 0.1, exampleValue: 0, required: false }),
+      ], 'tj', 'Traub-Johnson is the height-based pediatric equation used here; the BMI-method option approximates IBW as height² × 18 (a 50th-percentile BMI), which diverges in toddlers.'),
+      numberInput('actualWt', 'Actual weight (optional, for %IBW)', { unit: 'kg', unitKind: 'weight', min: 0, max: 200, step: 0.1, exampleValue: 0, required: false, helpText: 'Optional measured weight in kg; adding it lets the tool report percent IBW, which many pediatric formularies use to pick between TBW, IBW, and adjusted body weight.' }),
     ],
     calculate(values) {
       const ht = num(values.height, 120);
@@ -1453,27 +1453,27 @@ export const missingPedsObToxCalcs: Calculator[] = [
         { label: 'Mild undisturbed (3)', value: 3, description: 'Hands or feet, at rest' },
         { label: 'Mod–severe undisturbed (4)', value: 4, description: 'Arms or legs, at rest' },
       ], 0, 'Mild = hands or feet only; moderate–severe = arms or legs. Disturbed = after handling; undisturbed = at rest.'),
-      yesNo('increasedTone', 'Increased muscle tone', 2, 'Resistance to passive ROM and/or head lag as on the local FNAST card.'),
-      yesNo('excoriation', 'Excoriation', 1, 'Skin breakdown from rubbing (chin, nose, elbows, knees, toes) — not diaper dermatitis.'),
-      yesNo('myoclonic', 'Myoclonic jerks', 3, 'Twitching of a muscle group this interval — not a full seizure.'),
-      yesNo('convulsions', 'Convulsions', 5, 'Generalized or focal seizure activity this interval.'),
-      yesNo('sweating', 'Sweating', 1, 'Sweat on the brow or upper lip not explained by overheating.'),
-      yesNo('feverLow', 'Fever 37.2–38.3°C', 1, 'Axillary temperature 37.2–38.3°C during this interval.'),
-      yesNo('feverHigh', 'Fever >38.3°C', 2, 'Axillary temperature >38.3°C. Do not double-count with the 37.2–38.3 item.'),
-      yesNo('yawning', 'Frequent yawning (>3–4)', 1, '>3–4 yawns during this scoring interval.'),
-      yesNo('mottling', 'Mottling', 1, 'Mottled skin not explained by a cold environment.'),
-      yesNo('nasalStuff', 'Nasal stuffiness', 1, 'Nasal congestion with noisy nasal breathing this interval.'),
-      yesNo('sneezing', 'Sneezing (>3–4)', 1, '>3–4 sneezes during this scoring interval.'),
-      yesNo('nasalFlaring', 'Nasal flaring', 2, 'Alae nasi flare with inspiration this interval.'),
+      yesNo('increasedTone', 'Increased muscle tone', 2, 'Resistance to passive ROM and/or head lag as on the local FNAST card.', false),
+      yesNo('excoriation', 'Excoriation', 1, 'Skin breakdown from rubbing (chin, nose, elbows, knees, toes) — not diaper dermatitis.', false),
+      yesNo('myoclonic', 'Myoclonic jerks', 3, 'Twitching of a muscle group this interval — not a full seizure.', false),
+      yesNo('convulsions', 'Convulsions', 5, 'Generalized or focal seizure activity this interval.', false),
+      yesNo('sweating', 'Sweating', 1, 'Sweat on the brow or upper lip not explained by overheating.', true),
+      yesNo('feverLow', 'Fever 37.2–38.3°C', 1, 'Axillary temperature 37.2–38.3°C during this interval.', false),
+      yesNo('feverHigh', 'Fever >38.3°C', 2, 'Axillary temperature >38.3°C. Do not double-count with the 37.2–38.3 item.', false),
+      yesNo('yawning', 'Frequent yawning (>3–4)', 1, '>3–4 yawns during this scoring interval.', true),
+      yesNo('mottling', 'Mottling', 1, 'Mottled skin not explained by a cold environment.', false),
+      yesNo('nasalStuff', 'Nasal stuffiness', 1, 'Nasal congestion with noisy nasal breathing this interval.', true),
+      yesNo('sneezing', 'Sneezing (>3–4)', 1, '>3–4 sneezes during this scoring interval.', true),
+      yesNo('nasalFlaring', 'Nasal flaring', 2, 'Alae nasi flare with inspiration this interval.', false),
       selectInput('rr', 'Respiratory rate', [
         { label: '≤60 (0)', value: 0, description: 'RR ≤60/min over a full minute' },
         { label: '>60 (1)', value: 1, description: 'RR >60/min without retractions' },
         { label: '>60 with retractions (2)', value: 2, description: 'RR >60/min AND intercostal/subcostal retractions' },
       ], 0, 'Count over a full minute during this interval. Score 2 only if RR >60 AND retractions.'),
-      yesNo('excessiveSucking', 'Excessive sucking', 1, 'Frantic rooting or sucking of fists out of proportion to hunger this interval.'),
-      yesNo('poorFeeding', 'Poor feeding', 2, 'Uncoordinated suck/swallow, refuses feed, or takes a long time to feed this interval.'),
-      yesNo('regurgitation', 'Regurgitation', 2, '≥2 episodes of regurgitation this interval (not projectile).'),
-      yesNo('projectile', 'Projectile vomiting', 3, 'Vomitus projected a distance from the mouth this interval.'),
+      yesNo('excessiveSucking', 'Excessive sucking', 1, 'Frantic rooting or sucking of fists out of proportion to hunger this interval.', true),
+      yesNo('poorFeeding', 'Poor feeding', 2, 'Uncoordinated suck/swallow, refuses feed, or takes a long time to feed this interval.', false),
+      yesNo('regurgitation', 'Regurgitation', 2, '≥2 episodes of regurgitation this interval (not projectile).', false),
+      yesNo('projectile', 'Projectile vomiting', 3, 'Vomitus projected a distance from the mouth this interval.', false),
       selectInput('stools', 'Stools', [
         { label: 'Normal (0)', value: 0, description: 'Formed or usual stool for this infant' },
         { label: 'Loose (2)', value: 2, description: 'Loose, curdy, or seedy stools (not watery)' },
@@ -1557,8 +1557,8 @@ export const missingPedsObToxCalcs: Calculator[] = [
     whyUse: 'Negative UAG suggests appropriate NH₄⁺ excretion (e.g., diarrhea); positive suggests impaired renal acidification (RTA).',
     inputs: [
       numberInput('una', 'Urine Na', { unit: 'mEq/L', min: 1, max: 300, exampleValue: 40, helpText: 'UAG = UNa + UK − UCl. Negative suggests high NH₄⁺ (e.g. diarrhea); positive suggests low NH₄⁺ (RTA) in NAGMA.' }),
-      numberInput('uk', 'Urine K', { unit: 'mEq/L', min: 1, max: 200, exampleValue: 20 }),
-      numberInput('ucl', 'Urine Cl', { unit: 'mEq/L', min: 1, max: 300, exampleValue: 60 }),
+      numberInput('uk', 'Urine K', { unit: 'mEq/L', min: 1, max: 200, exampleValue: 20, helpText: 'Spot urine potassium in mEq/L from the same specimen as the urine Na and Cl; UAG = UNa + UK − UCl.' }),
+      numberInput('ucl', 'Urine Cl', { unit: 'mEq/L', min: 1, max: 300, exampleValue: 60, helpText: 'Spot urine chloride in mEq/L from the same specimen; a negative UAG flags adequate ammonium excretion (e.g. diarrhea) whereas a positive UAG suggests distal RTA.' }),
     ],
     calculate(values) {
       const una = num(values.una, 40);

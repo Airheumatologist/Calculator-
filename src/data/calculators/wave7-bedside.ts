@@ -90,13 +90,13 @@ export const wave7BedsideCalcs: Calculator[] = [
     whyUse:
       'CKiD U25 is less biased across the pediatric-to-young-adult range than bedside Schwartz or adult CKD-EPI in this age band; averaging Cr and CysC improves precision.',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 1, max: 25, step: 0.1, exampleValue: 10 }),
+      numberInput('age', 'Age', { unit: 'years', min: 1, max: 25, step: 0.1, exampleValue: 10, helpText: 'Age in years on the day the creatinine and cystatin C were drawn; the U25 coefficients change across the 1–25 year range, so reconcile a birthday inside the sampling window with the lab.' }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
-      ]),
+      ], 'M', 'Sex assigned at birth sets the k constant in the equation: 0.34 for girls and 0.40 for boys, so the same creatinine gives different eGFRs.'),
       numberInput('height', 'Height', { unit: 'cm', min: 50, max: 220, step: 0.1, exampleValue: 140, helpText: 'Measured standing height (recumbent length in infants). Required for the creatinine equation (height in metres).' }),
-      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 15, step: 0.01, exampleValue: 0.8 }),
+      numberInput('scr', 'Serum creatinine', { unit: 'mg/dL', unitKind: 'creatinine', min: 0.1, max: 15, step: 0.01, exampleValue: 0.8, helpText: 'Standardized (IDMS-traceable) serum creatinine; select µmol/L if the lab reports SI units, the engine converts to mg/dL.' }),
       numberInput('cysc', 'Cystatin C (optional)', {
         unit: 'mg/L',
         min: 0.2,
@@ -220,7 +220,7 @@ export const wave7BedsideCalcs: Calculator[] = [
     whyUse:
       'BRI models the body as an ellipse; higher values indicate rounder (more viscerally adiposity-like) shape. 2024 US cohort data show a U-shaped link with all-cause mortality — both low and high BRI vs the mid-range nadir.',
     inputs: [
-      numberInput('height', 'Height', { unit: 'cm', min: 100, max: 220, step: 0.1, exampleValue: 170 }),
+      numberInput('height', 'Height', { unit: 'cm', min: 100, max: 220, step: 0.1, exampleValue: 170, helpText: 'Standing height in cm, no shoes; enter the same visit\'s waist circumference. BRI 1.67 is below the lowest reference quintile.' }),
       numberInput('waist', 'Waist circumference', {
         unit: 'cm',
         min: 40,
@@ -522,39 +522,45 @@ export const wave7BedsideCalcs: Calculator[] = [
         'Major microbiology: typical IE organisms from ≥2 blood-culture sets, OR Coxiella / Bartonella / T. whipplei serology or PCR meeting major definitions',
         null,
         'Typical native-valve organisms: S. aureus, S. lugdunensis, E. faecalis, all streptococci except S. pneumoniae and S. pyogenes, Granulicatella/Abiotrophia/Gemella, HACEK. Additional organisms are typical only with prosthetic material. Nontypical organisms need ≥3 separate sets. Coxiella phase I IgG >1:800; Bartonella IgG ≥1:800.',
+        true,
       ),
       yesNo(
         'imagingMajor',
         'Major imaging: vegetation, abscess, pseudoaneurysm, fistula, new prosthetic dehiscence, or new significant regurgitation on echo/cardiac CTA, OR abnormal 18F-FDG PET/CT involving valve/prosthesis/CIED',
         null,
         'New regurgitation vs prior imaging — worsening of known regurgitation is not major. PET/CT major generally applies ≥3 months after prosthetic implant (postoperative uptake otherwise). Cardiac CTA equivalent findings count.',
+        true,
       ),
       yesNo(
         'surgicalMajor',
         'Major surgical: intraoperative inspection with evidence of IE',
         null,
         'Vegetation, destruction, abscess, fistula, or infectious prosthetic dehiscence on surgical inspection.',
+        false,
       ),
-      yesNo('pathologic', 'Pathologic criteria: microorganisms or active endocarditis on vegetation, explanted valve/CIED, or embolus', null, 'Pathologic criteria independently make IE definite regardless of clinical count.'),
+      yesNo('pathologic', 'Pathologic criteria: microorganisms or active endocarditis on vegetation, explanted valve/CIED, or embolus', null, 'Pathologic criteria independently make IE definite regardless of clinical count.', false),
       yesNo(
         'predisposition',
         'Minor predisposition: prior IE, prosthetic/TAVR valve, valve repair, CHD, CIED, HOCM, >mild native valve disease, IVDU, LVAD/MCS',
         null,
         'Any one counts as the predisposition minor. 2023 list includes TAVR, CIED, prior IE, and LVAD/MCS.',
+        true,
       ),
-      yesNo('fever', 'Minor: fever ≥38.0 °C', null, 'Documented temperature ≥38.0 °C.'),
+      yesNo('fever', 'Minor: fever ≥38.0 °C', null, 'Documented temperature ≥38.0 °C.', true),
       yesNo(
         'vascular',
         'Minor vascular: arterial emboli, septic pulmonary infarcts, mycotic aneurysm, ICH, conjunctival hemorrhage, Janeway lesions, splenic/cerebral abscess',
         null,
         'Any one vascular/embolic phenomenon counts. Janeway = nontender palmar/plantar macules (not Osler nodes).',
+        true,
       ),
-      yesNo('immuno', 'Minor immunologic: Osler nodes, Roth spots, glomerulonephritis, rheumatoid factor', null, 'RF = rheumatoid factor, not rheumatic fever.'),
+      yesNo('immuno', 'Minor immunologic: Osler nodes, Roth spots, glomerulonephritis, rheumatoid factor', null, 'RF = rheumatoid factor, not rheumatic fever.', false),
       yesNo(
         'microMinor',
         'Minor microbiology: positive cultures or serology not meeting major definitions',
         null,
         'Use only if major microbiology is not met (do not double-count the same isolates).',
+        false,
       ),
     ],
     calculate(values) {
@@ -658,7 +664,7 @@ export const wave7BedsideCalcs: Calculator[] = [
         exampleValue: 1,
         helpText: 'Hypertensive: 1 point if ≥2 BP medicines',
       }),
-      yesNo('af', 'Atrial fibrillation (paroxysmal or persistent)', 3, 'Any history of AF (paroxysmal, persistent, or permanent) — 3 points. Heavy (BMI >30) is scored from the BMI field.'),
+      yesNo('af', 'Atrial fibrillation (paroxysmal or persistent)', 3, 'Any history of AF (paroxysmal, persistent, or permanent) — 3 points. Heavy (BMI >30) is scored from the BMI field.', true),
       numberInput('pasp', 'Estimated PASP (echo)', { unit: 'mmHg', min: 15, max: 80, step: 1, exampleValue: 30, helpText: '1 point if PASP >35' }),
       numberInput('age', 'Age', { unit: 'years', min: 18, max: 100, step: 1, exampleValue: 65, helpText: 'Elder: 1 point if age >60' }),
       numberInput('ee', "E/e′ (average)", { min: 3, max: 25, step: 0.1, exampleValue: 8, helpText: 'Filling pressure: 1 point if E/e′ >9' }),
@@ -933,14 +939,14 @@ export const wave7BedsideCalcs: Calculator[] = [
     whyUse:
       'No risk factors: CSI ~0.2% and the neck can usually be clinically cleared. High-risk findings (~12% CSI) triage to CT; isolated intermediate findings to x-ray first.',
     inputs: [
-      yesNo('gcsUnresponsive', 'High-risk: GCS 3–8 or unresponsive (AVPU = U)', null, 'GCS 3–8, or AVPU = Unresponsive (does not respond to voice or pain). High-risk → CT C-spine.'),
-      yesNo('abnormalAbc', 'High-risk: abnormal airway, breathing, or circulation', null, 'Observed abnormal A/B/C: advanced airway, apnea/hypopnea, shock, or CPR — not a vague “looks unwell.”'),
-      yesNo('focalNeuro', 'High-risk: focal neurologic deficit (paresthesia, numbness, or weakness)', null, 'New motor or sensory deficit or paresthesia suggesting spinal cord/root injury — not a chronic baseline deficit.'),
-      yesNo('ams', 'Intermediate: altered mental status (GCS 9–14, AVPU V/P, or other AMS)', null, 'GCS 9–14 or AVPU Voice/Pain. Distinct from high-risk GCS 3–8 / AVPU U. Intermediate → x-ray first if no high-risk factor.'),
-      yesNo('neckPain', 'Intermediate: self-reported neck pain', null, 'Child or caregiver reports neck pain. Distinct from clinician-elicited posterior midline bony tenderness.'),
-      yesNo('midlineTenderness', 'Intermediate: posterior midline neck tenderness', null, 'Posterior midline bony tenderness. An uncooperative preverbal exam is not a No — if you cannot assess, do not clear the neck on this item.'),
-      yesNo('substantialHead', 'Intermediate: substantial head injury (needs OR or admission)', null, 'Leonard 2024: injury that warrants observation or surgery (e.g. skull fracture).'),
-      yesNo('substantialTorso', 'Intermediate: substantial torso injury (needs OR or admission)', null, 'Leonard 2024: injury that warrants observation or surgery (pneumothorax, solid-organ injury, pelvic or spine fracture).'),
+      yesNo('gcsUnresponsive', 'High-risk: GCS 3–8 or unresponsive (AVPU = U)', null, 'GCS 3–8, or AVPU = Unresponsive (does not respond to voice or pain). High-risk → CT C-spine.', false),
+      yesNo('abnormalAbc', 'High-risk: abnormal airway, breathing, or circulation', null, 'Observed abnormal A/B/C: advanced airway, apnea/hypopnea, shock, or CPR — not a vague “looks unwell.”', false),
+      yesNo('focalNeuro', 'High-risk: focal neurologic deficit (paresthesia, numbness, or weakness)', null, 'New motor or sensory deficit or paresthesia suggesting spinal cord/root injury — not a chronic baseline deficit.', false),
+      yesNo('ams', 'Intermediate: altered mental status (GCS 9–14, AVPU V/P, or other AMS)', null, 'GCS 9–14 or AVPU Voice/Pain. Distinct from high-risk GCS 3–8 / AVPU U. Intermediate → x-ray first if no high-risk factor.', false),
+      yesNo('neckPain', 'Intermediate: self-reported neck pain', null, 'Child or caregiver reports neck pain. Distinct from clinician-elicited posterior midline bony tenderness.', true),
+      yesNo('midlineTenderness', 'Intermediate: posterior midline neck tenderness', null, 'Posterior midline bony tenderness. An uncooperative preverbal exam is not a No — if you cannot assess, do not clear the neck on this item.', false),
+      yesNo('substantialHead', 'Intermediate: substantial head injury (needs OR or admission)', null, 'Leonard 2024: injury that warrants observation or surgery (e.g. skull fracture).', false),
+      yesNo('substantialTorso', 'Intermediate: substantial torso injury (needs OR or admission)', null, 'Leonard 2024: injury that warrants observation or surgery (pneumothorax, solid-organ injury, pelvic or spine fracture).', false),
     ],
     calculate(values) {
       const gcsUnresponsive = bool(values.gcsUnresponsive);
@@ -1029,12 +1035,12 @@ export const wave7BedsideCalcs: Calculator[] = [
     whenToUse: 'Acutely ill inpatients undergoing cEEG (not elective EMU, typically not post-arrest targeted-temperature protocols).',
     whyUse: 'Score 0: ~5% seizure risk (1-hour screen often enough); 1: ~12% (continue ~12 h); ≥2: ≥27% (continue ≥24 h).',
     inputs: [
-      yesNo('birds', 'BIRDs — brief (ictal) rhythmic discharges', 2, 'ACNS: rhythmic discharges >4 Hz lasting ≥0.5 s and <10 s. Do not score any brief rhythm as BIRDs.'),
-      yesNo('freqGt2', 'Frequency >2 Hz for any periodic or rhythmic pattern', 1, 'Frequency >2 Hz on a periodic/rhythmic pattern except GRDA (GRDA does not score this point).'),
-      yesNo('epileptiform', 'Sporadic epileptiform discharges', 1, 'Sporadic non-periodic epileptiform discharges (not the periodic LPD/GPD patterns).'),
-      yesNo('lpdLrdaBipd', 'LPDs, LRDA, or bilateral independent PDs', 1, 'LPD or LRDA or BIPD only — do not score GPD or GRDA here.'),
-      yesNo('plusFeatures', 'Plus features (superimposed fast, rhythmic, or sharp activity)', 1, '+F / +R / +S on LPD, LRDA, or BIPD only — not on GPDs/GRDA.'),
-      yesNo('priorSeizure', 'Prior seizure (acute or remote, including epilepsy)', 1, 'Remote epilepsy or an acute clinical seizure — not EEG-only (electrographic) events counted elsewhere.'),
+      yesNo('birds', 'BIRDs — brief (ictal) rhythmic discharges', 2, 'ACNS: rhythmic discharges >4 Hz lasting ≥0.5 s and <10 s. Do not score any brief rhythm as BIRDs.', false),
+      yesNo('freqGt2', 'Frequency >2 Hz for any periodic or rhythmic pattern', 1, 'Frequency >2 Hz on a periodic/rhythmic pattern except GRDA (GRDA does not score this point).', true),
+      yesNo('epileptiform', 'Sporadic epileptiform discharges', 1, 'Sporadic non-periodic epileptiform discharges (not the periodic LPD/GPD patterns).', true),
+      yesNo('lpdLrdaBipd', 'LPDs, LRDA, or bilateral independent PDs', 1, 'LPD or LRDA or BIPD only — do not score GPD or GRDA here.', true),
+      yesNo('plusFeatures', 'Plus features (superimposed fast, rhythmic, or sharp activity)', 1, '+F / +R / +S on LPD, LRDA, or BIPD only — not on GPDs/GRDA.', false),
+      yesNo('priorSeizure', 'Prior seizure (acute or remote, including epilepsy)', 1, 'Remote epilepsy or an acute clinical seizure — not EEG-only (electrographic) events counted elsewhere.', false),
     ],
     calculate(values) {
       const birds = bool(values.birds) ? 2 : 0;
@@ -1245,8 +1251,8 @@ export const wave7BedsideCalcs: Calculator[] = [
     whyUse: 'Rule-out <0.35 and rule-in ≥0.67 identify at-risk MASH with ~90% sensitivity / specificity in derivation, shrinking the grey zone vs LSM alone.',
     inputs: [
       numberInput('lsm', 'Liver stiffness (VCTE)', { unit: 'kPa', min: 1.5, max: 75, step: 0.1, exampleValue: 8, helpText: 'Valid FibroScan LSM (kPa), fasting; check IQR/M. Same-encounter CAP and AST for FAST.' }),
-      numberInput('cap', 'Controlled attenuation parameter (CAP)', { unit: 'dB/m', min: 100, max: 400, step: 1, exampleValue: 250 }),
-      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 500, step: 1, exampleValue: 40 }),
+      numberInput('cap', 'Controlled attenuation parameter (CAP)', { unit: 'dB/m', min: 100, max: 400, step: 1, exampleValue: 250, helpText: 'CAP in dB/m from the same FibroScan session as the LSM. The term 2.66 × 10⁻⁸ × CAP³ makes CAP the dominant driver of FAST.' }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 500, step: 1, exampleValue: 40, helpText: 'AST in U/L from a draw contemporaneous with the FibroScan; the equation divides 63.3 by AST, so a low AST raises the score.' }),
     ],
     calculate(values) {
       const lsm = Math.max(num(values.lsm, 8), 1.5);
@@ -1322,16 +1328,16 @@ export const wave7BedsideCalcs: Calculator[] = [
     whenToUse: 'MASLD when VCTE LSM and routine labs are available to rule in/out advanced fibrosis.',
     whyUse: 'Better PPV and a smaller indeterminate zone than LSM or FIB-4 alone for F≥3 (Sanyal 2022).',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 90, step: 1, exampleValue: 55 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 90, step: 1, exampleValue: 55, helpText: 'Age in years at the FibroScan; Agile 3+ carries an age coefficient, so an older patient scores higher for the same LSM and labs.' }),
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
-      ]),
-      yesNo('diabetes', 'Diabetes mellitus', null, 'Diagnosed diabetes or glucose-lowering therapy (Agile 3+ coefficient).'),
+      ], 'M', 'Male sex adds the equation\'s positive male coefficient; female is the reference (0).'),
+      yesNo('diabetes', 'Diabetes mellitus', null, 'Diagnosed diabetes or glucose-lowering therapy (Agile 3+ coefficient).', true),
       numberInput('lsm', 'Liver stiffness (VCTE)', { unit: 'kPa', min: 1.5, max: 75, step: 0.1, exampleValue: 10, helpText: 'Valid fasting VCTE LSM in kPa (check IQR/M).' }),
-      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 500, step: 1, exampleValue: 40 }),
-      numberInput('alt', 'ALT', { unit: 'U/L', min: 5, max: 500, step: 1, exampleValue: 45 }),
-      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 20, max: 600, step: 1, exampleValue: 220 }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 500, step: 1, exampleValue: 40, helpText: 'AST in U/L from the same encounter as the LSM; enters the ALT/AST ratio inside the score.' }),
+      numberInput('alt', 'ALT', { unit: 'U/L', min: 5, max: 500, step: 1, exampleValue: 45, helpText: 'ALT in U/L from the same encounter; the score uses ALT/AST (inverted ratio), so a relatively high ALT lowers the result.' }),
+      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 20, max: 600, step: 1, exampleValue: 220, helpText: 'Platelet count in ×10⁹/L (thousands/µL); each 1 ×10⁹/L lowers the logit, making a lower count score toward advanced fibrosis.' }),
     ],
     calculate(values) {
       const age = num(values.age, 55);
@@ -1427,12 +1433,12 @@ export const wave7BedsideCalcs: Calculator[] = [
       selectInput('sex', 'Sex', [
         { label: 'Female', value: 'F' },
         { label: 'Male', value: 'M' },
-      ]),
-      yesNo('diabetes', 'Diabetes mellitus', null, 'Diagnosed diabetes or glucose-lowering therapy (Agile 4 coefficient).'),
+      ], 'M', 'Male sex adds the Agile 4 male coefficient; female is the reference (0). Agile 4 has no age term, unlike Agile 3+.'),
+      yesNo('diabetes', 'Diabetes mellitus', null, 'Diagnosed diabetes or glucose-lowering therapy (Agile 4 coefficient).', true),
       numberInput('lsm', 'Liver stiffness (VCTE)', { unit: 'kPa', min: 1.5, max: 75, step: 0.1, exampleValue: 12, helpText: 'Valid fasting VCTE LSM in kPa (check IQR/M).' }),
-      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 500, step: 1, exampleValue: 40 }),
-      numberInput('alt', 'ALT', { unit: 'U/L', min: 5, max: 500, step: 1, exampleValue: 45 }),
-      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 20, max: 600, step: 1, exampleValue: 180 }),
+      numberInput('ast', 'AST', { unit: 'U/L', min: 5, max: 500, step: 1, exampleValue: 40, helpText: 'AST in U/L from the same encounter as the LSM; enters the ALT/AST ratio inside the score.' }),
+      numberInput('alt', 'ALT', { unit: 'U/L', min: 5, max: 500, step: 1, exampleValue: 45, helpText: 'ALT in U/L from the same encounter; the ratio term is ALT ÷ AST, so a high ALT lowers the score.' }),
+      numberInput('plt', 'Platelets', { unit: '×10⁹/L', min: 20, max: 600, step: 1, exampleValue: 180, helpText: 'Platelet count in ×10⁹/L; a lower count raises the Agile 4 probability of cirrhosis (F4).' }),
     ],
     calculate(values) {
       const male = str(values.sex, 'F') === 'M' ? 1 : 0;
@@ -1515,23 +1521,24 @@ export const wave7BedsideCalcs: Calculator[] = [
     whenToUse: 'Hepatic steatosis (imaging or biopsy) when assigning the SLD subcategory and deciding whether alcohol intake reclassifies the patient.',
     whyUse: 'MASLD replaced NAFLD; MetALD captures the overlap zone (20–50 g/d women, 30–60 g/d men) with both metabolic features and alcohol.',
     inputs: [
-      yesNo('steatosis', 'Hepatic steatosis (imaging, CAP, or histology)', null, 'Steatosis on ultrasound/MRI/CT, CAP, or histology. Required to enter SLD categories.'),
-      yesNo('otherLiver', 'Other liver disease that could fully explain steatosis (e.g. HCV, drugs, monogenic)', null),
-      yesNo('bmiMet', 'Cardiometabolic: BMI ≥25 kg/m² (≥23 in Asian populations)', null, 'Official adiposity slot is BMI or waist — either counts as one cardiometabolic criterion.'),
-      yesNo('waistMet', 'Cardiometabolic: waist ≥94 cm (men) or ≥80 cm (women) — ethnicity-adjusted cutoffs allowed', null, 'Europid ≥94/80 cm (M/F). Asian often ≥90/80 cm. Official adiposity slot is BMI or waist.'),
+      yesNo('steatosis', 'Hepatic steatosis (imaging, CAP, or histology)', null, 'Steatosis on ultrasound/MRI/CT, CAP, or histology. Required to enter SLD categories.', true),
+      yesNo('otherLiver', 'Other liver disease that could fully explain steatosis (e.g. HCV, drugs, monogenic)', null, 'Yes when another cause fully explains the steatosis (viral hepatitis, alcohol beyond thresholds, steatogenic drugs, monogenic disease). Yes moves the patient out of MASLD and suppresses cardiometabolic counting.', false),
+      yesNo('bmiMet', 'Cardiometabolic: BMI ≥25 kg/m² (≥23 in Asian populations)', null, 'Official adiposity slot is BMI or waist — either counts as one cardiometabolic criterion.', true),
+      yesNo('waistMet', 'Cardiometabolic: waist ≥94 cm (men) or ≥80 cm (women) — ethnicity-adjusted cutoffs allowed', null, 'Europid ≥94/80 cm (M/F). Asian often ≥90/80 cm. Official adiposity slot is BMI or waist.', false),
       yesNo(
         'glucoseMet',
         'Cardiometabolic: fasting glucose ≥100 mg/dL, 2-h OGTT ≥140, HbA1c ≥5.7%, T2D/treatment, or HOMA-IR ≥2.5',
         null,
         '2023 adult glucose criterion: FPG ≥100 mg/dL or 2-h OGTT ≥140 mg/dL or HbA1c ≥5.7% or T2D/treatment; HOMA-IR ≥2.5 is the insulin-resistance add-on.',
+        true,
       ),
-      yesNo('bpMet', 'Cardiometabolic: BP ≥130/85 or antihypertensive therapy', null),
-      yesNo('tgMet', 'Cardiometabolic: triglycerides ≥150 mg/dL or lipid-lowering for hypertriglyceridemia', null),
-      yesNo('hdlMet', 'Cardiometabolic: HDL <40 mg/dL (men) or <50 (women) or treatment', null),
+      yesNo('bpMet', 'Cardiometabolic: BP ≥130/85 or antihypertensive therapy', null, 'Yes for BP ≥130/85 mmHg or current antihypertensive therapy; counts as 1 of the cardiometabolic criteria required for MASLD.', true),
+      yesNo('tgMet', 'Cardiometabolic: triglycerides ≥150 mg/dL or lipid-lowering for hypertriglyceridemia', null, 'Yes for triglycerides ≥150 mg/dL (1.7 mmol/L) or lipid-lowering therapy for hypertriglyceridemia; counts as 1 cardiometabolic criterion.', false),
+      yesNo('hdlMet', 'Cardiometabolic: HDL <40 mg/dL (men) or <50 (women) or treatment', null, 'Yes for HDL <40 mg/dL in men or <50 mg/dL in women, or drug treatment for low HDL; counts as 1 cardiometabolic criterion.', false),
       selectInput('sex', 'Sex (alcohol thresholds)', [
         { label: 'Female (MASLD <20 g/d; MetALD 20–50; ALD >50)', value: 'F' },
         { label: 'Male (MASLD <30 g/d; MetALD 30–60; ALD >60)', value: 'M' },
-      ]),
+      ], 'M', 'Sets the alcohol bands: women MASLD <20 g/day, MetALD 20–50, ALD >50; men MASLD <30 g/day, MetALD 30–60, ALD >60.'),
       numberInput('alcohol', 'Average alcohol intake', {
         unit: 'g/day',
         min: 0,
@@ -1653,7 +1660,7 @@ export const wave7BedsideCalcs: Calculator[] = [
     whyUse:
       'Conventional 500 µg/L FEU cutoff loses specificity with age. Age × 10 (FEU) from age 50 safely increases the proportion of negative tests (ADJUST-PE).',
     inputs: [
-      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, step: 1, exampleValue: 70 }),
+      numberInput('age', 'Age', { unit: 'years', min: 18, max: 110, step: 1, exampleValue: 70, helpText: 'Age in years; the adjusted cutoff is age × 10 ng/mL FEU (age × 5 in DDU) and only applies from age 50 — below 50 use the fixed 500 ng/mL FEU cutoff.' }),
       numberInput('ddimer', 'Measured D-dimer', {
         unit: 'ng/mL FEU', unitKind: 'ddimer',
         min: 50,
